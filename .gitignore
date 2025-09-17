@@ -17,6 +17,9 @@ env.example
 # Documentation folder
 docs/
 
+# Debug folder
+components/debug/
+
 # Markdown files (except README)
 *.md
 !README.md
