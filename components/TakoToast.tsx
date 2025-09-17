@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { X, Navigation, Heart } from 'lucide-react';
-import { FuzoButton } from './FuzoButton';
+import { FuzoButton } from './global/FuzoButton';
 import type { Restaurant } from './ScoutPage';
 
 interface TakoToastProps {

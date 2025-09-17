@@ -1,4 +1,4 @@
-import { FuzoCard } from "../FuzoCard";
+import { FuzoCard } from "../global/FuzoCard";
 
 export function FoodStoryboardSection() {
   return (

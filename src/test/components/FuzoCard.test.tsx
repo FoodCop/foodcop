@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { FuzoCard } from '../../../components/FuzoCard'
+import { FuzoCard } from '../../../components/global/FuzoCard'
 
 describe('FuzoCard', () => {
   it('renders with default props', () => {

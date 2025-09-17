@@ -1,5 +1,5 @@
-import { FuzoFooter } from "./FuzoFooter";
-import { FuzoNavigation } from "./FuzoNavigation";
+import { FuzoFooter } from "./global/FuzoFooter";
+import { FuzoNavigation } from "./global/FuzoNavigation";
 import { CookWatchSection } from "./landing/CookWatchSection";
 import { ExploreFoodSection } from "./landing/ExploreFoodSection";
 import { FoodStoryboardSection } from "./landing/FoodStoryboardSection";

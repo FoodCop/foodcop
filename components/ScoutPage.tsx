@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Filter, Heart, Loader, MapPin, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BottomNavigation } from "./BottomNavigation";
-import { FuzoTabs } from "./FuzoTabs";
+import { FuzoTabs } from "./global/FuzoTabs";
 
 import { FriendsTab } from "./scout/FriendsTab";
 import { MapView } from "./scout/MapView";
@@ -157,11 +157,11 @@ interface ScoutPageProps {
   onNavigateToRecipes?: () => void;
 }
 
-export function ScoutPage({ 
+export function ScoutPage({
   onNavigateBack,
   onNavigateToFeed,
   onNavigateToSnap,
-  onNavigateToRecipes
+  onNavigateToRecipes,
 }: ScoutPageProps) {
   const [activeTab, setActiveTab] = useState("nearby");
   const [activeNavTab, setActiveNavTab] = useState("scout");
@@ -784,7 +784,10 @@ export function ScoutPage({
       )}
 
       {/* Bottom Navigation */}
-      <BottomNavigation activeTab={activeNavTab} onTabChange={handleNavTabChange} />
+      <BottomNavigation
+        activeTab={activeNavTab}
+        onTabChange={handleNavTabChange}
+      />
     </div>
   );
 }

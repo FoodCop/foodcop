@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FuzoButton } from './FuzoButton';
+import { FuzoButton } from './global/FuzoButton';
 
 const PAGES = [
   { name: 'Feed', path: '/feed' },

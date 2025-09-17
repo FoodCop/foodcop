@@ -1,4 +1,4 @@
-import { FuzoCard } from "../FuzoCard";
+import { FuzoCard } from "../global/FuzoCard";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 export function ExploreFoodSection() {

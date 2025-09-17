@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Filter, ArrowLeft, Plus, Loader } from 'lucide-react';
-import { BottomNavigation } from './BottomNavigation';
-import { Recipe, mockRecipes } from './constants/recipesData';
-import { RecipeCard } from './recipes/RecipeCard';
-import { RecipeDetail } from './recipes/RecipeDetail';
-import { GamificationPopup } from './recipes/GamificationPopup';
-import { RecipeCreatorPage, NewRecipe } from './RecipeCreatorPage';
-import { backendService } from './services/backendService';
+import { ArrowLeft, Filter, Plus, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BottomNavigation } from "./BottomNavigation";
+import { Recipe, mockRecipes } from "./constants/recipesData";
+import { NewRecipe, RecipeCreatorPage } from "./RecipeCreatorPage";
+import { GamificationPopup } from "./recipes/GamificationPopup";
+import { RecipeCard } from "./recipes/RecipeCard";
+import { RecipeDetail } from "./recipes/RecipeDetail";
+import { backendService } from "./services/backendService";
 
-type RecipeView = 'feed' | 'detail' | 'community' | 'create';
+type RecipeView = "feed" | "detail" | "community" | "create";
 
 interface RecipesPageProps {
   onNavigateBack?: () => void;
@@ -17,15 +17,15 @@ interface RecipesPageProps {
   onNavigateToSnap?: () => void;
 }
 
-export function RecipesPage({ 
+export function RecipesPage({
   onNavigateBack,
   onNavigateToFeed,
   onNavigateToScout,
-  onNavigateToSnap
+  onNavigateToSnap,
 }: RecipesPageProps) {
-  const [currentView, setCurrentView] = useState<RecipeView>('feed');
+  const [currentView, setCurrentView] = useState<RecipeView>("feed");
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [showGamification, setShowGamification] = useState(false);
   const [userPoints, setUserPoints] = useState(1240); // Mock user points
@@ -49,12 +49,15 @@ export function RecipesPage({
 
   // Combine all recipe sources
   const allRecipes = [...mockRecipes, ...userRecipes, ...backendRecipes];
-  
+
   // Filter recipes based on search query
-  const filteredRecipes = allRecipes.filter(recipe =>
-    recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    recipe.cuisine.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    recipe.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredRecipes = allRecipes.filter(
+    (recipe) =>
+      recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      recipe.cuisine.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      recipe.tags.some((tag) =>
+        tag.toLowerCase().includes(searchQuery.toLowerCase())
+      )
   );
 
   // Load recipes from backend on mount
@@ -66,59 +69,95 @@ export function RecipesPage({
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await backendService.searchRecipes('', '', '', '', 12);
-      
+
+      const response = await backendService.searchRecipes("", "", "", "", 12);
+
       if (response.success && response.data) {
         const recipes = response.data.results || [];
-        
+
         // Convert backend recipe format to our Recipe interface
         const convertedRecipes: Recipe[] = recipes.map((recipe: any) => ({
           id: recipe.id?.toString() || Math.random().toString(36),
-          title: recipe.title || 'Untitled Recipe',
-          description: recipe.summary?.replace(/<[^>]*>/g, '') || 'No description available',
-          image: recipe.image || 'https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400',
+          title: recipe.title || "Untitled Recipe",
+          description:
+            recipe.summary?.replace(/<[^>]*>/g, "") ||
+            "No description available",
+          image:
+            recipe.image ||
+            "https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400",
           cookingTime: recipe.readyInMinutes || 30,
-          difficulty: 'Medium' as const,
+          difficulty: "Medium" as const,
           servings: recipe.servings || 4,
-          cuisine: recipe.cuisines?.[0] || 'International',
-          rating: recipe.spoonacularScore ? Math.round(recipe.spoonacularScore / 20) : 4.0,
+          cuisine: recipe.cuisines?.[0] || "International",
+          rating: recipe.spoonacularScore
+            ? Math.round(recipe.spoonacularScore / 20)
+            : 4.0,
           reviews: recipe.aggregateLikes || 0,
           author: {
-            name: 'Spoonacular',
-            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-            verified: true
+            name: "Spoonacular",
+            avatar:
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+            verified: true,
           },
-          ingredients: recipe.extendedIngredients?.map((ing: any) => ing.original) || [],
-          instructions: recipe.analyzedInstructions?.[0]?.steps?.map((step: any) => step.step) || [],
+          ingredients:
+            recipe.extendedIngredients?.map((ing: any) => ing.original) || [],
+          instructions:
+            recipe.analyzedInstructions?.[0]?.steps?.map(
+              (step: any) => step.step
+            ) || [],
           tags: recipe.dishTypes || [],
           nutrition: {
-            calories: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Calories')?.amount || 0,
-            protein: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Protein')?.amount || 0,
-            carbs: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Carbohydrates')?.amount || 0,
-            fat: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Fat')?.amount || 0,
-            fiber: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Fiber')?.amount || 0,
-            sugar: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Sugar')?.amount || 0,
-            sodium: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Sodium')?.amount || 0
+            calories:
+              recipe.nutrition?.nutrients?.find(
+                (n: any) => n.name === "Calories"
+              )?.amount || 0,
+            protein:
+              recipe.nutrition?.nutrients?.find(
+                (n: any) => n.name === "Protein"
+              )?.amount || 0,
+            carbs:
+              recipe.nutrition?.nutrients?.find(
+                (n: any) => n.name === "Carbohydrates"
+              )?.amount || 0,
+            fat:
+              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Fat")
+                ?.amount || 0,
+            fiber:
+              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Fiber")
+                ?.amount || 0,
+            sugar:
+              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Sugar")
+                ?.amount || 0,
+            sodium:
+              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Sodium")
+                ?.amount || 0,
           },
-          calories: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Calories')?.amount || 300,
+          calories:
+            recipe.nutrition?.nutrients?.find((n: any) => n.name === "Calories")
+              ?.amount || 300,
           preparationTime: recipe.preparationMinutes || 15,
-          totalTime: (recipe.readyInMinutes || 30) + (recipe.preparationMinutes || 15),
+          totalTime:
+            (recipe.readyInMinutes || 30) + (recipe.preparationMinutes || 15),
           nutritionInfo: recipe.nutrition || {},
           isSaved: false,
-          isBackendRecipe: true
+          isBackendRecipe: true,
         }));
-        
+
         setBackendRecipes(convertedRecipes);
-        console.log(`✅ Loaded ${convertedRecipes.length} recipes from backend`);
+        console.log(
+          `✅ Loaded ${convertedRecipes.length} recipes from backend`
+        );
       } else {
-        console.warn('⚠️ Backend recipe search failed, using local recipes only:', response.error);
+        console.warn(
+          "⚠️ Backend recipe search failed, using local recipes only:",
+          response.error
+        );
         // Fallback: don't set error, just continue with local mockRecipes
       }
     } catch (err) {
-      console.error('Failed to load backend recipes:', err);
+      console.error("Failed to load backend recipes:", err);
       // Don't show error to user, just continue with local recipes
-      console.log('📚 Falling back to local recipe data only');
+      console.log("📚 Falling back to local recipe data only");
     } finally {
       setLoading(false);
     }
@@ -137,50 +176,87 @@ export function RecipesPage({
   const searchBackendRecipes = async (query: string) => {
     try {
       setLoading(true);
-      const response = await backendService.searchRecipes(query, '', '', '', 12);
-      
+      const response = await backendService.searchRecipes(
+        query,
+        "",
+        "",
+        "",
+        12
+      );
+
       if (response.success && response.data) {
         const recipes = response.data.results || [];
         const convertedRecipes: Recipe[] = recipes.map((recipe: any) => ({
           id: recipe.id?.toString() || Math.random().toString(36),
-          title: recipe.title || 'Untitled Recipe',
-          description: recipe.summary?.replace(/<[^>]*>/g, '') || 'No description available',
-          image: recipe.image || 'https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400',
+          title: recipe.title || "Untitled Recipe",
+          description:
+            recipe.summary?.replace(/<[^>]*>/g, "") ||
+            "No description available",
+          image:
+            recipe.image ||
+            "https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400",
           cookingTime: recipe.readyInMinutes || 30,
-          difficulty: 'Medium' as const,
+          difficulty: "Medium" as const,
           servings: recipe.servings || 4,
-          cuisine: recipe.cuisines?.[0] || 'International',
-          rating: recipe.spoonacularScore ? Math.round(recipe.spoonacularScore / 20) : 4.0,
+          cuisine: recipe.cuisines?.[0] || "International",
+          rating: recipe.spoonacularScore
+            ? Math.round(recipe.spoonacularScore / 20)
+            : 4.0,
           reviews: recipe.aggregateLikes || 0,
           author: {
-            name: 'Spoonacular',
-            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-            verified: true
+            name: "Spoonacular",
+            avatar:
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+            verified: true,
           },
-          ingredients: recipe.extendedIngredients?.map((ing: any) => ing.original) || [],
-          instructions: recipe.analyzedInstructions?.[0]?.steps?.map((step: any) => step.step) || [],
+          ingredients:
+            recipe.extendedIngredients?.map((ing: any) => ing.original) || [],
+          instructions:
+            recipe.analyzedInstructions?.[0]?.steps?.map(
+              (step: any) => step.step
+            ) || [],
           tags: recipe.dishTypes || [],
           nutrition: {
-            calories: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Calories')?.amount || 0,
-            protein: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Protein')?.amount || 0,
-            carbs: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Carbohydrates')?.amount || 0,
-            fat: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Fat')?.amount || 0,
-            fiber: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Fiber')?.amount || 0,
-            sugar: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Sugar')?.amount || 0,
-            sodium: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Sodium')?.amount || 0
+            calories:
+              recipe.nutrition?.nutrients?.find(
+                (n: any) => n.name === "Calories"
+              )?.amount || 0,
+            protein:
+              recipe.nutrition?.nutrients?.find(
+                (n: any) => n.name === "Protein"
+              )?.amount || 0,
+            carbs:
+              recipe.nutrition?.nutrients?.find(
+                (n: any) => n.name === "Carbohydrates"
+              )?.amount || 0,
+            fat:
+              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Fat")
+                ?.amount || 0,
+            fiber:
+              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Fiber")
+                ?.amount || 0,
+            sugar:
+              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Sugar")
+                ?.amount || 0,
+            sodium:
+              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Sodium")
+                ?.amount || 0,
           },
-          calories: recipe.nutrition?.nutrients?.find((n: any) => n.name === 'Calories')?.amount || 300,
+          calories:
+            recipe.nutrition?.nutrients?.find((n: any) => n.name === "Calories")
+              ?.amount || 300,
           preparationTime: recipe.preparationMinutes || 15,
-          totalTime: (recipe.readyInMinutes || 30) + (recipe.preparationMinutes || 15),
+          totalTime:
+            (recipe.readyInMinutes || 30) + (recipe.preparationMinutes || 15),
           nutritionInfo: recipe.nutrition || {},
           isSaved: false,
-          isBackendRecipe: true
+          isBackendRecipe: true,
         }));
-        
+
         setBackendRecipes(convertedRecipes);
       }
     } catch (err) {
-      console.error('Backend recipe search failed:', err);
+      console.error("Backend recipe search failed:", err);
       // Don't set error state for search failures, just use local filtering
     } finally {
       setLoading(false);
@@ -189,28 +265,28 @@ export function RecipesPage({
 
   const handleRecipeSelect = (recipe: Recipe) => {
     setSelectedRecipe(recipe);
-    setCurrentView('detail');
+    setCurrentView("detail");
   };
 
   const handleBackToFeed = () => {
-    setCurrentView('feed');
+    setCurrentView("feed");
     setSelectedRecipe(null);
   };
 
   const handleSaveRecipe = () => {
     // Mock save action - in real app would save to user's collection
-    setUserPoints(prev => prev + 10);
+    setUserPoints((prev) => prev + 10);
     setShowGamification(true);
   };
 
   const handleShareRecipe = () => {
     // Mock share action
-    setUserPoints(prev => prev + 20);
+    setUserPoints((prev) => prev + 20);
     setShowGamification(true);
   };
 
   const handleCreateRecipe = () => {
-    setCurrentView('create');
+    setCurrentView("create");
   };
 
   const handleSaveNewRecipe = (newRecipe: NewRecipe) => {
@@ -219,7 +295,9 @@ export function RecipesPage({
       id: `user_${Date.now()}`,
       title: newRecipe.title,
       description: newRecipe.description,
-      image: newRecipe.mainImage || 'https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400',
+      image:
+        newRecipe.mainImage ||
+        "https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400",
       cookingTime: newRecipe.cookingTime,
       difficulty: newRecipe.difficulty,
       servings: newRecipe.servings,
@@ -227,20 +305,21 @@ export function RecipesPage({
       rating: 0,
       reviews: 0,
       author: {
-        name: 'You',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-        verified: false
+        name: "You",
+        avatar:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+        verified: false,
       },
-      ingredients: newRecipe.ingredients.map(ing => ({ 
-        id: Math.random().toString(36), 
-        name: ing.name, 
-        amount: ing.amount, 
-        unit: ing.unit 
+      ingredients: newRecipe.ingredients.map((ing) => ({
+        id: Math.random().toString(36),
+        name: ing.name,
+        amount: ing.amount,
+        unit: ing.unit,
       })),
-      instructions: newRecipe.steps.map((step, index) => ({ 
-        id: Math.random().toString(36), 
-        step: index + 1, 
-        description: step.instruction 
+      instructions: newRecipe.steps.map((step, index) => ({
+        id: Math.random().toString(36),
+        step: index + 1,
+        description: step.instruction,
       })),
       tags: newRecipe.tags,
       nutrition: newRecipe.nutritionInfo || {
@@ -250,23 +329,23 @@ export function RecipesPage({
         fat: 0,
         fiber: 0,
         sugar: 0,
-        sodium: 0
+        sodium: 0,
       },
       calories: newRecipe.nutritionInfo?.calories || 0,
       preparationTime: 15,
       totalTime: newRecipe.cookingTime + 15,
       nutritionInfo: newRecipe.nutritionInfo,
       isSaved: false,
-      isUserCreated: true
+      isUserCreated: true,
     };
 
-    setUserRecipes(prev => [recipe, ...prev]);
-    setUserPoints(prev => prev + 50); // Bonus points for creating a recipe
-    setCurrentView('feed');
+    setUserRecipes((prev) => [recipe, ...prev]);
+    setUserPoints((prev) => prev + 50); // Bonus points for creating a recipe
+    setCurrentView("feed");
     setShowGamification(true);
   };
 
-  if (currentView === 'create') {
+  if (currentView === "create") {
     return (
       <RecipeCreatorPage
         onNavigateBack={handleBackToFeed}
@@ -275,7 +354,7 @@ export function RecipesPage({
     );
   }
 
-  if (currentView === 'detail' && selectedRecipe) {
+  if (currentView === "detail" && selectedRecipe) {
     return (
       <>
         <RecipeDetail
@@ -287,7 +366,11 @@ export function RecipesPage({
         {showGamification && (
           <GamificationPopup
             points={selectedRecipe.isUserCreated ? 50 : 20}
-            action={selectedRecipe.isUserCreated ? "creating a recipe" : "saving a recipe"}
+            action={
+              selectedRecipe.isUserCreated
+                ? "creating a recipe"
+                : "saving a recipe"
+            }
             currentPoints={userPoints}
             onClose={() => setShowGamification(false)}
           />
@@ -303,7 +386,7 @@ export function RecipesPage({
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center space-x-4">
             {onNavigateBack && (
-              <button 
+              <button
                 onClick={onNavigateBack}
                 className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
               >
@@ -315,7 +398,7 @@ export function RecipesPage({
               <p className="text-sm text-gray-600">Discover amazing recipes</p>
             </div>
           </div>
-          
+
           <button
             onClick={handleCreateRecipe}
             className="w-10 h-10 rounded-full bg-[#F14C35] flex items-center justify-center hover:bg-[#E63E26] transition-colors"
@@ -350,7 +433,14 @@ export function RecipesPage({
         {showFilters && (
           <div className="px-4 pb-4">
             <div className="flex flex-wrap gap-2">
-              {['Quick', 'Healthy', 'Vegetarian', 'High-Protein', 'Low-Carb', 'Dessert'].map((filter) => (
+              {[
+                "Quick",
+                "Healthy",
+                "Vegetarian",
+                "High-Protein",
+                "Low-Carb",
+                "Dessert",
+              ].map((filter) => (
                 <button
                   key={filter}
                   className="px-4 py-2 bg-gray-100 hover:bg-[#F14C35] hover:text-white rounded-full text-sm font-medium transition-colors"
@@ -368,7 +458,9 @@ export function RecipesPage({
         {searchQuery && (
           <div className="mb-4">
             <p className="text-sm text-gray-600">
-              {filteredRecipes.length} recipe{filteredRecipes.length !== 1 ? 's' : ''} found for "{searchQuery}"
+              {filteredRecipes.length} recipe
+              {filteredRecipes.length !== 1 ? "s" : ""} found for "{searchQuery}
+              "
             </p>
           </div>
         )}
@@ -390,8 +482,12 @@ export function RecipesPage({
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
               <Search className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-medium text-[#0B1F3A] mb-2">No recipes found</h3>
-            <p className="text-gray-600">Try searching for something else or browse our featured recipes.</p>
+            <h3 className="text-lg font-medium text-[#0B1F3A] mb-2">
+              No recipes found
+            </h3>
+            <p className="text-gray-600">
+              Try searching for something else or browse our featured recipes.
+            </p>
           </div>
         )}
 

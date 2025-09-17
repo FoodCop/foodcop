@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { FuzoTabs } from "../FuzoTabs";
+import { FuzoTabs } from "../global/FuzoTabs";
 import type { Restaurant } from "../ScoutPage";
 import { RestaurantCard } from "./RestaurantCard";
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { FuzoButton } from '../../../components/FuzoButton'
+import { FuzoButton } from '../../../components/global/FuzoButton'
 
 describe('FuzoButton', () => {
   it('renders with default props', () => {

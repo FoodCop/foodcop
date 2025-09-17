@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserPlus, Utensils } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
-import { FuzoButton } from '../FuzoButton';
+import { FuzoButton } from '../global/FuzoButton';
 
 interface SuggestedFriend {
   id: string;

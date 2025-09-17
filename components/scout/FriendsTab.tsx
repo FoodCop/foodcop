@@ -8,8 +8,8 @@ import {
 import { ActivityTabContent } from "../friends/ActivityTabContent";
 import { DiscoverTabContent } from "../friends/DiscoverTabContent";
 import { FriendsTabContent } from "../friends/FriendsTabContent";
-import { FuzoButton } from "../FuzoButton";
-import { FuzoTabs } from "../FuzoTabs";
+import { FuzoButton } from "../global/FuzoButton";
+import { FuzoTabs } from "../global/FuzoTabs";
 import { useFriendsTabLogic } from "../hooks/useFriendsTabLogic";
 import type { Friend, Restaurant } from "../ScoutPage";
 

@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { FuzoButton } from "../FuzoButton";
+import { FuzoButton } from "../global/FuzoButton";
 import type { Restaurant } from "../ScoutPage";
 
 interface RestaurantDetailSheetProps {

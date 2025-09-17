@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { BottomNavigation } from './BottomNavigation';
-import { CameraView } from './snap/CameraView';
-import { TaggingView } from './snap/TaggingView';
-import { GamificationFeedback } from './snap/GamificationFeedback';
+import { useState } from "react";
+import { BottomNavigation } from "./BottomNavigation";
+import { CameraView } from "./snap/CameraView";
+import { GamificationFeedback } from "./snap/GamificationFeedback";
+import { TaggingView } from "./snap/TaggingView";
 
 interface CapturedPhoto {
   id: string;
@@ -33,10 +33,14 @@ interface SnapPageProps {
 export function SnapPage({
   onNavigateToFeed,
   onNavigateToScout,
-  onNavigateToRecipes
+  onNavigateToRecipes,
 }: SnapPageProps = {}) {
-  const [currentScreen, setCurrentScreen] = useState<'camera' | 'tagging' | 'gamification'>('camera');
-  const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);
+  const [currentScreen, setCurrentScreen] = useState<
+    "camera" | "tagging" | "gamification"
+  >("camera");
+  const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(
+    null
+  );
   const [taggingData, setTaggingData] = useState<TaggingData | null>(null);
   const [pointsEarned, setPointsEarned] = useState(0);
   const [activeTab, setActiveTab] = useState("snap");
@@ -55,21 +59,21 @@ export function SnapPage({
 
   const handlePhotoCapture = (photo: CapturedPhoto) => {
     setCapturedPhoto(photo);
-    setCurrentScreen('tagging');
+    setCurrentScreen("tagging");
   };
 
   const handleTaggingComplete = (data: TaggingData) => {
     setTaggingData(data);
-    
+
     // Calculate points
     let points = 0;
     points += data.foodTags.length * 5; // 5 points per food tag
     points += data.additionalTags.length * 5; // 5 points per additional tag
     if (data.review.trim()) points += 20; // 20 points for review
     points += 10; // 10 points for new restaurant
-    
+
     setPointsEarned(points);
-    setCurrentScreen('gamification');
+    setCurrentScreen("gamification");
   };
 
   const handleGamificationComplete = () => {
@@ -77,29 +81,29 @@ export function SnapPage({
     setCapturedPhoto(null);
     setTaggingData(null);
     setPointsEarned(0);
-    setCurrentScreen('camera');
+    setCurrentScreen("camera");
   };
 
   const handleRetakePhoto = () => {
     setCapturedPhoto(null);
-    setCurrentScreen('camera');
+    setCurrentScreen("camera");
   };
 
   return (
     <div className="min-h-screen bg-background">
-      {currentScreen === 'camera' && (
+      {currentScreen === "camera" && (
         <CameraView onPhotoCapture={handlePhotoCapture} />
       )}
-      
-      {currentScreen === 'tagging' && capturedPhoto && (
+
+      {currentScreen === "tagging" && capturedPhoto && (
         <TaggingView
           photo={capturedPhoto}
           onComplete={handleTaggingComplete}
           onRetake={handleRetakePhoto}
         />
       )}
-      
-      {currentScreen === 'gamification' && (
+
+      {currentScreen === "gamification" && (
         <GamificationFeedback
           pointsEarned={pointsEarned}
           taggingData={taggingData!}

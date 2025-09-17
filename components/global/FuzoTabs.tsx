@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { cn } from './ui/utils';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon } from "lucide-react";
+import React, { useState } from "react";
+import { cn } from "../ui/utils";
 
 interface TabItem {
   id: string;
@@ -15,23 +15,25 @@ interface FuzoTabsProps {
   activeTab?: string;
   onTabChange?: (tabId: string) => void;
   className?: string;
-  variant?: 'default' | 'compact';
+  variant?: "default" | "compact";
   showContent?: boolean;
 }
 
-export function FuzoTabs({ 
-  tabs, 
-  defaultTab, 
+export function FuzoTabs({
+  tabs,
+  defaultTab,
   activeTab: controlledActiveTab,
   onTabChange,
   className,
-  variant = 'default',
-  showContent = true
+  variant = "default",
+  showContent = true,
 }: FuzoTabsProps) {
-  const [internalActiveTab, setInternalActiveTab] = useState(defaultTab || tabs[0]?.id);
-  
+  const [internalActiveTab, setInternalActiveTab] = useState(
+    defaultTab || tabs[0]?.id
+  );
+
   const activeTab = controlledActiveTab ?? internalActiveTab;
-  
+
   const handleTabChange = (tabId: string) => {
     if (onTabChange) {
       onTabChange(tabId);
@@ -40,7 +42,7 @@ export function FuzoTabs({
     }
   };
 
-  if (variant === 'compact') {
+  if (variant === "compact") {
     return (
       <div className={cn("", className)}>
         <div className="flex space-x-1 bg-gray-100 rounded-xl p-1">
@@ -58,9 +60,7 @@ export function FuzoTabs({
                     : "text-gray-600 hover:text-[#0B1F3A]"
                 )}
               >
-                {IconComponent && (
-                  <IconComponent className="w-4 h-4" />
-                )}
+                {IconComponent && <IconComponent className="w-4 h-4" />}
                 <span>{tab.label}</span>
               </button>
             );
@@ -89,9 +89,7 @@ export function FuzoTabs({
                     : "text-gray-500 hover:text-[#0B1F3A]"
                 )}
               >
-                {IconComponent && (
-                  <IconComponent className="w-4 h-4" />
-                )}
+                {IconComponent && <IconComponent className="w-4 h-4" />}
                 <span>{tab.label}</span>
               </button>
             );
