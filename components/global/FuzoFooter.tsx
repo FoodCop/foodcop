@@ -30,9 +30,11 @@ export function FuzoFooter() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="md:col-span-1">
             <h2 className="text-2xl font-bold text-[#F14C35] mb-4">FUZO</h2>
-            <p className="text-gray-600 text-sm">
-              Your intelligent food companion for discovering amazing culinary
-              adventures.
+            <p className="text-gray-600 text-sm mb-4">
+              FUZO — made with love for food lovers everywhere.
+            </p>
+            <p className="text-gray-500 text-xs">
+              Get a weekly bundle of unmissable eats (one email, zero noise).
             </p>
           </div>
 

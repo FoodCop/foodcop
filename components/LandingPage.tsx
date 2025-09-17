@@ -1,8 +1,8 @@
 import { FuzoFooter } from "./global/FuzoFooter";
 import { FuzoNavigation } from "./global/FuzoNavigation";
 import { CookWatchSection } from "./landing/CookWatchSection";
+import { DailyPicksSection } from "./landing/DailyPicksSection";
 import { ExploreFoodSection } from "./landing/ExploreFoodSection";
-import { FoodStoryboardSection } from "./landing/FoodStoryboardSection";
 import { HeroSection } from "./landing/HeroSection";
 import { PinFoodSection } from "./landing/PinFoodSection";
 import { TakoBuddySection } from "./landing/TakoBuddySection";
@@ -18,11 +18,11 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
       <FuzoNavigation onNavigateToSignup={onNavigateToSignup} />
       <main>
         <HeroSection onNavigateToSignup={onNavigateToSignup} />
-        <PinFoodSection />
-        <CookWatchSection />
-        <FoodStoryboardSection />
-        <TakoBuddySection />
-        <ExploreFoodSection />
+        <DailyPicksSection onNavigateToSignup={onNavigateToSignup} />
+        <PinFoodSection onNavigateToSignup={onNavigateToSignup} />
+        <CookWatchSection onNavigateToSignup={onNavigateToSignup} />
+        <TakoBuddySection onNavigateToSignup={onNavigateToSignup} />
+        <ExploreFoodSection onNavigateToSignup={onNavigateToSignup} />
       </main>
       <FuzoFooter />
 

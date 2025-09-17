@@ -1,57 +1,40 @@
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
-export function TakoBuddySection() {
-  const features = [
-    {
-      icon: "⚡",
-      title: "Power",
-      description:
-        "AI-powered recommendations based on your taste preferences and dietary needs.",
-    },
-    {
-      icon: "💡",
-      title: "Innovation",
-      description:
-        "Cutting-edge technology that learns from your food journey and suggests new experiences.",
-    },
-    {
-      icon: "🤝",
-      title: "Companionship",
-      description:
-        "Your friendly guide through every culinary adventure, making food discovery fun and personal.",
-    },
-  ];
+interface TakoBuddySectionProps {
+  onNavigateToSignup?: () => void;
+}
 
+export function TakoBuddySection({ onNavigateToSignup }: TakoBuddySectionProps) {
   return (
     <section className="bg-white py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
-            <div className="space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0B1F3A]">
-                Tako – The Food Buddy
-              </h2>
-              <p className="text-lg text-gray-600">
-                Meet Tako, your intelligent food companion who understands your
-                taste, learns your preferences, and guides you to incredible
-                culinary discoveries.
-              </p>
-            </div>
-
             <div className="space-y-6">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-[#FFD74A] rounded-xl flex items-center justify-center text-xl">
-                    {feature.icon}
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-semibold text-[#0B1F3A]">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </div>
-                </div>
-              ))}
+              <h2 className="text-4xl md:text-5xl font-bold text-[#0B1F3A]">
+                Meet Tako, your food buddy
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Ask for a quick tip, a must-order dish or the best time to go. Tako only talks food—off-topic? It'll point you to the right place and bring the chat back to eats.
+              </p>
+              
+              <button
+                onClick={onNavigateToSignup}
+                className="group relative px-8 py-4 bg-[#F14C35] text-white rounded-xl font-semibold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                onMouseOver={(e) => {
+                  const target = e.currentTarget;
+                  target.style.transform = "scale(1.05)";
+                  target.style.boxShadow = "0 12px 32px rgba(241, 76, 53, 0.4)";
+                }}
+                onMouseOut={(e) => {
+                  const target = e.currentTarget;
+                  target.style.transform = "scale(1)";
+                  target.style.boxShadow = "0 8px 24px rgba(241, 76, 53, 0.3)";
+                }}
+              >
+                Chat with Tako
+                <div className="absolute inset-0 rounded-xl ring-2 ring-[#F14C35]/50 scale-0 group-hover:scale-100 transition-transform duration-300" />
+              </button>
             </div>
           </div>
 

@@ -1,12 +1,15 @@
 import { ArrowLeft, Filter, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import {
+  convertSpoonacularRecipe,
+  spoonacularService,
+} from "../src/lib/spoonacular";
 import { BottomNavigation } from "./BottomNavigation";
 import { Recipe, mockRecipes } from "./constants/recipesData";
 import { NewRecipe, RecipeCreatorPage } from "./features/RecipeCreatorPage";
 import { GamificationPopup } from "./recipes/GamificationPopup";
 import { RecipeCard } from "./recipes/RecipeCard";
 import { RecipeDetail } from "./recipes/RecipeDetail";
-import { spoonacularService, convertSpoonacularRecipe } from "../src/lib/spoonacular";
 
 type RecipeView = "feed" | "detail" | "community" | "create";
 
@@ -77,9 +80,13 @@ export function RecipesPage({
       });
 
       if (response.results && response.results.length > 0) {
-        const convertedRecipes: Recipe[] = response.results.map(convertSpoonacularRecipe);
+        const convertedRecipes: Recipe[] = response.results.map(
+          convertSpoonacularRecipe
+        );
         setBackendRecipes(convertedRecipes);
-        console.log(`✅ Loaded ${convertedRecipes.length} recipes from Spoonacular API`);
+        console.log(
+          `✅ Loaded ${convertedRecipes.length} recipes from Spoonacular API`
+        );
       } else {
         console.warn("⚠️ No recipes returned from Spoonacular API");
         setError("No recipes available at the moment");
@@ -115,9 +122,13 @@ export function RecipesPage({
       });
 
       if (response.results && response.results.length > 0) {
-        const convertedRecipes: Recipe[] = response.results.map(convertSpoonacularRecipe);
+        const convertedRecipes: Recipe[] = response.results.map(
+          convertSpoonacularRecipe
+        );
         setBackendRecipes(convertedRecipes);
-        console.log(`✅ Found ${convertedRecipes.length} recipes for "${query}"`);
+        console.log(
+          `✅ Found ${convertedRecipes.length} recipes for "${query}"`
+        );
       } else {
         console.warn(`⚠️ No recipes found for "${query}"`);
         setError(`No recipes found for "${query}"`);
@@ -343,7 +354,9 @@ export function RecipesPage({
             <div className="flex items-center">
               <div className="w-5 h-5 text-blue-500 mr-3 animate-spin">⏳</div>
               <p className="text-sm text-blue-800">
-                {searchQuery ? `Searching for "${searchQuery}"...` : "Loading recipes..."}
+                {searchQuery
+                  ? `Searching for "${searchQuery}"...`
+                  : "Loading recipes..."}
               </p>
             </div>
           </div>
