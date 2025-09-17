@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, Filter, Heart, Loader, MapPin, Users } from "lucide-react";
 import { useEffect, useState } from "react";
+import { BottomNavigation } from "./BottomNavigation";
 import { FuzoTabs } from "./FuzoTabs";
 
 import { FriendsTab } from "./scout/FriendsTab";
@@ -151,10 +152,19 @@ const mockFriends: Friend[] = [
 
 interface ScoutPageProps {
   onNavigateBack?: () => void;
+  onNavigateToFeed?: () => void;
+  onNavigateToSnap?: () => void;
+  onNavigateToRecipes?: () => void;
 }
 
-export function ScoutPage({ onNavigateBack }: ScoutPageProps) {
+export function ScoutPage({ 
+  onNavigateBack,
+  onNavigateToFeed,
+  onNavigateToSnap,
+  onNavigateToRecipes
+}: ScoutPageProps) {
   const [activeTab, setActiveTab] = useState("nearby");
+  const [activeNavTab, setActiveNavTab] = useState("scout");
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
   const [showDetailSheet, setShowDetailSheet] = useState(false);
@@ -172,6 +182,18 @@ export function ScoutPage({ onNavigateBack }: ScoutPageProps) {
   const [error, setError] = useState<string | null>(null);
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
   const [showRouteInfo, setShowRouteInfo] = useState(false);
+
+  const handleNavTabChange = (tab: string) => {
+    if (tab === "feed" && onNavigateToFeed) {
+      onNavigateToFeed();
+    } else if (tab === "snap" && onNavigateToSnap) {
+      onNavigateToSnap();
+    } else if (tab === "bites" && onNavigateToRecipes) {
+      onNavigateToRecipes();
+    } else {
+      setActiveNavTab(tab);
+    }
+  };
   const [refreshingLocation, setRefreshingLocation] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCuisine, setSelectedCuisine] = useState<string>("");
@@ -760,6 +782,9 @@ export function ScoutPage({ onNavigateBack }: ScoutPageProps) {
           onClose={() => setShowTakoToast(false)}
         />
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNavigation activeTab={activeNavTab} onTabChange={handleNavTabChange} />
     </div>
   );
 }

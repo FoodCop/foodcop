@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BottomNavigation } from './BottomNavigation';
 import { CameraView } from './snap/CameraView';
 import { TaggingView } from './snap/TaggingView';
 import { GamificationFeedback } from './snap/GamificationFeedback';
@@ -23,11 +24,34 @@ interface TaggingData {
   priceRange: string;
 }
 
-export function SnapPage() {
+interface SnapPageProps {
+  onNavigateToFeed?: () => void;
+  onNavigateToScout?: () => void;
+  onNavigateToRecipes?: () => void;
+}
+
+export function SnapPage({
+  onNavigateToFeed,
+  onNavigateToScout,
+  onNavigateToRecipes
+}: SnapPageProps = {}) {
   const [currentScreen, setCurrentScreen] = useState<'camera' | 'tagging' | 'gamification'>('camera');
   const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);
   const [taggingData, setTaggingData] = useState<TaggingData | null>(null);
   const [pointsEarned, setPointsEarned] = useState(0);
+  const [activeTab, setActiveTab] = useState("snap");
+
+  const handleTabChange = (tab: string) => {
+    if (tab === "feed" && onNavigateToFeed) {
+      onNavigateToFeed();
+    } else if (tab === "scout" && onNavigateToScout) {
+      onNavigateToScout();
+    } else if (tab === "bites" && onNavigateToRecipes) {
+      onNavigateToRecipes();
+    } else {
+      setActiveTab(tab);
+    }
+  };
 
   const handlePhotoCapture = (photo: CapturedPhoto) => {
     setCapturedPhoto(photo);
@@ -82,6 +106,9 @@ export function SnapPage() {
           onComplete={handleGamificationComplete}
         />
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
     </div>
   );
 }

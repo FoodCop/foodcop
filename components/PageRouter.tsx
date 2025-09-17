@@ -84,19 +84,45 @@ export function PageRouter({
         );
 
       case "feed":
-        return <FeedPage />;
+        return (
+          <FeedPage
+            onNavigateToScout={() => setCurrentPage("scout")}
+            onNavigateToSnap={() => setCurrentPage("snap")}
+            onNavigateToChat={() => setCurrentPage("chat")}
+            onNavigateToRecipes={() => setCurrentPage("recipes")}
+            onNavigateToProfile={() => setCurrentPage("profile")}
+          />
+        );
 
       case "scout":
-        return <ScoutPage />;
+        return (
+          <ScoutPage
+            onNavigateToFeed={() => setCurrentPage("feed")}
+            onNavigateToSnap={() => setCurrentPage("snap")}
+            onNavigateToRecipes={() => setCurrentPage("recipes")}
+          />
+        );
 
       case "snap":
-        return <SnapPage />;
+        return (
+          <SnapPage
+            onNavigateToFeed={() => setCurrentPage("feed")}
+            onNavigateToScout={() => setCurrentPage("scout")}
+            onNavigateToRecipes={() => setCurrentPage("recipes")}
+          />
+        );
 
       case "chat":
         return <ChatPage />;
 
       case "recipes":
-        return <RecipesPage />;
+        return (
+          <RecipesPage
+            onNavigateToFeed={() => setCurrentPage("feed")}
+            onNavigateToScout={() => setCurrentPage("scout")}
+            onNavigateToSnap={() => setCurrentPage("snap")}
+          />
+        );
 
       case "profile":
         return <ProfilePage />;

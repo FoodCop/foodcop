@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, ArrowLeft, Plus, Loader } from 'lucide-react';
+import { BottomNavigation } from './BottomNavigation';
 import { Recipe, mockRecipes } from './constants/recipesData';
 import { RecipeCard } from './recipes/RecipeCard';
 import { RecipeDetail } from './recipes/RecipeDetail';
@@ -11,9 +12,17 @@ type RecipeView = 'feed' | 'detail' | 'community' | 'create';
 
 interface RecipesPageProps {
   onNavigateBack?: () => void;
+  onNavigateToFeed?: () => void;
+  onNavigateToScout?: () => void;
+  onNavigateToSnap?: () => void;
 }
 
-export function RecipesPage({ onNavigateBack }: RecipesPageProps) {
+export function RecipesPage({ 
+  onNavigateBack,
+  onNavigateToFeed,
+  onNavigateToScout,
+  onNavigateToSnap
+}: RecipesPageProps) {
   const [currentView, setCurrentView] = useState<RecipeView>('feed');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,6 +33,19 @@ export function RecipesPage({ onNavigateBack }: RecipesPageProps) {
   const [backendRecipes, setBackendRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("bites");
+
+  const handleTabChange = (tab: string) => {
+    if (tab === "feed" && onNavigateToFeed) {
+      onNavigateToFeed();
+    } else if (tab === "scout" && onNavigateToScout) {
+      onNavigateToScout();
+    } else if (tab === "snap" && onNavigateToSnap) {
+      onNavigateToSnap();
+    } else {
+      setActiveTab(tab);
+    }
+  };
 
   // Combine all recipe sources
   const allRecipes = [...mockRecipes, ...userRecipes, ...backendRecipes];
@@ -392,6 +414,9 @@ export function RecipesPage({ onNavigateBack }: RecipesPageProps) {
           onClose={() => setShowGamification(false)}
         />
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
     </div>
   );
 }
