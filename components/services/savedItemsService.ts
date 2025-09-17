@@ -31,6 +31,11 @@ class SavedItemsService {
     try {
       // Dynamically import to avoid circular dependencies
       const { default: supabaseClient } = await import('../../utils/supabase/client');
+      
+      if (!supabaseClient) {
+        throw new Error("Supabase client is not available");
+      }
+      
       const { data: { session } } = await supabaseClient.auth.getSession();
       
       if (session?.access_token) {
