@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, MessageCircle, UserPlus, Share2, MoreHorizontal, Copy } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { mockFriendProfiles, Friend } from './constants/profileData';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { FriendPlateTab } from './friend/FriendPlateTab';
