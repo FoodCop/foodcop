@@ -93,17 +93,20 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
   // Supabase client for OAuth
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  
+
   if (!supabaseUrl || !supabaseKey) {
     console.error("Supabase environment variables are missing");
   }
-  
-  const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
+  const supabase =
+    supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
   // Real Google OAuth sign-in
   const signInWithGoogle = async () => {
     if (!supabase) {
-      setError("Authentication service is not available. Please check your configuration.");
+      setError(
+        "Authentication service is not available. Please check your configuration."
+      );
       return;
     }
 
