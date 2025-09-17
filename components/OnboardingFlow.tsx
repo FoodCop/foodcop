@@ -373,10 +373,12 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
               transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
               className="text-center"
             >
-              <div className="w-32 h-32 mx-auto mb-8 bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center border border-white/20">
-                <span className="text-5xl font-bold text-primary-foreground">
-                  F
-                </span>
+              <div className="w-32 h-32 mx-auto mb-8 bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center border border-white/20 overflow-hidden">
+                <img 
+                  src="/images/landing/Images/logo.png" 
+                  alt="FUZO Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
 
               <div className="mb-8">
