@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Landing Page</title>
+</head>
+<body>
+    <h1>Testing Landing Page Access</h1>
+    <p>If you can see this, the dev server is working.</p>
+    <p>Check the browser console for any errors.</p>
+    <p>Current URL should be: http://localhost:5173/</p>
+    
+    <script>
+        console.log('Test page loaded');
+        console.log('Current URL:', window.location.href);
+        
+        // Check if React is loaded
+        if (typeof React !== 'undefined') {
+            console.log('React is available');
+        } else {
+            console.log('React not found');
+        }
+    </script>
+</body>
+</html>

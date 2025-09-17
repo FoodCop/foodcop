@@ -1,0 +1,32 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "utils/**/*.ts",
+    "utils/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "server",
+    "components/debug",
+    "components/recipes",
+    "components/services",
+    "components/recipes",
+    "components/snap",
+    "components/profile",
+    "components/friend",
+    "components/friends",
+    "components/constants",
+    "src/test",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}

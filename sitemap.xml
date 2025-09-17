@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- 
+    FUZO Food Discovery App - Sitemap & Architecture Overview
+    ========================================================
+    Entry Point: App.tsx → AuthProvider → PageRouter → (initialPage: "landing")
+    
+    Navigation Architecture:
+    - Hamburger Menu (Top-left): Access to all pages via PageSelector
+    - Bottom Navigation: Feed, Scout, Snap, Bites (on main app pages)
+    - Universal Header: Chat, Profile, Hamburger (context-dependent)
+    - AI Assistant: Tako floating button (available on all non-landing pages)
+    
+    Brand System:
+    - Colors: Coral Red (#F14C35), Deep Orange-Brown (#A6471E), Navy (#0B1F3A), Yellow (#FFD74A)
+    - Typography: Red Hat Display + Roboto
+    - Mascot: Tako the octopus
+  -->
+
+  <!-- MAIN APP PAGES -->
+  
+  <!-- Landing & Onboarding Flow -->
+  <url>
+    <loc>/landing</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2024-12-19</lastmod>
+    <!-- 
+      Component: LandingPage.tsx
+      Purpose: Brand showcase and entry point
+      Features: Hero, Pin Food, Cook Watch, Food Storyboard, Tako Buddy, Explore Food sections
+      Navigation: → Onboarding Flow, → Direct app access
+      Dependencies: FuzoNavigation, HeroSection, PinFoodSection, CookWatchSection, 
+                   FoodStoryboardSection, TakoBuddySection, ExploreFoodSection, FuzoFooter
+      Auth: GoogleAuthTester (dev only), FigmaStatusBadge
+    -->
+  </url>
+
+  <url>
+    <loc>/onboarding</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+    <!-- 
+      Component: OnboardingFlow.tsx
+      Purpose: 8-screen signup and onboarding experience
+      Flow: Welcome → Personal Info → Dietary Preferences → Cuisine Preferences → 
+            Location → Social Connect → Notifications → Welcome to FUZO
+      Navigation: ← Landing, → Feed (completion)
+      Features: Google OAuth integration, profile setup, preferences collection
+    -->
+  </url>
+
+  <!-- Core App Pages (Bottom Navigation) -->
+  
+  <url>
+    <loc>/feed</loc>
+    <priority>0.9</priority>
+    <changefreq>daily</changefreq>
+    <!-- 
+      Component: FeedPage.tsx
+      Purpose: Tinder-style food discovery with swipe interface
+      Features: SwipeDeck, FeedHeader with FUZO branding, recommendation engine
+      Navigation: ↔ Scout, Snap, Bites via bottom nav, → Profile, Chat via header
+      Dependencies: SwipeDeck, SwipeCard, FeedHeader, BottomNavigation
+      Backend: Food recommendation API, user preference matching
+    -->
+  </url>
+
+  <url>
+    <loc>/scout</loc>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+    <!-- 
+      Component: ScoutPage.tsx / MobileOptimizedScoutPage.tsx
+      Purpose: Map-based restaurant discovery
+      Features: Google Maps integration, restaurant search, detailed views, filters
+      Navigation: ↔ Feed, Snap, Bites via bottom nav
+      Dependencies: MapView, ModernGoogleMaps, RestaurantCard, RestaurantDetailSheet
+      Backend: Google Places API, geolocation services, restaurant data
+      Alternative: ScoutPageFixed.tsx (backup implementation)
+    -->
+  </url>
+
+  <url>
+    <loc>/snap</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+    <!-- 
+      Component: SnapPage.tsx
+      Purpose: Camera interface with tagging and gamification
+      Features: Photo capture, food recognition, tagging system, point rewards
+      Dependencies: CameraView, TaggingView, GamificationFeedback
+      Backend: Image processing, AI food recognition, gamification system
+    -->
+  </url>
+
+  <url>
+    <loc>/bites</loc>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+    <!-- 
+      Component: RecipesPage.tsx
+      Purpose: Recipe discovery hub with community features
+      Features: Recipe search, detailed instructions, community ratings, collections
+      Navigation: ↔ Feed, Scout, Snap via bottom nav
+      Dependencies: RecipeCard, RecipeDetail, RecipeCommunity, GamificationPopup
+      Backend: Spoonacular API integration, user-generated content
+      Alternative: RecipeCreatorPage.tsx (content creation)
+    -->
+  </url>
+
+  <!-- Social & Communication -->
+  
+  <url>
+    <loc>/chat</loc>
+    <priority>0.7</priority>
+    <changefreq>daily</changefreq>
+    <!-- 
+      Component: ChatPage.tsx
+      Purpose: Messaging system with Stream Chat integration
+      Features: Direct messages, group chats, Master Bot interactions
+      Dependencies: StreamChatProvider, ChatList, ChatConversation, MessageItem
+      Sub-components: chat/ChatSearch, chat/NewChatModal, chat/TypingIndicator
+      Backend: Stream Chat API, Master Bot AI integration
+    -->
+  </url>
+
+  <url>
+    <loc>/profile</loc>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+    <!-- 
+      Component: ProfilePage.tsx
+      Purpose: User identity hub with comprehensive profile management
+      Features: Crew (friends), Plate (saved items), Photos, Points, Rewards
+      Navigation: → Friend profiles, ← Feed/other pages
+      Dependencies: CrewTab, PlateTab, PhotosTab, PointsTab, RewardsTab
+      Sub-tabs: profile/CrewTab, profile/PhotosTab, profile/PlateTab, profile/PointsTab, profile/RewardsTab
+    -->
+  </url>
+
+  <url>
+    <loc>/friend/{friendId}</loc>
+    <priority>0.6</priority>
+    <changefreq>weekly</changefreq>
+    <!-- 
+      Component: FriendDetailPage.tsx
+      Purpose: Social profile view with friend's content and achievements
+      Features: Friend's saved items, photos, reviews, rewards
+      Navigation: ← Profile
+      Dependencies: FriendPlateTab, FriendPhotosTab, FriendReviewsTab, FriendRewardsTab
+      Data: friendsData.ts, profileData.ts
+    -->
+  </url>
+
+  <url>
+    <loc>/group-dining</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+    <!-- 
+      Component: GroupDiningPage.tsx
+      Purpose: Event planning and group dining coordination
+      Features: Event creation, group coordination, restaurant booking
+      Navigation: ← Feed
+    -->
+  </url>
+
+  <!-- AI & Bot System -->
+  
+  <url>
+    <loc>/ai-assistant</loc>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+    <!-- 
+      Component: FuzoAIAssistant.tsx (floating) + AIAssistantDemo.tsx (full page)
+      Purpose: Tako AI assistant integration
+      Features: Natural language queries, restaurant recommendations, recipe suggestions
+      Available: Floating on all non-landing pages
+      Dependencies: TakoIntroHint, TakoToast
+      Backend: OpenAI API integration
+    -->
+  </url>
+
+  <url>
+    <loc>/master-bots</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+    <!-- 
+      Component: MasterBotsShowcase.tsx
+      Purpose: League of Master Bots - AI-powered food explorer personas
+      Features: Bot profiles, personality showcase, interaction system
+      Navigation: → Bot Dashboard
+      Dependencies: MasterBotDirectory, MasterBotProfileSystem
+      Data: masterBotsData.ts, masterBotPersonalities.ts
+    -->
+  </url>
+
+  <url>
+    <loc>/bot-dashboard</loc>
+    <priority>0.5</priority>
+    <changefreq>monthly</changefreq>
+    <!-- 
+      Component: MasterBotDashboard.tsx
+      Purpose: Master Bot management and analytics
+      Features: Bot performance, content generation analytics, management tools
+      Navigation: ← Master Bots
+      Dependencies: MasterBotChatSystem, MasterBotFeedCard
+    -->
+  </url>
+
+  <!-- Development & Testing Pages -->
+  
+  <url>
+    <loc>/spoonacular-test</loc>
+    <priority>0.3</priority>
+    <changefreq>never</changefreq>
+    <!-- 
+      Component: SpoonacularTester.tsx
+      Purpose: Test Spoonacular API integration and verify recipe data
+      Features: API endpoint testing, data validation, error handling
+      Dependencies: RecipeEndpointTester
+      Backend: Supabase Edge Functions → Spoonacular API
+    -->
+  </url>
+
+  <url>
+    <loc>/geolocation-test</loc>
+    <priority>0.3</priority>
+    <changefreq>never</changefreq>
+    <!-- 
+      Component: GeolocationTester.tsx
+      Purpose: Test location services and nearby restaurant search
+      Features: Location permission, GPS accuracy, Places API testing
+      Dependencies: geolocationService.ts, locationService.ts
+      Backend: Google Places API, geolocation services
+    -->
+  </url>
+
+  <url>
+    <loc>/backend-diagnostics</loc>
+    <priority>0.3</priority>
+    <changefreq>never</changefreq>
+    <!-- 
+      Component: SupabaseEdgeFunctionDiagnostics.tsx
+      Purpose: Comprehensive backend health monitoring
+      Features: API endpoint testing, authentication verification, database connectivity
+      Dependencies: BackendHealthChecker, BackendStatusChecker, DiagnosticsReport
+    -->
+  </url>
+
+  <url>
+    <loc>/google-oauth-setup</loc>
+    <priority>0.3</priority>
+    <changefreq>never</changefreq>
+    <!-- 
+      Component: SupabaseGoogleOAuthSetup.tsx
+      Purpose: Complete guide for Google OAuth configuration
+      Features: Step-by-step setup, troubleshooting, verification
+      Dependencies: GoogleOAuthSetupGuide, OAuth403Troubleshooter
+    -->
+  </url>
+
+  <url>
+    <loc>/oauth-verification</loc>
+    <priority>0.3</priority>
+    <changefreq>never</changefreq>
+    <!-- 
+      Component: PersonalizedOAuthVerification.tsx
+      Purpose: Verify specific Google OAuth configuration and test sign-in
+      Features: Domain verification, callback URL testing, popup blocking detection
+      Dependencies: ComprehensiveGoogleTest, CallbackURLFixer, PopupBlockedMessage
+    -->
+  </url>
+
+  <url>
+    <loc>/figma-mcp</loc>
+    <priority>0.3</priority>
+    <changefreq>never</changefreq>
+    <!-- 
+      Component: FigmaMCPDemo.tsx
+      Purpose: Figma Model Context Protocol integration
+      Features: Component search, image export, comment management
+      Dependencies: useFigmaMCP.tsx hook
+      Backend: /supabase/functions/server/figma-mcp.tsx
+    -->
+  </url>
+
+  <!-- BACKEND ENDPOINTS -->
+  
+  <url>
+    <loc>/functions/v1/make-server-5976446e/</loc>
+    <priority>0.4</priority>
+    <!-- 
+      File: /supabase/functions/server/index.tsx
+      Purpose: Main Hono web server for backend operations
+      Architecture: Frontend → Server → Database (KV Store)
+      CORS: Open headers for cross-origin requests
+      Auth: Bearer token authentication using publicAnonKey
+    -->
+  </url>
+
+  <url>
+    <loc>/functions/v1/make-server-5976446e/figma-mcp</loc>
+    <priority>0.3</priority>
+    <!-- 
+      File: /supabase/functions/server/figma-mcp.tsx
+      Purpose: Figma Model Context Protocol operations
+      Features: File access, component search, image export, comment management
+      Security: Handles Figma access tokens securely
+    -->
+  </url>
+
+  <!-- KEY CONTEXTS & SERVICES -->
+  
+  <url>
+    <loc>/contexts/auth</loc>
+    <priority>0.8</priority>
+    <!-- 
+      File: /contexts/AuthContext.tsx
+      Purpose: Authentication state management
+      Features: Google OAuth, email auth, session management, profile handling
+      Methods: signInWithGoogle, signUpWithEmail, signInWithEmail, signOut, updateProfile
+      Integration: Supabase Auth, graceful fallbacks, popup blocking detection
+    -->
+  </url>
+
+  <!-- COMPONENT LIBRARIES & UTILITIES -->
+  
+  <url>
+    <loc>/components/ui/</loc>
+    <priority>0.5</priority>
+    <!-- 
+      Purpose: ShadCN UI component library
+      Components: 40+ components including buttons, forms, navigation, data display
+      Styling: Tailwind CSS with FUZO brand system integration
+      Theme: Supports light/dark modes with custom FUZO color palette
+    -->
+  </url>
+
+  <url>
+    <loc>/utils/supabase/</loc>
+    <priority>0.6</priority>
+    <!-- 
+      Files: client.ts, info.tsx
+      Purpose: Supabase client configuration and project information
+      Features: Database connection, authentication, storage, edge functions
+      Security: Environment variable management, secure API key handling
+    -->
+  </url>
+
+  <!-- DATA MODELS & CONSTANTS -->
+  
+  <url>
+    <loc>/components/constants/</loc>
+    <priority>0.4</priority>
+    <!-- 
+      Files: friendsData.ts, masterBotsData.ts, masterBotPersonalities.ts, 
+             profileData.ts, recipesData.ts
+      Purpose: Static data models and mock data for development
+      Content: User profiles, bot personalities, recipe collections, social connections
+    -->
+  </url>
+
+  <!-- SPECIALIZED SERVICES -->
+  
+  <url>
+    <loc>/components/services/</loc>
+    <priority>0.5</priority>
+    <!-- 
+      Files: backendService.ts, geolocationService.ts, locationService.ts,
+             locationServiceBackend.ts, mapLibreLocationService.ts, savedItemsService.ts
+      Purpose: Business logic and external API integrations
+      Features: Location services, restaurant data, user preferences, saved items
+    -->
+  </url>
+
+  <!-- NAVIGATION FLOW SUMMARY -->
+  <!-- 
+    Primary User Journey:
+    1. Landing Page → Onboarding Flow → Feed (main app)
+    2. Feed ↔ Scout ↔ Snap ↔ Bites (bottom navigation)
+    3. Any page → Chat/Profile (universal header)
+    4. Profile → Friend profiles (social flow)
+    5. Tako AI Assistant (floating, available everywhere except landing)
+    
+    Developer/Admin Journey:
+    1. Hamburger Menu → Development pages (diagnostics, testing, setup)
+    2. Backend diagnostics → API testing → OAuth setup → Configuration
+    3. Figma integration → Component management → Design system sync
+    
+    Authentication Flow:
+    1. Google OAuth → Supabase Auth → Profile Creation/Retrieval
+    2. Fallback profiles for offline/demo mode
+    3. Session management with automatic refresh
+    4. Popup blocking detection and user guidance
+    
+    Backend Architecture:
+    - Three-tier: Frontend → Supabase Edge Functions → Database
+    - KV Store for flexible data management
+    - External API proxy for security
+    - File storage in private Supabase buckets
+    - Real-time subscriptions for chat and social features
+  -->
+
+</urlset>

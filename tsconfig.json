@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Path mapping */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@components/*": ["./components/*"],
+      "@utils/*": ["./utils/*"],
+      "@contexts/*": ["./contexts/*"],
+      "@styles/*": ["./styles/*"]
+    }
+  },
+  "include": [
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "server/**/*.ts",
+    "server/**/*.tsx",
+    "utils/**/*.ts",
+    "utils/**/*.tsx",
+    "hooks/**/*.ts",
+    "hooks/**/*.tsx",
+    "contexts/**/*.ts",
+    "contexts/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

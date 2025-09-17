@@ -1,0 +1,11 @@
+{
+  "name": "FUZO - Food Discovery App",
+  "short_name": "FUZO",
+  "description": "Discover amazing food with Tako the octopus",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F14C35",
+  "theme_color": "#F14C35",
+  "orientation": "portrait-primary",
+  "icons": []
+}
