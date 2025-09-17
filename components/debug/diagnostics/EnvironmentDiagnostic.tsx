@@ -194,7 +194,7 @@ export const EnvironmentDiagnostic: React.FC = () => {
               <div className="mt-4 p-3 bg-red-100 rounded-lg">
                 <p className="font-medium mb-2">Example .env format:</p>
                 <pre className="text-xs overflow-x-auto">
-VITE_GOOGLE_MAPS_API_KEY=AIzaSyDKT9fftvHwreKtLZDb7KsTOE-d_kwuRrM
+VITE_GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY_HERE
 VITE_STREAM_CHAT_API_KEY=your_stream_chat_key_here
 VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
                 </pre>

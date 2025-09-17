@@ -213,7 +213,7 @@ export const EnvironmentFixer: React.FC = () => {
         <div className="space-y-3">
           <Input
             type="password"
-            placeholder="AIzaSyDKT9fftvHwreKtLZDb7KsTOE-d_kwuRrM"
+            placeholder="YOUR_GOOGLE_MAPS_API_KEY_HERE"
             value={currentKey}
             onChange={(e) => setCurrentKey(e.target.value)}
             className="font-mono"
@@ -305,7 +305,7 @@ export const EnvironmentFixer: React.FC = () => {
                 <li>
                   <strong>Add the API key:</strong> Add this line (replace with your actual key):
                   <div className="mt-1 p-2 bg-gray-100 rounded font-mono text-xs">
-                    VITE_GOOGLE_MAPS_API_KEY=AIzaSyDKT9fftvHwreKtLZDb7KsTOE-d_kwuRrM
+                    VITE_GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY_HERE
                   </div>
                 </li>
                 <li>
@@ -321,7 +321,7 @@ export const EnvironmentFixer: React.FC = () => {
                 <Textarea
                   readOnly
                   value={`# FUZO Environment Variables
-VITE_GOOGLE_MAPS_API_KEY=${currentKey || 'AIzaSyDKT9fftvHwreKtLZDb7KsTOE-d_kwuRrM'}
+VITE_GOOGLE_MAPS_API_KEY=${currentKey || 'YOUR_GOOGLE_MAPS_API_KEY_HERE'}
 # Add other environment variables here`}
                   className="mt-2 font-mono text-xs"
                   rows={3}

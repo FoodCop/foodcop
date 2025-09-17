@@ -62,7 +62,7 @@ console.log('4. Make sure there are no spaces around the = in your .env file');
 console.log('5. Check that your .env file doesn\'t have any special characters');
 
 console.log('\n📝 Example .env file format:');
-console.log('VITE_GOOGLE_MAPS_API_KEY=AIzaSyDKT9fftvHwreKtLZDb7KsTOE-d_kwuRrM');
+console.log('VITE_GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY_HERE');
 console.log('# No spaces around = sign');
 console.log('# No quotes needed');
 console.log('# Must start with VITE_ for Vite to expose it to the browser');

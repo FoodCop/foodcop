@@ -21,7 +21,7 @@ export const EnvDebugComponent: React.FC = () => {
     
     // Additional debug info
     const allViteVars = Object.entries(import.meta?.env || {}).filter(([key]) => key.startsWith('VITE_'));
-    const expectedKey = 'AIzaSyDKT9fftvHwreKtLZDb7KsTOE-d_kwuRrM';
+    const expectedKey = 'YOUR_GOOGLE_MAPS_API_KEY_HERE';
     
     const info = {
       timestamp: new Date().toISOString(),

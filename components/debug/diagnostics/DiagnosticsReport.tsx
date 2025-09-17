@@ -222,7 +222,7 @@ export const DiagnosticsReport: React.FC = () => {
         <h3 className="font-semibold text-blue-800 mb-2">💡 Quick Fix Guide</h3>
         <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
           <li>Ensure your <code>.env.local</code> file exists in the project root</li>
-          <li>Add: <code>VITE_GOOGLE_MAPS_API_KEY=AIzaSyDKT9fftvHwreKtLZDb7KsTOE-d_kwuRrM</code></li>
+          <li>Add: <code>VITE_GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY_HERE</code></li>
           <li>Restart your development server completely</li>
           <li>Clear browser cache and refresh</li>
           <li>Check that the API key starts with "AIza"</li>
