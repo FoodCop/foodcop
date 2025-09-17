@@ -6,7 +6,7 @@ import { NewRecipe, RecipeCreatorPage } from "./features/RecipeCreatorPage";
 import { GamificationPopup } from "./recipes/GamificationPopup";
 import { RecipeCard } from "./recipes/RecipeCard";
 import { RecipeDetail } from "./recipes/RecipeDetail";
-import { backendService } from "./services/backendService";
+import { spoonacularService, convertSpoonacularRecipe } from "../src/lib/spoonacular";
 
 type RecipeView = "feed" | "detail" | "community" | "create";
 
@@ -70,93 +70,23 @@ export function RecipesPage({
       setLoading(true);
       setError(null);
 
-      const response = await backendService.searchRecipes("", "", "", "", 12);
+      console.log("🍽️ Loading recipes from Spoonacular API...");
+      const response = await spoonacularService.searchRecipes({
+        query: "",
+        number: 12,
+      });
 
-      if (response.success && response.data) {
-        const recipes = response.data.results || [];
-
-        // Convert backend recipe format to our Recipe interface
-        const convertedRecipes: Recipe[] = recipes.map((recipe: any) => ({
-          id: recipe.id?.toString() || Math.random().toString(36),
-          title: recipe.title || "Untitled Recipe",
-          description:
-            recipe.summary?.replace(/<[^>]*>/g, "") ||
-            "No description available",
-          image:
-            recipe.image ||
-            "https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400",
-          cookingTime: recipe.readyInMinutes || 30,
-          difficulty: "Medium" as const,
-          servings: recipe.servings || 4,
-          cuisine: recipe.cuisines?.[0] || "International",
-          rating: recipe.spoonacularScore
-            ? Math.round(recipe.spoonacularScore / 20)
-            : 4.0,
-          reviews: recipe.aggregateLikes || 0,
-          author: {
-            name: "Spoonacular",
-            avatar:
-              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-            verified: true,
-          },
-          ingredients:
-            recipe.extendedIngredients?.map((ing: any) => ing.original) || [],
-          instructions:
-            recipe.analyzedInstructions?.[0]?.steps?.map(
-              (step: any) => step.step
-            ) || [],
-          tags: recipe.dishTypes || [],
-          nutrition: {
-            calories:
-              recipe.nutrition?.nutrients?.find(
-                (n: any) => n.name === "Calories"
-              )?.amount || 0,
-            protein:
-              recipe.nutrition?.nutrients?.find(
-                (n: any) => n.name === "Protein"
-              )?.amount || 0,
-            carbs:
-              recipe.nutrition?.nutrients?.find(
-                (n: any) => n.name === "Carbohydrates"
-              )?.amount || 0,
-            fat:
-              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Fat")
-                ?.amount || 0,
-            fiber:
-              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Fiber")
-                ?.amount || 0,
-            sugar:
-              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Sugar")
-                ?.amount || 0,
-            sodium:
-              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Sodium")
-                ?.amount || 0,
-          },
-          calories:
-            recipe.nutrition?.nutrients?.find((n: any) => n.name === "Calories")
-              ?.amount || 300,
-          preparationTime: recipe.preparationMinutes || 15,
-          totalTime:
-            (recipe.readyInMinutes || 30) + (recipe.preparationMinutes || 15),
-          nutritionInfo: recipe.nutrition || {},
-          isSaved: false,
-          isBackendRecipe: true,
-        }));
-
+      if (response.results && response.results.length > 0) {
+        const convertedRecipes: Recipe[] = response.results.map(convertSpoonacularRecipe);
         setBackendRecipes(convertedRecipes);
-        console.log(
-          `✅ Loaded ${convertedRecipes.length} recipes from backend`
-        );
+        console.log(`✅ Loaded ${convertedRecipes.length} recipes from Spoonacular API`);
       } else {
-        console.warn(
-          "⚠️ Backend recipe search failed, using local recipes only:",
-          response.error
-        );
-        // Fallback: don't set error, just continue with local mockRecipes
+        console.warn("⚠️ No recipes returned from Spoonacular API");
+        setError("No recipes available at the moment");
       }
-    } catch (err) {
-      console.error("Failed to load backend recipes:", err);
-      // Don't show error to user, just continue with local recipes
+    } catch (err: any) {
+      console.error("❌ Failed to load recipes from Spoonacular API:", err);
+      setError(`Failed to load recipes: ${err.message}`);
       console.log("📚 Falling back to local recipe data only");
     } finally {
       setLoading(false);
@@ -176,88 +106,25 @@ export function RecipesPage({
   const searchBackendRecipes = async (query: string) => {
     try {
       setLoading(true);
-      const response = await backendService.searchRecipes(
-        query,
-        "",
-        "",
-        "",
-        12
-      );
+      setError(null);
 
-      if (response.success && response.data) {
-        const recipes = response.data.results || [];
-        const convertedRecipes: Recipe[] = recipes.map((recipe: any) => ({
-          id: recipe.id?.toString() || Math.random().toString(36),
-          title: recipe.title || "Untitled Recipe",
-          description:
-            recipe.summary?.replace(/<[^>]*>/g, "") ||
-            "No description available",
-          image:
-            recipe.image ||
-            "https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400",
-          cookingTime: recipe.readyInMinutes || 30,
-          difficulty: "Medium" as const,
-          servings: recipe.servings || 4,
-          cuisine: recipe.cuisines?.[0] || "International",
-          rating: recipe.spoonacularScore
-            ? Math.round(recipe.spoonacularScore / 20)
-            : 4.0,
-          reviews: recipe.aggregateLikes || 0,
-          author: {
-            name: "Spoonacular",
-            avatar:
-              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-            verified: true,
-          },
-          ingredients:
-            recipe.extendedIngredients?.map((ing: any) => ing.original) || [],
-          instructions:
-            recipe.analyzedInstructions?.[0]?.steps?.map(
-              (step: any) => step.step
-            ) || [],
-          tags: recipe.dishTypes || [],
-          nutrition: {
-            calories:
-              recipe.nutrition?.nutrients?.find(
-                (n: any) => n.name === "Calories"
-              )?.amount || 0,
-            protein:
-              recipe.nutrition?.nutrients?.find(
-                (n: any) => n.name === "Protein"
-              )?.amount || 0,
-            carbs:
-              recipe.nutrition?.nutrients?.find(
-                (n: any) => n.name === "Carbohydrates"
-              )?.amount || 0,
-            fat:
-              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Fat")
-                ?.amount || 0,
-            fiber:
-              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Fiber")
-                ?.amount || 0,
-            sugar:
-              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Sugar")
-                ?.amount || 0,
-            sodium:
-              recipe.nutrition?.nutrients?.find((n: any) => n.name === "Sodium")
-                ?.amount || 0,
-          },
-          calories:
-            recipe.nutrition?.nutrients?.find((n: any) => n.name === "Calories")
-              ?.amount || 300,
-          preparationTime: recipe.preparationMinutes || 15,
-          totalTime:
-            (recipe.readyInMinutes || 30) + (recipe.preparationMinutes || 15),
-          nutritionInfo: recipe.nutrition || {},
-          isSaved: false,
-          isBackendRecipe: true,
-        }));
+      console.log(`🔍 Searching Spoonacular API for: "${query}"`);
+      const response = await spoonacularService.searchRecipes({
+        query: query,
+        number: 12,
+      });
 
+      if (response.results && response.results.length > 0) {
+        const convertedRecipes: Recipe[] = response.results.map(convertSpoonacularRecipe);
         setBackendRecipes(convertedRecipes);
+        console.log(`✅ Found ${convertedRecipes.length} recipes for "${query}"`);
+      } else {
+        console.warn(`⚠️ No recipes found for "${query}"`);
+        setError(`No recipes found for "${query}"`);
       }
-    } catch (err) {
-      console.error("Backend recipe search failed:", err);
-      // Don't set error state for search failures, just use local filtering
+    } catch (err: any) {
+      console.error("❌ Spoonacular recipe search failed:", err);
+      setError(`Search failed: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -455,7 +322,34 @@ export function RecipesPage({
 
       {/* Recipe Feed */}
       <div className="p-4">
-        {searchQuery && (
+        {/* Error Display */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div className="flex items-center">
+              <div className="w-5 h-5 text-red-500 mr-3">⚠️</div>
+              <div>
+                <p className="text-sm font-medium text-red-800">{error}</p>
+                <p className="text-xs text-red-600 mt-1">
+                  Showing local recipes as fallback
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading && (
+          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+            <div className="flex items-center">
+              <div className="w-5 h-5 text-blue-500 mr-3 animate-spin">⏳</div>
+              <p className="text-sm text-blue-800">
+                {searchQuery ? `Searching for "${searchQuery}"...` : "Loading recipes..."}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {searchQuery && !loading && (
           <div className="mb-4">
             <p className="text-sm text-gray-600">
               {filteredRecipes.length} recipe

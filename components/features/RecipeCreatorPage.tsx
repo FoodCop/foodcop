@@ -43,6 +43,9 @@ export interface NewRecipe {
     protein: number;
     carbs: number;
     fat: number;
+    fiber: number;
+    sugar: number;
+    sodium: number;
   };
 }
 
@@ -793,6 +796,9 @@ function NutritionStep({
                   protein: prev.nutritionInfo?.protein || 0,
                   carbs: prev.nutritionInfo?.carbs || 0,
                   fat: prev.nutritionInfo?.fat || 0,
+                  fiber: prev.nutritionInfo?.fiber || 0,
+                  sugar: prev.nutritionInfo?.sugar || 0,
+                  sodium: prev.nutritionInfo?.sodium || 0,
                 },
               }))
             }
@@ -817,6 +823,9 @@ function NutritionStep({
                   protein: parseInt(e.target.value) || 0,
                   carbs: prev.nutritionInfo?.carbs || 0,
                   fat: prev.nutritionInfo?.fat || 0,
+                  fiber: prev.nutritionInfo?.fiber || 0,
+                  sugar: prev.nutritionInfo?.sugar || 0,
+                  sodium: prev.nutritionInfo?.sodium || 0,
                 },
               }))
             }
@@ -841,6 +850,9 @@ function NutritionStep({
                   protein: prev.nutritionInfo?.protein || 0,
                   carbs: parseInt(e.target.value) || 0,
                   fat: prev.nutritionInfo?.fat || 0,
+                  fiber: prev.nutritionInfo?.fiber || 0,
+                  sugar: prev.nutritionInfo?.sugar || 0,
+                  sodium: prev.nutritionInfo?.sodium || 0,
                 },
               }))
             }
@@ -865,6 +877,9 @@ function NutritionStep({
                   protein: prev.nutritionInfo?.protein || 0,
                   carbs: prev.nutritionInfo?.carbs || 0,
                   fat: parseInt(e.target.value) || 0,
+                  fiber: prev.nutritionInfo?.fiber || 0,
+                  sugar: prev.nutritionInfo?.sugar || 0,
+                  sodium: prev.nutritionInfo?.sodium || 0,
                 },
               }))
             }
