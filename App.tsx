@@ -1,7 +1,7 @@
 // React import removed (not needed with JSX transform)
-import { PageRouter } from './components/PageRouter'
-import { Toaster } from './components/ui/sonner'
-import { ErrorBoundary } from './components/ErrorBoundary'
+import { PageRouter } from "./components/PageRouter";
+import { ErrorBoundary } from "./components/ui/ErrorBoundary";
+import { Toaster } from "./components/ui/sonner";
 
 export default function App() {
   // AuthProvider removed during auth reset. Components now rely on stub context returning null user.
@@ -12,5 +12,5 @@ export default function App() {
         <Toaster />
       </div>
     </ErrorBoundary>
-  )
+  );
 }

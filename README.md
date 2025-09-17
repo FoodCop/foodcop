@@ -435,5 +435,6 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 **Made with 🐙 and ❤️ by the FUZO team**
 
 For questions or support, please open an issue or contact the development team.
-#   f o o d c o p  
+#   f o o d c o p 
+ 
  

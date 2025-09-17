@@ -65,16 +65,16 @@ CREATE TABLE IF NOT EXISTS recipes (
   dish_types TEXT[],
   occasions TEXT[],
   tags TEXT[],
-  
+
   -- Spoonacular metadata
   very_healthy BOOLEAN DEFAULT FALSE,
   very_popular BOOLEAN DEFAULT FALSE,
   whole30 BOOLEAN DEFAULT FALSE,
-  
+
   -- Our metadata
   is_featured BOOLEAN DEFAULT FALSE,
   quality_score INTEGER DEFAULT 0,
-  
+
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS bot_history (
   entity_ref TEXT NOT NULL, -- restaurant place_id or recipe spoon_id
   entity_kind TEXT NOT NULL CHECK (entity_kind IN ('restaurant', 'recipe')),
   posted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  
+
   -- Ensure no duplicates within rotation period
   UNIQUE(bot_id, entity_ref, entity_kind)
 );
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS daily_generation_log (
   execution_time_ms INTEGER,
   ai_tokens_used INTEGER DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  
+
   -- One entry per bot per day
   UNIQUE(generation_date, bot_id)
 );
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS openai_prompts (
   is_active BOOLEAN DEFAULT TRUE,
   version INTEGER DEFAULT 1,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  
+
   -- One active prompt per bot per content type
   UNIQUE(bot_id, content_type, is_active) DEFERRABLE INITIALLY DEFERRED
 );
@@ -191,58 +191,58 @@ CREATE INDEX IF NOT EXISTS idx_openai_prompts_active ON openai_prompts(is_active
 -- =====================================================
 
 INSERT INTO tags_map (tag, restaurant_keywords, recipe_filters, bot_specialties, priority_score) VALUES
-('street_food', 
- ARRAY['hawker', 'street food', 'food court', 'cart', 'stall', 'market', 'food truck'], 
+('street_food',
+ ARRAY['hawker', 'street food', 'food court', 'cart', 'stall', 'market', 'food truck'],
  '{"cuisines": ["asian", "indian", "mexican", "thai"], "diets": [], "maxReadyTime": 30, "minHealthScore": 50}',
- ARRAY['Street Food Explorer'], 
+ ARRAY['Street Food Explorer'],
  5),
 
-('fine_dining', 
- ARRAY['fine dining', 'michelin', 'tasting menu', 'prix fixe', 'upscale', 'gourmet'], 
+('fine_dining',
+ ARRAY['fine dining', 'michelin', 'tasting menu', 'prix fixe', 'upscale', 'gourmet'],
  '{"cuisines": ["french", "european", "contemporary"], "diets": [], "minHealthScore": 70}',
- ARRAY['Fine Dining Expert'], 
+ ARRAY['Fine Dining Expert'],
  5),
 
-('vegan', 
- ARRAY['vegan', 'plant-based', 'vegetarian', 'plant based', 'veggie'], 
+('vegan',
+ ARRAY['vegan', 'plant-based', 'vegetarian', 'plant based', 'veggie'],
  '{"diets": ["vegan", "vegetarian"], "cuisines": [], "minHealthScore": 80}',
- ARRAY['Vegan Specialist'], 
+ ARRAY['Vegan Specialist'],
  5),
 
-('coffee', 
- ARRAY['coffee', 'cafe', 'espresso', 'latte', 'cappuccino', 'roastery', 'coffee shop'], 
+('coffee',
+ ARRAY['coffee', 'cafe', 'espresso', 'latte', 'cappuccino', 'roastery', 'coffee shop'],
  '{"cuisines": [], "diets": [], "includeIngredients": ["coffee", "espresso"]}',
- ARRAY['Coffee Culture Expert'], 
+ ARRAY['Coffee Culture Expert'],
  4),
 
-('japanese', 
- ARRAY['sushi', 'ramen', 'japanese', 'izakaya', 'tempura', 'yakitori', 'udon', 'soba'], 
+('japanese',
+ ARRAY['sushi', 'ramen', 'japanese', 'izakaya', 'tempura', 'yakitori', 'udon', 'soba'],
  '{"cuisines": ["japanese"], "diets": [], "minHealthScore": 65}',
- ARRAY['Japanese Master'], 
+ ARRAY['Japanese Master'],
  5),
 
-('spicy', 
- ARRAY['spicy', 'hot', 'chili', 'pepper', 'fire', 'heat', 'curry'], 
+('spicy',
+ ARRAY['spicy', 'hot', 'chili', 'pepper', 'fire', 'heat', 'curry'],
  '{"cuisines": ["indian", "thai", "mexican", "korean"], "diets": [], "includeIngredients": ["chili", "pepper", "spicy"]}',
- ARRAY['Indian/Asian Expert'], 
+ ARRAY['Indian/Asian Expert'],
  4),
 
-('bbq', 
- ARRAY['bbq', 'barbecue', 'grill', 'smoked', 'brisket', 'ribs'], 
+('bbq',
+ ARRAY['bbq', 'barbecue', 'grill', 'smoked', 'brisket', 'ribs'],
  '{"cuisines": ["american", "southern"], "diets": [], "includeIngredients": ["meat", "beef", "pork"]}',
- ARRAY['Adventure Foodie'], 
+ ARRAY['Adventure Foodie'],
  4),
 
-('healthy', 
- ARRAY['healthy', 'organic', 'fresh', 'salad', 'juice', 'smoothie'], 
+('healthy',
+ ARRAY['healthy', 'organic', 'fresh', 'salad', 'juice', 'smoothie'],
  '{"diets": ["healthy"], "minHealthScore": 85, "cuisines": []}',
- ARRAY['Vegan Specialist'], 
+ ARRAY['Vegan Specialist'],
  3),
 
-('asian', 
- ARRAY['asian', 'chinese', 'thai', 'vietnamese', 'korean', 'dim sum'], 
+('asian',
+ ARRAY['asian', 'chinese', 'thai', 'vietnamese', 'korean', 'dim sum'],
  '{"cuisines": ["asian", "chinese", "thai", "vietnamese", "korean"], "diets": []}',
- ARRAY['Indian/Asian Expert'], 
+ ARRAY['Indian/Asian Expert'],
  4)
 
 ON CONFLICT (tag) DO UPDATE SET
@@ -281,8 +281,8 @@ CREATE POLICY IF NOT EXISTS "Service role openai_prompts" ON openai_prompts FOR 
 DROP POLICY IF EXISTS "Users can view bot posts" ON bot_posts;
 CREATE POLICY "Public read bot posts and recipes" ON bot_posts FOR SELECT USING (
     is_published = true AND (
-        kind = 'restaurant' OR 
-        kind = 'recipe' OR 
+        kind = 'restaurant' OR
+        kind = 'recipe' OR
         kind IS NULL  -- Support existing posts
     )
 );
@@ -324,7 +324,7 @@ BEGIN
         AND (p_tags IS NULL OR bp.tags && p_tags)
         AND bp.restaurant_data->>'rating' IS NOT NULL
     )
-    SELECT 
+    SELECT
         fr.restaurant_place_id,
         fr.restaurant_data->>'name' as name,
         (fr.restaurant_data->>'rating')::DECIMAL as rating,
@@ -367,7 +367,7 @@ BEGIN
         AND r.health_score IS NOT NULL
         AND r.health_score >= 50
     )
-    SELECT 
+    SELECT
         fr.spoon_id,
         fr.title,
         fr.health_score,
@@ -429,7 +429,7 @@ COMMENT ON FUNCTION record_bot_history IS 'Record entity usage in bot history fo
 
 -- This migration transforms the Master Bot system from static to dynamic:
 -- ✅ Enhanced bot_posts table with recipe support
--- ✅ New recipes table for Spoonacular integration  
+-- ✅ New recipes table for Spoonacular integration
 -- ✅ Tags mapping system for bot specialties
 -- ✅ 90-day rotation tracking with bot_history
 -- ✅ Daily automation logging and monitoring
@@ -437,6 +437,7 @@ COMMENT ON FUNCTION record_bot_history IS 'Record entity usage in bot history fo
 -- ✅ Robust RLS policies for security
 -- ✅ Performance indexes for scale
 -- ✅ Helper functions for content selection
--- 
+--
 -- Ready for Phase 2B: API Integration and Phase 2C: Automation Engine
+
 

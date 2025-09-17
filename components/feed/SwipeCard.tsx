@@ -1,6 +1,6 @@
 import { Bookmark, Bot, Heart, MapPin, Share2, Verified } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { SafeRestaurantImage } from "../SafeRestaurantImage";
+import { SafeRestaurantImage } from "../ui/SafeRestaurantImage";
 
 interface SwipeCardProps {
   image: string;

@@ -16,17 +16,19 @@ interface MapViewProps {
   restaurants: Restaurant[];
   selectedRestaurant: Restaurant | null;
   onRestaurantSelect: (restaurant: Restaurant) => void;
+  currentLocation?: { lat: number; lng: number }; // Add current location prop
 }
 
 export function MapView({
   restaurants,
   selectedRestaurant,
   onRestaurantSelect,
+  currentLocation,
 }: MapViewProps) {
   const [zoomLevel, setZoomLevel] = useState(14);
   const [centerCoords, setCenterCoords] = useState({
-    lat: 37.7749,
-    lng: -122.4194,
+    lat: currentLocation?.lat || 37.7749,
+    lng: currentLocation?.lng || -122.4194,
   });
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapStyle, setMapStyle] = useState("Streets");
@@ -378,6 +380,20 @@ export function MapView({
       // The useEffect will trigger re-initialization
     }
   };
+
+  // Update map center when currentLocation changes
+  useEffect(() => {
+    if (currentLocation) {
+      setCenterCoords(currentLocation);
+      if (mapLibreRef.current) {
+        mapLibreRef.current.flyTo({
+          center: [currentLocation.lng, currentLocation.lat],
+          zoom: 15,
+          duration: 1000,
+        });
+      }
+    }
+  }, [currentLocation]);
 
   // Update markers when restaurants change
   useEffect(() => {

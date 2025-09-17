@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Clock, Heart, MapPin, Star } from "lucide-react";
-import { SafeRestaurantImage } from "../SafeRestaurantImage";
+import { SafeRestaurantImage } from "../ui/SafeRestaurantImage";
 import type { Restaurant } from "./ScoutPage";
 
 interface RestaurantCardProps {
@@ -34,6 +34,8 @@ export function RestaurantCard({
             restaurantName={restaurant.name}
             alt={restaurant.name}
             className="w-full h-40 object-cover"
+            placeId={restaurant.placeId}
+            coordinates={restaurant.coordinates}
           />
           <button
             onClick={(e) => {
@@ -107,6 +109,8 @@ export function RestaurantCard({
           restaurantName={restaurant.name}
           alt={restaurant.name}
           className="w-full h-36 object-cover"
+          placeId={restaurant.placeId}
+          coordinates={restaurant.coordinates}
         />
 
         {/* Status Badge */}

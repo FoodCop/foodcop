@@ -1,5 +1,5 @@
-import { FuzoCard } from "../global/FuzoCard";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { FuzoCard } from "../global/FuzoCard";
 
 export function ExploreFoodSection() {
   return (
@@ -21,7 +21,7 @@ export function ExploreFoodSection() {
               <div className="relative">
                 <div className="relative z-10">
                   <ImageWithFallback
-                    src="https://images.unsplash.com/photo-1724227656355-6acf2d4798f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXRlJTIwb2N0b3B1cyUyMG1hc2NvdCUyMGNoYXJhY3RlciUyMGlsbHVzdHJhdGlvbnxlbnwxfHx8fDE3NTY4MzI5NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                    src="/images/landing/Images/tako_pic.png"
                     alt="Tako pointing"
                     className="w-full h-auto max-w-sm mx-auto rounded-2xl"
                   />

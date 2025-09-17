@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 5173 --open",
+    "dev": "vite --port 5173 --open --force",
     "build": "vite build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
@@ -23,6 +23,9 @@
     "test:restaurants": "node ./scripts/test-restaurant-matching.js",
     "seed:bot-posts": "node ./scripts/seedBotPosts.js",
     "test:bot-posts": "node ./scripts/test-bot-posts.js",
+    "seed:masterbot-posts": "node ./scripts/seedMasterBotPosts.js",
+    "seed:real-restaurant-posts": "npx tsx ./scripts/seedRealRestaurantPosts.js",
+    "test:feed-posts": "node ./scripts/testFeedPosts.js",
     "seed:recipes": "node --loader ts-node/esm ./scripts/populate-recipes.ts",
     "seed:openai-prompts": "node --loader ts-node/esm ./scripts/seed-openai-prompts.ts",
     "test:daily-plan": "npx tsx scripts/test-daily-plan.ts",

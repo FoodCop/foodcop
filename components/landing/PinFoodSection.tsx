@@ -40,10 +40,18 @@ export function PinFoodSection() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "64px",
+                  overflow: "hidden",
                 }}
               >
-                🗺️
+                <img
+                  src="/images/landing/Images/radar.png"
+                  alt="Map and radar view"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
               </div>
               <div
                 style={{

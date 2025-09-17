@@ -4,26 +4,42 @@ import { sbAnon } from "../../src/lib/supabase";
 export interface BotPost {
   id: string;
   bot_id: string;
-  title: string;
-  subtitle: string;
-  content: string;
-  restaurant_data: any;
-  restaurant_place_id: string;
-  image_url: string;
-  tags: string[];
-  post_type: string;
+  user_id: string;
+  restaurant_id?: string;
+  title?: string;
+  subtitle?: string;
+  content?: string;
+  hero_url?: string;
+  images?: string[];
+  videos?: string[];
+  rating?: number;
+  visit_date?: string;
+  dish_names?: string[];
+  spent_amount?: number;
   likes_count: number;
   comments_count: number;
+  shares_count: number;
   saves_count: number;
-  is_published: boolean;
+  visibility: string;
   is_featured: boolean;
+  is_verified: boolean;
+  kind?: string;
+  payload?: any;
+  cta_label?: string;
+  cta_url?: string;
+  tags?: string[];
+  posted_at: string;
   created_at: string;
-  published_at: string;
+  updated_at: string;
+
+  // Restaurant data (if restaurant_id is present)
+  restaurant_data?: any;
 
   // Joined bot data
   bot?: {
     username: string;
     display_name: string;
+    avatar_url?: string;
     personality_type: string;
     specialties: string[];
   };
@@ -61,15 +77,16 @@ export function useBotPosts() {
     try {
       setLoading(true);
 
-      // Fetch bot posts with bot information
+      // Fetch bot posts from bot_posts table
       const { data: posts, error: postsError } = await sbAnon()
         .from("bot_posts")
         .select(
           `
           *,
-          bot:users (
+          bot:users!bot_id (
             username,
             display_name,
+            avatar_url,
             master_bots (
               personality_type,
               specialties
@@ -77,7 +94,7 @@ export function useBotPosts() {
           )
         `
         )
-        .eq("is_published", true)
+        .eq("is_published", true) // Only published posts
         .order("published_at", { ascending: false })
         .limit(20); // Get latest 20 posts
 
@@ -127,17 +144,19 @@ function convertPostToFeedCard(post: BotPost): FeedCard {
 
   return {
     id: post.id,
-    image: post.image_url,
-    title: post.title,
-    subtitle: post.subtitle,
+    image: post.image_url || post.hero_url || "", // Use image_url from bot_posts table
+    title: post.title || "Food Discovery",
+    subtitle: post.subtitle || "",
     profileName: post.bot?.display_name || "Master Bot",
     profileDesignation: post.bot?.personality_type || "Food Explorer",
-    tags: post.tags,
+    tags: post.tags || [],
     isMasterBot: true,
     botData: {
       username: post.bot?.username || "@masterbot",
       location: restaurant
-        ? `${restaurant.city}, ${getCountryName(restaurant.countryCode)}`
+        ? `${restaurant.city || restaurant.name}, ${getCountryName(
+            restaurant.countryCode
+          )}`
         : "Global",
       specialties: post.bot?.specialties || [],
     },
@@ -188,5 +207,3 @@ function getCountryName(countryCode: string): string {
 
   return countryMap[countryCode] || countryCode;
 }
-
-

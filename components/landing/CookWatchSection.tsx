@@ -4,7 +4,7 @@ export function CookWatchSection() {
       style={{
         padding: "80px 0",
         position: "relative",
-        backgroundImage: `linear-gradient(rgba(11, 31, 58, 0.7), rgba(11, 31, 58, 0.7)), url('https://images.unsplash.com/photo-1654064755996-80036b6e6984?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHhjb29raW5nJTIwa2l0Y2hlbiUyMHV0ZW5zaWxzJTIwYmFja2dyb3VuZHxlbnwxfHx8fDE3NTY4MzI5NjJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`,
+        backgroundImage: `linear-gradient(rgba(11, 31, 58, 0.7), rgba(11, 31, 58, 0.7)), url('/images/landing/Images/camera_image.png')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -50,9 +50,18 @@ export function CookWatchSection() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    overflow: "hidden",
                   }}
                 >
-                  <span style={{ fontSize: "48px" }}>👨‍🍳</span>
+                  <img
+                    src="/images/landing/Images/camera.png"
+                    alt="Cooking icon"
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      objectFit: "contain",
+                    }}
+                  />
                 </div>
               </div>
               <h2

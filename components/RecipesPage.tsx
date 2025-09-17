@@ -2,7 +2,7 @@ import { ArrowLeft, Filter, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BottomNavigation } from "./BottomNavigation";
 import { Recipe, mockRecipes } from "./constants/recipesData";
-import { NewRecipe, RecipeCreatorPage } from "./RecipeCreatorPage";
+import { NewRecipe, RecipeCreatorPage } from "./features/RecipeCreatorPage";
 import { GamificationPopup } from "./recipes/GamificationPopup";
 import { RecipeCard } from "./recipes/RecipeCard";
 import { RecipeDetail } from "./recipes/RecipeDetail";

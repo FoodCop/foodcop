@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BottomNavigation } from "./BottomNavigation";
 import { FuzoTabs } from "./global/FuzoTabs";
 
+import { TakoToast } from "./ai/TakoToast";
 import { FriendsTab } from "./scout/FriendsTab";
 import { MapView } from "./scout/MapView";
 import { RestaurantCard } from "./scout/RestaurantCard";
@@ -14,7 +15,6 @@ import {
   Location,
   RouteInfo,
 } from "./services/locationServiceBackend";
-import { TakoToast } from "./TakoToast";
 
 import {
   GeolocationResult,
@@ -46,6 +46,7 @@ export interface Restaurant {
     width?: number;
     height?: number;
   }>;
+  placeId?: string; // Add placeId for Google Places API v1
 }
 
 // Helper function to convert API restaurant to local restaurant format
@@ -215,7 +216,7 @@ export function ScoutPage({
       setError(null);
 
       console.log(
-        "🔍 ScoutPage: Loading nearby restaurants with geolocation..."
+        "🔍 ScoutPage: Loading nearby restaurants with direct Google Places API..."
       );
 
       // Get user location using enhanced geolocation service
@@ -233,68 +234,21 @@ export function ScoutPage({
       };
       setCurrentLocation(location);
 
-      // Search for nearby restaurants using enhanced geolocation service
-      const restaurantsResult = await geolocationService.getNearbyRestaurants(
-        5000,
-        forceRefreshLocation
+      // Call Google Places API directly
+      const restaurants = await searchNearbyRestaurants(
+        geoResult.latitude,
+        geoResult.longitude,
+        5000
       );
 
-      console.log("✅ Restaurant search results:", {
-        count: restaurantsResult.restaurants.length,
-        method: restaurantsResult.method,
-        location: restaurantsResult.location,
+      console.log("✅ Direct Google Places API results:", {
+        count: restaurants.length,
+        location: { lat: geoResult.latitude, lng: geoResult.longitude },
       });
 
-      // Convert Google Places results to frontend format with safe photo handling
-      const convertedRestaurants = restaurantsResult.restaurants.map(
-        (place: any, index: number) => {
-          // Prepare photos array for safe resolution later
-          const photos = place.photos
-            ? place.photos.map((photo: any) => ({
-                photoReference: photo.photo_reference,
-                needsResolving: true,
-                width: photo.width,
-                height: photo.height,
-              }))
-            : [];
+      setRestaurants(restaurants);
 
-          // Use fallback image as default
-          const fallbackImage = getFallbackImageForRestaurant(
-            place.types || [],
-            index
-          );
-
-          return {
-            id: place.place_id || `restaurant_${Math.random()}`,
-            name: place.name || "Unknown Restaurant",
-            image: fallbackImage, // Will be resolved by SafeRestaurantImage component
-            rating: place.rating || 4.0,
-            reviewCount:
-              place.user_ratings_total || Math.floor(Math.random() * 500) + 50,
-            cuisine: extractCuisineFromTypes(place.types || []),
-            address:
-              place.vicinity ||
-              place.formatted_address ||
-              "Address not available",
-            openHours: place.opening_hours?.open_now ? "Open now" : "Closed",
-            priceLevel: place.price_level || 2,
-            distance: place.distance_text || `${place.distance_km || 0}km`,
-            isOpen: place.opening_hours?.open_now !== false,
-            isSaved: false,
-            coordinates: {
-              lat: place.geometry?.location?.lat || 0,
-              lng: place.geometry?.location?.lng || 0,
-            },
-            phone: place.formatted_phone_number,
-            website: place.website,
-            photos: photos,
-          };
-        }
-      );
-
-      setRestaurants(convertedRestaurants);
-
-      if (convertedRestaurants.length === 0) {
+      if (restaurants.length === 0) {
         setError(
           "No restaurants found nearby. Try expanding your search radius."
         );
@@ -308,6 +262,139 @@ export function ScoutPage({
       setLoading(false);
       setRefreshingLocation(false);
     }
+  };
+
+  // Direct Google Places API search function
+  const searchNearbyRestaurants = async (
+    latitude: number,
+    longitude: number,
+    radius: number
+  ): Promise<Restaurant[]> => {
+    try {
+      const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+      if (!API_KEY) {
+        throw new Error("Google Maps API key not found");
+      }
+
+      console.log("🔍 Searching Google Places API directly...", {
+        location: { lat: latitude, lng: longitude },
+        radius,
+      });
+
+      // Use Google Places API (New) - Nearby Search
+      const response = await fetch(
+        `https://places.googleapis.com/v1/places:searchNearby`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": API_KEY,
+            "X-Goog-FieldMask":
+              "places.id,places.displayName,places.rating,places.userRatingCount,places.priceLevel,places.businessStatus,places.location,places.photos,places.types,places.formattedAddress,places.websiteUri,places.nationalPhoneNumber",
+          },
+          body: JSON.stringify({
+            includedTypes: ["restaurant"],
+            maxResultCount: 20,
+            locationRestriction: {
+              circle: {
+                center: {
+                  latitude,
+                  longitude,
+                },
+                radius,
+              },
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Google Places API error:", response.status, errorText);
+        throw new Error(`Google Places API failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const places = data.places || [];
+
+      console.log(
+        "✅ Google Places API returned:",
+        places.length,
+        "restaurants"
+      );
+
+      // Convert Google Places results to our Restaurant format
+      return places.map((place: any, index: number) => {
+        // Prepare photos array for SafeRestaurantImage
+        const photos = place.photos
+          ? place.photos.map((photo: any) => ({
+              photoReference: photo.name, // Google Places API v1 uses 'name' instead of 'photo_reference'
+              needsResolving: false, // We'll use placeId for direct API calls
+              width: photo.widthPx,
+              height: photo.heightPx,
+            }))
+          : [];
+
+        // Calculate distance (simple approximation)
+        const distance = calculateDistance(
+          { lat: latitude, lng: longitude },
+          {
+            lat: place.location?.latitude || 0,
+            lng: place.location?.longitude || 0,
+          }
+        );
+
+        return {
+          id: place.id || `restaurant_${Math.random()}`,
+          name: place.displayName?.text || "Unknown Restaurant",
+          image: getFallbackImageForRestaurant(place.types || [], index), // Will be resolved by SafeRestaurantImage
+          rating: place.rating || 4.0,
+          reviewCount:
+            place.userRatingCount || Math.floor(Math.random() * 500) + 50,
+          cuisine: extractCuisineFromTypes(place.types || []),
+          address: place.formattedAddress || "Address not available",
+          openHours:
+            place.businessStatus === "OPERATIONAL" ? "Open now" : "Closed",
+          priceLevel: place.priceLevel || 2,
+          distance: `${distance.toFixed(1)} km`,
+          isOpen: place.businessStatus === "OPERATIONAL",
+          isSaved: false,
+          coordinates: {
+            lat: place.location?.latitude || 0,
+            lng: place.location?.longitude || 0,
+          },
+          phone: place.nationalPhoneNumber,
+          website: place.websiteUri,
+          photos: photos,
+          placeId: place.id, // Use the place ID for Google Places API v1
+        };
+      });
+    } catch (error) {
+      console.error("Error searching nearby restaurants:", error);
+      throw error;
+    }
+  };
+
+  // Helper function to calculate distance between two points
+  const calculateDistance = (
+    point1: { lat: number; lng: number },
+    point2: { lat: number; lng: number }
+  ): number => {
+    const R = 6371; // Earth's radius in kilometers
+    const dLat = toRadians(point2.lat - point1.lat);
+    const dLng = toRadians(point2.lng - point1.lng);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadians(point1.lat)) *
+        Math.cos(toRadians(point2.lat)) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  const toRadians = (degrees: number): number => {
+    return degrees * (Math.PI / 180);
   };
 
   // Helper function to get variety of fallback images based on restaurant type
@@ -567,6 +654,7 @@ export function ScoutPage({
                 restaurants={filteredRestaurants}
                 selectedRestaurant={selectedMapRestaurant}
                 onRestaurantSelect={handleRestaurantClick}
+                currentLocation={currentLocation}
               />
 
               {/* Map Controls */}
