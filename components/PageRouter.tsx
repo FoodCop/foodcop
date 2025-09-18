@@ -7,7 +7,6 @@ import { ProfilePage } from "./ProfilePage";
 import { RecipesPage } from "./RecipesPage";
 import { ScoutPage } from "./ScoutPage";
 import { SnapPage } from "./SnapPage";
-import { APITestPage } from "./debug/APITestPage";
 import { AboutUsPage } from "./info/AboutUsPage";
 import { AccessibilityPage } from "./info/AccessibilityPage";
 import { CareersPage } from "./info/CareersPage";
@@ -37,18 +36,14 @@ type PageType =
   | "accessibility"
   | "help-center"
   | "contact-us"
-  | "restaurant-partners"
-  | "api-test";
+  | "restaurant-partners";
 
 interface PageRouterProps {
   onExitDemo?: () => void;
   initialPage?: PageType;
 }
 
-export function PageRouter({
-  onExitDemo,
-  initialPage = "landing",
-}: PageRouterProps = {}) {
+export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
   const [currentPage, setCurrentPage] = useState<PageType>(initialPage);
 
   // Listen for custom navigation events dispatched from global navigation (hamburger menu)
@@ -77,7 +72,6 @@ export function PageRouter({
           "help-center",
           "contact-us",
           "restaurant-partners",
-          "api-test",
         ].includes(target)
       ) {
         setCurrentPage(target);
@@ -195,9 +189,6 @@ export function PageRouter({
 
       case "restaurant-partners":
         return <RestaurantPartnersPage />;
-
-      case "api-test":
-        return <APITestPage />;
 
       default:
         return (
