@@ -17,8 +17,9 @@ env.example
 # Documentation folder
 docs/
 
-# Debug folder
-components/debug/
+# Debug folder (excluding ProductionEnvDebug)
+components/debug/*
+!components/debug/ProductionEnvDebug.tsx
 
 # Markdown files (except README)
 *.md
