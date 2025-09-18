@@ -798,5 +798,100 @@ app.route('/', supabaseMCP);
 
 console.log('🚀 FUZO Edge Function server starting...');
 
+// Geocoding endpoints
+app.post("/make-server-5976446e/geocoding/geocode", async (c) => {
+  try {
+    const { address } = await c.req.json();
+    
+    if (!address) {
+      return c.json({ success: false, error: "Address is required" }, 400);
+    }
+
+    if (!GOOGLE_MAPS_API_KEY) {
+      return c.json({ success: false, error: "Google Maps API key not configured" }, 500);
+    }
+
+    const geocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${GOOGLE_MAPS_API_KEY}`;
+    
+    const response = await fetch(geocodingUrl);
+    const data = await response.json();
+
+    if (data.status === 'OK' && data.results && data.results.length > 0) {
+      const result = data.results[0];
+      return c.json({
+        success: true,
+        data: {
+          results: [{
+            formatted_address: result.formatted_address,
+            geometry: {
+              location: {
+                lat: result.geometry.location.lat,
+                lng: result.geometry.location.lng
+              }
+            },
+            place_id: result.place_id
+          }]
+        }
+      });
+    } else {
+      return c.json({
+        success: false,
+        error: `Geocoding failed: ${data.status}`,
+        details: data.error_message || 'Unknown error'
+      }, 400);
+    }
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    return c.json({ success: false, error: "Internal server error" }, 500);
+  }
+});
+
+app.post("/make-server-5976446e/geocoding/reverse", async (c) => {
+  try {
+    const { lat, lng } = await c.req.json();
+    
+    if (!lat || !lng) {
+      return c.json({ success: false, error: "Latitude and longitude are required" }, 400);
+    }
+
+    if (!GOOGLE_MAPS_API_KEY) {
+      return c.json({ success: false, error: "Google Maps API key not configured" }, 500);
+    }
+
+    const reverseGeocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}`;
+    
+    const response = await fetch(reverseGeocodingUrl);
+    const data = await response.json();
+
+    if (data.status === 'OK' && data.results && data.results.length > 0) {
+      const result = data.results[0];
+      return c.json({
+        success: true,
+        data: {
+          results: [{
+            formatted_address: result.formatted_address,
+            geometry: {
+              location: {
+                lat: result.geometry.location.lat,
+                lng: result.geometry.location.lng
+              }
+            },
+            place_id: result.place_id
+          }]
+        }
+      });
+    } else {
+      return c.json({
+        success: false,
+        error: `Reverse geocoding failed: ${data.status}`,
+        details: data.error_message || 'Unknown error'
+      }, 400);
+    }
+  } catch (error) {
+    console.error('Reverse geocoding error:', error);
+    return c.json({ success: false, error: "Internal server error" }, 500);
+  }
+});
+
 // Start the server
 Deno.serve(app.fetch);
