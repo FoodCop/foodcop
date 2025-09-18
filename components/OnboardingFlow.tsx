@@ -1,4 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertCircle,
@@ -17,8 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { FuzoButton } from "./global/FuzoButton";
 import { FuzoInput } from "./global/FuzoInput";
-// import { GoogleSignInButton } from './debug/oauth/GoogleSignInButton'; // Moved to debug folder
-// import { useAuth } from '../contexts/AuthContext'; // Temporarily disabled
+import { useAuth } from '../contexts/AuthContext';
 
 interface OnboardingFlowProps {
   onComplete?: () => void;
@@ -95,37 +93,16 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
   const [error, setError] = useState<string | null>(null);
   const [isSigningIn, setIsSigningIn] = useState(false);
 
-  // Supabase client for OAuth
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    console.error("Supabase environment variables are missing");
-  }
-
-  const supabase =
-    supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+  // Use AuthContext for authentication
+  const { signInWithGoogle: authSignInWithGoogle, user, profile } = useAuth();
 
   // Real Google OAuth sign-in
   const signInWithGoogle = async () => {
-    if (!supabase) {
-      setError(
-        "Authentication service is not available. Please check your configuration."
-      );
-      return;
-    }
-
     setIsSigningIn(true);
     setError(null);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}?onboarding=auth`,
-        },
-      });
-      if (error) throw error;
-      // Supabase will redirect, so no further action needed here
+      await authSignInWithGoogle();
+      // AuthContext will handle the redirect and state management
     } catch (err: any) {
       setError(err.message || "Google sign-in failed");
       setIsSigningIn(false);
@@ -162,38 +139,13 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
     }
   }, [currentStep]);
 
-  // Check authentication state on mount and after OAuth redirect
+  // Check authentication state and advance to profile step
   useEffect(() => {
-    const checkAuthState = async () => {
-      if (supabase && currentStep === "auth") {
-        try {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user) {
-            console.log("✅ User is authenticated, advancing to profile step");
-            setCurrentStep("profile");
-          }
-        } catch (error) {
-          console.error("Error checking auth state:", error);
-        }
-      }
-    };
-
-    checkAuthState();
-  }, [supabase, currentStep]);
-
-  // Listen for auth state changes
-  useEffect(() => {
-    if (!supabase) return;
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user && currentStep === "auth") {
-        console.log("✅ Auth state changed: User signed in, advancing to profile step");
-        setCurrentStep("profile");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase, currentStep]);
+    if (user && currentStep === "auth") {
+      console.log("✅ User is authenticated, advancing to profile step");
+      setCurrentStep("profile");
+    }
+  }, [user, currentStep]);
 
   const handleAuth = async () => {
     console.log("🔐 handleAuth called", {

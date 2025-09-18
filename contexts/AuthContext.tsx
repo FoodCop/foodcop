@@ -1,38 +1,200 @@
-// Temporary stub AuthContext after removal of legacy auth system.
-// Provides a minimal interface so components depending on useAuth keep functioning
-// while a new authentication solution is designed.
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+
+interface User {
+  id: string;
+  email?: string;
+  user_metadata?: {
+    full_name?: string;
+    avatar_url?: string;
+  };
+}
+
+interface Profile {
+  id: string;
+  email: string;
+  display_name?: string;
+  username?: string;
+  avatar_url?: string;
+  bio?: string;
+  location_city?: string;
+  location_state?: string;
+  location_country?: string;
+  dietary_preferences?: string[];
+  cuisine_preferences?: string[];
+  total_points?: number;
+}
 
 interface AuthContextValue {
-  user: null;
-  profile: null;
+  user: User | null;
+  profile: Profile | null;
+  loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signUpWithEmail: (email: string, password: string) => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  updateProfile: (updates: any) => Promise<void>;
+  updateProfile: (updates: Partial<Profile>) => Promise<void>;
 }
 
-const noop = async () => { /* no-op auth stub */ };
-
-const defaultValue: AuthContextValue = {
-  user: null,
-  profile: null,
-  signInWithGoogle: noop,
-  signUpWithEmail: noop,
-  signInWithEmail: noop,
-  signOut: noop,
-  updateProfile: noop,
-};
-
-const AuthContext = createContext<AuthContextValue>(defaultValue);
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  return <AuthContext.Provider value={defaultValue}>{children}</AuthContext.Provider>;
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Initialize Supabase client
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
+  // Check for existing session on mount
+  useEffect(() => {
+    const getInitialSession = async () => {
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setUser(session.user);
+          await fetchUserProfile(session.user.id);
+        }
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getInitialSession();
+  }, [supabase]);
+
+  // Listen for auth state changes
+  useEffect(() => {
+    if (!supabase) return;
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        setUser(session.user);
+        await fetchUserProfile(session.user.id);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setProfile(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
+
+  // Fetch user profile from backend
+  const fetchUserProfile = async (userId: string) => {
+    if (!supabase) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+
+      const response = await fetch('/make-server-5976446e/auth/profile', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProfile(data.profile);
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    if (!supabase) return;
+    
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}?onboarding=auth`,
+      },
+    });
+    
+    if (error) {
+      console.error('Google sign-in error:', error);
+      throw error;
+    }
+  };
+
+  const signUpWithEmail = async (email: string, password: string) => {
+    if (!supabase) throw new Error('Supabase not configured');
+    
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
+  };
+
+  const signInWithEmail = async (email: string, password: string) => {
+    if (!supabase) throw new Error('Supabase not configured');
+    
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  };
+
+  const signOut = async () => {
+    if (!supabase) return;
+    
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Sign out error:', error);
+      throw error;
+    }
+  };
+
+  const updateProfile = async (updates: Partial<Profile>) => {
+    if (!supabase || !user) throw new Error('Not authenticated');
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) throw new Error('No access token');
+
+    const response = await fetch('/make-server-5976446e/auth/profile', {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updates),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to update profile');
+    }
+
+    const data = await response.json();
+    setProfile(data.profile);
+  };
+
+  const value: AuthContextValue = {
+    user,
+    profile,
+    loading,
+    signInWithGoogle,
+    signUpWithEmail,
+    signInWithEmail,
+    signOut,
+    updateProfile,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }
-
-// NOTE: When re-implementing auth, replace this file with real logic and update provider wiring in `App.tsx`.
