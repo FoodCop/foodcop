@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Edit, Settings, LogOut, Users, Bookmark, Camera, Award, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { mockUserProfile } from './constants/profileData';
+// Removed mock data import - using only real user data
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useAuth } from '../contexts/AuthContext';
 import { CrewTab } from './profile/CrewTab';
@@ -22,17 +22,24 @@ export function ProfilePage({ onNavigateBack, onNavigateToFriend }: ProfilePageP
   const [isEditing, setIsEditing] = useState(false);
   const { user, profile, signOut, updateProfile } = useAuth();
   
-  // Use profile data from context, fall back to mock data for missing fields
+  // Use only real profile data from context
   const userProfile = {
-    ...mockUserProfile,
-    displayName: profile?.display_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || mockUserProfile.displayName,
+    id: user?.id || "new_user",
+    displayName: profile?.display_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "FUZO User",
     handle: `@${profile?.username || user?.email?.split('@')[0] || 'user'}`,
-    avatar: profile?.avatar_url || user?.user_metadata?.avatar_url || mockUserProfile.avatar,
+    avatar: profile?.avatar_url || user?.user_metadata?.avatar_url || null,
     email: profile?.email || user?.email || '',
-    bio: profile?.bio || mockUserProfile.bio,
-    location: [profile?.location_city, profile?.location_state, profile?.location_country].filter(Boolean).join(', ') || mockUserProfile.location,
+    bio: profile?.bio || '',
+    location: [profile?.location_city, profile?.location_state, profile?.location_country].filter(Boolean).join(', ') || '',
     preferences: [...(profile?.dietary_preferences || []), ...(profile?.cuisine_preferences || [])],
-    points: profile?.total_points || mockUserProfile.points
+    points: profile?.total_points || 0,
+    // Fresh profile data - no mock data
+    crew: [],
+    savedPlaces: [],
+    savedRecipes: [],
+    photos: [],
+    badges: [],
+    achievements: []
   };
 
   const handleSignOut = async () => {
@@ -55,10 +62,10 @@ export function ProfilePage({ onNavigateBack, onNavigateToFriend }: ProfilePageP
   }
 
   const tabs = [
-    { id: 'crew' as ProfileTab, label: 'Crew', icon: Users, count: userProfile.crew.length },
-    { id: 'plate' as ProfileTab, label: 'Plate', icon: Bookmark, count: userProfile.savedPlaces.length + userProfile.savedRecipes.length },
-    { id: 'photos' as ProfileTab, label: 'Photos', icon: Camera, count: userProfile.photos.length },
-    { id: 'rewards' as ProfileTab, label: 'Rewards', icon: Award, count: userProfile.badges.filter(b => b.isUnlocked).length },
+    { id: 'crew' as ProfileTab, label: 'Crew', icon: Users, count: 0 }, // Will be loaded from backend
+    { id: 'plate' as ProfileTab, label: 'Plate', icon: Bookmark, count: 0 }, // Will be loaded from backend
+    { id: 'photos' as ProfileTab, label: 'Photos', icon: Camera, count: 0 }, // Will be loaded from backend
+    { id: 'rewards' as ProfileTab, label: 'Rewards', icon: Award, count: 0 }, // Will be loaded from backend
     { id: 'points' as ProfileTab, label: 'Points', icon: Star, count: userProfile.points }
   ];
 
@@ -67,7 +74,7 @@ export function ProfilePage({ onNavigateBack, onNavigateToFriend }: ProfilePageP
       case 'crew':
         return <CrewTab crew={userProfile.crew} onFriendClick={onNavigateToFriend} />;
       case 'plate':
-        return <PlateTab savedPlaces={userProfile.savedPlaces} savedRecipes={userProfile.savedRecipes} />;
+        return <PlateTab savedPlaces={[]} savedRecipes={[]} />;
       case 'photos':
         return <PhotosTab photos={userProfile.photos} />;
       case 'rewards':

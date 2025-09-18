@@ -42,13 +42,17 @@ export function RestaurantCard({
               e.stopPropagation();
               onSave();
             }}
-            className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-colors"
+            className={`absolute top-3 right-3 w-8 h-8 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm transition-all duration-200 hover:scale-110 active:scale-95 ${
+              restaurant.isSaved
+                ? "bg-[#F14C35]/20 hover:bg-[#F14C35]/30"
+                : "bg-white/90 hover:bg-white hover:shadow-md"
+            }`}
           >
             <Heart
-              className={`w-4 h-4 ${
+              className={`w-4 h-4 transition-all duration-200 ${
                 restaurant.isSaved
                   ? "text-[#F14C35] fill-[#F14C35]"
-                  : "text-gray-600"
+                  : "text-gray-600 hover:text-[#F14C35]"
               }`}
             />
           </button>
@@ -130,13 +134,17 @@ export function RestaurantCard({
             e.stopPropagation();
             onSave();
           }}
-          className="absolute top-2 right-2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-colors"
+          className={`absolute top-2 right-2 w-8 h-8 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm transition-all duration-200 hover:scale-110 active:scale-95 ${
+            restaurant.isSaved
+              ? "bg-[#F14C35]/20 hover:bg-[#F14C35]/30"
+              : "bg-white/90 hover:bg-white hover:shadow-md"
+          }`}
         >
           <Heart
-            className={`w-4 h-4 ${
+            className={`w-4 h-4 transition-all duration-200 ${
               restaurant.isSaved
                 ? "text-[#F14C35] fill-[#F14C35]"
-                : "text-gray-600"
+                : "text-gray-600 hover:text-[#F14C35]"
             }`}
           />
         </button>

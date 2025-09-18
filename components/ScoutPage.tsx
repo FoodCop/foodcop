@@ -10,12 +10,12 @@ import { MapView } from "./scout/MapView";
 import { RestaurantCard } from "./scout/RestaurantCard";
 import { RestaurantDetailSheet } from "./scout/RestaurantDetailSheet";
 import { SavedItemsTab } from "./scout/SavedItemsTab";
-import { savedItemsService } from "./services/savedItemsService";
 import {
   Restaurant as APIRestaurant,
   Location,
   RouteInfo,
 } from "./services/locationServiceBackend";
+import { savedItemsService } from "./services/savedItemsService";
 
 import {
   GeolocationResult,
@@ -84,73 +84,7 @@ export interface Friend {
   savedRestaurants: Restaurant[];
 }
 
-// Mock data
-const mockRestaurants: Restaurant[] = [
-  {
-    id: "1",
-    name: "Sakura Sushi Bar",
-    image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400",
-    rating: 4.8,
-    reviewCount: 324,
-    cuisine: ["Japanese", "Sushi"],
-    address: "123 Main St, Downtown",
-    openHours: "Open until 10 PM",
-    priceLevel: 3,
-    distance: "0.2 mi",
-    isOpen: true,
-    isSaved: false,
-    coordinates: { lat: 37.7749, lng: -122.4194 },
-  },
-  {
-    id: "2",
-    name: "Mama Maria's",
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400",
-    rating: 4.5,
-    reviewCount: 156,
-    cuisine: ["Italian", "Pizza"],
-    address: "456 Oak Ave, Little Italy",
-    openHours: "Open until 11 PM",
-    priceLevel: 2,
-    distance: "0.5 mi",
-    isOpen: true,
-    isSaved: true,
-    coordinates: { lat: 37.7849, lng: -122.4094 },
-  },
-  {
-    id: "3",
-    name: "Spice Route",
-    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400",
-    rating: 4.7,
-    reviewCount: 289,
-    cuisine: ["Indian", "Curry"],
-    address: "789 Curry Lane, Spice District",
-    openHours: "Closed",
-    priceLevel: 2,
-    distance: "0.8 mi",
-    isOpen: false,
-    isSaved: false,
-    coordinates: { lat: 37.7649, lng: -122.4294 },
-  },
-];
-
-const mockFriends: Friend[] = [
-  {
-    id: "1",
-    name: "Sarah Chen",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108755-2616b612b8e5?w=100",
-    savedCount: 12,
-    savedRestaurants: [mockRestaurants[0], mockRestaurants[1]],
-  },
-  {
-    id: "2",
-    name: "Mike Rodriguez",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100",
-    savedCount: 8,
-    savedRestaurants: [mockRestaurants[2]],
-  },
-];
+// Mock data removed - using only real data from backend
 
 interface ScoutPageProps {
   onNavigateBack?: () => void;
@@ -260,13 +194,14 @@ export function ScoutPage({
       });
 
       // Update restaurants with saved state
-      const restaurantsWithSavedState = restaurants.map(restaurant => ({
+      const restaurantsWithSavedState = restaurants.map((restaurant) => ({
         ...restaurant,
-        isSaved: savedRestaurants.some(saved => 
-          saved.place_id === restaurant.placeId || saved.id === restaurant.id
-        )
+        isSaved: savedRestaurants.some(
+          (saved) =>
+            saved.place_id === restaurant.placeId || saved.id === restaurant.id
+        ),
       }));
-      
+
       setRestaurants(restaurantsWithSavedState);
 
       if (restaurants.length === 0) {
@@ -276,15 +211,9 @@ export function ScoutPage({
       }
     } catch (err) {
       console.error("Failed to load restaurants:", err);
-      setError("Failed to load restaurants. Using offline data.");
-      // Fallback to mock data with saved state
-      const mockRestaurantsWithSavedState = mockRestaurants.map(restaurant => ({
-        ...restaurant,
-        isSaved: savedRestaurants.some(saved => 
-          saved.place_id === restaurant.placeId || saved.id === restaurant.id
-        )
-      }));
-      setRestaurants(mockRestaurantsWithSavedState);
+      setError("Failed to load restaurants. Please try again later.");
+      // No fallback data - show empty state
+      setRestaurants([]);
     } finally {
       setLoading(false);
       setRefreshingLocation(false);
@@ -501,7 +430,9 @@ export function ScoutPage({
     try {
       if (restaurant.isSaved) {
         // Unsave restaurant
-        const result = await savedItemsService.unsaveRestaurant(restaurant.placeId || restaurant.id);
+        const result = await savedItemsService.unsaveRestaurant(
+          restaurant.placeId || restaurant.id
+        );
         if (result.success) {
           const updatedRestaurants = restaurants.map((r) =>
             r.id === restaurant.id ? { ...r, isSaved: false } : r
@@ -510,7 +441,7 @@ export function ScoutPage({
           setSavedRestaurants((saved) =>
             saved.filter((r) => r.id !== restaurant.id)
           );
-          
+
           if (selectedRestaurant) {
             setSelectedRestaurant({
               ...selectedRestaurant,
@@ -532,10 +463,10 @@ export function ScoutPage({
           location: restaurant.address,
           savedAt: new Date().toISOString(),
           geometry: {
-            location: restaurant.coordinates
-          }
+            location: restaurant.coordinates,
+          },
         });
-        
+
         if (result.success) {
           const updatedRestaurants = restaurants.map((r) =>
             r.id === restaurant.id ? { ...r, isSaved: true } : r
@@ -545,7 +476,7 @@ export function ScoutPage({
             ...saved,
             { ...restaurant, isSaved: true },
           ]);
-          
+
           if (selectedRestaurant) {
             setSelectedRestaurant({
               ...selectedRestaurant,
@@ -834,7 +765,6 @@ export function ScoutPage({
 
         {activeTab === "saved" && (
           <SavedItemsTab
-            restaurants={savedRestaurants}
             onRestaurantClick={handleRestaurantClick}
             onRestaurantUnsave={handleSaveRestaurant}
           />
@@ -842,7 +772,7 @@ export function ScoutPage({
 
         {activeTab === "friends" && (
           <FriendsTab
-            friends={mockFriends}
+            friends={[]}
             onRestaurantClick={handleRestaurantClick}
             onCopyToPlate={handleSaveRestaurant}
           />

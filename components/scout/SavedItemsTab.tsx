@@ -12,9 +12,11 @@ import {
   Star,
   Utensils,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { FuzoTabs } from "../global/FuzoTabs";
+import { savedItemsService, SavedRestaurant } from "../services/savedItemsService";
+import { useAuth } from "../../contexts/AuthContext";
 import type { Restaurant } from "../ScoutPage";
 import { RestaurantCard } from "./RestaurantCard";
 
@@ -113,13 +115,11 @@ function ListRestaurantCard({
 }
 
 interface SavedItemsTabProps {
-  restaurants: Restaurant[];
   onRestaurantClick: (restaurant: Restaurant) => void;
   onRestaurantUnsave: (restaurant: Restaurant) => void;
 }
 
 export function SavedItemsTab({
-  restaurants,
   onRestaurantClick,
   onRestaurantUnsave,
 }: SavedItemsTabProps) {
@@ -129,6 +129,45 @@ export function SavedItemsTab({
   );
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [activeCategory, setActiveCategory] = useState("all");
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+
+  // Load saved restaurants from backend
+  useEffect(() => {
+    if (user) {
+      loadSavedRestaurants();
+    }
+  }, [user]);
+
+  const loadSavedRestaurants = async () => {
+    try {
+      setLoading(true);
+      const savedRestaurants = await savedItemsService.getSavedRestaurants();
+      
+      // Convert SavedRestaurant to Restaurant format
+      const convertedRestaurants: Restaurant[] = savedRestaurants.map(saved => ({
+        id: saved.id,
+        placeId: saved.place_id,
+        name: saved.name,
+        image: saved.image || "",
+        rating: saved.rating,
+        cuisine: saved.cuisine.split(", "),
+        priceLevel: saved.price.length,
+        address: saved.location,
+        coordinates: saved.geometry?.location || { lat: 0, lng: 0 },
+        isSaved: true,
+        photos: []
+      }));
+      
+      setRestaurants(convertedRestaurants);
+      console.log("✅ Loaded saved restaurants:", convertedRestaurants.length);
+    } catch (error) {
+      console.error("❌ Failed to load saved restaurants:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Categories with icons
   const categories = [
@@ -232,6 +271,29 @@ export function SavedItemsTab({
     const nextIndex = (currentIndex + 1) % options.length;
     setSortBy(options[nextIndex]);
   };
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-center"
+        >
+          <div className="w-16 h-16 bg-[#F14C35] rounded-full flex items-center justify-center mb-6 mx-auto animate-pulse">
+            <span className="text-3xl">🐙</span>
+          </div>
+          <h3 className="font-bold text-[#0B1F3A] text-xl mb-2">
+            Loading your saved restaurants...
+          </h3>
+          <p className="text-gray-600">
+            Tako is fetching your plate! 🍽️
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
 
   if (restaurants.length === 0) {
     return (
