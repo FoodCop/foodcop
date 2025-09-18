@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom/client'
 import App from '../App.tsx'
 import '../styles/globals.css'
 
+// Ensure React is available globally
+if (typeof window !== 'undefined') {
+  (window as any).React = React;
+}
+
 // Development mode enhancements
 if (import.meta.env.DEV) {
   // Enable React DevTools (fixed - check if property exists before setting)

@@ -40,37 +40,11 @@ export default defineConfig({
         },
         chunkFileNames: "assets/[name]-[hash].js",
         assetFileNames: "assets/[name]-[hash].[ext]",
-        manualChunks: (id) => {
-          // Create chunks based on node_modules
-          if (id.includes("node_modules")) {
-            // Keep React and React-DOM together in the main chunk for stability
-            if (id.includes("react") || id.includes("react-dom")) {
-              return undefined; // Keep in main chunk
-            }
-            if (
-              id.includes("framer-motion") ||
-              id.includes("lucide-react") ||
-              id.includes("@radix-ui") ||
-              id.includes("sonner")
-            ) {
-              return "ui-vendor";
-            }
-            if (id.includes("@supabase")) {
-              return "supabase-vendor";
-            }
-            if (id.includes("clsx") || id.includes("tailwind-merge")) {
-              return "utils-vendor";
-            }
-            // Group other vendor libraries
-            return "vendor";
-          }
-          // Split large application files
-          if (id.includes("components/") && id.includes("PageRouter")) {
-            return "router";
-          }
-          if (id.includes("components/") && id.includes("OnboardingFlow")) {
-            return "onboarding";
-          }
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
+          'ui-vendor': ['framer-motion', 'lucide-react', '@radix-ui/react-avatar', '@radix-ui/react-dialog', '@radix-ui/react-progress', 'sonner'],
+          'supabase-vendor': ['@supabase/supabase-js'],
+          'utils-vendor': ['clsx', 'tailwind-merge'],
         },
       },
     },
@@ -93,5 +67,8 @@ export default defineConfig({
       "tailwind-merge",
     ],
     force: true,
+  },
+  esbuild: {
+    jsx: 'automatic',
   },
 });
