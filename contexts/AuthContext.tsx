@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
   id: string;
@@ -38,7 +38,9 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const AuthProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,7 +48,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   // Initialize Supabase client
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+  const supabase =
+    supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
   // Check for existing session on mount
   useEffect(() => {
@@ -57,13 +60,15 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       }
 
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         if (session?.user) {
           setUser(session.user);
           await fetchUserProfile(session.user.id);
         }
       } catch (error) {
-        console.error('Error getting initial session:', error);
+        console.error("Error getting initial session:", error);
       } finally {
         setLoading(false);
       }
@@ -76,11 +81,13 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   useEffect(() => {
     if (!supabase) return;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_IN" && session?.user) {
         setUser(session.user);
         await fetchUserProfile(session.user.id);
-      } else if (event === 'SIGNED_OUT') {
+      } else if (event === "SIGNED_OUT") {
         setUser(null);
         setProfile(null);
       }
@@ -94,13 +101,15 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     if (!supabase) return;
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session?.access_token) return;
 
-      const response = await fetch('/make-server-5976446e/auth/profile', {
+      const response = await fetch("/make-server-5976446e/auth/profile", {
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
         },
       });
 
@@ -109,68 +118,73 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
         setProfile(data.profile);
       }
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      console.error("Error fetching user profile:", error);
     }
   };
 
   const signInWithGoogle = async () => {
     if (!supabase) return;
-    
+
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
         redirectTo: `${window.location.origin}?onboarding=auth`,
       },
     });
-    
+
     if (error) {
-      console.error('Google sign-in error:', error);
+      console.error("Google sign-in error:", error);
       throw error;
     }
   };
 
   const signUpWithEmail = async (email: string, password: string) => {
-    if (!supabase) throw new Error('Supabase not configured');
-    
+    if (!supabase) throw new Error("Supabase not configured");
+
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) throw error;
   };
 
   const signInWithEmail = async (email: string, password: string) => {
-    if (!supabase) throw new Error('Supabase not configured');
-    
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (!supabase) throw new Error("Supabase not configured");
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     if (error) throw error;
   };
 
   const signOut = async () => {
     if (!supabase) return;
-    
+
     const { error } = await supabase.auth.signOut();
     if (error) {
-      console.error('Sign out error:', error);
+      console.error("Sign out error:", error);
       throw error;
     }
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
-    if (!supabase || !user) throw new Error('Not authenticated');
-    
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.access_token) throw new Error('No access token');
+    if (!supabase || !user) throw new Error("Not authenticated");
 
-    const response = await fetch('/make-server-5976446e/auth/profile', {
-      method: 'PATCH',
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session?.access_token) throw new Error("No access token");
+
+    const response = await fetch("/make-server-5976446e/auth/profile", {
+      method: "PATCH",
       headers: {
-        'Authorization': `Bearer ${session.access_token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(updates),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Failed to update profile');
+      throw new Error(error.error || "Failed to update profile");
     }
 
     const data = await response.json();
@@ -194,7 +208,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

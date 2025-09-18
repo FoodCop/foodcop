@@ -49,7 +49,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
   // Check for OAuth redirect and redirect to onboarding
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('onboarding') === 'auth') {
+    if (urlParams.get("onboarding") === "auth") {
       console.log("🔄 OAuth redirect detected, navigating to onboarding");
       setCurrentPage("onboarding");
       // Clean up the URL
@@ -169,11 +169,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
         );
 
       case "profile":
-        return (
-          <ProfilePage
-            onNavigateBack={() => setCurrentPage("feed")}
-          />
-        );
+        return <ProfilePage onNavigateBack={() => setCurrentPage("feed")} />;
 
       case "about-us":
         return <AboutUsPage />;
