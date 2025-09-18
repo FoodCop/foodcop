@@ -43,8 +43,9 @@ export default defineConfig({
         manualChunks: (id) => {
           // Create chunks based on node_modules
           if (id.includes("node_modules")) {
+            // Keep React and React-DOM together in the main chunk for stability
             if (id.includes("react") || id.includes("react-dom")) {
-              return "react-vendor";
+              return undefined; // Keep in main chunk
             }
             if (
               id.includes("framer-motion") ||
@@ -81,6 +82,7 @@ export default defineConfig({
     include: [
       "react",
       "react-dom",
+      "react/jsx-runtime",
       "framer-motion",
       "lucide-react",
       "@radix-ui/react-avatar",
@@ -90,5 +92,6 @@ export default defineConfig({
       "clsx",
       "tailwind-merge",
     ],
+    force: true,
   },
 });
