@@ -169,7 +169,11 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
         );
 
       case "profile":
-        return <ProfilePage />;
+        return (
+          <ProfilePage
+            onNavigateBack={() => setCurrentPage("feed")}
+          />
+        );
 
       case "about-us":
         return <AboutUsPage />;
