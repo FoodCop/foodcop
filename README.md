@@ -2,21 +2,22 @@
 
 > **Discover Amazing Food with Tako the Octopus!**
 
-FUZO is a comprehensive food discovery platform featuring Tako the octopus mascot, designed with a complete brand system and powered by modern web technologies.
+FUZO is a comprehensive food discovery platform featuring Tako the octopus mascot, designed with a complete brand system and powered by modern web technologies. Experience real-world food discovery with persistent user data, seamless navigation, and intelligent AI-powered recommendations.
 
 ## ✨ Features
 
 ### 🎯 Core Features
 
-- **Tinder-style Food Discovery**: Swipe through restaurants and dishes
+- **Real-time Food Discovery**: Find nearby restaurants with Google Maps integration
+- **Persistent Saved Items**: Save restaurants to your "Plate" with backend persistence
 - **Master Bots System**: 7 specialized food expert AI personalities with curated content
-- **8-Screen Onboarding Flow**: Smooth user introduction experience
+- **Smooth Onboarding**: Google OAuth integration with profile setup
 - **Camera Functionality**: Snap and tag food photos
 - **Chat System**: Real-time messaging with Stream Chat API
 - **Recipe Discovery Hub**: Powered by Spoonacular API
 - **AI Assistant**: Tako-powered food recommendations with OpenAI
-- **Profile System**: User profiles, rewards, and social features
-- **Geolocation**: Find nearby restaurants with Google Maps API
+- **Fresh Profile System**: Users start with clean profiles and build their food journey
+- **Visual Feedback**: Interactive save buttons with hover and click effects
 
 ### 🤖 Master Bots System
 
@@ -58,6 +59,9 @@ Each Master Bot maintains a curated collection of restaurant posts:
 - **Animation**: Motion (Framer Motion)
 - **Icons**: Lucide React
 - **UI Components**: Radix UI + Custom components
+- **State Management**: React Context API with persistent data
+- **Authentication**: Supabase Auth with Google OAuth
+- **Data Persistence**: Real-time database with user-specific data
 
 ## 🚀 Quick Start
 
@@ -278,6 +282,15 @@ Each bot has a unique personality, system prompt, and specialization for authent
 - **Bottom Navigation**: Feed, Scout, Snap, Bites
 - **Top Header**: Chat, Profile, Hamburger menu (in order)
 - **Responsive**: Adapts to mobile and desktop
+- **Seamless Navigation**: Smooth transitions between pages with persistent state
+
+### Food Discovery & Saving System
+
+- **Real-time Restaurant Search**: Google Places API integration for nearby restaurants
+- **Interactive Save Buttons**: Visual feedback with hover and click animations
+- **Persistent Saved Items**: Restaurants saved to your "Plate" persist across sessions
+- **Cross-page Synchronization**: Saved items appear in both Scout and Profile pages
+- **Fresh User Experience**: New users start with clean profiles and build their food journey
 
 ### Tako AI Assistant
 
@@ -292,6 +305,38 @@ Each bot has a unique personality, system prompt, and specialization for authent
 - **Content Population**: Automated content creation with unique personalities
 - **AI-Powered Posts**: Each bot generates authentic food discoveries and recommendations
 - **Community Engagement**: Bots drive discussions and user interaction
+
+### User Profile System
+
+- **Fresh Start**: New users begin with empty profiles (0 points, no saved items)
+- **Real Data Only**: No mock data - everything is user-generated
+- **Progressive Building**: Profile grows through actual user interactions
+- **Persistent State**: User data persists across sessions and devices
+
+## 🆕 Recent Improvements
+
+### Data Persistence & User Experience
+
+- **✅ Fixed Saved Items Persistence**: Restaurants now properly save to backend and persist across navigation
+- **✅ Enhanced Visual Feedback**: Save buttons now have smooth hover and click animations
+- **✅ Real Data Integration**: Removed all mock data - users start with fresh profiles
+- **✅ Cross-page Synchronization**: Saved items appear in both Scout "Saved Items" and Profile "Plates" tabs
+- **✅ Fresh User Experience**: New users start with 0 points and empty profiles, building their food journey organically
+
+### Technical Improvements
+
+- **✅ Backend API Integration**: Proper save/unsave restaurant endpoints with error handling
+- **✅ State Management**: React Context API for persistent user data across components
+- **✅ Loading States**: Proper loading indicators and empty states throughout the app
+- **✅ Error Handling**: Graceful fallbacks and user-friendly error messages
+- **✅ Code Quality**: Removed mock data dependencies and improved TypeScript types
+
+### User Interface Enhancements
+
+- **✅ Interactive Elements**: Save buttons with scale animations and color transitions
+- **✅ Loading Animations**: Tako-themed loading states for better user feedback
+- **✅ Empty States**: Helpful messages when no data is available
+- **✅ Responsive Design**: Optimized for mobile and desktop experiences
 
 ## 🚀 Deployment
 
@@ -354,6 +399,32 @@ netlify deploy --prod
 ## 🐛 Troubleshooting
 
 ### Common Issues
+
+#### Saved Items Not Persisting
+
+```bash
+# Check if user is authenticated
+# Look for "✅ User is authenticated" in console
+
+# Verify backend API endpoints
+curl -X GET https://your-project.supabase.co/functions/v1/make-server-5976446e/profile/saved-restaurants \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+
+# Check Supabase database for saved restaurants
+# Query: SELECT * FROM saved_restaurants WHERE user_id = 'your-user-id';
+```
+
+#### Save Button Not Working
+
+```bash
+# Check browser console for errors
+# Look for "❌ Failed to save/unsave restaurant" messages
+
+# Verify Google Maps API key is set
+echo $VITE_GOOGLE_MAPS_API_KEY
+
+# Check if user is authenticated before saving
+```
 
 #### Environment Variables Not Loading
 
