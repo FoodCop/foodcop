@@ -121,7 +121,7 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: `${window.location.origin}?onboarding=auth`,
         },
       });
       if (error) throw error;
@@ -162,7 +162,38 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
     }
   }, [currentStep]);
 
-  // Handle Google sign-in success
+  // Check authentication state on mount and after OAuth redirect
+  useEffect(() => {
+    const checkAuthState = async () => {
+      if (supabase && currentStep === "auth") {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            console.log("✅ User is authenticated, advancing to profile step");
+            setCurrentStep("profile");
+          }
+        } catch (error) {
+          console.error("Error checking auth state:", error);
+        }
+      }
+    };
+
+    checkAuthState();
+  }, [supabase, currentStep]);
+
+  // Listen for auth state changes
+  useEffect(() => {
+    if (!supabase) return;
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user && currentStep === "auth") {
+        console.log("✅ Auth state changed: User signed in, advancing to profile step");
+        setCurrentStep("profile");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase, currentStep]);
 
   const handleAuth = async () => {
     console.log("🔐 handleAuth called", {

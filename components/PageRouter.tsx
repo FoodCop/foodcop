@@ -46,6 +46,17 @@ interface PageRouterProps {
 export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
   const [currentPage, setCurrentPage] = useState<PageType>(initialPage);
 
+  // Check for OAuth redirect and redirect to onboarding
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('onboarding') === 'auth') {
+      console.log("🔄 OAuth redirect detected, navigating to onboarding");
+      setCurrentPage("onboarding");
+      // Clean up the URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   // Listen for custom navigation events dispatched from global navigation (hamburger menu)
   useEffect(() => {
     const handleNavigateToPage = (e: Event) => {
