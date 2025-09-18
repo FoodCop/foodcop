@@ -123,6 +123,7 @@ export const APP_ENV = {
   // Optional services
   STREAM_CHAT_API_KEY: getEnv("VITE_STREAM_CHAT_API_KEY"),
   OPENAI_API_KEY: getEnv("VITE_OPENAI_API_KEY"),
+  SPOONACULAR_API_KEY: getEnv("VITE_SPOONACULAR_API_KEY"),
 
   // Supabase (server-side)
   SUPABASE_URL: getEnv("VITE_SUPABASE_URL"),

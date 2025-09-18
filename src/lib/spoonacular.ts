@@ -1,7 +1,9 @@
 // Direct Spoonacular API integration for recipes
 // This bypasses the backend service and calls Spoonacular directly
 
-const SPOONACULAR_API_KEY = import.meta.env.VITE_SPOONACULAR_API_KEY;
+import { getEnv } from "../../utils/env";
+
+const SPOONACULAR_API_KEY = getEnv('VITE_SPOONACULAR_API_KEY') || import.meta.env.VITE_SPOONACULAR_API_KEY;
 const SPOONACULAR_BASE_URL = "https://api.spoonacular.com/recipes";
 
 interface SpoonacularRecipe {

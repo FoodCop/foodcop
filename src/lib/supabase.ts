@@ -12,8 +12,16 @@ export function safeServerEnv() {
   return { url, anon, service };
 }
 
+// Singleton pattern to prevent multiple client instances
+let supabaseClient: any = null;
+
 // Browser client (anon key only) - Using Vite environment variables
 export function sbAnon() {
+  // Return existing client if available
+  if (supabaseClient) {
+    return supabaseClient;
+  }
+
   // Try multiple ways to get environment variables
   const supabaseUrl =
     getEnv("VITE_SUPABASE_URL") || import.meta.env.VITE_SUPABASE_URL;
@@ -46,7 +54,9 @@ export function sbAnon() {
     );
   }
 
-  return createClient(supabaseUrl, supabaseAnonKey);
+  // Create and cache the client
+  supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+  return supabaseClient;
 }
 
 // Server client (service role)

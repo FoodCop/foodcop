@@ -92,7 +92,7 @@ export function HeroSection({ onNavigateToSignup }: HeroSectionProps) {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes gradientShift {
           0%,
           100% {
