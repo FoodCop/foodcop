@@ -4,7 +4,9 @@ interface TakoBuddySectionProps {
   onNavigateToSignup?: () => void;
 }
 
-export function TakoBuddySection({ onNavigateToSignup }: TakoBuddySectionProps) {
+export function TakoBuddySection({
+  onNavigateToSignup,
+}: TakoBuddySectionProps) {
   return (
     <section className="bg-white py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,9 +17,11 @@ export function TakoBuddySection({ onNavigateToSignup }: TakoBuddySectionProps) 
                 Meet Tako, your food buddy
               </h2>
               <p className="text-xl text-gray-600 leading-relaxed">
-                Ask for a quick tip, a must-order dish or the best time to go. Tako only talks food—off-topic? It'll point you to the right place and bring the chat back to eats.
+                Ask for a quick tip, a must-order dish or the best time to go.
+                Tako only talks food—off-topic? It'll point you to the right
+                place and bring the chat back to eats.
               </p>
-              
+
               <button
                 onClick={onNavigateToSignup}
                 className="group relative px-8 py-4 bg-[#F14C35] text-white rounded-xl font-semibold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"

@@ -16,31 +16,31 @@ export function PinFoodSection({ onNavigateToSignup }: PinFoodSectionProps) {
                   alt="Food map with pins"
                   className="w-full h-full object-cover"
                 />
-                
+
                 {/* Animated floating pins */}
                 <div className="absolute top-8 right-8 w-8 h-8 bg-[#F14C35] rounded-full flex items-center justify-center text-white text-sm font-bold animate-bounce">
                   📍
                 </div>
-                <div 
+                <div
                   className="absolute top-16 left-12 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs animate-pulse"
                   style={{ animationDelay: "0.5s" }}
                 >
                   📌
                 </div>
-                <div 
+                <div
                   className="absolute bottom-16 right-16 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs animate-pulse"
                   style={{ animationDelay: "1s" }}
                 >
                   📌
                 </div>
-                <div 
+                <div
                   className="absolute bottom-8 left-8 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-xs animate-pulse"
                   style={{ animationDelay: "1.5s" }}
                 >
                   📌
                 </div>
               </div>
-              
+
               <div className="absolute top-4 right-4 bg-[#F14C35] text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
                 📍 Map View
               </div>
@@ -51,9 +51,10 @@ export function PinFoodSection({ onNavigateToSignup }: PinFoodSectionProps) {
                 Build your food map
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Save spots you love (and want to try). FUZO turns your saves into a living map with notes, quick ratings and shareable lists.
+                Save spots you love (and want to try). FUZO turns your saves
+                into a living map with notes, quick ratings and shareable lists.
               </p>
-              
+
               <button
                 onClick={onNavigateToSignup}
                 className="group relative px-8 py-4 bg-[#F14C35] text-white rounded-xl font-semibold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"

@@ -2,15 +2,41 @@ interface DailyPicksSectionProps {
   onNavigateToSignup?: () => void;
 }
 
-export function DailyPicksSection({ onNavigateToSignup }: DailyPicksSectionProps) {
+export function DailyPicksSection({
+  onNavigateToSignup,
+}: DailyPicksSectionProps) {
   const connoisseurs = [
-    { emoji: "🔥", name: "Street Food", description: "Late-night legends & hawker icons." },
-    { emoji: "🍽️", name: "Fine Dining", description: "Tasting menus worth dressing up for." },
+    {
+      emoji: "🔥",
+      name: "Street Food",
+      description: "Late-night legends & hawker icons.",
+    },
+    {
+      emoji: "🍽️",
+      name: "Fine Dining",
+      description: "Tasting menus worth dressing up for.",
+    },
     { emoji: "🍣", name: "Sushi", description: "Omakase and immaculate cuts." },
-    { emoji: "🥐", name: "Pastry", description: "Flaky, buttery, photogenic joy." },
-    { emoji: "🌱", name: "Healthy", description: "Bowls, salads, smart swaps." },
-    { emoji: "🔥", name: "BBQ", description: "Smoke, char and slow-cooked bliss." },
-    { emoji: "🌿", name: "Vegan", description: "Bold flavors, zero compromise." },
+    {
+      emoji: "🥐",
+      name: "Pastry",
+      description: "Flaky, buttery, photogenic joy.",
+    },
+    {
+      emoji: "🌱",
+      name: "Healthy",
+      description: "Bowls, salads, smart swaps.",
+    },
+    {
+      emoji: "🔥",
+      name: "BBQ",
+      description: "Smoke, char and slow-cooked bliss.",
+    },
+    {
+      emoji: "🌿",
+      name: "Vegan",
+      description: "Bold flavors, zero compromise.",
+    },
   ];
 
   return (
@@ -22,9 +48,10 @@ export function DailyPicksSection({ onNavigateToSignup }: DailyPicksSectionProps
             Daily Picks from our AI connoisseurs
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Every day, our AI connoisseurs bring you one standout place in each style. Short, specific and actually helpful.
+            Every day, our AI connoisseurs bring you one standout place in each
+            style. Short, specific and actually helpful.
           </p>
-          
+
           {/* Connoisseur avatars */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">
             {connoisseurs.map((connoisseur, index) => (
@@ -46,7 +73,7 @@ export function DailyPicksSection({ onNavigateToSignup }: DailyPicksSectionProps
           <h3 className="text-2xl font-bold text-[#0B1F3A] mb-8 text-center">
             Today's seven picks
           </h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {connoisseurs.map((connoisseur, index) => (
               <div
@@ -96,8 +123,13 @@ export function DailyPicksSection({ onNavigateToSignup }: DailyPicksSectionProps
 
       <style jsx>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
         }
       `}</style>
     </section>

@@ -2,7 +2,9 @@ interface CookWatchSectionProps {
   onNavigateToSignup?: () => void;
 }
 
-export function CookWatchSection({ onNavigateToSignup }: CookWatchSectionProps) {
+export function CookWatchSection({
+  onNavigateToSignup,
+}: CookWatchSectionProps) {
   return (
     <section
       className="py-20 relative"
@@ -26,14 +28,15 @@ export function CookWatchSection({ onNavigateToSignup }: CookWatchSectionProps) 
                   />
                 </div>
               </div>
-              
+
               <h2 className="text-4xl md:text-5xl font-bold text-[#0B1F3A] mb-6">
                 Cook it tonight
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Short step-by-step videos and chef-level recipes matched to your taste. Healthy swaps, prep times and nutrition at a glance.
+                Short step-by-step videos and chef-level recipes matched to your
+                taste. Healthy swaps, prep times and nutrition at a glance.
               </p>
-              
+
               <button
                 onClick={onNavigateToSignup}
                 className="group relative px-8 py-4 bg-[#F14C35] text-white rounded-xl font-semibold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"

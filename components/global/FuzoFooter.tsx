@@ -2,26 +2,38 @@ export function FuzoFooter() {
   const footerSections = [
     {
       title: "Company",
-      links: ["About Us", "Careers", "Press", "Blog"],
+      links: [
+        { name: "About Us", page: "about-us" },
+        { name: "Careers", page: "careers" },
+        { name: "Press", page: "press" },
+      ],
     },
     {
       title: "Legal & Policies",
       links: [
-        "Privacy Policy",
-        "Terms of Service",
-        "Cookie Policy",
-        "Accessibility",
+        { name: "Privacy Policy", page: "privacy-policy" },
+        { name: "Terms of Service", page: "terms-of-service" },
+        { name: "Cookie Policy", page: "cookie-policy" },
+        { name: "Accessibility", page: "accessibility" },
       ],
     },
     {
       title: "Support & Contact",
-      links: ["Help Center", "Contact Us", "Community", "Feedback"],
+      links: [
+        { name: "Help Center", page: "help-center" },
+        { name: "Contact Us", page: "contact-us" },
+      ],
     },
     {
-      title: "Partners & Social",
-      links: ["Restaurant Partners", "API", "Instagram", "Twitter"],
+      title: "Partners",
+      links: [{ name: "Restaurant Partners", page: "restaurant-partners" }],
     },
   ];
+
+  const handleNavigation = (page: string) => {
+    const event = new CustomEvent("navigateToPage", { detail: page });
+    window.dispatchEvent(event);
+  };
 
   return (
     <footer className="bg-white border-t border-gray-200">
@@ -45,12 +57,12 @@ export function FuzoFooter() {
               <ul className="space-y-2">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <a
-                      href="#"
-                      className="text-gray-600 hover:text-[#F14C35] text-sm transition-colors"
+                    <button
+                      onClick={() => handleNavigation(link.page)}
+                      className="text-gray-600 hover:text-[#F14C35] text-sm transition-colors text-left"
                     >
-                      {link}
-                    </a>
+                      {link.name}
+                    </button>
                   </li>
                 ))}
               </ul>

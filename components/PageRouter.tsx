@@ -7,6 +7,16 @@ import { ProfilePage } from "./ProfilePage";
 import { RecipesPage } from "./RecipesPage";
 import { ScoutPage } from "./ScoutPage";
 import { SnapPage } from "./SnapPage";
+import { AboutUsPage } from "./info/AboutUsPage";
+import { AccessibilityPage } from "./info/AccessibilityPage";
+import { CareersPage } from "./info/CareersPage";
+import { ContactUsPage } from "./info/ContactUsPage";
+import { CookiePolicyPage } from "./info/CookiePolicyPage";
+import { HelpCenterPage } from "./info/HelpCenterPage";
+import { PressPage } from "./info/PressPage";
+import { PrivacyPolicyPage } from "./info/PrivacyPolicyPage";
+import { RestaurantPartnersPage } from "./info/RestaurantPartnersPage";
+import { TermsOfServicePage } from "./info/TermsOfServicePage";
 
 type PageType =
   | "landing"
@@ -16,7 +26,17 @@ type PageType =
   | "snap"
   | "chat"
   | "recipes"
-  | "profile";
+  | "profile"
+  | "about-us"
+  | "careers"
+  | "press"
+  | "privacy-policy"
+  | "terms-of-service"
+  | "cookie-policy"
+  | "accessibility"
+  | "help-center"
+  | "contact-us"
+  | "restaurant-partners";
 
 interface PageRouterProps {
   onExitDemo?: () => void;
@@ -45,6 +65,16 @@ export function PageRouter({
           "chat",
           "recipes",
           "profile",
+          "about-us",
+          "careers",
+          "press",
+          "privacy-policy",
+          "terms-of-service",
+          "cookie-policy",
+          "accessibility",
+          "help-center",
+          "contact-us",
+          "restaurant-partners",
         ].includes(target)
       ) {
         setCurrentPage(target);
@@ -126,6 +156,36 @@ export function PageRouter({
 
       case "profile":
         return <ProfilePage />;
+
+      case "about-us":
+        return <AboutUsPage />;
+
+      case "careers":
+        return <CareersPage />;
+
+      case "press":
+        return <PressPage />;
+
+      case "privacy-policy":
+        return <PrivacyPolicyPage />;
+
+      case "terms-of-service":
+        return <TermsOfServicePage />;
+
+      case "cookie-policy":
+        return <CookiePolicyPage />;
+
+      case "accessibility":
+        return <AccessibilityPage />;
+
+      case "help-center":
+        return <HelpCenterPage />;
+
+      case "contact-us":
+        return <ContactUsPage />;
+
+      case "restaurant-partners":
+        return <RestaurantPartnersPage />;
 
       default:
         return (

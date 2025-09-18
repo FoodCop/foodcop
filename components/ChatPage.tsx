@@ -7,6 +7,7 @@ import {
   useMasterBotChat,
 } from "./chat/MasterBotIntegration";
 import { NewChatModal } from "./chat/NewChatModal";
+import { StreamChatIntegration } from "./chat/StreamChatIntegration";
 
 export interface User {
   id: string;
@@ -41,7 +42,13 @@ export interface Conversation {
   avatar?: string;
 }
 
-type ChatView = "list" | "conversation" | "search" | "new-chat" | "master-bots";
+type ChatView =
+  | "list"
+  | "conversation"
+  | "search"
+  | "new-chat"
+  | "master-bots"
+  | "stream-chat";
 
 export function ChatPage() {
   const [currentView, setCurrentView] = useState<ChatView>("list");
@@ -239,6 +246,14 @@ export function ChatPage() {
     setCurrentView("list");
   };
 
+  const handleStreamChatView = () => {
+    setCurrentView("stream-chat");
+  };
+
+  const handleBackFromStreamChat = () => {
+    setCurrentView("list");
+  };
+
   // If master bot chat is active, show it
   if (showBotChat) {
     return (
@@ -263,6 +278,7 @@ export function ChatPage() {
             onOpenSearch={handleOpenSearch}
             onNewChat={handleNewChat}
             onMasterBots={handleMasterBotsView}
+            onStreamChat={handleStreamChatView}
           />
         );
 
@@ -307,6 +323,14 @@ export function ChatPage() {
           </div>
         );
 
+      case "stream-chat":
+        return (
+          <StreamChatIntegration
+            onBack={handleBackFromStreamChat}
+            onBotSelect={startBotChat}
+          />
+        );
+
       default:
         return (
           <ChatList
@@ -316,6 +340,7 @@ export function ChatPage() {
             onOpenSearch={handleOpenSearch}
             onNewChat={handleNewChat}
             onMasterBots={handleMasterBotsView}
+            onStreamChat={handleStreamChatView}
           />
         );
     }

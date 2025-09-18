@@ -5,7 +5,9 @@ interface ExploreFoodSectionProps {
   onNavigateToSignup?: () => void;
 }
 
-export function ExploreFoodSection({ onNavigateToSignup }: ExploreFoodSectionProps) {
+export function ExploreFoodSection({
+  onNavigateToSignup,
+}: ExploreFoodSectionProps) {
   return (
     <section className="bg-gradient-to-br from-[#FFD74A] to-[#F14C35] py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,21 +19,24 @@ export function ExploreFoodSection({ onNavigateToSignup }: ExploreFoodSectionPro
                   Explore near & far
                 </h2>
                 <p className="text-xl text-[#0B1F3A]/80 leading-relaxed">
-                  Lunch around the corner or a weekend crawl across town—find the right spot, right now. Save, navigate and go.
+                  Lunch around the corner or a weekend crawl across town—find
+                  the right spot, right now. Save, navigate and go.
                 </p>
-                
+
                 <button
                   onClick={onNavigateToSignup}
                   className="group relative px-8 py-4 bg-[#F14C35] text-white rounded-xl font-semibold text-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                   onMouseOver={(e) => {
                     const target = e.currentTarget;
                     target.style.transform = "scale(1.05)";
-                    target.style.boxShadow = "0 12px 32px rgba(241, 76, 53, 0.4)";
+                    target.style.boxShadow =
+                      "0 12px 32px rgba(241, 76, 53, 0.4)";
                   }}
                   onMouseOut={(e) => {
                     const target = e.currentTarget;
                     target.style.transform = "scale(1)";
-                    target.style.boxShadow = "0 8px 24px rgba(241, 76, 53, 0.3)";
+                    target.style.boxShadow =
+                      "0 8px 24px rgba(241, 76, 53, 0.3)";
                   }}
                 >
                   Explore the map
