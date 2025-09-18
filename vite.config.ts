@@ -22,7 +22,10 @@ export default defineConfig({
   },
   build: {
     outDir: "dist",
-    sourcemap: false,
+    sourcemap: process.env.NODE_ENV === "production" ? false : true,
+    minify: "esbuild",
+    chunkSizeWarningLimit: 1000,
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, "index.html"),
@@ -54,8 +57,18 @@ export default defineConfig({
             if (id.includes("@supabase")) {
               return "supabase-vendor";
             }
+            if (id.includes("clsx") || id.includes("tailwind-merge")) {
+              return "utils-vendor";
+            }
             // Group other vendor libraries
             return "vendor";
+          }
+          // Split large application files
+          if (id.includes("components/") && id.includes("PageRouter")) {
+            return "router";
+          }
+          if (id.includes("components/") && id.includes("OnboardingFlow")) {
+            return "onboarding";
           }
         },
       },
