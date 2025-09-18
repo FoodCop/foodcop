@@ -6,8 +6,6 @@
  */
 
 import { config } from "dotenv";
-import fs from "fs";
-import path from "path";
 
 // Load environment variables from .env.local
 config({ path: ".env.local" });
@@ -17,9 +15,9 @@ console.log("🚀 Vercel Environment Variables Setup Helper\n");
 // Required environment variables
 const requiredVars = [
   "VITE_SUPABASE_URL",
-  "VITE_SUPABASE_ANON_KEY", 
+  "VITE_SUPABASE_ANON_KEY",
   "VITE_GOOGLE_MAPS_API_KEY",
-  "VITE_SPOONACULAR_API_KEY"
+  "VITE_SPOONACULAR_API_KEY",
 ];
 
 console.log("📋 Environment Variables to Add to Vercel:\n");
@@ -51,7 +49,9 @@ console.log("4. Copy the URL and anon key");
 console.log("5. Add your production domain to Site URL");
 
 if (allPresent) {
-  console.log("\n✅ All required environment variables are present in .env.local");
+  console.log(
+    "\n✅ All required environment variables are present in .env.local"
+  );
   console.log("💡 Copy the values above to your Vercel project settings");
 } else {
   console.log("\n❌ Some environment variables are missing from .env.local");

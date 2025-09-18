@@ -34,7 +34,11 @@
     "test:ai-connoisseurs": "node scripts/test-masterbot-dms.js",
     "deploy:bots-chat": "supabase functions deploy bots-chat",
     "test:webhook": "node scripts/test-masterbot-dms.js --webhook-only",
-    "test:security": "node scripts/test-masterbot-dms.js --security-only"
+    "test:security": "node scripts/test-masterbot-dms.js --security-only",
+    "console:monitor": "node server/console-monitor-server.js",
+    "console:monitor:dev": "node server/console-monitor-server.js 3001",
+    "dev:with-monitor": "concurrently \"npm run console:monitor\" \"npm run dev\"",
+    "console:test": "node -e \"const ws = new WebSocket('ws://localhost:3001/console'); ws.on('open', () => { console.log('Connected'); ws.send(JSON.stringify({type: 'subscribe'})); }); ws.on('message', (data) => console.log('Received:', JSON.parse(data.toString())));\""
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.5.0",
@@ -107,7 +111,9 @@
     "tailwindcss": "^4.0.0-alpha.0",
     "typescript": "^5.9.2",
     "vite": "^5.2.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "concurrently": "^8.2.2",
+    "ws": "^8.14.2"
   },
   "engines": {
     "node": ">=18.0.0",
