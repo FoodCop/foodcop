@@ -7,6 +7,7 @@ import { ProfilePage } from "./ProfilePage";
 import { RecipesPage } from "./RecipesPage";
 import { ScoutPage } from "./ScoutPage";
 import { SnapPage } from "./SnapPage";
+import { APITestPage } from "./debug/APITestPage";
 import { AboutUsPage } from "./info/AboutUsPage";
 import { AccessibilityPage } from "./info/AccessibilityPage";
 import { CareersPage } from "./info/CareersPage";
@@ -36,7 +37,8 @@ type PageType =
   | "accessibility"
   | "help-center"
   | "contact-us"
-  | "restaurant-partners";
+  | "restaurant-partners"
+  | "api-test";
 
 interface PageRouterProps {
   onExitDemo?: () => void;
@@ -75,6 +77,7 @@ export function PageRouter({
           "help-center",
           "contact-us",
           "restaurant-partners",
+          "api-test",
         ].includes(target)
       ) {
         setCurrentPage(target);
@@ -104,10 +107,16 @@ export function PageRouter({
           <OnboardingFlow
             onComplete={() => {
               console.log("✅ Onboarding completed - ready for Feed");
+              console.log(
+                "🔄 PageRouter: Changing page from onboarding to feed"
+              );
               setCurrentPage("feed");
             }}
             onBack={() => {
               console.log("⬅️ Going back to Landing");
+              console.log(
+                "🔄 PageRouter: Changing page from onboarding to landing"
+              );
               setCurrentPage("landing");
             }}
           />
@@ -186,6 +195,9 @@ export function PageRouter({
 
       case "restaurant-partners":
         return <RestaurantPartnersPage />;
+
+      case "api-test":
+        return <APITestPage />;
 
       default:
         return (

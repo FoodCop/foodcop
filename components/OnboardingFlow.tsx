@@ -75,6 +75,11 @@ const DUMMY_CREDENTIALS = {
 
 export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>("splash");
+
+  // Debug logging for step changes
+  useEffect(() => {
+    console.log("🎯 OnboardingFlow: Current step changed to:", currentStep);
+  }, [currentStep]);
   const [userData, setUserData] = useState<UserData>({
     email: "",
     password: "",
@@ -132,10 +137,15 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
 
   // Handle onboarding completion when reaching the final step
   useEffect(() => {
+    console.log("🎉 Onboarding completion check:", {
+      currentStep,
+      hasOnComplete: !!onComplete,
+    });
     if (currentStep === "success" && onComplete) {
       console.log("🎉 Onboarding completed, calling onComplete");
       // Small delay to show success screen briefly
       const timer = setTimeout(() => {
+        console.log("🎉 Calling onComplete callback");
         onComplete();
       }, 1500);
       return () => clearTimeout(timer);
@@ -155,7 +165,14 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
   // Handle Google sign-in success
 
   const handleAuth = async () => {
+    console.log("🔐 handleAuth called", {
+      isLogin,
+      email: userData.email,
+      password: userData.password ? "***" : "empty",
+    });
+
     if (!userData.email || !userData.password) {
+      console.log("❌ Missing email or password");
       alert("Please fill in all fields");
       return;
     }
@@ -164,6 +181,7 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
 
     if (isLogin) {
       // Login flow
+      console.log("🔑 Processing login flow");
       if (
         userData.email === DUMMY_CREDENTIALS.email &&
         userData.password === DUMMY_CREDENTIALS.password
@@ -182,7 +200,9 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
     } else {
       // Signup flow - for demo, just advance to profile
       console.log("🚀 Demo signup - advancing to profile setup");
+      console.log("📝 Current step before change:", currentStep);
       setCurrentStep("profile");
+      console.log("📝 Current step after change:", "profile");
       return;
     }
   };
