@@ -8,5 +8,6 @@
   "theme_color": "#F14C35",
   "orientation": "portrait-primary",
   "scope": "/",
-  "lang": "en"
+  "lang": "en",
+  "icons": []
 }

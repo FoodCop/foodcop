@@ -1,5 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { getSupabaseClient } from "../utils/supabase";
 
 interface User {
   id: string;
@@ -45,11 +45,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Initialize Supabase client
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  const supabase =
-    supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+  // Get singleton Supabase client
+  const supabase = getSupabaseClient();
 
   // Check for existing session on mount
   useEffect(() => {
@@ -107,6 +104,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
       if (!session?.access_token) return;
 
       const response = await fetch("/make-server-5976446e/auth/profile", {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",

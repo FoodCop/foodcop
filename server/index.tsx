@@ -244,7 +244,6 @@ app.get("/make-server-5976446e/auth/profile", async (c) => {
       is_private: profileRow.is_private || false,
       created_at: profileRow.created_at || user.created_at,
       last_seen_at: new Date().toISOString(),
-      fallback: false,
     };
 
     console.log("✅ Retrieved user profile:", {
