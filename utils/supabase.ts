@@ -7,12 +7,12 @@ export function getSupabaseClient() {
   if (!supabaseClient) {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    
+
     if (!supabaseUrl || !supabaseKey) {
       console.warn("Supabase environment variables not configured");
       return null;
     }
-    
+
     supabaseClient = createClient(supabaseUrl, supabaseKey, {
       auth: {
         persistSession: true,
@@ -21,6 +21,6 @@ export function getSupabaseClient() {
       },
     });
   }
-  
+
   return supabaseClient;
 }

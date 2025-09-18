@@ -24,6 +24,18 @@ export function PlateTab({ savedPlaces, savedRecipes }: PlateTabProps) {
     }
   }, [user]);
 
+  // Refresh saved restaurants when component becomes visible
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && user) {
+        loadSavedRestaurants();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [user]);
+
   const loadSavedRestaurants = async () => {
     try {
       setLoading(true);

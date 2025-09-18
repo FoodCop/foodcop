@@ -10,6 +10,7 @@ import { MapView } from "./scout/MapView";
 import { RestaurantCard } from "./scout/RestaurantCard";
 import { RestaurantDetailSheet } from "./scout/RestaurantDetailSheet";
 import { SavedItemsTab } from "./scout/SavedItemsTab";
+import { savedItemsService } from "./services/savedItemsService";
 import {
   Restaurant as APIRestaurant,
   Location,
@@ -206,7 +207,19 @@ export function ScoutPage({
   // Load restaurants on mount
   useEffect(() => {
     loadNearbyRestaurants();
+    loadSavedRestaurants();
   }, []);
+
+  // Load saved restaurants from backend
+  const loadSavedRestaurants = async () => {
+    try {
+      const savedRestaurants = await savedItemsService.getSavedRestaurants();
+      setSavedRestaurants(savedRestaurants);
+      console.log("✅ Loaded saved restaurants:", savedRestaurants.length);
+    } catch (error) {
+      console.error("❌ Failed to load saved restaurants:", error);
+    }
+  };
 
   const loadNearbyRestaurants = async (
     forceRefreshLocation: boolean = false
@@ -246,7 +259,15 @@ export function ScoutPage({
         location: { lat: geoResult.latitude, lng: geoResult.longitude },
       });
 
-      setRestaurants(restaurants);
+      // Update restaurants with saved state
+      const restaurantsWithSavedState = restaurants.map(restaurant => ({
+        ...restaurant,
+        isSaved: savedRestaurants.some(saved => 
+          saved.place_id === restaurant.placeId || saved.id === restaurant.id
+        )
+      }));
+      
+      setRestaurants(restaurantsWithSavedState);
 
       if (restaurants.length === 0) {
         setError(
@@ -256,8 +277,14 @@ export function ScoutPage({
     } catch (err) {
       console.error("Failed to load restaurants:", err);
       setError("Failed to load restaurants. Using offline data.");
-      // Fallback to mock data
-      setRestaurants(mockRestaurants);
+      // Fallback to mock data with saved state
+      const mockRestaurantsWithSavedState = mockRestaurants.map(restaurant => ({
+        ...restaurant,
+        isSaved: savedRestaurants.some(saved => 
+          saved.place_id === restaurant.placeId || saved.id === restaurant.id
+        )
+      }));
+      setRestaurants(mockRestaurantsWithSavedState);
     } finally {
       setLoading(false);
       setRefreshingLocation(false);
@@ -470,28 +497,66 @@ export function ScoutPage({
     setShowDetailSheet(false);
   };
 
-  const handleSaveRestaurant = (restaurant: Restaurant) => {
-    const updatedRestaurants = restaurants.map((r) =>
-      r.id === restaurant.id ? { ...r, isSaved: !r.isSaved } : r
-    );
-    setRestaurants(updatedRestaurants);
-
-    if (restaurant.isSaved) {
-      setSavedRestaurants((saved) =>
-        saved.filter((r) => r.id !== restaurant.id)
-      );
-    } else {
-      setSavedRestaurants((saved) => [
-        ...saved,
-        { ...restaurant, isSaved: true },
-      ]);
-    }
-
-    if (selectedRestaurant) {
-      setSelectedRestaurant({
-        ...selectedRestaurant,
-        isSaved: !selectedRestaurant.isSaved,
-      });
+  const handleSaveRestaurant = async (restaurant: Restaurant) => {
+    try {
+      if (restaurant.isSaved) {
+        // Unsave restaurant
+        const result = await savedItemsService.unsaveRestaurant(restaurant.placeId || restaurant.id);
+        if (result.success) {
+          const updatedRestaurants = restaurants.map((r) =>
+            r.id === restaurant.id ? { ...r, isSaved: false } : r
+          );
+          setRestaurants(updatedRestaurants);
+          setSavedRestaurants((saved) =>
+            saved.filter((r) => r.id !== restaurant.id)
+          );
+          
+          if (selectedRestaurant) {
+            setSelectedRestaurant({
+              ...selectedRestaurant,
+              isSaved: false,
+            });
+          }
+          console.log("✅ Restaurant removed from saved list");
+        }
+      } else {
+        // Save restaurant
+        const result = await savedItemsService.saveRestaurant({
+          id: restaurant.id,
+          place_id: restaurant.placeId || restaurant.id,
+          name: restaurant.name,
+          image: restaurant.image,
+          rating: restaurant.rating,
+          cuisine: restaurant.cuisine.join(", "),
+          price: "$".repeat(restaurant.priceLevel),
+          location: restaurant.address,
+          savedAt: new Date().toISOString(),
+          geometry: {
+            location: restaurant.coordinates
+          }
+        });
+        
+        if (result.success) {
+          const updatedRestaurants = restaurants.map((r) =>
+            r.id === restaurant.id ? { ...r, isSaved: true } : r
+          );
+          setRestaurants(updatedRestaurants);
+          setSavedRestaurants((saved) => [
+            ...saved,
+            { ...restaurant, isSaved: true },
+          ]);
+          
+          if (selectedRestaurant) {
+            setSelectedRestaurant({
+              ...selectedRestaurant,
+              isSaved: true,
+            });
+          }
+          console.log("✅ Restaurant saved to your plate");
+        }
+      }
+    } catch (error) {
+      console.error("❌ Failed to save/unsave restaurant:", error);
     }
   };
 
