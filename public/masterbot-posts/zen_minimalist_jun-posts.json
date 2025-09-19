@@ -2,1960 +2,1939 @@
   {
     "id": "zen_minimalist_jun-post-1",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Pro tip: The {technique} should be {adjective} for...",
-    "content": "Pro tip: The {technique} should be {adjective} for perfect {dish}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-1.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-1.jpg",
+    "title": "🍽️ Robata - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Robata in Barcelona! Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting. The Japanese cuisine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic japanese restaurant in Eixample.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-1",
+      "id": "restaurant-zen_minimalist_jun-1",
       "name": "Robata",
       "location": "Barcelona, ES",
       "rating": 4.5,
       "priceRange": "$$$",
-      "cuisine": "Japanese restaurant"
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer d'Enric Granados, 55, L'Eixample, 08008 Barcelona, Spain",
+      "description": "Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting.",
+      "reviewsCount": 7113
     },
     "tags": [
       "Japanese restaurant",
-      "Dim sum restaurant",
-      "Authentic Japanese restaurant",
-      "Delivery Restaurant",
-      "Modern izakaya restaurant",
-      "Okonomiyaki restaurant",
-      "Restaurant",
-      "Sushi restaurant",
-      "Tempura restaurant"
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "review"
     ],
-    "engagement": {
-      "likes": 85,
-      "comments": 4,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
     "id": "zen_minimalist_jun-post-2",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 50 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-2.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-2.jpg",
+    "title": "🌟 My Journey to Shunka",
+    "content": "Walking through Ciutat Vella in Barcelona, I discovered this hidden gem: Shunka. undefined As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Barcelona!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-2",
+      "id": "restaurant-zen_minimalist_jun-2",
       "name": "Shunka",
       "location": "Barcelona, ES",
       "rating": 4.6,
       "priceRange": "$$$",
-      "cuisine": "Japanese restaurant"
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer dels Sagristans, 5, Ciutat Vella, 08002 Barcelona, Spain",
+      "reviewsCount": 2220
     },
     "tags": [
       "Japanese restaurant",
-      "Asian restaurant",
-      "Sushi restaurant"
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "story"
     ],
-    "engagement": {
-      "likes": 96,
-      "comments": 8,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
     "id": "zen_minimalist_jun-post-3",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
-    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-3.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-3.jpg",
+    "title": "💡 Pro Tip: Isoya Japanese Vegetarian Restaurant",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Isoya Japanese Vegetarian Restaurant in Wan Chai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
     "restaurant": {
-      "id": "restaurant-3",
-      "name": "Can Kenji",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Izakaya restaurant",
-      "Mediterranean restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 80,
-      "comments": 10,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-4",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} in this {dish} is {adjective}. Eve...",
-    "content": "The {technique} in this {dish} is {adjective}. Every element is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-4.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-4.jpg",
-    "restaurant": {
-      "id": "restaurant-4",
-      "name": "IKOYA Izakaya",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Restaurant",
-      "Ramen restaurant",
-      "Sake brewery",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 2,
-      "comments": 16,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "zen_minimalist_jun-post-5",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
-    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-5.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-5.jpg",
-    "restaurant": {
-      "id": "restaurant-5",
-      "name": "Restaurante FUTAMI",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 96,
-      "comments": 19,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-6",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 200 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-6.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-6.jpg",
-    "restaurant": {
-      "id": "restaurant-6",
-      "name": "Matsuri Sushi Bar - Restaurante Japonés",
-      "location": "Barcelona, ES",
-      "rating": 4.4,
-      "priceRange": "€20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 45,
-      "comments": 7,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-7",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Pro tip: The {technique} should be {adjective} for...",
-    "content": "Pro tip: The {technique} should be {adjective} for perfect {dish}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-7.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-7.jpg",
-    "restaurant": {
-      "id": "restaurant-7",
-      "name": "Restaurante Hitsumabushi",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 12,
-      "comments": 4,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-8",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
-    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-8.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-8.jpg",
-    "restaurant": {
-      "id": "restaurant-8",
-      "name": "Roots & Rolls",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€20–30",
-      "cuisine": "Vegan restaurant"
-    },
-    "tags": [
-      "Vegan restaurant",
-      "Event venue",
-      "Restaurant",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 35,
-      "comments": 1,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-9",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
-    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-9.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-9.jpg",
-    "restaurant": {
-      "id": "restaurant-9",
-      "name": "Yamato BBQ Barcelona",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€20–40",
-      "cuisine": "Authentic Japanese restaurant"
-    },
-    "tags": [
-      "Authentic Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 99,
-      "comments": 15,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-10",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I discovered {technique} in {location}. It's the e...",
-    "content": "I discovered {technique} in {location}. It's the essence of {cuisine}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-10.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-10.jpg",
-    "restaurant": {
-      "id": "restaurant-10",
-      "name": "BUFFET YA (Buffet BBQ)",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€20–30",
-      "cuisine": "Barbecue restaurant"
-    },
-    "tags": [
-      "Barbecue restaurant",
-      "Grill",
-      "Asian restaurant",
-      "Buffet restaurant",
-      "Japanese restaurant",
-      "Yakiniku restaurant"
-    ],
-    "engagement": {
-      "likes": 7,
-      "comments": 3,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "zen_minimalist_jun-post-11",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
-    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-11.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-11.jpg",
-    "restaurant": {
-      "id": "restaurant-11",
-      "name": "Kanesaka Hong Kong",
-      "location": "Central, HK",
-      "rating": 4.9,
-      "priceRange": "HK$500+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 50,
-      "comments": 19,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-12",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
-    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-12.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-12.jpg",
-    "restaurant": {
-      "id": "restaurant-12",
-      "name": "Sushi Rin",
-      "location": "Sheung Wan, HK",
-      "rating": 4.7,
-      "priceRange": "HK$500+",
-      "cuisine": "Authentic Japanese restaurant"
-    },
-    "tags": [
-      "Authentic Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 49,
-      "comments": 11,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-13",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} in this {dish} is {adjective}. Eve...",
-    "content": "The {technique} in this {dish} is {adjective}. Every element is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-13.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-13.jpg",
-    "restaurant": {
-      "id": "restaurant-13",
-      "name": "Sushi Saito",
-      "location": "Central, HK",
-      "rating": 4.6,
-      "priceRange": "HK$500+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Fine dining restaurant",
-      "Japanese restaurant",
-      "Restaurant",
-      "Seafood restaurant"
-    ],
-    "engagement": {
-      "likes": 31,
-      "comments": 5,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-14",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
-    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-14.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-14.jpg",
-    "restaurant": {
-      "id": "restaurant-14",
-      "name": "Sushi Kuu",
-      "location": "Central, HK",
-      "rating": 4.2,
-      "priceRange": "HK$500+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 72,
-      "comments": 16,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-15",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Pro tip: The {technique} should be {adjective} for...",
-    "content": "Pro tip: The {technique} should be {adjective} for perfect {dish}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-15.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-15.jpg",
-    "restaurant": {
-      "id": "restaurant-15",
-      "name": "Zuma Hong Kong",
-      "location": "Central, HK",
-      "rating": 4.3,
-      "priceRange": "HK$500+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Cocktail bar",
-      "Lounge"
-    ],
-    "engagement": {
-      "likes": 53,
-      "comments": 17,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-16",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {chef} shared the {cuisine} philosophy behind ...",
-    "content": "The {chef} shared the {cuisine} philosophy behind this {dish}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-16.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-16.jpg",
-    "restaurant": {
-      "id": "restaurant-16",
-      "name": "Tokio Joe",
-      "location": "Central, HK",
-      "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Japanese restaurant",
-      "Takeout Restaurant"
-    ],
-    "engagement": {
-      "likes": 70,
-      "comments": 6,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-17",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
-    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-17.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-17.jpg",
-    "restaurant": {
-      "id": "restaurant-17",
-      "name": "Honjo",
-      "location": "Sheung Wan, HK",
-      "rating": 4.6,
-      "priceRange": "HK$500+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Bar",
-      "Sushi restaurant",
-      "Tempura restaurant"
-    ],
-    "engagement": {
-      "likes": 1,
-      "comments": 13,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-18",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {ingredient} should be {adjective} before {tec...",
-    "content": "The {ingredient} should be {adjective} before {technique}. It's {cuisine} wisdom.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-18.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-18.jpg",
-    "restaurant": {
-      "id": "restaurant-18",
+      "id": "restaurant-zen_minimalist_jun-3",
       "name": "Isoya Japanese Vegetarian Restaurant",
       "location": "Wan Chai, HK",
       "rating": 4.4,
       "priceRange": "$$",
-      "cuisine": "Vegetarian restaurant"
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
     },
     "tags": [
-      "Vegetarian restaurant"
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Japanese cuisine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 50,
-      "comments": 11,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
-    "id": "zen_minimalist_jun-post-19",
+    "id": "zen_minimalist_jun-post-4",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
-    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-19.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-19.jpg",
+    "title": "🧘 The Philosophy of Wasabi by Morimoto",
+    "content": "Wasabi by Morimoto in Mumbai embodies everything I believe about Japanese cuisine. This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-19",
+      "id": "restaurant-zen_minimalist_jun-4",
       "name": "Wasabi by Morimoto",
       "location": "Mumbai, IN",
       "rating": 4.5,
       "priceRange": "$$$$",
-      "cuisine": "Japanese restaurant"
+      "cuisine": "Japanese restaurant",
+      "address": "The Taj Mahal Palace, Mumbai, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001, India",
+      "description": "This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes.",
+      "reviewsCount": 1873
     },
     "tags": [
-      "Japanese restaurant"
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 71,
-      "comments": 1,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
-    "id": "zen_minimalist_jun-post-20",
+    "id": "zen_minimalist_jun-post-5",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
-    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-20.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-20.jpg",
+    "title": "✈️ Travel Discovery: Kofuku (Cloud Kitchen)",
+    "content": "While exploring Mumbai, I stumbled upon Kofuku (Cloud Kitchen) in Indrajit Society, Vithaldas Nagar, Santacruz (West). Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style. This is exactly the kind of authentic japanese restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
     "restaurant": {
-      "id": "restaurant-20",
-      "name": "Izumi Bandra",
-      "location": "Mumbai, IN",
-      "rating": 4.5,
-      "priceRange": "₹2,000+",
-      "cuisine": "Authentic Japanese restaurant"
-    },
-    "tags": [
-      "Authentic Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 76,
-      "comments": 5,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-21",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {ingredient} quality here is {adjective}. It's...",
-    "content": "The {ingredient} quality here is {adjective}. It's {cuisine} perfection.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-21.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-21.jpg",
-    "restaurant": {
-      "id": "restaurant-21",
-      "name": "Kuuraku Bandra West Mumbai",
-      "location": "Mumbai, IN",
-      "rating": 4.7,
-      "priceRange": "₹2,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 33,
-      "comments": 6,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-22",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
-    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-22.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-22.jpg",
-    "restaurant": {
-      "id": "restaurant-22",
+      "id": "restaurant-zen_minimalist_jun-5",
       "name": "Kofuku (Cloud Kitchen)",
       "location": "Mumbai, IN",
       "rating": 4.4,
       "priceRange": "$$$",
-      "cuisine": "Japanese restaurant"
+      "cuisine": "Japanese restaurant",
+      "address": "Flat No.101, 1st Floor, Krishna villa, 18th Rd, Indrajit Society, Vithaldas Nagar, Santacruz (West), Mumbai, Maharashtra 400054, India",
+      "description": "Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style.",
+      "reviewsCount": 1689
     },
     "tags": [
       "Japanese restaurant",
-      "Japanese curry restaurant",
-      "Ramen restaurant",
-      "Restaurant",
-      "Teppanyaki restaurant"
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 15,
-      "comments": 19,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
-    "id": "zen_minimalist_jun-post-23",
+    "id": "zen_minimalist_jun-post-6",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {chef} shared the {cuisine} philosophy behind ...",
-    "content": "The {chef} shared the {cuisine} philosophy behind this {dish}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-23.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-23.jpg",
+    "title": "🍽️ KOKO Mumbai - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at KOKO Mumbai in Mumbai! Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar. The Japanese cuisine here is absolutely outstanding. $$$$ price point makes it accessible, and the 4.6-star rating is well deserved. Highly recommend for anyone looking for authentic asian restaurant in Lower Parel.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
     "restaurant": {
-      "id": "restaurant-23",
+      "id": "restaurant-zen_minimalist_jun-6",
       "name": "KOKO Mumbai",
       "location": "Mumbai, IN",
       "rating": 4.6,
       "priceRange": "$$$$",
-      "cuisine": "Asian restaurant"
+      "cuisine": "Asian restaurant",
+      "address": "C Wing, Trade World, Kamala Mills Compound, Ground Floor, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar.",
+      "reviewsCount": 4656
     },
     "tags": [
-      "Asian restaurant"
+      "Asian restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "review"
     ],
-    "engagement": {
-      "likes": 52,
-      "comments": 13,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
-    "id": "zen_minimalist_jun-post-24",
+    "id": "zen_minimalist_jun-post-7",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
-    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-24.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-24.jpg",
+    "title": "🌟 My Journey to Origami Japanese & Korean Restaurant",
+    "content": "Walking through Hiranandani Gardens, Powai in Mumbai, I discovered this hidden gem: Origami Japanese & Korean Restaurant. Fine-dining Asian restaurant with views of a lake from partially open-air seating. As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-24",
+      "id": "restaurant-zen_minimalist_jun-7",
       "name": "Origami Japanese & Korean Restaurant",
       "location": "Mumbai, IN",
       "rating": 4.3,
       "priceRange": "$$$",
-      "cuisine": "Authentic Japanese restaurant"
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
       "Authentic Japanese restaurant",
-      "Korean restaurant"
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "story"
     ],
-    "engagement": {
-      "likes": 67,
-      "comments": 8,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
-    "id": "zen_minimalist_jun-post-25",
+    "id": "zen_minimalist_jun-post-8",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} in this {dish} is {adjective}. Eve...",
-    "content": "The {technique} in this {dish} is {adjective}. Every element is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-25.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-25.jpg",
+    "title": "💡 Pro Tip: Kura",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Kura in Cuauhtémoc, Mexico City during off-peak hours. Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer. Their japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-25",
-      "name": "Mizu",
-      "location": "Pali, Mumbai, IN",
-      "rating": 4.4,
-      "priceRange": "₹2,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 1,
-      "comments": 1,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-26",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
-    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-26.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-26.jpg",
-    "restaurant": {
-      "id": "restaurant-26",
-      "name": "Tengoku Yakiniku Singapore | Japanese Restaurant Singapore | Japanese BBQ",
-      "location": "Singapore, SG",
-      "rating": 4.8,
-      "priceRange": "SGD 100+",
-      "cuisine": "Yakiniku restaurant"
-    },
-    "tags": [
-      "Yakiniku restaurant",
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 45,
-      "comments": 9,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-27",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {chef} shared the {cuisine} philosophy behind ...",
-    "content": "The {chef} shared the {cuisine} philosophy behind this {dish}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-27.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-27.jpg",
-    "restaurant": {
-      "id": "restaurant-27",
-      "name": "Sushi Juban Asok Branch",
-      "location": "Watthana, TH",
-      "rating": 4.9,
-      "priceRange": "฿1,000+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 97,
-      "comments": 5,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "zen_minimalist_jun-post-28",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
-    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-28.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-28.jpg",
-    "restaurant": {
-      "id": "restaurant-28",
-      "name": "SUSHI JUBAN Takumi",
-      "location": "Watthana, TH",
-      "rating": 4.9,
-      "priceRange": "฿2,000+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 13,
-      "comments": 1,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-29",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
-    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-29.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-29.jpg",
-    "restaurant": {
-      "id": "restaurant-29",
-      "name": "Zuma Bangkok",
-      "location": "Pathum Wan, TH",
-      "rating": 4.4,
-      "priceRange": "฿2,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Cocktail bar",
-      "Fine dining restaurant",
-      "Restaurant"
-    ],
-    "engagement": {
-      "likes": 4,
-      "comments": 14,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-30",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
-    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-30.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-30.jpg",
-    "restaurant": {
-      "id": "restaurant-30",
-      "name": "Akira Back",
-      "location": "Khlong Toei, TH",
-      "rating": 4.7,
-      "priceRange": "฿1,400–1,600",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Asian fusion restaurant",
-      "Restaurant"
-    ],
-    "engagement": {
-      "likes": 30,
-      "comments": 15,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-31",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
-    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-31.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-31.jpg",
-    "restaurant": {
-      "id": "restaurant-31",
-      "name": "SUSHI SEKI",
-      "location": "Watthana, TH",
-      "rating": 4.8,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 41,
-      "comments": 6,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-32",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
-    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-32.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-32.jpg",
-    "restaurant": {
-      "id": "restaurant-32",
-      "name": "Sushi Yorokobu",
-      "location": "Watthana, TH",
-      "rating": 4.8,
-      "priceRange": "฿1,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 36,
-      "comments": 7,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "zen_minimalist_jun-post-33",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 300 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-33.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-33.jpg",
-    "restaurant": {
-      "id": "restaurant-33",
-      "name": "Sushi Sora",
-      "location": "Bang Rak, TH",
-      "rating": 4.9,
-      "priceRange": "฿2,000+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 3,
-      "comments": 2,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-34",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
-    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-34.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-34.jpg",
-    "restaurant": {
-      "id": "restaurant-34",
-      "name": "NIKU NIKU Japanese BBQ",
-      "location": "Khlong Toei, TH",
-      "rating": 4.9,
-      "priceRange": "฿1,000+",
-      "cuisine": "Barbecue restaurant"
-    },
-    "tags": [
-      "Barbecue restaurant",
-      "Japanese restaurant",
-      "Restaurant",
-      "Yakiniku restaurant"
-    ],
-    "engagement": {
-      "likes": 53,
-      "comments": 4,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-35",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
-    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-35.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-35.jpg",
-    "restaurant": {
-      "id": "restaurant-35",
-      "name": "Ling Ling by Hakkasan",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.9,
-      "priceRange": "MX$1,000+",
-      "cuisine": "Restaurant"
-    },
-    "tags": [
-      "Restaurant"
-    ],
-    "engagement": {
-      "likes": 71,
-      "comments": 2,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-36",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
-    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-36.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-36.jpg",
-    "restaurant": {
-      "id": "restaurant-36",
+      "id": "restaurant-zen_minimalist_jun-8",
       "name": "Kura",
       "location": "Cuauhtémoc, Mexico City, MX",
       "rating": 4.5,
       "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
+      "cuisine": "Japanese restaurant",
+      "address": "Colima 378-Local A, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer.",
+      "reviewsCount": 6103
     },
     "tags": [
       "Japanese restaurant",
-      "Modern izakaya restaurant",
-      "Sushi restaurant"
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 32,
-      "comments": 6,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
-    "id": "zen_minimalist_jun-post-37",
+    "id": "zen_minimalist_jun-post-9",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
-    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-37.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-37.jpg",
+    "title": "🧘 The Philosophy of Nagaoka",
+    "content": "Nagaoka in Benito Juarez, Mexico City embodies everything I believe about Japanese cuisine. Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-37",
-      "name": "Tori Tori Polanco",
-      "location": "Miguel Hidalgo, Mexico City, MX",
-      "rating": 4.5,
-      "priceRange": "MX$1,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Authentic Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 43,
-      "comments": 1,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-38",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
-    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-38.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-38.jpg",
-    "restaurant": {
-      "id": "restaurant-38",
-      "name": "Ryoshi",
-      "location": "Miguel Hidalgo, Mexico City, MX",
-      "rating": 4.9,
-      "priceRange": "MX$1,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 64,
-      "comments": 10,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-39",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
-    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-39.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-39.jpg",
-    "restaurant": {
-      "id": "restaurant-39",
-      "name": "Suntory Del Valle",
-      "location": "Benito Juarez, Mexico City, MX",
-      "rating": 4.7,
-      "priceRange": "MX$1,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Authentic Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 35,
-      "comments": 14,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-40",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
-    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-40.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-40.jpg",
-    "restaurant": {
-      "id": "restaurant-40",
+      "id": "restaurant-zen_minimalist_jun-9",
       "name": "Nagaoka",
       "location": "Benito Juarez, Mexico City, MX",
       "rating": 4.7,
       "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
+      "cuisine": "Japanese restaurant",
+      "address": "Arkansas 38, Nápoles, Benito Juárez, 03810 Ciudad de México, CDMX, Mexico",
+      "description": "Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients.",
+      "reviewsCount": 4162
     },
     "tags": [
       "Japanese restaurant",
-      "Restaurant",
-      "Sushi restaurant"
+      "Benito Juarez, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 64,
-      "comments": 6,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
-    "id": "zen_minimalist_jun-post-41",
+    "id": "zen_minimalist_jun-post-10",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
-    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-41.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-41.jpg",
+    "title": "✈️ Travel Discovery: Mog Bistro",
+    "content": "While exploring Cuauhtémoc, Mexico City, I stumbled upon Mog Bistro in Roma Norte. Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles. This is exactly the kind of authentic japanese restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-41",
+      "id": "restaurant-zen_minimalist_jun-10",
       "name": "Mog Bistro",
       "location": "Cuauhtémoc, Mexico City, MX",
       "rating": 4.5,
       "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
+      "cuisine": "Japanese restaurant",
+      "address": "Frontera 168, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles.",
+      "reviewsCount": 8861
     },
     "tags": [
       "Japanese restaurant",
-      "Restaurant",
-      "Sushi restaurant",
-      "Taiwanese restaurant"
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 1,
-      "comments": 9,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
-    "id": "zen_minimalist_jun-post-42",
+    "id": "zen_minimalist_jun-post-11",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
-    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-42.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-42.jpg",
+    "title": "🍽️ TOKYO SUSHI ITAMAE SUSHI Akasaka - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at TOKYO SUSHI ITAMAE SUSHI Akasaka in Minato City! undefined The Japanese cuisine here is absolutely outstanding. $$ price point makes it accessible, and the 4.2-star rating is well deserved. Highly recommend for anyone looking for authentic sushi restaurant in 3 Chome Akasaka.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
     "restaurant": {
-      "id": "restaurant-42",
-      "name": "Gin Chan",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.7,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 6,
-      "comments": 0,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "zen_minimalist_jun-post-43",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
-    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-43.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-43.jpg",
-    "restaurant": {
-      "id": "restaurant-43",
-      "name": "Plantasia",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.5,
-      "priceRange": "$$",
-      "cuisine": "Asian restaurant"
-    },
-    "tags": [
-      "Asian restaurant",
-      "Asian fusion restaurant",
-      "Chinese restaurant",
-      "Japanese restaurant",
-      "Pan-Asian restaurant",
-      "Vegan restaurant"
-    ],
-    "engagement": {
-      "likes": 18,
-      "comments": 0,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-44",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
-    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-44.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-44.jpg",
-    "restaurant": {
-      "id": "restaurant-44",
-      "name": "Seven Dials Market",
-      "location": "London, GB",
-      "rating": 4.5,
-      "priceRange": "£10–20",
-      "cuisine": "Food court"
-    },
-    "tags": [
-      "Food court",
-      "Bar",
-      "Book store",
-      "Cocktail bar",
-      "Market",
-      "Restaurant",
-      "Wine bar"
-    ],
-    "engagement": {
-      "likes": 51,
-      "comments": 15,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-45",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 100 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-45.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-45.jpg",
-    "restaurant": {
-      "id": "restaurant-45",
-      "name": "LOS LOOSERS",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.1,
-      "priceRange": "$$",
-      "cuisine": "Vegan restaurant"
-    },
-    "tags": [
-      "Vegan restaurant",
-      "Asian fusion restaurant",
-      "Asian restaurant",
-      "Japanese restaurant",
-      "Korean restaurant",
-      "Mexican restaurant",
-      "Oaxacan restaurant",
-      "Ramen restaurant",
-      "Taco restaurant"
-    ],
-    "engagement": {
-      "likes": 54,
-      "comments": 12,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-46",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 Pro tip: The {technique} should be {adjective} for...",
-    "content": "Pro tip: The {technique} should be {adjective} for perfect {dish}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-46.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-46.jpg",
-    "restaurant": {
-      "id": "restaurant-46",
-      "name": "SUSHISAMBA",
-      "location": "London, GB",
-      "rating": 4.5,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Brazilian restaurant",
-      "Cocktail bar",
-      "Peruvian restaurant",
-      "Restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 13,
-      "comments": 4,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-47",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} in this {dish} is {adjective}. Eve...",
-    "content": "The {technique} in this {dish} is {adjective}. Every element is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-47.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-47.jpg",
-    "restaurant": {
-      "id": "restaurant-47",
-      "name": "The Sushi Co - Waterloo",
-      "location": "London, GB",
-      "rating": 4.8,
-      "priceRange": "£10–20",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Sushi restaurant",
-      "Sushi takeaway"
-    ],
-    "engagement": {
-      "likes": 74,
-      "comments": 9,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-48",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
-    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-48.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-48.jpg",
-    "restaurant": {
-      "id": "restaurant-48",
-      "name": "SUSHINOEN",
-      "location": "London, GB",
-      "rating": 4.6,
-      "priceRange": "£20–40",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Asian restaurant",
-      "Halal restaurant",
-      "Authentic Japanese restaurant",
-      "Restaurant",
-      "Sushi restaurant",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 49,
-      "comments": 2,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "zen_minimalist_jun-post-49",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
-    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-49.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-49.jpg",
-    "restaurant": {
-      "id": "restaurant-49",
-      "name": "The Sushi Co - Kensington",
-      "location": "London, GB",
-      "rating": 4.8,
-      "priceRange": "£10–20",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Japanese restaurant",
-      "Sushi takeaway"
-    ],
-    "engagement": {
-      "likes": 19,
-      "comments": 5,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-50",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {ingredient} quality here is {adjective}. It's...",
-    "content": "The {ingredient} quality here is {adjective}. It's {cuisine} perfection.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-50.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-50.jpg",
-    "restaurant": {
-      "id": "restaurant-50",
-      "name": "Eat Tokyo (Soho)",
-      "location": "London, GB",
-      "rating": 4.3,
-      "priceRange": "£10–20",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Authentic Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 53,
-      "comments": 9,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-51",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {ingredient} quality here is {adjective}. It's...",
-    "content": "The {ingredient} quality here is {adjective}. It's {cuisine} perfection.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-51.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-51.jpg",
-    "restaurant": {
-      "id": "restaurant-51",
-      "name": "Cubé",
-      "location": "London, GB",
-      "rating": 4.6,
-      "priceRange": "£100+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Authentic Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 61,
-      "comments": 14,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-52",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {ingredient} should be {adjective} before {tec...",
-    "content": "The {ingredient} should be {adjective} before {technique}. It's {cuisine} wisdom.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-52.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-52.jpg",
-    "restaurant": {
-      "id": "restaurant-52",
-      "name": "Machiya",
-      "location": "London, GB",
-      "rating": 4.6,
-      "priceRange": "£20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 87,
-      "comments": 5,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-53",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 100 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-53.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-53.jpg",
-    "restaurant": {
-      "id": "restaurant-53",
-      "name": "Bageriet",
-      "location": "London, GB",
-      "rating": 4.7,
-      "priceRange": "£1–10",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery",
-      "Cafe",
-      "Patisserie"
-    ],
-    "engagement": {
-      "likes": 44,
-      "comments": 0,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-54",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
-    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-54.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-54.jpg",
-    "restaurant": {
-      "id": "restaurant-54",
-      "name": "Traditional Pure",
-      "location": "London, GB",
-      "rating": 4.8,
-      "priceRange": "£1–10",
-      "cuisine": "Health food restaurant"
-    },
-    "tags": [
-      "Health food restaurant",
-      "Breakfast restaurant",
-      "Health food store",
-      "Takeout Restaurant",
-      "Salad shop"
-    ],
-    "engagement": {
-      "likes": 88,
-      "comments": 4,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-55",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
-    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-55.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-55.jpg",
-    "restaurant": {
-      "id": "restaurant-55",
-      "name": "THAI STREET FOOD",
-      "location": "Toshima City, JP",
-      "rating": 4,
-      "priceRange": "¥1,000–2,000",
-      "cuisine": "Thai restaurant"
-    },
-    "tags": [
-      "Thai restaurant",
-      "Asian restaurant",
-      "Brewpub",
-      "Japanese curry restaurant",
-      "Takeout Restaurant"
-    ],
-    "engagement": {
-      "likes": 65,
-      "comments": 6,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-56",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
-    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-56.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-56.jpg",
-    "restaurant": {
-      "id": "restaurant-56",
-      "name": "Tokyo Ramen Street",
-      "location": "Chiyoda City, JP",
-      "rating": 4,
-      "priceRange": "¥1,000–2,000",
-      "cuisine": "Food court"
-    },
-    "tags": [
-      "Food court",
-      "Ramen restaurant"
-    ],
-    "engagement": {
-      "likes": 6,
-      "comments": 18,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "zen_minimalist_jun-post-57",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {ingredient} quality here is {adjective}. It's...",
-    "content": "The {ingredient} quality here is {adjective}. It's {cuisine} perfection.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-57.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-57.jpg",
-    "restaurant": {
-      "id": "restaurant-57",
-      "name": "Luke's Lobster Shibuya Park Street Shop",
-      "location": "Shibuya, JP",
-      "rating": 4,
-      "priceRange": "¥2,000–3,000",
-      "cuisine": "Seafood restaurant"
-    },
-    "tags": [
-      "Seafood restaurant",
-      "Cafe",
-      "Ramen restaurant",
-      "Sandwich shop",
-      "Wholesale bakery"
-    ],
-    "engagement": {
-      "likes": 73,
-      "comments": 3,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-58",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
-    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-58.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-58.jpg",
-    "restaurant": {
-      "id": "restaurant-58",
-      "name": "Tapas Molecular Bar",
-      "location": "Chuo City, JP",
-      "rating": 4.6,
-      "priceRange": "¥10,000+",
-      "cuisine": "Tapas restaurant"
-    },
-    "tags": [
-      "Tapas restaurant",
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 94,
-      "comments": 12,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "zen_minimalist_jun-post-59",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
-    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-59.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-59.jpg",
-    "restaurant": {
-      "id": "restaurant-59",
-      "name": "L’Effervescence",
-      "location": "Minato City, JP",
-      "rating": 4.6,
-      "priceRange": "¥10,000+",
-      "cuisine": "Haute French restaurant"
-    },
-    "tags": [
-      "Haute French restaurant",
-      "French restaurant",
-      "Restaurant"
-    ],
-    "engagement": {
-      "likes": 56,
-      "comments": 9,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-60",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
-    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-60.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-60.jpg",
-    "restaurant": {
-      "id": "restaurant-60",
-      "name": "Narisawa",
-      "location": "Minato City, JP",
-      "rating": 4.6,
-      "priceRange": "¥10,000+",
-      "cuisine": "Kaiseki restaurant"
-    },
-    "tags": [
-      "Kaiseki restaurant",
-      "French restaurant",
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 94,
-      "comments": 14,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.973Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-61",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
-    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-61.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-61.jpg",
-    "restaurant": {
-      "id": "restaurant-61",
-      "name": "Den",
-      "location": "Shibuya, JP",
-      "rating": 4.4,
-      "priceRange": "¥10,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Kaiseki restaurant",
-      "Restaurant"
-    ],
-    "engagement": {
-      "likes": 79,
-      "comments": 9,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Precise"
-  },
-  {
-    "id": "zen_minimalist_jun-post-62",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
-    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-62.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-62.jpg",
-    "restaurant": {
-      "id": "restaurant-62",
-      "name": "Sushi no Midori",
-      "location": "Chuo City, JP",
-      "rating": 4.2,
-      "priceRange": "$",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 13,
-      "comments": 12,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-63",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
-    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-63.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-63.jpg",
-    "restaurant": {
-      "id": "restaurant-63",
-      "name": "KABUKI Sushi",
-      "location": "Shinjuku City, JP",
-      "rating": 4.6,
-      "priceRange": "$$",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 36,
-      "comments": 3,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-64",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 The {chef} shared the {cuisine} philosophy behind ...",
-    "content": "The {chef} shared the {cuisine} philosophy behind this {dish}. It's {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-64.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-64.jpg",
-    "restaurant": {
-      "id": "restaurant-64",
-      "name": "Sushisho Masa",
-      "location": "Minato City, JP",
-      "rating": 4.7,
-      "priceRange": "¥10,000+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Fine dining restaurant"
-    ],
-    "engagement": {
-      "likes": 9,
-      "comments": 8,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Minimalist"
-  },
-  {
-    "id": "zen_minimalist_jun-post-65",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
-    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-65.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-65.jpg",
-    "restaurant": {
-      "id": "restaurant-65",
-      "name": "Sushi m",
-      "location": "Minato City, JP",
-      "rating": 4.6,
-      "priceRange": "¥10,000+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Fine dining restaurant",
-      "Gourmet grocery store",
-      "Japanese restaurant",
-      "Wine bar"
-    ],
-    "engagement": {
-      "likes": 49,
-      "comments": 19,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Thoughtful"
-  },
-  {
-    "id": "zen_minimalist_jun-post-66",
-    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
-    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-66.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-66.jpg",
-    "restaurant": {
-      "id": "restaurant-66",
+      "id": "restaurant-zen_minimalist_jun-11",
       "name": "TOKYO SUSHI ITAMAE SUSHI Akasaka",
       "location": "Minato City, JP",
       "rating": 4.2,
       "priceRange": "$$",
-      "cuisine": "Sushi restaurant"
+      "cuisine": "Sushi restaurant",
+      "address": "Japan, 〒107-0052 Tokyo, Minato City, Akasaka, 3 Chome−10−1 対翠館ビル 1F",
+      "reviewsCount": 1527
     },
     "tags": [
-      "Sushi restaurant"
+      "Sushi restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "review"
     ],
-    "engagement": {
-      "likes": 45,
-      "comments": 19,
-      "shares": 2
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-12",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to Japanese Yakiniku Nikugen",
+    "content": "Walking through 7 Chome Roppongi in Minato City, I discovered this hidden gem: Japanese Yakiniku Nikugen. undefined As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Minato City!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-12",
+      "name": "Japanese Yakiniku Nikugen",
+      "location": "Minato City, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Yakiniku restaurant",
+      "address": "Japan, 〒106-0032 Tokyo, Minato City, Roppongi, 7 Chome−15−17 ユニ六本木ビル ２Ｆ",
+      "reviewsCount": 1026
     },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Minimalist"
+    "tags": [
+      "Yakiniku restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-13",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: SMOKEHOUSE",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit SMOKEHOUSE in Shibuya during off-peak hours. Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap. Their barbecue restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-13",
+      "name": "SMOKEHOUSE",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Japan, 〒150-0001 Tokyo, Shibuya, Jingumae, 5 Chome−17−13 Niki Bldg, ２Ｆ ダイイチ​HOKI",
+      "description": "Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap.",
+      "reviewsCount": 2042
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Shibuya",
+      "JP",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-14",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of Robata",
+    "content": "Robata in Barcelona embodies everything I believe about Japanese cuisine. Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-1",
+      "name": "Robata",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer d'Enric Granados, 55, L'Eixample, 08008 Barcelona, Spain",
+      "description": "Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting.",
+      "reviewsCount": 7113
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-15",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: Shunka",
+    "content": "While exploring Barcelona, I stumbled upon Shunka in Ciutat Vella. undefined This is exactly the kind of authentic japanese restaurant experience I seek when traveling. The 4.6-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-2",
+      "name": "Shunka",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer dels Sagristans, 5, Ciutat Vella, 08002 Barcelona, Spain",
+      "reviewsCount": 2220
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-16",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Isoya Japanese Vegetarian Restaurant - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Isoya Japanese Vegetarian Restaurant in Wan Chai! undefined The Japanese cuisine here is absolutely outstanding. $$ price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in null.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-3",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-17",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to Wasabi by Morimoto",
+    "content": "Walking through Apollo Bandar, Colaba in Mumbai, I discovered this hidden gem: Wasabi by Morimoto. This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes. As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-4",
+      "name": "Wasabi by Morimoto",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "The Taj Mahal Palace, Mumbai, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001, India",
+      "description": "This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes.",
+      "reviewsCount": 1873
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-18",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: Kofuku (Cloud Kitchen)",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Kofuku (Cloud Kitchen) in Mumbai during off-peak hours. Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style. Their japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-5",
+      "name": "Kofuku (Cloud Kitchen)",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Flat No.101, 1st Floor, Krishna villa, 18th Rd, Indrajit Society, Vithaldas Nagar, Santacruz (West), Mumbai, Maharashtra 400054, India",
+      "description": "Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style.",
+      "reviewsCount": 1689
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-19",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of KOKO Mumbai",
+    "content": "KOKO Mumbai in Mumbai embodies everything I believe about Japanese cuisine. Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-6",
+      "name": "KOKO Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": "$$$$",
+      "cuisine": "Asian restaurant",
+      "address": "C Wing, Trade World, Kamala Mills Compound, Ground Floor, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar.",
+      "reviewsCount": 4656
+    },
+    "tags": [
+      "Asian restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-20",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: Origami Japanese & Korean Restaurant",
+    "content": "While exploring Mumbai, I stumbled upon Origami Japanese & Korean Restaurant in Hiranandani Gardens, Powai. Fine-dining Asian restaurant with views of a lake from partially open-air seating. This is exactly the kind of authentic authentic japanese restaurant experience I seek when traveling. The 4.3-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-7",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-21",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Kura - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Kura in Cuauhtémoc, Mexico City! Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer. The Japanese cuisine here is absolutely outstanding. $$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic japanese restaurant in Roma Norte.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-8",
+      "name": "Kura",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Colima 378-Local A, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer.",
+      "reviewsCount": 6103
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-22",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to Nagaoka",
+    "content": "Walking through Colonia Nápoles in Benito Juarez, Mexico City, I discovered this hidden gem: Nagaoka. Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients. As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Benito Juarez, Mexico City!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-9",
+      "name": "Nagaoka",
+      "location": "Benito Juarez, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Arkansas 38, Nápoles, Benito Juárez, 03810 Ciudad de México, CDMX, Mexico",
+      "description": "Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients.",
+      "reviewsCount": 4162
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Benito Juarez, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-23",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: Mog Bistro",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Mog Bistro in Cuauhtémoc, Mexico City during off-peak hours. Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles. Their japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-10",
+      "name": "Mog Bistro",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Frontera 168, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles.",
+      "reviewsCount": 8861
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-24",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of TOKYO SUSHI ITAMAE SUSHI Akasaka",
+    "content": "TOKYO SUSHI ITAMAE SUSHI Akasaka in Minato City embodies everything I believe about Japanese cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-11",
+      "name": "TOKYO SUSHI ITAMAE SUSHI Akasaka",
+      "location": "Minato City, JP",
+      "rating": 4.2,
+      "priceRange": "$$",
+      "cuisine": "Sushi restaurant",
+      "address": "Japan, 〒107-0052 Tokyo, Minato City, Akasaka, 3 Chome−10−1 対翠館ビル 1F",
+      "reviewsCount": 1527
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-25",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: Japanese Yakiniku Nikugen",
+    "content": "While exploring Minato City, I stumbled upon Japanese Yakiniku Nikugen in 7 Chome Roppongi. undefined This is exactly the kind of authentic yakiniku restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-12",
+      "name": "Japanese Yakiniku Nikugen",
+      "location": "Minato City, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Yakiniku restaurant",
+      "address": "Japan, 〒106-0032 Tokyo, Minato City, Roppongi, 7 Chome−15−17 ユニ六本木ビル ２Ｆ",
+      "reviewsCount": 1026
+    },
+    "tags": [
+      "Yakiniku restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-26",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ SMOKEHOUSE - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at SMOKEHOUSE in Shibuya! Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap. The Japanese cuisine here is absolutely outstanding. $$ price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic barbecue restaurant in 5 Chome Jingumae.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-13",
+      "name": "SMOKEHOUSE",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Japan, 〒150-0001 Tokyo, Shibuya, Jingumae, 5 Chome−17−13 Niki Bldg, ２Ｆ ダイイチ​HOKI",
+      "description": "Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap.",
+      "reviewsCount": 2042
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Shibuya",
+      "JP",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-27",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to Robata",
+    "content": "Walking through Eixample in Barcelona, I discovered this hidden gem: Robata. Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting. As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Barcelona!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-1",
+      "name": "Robata",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer d'Enric Granados, 55, L'Eixample, 08008 Barcelona, Spain",
+      "description": "Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting.",
+      "reviewsCount": 7113
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-28",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: Shunka",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Shunka in Barcelona during off-peak hours. undefined Their japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-2",
+      "name": "Shunka",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer dels Sagristans, 5, Ciutat Vella, 08002 Barcelona, Spain",
+      "reviewsCount": 2220
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-29",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of Isoya Japanese Vegetarian Restaurant",
+    "content": "Isoya Japanese Vegetarian Restaurant in Wan Chai embodies everything I believe about Japanese cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-3",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-30",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: Wasabi by Morimoto",
+    "content": "While exploring Mumbai, I stumbled upon Wasabi by Morimoto in Apollo Bandar, Colaba. This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes. This is exactly the kind of authentic japanese restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-4",
+      "name": "Wasabi by Morimoto",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "The Taj Mahal Palace, Mumbai, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001, India",
+      "description": "This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes.",
+      "reviewsCount": 1873
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-31",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Kofuku (Cloud Kitchen) - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Kofuku (Cloud Kitchen) in Mumbai! Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style. The Japanese cuisine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic japanese restaurant in Indrajit Society, Vithaldas Nagar, Santacruz (West).",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-5",
+      "name": "Kofuku (Cloud Kitchen)",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Flat No.101, 1st Floor, Krishna villa, 18th Rd, Indrajit Society, Vithaldas Nagar, Santacruz (West), Mumbai, Maharashtra 400054, India",
+      "description": "Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style.",
+      "reviewsCount": 1689
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-32",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to KOKO Mumbai",
+    "content": "Walking through Lower Parel in Mumbai, I discovered this hidden gem: KOKO Mumbai. Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar. As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-6",
+      "name": "KOKO Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": "$$$$",
+      "cuisine": "Asian restaurant",
+      "address": "C Wing, Trade World, Kamala Mills Compound, Ground Floor, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar.",
+      "reviewsCount": 4656
+    },
+    "tags": [
+      "Asian restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-33",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: Origami Japanese & Korean Restaurant",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Origami Japanese & Korean Restaurant in Mumbai during off-peak hours. Fine-dining Asian restaurant with views of a lake from partially open-air seating. Their authentic japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-7",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-34",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of Kura",
+    "content": "Kura in Cuauhtémoc, Mexico City embodies everything I believe about Japanese cuisine. Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-8",
+      "name": "Kura",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Colima 378-Local A, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer.",
+      "reviewsCount": 6103
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-35",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: Nagaoka",
+    "content": "While exploring Benito Juarez, Mexico City, I stumbled upon Nagaoka in Colonia Nápoles. Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients. This is exactly the kind of authentic japanese restaurant experience I seek when traveling. The 4.7-star rating is spot on, and the $$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-9",
+      "name": "Nagaoka",
+      "location": "Benito Juarez, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Arkansas 38, Nápoles, Benito Juárez, 03810 Ciudad de México, CDMX, Mexico",
+      "description": "Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients.",
+      "reviewsCount": 4162
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Benito Juarez, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-36",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Mog Bistro - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Mog Bistro in Cuauhtémoc, Mexico City! Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles. The Japanese cuisine here is absolutely outstanding. $$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic japanese restaurant in Roma Norte.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-10",
+      "name": "Mog Bistro",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Frontera 168, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles.",
+      "reviewsCount": 8861
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-37",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to TOKYO SUSHI ITAMAE SUSHI Akasaka",
+    "content": "Walking through 3 Chome Akasaka in Minato City, I discovered this hidden gem: TOKYO SUSHI ITAMAE SUSHI Akasaka. undefined As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Minato City!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-11",
+      "name": "TOKYO SUSHI ITAMAE SUSHI Akasaka",
+      "location": "Minato City, JP",
+      "rating": 4.2,
+      "priceRange": "$$",
+      "cuisine": "Sushi restaurant",
+      "address": "Japan, 〒107-0052 Tokyo, Minato City, Akasaka, 3 Chome−10−1 対翠館ビル 1F",
+      "reviewsCount": 1527
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-38",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: Japanese Yakiniku Nikugen",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Japanese Yakiniku Nikugen in Minato City during off-peak hours. undefined Their yakiniku restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-12",
+      "name": "Japanese Yakiniku Nikugen",
+      "location": "Minato City, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Yakiniku restaurant",
+      "address": "Japan, 〒106-0032 Tokyo, Minato City, Roppongi, 7 Chome−15−17 ユニ六本木ビル ２Ｆ",
+      "reviewsCount": 1026
+    },
+    "tags": [
+      "Yakiniku restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-39",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of SMOKEHOUSE",
+    "content": "SMOKEHOUSE in Shibuya embodies everything I believe about Japanese cuisine. Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-13",
+      "name": "SMOKEHOUSE",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Japan, 〒150-0001 Tokyo, Shibuya, Jingumae, 5 Chome−17−13 Niki Bldg, ２Ｆ ダイイチ​HOKI",
+      "description": "Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap.",
+      "reviewsCount": 2042
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Shibuya",
+      "JP",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-40",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: Robata",
+    "content": "While exploring Barcelona, I stumbled upon Robata in Eixample. Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting. This is exactly the kind of authentic japanese restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-1",
+      "name": "Robata",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer d'Enric Granados, 55, L'Eixample, 08008 Barcelona, Spain",
+      "description": "Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting.",
+      "reviewsCount": 7113
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-41",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Shunka - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Shunka in Barcelona! undefined The Japanese cuisine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.6-star rating is well deserved. Highly recommend for anyone looking for authentic japanese restaurant in Ciutat Vella.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-2",
+      "name": "Shunka",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer dels Sagristans, 5, Ciutat Vella, 08002 Barcelona, Spain",
+      "reviewsCount": 2220
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-42",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to Isoya Japanese Vegetarian Restaurant",
+    "content": "Walking through null in Wan Chai, I discovered this hidden gem: Isoya Japanese Vegetarian Restaurant. undefined As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Wan Chai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-3",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-43",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: Wasabi by Morimoto",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Wasabi by Morimoto in Mumbai during off-peak hours. This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes. Their japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-4",
+      "name": "Wasabi by Morimoto",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "The Taj Mahal Palace, Mumbai, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001, India",
+      "description": "This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes.",
+      "reviewsCount": 1873
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-44",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of Kofuku (Cloud Kitchen)",
+    "content": "Kofuku (Cloud Kitchen) in Mumbai embodies everything I believe about Japanese cuisine. Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-5",
+      "name": "Kofuku (Cloud Kitchen)",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Flat No.101, 1st Floor, Krishna villa, 18th Rd, Indrajit Society, Vithaldas Nagar, Santacruz (West), Mumbai, Maharashtra 400054, India",
+      "description": "Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style.",
+      "reviewsCount": 1689
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-45",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: KOKO Mumbai",
+    "content": "While exploring Mumbai, I stumbled upon KOKO Mumbai in Lower Parel. Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar. This is exactly the kind of authentic asian restaurant experience I seek when traveling. The 4.6-star rating is spot on, and the $$$$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-6",
+      "name": "KOKO Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": "$$$$",
+      "cuisine": "Asian restaurant",
+      "address": "C Wing, Trade World, Kamala Mills Compound, Ground Floor, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar.",
+      "reviewsCount": 4656
+    },
+    "tags": [
+      "Asian restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-46",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Origami Japanese & Korean Restaurant - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Origami Japanese & Korean Restaurant in Mumbai! Fine-dining Asian restaurant with views of a lake from partially open-air seating. The Japanese cuisine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.3-star rating is well deserved. Highly recommend for anyone looking for authentic authentic japanese restaurant in Hiranandani Gardens, Powai.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-7",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-47",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to Kura",
+    "content": "Walking through Roma Norte in Cuauhtémoc, Mexico City, I discovered this hidden gem: Kura. Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer. As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Cuauhtémoc, Mexico City!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-8",
+      "name": "Kura",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Colima 378-Local A, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer.",
+      "reviewsCount": 6103
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-48",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: Nagaoka",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Nagaoka in Benito Juarez, Mexico City during off-peak hours. Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients. Their japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-9",
+      "name": "Nagaoka",
+      "location": "Benito Juarez, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Arkansas 38, Nápoles, Benito Juárez, 03810 Ciudad de México, CDMX, Mexico",
+      "description": "Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients.",
+      "reviewsCount": 4162
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Benito Juarez, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-49",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of Mog Bistro",
+    "content": "Mog Bistro in Cuauhtémoc, Mexico City embodies everything I believe about Japanese cuisine. Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-10",
+      "name": "Mog Bistro",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Frontera 168, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles.",
+      "reviewsCount": 8861
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-50",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: TOKYO SUSHI ITAMAE SUSHI Akasaka",
+    "content": "While exploring Minato City, I stumbled upon TOKYO SUSHI ITAMAE SUSHI Akasaka in 3 Chome Akasaka. undefined This is exactly the kind of authentic sushi restaurant experience I seek when traveling. The 4.2-star rating is spot on, and the $$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-11",
+      "name": "TOKYO SUSHI ITAMAE SUSHI Akasaka",
+      "location": "Minato City, JP",
+      "rating": 4.2,
+      "priceRange": "$$",
+      "cuisine": "Sushi restaurant",
+      "address": "Japan, 〒107-0052 Tokyo, Minato City, Akasaka, 3 Chome−10−1 対翠館ビル 1F",
+      "reviewsCount": 1527
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-51",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Japanese Yakiniku Nikugen - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Japanese Yakiniku Nikugen in Minato City! undefined The Japanese cuisine here is absolutely outstanding. $$ price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic yakiniku restaurant in 7 Chome Roppongi.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-12",
+      "name": "Japanese Yakiniku Nikugen",
+      "location": "Minato City, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Yakiniku restaurant",
+      "address": "Japan, 〒106-0032 Tokyo, Minato City, Roppongi, 7 Chome−15−17 ユニ六本木ビル ２Ｆ",
+      "reviewsCount": 1026
+    },
+    "tags": [
+      "Yakiniku restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-52",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to SMOKEHOUSE",
+    "content": "Walking through 5 Chome Jingumae in Shibuya, I discovered this hidden gem: SMOKEHOUSE. Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap. As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Shibuya!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-13",
+      "name": "SMOKEHOUSE",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Japan, 〒150-0001 Tokyo, Shibuya, Jingumae, 5 Chome−17−13 Niki Bldg, ２Ｆ ダイイチ​HOKI",
+      "description": "Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap.",
+      "reviewsCount": 2042
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Shibuya",
+      "JP",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-53",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: Robata",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Robata in Barcelona during off-peak hours. Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting. Their japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-1",
+      "name": "Robata",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer d'Enric Granados, 55, L'Eixample, 08008 Barcelona, Spain",
+      "description": "Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting.",
+      "reviewsCount": 7113
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-54",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of Shunka",
+    "content": "Shunka in Barcelona embodies everything I believe about Japanese cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-2",
+      "name": "Shunka",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer dels Sagristans, 5, Ciutat Vella, 08002 Barcelona, Spain",
+      "reviewsCount": 2220
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-55",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: Isoya Japanese Vegetarian Restaurant",
+    "content": "While exploring Wan Chai, I stumbled upon Isoya Japanese Vegetarian Restaurant in null. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-3",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-56",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Wasabi by Morimoto - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Wasabi by Morimoto in Mumbai! This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes. The Japanese cuisine here is absolutely outstanding. $$$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic japanese restaurant in Apollo Bandar, Colaba.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-4",
+      "name": "Wasabi by Morimoto",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "The Taj Mahal Palace, Mumbai, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001, India",
+      "description": "This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes.",
+      "reviewsCount": 1873
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-57",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to Kofuku (Cloud Kitchen)",
+    "content": "Walking through Indrajit Society, Vithaldas Nagar, Santacruz (West) in Mumbai, I discovered this hidden gem: Kofuku (Cloud Kitchen). Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style. As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-5",
+      "name": "Kofuku (Cloud Kitchen)",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Flat No.101, 1st Floor, Krishna villa, 18th Rd, Indrajit Society, Vithaldas Nagar, Santacruz (West), Mumbai, Maharashtra 400054, India",
+      "description": "Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style.",
+      "reviewsCount": 1689
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-58",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: KOKO Mumbai",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit KOKO Mumbai in Mumbai during off-peak hours. Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar. Their asian restaurant is exceptional, and you'll get the full experience without the crowds. The $$$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4x-3vujGms3KglzMPCtxQXTFa4aRn65P90XbQ14TR1IoU3aDHzWkaZue1bgoKw6eNYDu9DQ7DUVrkBypbCJyvYE2Bx9vAvtbXijlmm76-lHYCWjeVUxmk1vdd7l30pTQ8-AHBbA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-6",
+      "name": "KOKO Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": "$$$$",
+      "cuisine": "Asian restaurant",
+      "address": "C Wing, Trade World, Kamala Mills Compound, Ground Floor, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Creative cocktails, sushi & modern pan-Asian fare in a stylish space with a long Burmese teak bar.",
+      "reviewsCount": 4656
+    },
+    "tags": [
+      "Asian restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-59",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of Origami Japanese & Korean Restaurant",
+    "content": "Origami Japanese & Korean Restaurant in Mumbai embodies everything I believe about Japanese cuisine. Fine-dining Asian restaurant with views of a lake from partially open-air seating. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-7",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-60",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: Kura",
+    "content": "While exploring Cuauhtémoc, Mexico City, I stumbled upon Kura in Roma Norte. Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer. This is exactly the kind of authentic japanese restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-8",
+      "name": "Kura",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Colima 378-Local A, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer.",
+      "reviewsCount": 6103
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-61",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Nagaoka - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Nagaoka in Benito Juarez, Mexico City! Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients. The Japanese cuisine here is absolutely outstanding. $$ price point makes it accessible, and the 4.7-star rating is well deserved. Highly recommend for anyone looking for authentic japanese restaurant in Colonia Nápoles.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-9",
+      "name": "Nagaoka",
+      "location": "Benito Juarez, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Arkansas 38, Nápoles, Benito Juárez, 03810 Ciudad de México, CDMX, Mexico",
+      "description": "Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients.",
+      "reviewsCount": 4162
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Benito Juarez, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-62",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🌟 My Journey to Mog Bistro",
+    "content": "Walking through Roma Norte in Cuauhtémoc, Mexico City, I discovered this hidden gem: Mog Bistro. Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles. As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Cuauhtémoc, Mexico City!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nozupCDHGOA69kQDkgWh3aMtXqWLXc6tErOLSnlc4eaPs7t9IlW-ZhBoA5DnBQ7ulkNNeIWSH_5GZVSh0SCivP5eHF_0gVN-ijW1A0Nfkd_yJKnaUzNfnPhtEE_tChIn2e2j1w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-10",
+      "name": "Mog Bistro",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Frontera 168, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+      "description": "Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles.",
+      "reviewsCount": 8861
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cuauhtémoc, Mexico City",
+      "MX",
+      "Japanese cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-63",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "💡 Pro Tip: TOKYO SUSHI ITAMAE SUSHI Akasaka",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit TOKYO SUSHI ITAMAE SUSHI Akasaka in Minato City during off-peak hours. undefined Their sushi restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqL4gl8fbP3u7E12aBvRvty6l8VIE6X-AournOgnPR3eXvrkXUDm8j_xY_UjBH3oOgddTkyR9WWt3BsQ_-e1zDiMsiONejrchSZlx-zizq_QkJff-Juswcz4hmwnm4Yw5iAKbjjoQ=w408-h324-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-11",
+      "name": "TOKYO SUSHI ITAMAE SUSHI Akasaka",
+      "location": "Minato City, JP",
+      "rating": 4.2,
+      "priceRange": "$$",
+      "cuisine": "Sushi restaurant",
+      "address": "Japan, 〒107-0052 Tokyo, Minato City, Akasaka, 3 Chome−10−1 対翠館ビル 1F",
+      "reviewsCount": 1527
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-64",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🧘 The Philosophy of Japanese Yakiniku Nikugen",
+    "content": "Japanese Yakiniku Nikugen in Minato City embodies everything I believe about Japanese cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npgTiJhNSw11Xztv2JwHVSAt2goBKErCfb0YqaVc7Rs-0gi-9b1YUGuedGIMK7RGH-7Ao6ggLQ7SzmICqJWlWnLPOOtUNbm-xOogI8rauIru1QI-q5JZOE9meHMr4UHqOySld-P=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-12",
+      "name": "Japanese Yakiniku Nikugen",
+      "location": "Minato City, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Yakiniku restaurant",
+      "address": "Japan, 〒106-0032 Tokyo, Minato City, Roppongi, 7 Chome−15−17 ユニ六本木ビル ２Ｆ",
+      "reviewsCount": 1026
+    },
+    "tags": [
+      "Yakiniku restaurant",
+      "Minato City",
+      "JP",
+      "Japanese cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-65",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "✈️ Travel Discovery: SMOKEHOUSE",
+    "content": "While exploring Shibuya, I stumbled upon SMOKEHOUSE in 5 Chome Jingumae. Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap. This is exactly the kind of authentic barbecue restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nok_KBI-J2eJxGvIojNcRpxWw1LemFo6PFE4xIwpt8ggJDWa1GvdpyXXmJa4aclvK-7uKDws8-lhPAmdbqpQ7OcCwnkfng7o4lVyVAEqqllQ2EETq7iP2OVQinwt2dWHY-UVig=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-13",
+      "name": "SMOKEHOUSE",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Japan, 〒150-0001 Tokyo, Shibuya, Jingumae, 5 Chome−17−13 Niki Bldg, ２Ｆ ダイイチ​HOKI",
+      "description": "Buzzing brewery-style place for burgers, ribs & steak, with a terrace & an array of beers on tap.",
+      "reviewsCount": 2042
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Shibuya",
+      "JP",
+      "Japanese cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
+  },
+  {
+    "id": "zen_minimalist_jun-post-66",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍽️ Robata - A Japanese cuisine Experience",
+    "content": "Just had an incredible meal at Robata in Barcelona! Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting. The Japanese cuisine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic japanese restaurant in Eixample.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-zen_minimalist_jun-1",
+      "name": "Robata",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer d'Enric Granados, 55, L'Eixample, 08008 Barcelona, Spain",
+      "description": "Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting.",
+      "reviewsCount": 7113
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
     "id": "zen_minimalist_jun-post-67",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 50 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-67.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-67.jpg",
+    "title": "🌟 My Journey to Shunka",
+    "content": "Walking through Ciutat Vella in Barcelona, I discovered this hidden gem: Shunka. undefined As someone who specializes in Japanese cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Minimalism. This is why I love exploring Barcelona!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqud43t-0KtzNnp3ukO3gRBPKpS6dV4SxahegMXlkP3Is35QsMV7M0cKvcoy-1LUVBEpbF2C2vMoBPP_HmiPaA2g2mlqV0cTgv2qdk2E5mz9-_7ugSWZXFUWq1x94WMeJS0bZQn=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-67",
-      "name": "Ginza Kyūbey Honten",
-      "location": "Chuo City, JP",
-      "rating": 4.4,
-      "priceRange": "¥10,000+",
-      "cuisine": "Sushi restaurant"
+      "id": "restaurant-zen_minimalist_jun-2",
+      "name": "Shunka",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Carrer dels Sagristans, 5, Ciutat Vella, 08002 Barcelona, Spain",
+      "reviewsCount": 2220
     },
     "tags": [
-      "Sushi restaurant"
+      "Japanese restaurant",
+      "Barcelona",
+      "ES",
+      "Japanese cuisine",
+      "story"
     ],
-    "engagement": {
-      "likes": 52,
-      "comments": 6,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Traditional"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
     "id": "zen_minimalist_jun-post-68",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 200 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-68.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-68.jpg",
+    "title": "💡 Pro Tip: Isoya Japanese Vegetarian Restaurant",
+    "content": "Here's a Japanese cuisine tip for my fellow food lovers: Visit Isoya Japanese Vegetarian Restaurant in Wan Chai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
     "restaurant": {
-      "id": "restaurant-68",
-      "name": "Sushi｜Yurakucho Kakida｜Tokyo",
-      "location": "Shibuya, JP",
-      "rating": 4.5,
-      "priceRange": "¥10,000+",
-      "cuisine": "Sushi restaurant"
+      "id": "restaurant-zen_minimalist_jun-3",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
     },
     "tags": [
-      "Sushi restaurant",
-      "Japanese grocery store",
-      "Japanese restaurant"
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Japanese cuisine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 62,
-      "comments": 17,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Thoughtful"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
     "id": "zen_minimalist_jun-post-69",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
-    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-69.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-69.jpg",
+    "title": "🧘 The Philosophy of Wasabi by Morimoto",
+    "content": "Wasabi by Morimoto in Mumbai embodies everything I believe about Japanese cuisine. This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Minimalism. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nphB3-NEj7ru3J7ZhB2Lmv1zVOqVWuHs2SrwkeDqG2wrxQYm5YyZfXuNOdKMFOCbGe8DpA1r9fT6XR4J2FwXlmI181n6nY4eOtNpKQnd2vHvCmmf8-gB-lAFNC47S-KMDEnKp91pg=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-69",
-      "name": "Brown Rice Tokyo Omotesando",
-      "location": "Shibuya, JP",
+      "id": "restaurant-zen_minimalist_jun-4",
+      "name": "Wasabi by Morimoto",
+      "location": "Mumbai, IN",
       "rating": 4.5,
-      "priceRange": "¥2,000–3,000",
-      "cuisine": "Organic restaurant"
+      "priceRange": "$$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "The Taj Mahal Palace, Mumbai, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001, India",
+      "description": "This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes.",
+      "reviewsCount": 1873
     },
     "tags": [
-      "Organic restaurant",
       "Japanese restaurant",
-      "Vegan restaurant",
-      "Vegetarian restaurant"
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 86,
-      "comments": 14,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Minimalist"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   },
   {
     "id": "zen_minimalist_jun-post-70",
     "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
-    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
-    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/zen_minimalist_jun/post-70.jpg",
-    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-70.jpg",
+    "title": "✈️ Travel Discovery: Kofuku (Cloud Kitchen)",
+    "content": "While exploring Mumbai, I stumbled upon Kofuku (Cloud Kitchen) in Indrajit Society, Vithaldas Nagar, Santacruz (West). Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style. This is exactly the kind of authentic japanese restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Japanese cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipOwS15_cdaBe2ydCl_CzeXqZICQne1_16QW4WsP=w408-h271-k-no",
     "restaurant": {
-      "id": "restaurant-70",
-      "name": "Vegan Eat Tokyo",
-      "location": "Taito City, JP",
-      "rating": 4.7,
-      "priceRange": "¥2,000–3,000",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-zen_minimalist_jun-5",
+      "name": "Kofuku (Cloud Kitchen)",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant",
+      "address": "Flat No.101, 1st Floor, Krishna villa, 18th Rd, Indrajit Society, Vithaldas Nagar, Santacruz (West), Mumbai, Maharashtra 400054, India",
+      "description": "Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style.",
+      "reviewsCount": 1689
     },
     "tags": [
-      "Vegan restaurant",
-      "Organic restaurant",
-      "Vegetarian restaurant"
+      "Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Japanese cuisine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 95,
-      "comments": 13,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.974Z",
-    "personality": "Traditional"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:04.805Z"
   }
 ]

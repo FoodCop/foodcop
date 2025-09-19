@@ -2,1962 +2,1961 @@
   {
     "id": "sommelier_seb-post-1",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
-    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-1.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-1.jpg",
+    "title": "🍽️ Osmosis - A Wine Experience",
+    "content": "Just had an incredible meal at Osmosis in Barcelona! Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic mediterranean restaurant in Eixample.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-1",
-      "name": "Robata",
-      "location": "Barcelona, ES",
-      "rating": 4.5,
-      "priceRange": "$$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Dim sum restaurant",
-      "Authentic Japanese restaurant",
-      "Delivery Restaurant",
-      "Modern izakaya restaurant",
-      "Okonomiyaki restaurant",
-      "Restaurant",
-      "Sushi restaurant",
-      "Tempura restaurant"
-    ],
-    "engagement": {
-      "likes": 16,
-      "comments": 14,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.873Z",
-    "personality": "Knowledgeable"
-  },
-  {
-    "id": "sommelier_seb-post-2",
-    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {chef} shared the story behind this {dish}. It...",
-    "content": "The {chef} shared the story behind this {dish}. It's inspired by {inspiration}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-2.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-2.jpg",
-    "restaurant": {
-      "id": "restaurant-2",
-      "name": "Shunka",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "$$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Asian restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 79,
-      "comments": 2,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.873Z",
-    "personality": "Knowledgeable"
-  },
-  {
-    "id": "sommelier_seb-post-3",
-    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 75 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-3.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-3.jpg",
-    "restaurant": {
-      "id": "restaurant-3",
-      "name": "Can Kenji",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Izakaya restaurant",
-      "Mediterranean restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 72,
-      "comments": 14,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.873Z",
-    "personality": "Knowledgeable"
-  },
-  {
-    "id": "sommelier_seb-post-4",
-    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {dish} should be {adjective} before serving. T...",
-    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-4.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-4.jpg",
-    "restaurant": {
-      "id": "restaurant-4",
-      "name": "IKOYA Izakaya",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Restaurant",
-      "Ramen restaurant",
-      "Sake brewery",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 74,
-      "comments": 13,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.873Z",
-    "personality": "Sophisticated"
-  },
-  {
-    "id": "sommelier_seb-post-5",
-    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
-    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-5.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-5.jpg",
-    "restaurant": {
-      "id": "restaurant-5",
-      "name": "Restaurante FUTAMI",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 23,
-      "comments": 17,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.873Z",
-    "personality": "Sophisticated"
-  },
-  {
-    "id": "sommelier_seb-post-6",
-    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
-    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
-    "imageUrl": "/images/posts/sommelier_seb/post-6.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-6.jpg",
-    "restaurant": {
-      "id": "restaurant-6",
-      "name": "Matsuri Sushi Bar - Restaurante Japonés",
-      "location": "Barcelona, ES",
-      "rating": 4.4,
-      "priceRange": "€20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 55,
-      "comments": 10,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
-  },
-  {
-    "id": "sommelier_seb-post-7",
-    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
-    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-7.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-7.jpg",
-    "restaurant": {
-      "id": "restaurant-7",
-      "name": "Restaurante Hitsumabushi",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 60,
-      "comments": 18,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
-  },
-  {
-    "id": "sommelier_seb-post-8",
-    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {cuisine} tradition here is {adjective}. The {...",
-    "content": "The {cuisine} tradition here is {adjective}. The {dish} is a {adjective} example.",
-    "imageUrl": "/images/posts/sommelier_seb/post-8.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-8.jpg",
-    "restaurant": {
-      "id": "restaurant-8",
-      "name": "Disfrutar",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€100+",
-      "cuisine": "Fine dining restaurant"
-    },
-    "tags": [
-      "Fine dining restaurant",
-      "Catalonian restaurant",
-      "Mediterranean restaurant",
-      "Spanish restaurant"
-    ],
-    "engagement": {
-      "likes": 58,
-      "comments": 11,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "sommelier_seb-post-9",
-    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
-    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-9.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-9.jpg",
-    "restaurant": {
-      "id": "restaurant-9",
-      "name": "Cinc Sentits",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€100+",
-      "cuisine": "Fine dining restaurant"
-    },
-    "tags": [
-      "Fine dining restaurant",
-      "Catalonian restaurant",
-      "Mediterranean restaurant",
-      "Spanish restaurant"
-    ],
-    "engagement": {
-      "likes": 6,
-      "comments": 6,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
-  },
-  {
-    "id": "sommelier_seb-post-10",
-    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
-    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
-    "imageUrl": "/images/posts/sommelier_seb/post-10.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-10.jpg",
-    "restaurant": {
-      "id": "restaurant-10",
+      "id": "restaurant-sommelier_seb-1",
       "name": "Osmosis",
       "location": "Barcelona, ES",
       "rating": 4.5,
       "priceRange": "$$$",
-      "cuisine": "Mediterranean restaurant"
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
       "Mediterranean restaurant",
-      "Catalonian restaurant",
-      "Spanish restaurant"
+      "Barcelona",
+      "ES",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 25,
-      "comments": 16,
-      "shares": 4
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
+  },
+  {
+    "id": "sommelier_seb-post-2",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🌟 My Journey to Origami Japanese & Korean Restaurant",
+    "content": "Walking through Hiranandani Gardens, Powai in Mumbai, I discovered this hidden gem: Origami Japanese & Korean Restaurant. Fine-dining Asian restaurant with views of a lake from partially open-air seating. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
+  },
+  {
+    "id": "sommelier_seb-post-3",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "💡 Pro Tip: Relish International Veg Cuisine",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Relish International Veg Cuisine in Mumbai during off-peak hours. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. Their vegan restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
+  },
+  {
+    "id": "sommelier_seb-post-4",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🧘 The Philosophy of SOON GRILL Marais",
+    "content": "SOON GRILL Marais in Paris embodies everything I believe about Wine. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "restaurant": {
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
+  },
+  {
+    "id": "sommelier_seb-post-5",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "✈️ Travel Discovery: Osmosis",
+    "content": "While exploring Barcelona, I stumbled upon Osmosis in Eixample. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. This is exactly the kind of authentic mediterranean restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
+    },
+    "tags": [
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
+  },
+  {
+    "id": "sommelier_seb-post-6",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍽️ Origami Japanese & Korean Restaurant - A Wine Experience",
+    "content": "Just had an incredible meal at Origami Japanese & Korean Restaurant in Mumbai! Fine-dining Asian restaurant with views of a lake from partially open-air seating. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.3-star rating is well deserved. Highly recommend for anyone looking for authentic authentic japanese restaurant in Hiranandani Gardens, Powai.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
+  },
+  {
+    "id": "sommelier_seb-post-7",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🌟 My Journey to Relish International Veg Cuisine",
+    "content": "Walking through Churchgate in Mumbai, I discovered this hidden gem: Relish International Veg Cuisine. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
+  },
+  {
+    "id": "sommelier_seb-post-8",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "💡 Pro Tip: SOON GRILL Marais",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit SOON GRILL Marais in Paris during off-peak hours. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. Their korean barbecue restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "restaurant": {
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
+  },
+  {
+    "id": "sommelier_seb-post-9",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🧘 The Philosophy of Osmosis",
+    "content": "Osmosis in Barcelona embodies everything I believe about Wine. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
+    },
+    "tags": [
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
+  },
+  {
+    "id": "sommelier_seb-post-10",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "✈️ Travel Discovery: Origami Japanese & Korean Restaurant",
+    "content": "While exploring Mumbai, I stumbled upon Origami Japanese & Korean Restaurant in Hiranandani Gardens, Powai. Fine-dining Asian restaurant with views of a lake from partially open-air seating. This is exactly the kind of authentic authentic japanese restaurant experience I seek when traveling. The 4.3-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-11",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
-    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-11.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-11.jpg",
+    "title": "🍽️ Relish International Veg Cuisine - A Wine Experience",
+    "content": "Just had an incredible meal at Relish International Veg Cuisine in Mumbai! Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic vegan restaurant in Churchgate.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-11",
-      "name": "Caelis",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€100+",
-      "cuisine": "Fine dining restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Fine dining restaurant",
-      "French restaurant",
-      "Restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 42,
-      "comments": 8,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-12",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {dish} should be {adjective} before serving. T...",
-    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-12.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-12.jpg",
+    "title": "🌟 My Journey to SOON GRILL Marais",
+    "content": "Walking through null in Paris, I discovered this hidden gem: SOON GRILL Marais. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Paris!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-12",
-      "name": "Cocina Hermanos Torres",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€100+",
-      "cuisine": "Fine dining restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Fine dining restaurant",
-      "Restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 79,
-      "comments": 7,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Refined"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-13",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I always {technique} when preparing {dish}. The {c...",
-    "content": "I always {technique} when preparing {dish}. The {cuisine} method is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-13.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-13.jpg",
+    "title": "💡 Pro Tip: Osmosis",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Osmosis in Barcelona during off-peak hours. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. Their mediterranean restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-13",
-      "name": "UMA",
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
       "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€100+",
-      "cuisine": "Restaurant"
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Restaurant",
-      "Castilian restaurant",
-      "Catalonian restaurant",
-      "Caterer",
-      "European restaurant",
-      "Fine dining restaurant",
-      "Function room facility",
-      "Mediterranean restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 60,
-      "comments": 13,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-14",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
-    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-14.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-14.jpg",
+    "title": "🧘 The Philosophy of Origami Japanese & Korean Restaurant",
+    "content": "Origami Japanese & Korean Restaurant in Mumbai embodies everything I believe about Wine. Fine-dining Asian restaurant with views of a lake from partially open-air seating. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-14",
-      "name": "Con Gracia",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€100+",
-      "cuisine": "Mediterranean restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Mediterranean restaurant",
-      "Catalonian restaurant",
-      "Modern European restaurant",
-      "Spanish restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 53,
-      "comments": 12,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-15",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
-    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-15.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-15.jpg",
+    "title": "✈️ Travel Discovery: Relish International Veg Cuisine",
+    "content": "While exploring Mumbai, I stumbled upon Relish International Veg Cuisine in Churchgate. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. This is exactly the kind of authentic vegan restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-15",
-      "name": "Villa Bakery",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€1–10",
-      "cuisine": "Bakery"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Bakery",
-      "Cafeteria"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 22,
-      "comments": 9,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-16",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {chef} shared the story behind this {dish}. It...",
-    "content": "The {chef} shared the story behind this {dish}. It's inspired by {inspiration}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-16.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-16.jpg",
+    "title": "🍽️ SOON GRILL Marais - A Wine Experience",
+    "content": "Just had an incredible meal at SOON GRILL Marais in Paris! Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic korean barbecue restaurant in null.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-16",
-      "name": "La Colmena",
-      "location": "Barcelona, ES",
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
       "rating": 4.5,
-      "priceRange": "$$",
-      "cuisine": "Pastry shop"
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Pastry shop",
-      "Bakery",
-      "Cafe",
-      "Cake shop",
-      "Candy store",
-      "Chocolate shop",
-      "Confectionery store",
-      "Gift shop",
-      "Souvenir manufacturer"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 14,
-      "comments": 12,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-17",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} cellar here is {adjective}. Every bottl...",
-    "content": "The {wine} cellar here is {adjective}. Every bottle tells a story of {region}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-17.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-17.jpg",
+    "title": "🌟 My Journey to Osmosis",
+    "content": "Walking through Eixample in Barcelona, I discovered this hidden gem: Osmosis. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Barcelona!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-17",
-      "name": "Furnos",
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
       "location": "Barcelona, ES",
-      "rating": 4.9,
-      "priceRange": "€1–10",
-      "cuisine": "Bakery"
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Bakery",
-      "Cafe",
-      "Gourmet grocery store",
-      "Delivery Restaurant",
-      "Takeout Restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 24,
-      "comments": 10,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-18",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
-    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-18.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-18.jpg",
+    "title": "💡 Pro Tip: Origami Japanese & Korean Restaurant",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Origami Japanese & Korean Restaurant in Mumbai during off-peak hours. Fine-dining Asian restaurant with views of a lake from partially open-air seating. Their authentic japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-18",
-      "name": "All you eat is love",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€10–20",
-      "cuisine": "Restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 32,
-      "comments": 1,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-19",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
-    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
-    "imageUrl": "/images/posts/sommelier_seb/post-19.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-19.jpg",
+    "title": "🧘 The Philosophy of Relish International Veg Cuisine",
+    "content": "Relish International Veg Cuisine in Mumbai embodies everything I believe about Wine. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-19",
-      "name": "Roots & Rolls",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€20–30",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
       "Vegan restaurant",
-      "Event venue",
-      "Restaurant",
-      "Vegetarian restaurant"
+      "Mumbai",
+      "IN",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 73,
-      "comments": 13,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-20",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} cellar here is {adjective}. Every bottl...",
-    "content": "The {wine} cellar here is {adjective}. Every bottle tells a story of {region}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-20.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-20.jpg",
+    "title": "✈️ Travel Discovery: SOON GRILL Marais",
+    "content": "While exploring Paris, I stumbled upon SOON GRILL Marais in null. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. This is exactly the kind of authentic korean barbecue restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-20",
-      "name": "Faire. Brunch & Drinks",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€10–20",
-      "cuisine": "Brunch restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Brunch restaurant",
-      "Breakfast restaurant",
-      "Dog cafe",
-      "Espresso bar",
-      "Vegan restaurant",
-      "Vegetarian restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 12,
-      "comments": 3,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-21",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
-    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-21.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-21.jpg",
+    "title": "🍽️ Osmosis - A Wine Experience",
+    "content": "Just had an incredible meal at Osmosis in Barcelona! Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic mediterranean restaurant in Eixample.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-21",
-      "name": "Froots & Roots - Healthy Juice Bar",
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
       "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€10–20",
-      "cuisine": "Health food restaurant"
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Health food restaurant",
-      "Açaí shop",
-      "Brunch restaurant",
-      "Cafe",
-      "Juice shop",
-      "Sandwich shop",
-      "Vegan restaurant",
-      "Vegetarian cafe and deli",
-      "Vegetarian restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 73,
-      "comments": 13,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-22",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
-    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-22.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-22.jpg",
+    "title": "🌟 My Journey to Origami Japanese & Korean Restaurant",
+    "content": "Walking through Hiranandani Gardens, Powai in Mumbai, I discovered this hidden gem: Origami Japanese & Korean Restaurant. Fine-dining Asian restaurant with views of a lake from partially open-air seating. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-22",
-      "name": "Biocenter",
-      "location": "Barcelona, ES",
-      "rating": 4.4,
-      "priceRange": "€10–20",
-      "cuisine": "Vegetarian restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Vegetarian restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 37,
-      "comments": 6,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-23",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
-    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-23.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-23.jpg",
+    "title": "💡 Pro Tip: Relish International Veg Cuisine",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Relish International Veg Cuisine in Mumbai during off-peak hours. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. Their vegan restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-23",
-      "name": "Generation B - Healthy food para todos",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€10–20",
-      "cuisine": "Health food restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Health food restaurant",
-      "Restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 48,
-      "comments": 1,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-24",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Every element on this plate has a purpose. The {cu...",
-    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-24.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-24.jpg",
+    "title": "🧘 The Philosophy of SOON GRILL Marais",
+    "content": "SOON GRILL Marais in Paris embodies everything I believe about Wine. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-24",
-      "name": "FitBar - Açai Bowls & Healthy Food",
-      "location": "Barcelona, ES",
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
       "rating": 4.5,
-      "priceRange": "€1–10",
-      "cuisine": "Health food restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Health food restaurant",
-      "Brunch restaurant",
-      "Juice shop",
-      "Vegan restaurant",
-      "Vegetarian restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 75,
-      "comments": 2,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-25",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
-    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-25.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-25.jpg",
+    "title": "✈️ Travel Discovery: Osmosis",
+    "content": "While exploring Barcelona, I stumbled upon Osmosis in Eixample. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. This is exactly the kind of authentic mediterranean restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-25",
-      "name": "The Ranch Smokehouse",
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
       "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€20–30",
-      "cuisine": "Barbecue restaurant"
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Barbecue restaurant",
-      "American restaurant",
-      "Hamburger restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 57,
-      "comments": 15,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-26",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
-    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-26.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-26.jpg",
+    "title": "🍽️ Origami Japanese & Korean Restaurant - A Wine Experience",
+    "content": "Just had an incredible meal at Origami Japanese & Korean Restaurant in Mumbai! Fine-dining Asian restaurant with views of a lake from partially open-air seating. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.3-star rating is well deserved. Highly recommend for anyone looking for authentic authentic japanese restaurant in Hiranandani Gardens, Powai.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-26",
-      "name": "Yamato BBQ Barcelona",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€20–40",
-      "cuisine": "Authentic Japanese restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Authentic Japanese restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 53,
-      "comments": 0,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Knowledgeable"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-27",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Every element on this plate has a purpose. The {cu...",
-    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-27.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-27.jpg",
+    "title": "🌟 My Journey to Relish International Veg Cuisine",
+    "content": "Walking through Churchgate in Mumbai, I discovered this hidden gem: Relish International Veg Cuisine. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-27",
-      "name": "KIM BBQ",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€20–30",
-      "cuisine": "Korean restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Korean restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 46,
-      "comments": 0,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-28",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
-    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
-    "imageUrl": "/images/posts/sommelier_seb/post-28.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-28.jpg",
+    "title": "💡 Pro Tip: SOON GRILL Marais",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit SOON GRILL Marais in Paris during off-peak hours. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. Their korean barbecue restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-28",
-      "name": "La Parrillada Grill Steak House",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€20–40",
-      "cuisine": "Argentinian restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Argentinian restaurant",
-      "Grill",
-      "Brasserie"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 99,
-      "comments": 19,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-29",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
-    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-29.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-29.jpg",
+    "title": "🧘 The Philosophy of Osmosis",
+    "content": "Osmosis in Barcelona embodies everything I believe about Wine. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-29",
-      "name": "MONGOLIAN BBQ",
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
       "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€10–20",
-      "cuisine": "Restaurant"
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 11,
-      "comments": 18,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Knowledgeable"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-30",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
-    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
-    "imageUrl": "/images/posts/sommelier_seb/post-30.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-30.jpg",
+    "title": "✈️ Travel Discovery: Origami Japanese & Korean Restaurant",
+    "content": "While exploring Mumbai, I stumbled upon Origami Japanese & Korean Restaurant in Hiranandani Gardens, Powai. Fine-dining Asian restaurant with views of a lake from partially open-air seating. This is exactly the kind of authentic authentic japanese restaurant experience I seek when traveling. The 4.3-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-30",
-      "name": "BUFFET YA (Buffet BBQ)",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€20–30",
-      "cuisine": "Barbecue restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Barbecue restaurant",
-      "Grill",
-      "Asian restaurant",
-      "Buffet restaurant",
-      "Japanese restaurant",
-      "Yakiniku restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 47,
-      "comments": 8,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Refined"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-31",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
-    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-31.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-31.jpg",
+    "title": "🍽️ Relish International Veg Cuisine - A Wine Experience",
+    "content": "Just had an incredible meal at Relish International Veg Cuisine in Mumbai! Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic vegan restaurant in Churchgate.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-31",
-      "name": "LAZEEZ BBQ Lebanese restaurant",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€20–30",
-      "cuisine": "Lebanese restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Lebanese restaurant",
-      "Halal restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 31,
-      "comments": 14,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-32",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 150 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-32.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-32.jpg",
+    "title": "🌟 My Journey to SOON GRILL Marais",
+    "content": "Walking through null in Paris, I discovered this hidden gem: SOON GRILL Marais. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Paris!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-32",
-      "name": "Vegan Mount | Barcelona",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€10–20",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Vegan restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 45,
-      "comments": 0,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-33",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {dish} should be {adjective} before serving. T...",
-    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-33.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-33.jpg",
+    "title": "💡 Pro Tip: Osmosis",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Osmosis in Barcelona during off-peak hours. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. Their mediterranean restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-33",
-      "name": "Mundo Vegan",
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
       "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€10–20",
-      "cuisine": "Vegan restaurant"
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Vegan restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 25,
-      "comments": 2,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Refined"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-34",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
-    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
-    "imageUrl": "/images/posts/sommelier_seb/post-34.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-34.jpg",
+    "title": "🧘 The Philosophy of Origami Japanese & Korean Restaurant",
+    "content": "Origami Japanese & Korean Restaurant in Mumbai embodies everything I believe about Wine. Fine-dining Asian restaurant with views of a lake from partially open-air seating. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-34",
-      "name": "The Vegan Corner",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€1–10",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Vegan restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 79,
-      "comments": 11,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Refined"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-35",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
-    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-35.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-35.jpg",
+    "title": "✈️ Travel Discovery: Relish International Veg Cuisine",
+    "content": "While exploring Mumbai, I stumbled upon Relish International Veg Cuisine in Churchgate. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. This is exactly the kind of authentic vegan restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-35",
-      "name": "Santa Vegana",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€1–10",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
       "Vegan restaurant",
-      "Bakery"
+      "Mumbai",
+      "IN",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 72,
-      "comments": 19,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-36",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Every element on this plate has a purpose. The {cu...",
-    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-36.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-36.jpg",
+    "title": "🍽️ SOON GRILL Marais - A Wine Experience",
+    "content": "Just had an incredible meal at SOON GRILL Marais in Paris! Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic korean barbecue restaurant in null.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-36",
-      "name": "Mad Mad Vegan Barcelona",
-      "location": "Barcelona, ES",
-      "rating": 4.9,
-      "priceRange": "€10–20",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Vegan restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 72,
-      "comments": 4,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-37",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {chef} has created something {adjective} here....",
-    "content": "The {chef} has created something {adjective} here. The {dish} is a {adjective} experience.",
-    "imageUrl": "/images/posts/sommelier_seb/post-37.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-37.jpg",
+    "title": "🌟 My Journey to Osmosis",
+    "content": "Walking through Eixample in Barcelona, I discovered this hidden gem: Osmosis. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Barcelona!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-37",
-      "name": "Fat Veggies",
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
       "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€20–30",
-      "cuisine": "Vegan restaurant"
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Vegan restaurant",
-      "Vegetarian restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 3,
-      "comments": 14,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Knowledgeable"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-38",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
-    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
-    "imageUrl": "/images/posts/sommelier_seb/post-38.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-38.jpg",
+    "title": "💡 Pro Tip: Origami Japanese & Korean Restaurant",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Origami Japanese & Korean Restaurant in Mumbai during off-peak hours. Fine-dining Asian restaurant with views of a lake from partially open-air seating. Their authentic japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-38",
-      "name": "Vegan Tulsi Restaurant",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€10–20",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Vegan restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 78,
-      "comments": 9,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Refined"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-39",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {cuisine} tradition here is {adjective}. The {...",
-    "content": "The {cuisine} tradition here is {adjective}. The {dish} is a {adjective} example.",
-    "imageUrl": "/images/posts/sommelier_seb/post-39.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-39.jpg",
+    "title": "🧘 The Philosophy of Relish International Veg Cuisine",
+    "content": "Relish International Veg Cuisine in Mumbai embodies everything I believe about Wine. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-39",
-      "name": "Street food",
-      "location": "Tsim Sha Tsui, HK",
-      "rating": 2.9,
-      "priceRange": "HK$1–50",
-      "cuisine": "Restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 52,
-      "comments": 2,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-40",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
-    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-40.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-40.jpg",
+    "title": "✈️ Travel Discovery: SOON GRILL Marais",
+    "content": "While exploring Paris, I stumbled upon SOON GRILL Marais in null. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. This is exactly the kind of authentic korean barbecue restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-40",
-      "name": "Oh Wahh Street Food",
-      "location": "Tsim Sha Tsui, HK",
-      "rating": 3.9,
-      "priceRange": "HK$1–100",
-      "cuisine": "Hong Kong style fast food restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Hong Kong style fast food restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 67,
-      "comments": 17,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-41",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
-    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-41.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-41.jpg",
+    "title": "🍽️ Osmosis - A Wine Experience",
+    "content": "Just had an incredible meal at Osmosis in Barcelona! Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic mediterranean restaurant in Eixample.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-41",
-      "name": "Night street food market",
-      "location": "Yau Ma Tei, HK",
-      "rating": 4.4,
-      "priceRange": "HK$50–100",
-      "cuisine": "Chinese restaurant"
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Chinese restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 16,
-      "comments": 3,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Refined"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-42",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
-    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-42.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-42.jpg",
+    "title": "🌟 My Journey to Origami Japanese & Korean Restaurant",
+    "content": "Walking through Hiranandani Gardens, Powai in Mumbai, I discovered this hidden gem: Origami Japanese & Korean Restaurant. Fine-dining Asian restaurant with views of a lake from partially open-air seating. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-42",
-      "name": "Bingaz Street Food",
-      "location": "Sai Ying Pun, HK",
-      "rating": 4.1,
-      "priceRange": "$$",
-      "cuisine": "Restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Restaurant",
-      "Catering food and drink supplier",
-      "Fusion restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 63,
-      "comments": 15,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Knowledgeable"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-43",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {chef} has created something {adjective} here....",
-    "content": "The {chef} has created something {adjective} here. The {dish} is a {adjective} experience.",
-    "imageUrl": "/images/posts/sommelier_seb/post-43.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-43.jpg",
+    "title": "💡 Pro Tip: Relish International Veg Cuisine",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Relish International Veg Cuisine in Mumbai during off-peak hours. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. Their vegan restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-43",
-      "name": "Fashion Walk Food Street",
-      "location": "Causeway Bay, HK",
-      "rating": 4.1,
-      "priceRange": "$$",
-      "cuisine": "Restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 85,
-      "comments": 17,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Detail-oriented"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-44",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
-    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-44.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-44.jpg",
+    "title": "🧘 The Philosophy of SOON GRILL Marais",
+    "content": "SOON GRILL Marais in Paris embodies everything I believe about Wine. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-44",
-      "name": "Amber",
-      "location": "Central, HK",
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
       "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "Haute French restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Haute French restaurant",
-      "French restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 87,
-      "comments": 17,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-45",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Every element on this plate has a purpose. The {cu...",
-    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-45.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-45.jpg",
+    "title": "✈️ Travel Discovery: Osmosis",
+    "content": "While exploring Barcelona, I stumbled upon Osmosis in Eixample. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. This is exactly the kind of authentic mediterranean restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-45",
-      "name": "Caprice",
-      "location": "Central, HK",
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
       "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "French restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "French restaurant",
-      "Fine dining restaurant",
-      "Restaurant",
-      "Vegan restaurant",
-      "Vegetarian restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 84,
-      "comments": 12,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-46",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
-    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-46.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-46.jpg",
+    "title": "🍽️ Origami Japanese & Korean Restaurant - A Wine Experience",
+    "content": "Just had an incredible meal at Origami Japanese & Korean Restaurant in Mumbai! Fine-dining Asian restaurant with views of a lake from partially open-air seating. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.3-star rating is well deserved. Highly recommend for anyone looking for authentic authentic japanese restaurant in Hiranandani Gardens, Powai.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-46",
-      "name": "Restaurant Petrus",
-      "location": "Central, HK",
-      "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "French restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "French restaurant",
-      "Fine dining restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 63,
-      "comments": 4,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Knowledgeable"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-47",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} cellar here is {adjective}. Every bottl...",
-    "content": "The {wine} cellar here is {adjective}. Every bottle tells a story of {region}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-47.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-47.jpg",
+    "title": "🌟 My Journey to Relish International Veg Cuisine",
+    "content": "Walking through Churchgate in Mumbai, I discovered this hidden gem: Relish International Veg Cuisine. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-47",
-      "name": "The Chairman Restaurant",
-      "location": "Central, HK",
-      "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "Cantonese restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Cantonese restaurant",
-      "Chinese restaurant",
-      "Fine dining restaurant",
-      "Restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 34,
-      "comments": 3,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-48",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 This {restaurant} has been perfecting {cuisine} fo...",
-    "content": "This {restaurant} has been perfecting {cuisine} for 200 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-48.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-48.jpg",
+    "title": "💡 Pro Tip: SOON GRILL Marais",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit SOON GRILL Marais in Paris during off-peak hours. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. Their korean barbecue restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-48",
-      "name": "Ta Vie",
-      "location": "Central, HK",
-      "rating": 4.6,
-      "priceRange": "HK$500+",
-      "cuisine": "French restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "French restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 78,
-      "comments": 6,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-49",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Every element on this plate has a purpose. The {cu...",
-    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-49.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-49.jpg",
+    "title": "🧘 The Philosophy of Osmosis",
+    "content": "Osmosis in Barcelona embodies everything I believe about Wine. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-49",
-      "name": "BELON",
-      "location": "Central, HK",
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
       "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "French restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "French restaurant",
-      "Fine dining restaurant",
-      "Restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 77,
-      "comments": 2,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Refined"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-50",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {dish} should be {adjective} before serving. T...",
-    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-50.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-50.jpg",
+    "title": "✈️ Travel Discovery: Origami Japanese & Korean Restaurant",
+    "content": "While exploring Mumbai, I stumbled upon Origami Japanese & Korean Restaurant in Hiranandani Gardens, Powai. Fine-dining Asian restaurant with views of a lake from partially open-air seating. This is exactly the kind of authentic authentic japanese restaurant experience I seek when traveling. The 4.3-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-50",
-      "name": "Mott 32",
-      "location": "Central, HK",
-      "rating": 4.4,
-      "priceRange": "HK$500+",
-      "cuisine": "Chinese restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Chinese restaurant",
-      "Cocktail bar"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 79,
-      "comments": 8,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Sophisticated"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-51",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I always {technique} when preparing {dish}. The {c...",
-    "content": "I always {technique} when preparing {dish}. The {cuisine} method is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-51.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-51.jpg",
+    "title": "🍽️ Relish International Veg Cuisine - A Wine Experience",
+    "content": "Just had an incredible meal at Relish International Veg Cuisine in Mumbai! Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic vegan restaurant in Churchgate.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-51",
-      "name": "Kanesaka Hong Kong",
-      "location": "Central, HK",
-      "rating": 4.9,
-      "priceRange": "HK$500+",
-      "cuisine": "Sushi restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Sushi restaurant",
-      "Japanese restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 79,
-      "comments": 11,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Knowledgeable"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-52",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {dish} should be {adjective} before serving. T...",
-    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-52.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-52.jpg",
+    "title": "🌟 My Journey to SOON GRILL Marais",
+    "content": "Walking through null in Paris, I discovered this hidden gem: SOON GRILL Marais. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Paris!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-52",
-      "name": "Sushi Rin",
-      "location": "Sheung Wan, HK",
-      "rating": 4.7,
-      "priceRange": "HK$500+",
-      "cuisine": "Authentic Japanese restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Authentic Japanese restaurant",
-      "Sushi restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 72,
-      "comments": 11,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.874Z",
-    "personality": "Knowledgeable"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-53",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I always {technique} when preparing {dish}. The {c...",
-    "content": "I always {technique} when preparing {dish}. The {cuisine} method is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-53.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-53.jpg",
+    "title": "💡 Pro Tip: Osmosis",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Osmosis in Barcelona during off-peak hours. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. Their mediterranean restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-53",
-      "name": "Sushi Saito",
-      "location": "Central, HK",
-      "rating": 4.6,
-      "priceRange": "HK$500+",
-      "cuisine": "Sushi restaurant"
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Sushi restaurant",
-      "Fine dining restaurant",
-      "Japanese restaurant",
-      "Restaurant",
-      "Seafood restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 53,
-      "comments": 1,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Detail-oriented"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-54",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {dish} should be {adjective} before serving. T...",
-    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-54.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-54.jpg",
+    "title": "🧘 The Philosophy of Origami Japanese & Korean Restaurant",
+    "content": "Origami Japanese & Korean Restaurant in Mumbai embodies everything I believe about Wine. Fine-dining Asian restaurant with views of a lake from partially open-air seating. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-54",
-      "name": "Sushi Kuu",
-      "location": "Central, HK",
-      "rating": 4.2,
-      "priceRange": "HK$500+",
-      "cuisine": "Japanese restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Japanese restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 1,
-      "comments": 15,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Refined"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-55",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 This {restaurant} showcases {cuisine} at its fines...",
-    "content": "This {restaurant} showcases {cuisine} at its finest. The {dish} is {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-55.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-55.jpg",
+    "title": "✈️ Travel Discovery: Relish International Veg Cuisine",
+    "content": "While exploring Mumbai, I stumbled upon Relish International Veg Cuisine in Churchgate. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. This is exactly the kind of authentic vegan restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-55",
-      "name": "Zuma Hong Kong",
-      "location": "Central, HK",
-      "rating": 4.3,
-      "priceRange": "HK$500+",
-      "cuisine": "Japanese restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Japanese restaurant",
-      "Cocktail bar",
-      "Lounge"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 42,
-      "comments": 13,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Sophisticated"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-56",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Every element on this plate has a purpose. The {cu...",
-    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-56.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-56.jpg",
+    "title": "🍽️ SOON GRILL Marais - A Wine Experience",
+    "content": "Just had an incredible meal at SOON GRILL Marais in Paris! Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic korean barbecue restaurant in null.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-56",
-      "name": "Tokio Joe",
-      "location": "Central, HK",
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
       "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "Sushi restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Sushi restaurant",
-      "Japanese restaurant",
-      "Takeout Restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 66,
-      "comments": 12,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Sophisticated"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-57",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {dish} should be {adjective} before serving. T...",
-    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-57.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-57.jpg",
+    "title": "🌟 My Journey to Osmosis",
+    "content": "Walking through Eixample in Barcelona, I discovered this hidden gem: Osmosis. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Barcelona!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-57",
-      "name": "Honjo",
-      "location": "Sheung Wan, HK",
-      "rating": 4.6,
-      "priceRange": "HK$500+",
-      "cuisine": "Japanese restaurant"
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Japanese restaurant",
-      "Bar",
-      "Sushi restaurant",
-      "Tempura restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 72,
-      "comments": 14,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Refined"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-58",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Every element on this plate has a purpose. The {cu...",
-    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-58.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-58.jpg",
+    "title": "💡 Pro Tip: Origami Japanese & Korean Restaurant",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Origami Japanese & Korean Restaurant in Mumbai during off-peak hours. Fine-dining Asian restaurant with views of a lake from partially open-air seating. Their authentic japanese restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-58",
-      "name": "Bakehouse (Wan Chai)",
-      "location": "Wan Chai, HK",
-      "rating": 4.4,
-      "priceRange": "HK$1–100",
-      "cuisine": "Bakery"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Bakery",
-      "Breakfast restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 69,
-      "comments": 0,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Detail-oriented"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-59",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 This {restaurant} showcases {cuisine} at its fines...",
-    "content": "This {restaurant} showcases {cuisine} at its finest. The {dish} is {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-59.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-59.jpg",
+    "title": "🧘 The Philosophy of Relish International Veg Cuisine",
+    "content": "Relish International Veg Cuisine in Mumbai embodies everything I believe about Wine. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-59",
-      "name": "TREEHOUSE (Hcode)",
-      "location": "Central, HK",
-      "rating": 4.5,
-      "priceRange": "HK$100–150",
-      "cuisine": "Vegetarian restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Vegetarian restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 63,
-      "comments": 9,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Sophisticated"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-60",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 This {restaurant} showcases {cuisine} at its fines...",
-    "content": "This {restaurant} showcases {cuisine} at its finest. The {dish} is {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-60.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-60.jpg",
+    "title": "✈️ Travel Discovery: SOON GRILL Marais",
+    "content": "While exploring Paris, I stumbled upon SOON GRILL Marais in null. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. This is exactly the kind of authentic korean barbecue restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-60",
-      "name": "ORKA Restaurant & Bar",
-      "location": "Central, HK",
-      "rating": 4.8,
-      "priceRange": "$$",
-      "cuisine": "Restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Restaurant",
-      "Bar",
-      "Cocktail bar",
-      "Event venue",
-      "Meat dish restaurant",
-      "Vegan restaurant",
-      "Vegetarian restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 15,
-      "comments": 1,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Refined"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-61",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {chef} shared the story behind this {dish}. It...",
-    "content": "The {chef} shared the story behind this {dish}. It's inspired by {inspiration}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-61.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-61.jpg",
+    "title": "🍽️ Osmosis - A Wine Experience",
+    "content": "Just had an incredible meal at Osmosis in Barcelona! Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic mediterranean restaurant in Eixample.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-61",
-      "name": "Calfit Organic and Healthy Foods",
-      "location": "Tsim Sha Tsui, HK",
-      "rating": 4.4,
-      "priceRange": "$$",
-      "cuisine": "Health food restaurant"
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Health food restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 35,
-      "comments": 0,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Detail-oriented"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-62",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
-    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-62.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-62.jpg",
+    "title": "🌟 My Journey to Origami Japanese & Korean Restaurant",
+    "content": "Walking through Hiranandani Gardens, Powai in Mumbai, I discovered this hidden gem: Origami Japanese & Korean Restaurant. Fine-dining Asian restaurant with views of a lake from partially open-air seating. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-62",
-      "name": "Dandy's Organic Cafe",
-      "location": "Sheung Wan, HK",
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
       "rating": 4.3,
-      "priceRange": "HK$150–200",
-      "cuisine": "Restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Restaurant",
-      "Gluten-free restaurant",
-      "Health food restaurant",
-      "Organic restaurant",
-      "Vegan restaurant",
-      "Vegetarian restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 22,
-      "comments": 11,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Detail-oriented"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-63",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
-    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-63.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-63.jpg",
+    "title": "💡 Pro Tip: Relish International Veg Cuisine",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit Relish International Veg Cuisine in Mumbai during off-peak hours. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. Their vegan restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-63",
-      "name": "TREEHOUSE (Causeway Bay)",
-      "location": "Causeway Bay, HK",
-      "rating": 4.5,
-      "priceRange": "HK$100–150",
-      "cuisine": "Vegetarian restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
-      "Vegetarian restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 45,
-      "comments": 12,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Refined"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-64",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
-    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-64.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-64.jpg",
+    "title": "🧘 The Philosophy of SOON GRILL Marais",
+    "content": "SOON GRILL Marais in Paris embodies everything I believe about Wine. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-64",
-      "name": "Nutrition Kitchen",
-      "location": "Sheung Wan, HK",
-      "rating": 4.4,
-      "priceRange": "HK$50–100",
-      "cuisine": "Health food restaurant"
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Health food restaurant",
-      "Delivery Restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 8,
-      "comments": 12,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Knowledgeable"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-65",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
-    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-65.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-65.jpg",
+    "title": "✈️ Travel Discovery: Osmosis",
+    "content": "While exploring Barcelona, I stumbled upon Osmosis in Eixample. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. This is exactly the kind of authentic mediterranean restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-65",
-      "name": "Tallore",
-      "location": "Wan Chai, HK",
-      "rating": 4.7,
-      "priceRange": "HK$50–100",
-      "cuisine": "Western restaurant"
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Western restaurant",
-      "Salad shop",
-      "Soup shop"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 73,
-      "comments": 9,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Detail-oriented"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-66",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
-    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
-    "imageUrl": "/images/posts/sommelier_seb/post-66.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-66.jpg",
+    "title": "🍽️ Origami Japanese & Korean Restaurant - A Wine Experience",
+    "content": "Just had an incredible meal at Origami Japanese & Korean Restaurant in Mumbai! Fine-dining Asian restaurant with views of a lake from partially open-air seating. The Wine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.3-star rating is well deserved. Highly recommend for anyone looking for authentic authentic japanese restaurant in Hiranandani Gardens, Powai.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-66",
-      "name": "Root Vegan",
-      "location": "Central, HK",
-      "rating": 4.6,
-      "priceRange": "$$",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Vegan restaurant",
-      "Coffee store",
-      "Vegetarian restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "review"
     ],
-    "engagement": {
-      "likes": 34,
-      "comments": 4,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Refined"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-67",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {chef} shared the story behind this {dish}. It...",
-    "content": "The {chef} shared the story behind this {dish}. It's inspired by {inspiration}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-67.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-67.jpg",
+    "title": "🌟 My Journey to Relish International Veg Cuisine",
+    "content": "Walking through Churchgate in Mumbai, I discovered this hidden gem: Relish International Veg Cuisine. Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating. As someone who specializes in Wine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Fine dining. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-67",
-      "name": "Woodlands Indian Vegetarian Restaurant (Tsim Sha Tsui)",
-      "location": "Tsim Sha Tsui, HK",
-      "rating": 4.6,
-      "priceRange": "HK$100–150",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-sommelier_seb-3",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+      "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+      "reviewsCount": 5494
     },
     "tags": [
       "Vegan restaurant",
-      "Catering food and drink supplier",
-      "Caterer",
-      "Family restaurant",
-      "Halal restaurant",
-      "Indian restaurant",
-      "Indian takeaway",
-      "Delivery Restaurant",
-      "Restaurant",
-      "Vegetarian restaurant"
+      "Mumbai",
+      "IN",
+      "Wine",
+      "story"
     ],
-    "engagement": {
-      "likes": 56,
-      "comments": 2,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Knowledgeable"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-68",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
-    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
-    "imageUrl": "/images/posts/sommelier_seb/post-68.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-68.jpg",
+    "title": "💡 Pro Tip: SOON GRILL Marais",
+    "content": "Here's a Wine tip for my fellow food lovers: Visit SOON GRILL Marais in Paris during off-peak hours. Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space. Their korean barbecue restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nopLxMoaKyMILIibWKtr2TrairwtlTEWfPpDtbod4u37_PqoXVpUtdn7vWMv8ShYFTYA8vNWid5I4GWnp4bNhPA6z8X-Jna8YT5QfiGGxKZlWIomA4hJ7BqJtIYacmJqchNh9g1=w408-h404-k-no",
     "restaurant": {
-      "id": "restaurant-68",
-      "name": "Veggie 4 love",
-      "location": "Central, HK",
+      "id": "restaurant-sommelier_seb-4",
+      "name": "SOON GRILL Marais",
+      "location": "Paris, FR",
       "rating": 4.5,
-      "priceRange": "HK$150–200",
-      "cuisine": "Vegan restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Korean barbecue restaurant",
+      "address": "78 Rue des Tournelles, 75003 Paris, France",
+      "description": "Korean barbecue with an inventive French twist, cooked at the table in a low-lit contemporary space.",
+      "reviewsCount": 2869
     },
     "tags": [
-      "Vegan restaurant",
-      "Restaurant",
-      "Vegetarian restaurant"
+      "Korean barbecue restaurant",
+      "Paris",
+      "FR",
+      "Wine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 11,
-      "comments": 17,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Knowledgeable"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-69",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {dish} should be {adjective} before serving. T...",
-    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
-    "imageUrl": "/images/posts/sommelier_seb/post-69.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-69.jpg",
+    "title": "🧘 The Philosophy of Osmosis",
+    "content": "Osmosis in Barcelona embodies everything I believe about Wine. Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Fine dining. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNhAGabPXdTJqJmUlcz4rfylQKmx0_NHJBOWA9U=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-69",
-      "name": "Sangeetha Vegetarian Restaurant, Hong Kong",
-      "location": "Tsim Sha Tsui, HK",
-      "rating": 4.3,
-      "priceRange": "HK$100–150",
-      "cuisine": "Vegetarian restaurant"
+      "id": "restaurant-sommelier_seb-1",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant",
+      "address": "Carrer d'Aribau, 100, Primera Planta, L'Eixample, 08036 Barcelona, Spain",
+      "description": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings.",
+      "reviewsCount": 1258
     },
     "tags": [
-      "Vegetarian restaurant",
-      "Indian restaurant"
+      "Mediterranean restaurant",
+      "Barcelona",
+      "ES",
+      "Wine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 21,
-      "comments": 4,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Detail-oriented"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   },
   {
     "id": "sommelier_seb-post-70",
     "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
-    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
-    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
-    "imageUrl": "/images/posts/sommelier_seb/post-70.jpg",
-    "imageLocalPath": "public/images/posts/sommelier_seb/post-70.jpg",
+    "title": "✈️ Travel Discovery: Origami Japanese & Korean Restaurant",
+    "content": "While exploring Mumbai, I stumbled upon Origami Japanese & Korean Restaurant in Hiranandani Gardens, Powai. Fine-dining Asian restaurant with views of a lake from partially open-air seating. This is exactly the kind of authentic authentic japanese restaurant experience I seek when traveling. The 4.3-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Wine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-70",
-      "name": "Isoya Japanese Vegetarian Restaurant",
-      "location": "Wan Chai, HK",
-      "rating": 4.4,
-      "priceRange": "$$",
-      "cuisine": "Vegetarian restaurant"
+      "id": "restaurant-sommelier_seb-2",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant",
+      "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+      "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+      "reviewsCount": 1705
     },
     "tags": [
-      "Vegetarian restaurant"
+      "Authentic Japanese restaurant",
+      "Mumbai",
+      "IN",
+      "Wine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 26,
-      "comments": 16,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.875Z",
-    "personality": "Sophisticated"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:59.013Z"
   }
 ]

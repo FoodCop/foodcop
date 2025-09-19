@@ -2,1974 +2,1901 @@
   {
     "id": "spice_scholar_anika-post-1",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
-    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-1.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-1.jpg",
+    "title": "🍽️ Bingaz Street Food - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Bingaz Street Food in Sai Ying Pun! undefined The Indian cuisine here is absolutely outstanding. null price point makes it accessible, and the 4.1-star rating is well deserved. Highly recommend for anyone looking for authentic restaurant in null.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-1",
-      "name": "Robata",
-      "location": "Barcelona, ES",
-      "rating": 4.5,
-      "priceRange": "$$$",
-      "cuisine": "Japanese restaurant"
+      "id": "restaurant-spice_scholar_anika-1",
+      "name": "Bingaz Street Food",
+      "location": "Sai Ying Pun, HK",
+      "rating": 4.1,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "23 High Street G/F Bingaz, Sai Ying Pun, Hong Kong",
+      "reviewsCount": 39
     },
     "tags": [
-      "Japanese restaurant",
-      "Dim sum restaurant",
-      "Authentic Japanese restaurant",
-      "Delivery Restaurant",
-      "Modern izakaya restaurant",
-      "Okonomiyaki restaurant",
       "Restaurant",
-      "Sushi restaurant",
-      "Tempura restaurant"
+      "Sai Ying Pun",
+      "HK",
+      "Indian cuisine",
+      "review"
     ],
-    "engagement": {
-      "likes": 10,
-      "comments": 4,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.800Z",
-    "personality": "Cultural"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.562Z"
   },
   {
     "id": "spice_scholar_anika-post-2",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I always {technique} when making {dish}. The {spic...",
-    "content": "I always {technique} when making {dish}. The {spice} needs to be {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-2.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-2.jpg",
+    "title": "🌟 My Journey to Isoya Japanese Vegetarian Restaurant",
+    "content": "Walking through null in Wan Chai, I discovered this hidden gem: Isoya Japanese Vegetarian Restaurant. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Wan Chai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
     "restaurant": {
-      "id": "restaurant-2",
-      "name": "Shunka",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "$$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Asian restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 26,
-      "comments": 12,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.800Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-3",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
-    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-3.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-3.jpg",
-    "restaurant": {
-      "id": "restaurant-3",
-      "name": "Can Kenji",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Izakaya restaurant",
-      "Mediterranean restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 13,
-      "comments": 17,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.800Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-4",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Want to master {cuisine}? Start with {spice}. It's...",
-    "content": "Want to master {cuisine}? Start with {spice}. It's the foundation of {dish}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-4.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-4.jpg",
-    "restaurant": {
-      "id": "restaurant-4",
-      "name": "IKOYA Izakaya",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Restaurant",
-      "Ramen restaurant",
-      "Sake brewery",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 7,
-      "comments": 16,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.800Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-5",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
-    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-5.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-5.jpg",
-    "restaurant": {
-      "id": "restaurant-5",
-      "name": "Restaurante FUTAMI",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 35,
-      "comments": 16,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.800Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-6",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
-    "content": "This {cuisine} restaurant has been using the same {spice} blend for 100 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-6.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-6.jpg",
-    "restaurant": {
-      "id": "restaurant-6",
-      "name": "Matsuri Sushi Bar - Restaurante Japonés",
-      "location": "Barcelona, ES",
-      "rating": 4.4,
-      "priceRange": "€20–30",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 78,
-      "comments": 5,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-7",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} ratio in {dish} is {adjective}. Too mu...",
-    "content": "The {spice} ratio in {dish} is {adjective}. Too much and it's {adjective}, too little and it's {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-7.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-7.jpg",
-    "restaurant": {
-      "id": "restaurant-7",
-      "name": "Restaurante Hitsumabushi",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 17,
-      "comments": 6,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-8",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
-    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-8.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-8.jpg",
-    "restaurant": {
-      "id": "restaurant-8",
-      "name": "Roots & Rolls",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€20–30",
-      "cuisine": "Vegan restaurant"
-    },
-    "tags": [
-      "Vegan restaurant",
-      "Event venue",
-      "Restaurant",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 41,
-      "comments": 8,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-9",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
-    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-9.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-9.jpg",
-    "restaurant": {
-      "id": "restaurant-9",
-      "name": "Yamato BBQ Barcelona",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€20–40",
-      "cuisine": "Authentic Japanese restaurant"
-    },
-    "tags": [
-      "Authentic Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 4,
-      "comments": 5,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-10",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
-    "content": "This {cuisine} restaurant has been using the same {spice} blend for 50 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-10.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-10.jpg",
-    "restaurant": {
-      "id": "restaurant-10",
-      "name": "KIM BBQ",
-      "location": "Barcelona, ES",
-      "rating": 4.7,
-      "priceRange": "€20–30",
-      "cuisine": "Korean restaurant"
-    },
-    "tags": [
-      "Korean restaurant"
-    ],
-    "engagement": {
-      "likes": 82,
-      "comments": 2,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Knowledgeable"
-  },
-  {
-    "id": "spice_scholar_anika-post-11",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
-    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-11.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-11.jpg",
-    "restaurant": {
-      "id": "restaurant-11",
-      "name": "BUFFET YA (Buffet BBQ)",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€20–30",
-      "cuisine": "Barbecue restaurant"
-    },
-    "tags": [
-      "Barbecue restaurant",
-      "Grill",
-      "Asian restaurant",
-      "Buffet restaurant",
-      "Japanese restaurant",
-      "Yakiniku restaurant"
-    ],
-    "engagement": {
-      "likes": 39,
-      "comments": 15,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-12",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
-    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-12.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-12.jpg",
-    "restaurant": {
-      "id": "restaurant-12",
-      "name": "Night street food market",
-      "location": "Yau Ma Tei, HK",
-      "rating": 4.4,
-      "priceRange": "HK$50–100",
-      "cuisine": "Chinese restaurant"
-    },
-    "tags": [
-      "Chinese restaurant"
-    ],
-    "engagement": {
-      "likes": 92,
-      "comments": 9,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-13",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
-    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-13.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-13.jpg",
-    "restaurant": {
-      "id": "restaurant-13",
-      "name": "The Chairman Restaurant",
-      "location": "Central, HK",
-      "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "Cantonese restaurant"
-    },
-    "tags": [
-      "Cantonese restaurant",
-      "Chinese restaurant",
-      "Fine dining restaurant",
-      "Restaurant"
-    ],
-    "engagement": {
-      "likes": 24,
-      "comments": 6,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Knowledgeable"
-  },
-  {
-    "id": "spice_scholar_anika-post-14",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} ratio in {dish} is {adjective}. Too mu...",
-    "content": "The {spice} ratio in {dish} is {adjective}. Too much and it's {adjective}, too little and it's {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-14.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-14.jpg",
-    "restaurant": {
-      "id": "restaurant-14",
-      "name": "Mott 32",
-      "location": "Central, HK",
-      "rating": 4.4,
-      "priceRange": "HK$500+",
-      "cuisine": "Chinese restaurant"
-    },
-    "tags": [
-      "Chinese restaurant",
-      "Cocktail bar"
-    ],
-    "engagement": {
-      "likes": 39,
-      "comments": 2,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-15",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
-    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-15.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-15.jpg",
-    "restaurant": {
-      "id": "restaurant-15",
-      "name": "Kanesaka Hong Kong",
-      "location": "Central, HK",
-      "rating": 4.9,
-      "priceRange": "HK$500+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 12,
-      "comments": 15,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-16",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
-    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-16.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-16.jpg",
-    "restaurant": {
-      "id": "restaurant-16",
-      "name": "Sushi Rin",
-      "location": "Sheung Wan, HK",
-      "rating": 4.7,
-      "priceRange": "HK$500+",
-      "cuisine": "Authentic Japanese restaurant"
-    },
-    "tags": [
-      "Authentic Japanese restaurant",
-      "Sushi restaurant"
-    ],
-    "engagement": {
-      "likes": 52,
-      "comments": 7,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-17",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
-    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-17.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-17.jpg",
-    "restaurant": {
-      "id": "restaurant-17",
-      "name": "Sushi Saito",
-      "location": "Central, HK",
-      "rating": 4.6,
-      "priceRange": "HK$500+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Fine dining restaurant",
-      "Japanese restaurant",
-      "Restaurant",
-      "Seafood restaurant"
-    ],
-    "engagement": {
-      "likes": 9,
-      "comments": 10,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-18",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
-    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-18.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-18.jpg",
-    "restaurant": {
-      "id": "restaurant-18",
-      "name": "Sushi Kuu",
-      "location": "Central, HK",
-      "rating": 4.2,
-      "priceRange": "HK$500+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 99,
-      "comments": 15,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-19",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} should be {adjective} before adding to...",
-    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-19.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-19.jpg",
-    "restaurant": {
-      "id": "restaurant-19",
-      "name": "Zuma Hong Kong",
-      "location": "Central, HK",
-      "rating": 4.3,
-      "priceRange": "HK$500+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Cocktail bar",
-      "Lounge"
-    ],
-    "engagement": {
-      "likes": 28,
-      "comments": 14,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-20",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
-    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-20.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-20.jpg",
-    "restaurant": {
-      "id": "restaurant-20",
-      "name": "Tokio Joe",
-      "location": "Central, HK",
-      "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "Sushi restaurant"
-    },
-    "tags": [
-      "Sushi restaurant",
-      "Japanese restaurant",
-      "Takeout Restaurant"
-    ],
-    "engagement": {
-      "likes": 16,
-      "comments": 10,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-21",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
-    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-21.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-21.jpg",
-    "restaurant": {
-      "id": "restaurant-21",
-      "name": "Honjo",
-      "location": "Sheung Wan, HK",
-      "rating": 4.6,
-      "priceRange": "HK$500+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Bar",
-      "Sushi restaurant",
-      "Tempura restaurant"
-    ],
-    "engagement": {
-      "likes": 54,
-      "comments": 12,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-22",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
-    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-22.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-22.jpg",
-    "restaurant": {
-      "id": "restaurant-22",
-      "name": "Tai Cheong Bakery",
-      "location": "Central, HK",
-      "rating": 3.9,
-      "priceRange": "HK$1–50",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery",
-      "Chinese bakery"
-    ],
-    "engagement": {
-      "likes": 31,
-      "comments": 10,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-23",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
-    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-23.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-23.jpg",
-    "restaurant": {
-      "id": "restaurant-23",
-      "name": "Door Door Bakery",
-      "location": "Mei Foo Sun Chuen, HK",
-      "rating": 4,
-      "priceRange": "HK$1–50",
-      "cuisine": "Chinese bakery"
-    },
-    "tags": [
-      "Chinese bakery"
-    ],
-    "engagement": {
-      "likes": 19,
-      "comments": 17,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-24",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
-    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-24.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-24.jpg",
-    "restaurant": {
-      "id": "restaurant-24",
-      "name": "Woodlands Indian Vegetarian Restaurant (Tsim Sha Tsui)",
-      "location": "Tsim Sha Tsui, HK",
-      "rating": 4.6,
-      "priceRange": "HK$100–150",
-      "cuisine": "Vegan restaurant"
-    },
-    "tags": [
-      "Vegan restaurant",
-      "Catering food and drink supplier",
-      "Caterer",
-      "Family restaurant",
-      "Halal restaurant",
-      "Indian restaurant",
-      "Indian takeaway",
-      "Delivery Restaurant",
-      "Restaurant",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 29,
-      "comments": 13,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-25",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
-    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-25.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-25.jpg",
-    "restaurant": {
-      "id": "restaurant-25",
-      "name": "Sangeetha Vegetarian Restaurant, Hong Kong",
-      "location": "Tsim Sha Tsui, HK",
-      "rating": 4.3,
-      "priceRange": "HK$100–150",
-      "cuisine": "Vegetarian restaurant"
-    },
-    "tags": [
-      "Vegetarian restaurant",
-      "Indian restaurant"
-    ],
-    "engagement": {
-      "likes": 10,
-      "comments": 0,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-26",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} should be {adjective} before adding to...",
-    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-26.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-26.jpg",
-    "restaurant": {
-      "id": "restaurant-26",
+      "id": "restaurant-spice_scholar_anika-2",
       "name": "Isoya Japanese Vegetarian Restaurant",
       "location": "Wan Chai, HK",
       "rating": 4.4,
       "priceRange": "$$",
-      "cuisine": "Vegetarian restaurant"
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
     },
     "tags": [
-      "Vegetarian restaurant"
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Indian cuisine",
+      "story"
     ],
-    "engagement": {
-      "likes": 5,
-      "comments": 0,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
-    "id": "spice_scholar_anika-post-27",
+    "id": "spice_scholar_anika-post-3",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
-    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-27.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-27.jpg",
+    "title": "💡 Pro Tip: Street Food stalls",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Street Food stalls in Mumbai during off-peak hours. undefined Their food court is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-27",
-      "name": "Mr. Korea BBQ",
-      "location": "Causeway Bay, HK",
-      "rating": 4.2,
-      "priceRange": "$$",
-      "cuisine": "Korean barbecue restaurant"
-    },
-    "tags": [
-      "Korean barbecue restaurant",
-      "Bar & grill",
-      "Barbecue restaurant",
-      "Delivery service",
-      "Korean grocery store",
-      "Korean restaurant",
-      "Takeout Restaurant",
-      "Raw food restaurant"
-    ],
-    "engagement": {
-      "likes": 43,
-      "comments": 4,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-28",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} ratio in {dish} is {adjective}. Too mu...",
-    "content": "The {spice} ratio in {dish} is {adjective}. Too much and it's {adjective}, too little and it's {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-28.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-28.jpg",
-    "restaurant": {
-      "id": "restaurant-28",
-      "name": "AnPing Grill - Mong Kok",
-      "location": "Mong Kok, HK",
-      "rating": 4.3,
-      "priceRange": "HK$350–450",
-      "cuisine": "Korean barbecue restaurant"
-    },
-    "tags": [
-      "Korean barbecue restaurant",
-      "Grill",
-      "Taiwanese restaurant"
-    ],
-    "engagement": {
-      "likes": 1,
-      "comments": 15,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-29",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
-    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-29.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-29.jpg",
-    "restaurant": {
-      "id": "restaurant-29",
-      "name": "BBQ 7080",
-      "location": "Tin Hau, HK",
-      "rating": 4.1,
-      "priceRange": "HK$50–100",
-      "cuisine": "Korean barbecue restaurant"
-    },
-    "tags": [
-      "Korean barbecue restaurant"
-    ],
-    "engagement": {
-      "likes": 8,
-      "comments": 14,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-30",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
-    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-30.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-30.jpg",
-    "restaurant": {
-      "id": "restaurant-30",
-      "name": "Wasabi by Morimoto",
-      "location": "Mumbai, IN",
-      "rating": 4.5,
-      "priceRange": "$$$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 28,
-      "comments": 7,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Knowledgeable"
-  },
-  {
-    "id": "spice_scholar_anika-post-31",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} should be {adjective} before adding to...",
-    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-31.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-31.jpg",
-    "restaurant": {
-      "id": "restaurant-31",
-      "name": "Izumi Bandra",
-      "location": "Mumbai, IN",
-      "rating": 4.5,
-      "priceRange": "₹2,000+",
-      "cuisine": "Authentic Japanese restaurant"
-    },
-    "tags": [
-      "Authentic Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 29,
-      "comments": 16,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-32",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
-    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-32.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-32.jpg",
-    "restaurant": {
-      "id": "restaurant-32",
-      "name": "Kuuraku Bandra West Mumbai",
-      "location": "Mumbai, IN",
-      "rating": 4.7,
-      "priceRange": "₹2,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 46,
-      "comments": 9,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Knowledgeable"
-  },
-  {
-    "id": "spice_scholar_anika-post-33",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Pro tip: The key to perfect {dish} is {technique}....",
-    "content": "Pro tip: The key to perfect {dish} is {technique}. The {spice} should be {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-33.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-33.jpg",
-    "restaurant": {
-      "id": "restaurant-33",
-      "name": "Kofuku (Cloud Kitchen)",
-      "location": "Mumbai, IN",
-      "rating": 4.4,
-      "priceRange": "$$$",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant",
-      "Japanese curry restaurant",
-      "Ramen restaurant",
-      "Restaurant",
-      "Teppanyaki restaurant"
-    ],
-    "engagement": {
-      "likes": 4,
-      "comments": 19,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-34",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Want to master {cuisine}? Start with {spice}. It's...",
-    "content": "Want to master {cuisine}? Start with {spice}. It's the foundation of {dish}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-34.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-34.jpg",
-    "restaurant": {
-      "id": "restaurant-34",
-      "name": "KOKO Mumbai",
-      "location": "Mumbai, IN",
-      "rating": 4.6,
-      "priceRange": "$$$$",
-      "cuisine": "Asian restaurant"
-    },
-    "tags": [
-      "Asian restaurant"
-    ],
-    "engagement": {
-      "likes": 79,
-      "comments": 13,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "spice_scholar_anika-post-35",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
-    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-35.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-35.jpg",
-    "restaurant": {
-      "id": "restaurant-35",
-      "name": "Origami Japanese & Korean Restaurant",
-      "location": "Mumbai, IN",
-      "rating": 4.3,
-      "priceRange": "$$$",
-      "cuisine": "Authentic Japanese restaurant"
-    },
-    "tags": [
-      "Authentic Japanese restaurant",
-      "Korean restaurant"
-    ],
-    "engagement": {
-      "likes": 75,
-      "comments": 8,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-36",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I always {technique} when making {dish}. The {spic...",
-    "content": "I always {technique} when making {dish}. The {spice} needs to be {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-36.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-36.jpg",
-    "restaurant": {
-      "id": "restaurant-36",
-      "name": "Mizu",
-      "location": "Pali, Mumbai, IN",
-      "rating": 4.4,
-      "priceRange": "₹2,000+",
-      "cuisine": "Japanese restaurant"
-    },
-    "tags": [
-      "Japanese restaurant"
-    ],
-    "engagement": {
-      "likes": 19,
-      "comments": 2,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-37",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
-    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-37.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-37.jpg",
-    "restaurant": {
-      "id": "restaurant-37",
-      "name": "Ziya Restaurant",
-      "location": "Mumbai, IN",
-      "rating": 4.5,
-      "priceRange": "$$$$",
-      "cuisine": "North Indian restaurant"
-    },
-    "tags": [
-      "North Indian restaurant",
-      "Cafe",
-      "Dessert restaurant",
-      "Seafood restaurant"
-    ],
-    "engagement": {
-      "likes": 21,
-      "comments": 1,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
-  },
-  {
-    "id": "spice_scholar_anika-post-38",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
-    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-38.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-38.jpg",
-    "restaurant": {
-      "id": "restaurant-38",
-      "name": "Masala Library by Jiggs Kalra",
-      "location": "Mumbai, IN",
-      "rating": 4.5,
-      "priceRange": "₹2,000+",
-      "cuisine": "North Indian restaurant"
-    },
-    "tags": [
-      "North Indian restaurant",
-      "Fine dining restaurant"
-    ],
-    "engagement": {
-      "likes": 30,
-      "comments": 3,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Knowledgeable"
-  },
-  {
-    "id": "spice_scholar_anika-post-39",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
-    "content": "This {cuisine} restaurant has been using the same {spice} blend for 200 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-39.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-39.jpg",
-    "restaurant": {
-      "id": "restaurant-39",
-      "name": "The Sahib Room & Kipling Bar",
+      "id": "restaurant-spice_scholar_anika-3",
+      "name": "Street Food stalls",
       "location": "Mumbai, IN",
       "rating": 4.8,
-      "priceRange": "$$$$",
-      "cuisine": "Indian restaurant"
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Watson's Hotel, 144/1, Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400023, India",
+      "reviewsCount": 68
     },
     "tags": [
-      "Indian restaurant",
-      "Bar",
-      "Fine dining restaurant",
-      "Indian takeaway",
-      "Delivery Restaurant",
-      "Takeout Restaurant",
-      "Mughlai restaurant"
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 55,
-      "comments": 11,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
-    "id": "spice_scholar_anika-post-40",
+    "id": "spice_scholar_anika-post-4",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} should be {adjective} before adding to...",
-    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-40.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-40.jpg",
+    "title": "🧘 The Philosophy of Street Food",
+    "content": "Street Food in Mumbai embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
     "restaurant": {
-      "id": "restaurant-40",
-      "name": "Yauatcha Mumbai",
+      "id": "restaurant-spice_scholar_anika-4",
+      "name": "Street Food",
       "location": "Mumbai, IN",
-      "rating": 4.5,
-      "priceRange": "₹2,000+",
-      "cuisine": "Chinese restaurant"
+      "rating": 4,
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Street Food Santacruz, Maharashtra 400055, India",
+      "reviewsCount": 3
     },
     "tags": [
-      "Chinese restaurant",
-      "Asian restaurant",
-      "Cantonese restaurant",
-      "Cocktail bar",
-      "Dessert restaurant",
-      "Patisserie",
-      "Restaurant"
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 1,
-      "comments": 4,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
-    "id": "spice_scholar_anika-post-41",
+    "id": "spice_scholar_anika-post-5",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
-    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-41.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-41.jpg",
+    "title": "✈️ Travel Discovery: Thank Gourd",
+    "content": "While exploring Mumbai, I stumbled upon Thank Gourd in Aram Nagar Part 2, Machlimar, Versova, Andheri West. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.7-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-41",
-      "name": "JYRAN - TANDOOR DINING & LOUNGE",
-      "location": "Mumbai, IN",
-      "rating": 4.7,
-      "priceRange": "₹2,000+",
-      "cuisine": "Restaurant"
-    },
-    "tags": [
-      "Restaurant"
-    ],
-    "engagement": {
-      "likes": 87,
-      "comments": 17,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-42",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
-    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-42.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-42.jpg",
-    "restaurant": {
-      "id": "restaurant-42",
-      "name": "Dakshin Coastal",
-      "location": "Mumbai, IN",
-      "rating": 4.7,
-      "priceRange": "$$$$",
-      "cuisine": "South Indian restaurant"
-    },
-    "tags": [
-      "South Indian restaurant"
-    ],
-    "engagement": {
-      "likes": 4,
-      "comments": 4,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-43",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
-    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-43.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-43.jpg",
-    "restaurant": {
-      "id": "restaurant-43",
-      "name": "Rare Earth Cafe | 100% Pure Veg",
-      "location": "Mumbai, IN",
-      "rating": 4.6,
-      "priceRange": "$$",
-      "cuisine": "Gluten-free restaurant"
-    },
-    "tags": [
-      "Gluten-free restaurant",
-      "Coffee shop",
-      "Health food restaurant",
-      "Modern Indian restaurant",
-      "Pizza delivery",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 50,
-      "comments": 7,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-44",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
-    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-44.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-44.jpg",
-    "restaurant": {
-      "id": "restaurant-44",
-      "name": "Relish International Veg Cuisine",
-      "location": "Mumbai, IN",
-      "rating": 4.4,
-      "priceRange": "$$$",
-      "cuisine": "Vegan restaurant"
-    },
-    "tags": [
-      "Vegan restaurant",
-      "Indian sizzler restaurant",
-      "Italian restaurant",
-      "Mexican restaurant",
-      "Pizza restaurant",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 35,
-      "comments": 8,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-45",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
-    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-45.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-45.jpg",
-    "restaurant": {
-      "id": "restaurant-45",
+      "id": "restaurant-spice_scholar_anika-5",
       "name": "Thank Gourd",
       "location": "Mumbai, IN",
       "rating": 4.7,
-      "priceRange": "$$",
-      "cuisine": "Vegetarian restaurant"
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "8/B, opp. Palm Beach Apartment, Aram Nagar Part 2, Machlimar, Versova, Andheri West, Mumbai, Maharashtra 400061, India",
+      "reviewsCount": 380
     },
     "tags": [
       "Vegetarian restaurant",
-      "Asian fusion restaurant",
-      "Italian restaurant",
-      "Pan-Asian restaurant"
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 25,
-      "comments": 8,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
-    "id": "spice_scholar_anika-post-46",
+    "id": "spice_scholar_anika-post-6",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
-    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-46.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-46.jpg",
+    "title": "🍽️ SpiceKlub - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at SpiceKlub in Mumbai! Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy. The Indian cuisine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.3-star rating is well deserved. Highly recommend for anyone looking for authentic vegan restaurant in Lower Parel.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
     "restaurant": {
-      "id": "restaurant-46",
-      "name": "Govindas International- The Higher Taste",
-      "location": "Mumbai, IN",
-      "rating": 4.4,
-      "priceRange": "₹200–600",
-      "cuisine": "Vegetarian restaurant"
-    },
-    "tags": [
-      "Vegetarian restaurant",
-      "Indian restaurant"
-    ],
-    "engagement": {
-      "likes": 26,
-      "comments": 0,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
-  },
-  {
-    "id": "spice_scholar_anika-post-47",
-    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
-    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-47.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-47.jpg",
-    "restaurant": {
-      "id": "restaurant-47",
+      "id": "restaurant-spice_scholar_anika-6",
       "name": "SpiceKlub",
       "location": "Mumbai, IN",
       "rating": 4.3,
       "priceRange": "$$$",
-      "cuisine": "Vegan restaurant"
+      "cuisine": "Vegan restaurant",
+      "address": "Janta Industrial Estate, opposite Phoenix Mills 8A, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy.",
+      "reviewsCount": 3540
     },
     "tags": [
       "Vegan restaurant",
-      "Gluten-free restaurant",
-      "Modern Indian restaurant",
-      "North Indian restaurant",
-      "Vegetarian restaurant"
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "review"
     ],
-    "engagement": {
-      "likes": 23,
-      "comments": 9,
-      "shares": 6
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-7",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌟 My Journey to Greenr Cafe",
+    "content": "Walking through Bandra West in Mumbai, I discovered this hidden gem: Greenr Cafe. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-7",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-8",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "💡 Pro Tip: เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food in Samphanthawong during off-peak hours. undefined Their restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-8",
+      "name": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+      "location": "Samphanthawong, TH",
+      "rating": 4.3,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "418 Yaowarat Rd, Khwaeng Samphanthawong, Samphanthawong, Bangkok 10100, Thailand",
+      "reviewsCount": 117
+    },
+    "tags": [
+      "Restaurant",
+      "Samphanthawong",
+      "TH",
+      "Indian cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-9",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🧘 The Philosophy of Central World Square Street Food",
+    "content": "Central World Square Street Food in Pathum Wan embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-9",
+      "name": "Central World Square Street Food",
+      "location": "Pathum Wan, TH",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Thai restaurant",
+      "address": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4 Pathum Wan, Bangkok 10330, Thailand",
+      "reviewsCount": 34
+    },
+    "tags": [
+      "Thai restaurant",
+      "Pathum Wan",
+      "TH",
+      "Indian cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-10",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "✈️ Travel Discovery: Govinda Vegetarian Vegan Restaurant in Bangkok",
+    "content": "While exploring Khlong Toei, I stumbled upon Govinda Vegetarian Vegan Restaurant in Bangkok in Khlong Tan. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$ price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-10",
+      "name": "Govinda Vegetarian Vegan Restaurant in Bangkok",
+      "location": "Khlong Toei, TH",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "6/5-6 Sukhumvit Alley 22, Khlong Tan, Khlong Toei, Bangkok 10110, Thailand",
+      "reviewsCount": 648
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Khlong Toei",
+      "TH",
+      "Indian cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-11",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🍽️ Taquería en la calle (street-food) - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Taquería en la calle (street-food) in Venustiano Carranza, Mexico City! undefined The Indian cuisine here is absolutely outstanding. null price point makes it accessible, and the 5-star rating is well deserved. Highly recommend for anyone looking for authentic mexican restaurant in Aviación Civil.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-11",
+      "name": "Taquería en la calle (street-food)",
+      "location": "Venustiano Carranza, Mexico City, MX",
+      "rating": 5,
+      "priceRange": null,
+      "cuisine": "Mexican restaurant",
+      "address": "Calle Santos Dumont 131(105, Aviación Civil, Venustiano Carranza, 15740 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 2
+    },
+    "tags": [
+      "Mexican restaurant",
+      "Venustiano Carranza, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-12",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌟 My Journey to Pinche Gringo BBQ Warehouse - Polanco",
+    "content": "Walking through Anáhuac I Sección in Miguel Hidalgo, Mexico City, I discovered this hidden gem: Pinche Gringo BBQ Warehouse - Polanco. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Miguel Hidalgo, Mexico City!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-12",
+      "name": "Pinche Gringo BBQ Warehouse - Polanco",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Lago Iseo 296, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 4099
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Miguel Hidalgo, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-13",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "💡 Pro Tip: Mominoki House",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Mominoki House in Shibuya during off-peak hours. Intimate venue with wood accents, serving meals made with organic produce, plus vegan options. Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-13",
+      "name": "Mominoki House",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "2 Chome-18-5 Jingumae, Shibuya, Tokyo 150-0001, Japan",
+      "description": "Intimate venue with wood accents, serving meals made with organic produce, plus vegan options.",
+      "reviewsCount": 277
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Shibuya",
+      "JP",
+      "Indian cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-14",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🧘 The Philosophy of Street food vendor",
+    "content": "Street food vendor in New York embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-14",
+      "name": "Street food vendor",
+      "location": "New York, US",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "2239 Broadway, New York, NY 10024",
+      "reviewsCount": 9
+    },
+    "tags": [
+      "Restaurant",
+      "New York",
+      "US",
+      "Indian cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-15",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "✈️ Travel Discovery: Bingaz Street Food",
+    "content": "While exploring Sai Ying Pun, I stumbled upon Bingaz Street Food in null. undefined This is exactly the kind of authentic restaurant experience I seek when traveling. The 4.1-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-1",
+      "name": "Bingaz Street Food",
+      "location": "Sai Ying Pun, HK",
+      "rating": 4.1,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "23 High Street G/F Bingaz, Sai Ying Pun, Hong Kong",
+      "reviewsCount": 39
+    },
+    "tags": [
+      "Restaurant",
+      "Sai Ying Pun",
+      "HK",
+      "Indian cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-16",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🍽️ Isoya Japanese Vegetarian Restaurant - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Isoya Japanese Vegetarian Restaurant in Wan Chai! undefined The Indian cuisine here is absolutely outstanding. $$ price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in null.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-2",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Indian cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-17",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌟 My Journey to Street Food stalls",
+    "content": "Walking through Kala Ghoda, Fort in Mumbai, I discovered this hidden gem: Street Food stalls. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-3",
+      "name": "Street Food stalls",
+      "location": "Mumbai, IN",
+      "rating": 4.8,
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Watson's Hotel, 144/1, Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400023, India",
+      "reviewsCount": 68
+    },
+    "tags": [
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-18",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "💡 Pro Tip: Street Food",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Street Food in Mumbai during off-peak hours. undefined Their food court is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-4",
+      "name": "Street Food",
+      "location": "Mumbai, IN",
+      "rating": 4,
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Street Food Santacruz, Maharashtra 400055, India",
+      "reviewsCount": 3
+    },
+    "tags": [
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-19",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🧘 The Philosophy of Thank Gourd",
+    "content": "Thank Gourd in Mumbai embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-5",
+      "name": "Thank Gourd",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "8/B, opp. Palm Beach Apartment, Aram Nagar Part 2, Machlimar, Versova, Andheri West, Mumbai, Maharashtra 400061, India",
+      "reviewsCount": 380
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-20",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "✈️ Travel Discovery: SpiceKlub",
+    "content": "While exploring Mumbai, I stumbled upon SpiceKlub in Lower Parel. Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy. This is exactly the kind of authentic vegan restaurant experience I seek when traveling. The 4.3-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-6",
+      "name": "SpiceKlub",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Janta Industrial Estate, opposite Phoenix Mills 8A, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy.",
+      "reviewsCount": 3540
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-21",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🍽️ Greenr Cafe - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Greenr Cafe in Mumbai! undefined The Indian cuisine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Bandra West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-7",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-22",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌟 My Journey to เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+    "content": "Walking through Samphanthawong in Samphanthawong, I discovered this hidden gem: เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Samphanthawong!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-8",
+      "name": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+      "location": "Samphanthawong, TH",
+      "rating": 4.3,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "418 Yaowarat Rd, Khwaeng Samphanthawong, Samphanthawong, Bangkok 10100, Thailand",
+      "reviewsCount": 117
+    },
+    "tags": [
+      "Restaurant",
+      "Samphanthawong",
+      "TH",
+      "Indian cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-23",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "💡 Pro Tip: Central World Square Street Food",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Central World Square Street Food in Pathum Wan during off-peak hours. undefined Their thai restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-9",
+      "name": "Central World Square Street Food",
+      "location": "Pathum Wan, TH",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Thai restaurant",
+      "address": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4 Pathum Wan, Bangkok 10330, Thailand",
+      "reviewsCount": 34
+    },
+    "tags": [
+      "Thai restaurant",
+      "Pathum Wan",
+      "TH",
+      "Indian cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-24",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🧘 The Philosophy of Govinda Vegetarian Vegan Restaurant in Bangkok",
+    "content": "Govinda Vegetarian Vegan Restaurant in Bangkok in Khlong Toei embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-10",
+      "name": "Govinda Vegetarian Vegan Restaurant in Bangkok",
+      "location": "Khlong Toei, TH",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "6/5-6 Sukhumvit Alley 22, Khlong Tan, Khlong Toei, Bangkok 10110, Thailand",
+      "reviewsCount": 648
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Khlong Toei",
+      "TH",
+      "Indian cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-25",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "✈️ Travel Discovery: Taquería en la calle (street-food)",
+    "content": "While exploring Venustiano Carranza, Mexico City, I stumbled upon Taquería en la calle (street-food) in Aviación Civil. undefined This is exactly the kind of authentic mexican restaurant experience I seek when traveling. The 5-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-11",
+      "name": "Taquería en la calle (street-food)",
+      "location": "Venustiano Carranza, Mexico City, MX",
+      "rating": 5,
+      "priceRange": null,
+      "cuisine": "Mexican restaurant",
+      "address": "Calle Santos Dumont 131(105, Aviación Civil, Venustiano Carranza, 15740 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 2
+    },
+    "tags": [
+      "Mexican restaurant",
+      "Venustiano Carranza, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-26",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🍽️ Pinche Gringo BBQ Warehouse - Polanco - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Pinche Gringo BBQ Warehouse - Polanco in Miguel Hidalgo, Mexico City! undefined The Indian cuisine here is absolutely outstanding. $$$ price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic barbecue restaurant in Anáhuac I Sección.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-12",
+      "name": "Pinche Gringo BBQ Warehouse - Polanco",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Lago Iseo 296, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 4099
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Miguel Hidalgo, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-27",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌟 My Journey to Mominoki House",
+    "content": "Walking through 2 Chome Jingumae in Shibuya, I discovered this hidden gem: Mominoki House. Intimate venue with wood accents, serving meals made with organic produce, plus vegan options. As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Shibuya!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-13",
+      "name": "Mominoki House",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "2 Chome-18-5 Jingumae, Shibuya, Tokyo 150-0001, Japan",
+      "description": "Intimate venue with wood accents, serving meals made with organic produce, plus vegan options.",
+      "reviewsCount": 277
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Shibuya",
+      "JP",
+      "Indian cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-28",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "💡 Pro Tip: Street food vendor",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Street food vendor in New York during off-peak hours. undefined Their restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-14",
+      "name": "Street food vendor",
+      "location": "New York, US",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "2239 Broadway, New York, NY 10024",
+      "reviewsCount": 9
+    },
+    "tags": [
+      "Restaurant",
+      "New York",
+      "US",
+      "Indian cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-29",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🧘 The Philosophy of Bingaz Street Food",
+    "content": "Bingaz Street Food in Sai Ying Pun embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-1",
+      "name": "Bingaz Street Food",
+      "location": "Sai Ying Pun, HK",
+      "rating": 4.1,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "23 High Street G/F Bingaz, Sai Ying Pun, Hong Kong",
+      "reviewsCount": 39
+    },
+    "tags": [
+      "Restaurant",
+      "Sai Ying Pun",
+      "HK",
+      "Indian cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-30",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "✈️ Travel Discovery: Isoya Japanese Vegetarian Restaurant",
+    "content": "While exploring Wan Chai, I stumbled upon Isoya Japanese Vegetarian Restaurant in null. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$ price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-2",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Indian cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-31",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🍽️ Street Food stalls - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Street Food stalls in Mumbai! undefined The Indian cuisine here is absolutely outstanding. null price point makes it accessible, and the 4.8-star rating is well deserved. Highly recommend for anyone looking for authentic food court in Kala Ghoda, Fort.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-3",
+      "name": "Street Food stalls",
+      "location": "Mumbai, IN",
+      "rating": 4.8,
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Watson's Hotel, 144/1, Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400023, India",
+      "reviewsCount": 68
+    },
+    "tags": [
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-32",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌟 My Journey to Street Food",
+    "content": "Walking through Kolivery Village, Vidya Nagari, Kalina, Santacruz East in Mumbai, I discovered this hidden gem: Street Food. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Mumbai!",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-4",
+      "name": "Street Food",
+      "location": "Mumbai, IN",
+      "rating": 4,
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Street Food Santacruz, Maharashtra 400055, India",
+      "reviewsCount": 3
+    },
+    "tags": [
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-33",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "💡 Pro Tip: Thank Gourd",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Thank Gourd in Mumbai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-5",
+      "name": "Thank Gourd",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "8/B, opp. Palm Beach Apartment, Aram Nagar Part 2, Machlimar, Versova, Andheri West, Mumbai, Maharashtra 400061, India",
+      "reviewsCount": 380
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-34",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🧘 The Philosophy of SpiceKlub",
+    "content": "SpiceKlub in Mumbai embodies everything I believe about Indian cuisine. Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-6",
+      "name": "SpiceKlub",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Janta Industrial Estate, opposite Phoenix Mills 8A, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy.",
+      "reviewsCount": 3540
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-35",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "✈️ Travel Discovery: Greenr Cafe",
+    "content": "While exploring Mumbai, I stumbled upon Greenr Cafe in Bandra West. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-7",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-36",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🍽️ เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food in Samphanthawong! undefined The Indian cuisine here is absolutely outstanding. null price point makes it accessible, and the 4.3-star rating is well deserved. Highly recommend for anyone looking for authentic restaurant in Samphanthawong.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-8",
+      "name": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+      "location": "Samphanthawong, TH",
+      "rating": 4.3,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "418 Yaowarat Rd, Khwaeng Samphanthawong, Samphanthawong, Bangkok 10100, Thailand",
+      "reviewsCount": 117
+    },
+    "tags": [
+      "Restaurant",
+      "Samphanthawong",
+      "TH",
+      "Indian cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-37",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌟 My Journey to Central World Square Street Food",
+    "content": "Walking through Pathum Wan in Pathum Wan, I discovered this hidden gem: Central World Square Street Food. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Pathum Wan!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-9",
+      "name": "Central World Square Street Food",
+      "location": "Pathum Wan, TH",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Thai restaurant",
+      "address": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4 Pathum Wan, Bangkok 10330, Thailand",
+      "reviewsCount": 34
+    },
+    "tags": [
+      "Thai restaurant",
+      "Pathum Wan",
+      "TH",
+      "Indian cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-38",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "💡 Pro Tip: Govinda Vegetarian Vegan Restaurant in Bangkok",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Govinda Vegetarian Vegan Restaurant in Bangkok in Khlong Toei during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-10",
+      "name": "Govinda Vegetarian Vegan Restaurant in Bangkok",
+      "location": "Khlong Toei, TH",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "6/5-6 Sukhumvit Alley 22, Khlong Tan, Khlong Toei, Bangkok 10110, Thailand",
+      "reviewsCount": 648
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Khlong Toei",
+      "TH",
+      "Indian cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-39",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🧘 The Philosophy of Taquería en la calle (street-food)",
+    "content": "Taquería en la calle (street-food) in Venustiano Carranza, Mexico City embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-11",
+      "name": "Taquería en la calle (street-food)",
+      "location": "Venustiano Carranza, Mexico City, MX",
+      "rating": 5,
+      "priceRange": null,
+      "cuisine": "Mexican restaurant",
+      "address": "Calle Santos Dumont 131(105, Aviación Civil, Venustiano Carranza, 15740 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 2
+    },
+    "tags": [
+      "Mexican restaurant",
+      "Venustiano Carranza, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-40",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "✈️ Travel Discovery: Pinche Gringo BBQ Warehouse - Polanco",
+    "content": "While exploring Miguel Hidalgo, Mexico City, I stumbled upon Pinche Gringo BBQ Warehouse - Polanco in Anáhuac I Sección. undefined This is exactly the kind of authentic barbecue restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-12",
+      "name": "Pinche Gringo BBQ Warehouse - Polanco",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Lago Iseo 296, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 4099
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Miguel Hidalgo, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-41",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🍽️ Mominoki House - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Mominoki House in Shibuya! Intimate venue with wood accents, serving meals made with organic produce, plus vegan options. The Indian cuisine here is absolutely outstanding. null price point makes it accessible, and the 4.4-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in 2 Chome Jingumae.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-13",
+      "name": "Mominoki House",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "2 Chome-18-5 Jingumae, Shibuya, Tokyo 150-0001, Japan",
+      "description": "Intimate venue with wood accents, serving meals made with organic produce, plus vegan options.",
+      "reviewsCount": 277
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Shibuya",
+      "JP",
+      "Indian cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-42",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌟 My Journey to Street food vendor",
+    "content": "Walking through Manhattan in New York, I discovered this hidden gem: Street food vendor. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring New York!",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-14",
+      "name": "Street food vendor",
+      "location": "New York, US",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "2239 Broadway, New York, NY 10024",
+      "reviewsCount": 9
+    },
+    "tags": [
+      "Restaurant",
+      "New York",
+      "US",
+      "Indian cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-43",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "💡 Pro Tip: Bingaz Street Food",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Bingaz Street Food in Sai Ying Pun during off-peak hours. undefined Their restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-1",
+      "name": "Bingaz Street Food",
+      "location": "Sai Ying Pun, HK",
+      "rating": 4.1,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "23 High Street G/F Bingaz, Sai Ying Pun, Hong Kong",
+      "reviewsCount": 39
+    },
+    "tags": [
+      "Restaurant",
+      "Sai Ying Pun",
+      "HK",
+      "Indian cuisine",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-44",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🧘 The Philosophy of Isoya Japanese Vegetarian Restaurant",
+    "content": "Isoya Japanese Vegetarian Restaurant in Wan Chai embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-2",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Indian cuisine",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-45",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "✈️ Travel Discovery: Street Food stalls",
+    "content": "While exploring Mumbai, I stumbled upon Street Food stalls in Kala Ghoda, Fort. undefined This is exactly the kind of authentic food court experience I seek when traveling. The 4.8-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-3",
+      "name": "Street Food stalls",
+      "location": "Mumbai, IN",
+      "rating": 4.8,
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Watson's Hotel, 144/1, Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400023, India",
+      "reviewsCount": 68
+    },
+    "tags": [
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-46",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🍽️ Street Food - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Street Food in Mumbai! undefined The Indian cuisine here is absolutely outstanding. null price point makes it accessible, and the 4-star rating is well deserved. Highly recommend for anyone looking for authentic food court in Kolivery Village, Vidya Nagari, Kalina, Santacruz East.",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-4",
+      "name": "Street Food",
+      "location": "Mumbai, IN",
+      "rating": 4,
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Street Food Santacruz, Maharashtra 400055, India",
+      "reviewsCount": 3
+    },
+    "tags": [
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
+  },
+  {
+    "id": "spice_scholar_anika-post-47",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌟 My Journey to Thank Gourd",
+    "content": "Walking through Aram Nagar Part 2, Machlimar, Versova, Andheri West in Mumbai, I discovered this hidden gem: Thank Gourd. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "restaurant": {
+      "id": "restaurant-spice_scholar_anika-5",
+      "name": "Thank Gourd",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "8/B, opp. Palm Beach Apartment, Aram Nagar Part 2, Machlimar, Versova, Andheri West, Mumbai, Maharashtra 400061, India",
+      "reviewsCount": 380
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-48",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
-    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-48.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-48.jpg",
+    "title": "💡 Pro Tip: SpiceKlub",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit SpiceKlub in Mumbai during off-peak hours. Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy. Their vegan restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
     "restaurant": {
-      "id": "restaurant-48",
-      "name": "AB's - Absolute Barbecues | Powai, Mumbai",
+      "id": "restaurant-spice_scholar_anika-6",
+      "name": "SpiceKlub",
       "location": "Mumbai, IN",
       "rating": 4.3,
-      "priceRange": "₹800–1,000",
-      "cuisine": "Barbecue restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Janta Industrial Estate, opposite Phoenix Mills 8A, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy.",
+      "reviewsCount": 3540
     },
     "tags": [
-      "Barbecue restaurant",
-      "Buffet restaurant",
-      "Children's party buffet",
-      "Event venue",
-      "Family restaurant",
-      "Indian restaurant",
-      "Delivery Restaurant",
-      "Takeout Restaurant",
-      "Non vegetarian restaurant",
-      "North Indian restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 10,
-      "comments": 3,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-49",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
-    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-49.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-49.jpg",
+    "title": "🧘 The Philosophy of Greenr Cafe",
+    "content": "Greenr Cafe in Mumbai embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-49",
-      "name": "Barbeque Nation Mumbai Kurla",
+      "id": "restaurant-spice_scholar_anika-7",
+      "name": "Greenr Cafe",
       "location": "Mumbai, IN",
-      "rating": 4.3,
+      "rating": 4.5,
       "priceRange": "$$$",
-      "cuisine": "Barbecue restaurant"
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Barbecue restaurant",
-      "Buffet restaurant",
-      "Dessert restaurant",
-      "Indian restaurant",
-      "Restaurant"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 99,
-      "comments": 7,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-50",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
-    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-50.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-50.jpg",
+    "title": "✈️ Travel Discovery: เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+    "content": "While exploring Samphanthawong, I stumbled upon เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food in Samphanthawong. undefined This is exactly the kind of authentic restaurant experience I seek when traveling. The 4.3-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-50",
-      "name": "Sigree Global Grill | Powai",
-      "location": "Mumbai, IN",
-      "rating": 4.2,
-      "priceRange": "₹1,000–1,200",
-      "cuisine": "Barbecue restaurant"
+      "id": "restaurant-spice_scholar_anika-8",
+      "name": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+      "location": "Samphanthawong, TH",
+      "rating": 4.3,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "418 Yaowarat Rd, Khwaeng Samphanthawong, Samphanthawong, Bangkok 10100, Thailand",
+      "reviewsCount": 117
     },
     "tags": [
-      "Barbecue restaurant",
-      "Buffet restaurant",
-      "Dessert restaurant",
-      "North Indian restaurant"
+      "Restaurant",
+      "Samphanthawong",
+      "TH",
+      "Indian cuisine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 59,
-      "comments": 8,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Knowledgeable"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-51",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} vendor in {location} shared the secret...",
-    "content": "The {spice} vendor in {location} shared the secret to perfect {dish}. It's all about {technique}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-51.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-51.jpg",
+    "title": "🍽️ Central World Square Street Food - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Central World Square Street Food in Pathum Wan! undefined The Indian cuisine here is absolutely outstanding. null price point makes it accessible, and the 3.7-star rating is well deserved. Highly recommend for anyone looking for authentic thai restaurant in Pathum Wan.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-51",
-      "name": "Barbeque Nation - Mumbai - Worli",
-      "location": "Mumbai, IN",
-      "rating": 4.3,
-      "priceRange": "₹800–1,200",
-      "cuisine": "Barbecue restaurant"
+      "id": "restaurant-spice_scholar_anika-9",
+      "name": "Central World Square Street Food",
+      "location": "Pathum Wan, TH",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Thai restaurant",
+      "address": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4 Pathum Wan, Bangkok 10330, Thailand",
+      "reviewsCount": 34
     },
     "tags": [
-      "Barbecue restaurant",
-      "Buffet restaurant",
-      "Dessert restaurant",
-      "Family restaurant",
-      "Indian restaurant",
-      "Restaurant"
+      "Thai restaurant",
+      "Pathum Wan",
+      "TH",
+      "Indian cuisine",
+      "review"
     ],
-    "engagement": {
-      "likes": 3,
-      "comments": 14,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Knowledgeable"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-52",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
-    "content": "This {cuisine} restaurant has been using the same {spice} blend for 200 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-52.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-52.jpg",
+    "title": "🌟 My Journey to Govinda Vegetarian Vegan Restaurant in Bangkok",
+    "content": "Walking through Khlong Tan in Khlong Toei, I discovered this hidden gem: Govinda Vegetarian Vegan Restaurant in Bangkok. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Khlong Toei!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
     "restaurant": {
-      "id": "restaurant-52",
-      "name": "Barbeque Nation - Navi Mumbai - Nerul",
-      "location": "Navi Mumbai, IN",
-      "rating": 4.3,
-      "priceRange": "₹800–1,200",
-      "cuisine": "Barbecue restaurant"
+      "id": "restaurant-spice_scholar_anika-10",
+      "name": "Govinda Vegetarian Vegan Restaurant in Bangkok",
+      "location": "Khlong Toei, TH",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "6/5-6 Sukhumvit Alley 22, Khlong Tan, Khlong Toei, Bangkok 10110, Thailand",
+      "reviewsCount": 648
     },
     "tags": [
-      "Barbecue restaurant",
-      "Buffet restaurant",
-      "Dessert restaurant",
-      "Family restaurant",
-      "Indian restaurant",
-      "Restaurant"
+      "Vegetarian restaurant",
+      "Khlong Toei",
+      "TH",
+      "Indian cuisine",
+      "story"
     ],
-    "engagement": {
-      "likes": 50,
-      "comments": 2,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Cultural"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-53",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} should be {adjective} before adding to...",
-    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-53.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-53.jpg",
+    "title": "💡 Pro Tip: Taquería en la calle (street-food)",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Taquería en la calle (street-food) in Venustiano Carranza, Mexico City during off-peak hours. undefined Their mexican restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
     "restaurant": {
-      "id": "restaurant-53",
-      "name": "Barbeque Nation - Mumbai - Times Square, Sakinaka",
-      "location": "Mumbai, IN",
-      "rating": 4.3,
-      "priceRange": "₹1,000–1,200",
-      "cuisine": "Barbecue restaurant"
+      "id": "restaurant-spice_scholar_anika-11",
+      "name": "Taquería en la calle (street-food)",
+      "location": "Venustiano Carranza, Mexico City, MX",
+      "rating": 5,
+      "priceRange": null,
+      "cuisine": "Mexican restaurant",
+      "address": "Calle Santos Dumont 131(105, Aviación Civil, Venustiano Carranza, 15740 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 2
     },
     "tags": [
-      "Barbecue restaurant",
-      "Buffet restaurant",
-      "Dessert restaurant",
-      "Family restaurant",
-      "Indian restaurant"
+      "Mexican restaurant",
+      "Venustiano Carranza, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 57,
-      "comments": 6,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Passionate"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-54",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Pro tip: The key to perfect {dish} is {technique}....",
-    "content": "Pro tip: The key to perfect {dish} is {technique}. The {spice} should be {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-54.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-54.jpg",
+    "title": "🧘 The Philosophy of Pinche Gringo BBQ Warehouse - Polanco",
+    "content": "Pinche Gringo BBQ Warehouse - Polanco in Miguel Hidalgo, Mexico City embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-54",
-      "name": "Ajoomma Korean Charcoal BBQ Restaurant",
-      "location": "Singapore, SG",
-      "rating": 4.8,
-      "priceRange": "$$",
-      "cuisine": "Restaurant"
+      "id": "restaurant-spice_scholar_anika-12",
+      "name": "Pinche Gringo BBQ Warehouse - Polanco",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Lago Iseo 296, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 4099
     },
     "tags": [
-      "Restaurant"
+      "Barbecue restaurant",
+      "Miguel Hidalgo, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 32,
-      "comments": 5,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.801Z",
-    "personality": "Traditional"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-55",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
-    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-55.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-55.jpg",
+    "title": "✈️ Travel Discovery: Mominoki House",
+    "content": "While exploring Shibuya, I stumbled upon Mominoki House in 2 Chome Jingumae. Intimate venue with wood accents, serving meals made with organic produce, plus vegan options. This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.4-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-55",
-      "name": "Hanjip Korean Grill House",
-      "location": "Singapore, SG",
-      "rating": 4.8,
-      "priceRange": "SGD 100+",
-      "cuisine": "Korean barbecue restaurant"
+      "id": "restaurant-spice_scholar_anika-13",
+      "name": "Mominoki House",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "2 Chome-18-5 Jingumae, Shibuya, Tokyo 150-0001, Japan",
+      "description": "Intimate venue with wood accents, serving meals made with organic produce, plus vegan options.",
+      "reviewsCount": 277
     },
     "tags": [
-      "Korean barbecue restaurant",
-      "Korean restaurant",
-      "Restaurant"
+      "Vegetarian restaurant",
+      "Shibuya",
+      "JP",
+      "Indian cuisine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 62,
-      "comments": 11,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Traditional"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-56",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
-    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-56.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-56.jpg",
+    "title": "🍽️ Street food vendor - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Street food vendor in New York! undefined The Indian cuisine here is absolutely outstanding. null price point makes it accessible, and the 3.7-star rating is well deserved. Highly recommend for anyone looking for authentic restaurant in Manhattan.",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
     "restaurant": {
-      "id": "restaurant-56",
-      "name": "Tengoku Yakiniku Singapore | Japanese Restaurant Singapore | Japanese BBQ",
-      "location": "Singapore, SG",
-      "rating": 4.8,
-      "priceRange": "SGD 100+",
-      "cuisine": "Yakiniku restaurant"
+      "id": "restaurant-spice_scholar_anika-14",
+      "name": "Street food vendor",
+      "location": "New York, US",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "2239 Broadway, New York, NY 10024",
+      "reviewsCount": 9
     },
     "tags": [
-      "Yakiniku restaurant",
-      "Japanese restaurant"
+      "Restaurant",
+      "New York",
+      "US",
+      "Indian cuisine",
+      "review"
     ],
-    "engagement": {
-      "likes": 4,
-      "comments": 17,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Cultural"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-57",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
-    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-57.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-57.jpg",
+    "title": "🌟 My Journey to Bingaz Street Food",
+    "content": "Walking through null in Sai Ying Pun, I discovered this hidden gem: Bingaz Street Food. undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Sai Ying Pun!",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-57",
-      "name": "Gangnam BBQ",
-      "location": "Singapore, SG",
-      "rating": 4.6,
-      "priceRange": "$$",
-      "cuisine": "Korean barbecue restaurant"
+      "id": "restaurant-spice_scholar_anika-1",
+      "name": "Bingaz Street Food",
+      "location": "Sai Ying Pun, HK",
+      "rating": 4.1,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "23 High Street G/F Bingaz, Sai Ying Pun, Hong Kong",
+      "reviewsCount": 39
     },
     "tags": [
-      "Korean barbecue restaurant",
-      "Restaurant"
+      "Restaurant",
+      "Sai Ying Pun",
+      "HK",
+      "Indian cuisine",
+      "story"
     ],
-    "engagement": {
-      "likes": 9,
-      "comments": 14,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Cultural"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-58",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
-    "content": "This {cuisine} restaurant has been using the same {spice} blend for 300 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-58.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-58.jpg",
+    "title": "💡 Pro Tip: Isoya Japanese Vegetarian Restaurant",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Isoya Japanese Vegetarian Restaurant in Wan Chai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
     "restaurant": {
-      "id": "restaurant-58",
-      "name": "I'm Kim Korean BBQ",
-      "location": "Singapore, SG",
-      "rating": 4.6,
-      "priceRange": "SGD 20–30",
-      "cuisine": "Korean barbecue restaurant"
+      "id": "restaurant-spice_scholar_anika-2",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+      "reviewsCount": 352
     },
     "tags": [
-      "Korean barbecue restaurant",
-      "Buffet restaurant",
-      "Korean restaurant"
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK",
+      "Indian cuisine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 85,
-      "comments": 18,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Cultural"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-59",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
-    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-59.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-59.jpg",
+    "title": "🧘 The Philosophy of Street Food stalls",
+    "content": "Street Food stalls in Mumbai embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-59",
-      "name": "Nanta BBQ",
-      "location": "Singapore, SG",
-      "rating": 4.7,
-      "priceRange": "$$",
-      "cuisine": "Korean barbecue restaurant"
+      "id": "restaurant-spice_scholar_anika-3",
+      "name": "Street Food stalls",
+      "location": "Mumbai, IN",
+      "rating": 4.8,
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Watson's Hotel, 144/1, Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400023, India",
+      "reviewsCount": 68
     },
     "tags": [
-      "Korean barbecue restaurant",
-      "Delivery service",
-      "Fried chicken takeaway"
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 78,
-      "comments": 9,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Passionate"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-60",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
-    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-60.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-60.jpg",
+    "title": "✈️ Travel Discovery: Street Food",
+    "content": "While exploring Mumbai, I stumbled upon Street Food in Kolivery Village, Vidya Nagari, Kalina, Santacruz East. undefined This is exactly the kind of authentic food court experience I seek when traveling. The 4-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
     "restaurant": {
-      "id": "restaurant-60",
-      "name": "Genesis Vegan Restaurant",
-      "location": "Singapore, SG",
-      "rating": 4.4,
-      "priceRange": "SGD 10–20",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-spice_scholar_anika-4",
+      "name": "Street Food",
+      "location": "Mumbai, IN",
+      "rating": 4,
+      "priceRange": null,
+      "cuisine": "Food court",
+      "address": "Street Food Santacruz, Maharashtra 400055, India",
+      "reviewsCount": 3
     },
     "tags": [
-      "Vegan restaurant",
-      "Restaurant",
-      "Vegetarian cafe and deli",
-      "Vegetarian restaurant"
+      "Food court",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 43,
-      "comments": 4,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Cultural"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-61",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} vendor in {location} shared the secret...",
-    "content": "The {spice} vendor in {location} shared the secret to perfect {dish}. It's all about {technique}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-61.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-61.jpg",
+    "title": "🍽️ Thank Gourd - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Thank Gourd in Mumbai! undefined The Indian cuisine here is absolutely outstanding. null price point makes it accessible, and the 4.7-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Aram Nagar Part 2, Machlimar, Versova, Andheri West.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-61",
-      "name": "The Boneless Kitchen - Korean Vegetarian and Vegan Cuisine",
-      "location": "Singapore, SG",
-      "rating": 4.4,
-      "priceRange": "SGD 20–30",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-spice_scholar_anika-5",
+      "name": "Thank Gourd",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "8/B, opp. Palm Beach Apartment, Aram Nagar Part 2, Machlimar, Versova, Andheri West, Mumbai, Maharashtra 400061, India",
+      "reviewsCount": 380
     },
     "tags": [
-      "Vegan restaurant",
-      "Vegetarian restaurant"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "review"
     ],
-    "engagement": {
-      "likes": 78,
-      "comments": 6,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Traditional"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-62",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
-    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-62.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-62.jpg",
+    "title": "🌟 My Journey to SpiceKlub",
+    "content": "Walking through Lower Parel in Mumbai, I discovered this hidden gem: SpiceKlub. Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy. As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
     "restaurant": {
-      "id": "restaurant-62",
-      "name": "Cheaper & Better Street Food",
-      "location": "Bang Rak, TH",
-      "rating": 4.7,
-      "priceRange": "฿1–200",
-      "cuisine": "Thai restaurant"
+      "id": "restaurant-spice_scholar_anika-6",
+      "name": "SpiceKlub",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant",
+      "address": "Janta Industrial Estate, opposite Phoenix Mills 8A, Lower Parel, Mumbai, Maharashtra 400013, India",
+      "description": "Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy.",
+      "reviewsCount": 3540
     },
     "tags": [
-      "Thai restaurant",
-      "Restaurant"
+      "Vegan restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "story"
     ],
-    "engagement": {
-      "likes": 12,
-      "comments": 16,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Passionate"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-63",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
-    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-63.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-63.jpg",
+    "title": "💡 Pro Tip: Greenr Cafe",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Greenr Cafe in Mumbai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-63",
-      "name": "Thai Street Food Place",
-      "location": "Watthana, TH",
-      "rating": 4.6,
-      "priceRange": "฿1–100",
-      "cuisine": "Food court"
+      "id": "restaurant-spice_scholar_anika-7",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Food court",
-      "Restaurant"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Indian cuisine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 87,
-      "comments": 2,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Traditional"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-64",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
-    "content": "This {cuisine} restaurant has been using the same {spice} blend for 50 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-64.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-64.jpg",
+    "title": "🧘 The Philosophy of เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+    "content": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food in Samphanthawong embodies everything I believe about Indian cuisine. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-64",
-      "name": "Central World Square Street Food",
-      "location": "Pathum Wan, TH",
-      "rating": 3.7,
-      "priceRange": "$$",
-      "cuisine": "Thai restaurant"
+      "id": "restaurant-spice_scholar_anika-8",
+      "name": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+      "location": "Samphanthawong, TH",
+      "rating": 4.3,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "418 Yaowarat Rd, Khwaeng Samphanthawong, Samphanthawong, Bangkok 10100, Thailand",
+      "reviewsCount": 117
     },
     "tags": [
-      "Thai restaurant"
+      "Restaurant",
+      "Samphanthawong",
+      "TH",
+      "Indian cuisine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 1,
-      "comments": 10,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Cultural"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-65",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Want to master {cuisine}? Start with {spice}. It's...",
-    "content": "Want to master {cuisine}? Start with {spice}. It's the foundation of {dish}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-65.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-65.jpg",
+    "title": "✈️ Travel Discovery: Central World Square Street Food",
+    "content": "While exploring Pathum Wan, I stumbled upon Central World Square Street Food in Pathum Wan. undefined This is exactly the kind of authentic thai restaurant experience I seek when traveling. The 3.7-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-65",
-      "name": "Sushi Juban Asok Branch",
-      "location": "Watthana, TH",
-      "rating": 4.9,
-      "priceRange": "฿1,000+",
-      "cuisine": "Sushi restaurant"
+      "id": "restaurant-spice_scholar_anika-9",
+      "name": "Central World Square Street Food",
+      "location": "Pathum Wan, TH",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Thai restaurant",
+      "address": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4 Pathum Wan, Bangkok 10330, Thailand",
+      "reviewsCount": 34
     },
     "tags": [
-      "Sushi restaurant"
+      "Thai restaurant",
+      "Pathum Wan",
+      "TH",
+      "Indian cuisine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 48,
-      "comments": 18,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Knowledgeable"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-66",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
-    "content": "This {cuisine} restaurant has been using the same {spice} blend for 75 years. The {dish} is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-66.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-66.jpg",
+    "title": "🍽️ Govinda Vegetarian Vegan Restaurant in Bangkok - A Indian cuisine Experience",
+    "content": "Just had an incredible meal at Govinda Vegetarian Vegan Restaurant in Bangkok in Khlong Toei! undefined The Indian cuisine here is absolutely outstanding. $$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Khlong Tan.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
     "restaurant": {
-      "id": "restaurant-66",
-      "name": "SUSHI JUBAN Takumi",
-      "location": "Watthana, TH",
-      "rating": 4.9,
-      "priceRange": "฿2,000+",
-      "cuisine": "Sushi restaurant"
+      "id": "restaurant-spice_scholar_anika-10",
+      "name": "Govinda Vegetarian Vegan Restaurant in Bangkok",
+      "location": "Khlong Toei, TH",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "6/5-6 Sukhumvit Alley 22, Khlong Tan, Khlong Toei, Bangkok 10110, Thailand",
+      "reviewsCount": 648
     },
     "tags": [
-      "Sushi restaurant"
+      "Vegetarian restaurant",
+      "Khlong Toei",
+      "TH",
+      "Indian cuisine",
+      "review"
     ],
-    "engagement": {
-      "likes": 61,
-      "comments": 14,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Traditional"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-67",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
-    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-67.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-67.jpg",
+    "title": "🌟 My Journey to Taquería en la calle (street-food)",
+    "content": "Walking through Aviación Civil in Venustiano Carranza, Mexico City, I discovered this hidden gem: Taquería en la calle (street-food). undefined As someone who specializes in Indian cuisine, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Spices. This is why I love exploring Venustiano Carranza, Mexico City!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
     "restaurant": {
-      "id": "restaurant-67",
-      "name": "Zuma Bangkok",
-      "location": "Pathum Wan, TH",
-      "rating": 4.4,
-      "priceRange": "฿2,000+",
-      "cuisine": "Japanese restaurant"
+      "id": "restaurant-spice_scholar_anika-11",
+      "name": "Taquería en la calle (street-food)",
+      "location": "Venustiano Carranza, Mexico City, MX",
+      "rating": 5,
+      "priceRange": null,
+      "cuisine": "Mexican restaurant",
+      "address": "Calle Santos Dumont 131(105, Aviación Civil, Venustiano Carranza, 15740 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 2
     },
     "tags": [
-      "Japanese restaurant",
-      "Cocktail bar",
-      "Fine dining restaurant",
-      "Restaurant"
+      "Mexican restaurant",
+      "Venustiano Carranza, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "story"
     ],
-    "engagement": {
-      "likes": 14,
-      "comments": 5,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Knowledgeable"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-68",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} should be {adjective} before adding to...",
-    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-68.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-68.jpg",
+    "title": "💡 Pro Tip: Pinche Gringo BBQ Warehouse - Polanco",
+    "content": "Here's a Indian cuisine tip for my fellow food lovers: Visit Pinche Gringo BBQ Warehouse - Polanco in Miguel Hidalgo, Mexico City during off-peak hours. undefined Their barbecue restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-68",
-      "name": "Akira Back",
-      "location": "Khlong Toei, TH",
-      "rating": 4.7,
-      "priceRange": "฿1,400–1,600",
-      "cuisine": "Japanese restaurant"
+      "id": "restaurant-spice_scholar_anika-12",
+      "name": "Pinche Gringo BBQ Warehouse - Polanco",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Barbecue restaurant",
+      "address": "Lago Iseo 296, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX, Mexico",
+      "reviewsCount": 4099
     },
     "tags": [
-      "Japanese restaurant",
-      "Asian fusion restaurant",
-      "Restaurant"
+      "Barbecue restaurant",
+      "Miguel Hidalgo, Mexico City",
+      "MX",
+      "Indian cuisine",
+      "tip"
     ],
-    "engagement": {
-      "likes": 90,
-      "comments": 9,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Cultural"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-69",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
-    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-69.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-69.jpg",
+    "title": "🧘 The Philosophy of Mominoki House",
+    "content": "Mominoki House in Shibuya embodies everything I believe about Indian cuisine. Intimate venue with wood accents, serving meals made with organic produce, plus vegan options. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Spices. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
     "restaurant": {
-      "id": "restaurant-69",
-      "name": "SUSHI SEKI",
-      "location": "Watthana, TH",
-      "rating": 4.8,
-      "priceRange": "$$",
-      "cuisine": "Japanese restaurant"
+      "id": "restaurant-spice_scholar_anika-13",
+      "name": "Mominoki House",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": null,
+      "cuisine": "Vegetarian restaurant",
+      "address": "2 Chome-18-5 Jingumae, Shibuya, Tokyo 150-0001, Japan",
+      "description": "Intimate venue with wood accents, serving meals made with organic produce, plus vegan options.",
+      "reviewsCount": 277
     },
     "tags": [
-      "Japanese restaurant",
-      "Sushi restaurant"
+      "Vegetarian restaurant",
+      "Shibuya",
+      "JP",
+      "Indian cuisine",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 80,
-      "comments": 9,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Traditional"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   },
   {
     "id": "spice_scholar_anika-post-70",
     "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
-    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
-    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
-    "imageUrl": "/images/posts/spice_scholar_anika/post-70.jpg",
-    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-70.jpg",
+    "title": "✈️ Travel Discovery: Street food vendor",
+    "content": "While exploring New York, I stumbled upon Street food vendor in Manhattan. undefined This is exactly the kind of authentic restaurant experience I seek when traveling. The 3.7-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Indian cuisine enthusiasts!",
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "imageLocalPath": "publichttps://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
     "restaurant": {
-      "id": "restaurant-70",
-      "name": "Sushi Yorokobu",
-      "location": "Watthana, TH",
-      "rating": 4.8,
-      "priceRange": "฿1,000+",
-      "cuisine": "Japanese restaurant"
+      "id": "restaurant-spice_scholar_anika-14",
+      "name": "Street food vendor",
+      "location": "New York, US",
+      "rating": 3.7,
+      "priceRange": null,
+      "cuisine": "Restaurant",
+      "address": "2239 Broadway, New York, NY 10024",
+      "reviewsCount": 9
     },
     "tags": [
-      "Japanese restaurant",
-      "Sushi restaurant"
+      "Restaurant",
+      "New York",
+      "US",
+      "Indian cuisine",
+      "travel"
     ],
-    "engagement": {
-      "likes": 11,
-      "comments": 18,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:23.802Z",
-    "personality": "Passionate"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:08:57.563Z"
   }
 ]

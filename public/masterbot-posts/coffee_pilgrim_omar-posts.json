@@ -2,2025 +2,1926 @@
   {
     "id": "coffee_pilgrim_omar-post-1",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Want to master {coffee}? Start with {method}. It's...",
-    "content": "Want to master {coffee}? Start with {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-1.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-1.jpg",
+    "title": "🍽️ Rare Earth Cafe | 100% Pure Veg - A Coffee Experience",
+    "content": "Just had an incredible meal at Rare Earth Cafe | 100% Pure Veg in Mumbai! Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. The Coffee here is absolutely outstanding. null price point makes it accessible, and the 4.6-star rating is well deserved. Highly recommend for anyone looking for authentic gluten-free restaurant in Khar, Ram Krishna Nagar, Khar West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-1",
-      "name": "Villa Bakery",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€1–10",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Bakery",
-      "Cafeteria"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
     ],
-    "engagement": {
-      "likes": 14,
-      "comments": 8,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Methodical"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-2",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Want to master {coffee}? Start with {method}. It's...",
-    "content": "Want to master {coffee}? Start with {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-2.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-2.jpg",
+    "title": "🌟 My Journey to Greenr Cafe",
+    "content": "Walking through Bandra West in Mumbai, I discovered this hidden gem: Greenr Cafe. undefined As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-2",
-      "name": "La Colmena",
-      "location": "Barcelona, ES",
-      "rating": 4.5,
-      "priceRange": "$$",
-      "cuisine": "Pastry shop"
-    },
-    "tags": [
-      "Pastry shop",
-      "Bakery",
-      "Cafe",
-      "Cake shop",
-      "Candy store",
-      "Chocolate shop",
-      "Confectionery store",
-      "Gift shop",
-      "Souvenir manufacturer"
-    ],
-    "engagement": {
-      "likes": 4,
-      "comments": 10,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-3",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Want to master {coffee}? Start with {method}. It's...",
-    "content": "Want to master {coffee}? Start with {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-3.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-3.jpg",
-    "restaurant": {
-      "id": "restaurant-3",
-      "name": "Baluard Barceloneta",
-      "location": "Barcelona, ES",
-      "rating": 4.6,
-      "priceRange": "€1–10",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery",
-      "Espresso bar",
-      "Pizza Takeout"
-    ],
-    "engagement": {
-      "likes": 34,
-      "comments": 8,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-4",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Want to master {coffee}? Start with {method}. It's...",
-    "content": "Want to master {coffee}? Start with {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-4.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-4.jpg",
-    "restaurant": {
-      "id": "restaurant-4",
-      "name": "Furnos",
-      "location": "Barcelona, ES",
-      "rating": 4.9,
-      "priceRange": "€1–10",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery",
-      "Cafe",
-      "Gourmet grocery store",
-      "Delivery Restaurant",
-      "Takeout Restaurant"
-    ],
-    "engagement": {
-      "likes": 56,
-      "comments": 18,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Methodical"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-5",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Want to master {coffee}? Start with {method}. It's...",
-    "content": "Want to master {coffee}? Start with {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-5.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-5.jpg",
-    "restaurant": {
-      "id": "restaurant-5",
-      "name": "Faire. Brunch & Drinks",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€10–20",
-      "cuisine": "Brunch restaurant"
-    },
-    "tags": [
-      "Brunch restaurant",
-      "Breakfast restaurant",
-      "Dog cafe",
-      "Espresso bar",
-      "Vegan restaurant",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 86,
-      "comments": 19,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-6",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I always {method} when preparing {coffee}. The {fl...",
-    "content": "I always {method} when preparing {coffee}. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-6.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-6.jpg",
-    "restaurant": {
-      "id": "restaurant-6",
-      "name": "Froots & Roots - Healthy Juice Bar",
-      "location": "Barcelona, ES",
-      "rating": 4.8,
-      "priceRange": "€10–20",
-      "cuisine": "Health food restaurant"
-    },
-    "tags": [
-      "Health food restaurant",
-      "Açaí shop",
-      "Brunch restaurant",
-      "Cafe",
-      "Juice shop",
-      "Sandwich shop",
-      "Vegan restaurant",
-      "Vegetarian cafe and deli",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 82,
-      "comments": 0,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-7",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {method} here is {adjective}. It's {coffee} pe...",
-    "content": "The {method} here is {adjective}. It's {coffee} perfection.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-7.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-7.jpg",
-    "restaurant": {
-      "id": "restaurant-7",
-      "name": "Biocenter",
-      "location": "Barcelona, ES",
-      "rating": 4.4,
-      "priceRange": "€10–20",
-      "cuisine": "Vegetarian restaurant"
-    },
-    "tags": [
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 77,
-      "comments": 1,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Contemplative"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-8",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {barista} shared the story of this {coffee}. I...",
-    "content": "The {barista} shared the story of this {coffee}. It's from {region} and {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-8.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-8.jpg",
-    "restaurant": {
-      "id": "restaurant-8",
-      "name": "Caprice",
-      "location": "Central, HK",
-      "rating": 4.5,
-      "priceRange": "HK$500+",
-      "cuisine": "French restaurant"
-    },
-    "tags": [
-      "French restaurant",
-      "Fine dining restaurant",
-      "Restaurant",
-      "Vegan restaurant",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 8,
-      "comments": 16,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-9",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {method} here is {adjective}. It's {coffee} pe...",
-    "content": "The {method} here is {adjective}. It's {coffee} perfection.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-9.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-9.jpg",
-    "restaurant": {
-      "id": "restaurant-9",
-      "name": "Bakehouse (Wan Chai)",
-      "location": "Wan Chai, HK",
-      "rating": 4.4,
-      "priceRange": "HK$1–100",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery",
-      "Breakfast restaurant"
-    ],
-    "engagement": {
-      "likes": 92,
-      "comments": 0,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-10",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ This {cafe} showcases {coffee} culture at its fine...",
-    "content": "This {cafe} showcases {coffee} culture at its finest. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-10.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-10.jpg",
-    "restaurant": {
-      "id": "restaurant-10",
-      "name": "Bakehouse",
-      "location": "Tsim Sha Tsui, HK",
-      "rating": 4.3,
-      "priceRange": "HK$50–100",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery"
-    ],
-    "engagement": {
-      "likes": 3,
-      "comments": 13,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-11",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Pro tip: The {method} should be {adjective} for pe...",
-    "content": "Pro tip: The {method} should be {adjective} for perfect {coffee}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-11.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-11.jpg",
-    "restaurant": {
-      "id": "restaurant-11",
-      "name": "Mayse Artisan Bakery",
-      "location": "Tai Mei Tuk Tsuen, HK",
-      "rating": 4.8,
-      "priceRange": "HK$50–100",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery"
-    ],
-    "engagement": {
-      "likes": 82,
-      "comments": 10,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-12",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {method} here is {adjective}. It's {coffee} pe...",
-    "content": "The {method} here is {adjective}. It's {coffee} perfection.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-12.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-12.jpg",
-    "restaurant": {
-      "id": "restaurant-12",
-      "name": "Tai Cheong Bakery",
-      "location": "Central, HK",
-      "rating": 3.9,
-      "priceRange": "HK$1–50",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery",
-      "Chinese bakery"
-    ],
-    "engagement": {
-      "likes": 91,
-      "comments": 6,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-13",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} tradition here is {adjective}. The {m...",
-    "content": "The {coffee} tradition here is {adjective}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-13.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-13.jpg",
-    "restaurant": {
-      "id": "restaurant-13",
-      "name": "Bakehouse",
-      "location": "Central, HK",
-      "rating": 4.5,
-      "priceRange": "HK$1–50",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery"
-    ],
-    "engagement": {
-      "likes": 67,
-      "comments": 3,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Contemplative"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-14",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Pro tip: The {method} should be {adjective} for pe...",
-    "content": "Pro tip: The {method} should be {adjective} for perfect {coffee}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-14.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-14.jpg",
-    "restaurant": {
-      "id": "restaurant-14",
-      "name": "Door Door Bakery",
-      "location": "Mei Foo Sun Chuen, HK",
-      "rating": 4,
-      "priceRange": "HK$1–50",
-      "cuisine": "Chinese bakery"
-    },
-    "tags": [
-      "Chinese bakery"
-    ],
-    "engagement": {
-      "likes": 52,
-      "comments": 6,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-15",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} here is {adjective}. The {method} bri...",
-    "content": "The {coffee} here is {adjective}. The {method} brings out {flavor} notes.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-15.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-15.jpg",
-    "restaurant": {
-      "id": "restaurant-15",
-      "name": "Dandy's Organic Cafe",
-      "location": "Sheung Wan, HK",
-      "rating": 4.3,
-      "priceRange": "HK$150–200",
-      "cuisine": "Restaurant"
-    },
-    "tags": [
-      "Restaurant",
-      "Gluten-free restaurant",
-      "Health food restaurant",
-      "Organic restaurant",
-      "Vegan restaurant",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 70,
-      "comments": 2,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Methodical"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-16",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} tradition here is {adjective}. The {m...",
-    "content": "The {coffee} tradition here is {adjective}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-16.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-16.jpg",
-    "restaurant": {
-      "id": "restaurant-16",
-      "name": "Root Vegan",
-      "location": "Central, HK",
-      "rating": 4.6,
-      "priceRange": "$$",
-      "cuisine": "Vegan restaurant"
-    },
-    "tags": [
-      "Vegan restaurant",
-      "Coffee store",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 54,
-      "comments": 12,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-17",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} should be {adjective} before {method}...",
-    "content": "The {coffee} should be {adjective} before {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-17.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-17.jpg",
-    "restaurant": {
-      "id": "restaurant-17",
-      "name": "LN COFFEE",
-      "location": "Sai Ying Pun, HK",
-      "rating": 4.4,
-      "priceRange": "HK$100–150",
-      "cuisine": "Vegan restaurant"
-    },
-    "tags": [
-      "Vegan restaurant"
-    ],
-    "engagement": {
-      "likes": 58,
-      "comments": 8,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-18",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ This {cafe} sources {coffee} from {region}. The {m...",
-    "content": "This {cafe} sources {coffee} from {region}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-18.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-18.jpg",
-    "restaurant": {
-      "id": "restaurant-18",
-      "name": "The Park by Years",
-      "location": "Sham Shui Po, HK",
-      "rating": 4.4,
-      "priceRange": "HK$100–150",
-      "cuisine": "Vegetarian restaurant"
-    },
-    "tags": [
-      "Vegetarian restaurant",
-      "Cafe"
-    ],
-    "engagement": {
-      "likes": 86,
-      "comments": 10,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-19",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Want to master {coffee}? Start with {method}. It's...",
-    "content": "Want to master {coffee}? Start with {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-19.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-19.jpg",
-    "restaurant": {
-      "id": "restaurant-19",
-      "name": "Ziya Restaurant",
-      "location": "Mumbai, IN",
-      "rating": 4.5,
-      "priceRange": "$$$$",
-      "cuisine": "North Indian restaurant"
-    },
-    "tags": [
-      "North Indian restaurant",
-      "Cafe",
-      "Dessert restaurant",
-      "Seafood restaurant"
-    ],
-    "engagement": {
-      "likes": 34,
-      "comments": 11,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Contemplative"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-20",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Pro tip: The {method} should be {adjective} for pe...",
-    "content": "Pro tip: The {method} should be {adjective} for perfect {coffee}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-20.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-20.jpg",
-    "restaurant": {
-      "id": "restaurant-20",
-      "name": "Harley's Ivory Lounge - Kala Ghoda BSE",
-      "location": "Mumbai, IN",
-      "rating": 4.8,
-      "priceRange": "$$",
-      "cuisine": "Patisserie"
-    },
-    "tags": [
-      "Patisserie",
-      "Bakery",
-      "Cafe",
-      "Cake shop",
-      "Coffee shop"
-    ],
-    "engagement": {
-      "likes": 53,
-      "comments": 11,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-21",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} selection here is {adjective}. Every ...",
-    "content": "The {coffee} selection here is {adjective}. Every {method} tells a story.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-21.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-21.jpg",
-    "restaurant": {
-      "id": "restaurant-21",
-      "name": "Theobroma",
-      "location": "Mumbai, IN",
-      "rating": 4.4,
-      "priceRange": "₹200–400",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery",
-      "Cafe",
-      "Patisserie"
-    ],
-    "engagement": {
-      "likes": 41,
-      "comments": 18,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-22",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} selection here is {adjective}. Every ...",
-    "content": "The {coffee} selection here is {adjective}. Every {method} tells a story.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-22.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-22.jpg",
-    "restaurant": {
-      "id": "restaurant-22",
-      "name": "Theobroma Bakery and Cake Shop - Bandra Kurla Complex, Mumbai",
-      "location": "Mumbai, IN",
-      "rating": 4.3,
-      "priceRange": "$$",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery",
-      "Cafe",
-      "Cake shop",
-      "Patisserie",
-      "Wedding bakery",
-      "Wholesale bakery"
-    ],
-    "engagement": {
-      "likes": 62,
-      "comments": 10,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-23",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} selection here is {adjective}. Every ...",
-    "content": "The {coffee} selection here is {adjective}. Every {method} tells a story.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-23.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-23.jpg",
-    "restaurant": {
-      "id": "restaurant-23",
-      "name": "Theobroma Bakery and Cake Shop - Fort, Mumbai",
-      "location": "Mumbai, IN",
-      "rating": 4.3,
-      "priceRange": "$$",
-      "cuisine": "Bakery"
-    },
-    "tags": [
-      "Bakery",
-      "Cafe",
-      "Pastry shop",
-      "Patisserie"
-    ],
-    "engagement": {
-      "likes": 92,
-      "comments": 18,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Detail-oriented"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-24",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I learned about {method} from a {coffee} expert. T...",
-    "content": "I learned about {method} from a {coffee} expert. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-24.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-24.jpg",
-    "restaurant": {
-      "id": "restaurant-24",
-      "name": "Rare Earth Cafe | 100% Pure Veg",
-      "location": "Mumbai, IN",
-      "rating": 4.6,
-      "priceRange": "$$",
-      "cuisine": "Gluten-free restaurant"
-    },
-    "tags": [
-      "Gluten-free restaurant",
-      "Coffee shop",
-      "Health food restaurant",
-      "Modern Indian restaurant",
-      "Pizza delivery",
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 62,
-      "comments": 18,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-25",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {method} here is {adjective}. It's {coffee} pe...",
-    "content": "The {method} here is {adjective}. It's {coffee} perfection.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-25.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-25.jpg",
-    "restaurant": {
-      "id": "restaurant-25",
-      "name": "Aharveda - Vegan & Beyond",
-      "location": "Mumbai, IN",
-      "rating": 4.4,
-      "priceRange": "₹400–600",
-      "cuisine": "Vegan restaurant"
-    },
-    "tags": [
-      "Vegan restaurant",
-      "Fusion restaurant",
-      "Gluten-free restaurant",
-      "Health food restaurant",
-      "Restaurant"
-    ],
-    "engagement": {
-      "likes": 53,
-      "comments": 4,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Cultural"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-26",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} beans here are {adjective}. The {meth...",
-    "content": "The {coffee} beans here are {adjective}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-26.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-26.jpg",
-    "restaurant": {
-      "id": "restaurant-26",
-      "name": "Bombay Salad Co.",
-      "location": "Mumbai, IN",
-      "rating": 4.5,
-      "priceRange": "$$",
-      "cuisine": "Salad shop"
-    },
-    "tags": [
-      "Salad shop",
-      "Cafe",
-      "Health food restaurant",
-      "Juice shop",
-      "Restaurant",
-      "Sandwich shop"
-    ],
-    "engagement": {
-      "likes": 30,
-      "comments": 3,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Methodical"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-27",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} here is {adjective}. The {method} bri...",
-    "content": "The {coffee} here is {adjective}. The {method} brings out {flavor} notes.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-27.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-27.jpg",
-    "restaurant": {
-      "id": "restaurant-27",
-      "name": "The Bodhi Cafe",
-      "location": "Mumbai, IN",
-      "rating": 4.4,
-      "priceRange": "₹400–600",
-      "cuisine": "Vegetarian restaurant"
-    },
-    "tags": [
-      "Vegetarian restaurant"
-    ],
-    "engagement": {
-      "likes": 13,
-      "comments": 7,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:24.019Z",
-    "personality": "Contemplative"
-  },
-  {
-    "id": "coffee_pilgrim_omar-post-28",
-    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {barista} shared the story of this {coffee}. I...",
-    "content": "The {barista} shared the story of this {coffee}. It's from {region} and {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-28.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-28.jpg",
-    "restaurant": {
-      "id": "restaurant-28",
+      "id": "restaurant-coffee_pilgrim_omar-2",
       "name": "Greenr Cafe",
       "location": "Mumbai, IN",
       "rating": 4.5,
       "priceRange": "$$$",
-      "cuisine": "Vegetarian restaurant"
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
       "Vegetarian restaurant",
-      "Cafe"
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
     ],
-    "engagement": {
-      "likes": 27,
-      "comments": 2,
-      "shares": 5
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-3",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "💡 Pro Tip: Rare Earth Cafe | 100% Pure Veg",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Rare Earth Cafe | 100% Pure Veg in Mumbai during off-peak hours. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. Their gluten-free restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Cultural"
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-4",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🧘 The Philosophy of Greenr Cafe",
+    "content": "Greenr Cafe in Mumbai embodies everything I believe about Coffee. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-5",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "✈️ Travel Discovery: Rare Earth Cafe | 100% Pure Veg",
+    "content": "While exploring Mumbai, I stumbled upon Rare Earth Cafe | 100% Pure Veg in Khar, Ram Krishna Nagar, Khar West. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. This is exactly the kind of authentic gluten-free restaurant experience I seek when traveling. The 4.6-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-6",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🍽️ Greenr Cafe - A Coffee Experience",
+    "content": "Just had an incredible meal at Greenr Cafe in Mumbai! undefined The Coffee here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Bandra West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-7",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🌟 My Journey to Rare Earth Cafe | 100% Pure Veg",
+    "content": "Walking through Khar, Ram Krishna Nagar, Khar West in Mumbai, I discovered this hidden gem: Rare Earth Cafe | 100% Pure Veg. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-8",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "💡 Pro Tip: Greenr Cafe",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Greenr Cafe in Mumbai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-9",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🧘 The Philosophy of Rare Earth Cafe | 100% Pure Veg",
+    "content": "Rare Earth Cafe | 100% Pure Veg in Mumbai embodies everything I believe about Coffee. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-10",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "✈️ Travel Discovery: Greenr Cafe",
+    "content": "While exploring Mumbai, I stumbled upon Greenr Cafe in Bandra West. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-11",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🍽️ Rare Earth Cafe | 100% Pure Veg - A Coffee Experience",
+    "content": "Just had an incredible meal at Rare Earth Cafe | 100% Pure Veg in Mumbai! Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. The Coffee here is absolutely outstanding. null price point makes it accessible, and the 4.6-star rating is well deserved. Highly recommend for anyone looking for authentic gluten-free restaurant in Khar, Ram Krishna Nagar, Khar West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-12",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🌟 My Journey to Greenr Cafe",
+    "content": "Walking through Bandra West in Mumbai, I discovered this hidden gem: Greenr Cafe. undefined As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-13",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "💡 Pro Tip: Rare Earth Cafe | 100% Pure Veg",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Rare Earth Cafe | 100% Pure Veg in Mumbai during off-peak hours. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. Their gluten-free restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-14",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🧘 The Philosophy of Greenr Cafe",
+    "content": "Greenr Cafe in Mumbai embodies everything I believe about Coffee. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-15",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "✈️ Travel Discovery: Rare Earth Cafe | 100% Pure Veg",
+    "content": "While exploring Mumbai, I stumbled upon Rare Earth Cafe | 100% Pure Veg in Khar, Ram Krishna Nagar, Khar West. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. This is exactly the kind of authentic gluten-free restaurant experience I seek when traveling. The 4.6-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-16",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🍽️ Greenr Cafe - A Coffee Experience",
+    "content": "Just had an incredible meal at Greenr Cafe in Mumbai! undefined The Coffee here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Bandra West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-17",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🌟 My Journey to Rare Earth Cafe | 100% Pure Veg",
+    "content": "Walking through Khar, Ram Krishna Nagar, Khar West in Mumbai, I discovered this hidden gem: Rare Earth Cafe | 100% Pure Veg. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-18",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "💡 Pro Tip: Greenr Cafe",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Greenr Cafe in Mumbai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-19",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🧘 The Philosophy of Rare Earth Cafe | 100% Pure Veg",
+    "content": "Rare Earth Cafe | 100% Pure Veg in Mumbai embodies everything I believe about Coffee. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-20",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "✈️ Travel Discovery: Greenr Cafe",
+    "content": "While exploring Mumbai, I stumbled upon Greenr Cafe in Bandra West. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-21",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🍽️ Rare Earth Cafe | 100% Pure Veg - A Coffee Experience",
+    "content": "Just had an incredible meal at Rare Earth Cafe | 100% Pure Veg in Mumbai! Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. The Coffee here is absolutely outstanding. null price point makes it accessible, and the 4.6-star rating is well deserved. Highly recommend for anyone looking for authentic gluten-free restaurant in Khar, Ram Krishna Nagar, Khar West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-22",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🌟 My Journey to Greenr Cafe",
+    "content": "Walking through Bandra West in Mumbai, I discovered this hidden gem: Greenr Cafe. undefined As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-23",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "💡 Pro Tip: Rare Earth Cafe | 100% Pure Veg",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Rare Earth Cafe | 100% Pure Veg in Mumbai during off-peak hours. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. Their gluten-free restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-24",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🧘 The Philosophy of Greenr Cafe",
+    "content": "Greenr Cafe in Mumbai embodies everything I believe about Coffee. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
+    ],
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-25",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "✈️ Travel Discovery: Rare Earth Cafe | 100% Pure Veg",
+    "content": "While exploring Mumbai, I stumbled upon Rare Earth Cafe | 100% Pure Veg in Khar, Ram Krishna Nagar, Khar West. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. This is exactly the kind of authentic gluten-free restaurant experience I seek when traveling. The 4.6-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
+    ],
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-26",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🍽️ Greenr Cafe - A Coffee Experience",
+    "content": "Just had an incredible meal at Greenr Cafe in Mumbai! undefined The Coffee here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Bandra West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
+    ],
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-27",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "🌟 My Journey to Rare Earth Cafe | 100% Pure Veg",
+    "content": "Walking through Khar, Ram Krishna Nagar, Khar West in Mumbai, I discovered this hidden gem: Rare Earth Cafe | 100% Pure Veg. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
+    ],
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
+  },
+  {
+    "id": "coffee_pilgrim_omar-post-28",
+    "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
+    "title": "💡 Pro Tip: Greenr Cafe",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Greenr Cafe in Mumbai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "restaurant": {
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
+    ],
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-29",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} selection here is {adjective}. Every ...",
-    "content": "The {coffee} selection here is {adjective}. Every {method} tells a story.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-29.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-29.jpg",
+    "title": "🧘 The Philosophy of Rare Earth Cafe | 100% Pure Veg",
+    "content": "Rare Earth Cafe | 100% Pure Veg in Mumbai embodies everything I believe about Coffee. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-29",
-      "name": "The Living Cafe",
-      "location": "Singapore, SG",
-      "rating": 3.7,
-      "priceRange": "SGD 20–30",
-      "cuisine": "Cafe"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Cafe",
-      "Raw food restaurant"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 4,
-      "comments": 13,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Detail-oriented"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-30",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I always {method} when preparing {coffee}. The {fl...",
-    "content": "I always {method} when preparing {coffee}. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-30.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-30.jpg",
+    "title": "✈️ Travel Discovery: Greenr Cafe",
+    "content": "While exploring Mumbai, I stumbled upon Greenr Cafe in Bandra West. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-30",
-      "name": "Sunnychoice Vegan Cafe and Healthy Option Store",
-      "location": "Singapore, SG",
-      "rating": 4.6,
-      "priceRange": "SGD 10–20",
-      "cuisine": "Vegetarian restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
       "Vegetarian restaurant",
-      "Health food store"
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
     ],
-    "engagement": {
-      "likes": 47,
-      "comments": 1,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Cultural"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-31",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {barista} shared the story of this {coffee}. I...",
-    "content": "The {barista} shared the story of this {coffee}. It's from {region} and {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-31.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-31.jpg",
+    "title": "🍽️ Rare Earth Cafe | 100% Pure Veg - A Coffee Experience",
+    "content": "Just had an incredible meal at Rare Earth Cafe | 100% Pure Veg in Mumbai! Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. The Coffee here is absolutely outstanding. null price point makes it accessible, and the 4.6-star rating is well deserved. Highly recommend for anyone looking for authentic gluten-free restaurant in Khar, Ram Krishna Nagar, Khar West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-31",
-      "name": "The Lawn Cafe (Dog-Friendly!)",
-      "location": "Singapore, SG",
-      "rating": 4.3,
-      "priceRange": "SGD 10–20",
-      "cuisine": "Restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Restaurant",
-      "Cafe",
-      "Salad shop"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
     ],
-    "engagement": {
-      "likes": 18,
-      "comments": 15,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-32",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {method} here is {adjective}. It's {coffee} pe...",
-    "content": "The {method} here is {adjective}. It's {coffee} perfection.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-32.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-32.jpg",
+    "title": "🌟 My Journey to Greenr Cafe",
+    "content": "Walking through Bandra West in Mumbai, I discovered this hidden gem: Greenr Cafe. undefined As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-32",
-      "name": "Genesis Vegan Restaurant",
-      "location": "Singapore, SG",
-      "rating": 4.4,
-      "priceRange": "SGD 10–20",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Vegan restaurant",
-      "Restaurant",
-      "Vegetarian cafe and deli",
-      "Vegetarian restaurant"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
     ],
-    "engagement": {
-      "likes": 55,
-      "comments": 2,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-33",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {method} here is {adjective}. It's {coffee} pe...",
-    "content": "The {method} here is {adjective}. It's {coffee} perfection.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-33.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-33.jpg",
+    "title": "💡 Pro Tip: Rare Earth Cafe | 100% Pure Veg",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Rare Earth Cafe | 100% Pure Veg in Mumbai during off-peak hours. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. Their gluten-free restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-33",
-      "name": "ahimsa sanctuary",
-      "location": "Singapore, SG",
-      "rating": 4.7,
-      "priceRange": "SGD 10–20",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Vegan restaurant",
-      "Cafe",
-      "Vegetarian cafe and deli",
-      "Vegetarian restaurant",
-      "Yoga studio"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
     ],
-    "engagement": {
-      "likes": 9,
-      "comments": 11,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-34",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {barista} shared the story of this {coffee}. I...",
-    "content": "The {barista} shared the story of this {coffee}. It's from {region} and {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-34.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-34.jpg",
+    "title": "🧘 The Philosophy of Greenr Cafe",
+    "content": "Greenr Cafe in Mumbai embodies everything I believe about Coffee. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-34",
-      "name": "Nine Pastry",
-      "location": "Khlong Toei, TH",
-      "rating": 4.8,
-      "priceRange": "฿1–200",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery",
-      "Coffee shop",
-      "Pastry shop"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 66,
-      "comments": 9,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-35",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} here is {adjective}. The {method} bri...",
-    "content": "The {coffee} here is {adjective}. The {method} brings out {flavor} notes.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-35.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-35.jpg",
+    "title": "✈️ Travel Discovery: Rare Earth Cafe | 100% Pure Veg",
+    "content": "While exploring Mumbai, I stumbled upon Rare Earth Cafe | 100% Pure Veg in Khar, Ram Krishna Nagar, Khar West. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. This is exactly the kind of authentic gluten-free restaurant experience I seek when traveling. The 4.6-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-35",
-      "name": "Holey Artisan Bakery",
-      "location": "Watthana, TH",
-      "rating": 4.3,
-      "priceRange": "$$",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Bakery",
-      "Cafe",
-      "Breakfast restaurant",
-      "Brunch restaurant",
-      "Cake shop",
-      "Coffee shop",
-      "Dessert shop",
-      "Lunch restaurant",
-      "Sandwich shop"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
     ],
-    "engagement": {
-      "likes": 84,
-      "comments": 8,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-36",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {barista} shared the story of this {coffee}. I...",
-    "content": "The {barista} shared the story of this {coffee}. It's from {region} and {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-36.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-36.jpg",
+    "title": "🍽️ Greenr Cafe - A Coffee Experience",
+    "content": "Just had an incredible meal at Greenr Cafe in Mumbai! undefined The Coffee here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Bandra West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-36",
-      "name": "Erawan Bakery",
-      "location": "Pathum Wan, TH",
-      "rating": 4.4,
-      "priceRange": "฿1–200",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery",
-      "Cafe",
-      "Cake shop",
-      "Coffee shop",
-      "Cookie shop",
-      "Dessert restaurant",
-      "Delivery Restaurant",
-      "Takeout Restaurant",
-      "Pastry shop",
-      "Salad shop"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
     ],
-    "engagement": {
-      "likes": 88,
-      "comments": 14,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-37",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I always {method} when preparing {coffee}. The {fl...",
-    "content": "I always {method} when preparing {coffee}. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-37.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-37.jpg",
+    "title": "🌟 My Journey to Rare Earth Cafe | 100% Pure Veg",
+    "content": "Walking through Khar, Ram Krishna Nagar, Khar West in Mumbai, I discovered this hidden gem: Rare Earth Cafe | 100% Pure Veg. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-37",
-      "name": "Bangkok Baking Company/BBCO",
-      "location": "Khlong Toei, TH",
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
       "rating": 4.6,
-      "priceRange": "฿200–400",
-      "cuisine": "Bakery"
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Bakery",
-      "Restaurant",
-      "Cafe"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
     ],
-    "engagement": {
-      "likes": 59,
-      "comments": 18,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-38",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} beans here are {adjective}. The {meth...",
-    "content": "The {coffee} beans here are {adjective}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-38.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-38.jpg",
+    "title": "💡 Pro Tip: Greenr Cafe",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Greenr Cafe in Mumbai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-38",
-      "name": "Sarnies Sourdough",
-      "location": "Bang Rak, TH",
-      "rating": 4.6,
-      "priceRange": "฿200–400",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery",
-      "Brunch restaurant",
-      "Cafe",
-      "Coffee roasters",
-      "Coffee shop",
-      "Coffee store",
-      "Pizza delivery",
-      "Pizza restaurant",
-      "Sandwich shop",
-      "Wholesale bakery"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
     ],
-    "engagement": {
-      "likes": 8,
-      "comments": 16,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-39",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I always {method} when preparing {coffee}. The {fl...",
-    "content": "I always {method} when preparing {coffee}. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-39.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-39.jpg",
+    "title": "🧘 The Philosophy of Rare Earth Cafe | 100% Pure Veg",
+    "content": "Rare Earth Cafe | 100% Pure Veg in Mumbai embodies everything I believe about Coffee. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-39",
-      "name": "Pimp My Salad Bangkok",
-      "location": "Bang Rak, TH",
-      "rating": 4.7,
-      "priceRange": "฿400–600",
-      "cuisine": "Salad shop"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Salad shop",
-      "Brunch restaurant",
-      "Cafe",
-      "Health food restaurant",
-      "Health food store",
-      "Lunch restaurant",
-      "Vegan restaurant",
-      "Vegetarian cafe and deli",
-      "Vegetarian restaurant"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 36,
-      "comments": 15,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Cultural"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-40",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} selection here is {adjective}. Every ...",
-    "content": "The {coffee} selection here is {adjective}. Every {method} tells a story.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-40.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-40.jpg",
+    "title": "✈️ Travel Discovery: Greenr Cafe",
+    "content": "While exploring Mumbai, I stumbled upon Greenr Cafe in Bandra West. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-40",
-      "name": "Genius Bar BKK - Bone Broth Cafe",
-      "location": "Watthana, TH",
-      "rating": 4.7,
-      "priceRange": "฿200–300",
-      "cuisine": "Health food restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Health food restaurant",
-      "Cafe",
-      "Organic restaurant",
-      "Restaurant"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
     ],
-    "engagement": {
-      "likes": 29,
-      "comments": 16,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Detail-oriented"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-41",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {method} here is {adjective}. It's {coffee} pe...",
-    "content": "The {method} here is {adjective}. It's {coffee} perfection.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-41.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-41.jpg",
+    "title": "🍽️ Rare Earth Cafe | 100% Pure Veg - A Coffee Experience",
+    "content": "Just had an incredible meal at Rare Earth Cafe | 100% Pure Veg in Mumbai! Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. The Coffee here is absolutely outstanding. null price point makes it accessible, and the 4.6-star rating is well deserved. Highly recommend for anyone looking for authentic gluten-free restaurant in Khar, Ram Krishna Nagar, Khar West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-41",
-      "name": "Bella Healthy Food",
-      "location": "Lak Si, TH",
-      "rating": 4.7,
-      "priceRange": "฿200–400",
-      "cuisine": "Health food restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Health food restaurant",
-      "Bagel shop",
-      "Bakery",
-      "Cafeteria",
-      "Coffee shop",
-      "Takeout Restaurant",
-      "Salad shop",
-      "Vegetarian restaurant",
-      "Western restaurant"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
     ],
-    "engagement": {
-      "likes": 65,
-      "comments": 13,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Detail-oriented"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-42",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} tradition here is {adjective}. The {m...",
-    "content": "The {coffee} tradition here is {adjective}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-42.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-42.jpg",
+    "title": "🌟 My Journey to Greenr Cafe",
+    "content": "Walking through Bandra West in Mumbai, I discovered this hidden gem: Greenr Cafe. undefined As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-42",
-      "name": "Vistro-Vegan Cafe & Restaurant",
-      "location": "Khlong Toei, TH",
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
       "rating": 4.5,
-      "priceRange": "฿200–400",
-      "cuisine": "Vegan restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Vegan restaurant"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
     ],
-    "engagement": {
-      "likes": 85,
-      "comments": 18,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-43",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} selection here is {adjective}. Every ...",
-    "content": "The {coffee} selection here is {adjective}. Every {method} tells a story.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-43.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-43.jpg",
+    "title": "💡 Pro Tip: Rare Earth Cafe | 100% Pure Veg",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Rare Earth Cafe | 100% Pure Veg in Mumbai during off-peak hours. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. Their gluten-free restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-43",
-      "name": "Cà Phê Vietnam Street Food",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.7,
-      "priceRange": "MX$200–300",
-      "cuisine": "Restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Restaurant",
-      "Bar",
-      "Espresso bar",
-      "Vegan restaurant",
-      "Vegetarian cafe and deli",
-      "Vegetarian restaurant",
-      "Vietnamese restaurant"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
     ],
-    "engagement": {
-      "likes": 2,
-      "comments": 15,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-44",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I discovered {coffee} in {location}. It's the perf...",
-    "content": "I discovered {coffee} in {location}. It's the perfect {method} for {flavor}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-44.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-44.jpg",
+    "title": "🧘 The Philosophy of Greenr Cafe",
+    "content": "Greenr Cafe in Mumbai embodies everything I believe about Coffee. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-44",
-      "name": "Pastelería Ideal",
-      "location": "Cuauhtémoc, MX",
-      "rating": 4.6,
-      "priceRange": "MX$1–100",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 61,
-      "comments": 19,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Cultural"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-45",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} should be {adjective} before {method}...",
-    "content": "The {coffee} should be {adjective} before {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-45.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-45.jpg",
+    "title": "✈️ Travel Discovery: Rare Earth Cafe | 100% Pure Veg",
+    "content": "While exploring Mumbai, I stumbled upon Rare Earth Cafe | 100% Pure Veg in Khar, Ram Krishna Nagar, Khar West. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. This is exactly the kind of authentic gluten-free restaurant experience I seek when traveling. The 4.6-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-45",
-      "name": "Panadería Rosetta",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.5,
-      "priceRange": "MX$100–300",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Bakery"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
     ],
-    "engagement": {
-      "likes": 55,
-      "comments": 13,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-46",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I always {method} when preparing {coffee}. The {fl...",
-    "content": "I always {method} when preparing {coffee}. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-46.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-46.jpg",
+    "title": "🍽️ Greenr Cafe - A Coffee Experience",
+    "content": "Just had an incredible meal at Greenr Cafe in Mumbai! undefined The Coffee here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Bandra West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-46",
-      "name": "Pastelería Ideal",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.6,
-      "priceRange": "MX$1–100",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
     ],
-    "engagement": {
-      "likes": 22,
-      "comments": 19,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Detail-oriented"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-47",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} should be {adjective} before {method}...",
-    "content": "The {coffee} should be {adjective} before {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-47.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-47.jpg",
+    "title": "🌟 My Journey to Rare Earth Cafe | 100% Pure Veg",
+    "content": "Walking through Khar, Ram Krishna Nagar, Khar West in Mumbai, I discovered this hidden gem: Rare Earth Cafe | 100% Pure Veg. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-47",
-      "name": "Pastelería Madrid S.A. de C.V.",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.4,
-      "priceRange": "MX$100–200",
-      "cuisine": "Cake shop"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Cake shop",
-      "Bakery"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
     ],
-    "engagement": {
-      "likes": 79,
-      "comments": 11,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Detail-oriented"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-48",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Pro tip: The {method} should be {adjective} for pe...",
-    "content": "Pro tip: The {method} should be {adjective} for perfect {coffee}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-48.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-48.jpg",
+    "title": "💡 Pro Tip: Greenr Cafe",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Greenr Cafe in Mumbai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-48",
-      "name": "Pastelería y Lonchería La Joya",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.4,
-      "priceRange": "MX$100–200",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
     ],
-    "engagement": {
-      "likes": 53,
-      "comments": 1,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-49",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ This {cafe} showcases {coffee} culture at its fine...",
-    "content": "This {cafe} showcases {coffee} culture at its finest. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-49.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-49.jpg",
+    "title": "🧘 The Philosophy of Rare Earth Cafe | 100% Pure Veg",
+    "content": "Rare Earth Cafe | 100% Pure Veg in Mumbai embodies everything I believe about Coffee. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-49",
-      "name": "Panadería Rosetta Puebla",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.5,
-      "priceRange": "MX$100–200",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Bakery"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 70,
-      "comments": 3,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-50",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ This {cafe} showcases {coffee} culture at its fine...",
-    "content": "This {cafe} showcases {coffee} culture at its finest. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-50.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-50.jpg",
+    "title": "✈️ Travel Discovery: Greenr Cafe",
+    "content": "While exploring Mumbai, I stumbled upon Greenr Cafe in Bandra West. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-50",
-      "name": "Bakers",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.4,
-      "priceRange": "MX$100–200",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
     ],
-    "engagement": {
-      "likes": 36,
-      "comments": 10,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Detail-oriented"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-51",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} tradition here is {adjective}. The {m...",
-    "content": "The {coffee} tradition here is {adjective}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-51.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-51.jpg",
+    "title": "🍽️ Rare Earth Cafe | 100% Pure Veg - A Coffee Experience",
+    "content": "Just had an incredible meal at Rare Earth Cafe | 100% Pure Veg in Mumbai! Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. The Coffee here is absolutely outstanding. null price point makes it accessible, and the 4.6-star rating is well deserved. Highly recommend for anyone looking for authentic gluten-free restaurant in Khar, Ram Krishna Nagar, Khar West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-51",
-      "name": "Goy's Bistró Plant-Based Nuevo Polanco",
-      "location": "Miguel Hidalgo, Mexico City, MX",
-      "rating": 4.8,
-      "priceRange": "MX$200–300",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Vegan restaurant",
-      "Brunch restaurant",
-      "Espresso bar",
-      "Fast food restaurant",
-      "Hamburger restaurant",
-      "Delivery Restaurant",
-      "Restaurant",
-      "Vegetarian restaurant"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
     ],
-    "engagement": {
-      "likes": 16,
-      "comments": 19,
-      "shares": 0
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Cultural"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-52",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} beans here are {adjective}. The {meth...",
-    "content": "The {coffee} beans here are {adjective}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-52.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-52.jpg",
+    "title": "🌟 My Journey to Greenr Cafe",
+    "content": "Walking through Bandra West in Mumbai, I discovered this hidden gem: Greenr Cafe. undefined As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-52",
-      "name": "Borough Market",
-      "location": "London, GB",
-      "rating": 4.6,
-      "priceRange": "$$",
-      "cuisine": "Fresh food market"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Fresh food market",
-      "Farmers' market",
-      "Market",
-      "Tourist attraction"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
     ],
-    "engagement": {
-      "likes": 36,
-      "comments": 18,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-53",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I discovered {coffee} in {location}. It's the perf...",
-    "content": "I discovered {coffee} in {location}. It's the perfect {method} for {flavor}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-53.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-53.jpg",
+    "title": "💡 Pro Tip: Rare Earth Cafe | 100% Pure Veg",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Rare Earth Cafe | 100% Pure Veg in Mumbai during off-peak hours. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. Their gluten-free restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-53",
-      "name": "Mercato Metropolitano",
-      "location": "London, GB",
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
       "rating": 4.6,
-      "priceRange": "£10–20",
-      "cuisine": "Food court"
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Food court",
-      "Bakery",
-      "Brewery",
-      "Coffee shop",
-      "Distillery",
-      "Fresh food market",
-      "Wine bar"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
     ],
-    "engagement": {
-      "likes": 54,
-      "comments": 7,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-54",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ This {cafe} sources {coffee} from {region}. The {m...",
-    "content": "This {cafe} sources {coffee} from {region}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-54.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-54.jpg",
+    "title": "🧘 The Philosophy of Greenr Cafe",
+    "content": "Greenr Cafe in Mumbai embodies everything I believe about Coffee. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-54",
-      "name": "Café Vegetal",
-      "location": "Benito Juarez, Mexico City, MX",
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
       "rating": 4.5,
-      "priceRange": "MX$100–200",
-      "cuisine": "Vegan restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Vegan restaurant",
-      "Coffee shop"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 35,
-      "comments": 4,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Detail-oriented"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-55",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} should be {adjective} before {method}...",
-    "content": "The {coffee} should be {adjective} before {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-55.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-55.jpg",
+    "title": "✈️ Travel Discovery: Rare Earth Cafe | 100% Pure Veg",
+    "content": "While exploring Mumbai, I stumbled upon Rare Earth Cafe | 100% Pure Veg in Khar, Ram Krishna Nagar, Khar West. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. This is exactly the kind of authentic gluten-free restaurant experience I seek when traveling. The 4.6-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-55",
-      "name": "u.to.pi.a",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.5,
-      "priceRange": "MX$200–300",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Vegan restaurant"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
     ],
-    "engagement": {
-      "likes": 29,
-      "comments": 8,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Cultural"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-56",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Pro tip: The {method} should be {adjective} for pe...",
-    "content": "Pro tip: The {method} should be {adjective} for perfect {coffee}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-56.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-56.jpg",
+    "title": "🍽️ Greenr Cafe - A Coffee Experience",
+    "content": "Just had an incredible meal at Greenr Cafe in Mumbai! undefined The Coffee here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Bandra West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-56",
-      "name": "Vegamo",
-      "location": "Cuauhtémoc, Mexico City, MX",
-      "rating": 4.4,
-      "priceRange": "MX$200–300",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Vegan restaurant",
-      "Breakfast restaurant",
-      "Espresso bar",
-      "Hamburger restaurant",
-      "Pizza restaurant"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
     ],
-    "engagement": {
-      "likes": 67,
-      "comments": 17,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-57",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Want to master {coffee}? Start with {method}. It's...",
-    "content": "Want to master {coffee}? Start with {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-57.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-57.jpg",
+    "title": "🌟 My Journey to Rare Earth Cafe | 100% Pure Veg",
+    "content": "Walking through Khar, Ram Krishna Nagar, Khar West in Mumbai, I discovered this hidden gem: Rare Earth Cafe | 100% Pure Veg. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-57",
-      "name": "Eat Tokyo (Soho)",
-      "location": "London, GB",
-      "rating": 4.3,
-      "priceRange": "£10–20",
-      "cuisine": "Japanese restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Japanese restaurant",
-      "Authentic Japanese restaurant",
-      "Sushi restaurant"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
     ],
-    "engagement": {
-      "likes": 14,
-      "comments": 11,
-      "shares": 7
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-58",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} selection here is {adjective}. Every ...",
-    "content": "The {coffee} selection here is {adjective}. Every {method} tells a story.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-58.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-58.jpg",
+    "title": "💡 Pro Tip: Greenr Cafe",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Greenr Cafe in Mumbai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-58",
-      "name": "Galvin La Chapelle",
-      "location": "London, GB",
-      "rating": 4.6,
-      "priceRange": "£100+",
-      "cuisine": "French restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "French restaurant",
-      "British restaurant",
-      "Dessert restaurant",
-      "Event venue",
-      "Fine dining restaurant",
-      "Lunch restaurant",
-      "Modern British restaurant",
-      "Modern European restaurant",
-      "Modern French restaurant",
-      "Restaurant"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
     ],
-    "engagement": {
-      "likes": 46,
-      "comments": 0,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Cultural"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-59",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I always {method} when preparing {coffee}. The {fl...",
-    "content": "I always {method} when preparing {coffee}. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-59.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-59.jpg",
+    "title": "🧘 The Philosophy of Rare Earth Cafe | 100% Pure Veg",
+    "content": "Rare Earth Cafe | 100% Pure Veg in Mumbai embodies everything I believe about Coffee. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-59",
-      "name": "E5 Bakehouse",
-      "location": "London, GB",
-      "rating": 4.4,
-      "priceRange": "£10–20",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Bakery"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 75,
-      "comments": 1,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-60",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I learned about {method} from a {coffee} expert. T...",
-    "content": "I learned about {method} from a {coffee} expert. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-60.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-60.jpg",
+    "title": "✈️ Travel Discovery: Greenr Cafe",
+    "content": "While exploring Mumbai, I stumbled upon Greenr Cafe in Bandra West. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-60",
-      "name": "Miel Bakery",
-      "location": "London, GB",
-      "rating": 4.4,
-      "priceRange": "£1–10",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery",
-      "Cafe",
-      "Cake shop",
-      "Coffee shop",
-      "Cooking class",
-      "Patisserie"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
     ],
-    "engagement": {
-      "likes": 96,
-      "comments": 12,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-61",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I always {method} when preparing {coffee}. The {fl...",
-    "content": "I always {method} when preparing {coffee}. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-61.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-61.jpg",
+    "title": "🍽️ Rare Earth Cafe | 100% Pure Veg - A Coffee Experience",
+    "content": "Just had an incredible meal at Rare Earth Cafe | 100% Pure Veg in Mumbai! Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. The Coffee here is absolutely outstanding. null price point makes it accessible, and the 4.6-star rating is well deserved. Highly recommend for anyone looking for authentic gluten-free restaurant in Khar, Ram Krishna Nagar, Khar West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-61",
-      "name": "Aux pains de papy",
-      "location": "London, GB",
-      "rating": 4.7,
-      "priceRange": "£1–10",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Bakery",
-      "Cafe",
-      "Coffee shop",
-      "Patisserie",
-      "Sandwich shop"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
     ],
-    "engagement": {
-      "likes": 70,
-      "comments": 4,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-62",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {method} here is {adjective}. It's {coffee} pe...",
-    "content": "The {method} here is {adjective}. It's {coffee} perfection.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-62.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-62.jpg",
+    "title": "🌟 My Journey to Greenr Cafe",
+    "content": "Walking through Bandra West in Mumbai, I discovered this hidden gem: Greenr Cafe. undefined As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-62",
-      "name": "Bageriet",
-      "location": "London, GB",
-      "rating": 4.7,
-      "priceRange": "£1–10",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery",
-      "Cafe",
-      "Patisserie"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
     ],
-    "engagement": {
-      "likes": 88,
-      "comments": 5,
-      "shares": 1
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-63",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I discovered {coffee} in {location}. It's the perf...",
-    "content": "I discovered {coffee} in {location}. It's the perfect {method} for {flavor}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-63.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-63.jpg",
+    "title": "💡 Pro Tip: Rare Earth Cafe | 100% Pure Veg",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Rare Earth Cafe | 100% Pure Veg in Mumbai during off-peak hours. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. Their gluten-free restaurant is exceptional, and you'll get the full experience without the crowds. The null pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-63",
-      "name": "Grain Kitchen",
-      "location": "London, GB",
-      "rating": 4.8,
-      "priceRange": "£10–20",
-      "cuisine": "Health food restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Health food restaurant"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
     ],
-    "engagement": {
-      "likes": 11,
-      "comments": 8,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Detail-oriented"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-64",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {coffee} here is {adjective}. The {method} bri...",
-    "content": "The {coffee} here is {adjective}. The {method} brings out {flavor} notes.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-64.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-64.jpg",
+    "title": "🧘 The Philosophy of Greenr Cafe",
+    "content": "Greenr Cafe in Mumbai embodies everything I believe about Coffee. undefined It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-64",
-      "name": "Natural Kitchen",
-      "location": "London, GB",
-      "rating": 4.2,
-      "priceRange": "£20–30",
-      "cuisine": "Health food restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Health food restaurant",
-      "Bar",
-      "Breakfast restaurant",
-      "Cocktail bar",
-      "Coffee shop",
-      "Juice shop",
-      "Modern European restaurant",
-      "Restaurant",
-      "Brasserie"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 13,
-      "comments": 15,
-      "shares": 8
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Detail-oriented"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-65",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ The {barista} shared the story of this {coffee}. I...",
-    "content": "The {barista} shared the story of this {coffee}. It's from {region} and {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-65.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-65.jpg",
+    "title": "✈️ Travel Discovery: Rare Earth Cafe | 100% Pure Veg",
+    "content": "While exploring Mumbai, I stumbled upon Rare Earth Cafe | 100% Pure Veg in Khar, Ram Krishna Nagar, Khar West. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. This is exactly the kind of authentic gluten-free restaurant experience I seek when traveling. The 4.6-star rating is spot on, and the null price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-65",
-      "name": "Remedy Kitchen",
-      "location": "London, GB",
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
       "rating": 4.6,
-      "priceRange": "£10–20",
-      "cuisine": "Health food restaurant"
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Health food restaurant",
-      "Cafe"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
     ],
-    "engagement": {
-      "likes": 86,
-      "comments": 7,
-      "shares": 6
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-66",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ This {cafe} sources {coffee} from {region}. The {m...",
-    "content": "This {cafe} sources {coffee} from {region}. The {method} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-66.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-66.jpg",
+    "title": "🍽️ Greenr Cafe - A Coffee Experience",
+    "content": "Just had an incredible meal at Greenr Cafe in Mumbai! undefined The Coffee here is absolutely outstanding. $$$ price point makes it accessible, and the 4.5-star rating is well deserved. Highly recommend for anyone looking for authentic vegetarian restaurant in Bandra West.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-66",
-      "name": "Vantra Vegan",
-      "location": "London, GB",
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
       "rating": 4.5,
-      "priceRange": "£20–30",
-      "cuisine": "Vegan restaurant"
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Vegan restaurant",
-      "Gluten-free restaurant",
-      "Health food restaurant",
-      "Raw food restaurant",
-      "Vegetarian restaurant"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "review"
     ],
-    "engagement": {
-      "likes": 35,
-      "comments": 12,
-      "shares": 9
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Cultural"
+    "postType": "review",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-67",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I always {method} when preparing {coffee}. The {fl...",
-    "content": "I always {method} when preparing {coffee}. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-67.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-67.jpg",
+    "title": "🌟 My Journey to Rare Earth Cafe | 100% Pure Veg",
+    "content": "Walking through Khar, Ram Krishna Nagar, Khar West in Mumbai, I discovered this hidden gem: Rare Earth Cafe | 100% Pure Veg. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. As someone who specializes in Coffee, I was immediately drawn to their approach. The atmosphere, the flavors, the attention to detail - everything speaks to the heart of Cafes. This is why I love exploring Mumbai!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-67",
-      "name": "Vegan Yes",
-      "location": "London, GB",
-      "rating": 4.8,
-      "priceRange": "£10–20",
-      "cuisine": "Vegan restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Vegan restaurant",
-      "Vegetarian cafe and deli",
-      "Vegetarian restaurant"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "story"
     ],
-    "engagement": {
-      "likes": 51,
-      "comments": 2,
-      "shares": 5
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "story",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-68",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Want to master {coffee}? Start with {method}. It's...",
-    "content": "Want to master {coffee}? Start with {method}. It's {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-68.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-68.jpg",
+    "title": "💡 Pro Tip: Greenr Cafe",
+    "content": "Here's a Coffee tip for my fellow food lovers: Visit Greenr Cafe in Mumbai during off-peak hours. undefined Their vegetarian restaurant is exceptional, and you'll get the full experience without the crowds. The $$$ pricing is fair for the quality you receive. Trust me on this one!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-68",
-      "name": "Luke's Lobster Shibuya Park Street Shop",
-      "location": "Shibuya, JP",
-      "rating": 4,
-      "priceRange": "¥2,000–3,000",
-      "cuisine": "Seafood restaurant"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Seafood restaurant",
-      "Cafe",
-      "Ramen restaurant",
-      "Sandwich shop",
-      "Wholesale bakery"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "tip"
     ],
-    "engagement": {
-      "likes": 45,
-      "comments": 15,
-      "shares": 2
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Cultural"
+    "postType": "tip",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-69",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ Pro tip: The {method} should be {adjective} for pe...",
-    "content": "Pro tip: The {method} should be {adjective} for perfect {coffee}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-69.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-69.jpg",
+    "title": "🧘 The Philosophy of Rare Earth Cafe | 100% Pure Veg",
+    "content": "Rare Earth Cafe | 100% Pure Veg in Mumbai embodies everything I believe about Coffee. Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area. It's not just about the food - it's about the story, the culture, the connection. This place reminds me why I fell in love with Cafes. Sometimes the best discoveries are right in your neighborhood.",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
     "restaurant": {
-      "id": "restaurant-69",
-      "name": "Centre The Bakery",
-      "location": "Chuo City, JP",
-      "rating": 4.2,
-      "priceRange": "¥1,000–2,000",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-1",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": null,
+      "cuisine": "Gluten-free restaurant",
+      "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+      "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+      "reviewsCount": 564
     },
     "tags": [
-      "Bakery",
-      "Cafe"
+      "Gluten-free restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "philosophy"
     ],
-    "engagement": {
-      "likes": 13,
-      "comments": 13,
-      "shares": 3
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Methodical"
+    "postType": "philosophy",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   },
   {
     "id": "coffee_pilgrim_omar-post-70",
     "masterBotId": "0a1092da-dea6-4d32-ac2b-fe50a31beae3",
-    "title": "☕ I learned about {method} from a {coffee} expert. T...",
-    "content": "I learned about {method} from a {coffee} expert. The {flavor} is {adjective}.",
-    "imageUrl": "/images/posts/coffee_pilgrim_omar/post-70.jpg",
-    "imageLocalPath": "public/images/posts/coffee_pilgrim_omar/post-70.jpg",
+    "title": "✈️ Travel Discovery: Greenr Cafe",
+    "content": "While exploring Mumbai, I stumbled upon Greenr Cafe in Bandra West. undefined This is exactly the kind of authentic vegetarian restaurant experience I seek when traveling. The 4.5-star rating is spot on, and the $$$ price point makes it accessible to everyone. A must-visit for fellow Coffee enthusiasts!",
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "imageLocalPath": "publichttps://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
     "restaurant": {
-      "id": "restaurant-70",
-      "name": "Katane Bakery",
-      "location": "Shibuya, JP",
-      "rating": 4.4,
-      "priceRange": "¥1–1,000",
-      "cuisine": "Bakery"
+      "id": "restaurant-coffee_pilgrim_omar-2",
+      "name": "Greenr Cafe",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Vegetarian restaurant",
+      "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+      "reviewsCount": 841
     },
     "tags": [
-      "Bakery"
+      "Vegetarian restaurant",
+      "Mumbai",
+      "IN",
+      "Coffee",
+      "travel"
     ],
-    "engagement": {
-      "likes": 41,
-      "comments": 18,
-      "shares": 4
-    },
-    "createdAt": "2025-09-19T16:21:24.020Z",
-    "personality": "Contemplative"
+    "postType": "travel",
+    "createdAt": "2025-09-19T18:10:05.397Z"
   }
 ]

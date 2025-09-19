@@ -1,0 +1,911 @@
+[
+  {
+    "id": "restaurant-nomad_aurelia-1",
+    "placeId": "ChIJQSB4GI6ipBIR0owzy0TgXoY",
+    "name": "Robata",
+    "description": "Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting.",
+    "address": "Carrer d'Enric Granados, 55, L'Eixample, 08008 Barcelona, Spain",
+    "street": "Carrer d'Enric Granados, 55",
+    "city": "Barcelona",
+    "country": "ES",
+    "postalCode": "08008",
+    "neighborhood": "Eixample",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Japanese restaurant",
+    "rating": 4.5,
+    "reviewsCount": 7113,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npZH2Ah3kbBRqGWkzQFW9zCzIAKnVUV85Yf8prBKnp188wxrV5fL0QJagEa1FsgxNulvJl7iH61RN9ihVj5kxr05ukHi3Ix_olmSs1GUx4jB2miZtov-JnU5DDQiGzIz9eGJWIO=w408-h544-k-no",
+    "website": "https://robata.es/?utm_source=GMB&utm_medium=web&utm_campaign=GMB_barcelona",
+    "phone": "+34 937 82 60 00",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "1:30 PM to 12 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "1:30 PM to 12 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1:30 PM to 12 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1:30 PM to 12 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 PM to 1 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "1 PM to 1 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "1 PM to 12 AM"
+      }
+    ],
+    "tags": [
+      "Japanese restaurant",
+      "Eixample",
+      "Barcelona",
+      "ES"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-2",
+    "placeId": "ChIJc5ON4Xb_AzQR_dqjqgq0XkM",
+    "name": "Bingaz Street Food",
+    "address": "23 High Street G/F Bingaz, Sai Ying Pun, Hong Kong",
+    "street": "23 High Street G/F Bingaz",
+    "city": "Sai Ying Pun",
+    "country": "HK",
+    "postalCode": null,
+    "neighborhood": null,
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 4.1,
+    "reviewsCount": 39,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "website": "https://bingazstreetfood.com/menu/",
+    "phone": "+852 5729 2308",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Restaurant",
+      "Sai Ying Pun",
+      "HK"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-3",
+    "placeId": "ChIJOW5d0SLR5zsRdOb864OWRxg",
+    "name": "Street Food stalls",
+    "address": "Watson's Hotel, 144/1, Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400023, India",
+    "street": "Watson's Hotel, 144/1, Mahatma Gandhi Road",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400023",
+    "neighborhood": "Kala Ghoda, Fort",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Food court",
+    "rating": 4.8,
+    "reviewsCount": 68,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "website": null,
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "8 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Food court",
+      "Kala Ghoda, Fort",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-4",
+    "placeId": "ChIJ5TOqIwLJ5zsRNyF9uOKWAec",
+    "name": "Street Food",
+    "address": "Street Food Santacruz, Maharashtra 400055, India",
+    "street": "Street Food Santacruz",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400055",
+    "neighborhood": "Kolivery Village, Vidya Nagari, Kalina, Santacruz East",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Food court",
+    "rating": 4,
+    "reviewsCount": 3,
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "website": null,
+    "phone": null,
+    "openingHours": [],
+    "tags": [
+      "Food court",
+      "Kolivery Village, Vidya Nagari, Kalina, Santacruz East",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-5",
+    "placeId": "ChIJBW78K-PH5zsRQuq7ifFg_Ys",
+    "name": "Origami Japanese & Korean Restaurant",
+    "description": "Fine-dining Asian restaurant with views of a lake from partially open-air seating.",
+    "address": "SERVICE OFFICE, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076, India",
+    "street": "SERVICE OFFICE",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400076",
+    "neighborhood": "Hiranandani Gardens, Powai",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Authentic Japanese restaurant",
+    "rating": 4.3,
+    "reviewsCount": 1705,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrPUBtERJKldUQ1OszeD4CfY3w0H1zShbhH474Vrgn9oLs7AtqJbBfcf2BQiEaoSFNUtc6IhpnptXoJfWSmZOpoo73MFcuSP2Gw8FHSDg05soJuGSJyFeK80KOfBYV1_G5F14Tz=w408-h306-k-no",
+    "website": "http://origamirestaurants.in/",
+    "phone": "+91 98928 25799",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      }
+    ],
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Hiranandani Gardens, Powai",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-6",
+    "placeId": "ChIJCWU-_QHJ5zsR291jn2ZRP6g",
+    "name": "Fifty Five East",
+    "description": "This sophisticated global restaurant in the Grand Hyatt is known for its hearty Sunday brunches.",
+    "address": "Vicinity, BANK OF INDIA STAR AVAS, Hotel and Residences, Grand Hyatt, Off, Western Express Hwy, Santacruz East, Mumbai, Maharashtra 400055, India",
+    "street": "Vicinity, BANK OF INDIA STAR AVAS, Hotel and Residences, Grand Hyatt, Off, Western Express Hwy",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400055",
+    "neighborhood": "Siddharath Nagar, Vakola, Santacruz East",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Buffet restaurant",
+    "rating": 4.6,
+    "reviewsCount": 2244,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJsNBN7ggRrf0rWZY79E-N_d6Pr-eVaFW5jfOIaWaCDhqCGJa5mHKSlbjjjIwa4-ht4oqCNwsWnTbY18IrDTlfejesXemgqwUzAcEkkVQXr1SjDAhjwi-yVna8Fs17q8wUtuze=w408-h243-k-no",
+    "website": "https://www.hyattrestaurants.com/en/dining/india/mumbai/multi-cuisine-restaurant-in-bkc-fifty-five-east",
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "7 to 10:30 AM, 7 PM to 12 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "7 to 10:30 AM, 7 PM to 12 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "7 to 10:30 AM, 7 PM to 12 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "7 to 10:30 AM, 7 PM to 12 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "7 to 10:30 AM, 7 PM to 12 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "7 to 11 AM, 12:30 to 3 PM, 7 PM to 12 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "7 to 11 AM, 12:30 to 4 PM, 7 PM to 12 AM"
+      }
+    ],
+    "tags": [
+      "Buffet restaurant",
+      "Siddharath Nagar, Vakola, Santacruz East",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-7",
+    "placeId": "ChIJaU7vDOjR5zsRXd7WikjgfnE",
+    "name": "Relish International Veg Cuisine",
+    "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+    "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+    "street": "Prem Court, 1, Dinshaw Vacha Rd",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400020",
+    "neighborhood": "Churchgate",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Vegan restaurant",
+    "rating": 4.4,
+    "reviewsCount": 5494,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "website": "http://www.relish-restaurant.com/",
+    "phone": "+91 22 4213 5419",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 to 11 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "Churchgate",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-8",
+    "placeId": "ChIJf_-XwIzO5zsRDTUnLL7219A",
+    "name": "SpiceKlub",
+    "description": "Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy.",
+    "address": "Janta Industrial Estate, opposite Phoenix Mills 8A, Lower Parel, Mumbai, Maharashtra 400013, India",
+    "street": "Janta Industrial Estate, opposite Phoenix Mills 8A",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400013",
+    "neighborhood": "Lower Parel",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Vegan restaurant",
+    "rating": 4.3,
+    "reviewsCount": 3540,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "website": "http://spiceklub.com/",
+    "phone": "+91 22 4610 4604",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "Lower Parel",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-9",
+    "placeId": "ChIJSSTzpQCZ4jARTl-EkRb3Jlw",
+    "name": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+    "address": "418 Yaowarat Rd, Khwaeng Samphanthawong, Samphanthawong, Bangkok 10100, Thailand",
+    "street": "418 Yaowarat Rd",
+    "city": "Samphanthawong",
+    "country": "TH",
+    "postalCode": "10100",
+    "neighborhood": "Samphanthawong",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 4.3,
+    "reviewsCount": 117,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "website": null,
+    "phone": "+66 86 995 1020",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "5 to 11 PM"
+      }
+    ],
+    "tags": [
+      "Restaurant",
+      "Samphanthawong",
+      "Samphanthawong",
+      "TH"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-10",
+    "placeId": "ChIJbYao6cif4jARF8mR5mjFcUI",
+    "name": "Central World Square Street Food",
+    "address": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4 Pathum Wan, Bangkok 10330, Thailand",
+    "street": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4",
+    "city": "Pathum Wan",
+    "country": "TH",
+    "postalCode": "10330",
+    "neighborhood": "Pathum Wan",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Thai restaurant",
+    "rating": 3.7,
+    "reviewsCount": 34,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "website": null,
+    "phone": "+66 2 640 7000",
+    "openingHours": [],
+    "tags": [
+      "Thai restaurant",
+      "Pathum Wan",
+      "Pathum Wan",
+      "TH"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-11",
+    "placeId": "ChIJTcCIY_ye4jAR9OSZg67PKrg",
+    "name": "Holey Artisan Bakery",
+    "description": "Laid-back locale for paninis, deep dish pizza & craft sandwiches, plus sweet & savory baked goods.",
+    "address": "245 12 ซ. สุขุมวิท 31 Khlong Toei Nuea, Watthana, Bangkok 10110, Thailand",
+    "street": "245 12 ซ. สุขุมวิท 31",
+    "city": "Watthana",
+    "country": "TH",
+    "postalCode": "10110",
+    "neighborhood": "Khlong Toei Nuea",
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Bakery",
+    "rating": 4.3,
+    "reviewsCount": 1390,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqsXCqPk_RrWSedaujTg-AL39JDyzFswdjCiVlqT5e5sHbPsOLUtz3mpzoiSc7rzRr6aNrauXg9Le-xBURxM9wNvYu6uykcYNt_XC5YOpSyuTiV3uKilytvrYm6FSZ5beBsX3KyJGajHjUI=w408-h306-k-no",
+    "website": "http://holeybakery.cafe/?utm_source=gmb&utm_medium=referral",
+    "phone": "+66 2 101 1427",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "7 AM to 7 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "7 AM to 7 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "7 AM to 7 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "7 AM to 7 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "7 AM to 7 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "7 AM to 7 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "7 AM to 7 PM"
+      }
+    ],
+    "tags": [
+      "Bakery",
+      "Khlong Toei Nuea",
+      "Watthana",
+      "TH"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-12",
+    "placeId": "ChIJT4EmU7D90YURgBm8QimOZOQ",
+    "name": "Taquería en la calle (street-food)",
+    "address": "Calle Santos Dumont 131(105, Aviación Civil, Venustiano Carranza, 15740 Ciudad de México, CDMX, Mexico",
+    "street": "Calle Santos Dumont 131(105",
+    "city": "Venustiano Carranza, Mexico City",
+    "country": "MX",
+    "postalCode": "15740",
+    "neighborhood": "Aviación Civil",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Mexican restaurant",
+    "rating": 5,
+    "reviewsCount": 2,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "website": null,
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Thursday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Friday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Saturday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Open 24 hours"
+      }
+    ],
+    "tags": [
+      "Mexican restaurant",
+      "Aviación Civil",
+      "Venustiano Carranza, Mexico City",
+      "MX"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-13",
+    "placeId": "ChIJrxn-r0f_0YURDXlBWYaD_24",
+    "name": "Kura",
+    "description": "Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer.",
+    "address": "Colima 378-Local A, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+    "street": "Colima 378-Local A",
+    "city": "Cuauhtémoc, Mexico City",
+    "country": "MX",
+    "postalCode": "06700",
+    "neighborhood": "Roma Norte",
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Japanese restaurant",
+    "rating": 4.5,
+    "reviewsCount": 6103,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipOICbrvV6BPeMi-f2fU6VyTB1DrOJSlFzqExPnk=w408-h272-k-no",
+    "website": "https://izakayakura.mx/",
+    "phone": "+52 55 5511 8665",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 12 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 12 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 12 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 12 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 12 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 12 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 12 AM"
+      }
+    ],
+    "tags": [
+      "Japanese restaurant",
+      "Roma Norte",
+      "Cuauhtémoc, Mexico City",
+      "MX"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-14",
+    "placeId": "ChIJZ9jUVEEDdkgRN7k3RDL_908",
+    "name": "Maltby Street Market",
+    "description": "Outdoor weekend street market with food & drink vendors below 19th-century railway arches.",
+    "address": "Arch 46, Ropewalk, Maltby St, London SE1 3PA, United Kingdom",
+    "street": "Arch 46, Ropewalk, Maltby St",
+    "city": "London",
+    "country": "GB",
+    "postalCode": "SE1 3PA",
+    "neighborhood": null,
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 4.6,
+    "reviewsCount": 4529,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4np0Szp0IiHsYlOrjfSf61EBoVHOni7-tGVOMUr5z8CipNMq1oJga-EBwPeTBtB6UGuSmqcbDwCRPomN7jzsVSYpLpP2Vx5t4ggApjWhuweSZAwT6lC7GJR-LIWTsWR8_cc_-rhH_w=w426-h240-k-no",
+    "website": "https://maltbystmarket.squarespace.com/",
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Thursday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Friday",
+        "hours": "5:30 to 8:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "10 AM to 5 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11 AM to 4 PM"
+      }
+    ],
+    "tags": [
+      "Restaurant",
+      "London",
+      "GB"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-15",
+    "placeId": "ChIJD2bPdVcDdkgRuUSgnOXnKDE",
+    "name": "Borough Market",
+    "description": "Huge market under the railway lines, for British-reared meat and artisanal baked and dairy goods.",
+    "address": "London SE1 9AL, United Kingdom",
+    "street": null,
+    "city": "London",
+    "country": "GB",
+    "postalCode": null,
+    "neighborhood": null,
+    "price": null,
+    "priceLevel": 1,
+    "category": "Fresh food market",
+    "rating": 4.6,
+    "reviewsCount": 118046,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noQmKTI-iX_KKssQn7FI8iQH1gDMUKQi2Q-ZqBy6daUHnmGQe4J4zMuWWnlHfwNh5ABA3lX3PoBFmY6SH5WXYbFFFbwnEEYyCj5_JqqsB_ZmEDX19Sue31eyQadRTsz03-3LrUqx9KGODAw=w408-h306-k-no",
+    "website": "https://boroughmarket.org.uk/",
+    "phone": "+44 20 7407 1002",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "10 AM to 5 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "10 AM to 5 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "10 AM to 5 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "10 AM to 5 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "9 AM to 5 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "10 AM to 4 PM"
+      }
+    ],
+    "tags": [
+      "Fresh food market",
+      "London",
+      "GB"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-16",
+    "placeId": "ChIJW7PbgAYFdkgRKzZcm_oVjnM",
+    "name": "SUSHISAMBA",
+    "description": "Creative Japanese & Latin American sushi in contemporary surroundings, plus cocktails.",
+    "address": "35 The Market, London WC2E 8RF, United Kingdom",
+    "street": "35 The Market",
+    "city": "London",
+    "country": "GB",
+    "postalCode": "WC2E 8RF",
+    "neighborhood": null,
+    "price": null,
+    "priceLevel": 1,
+    "category": "Japanese restaurant",
+    "rating": 4.5,
+    "reviewsCount": 4743,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4hMA4hBYvASt29sY4P5U_DikD8x7tWHnfOhCSZfuVShOUEWbuu1SVXM50WN8xpHphqTRql9pNYxKCHgCqlFWzJBTCEINg28LxA5ISnb_6Benw4azpWKWC-9EZi9LJaUOScUla=w408-h544-k-no",
+    "website": "https://www.sushisamba.com/locations/uk/london-covent-garden?utm_source=gbp&utm_medium=organic&utm_campaign=covent_garden_gbp",
+    "phone": "+44 20 3053 0000",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 PM to 1 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 PM to 1 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 PM to 1 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 PM to 1 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 PM to 1:30 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 PM to 1:30 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 PM to 12 AM"
+      }
+    ],
+    "tags": [
+      "Japanese restaurant",
+      "London",
+      "GB"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-17",
+    "placeId": "ChIJicTFEbADdkgRJTJMF_RX50o",
+    "name": "Mallow Borough Market",
+    "description": "Eco-friendly, bohemian eatery serving plant-based global dishes made from area-sourced ingredients.",
+    "address": "1 Cathedral St, London SE1 9DE, United Kingdom",
+    "street": "1 Cathedral St",
+    "city": "London",
+    "country": "GB",
+    "postalCode": "SE1 9DE",
+    "neighborhood": null,
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Vegan restaurant",
+    "rating": 4.8,
+    "reviewsCount": 3673,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npf8JTMuhtH22AF04hicxja8JoWBTlKv5KlOQW8hpRvcnoRZcb-zGCovPBg4Ngck4QZnWM2i_q5dxJo9bTCu-8Nc5I9n3wLAA9ydcLZ1YE87tUhKvjNQWtxZVmveV7_QRHvmYndXKpIvLk=w408-h544-k-no",
+    "website": "https://mallowlondon.com/locations/borough-market/",
+    "phone": "+44 20 7846 8785",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "9 AM to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "9 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "London",
+      "GB"
+    ]
+  },
+  {
+    "id": "restaurant-nomad_aurelia-18",
+    "placeId": "ChIJwZCWumNZwokRA_PDwYfl0No",
+    "name": "Street food vendor",
+    "address": "2239 Broadway, New York, NY 10024",
+    "street": "2239 Broadway",
+    "city": "New York",
+    "country": "US",
+    "postalCode": "10024",
+    "neighborhood": "Manhattan",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 3.7,
+    "reviewsCount": 9,
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "website": null,
+    "phone": null,
+    "openingHours": [],
+    "tags": [
+      "Restaurant",
+      "Manhattan",
+      "New York",
+      "US"
+    ]
+  }
+]
