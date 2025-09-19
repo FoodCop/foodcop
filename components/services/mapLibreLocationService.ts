@@ -1,152 +1,96 @@
-import { backendService } from './backendService';
-
 export interface LocationData {
   lat: number;
   lng: number;
   name: string;
   address: string;
-  rating?: number;
+  rating: number;
   types: string[];
   place_id: string;
 }
 
-export interface MapLibreLocationService {
-  searchNearbyPlaces(
+class MapLibreLocationServiceImpl {
+  /**
+   * Search for places using MapLibre and external APIs
+   */
+  async searchPlaces(
+    query: string,
     center: { lat: number; lng: number },
-    radius: number,
-    type: string
-  ): Promise<LocationData[]>;
-  
-  getPlaceDetails(placeId: string): Promise<LocationData | null>;
-  
-  geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null>;
-  
-  reverseGeocode(lat: number, lng: number): Promise<string | null>;
-}
-
-class MapLibreLocationServiceImpl implements MapLibreLocationService {
-  async searchNearbyPlaces(
-    center: { lat: number; lng: number },
-    radius: number,
-    type: string = 'restaurant'
+    type: string = "restaurant"
   ): Promise<LocationData[]> {
+    console.log("🔍 MapLibre search places:", { query, center, type });
+
     try {
-      console.log(`🔍 Searching for ${type}s near ${center.lat}, ${center.lng} within ${radius}m`);
-      
-      // Try backend service first
-      const response = await backendService.searchNearbyPlaces(center, radius, type);
-      
-      if (response.success && response.data?.results) {
-        console.log(`✅ Found ${response.data.results.length} places via backend`);
-        return response.data.results.map(this.formatGooglePlace);
+      // Try to use a real geocoding service first
+      const results = await this.searchWithGeocodingAPI(query, center, type);
+      if (results.length > 0) {
+        return results;
       }
-      
-      // Fallback to mock data
-      console.log('📍 Using mock location data for MapLibre');
-      return this.generateMockPlaces(center, type);
-      
     } catch (error) {
-      console.warn('Error searching places:', error);
-      return this.generateMockPlaces(center, type);
+      console.warn(
+        "⚠️ Geocoding API failed, falling back to empty results:",
+        error
+      );
     }
+
+    // Return empty results instead of mock data
+    console.log("📭 No places found for query:", query);
+    return [];
   }
 
-  async getPlaceDetails(placeId: string): Promise<LocationData | null> {
+  /**
+   * Search using a real geocoding API (e.g., Mapbox, OpenCage, etc.)
+   */
+  private async searchWithGeocodingAPI(
+    query: string,
+    center: { lat: number; lng: number },
+    type: string
+  ): Promise<LocationData[]> {
+    // This would integrate with a real geocoding service
+    // For now, return empty array to avoid mock data
+    console.log("🌐 Geocoding API not implemented yet");
+    return [];
+  }
+
+  /**
+   * Get nearby places using MapLibre
+   */
+  async getNearbyPlaces(
+    center: { lat: number; lng: number },
+    type: string = "restaurant",
+    radius: number = 1000
+  ): Promise<LocationData[]> {
+    console.log("📍 MapLibre nearby places:", { center, type, radius });
+
     try {
-      const response = await backendService.getPlaceDetails(placeId);
-      
-      if (response.success && response.data) {
-        return this.formatGooglePlace(response.data);
+      // Try to use a real places API
+      const results = await this.searchWithPlacesAPI(center, type, radius);
+      if (results.length > 0) {
+        return results;
       }
-      
-      return null;
     } catch (error) {
-      console.warn('Error getting place details:', error);
-      return null;
+      console.warn(
+        "⚠️ Places API failed, falling back to empty results:",
+        error
+      );
     }
+
+    // Return empty results instead of mock data
+    console.log("📭 No nearby places found");
+    return [];
   }
 
-  async geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
-    try {
-      const response = await backendService.geocodeAddress(address);
-      
-      if (response.success && response.data?.results?.[0]) {
-        const location = response.data.results[0].geometry.location;
-        return { lat: location.lat, lng: location.lng };
-      }
-      
-      return null;
-    } catch (error) {
-      console.warn('Error geocoding address:', error);
-      return null;
-    }
-  }
-
-  async reverseGeocode(lat: number, lng: number): Promise<string | null> {
-    try {
-      const response = await backendService.reverseGeocode(lat, lng);
-      
-      if (response.success && response.data?.results?.[0]) {
-        return response.data.results[0].formatted_address;
-      }
-      
-      return null;
-    } catch (error) {
-      console.warn('Error reverse geocoding:', error);
-      return null;
-    }
-  }
-
-  private formatGooglePlace(place: any): LocationData {
-    return {
-      lat: place.geometry?.location?.lat || place.lat,
-      lng: place.geometry?.location?.lng || place.lng,
-      name: place.name || 'Unknown Place',
-      address: place.formatted_address || place.vicinity || 'Unknown Address',
-      rating: place.rating,
-      types: place.types || [],
-      place_id: place.place_id || `mock_${Date.now()}_${Math.random()}`
-    };
-  }
-
-  private generateMockPlaces(center: { lat: number; lng: number }, type: string): LocationData[] {
-    const mockPlaces: LocationData[] = [];
-    const placeTypes = {
-      restaurant: [
-        'Italian Bistro', 'Sushi House', 'Burger Joint', 'Thai Palace', 'Pizza Corner',
-        'Mexican Grill', 'French Café', 'Indian Spice', 'Chinese Dragon', 'Greek Taverna'
-      ],
-      cafe: [
-        'Coffee Bean', 'Daily Grind', 'Espresso Bar', 'Morning Brew', 'Café Luna',
-        'Steam & Beans', 'Roast House', 'Bean There', 'Caffeine Fix', 'Brew Master'
-      ],
-      store: [
-        'Corner Market', 'City Store', 'Quick Shop', 'Daily Needs', 'Local Mart',
-        'Convenience Plus', 'Express Store', 'Neighborhood Shop', 'Easy Mart', 'Fast Stop'
-      ]
-    };
-
-    const names = placeTypes[type as keyof typeof placeTypes] || placeTypes.restaurant;
-    
-    for (let i = 0; i < 8; i++) {
-      const angle = (i / 8) * 2 * Math.PI;
-      const distance = 0.002 + (Math.random() * 0.008); // Random distance within ~1km
-      
-      const lat = center.lat + (distance * Math.cos(angle));
-      const lng = center.lng + (distance * Math.sin(angle));
-      
-      mockPlaces.push({
-        lat,
-        lng,
-        name: names[i % names.length],
-        address: `${100 + i * 50} Demo Street`,
-        rating: 3.5 + (Math.random() * 1.5), // 3.5 to 5.0
-        types: [type, 'establishment'],
-        place_id: `mock_${type}_${i}_${Date.now()}`
-      });
-    }
-    
-    return mockPlaces;
+  /**
+   * Search using a real places API
+   */
+  private async searchWithPlacesAPI(
+    center: { lat: number; lng: number },
+    type: string,
+    radius: number
+  ): Promise<LocationData[]> {
+    // This would integrate with a real places service
+    // For now, return empty array to avoid mock data
+    console.log("🌐 Places API not implemented yet");
+    return [];
   }
 }
 

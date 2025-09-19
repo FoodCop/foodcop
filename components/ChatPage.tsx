@@ -63,135 +63,33 @@ export function ChatPage() {
     online: true,
   });
   const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Master Bot Integration
   const { activeBotId, showBotChat, startBotChat, closeBotChat } =
     useMasterBotChat();
 
-  // Mock data for demonstration
+  // Load conversations from real data source
   useEffect(() => {
-    const mockConversations: Conversation[] = [
-      {
-        id: "conv-1",
-        participants: [
-          currentUser,
-          {
-            id: "user-1",
-            name: "Sarah Chen",
-            avatar:
-              "https://images.unsplash.com/photo-1494790108755-2616b381b5d4?w=100&h=100&fit=crop&crop=face",
-            online: true,
-          },
-        ],
-        lastMessage: {
-          id: "msg-1",
-          text: "That ramen place you recommended was amazing! 🍜",
-          userId: "user-1",
-          timestamp: new Date(Date.now() - 5 * 60 * 1000),
-          type: "text",
-          status: "read",
-        },
-        unreadCount: 2,
-        updatedAt: new Date(Date.now() - 5 * 60 * 1000),
-        type: "direct",
-      },
-      {
-        id: "conv-2",
-        participants: [
-          currentUser,
-          {
-            id: "user-2",
-            name: "Marcus Rodriguez",
-            avatar:
-              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-            online: false,
-            lastSeen: new Date(Date.now() - 2 * 60 * 60 * 1000),
-          },
-        ],
-        lastMessage: {
-          id: "msg-2",
-          text: "Want to check out that new pizza spot this weekend?",
-          userId: "current-user",
-          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-          type: "text",
-          status: "read",
-        },
-        unreadCount: 0,
-        updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        type: "direct",
-      },
-      {
-        id: "conv-3",
-        participants: [
-          currentUser,
-          {
-            id: "user-3",
-            name: "Emma Thompson",
-            avatar:
-              "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-            online: true,
-          },
-          {
-            id: "user-4",
-            name: "Alex Kim",
-            avatar:
-              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-            online: false,
-          },
-        ],
-        lastMessage: {
-          id: "msg-3",
-          text: "Group dinner plans are set! 🎉",
-          userId: "user-3",
-          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
-          type: "text",
-          status: "delivered",
-        },
-        unreadCount: 1,
-        updatedAt: new Date(Date.now() - 6 * 60 * 60 * 1000),
-        type: "group",
-        name: "Foodie Squad",
-        avatar: "🍽️",
-      },
-      {
-        id: "conv-4",
-        participants: [
-          currentUser,
-          {
-            id: "user-5",
-            name: "David Park",
-            avatar:
-              "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
-            online: true,
-          },
-        ],
-        lastMessage: {
-          id: "msg-4",
-          text: "Thanks for the restaurant recommendation!",
-          userId: "user-5",
-          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
-          type: "text",
-          status: "read",
-        },
-        unreadCount: 0,
-        updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        type: "direct",
-      },
-    ];
+    loadConversations();
+  }, []);
 
-    setConversations(mockConversations);
-  }, [currentUser]);
+  const loadConversations = async () => {
+    try {
+      setLoading(true);
+      // TODO: Replace with real API call to fetch conversations
+      // For now, show empty state
+      setConversations([]);
+    } catch (error) {
+      console.error("Failed to load conversations:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleSelectConversation = (conversation: Conversation) => {
+  const handleConversationSelect = (conversation: Conversation) => {
     setSelectedConversation(conversation);
     setCurrentView("conversation");
-
-    // Mark messages as read
-    setConversations((prev) =>
-      prev.map((conv) =>
-        conv.id === conversation.id ? { ...conv, unreadCount: 0 } : conv
-      )
-    );
   };
 
   const handleBackToList = () => {
@@ -199,163 +97,133 @@ export function ChatPage() {
     setSelectedConversation(null);
   };
 
-  const handleOpenSearch = () => {
-    setCurrentView("search");
-  };
-
-  const handleBackToListFromSearch = () => {
-    setCurrentView("list");
-  };
-
   const handleNewChat = () => {
     setIsNewChatModalOpen(true);
   };
 
-  const handleStartNewConversation = (user: User) => {
-    // Check if conversation already exists
-    const existingConv = conversations.find(
-      (conv) =>
-        conv.type === "direct" &&
-        conv.participants.some((p) => p.id === user.id)
-    );
-
-    if (existingConv) {
-      handleSelectConversation(existingConv);
-    } else {
-      // Create new conversation
-      const newConversation: Conversation = {
-        id: `conv-${Date.now()}`,
-        participants: [currentUser, user],
-        unreadCount: 0,
-        updatedAt: new Date(),
-        type: "direct",
-      };
-
-      setConversations((prev) => [newConversation, ...prev]);
-      handleSelectConversation(newConversation);
-    }
-
+  const handleCloseNewChatModal = () => {
     setIsNewChatModalOpen(false);
   };
 
-  const handleMasterBotsView = () => {
+  const handleSearch = () => {
+    setCurrentView("search");
+  };
+
+  const handleMasterBots = () => {
     setCurrentView("master-bots");
   };
 
-  const handleBackFromMasterBots = () => {
-    setCurrentView("list");
-  };
-
-  const handleStreamChatView = () => {
+  const handleStreamChat = () => {
     setCurrentView("stream-chat");
   };
 
-  const handleBackFromStreamChat = () => {
+  const handleBackToMasterBots = () => {
+    setCurrentView("master-bots");
+  };
+
+  const handleBackToStreamChat = () => {
+    setCurrentView("stream-chat");
+  };
+
+  // Master Bot Chat Handlers
+  const handleStartBotChat = (botId: string) => {
+    startBotChat(botId);
+    setCurrentView("conversation");
+  };
+
+  const handleCloseBotChat = () => {
+    closeBotChat();
     setCurrentView("list");
   };
 
-  // If master bot chat is active, show it
-  if (showBotChat) {
+  if (currentView === "conversation" && selectedConversation) {
     return (
-      <div className="min-h-screen bg-background">
-        <MasterBotIntegration
-          showChatInterface={true}
-          currentBotId={activeBotId || undefined}
-          onCloseBotChat={closeBotChat}
-        />
-      </div>
+      <ChatConversation
+        conversation={selectedConversation}
+        currentUser={currentUser}
+        onBack={handleBackToList}
+      />
     );
   }
 
-  const renderCurrentView = () => {
-    switch (currentView) {
-      case "list":
-        return (
-          <ChatList
-            conversations={conversations}
-            currentUser={currentUser}
-            onSelectConversation={handleSelectConversation}
-            onOpenSearch={handleOpenSearch}
-            onNewChat={handleNewChat}
-            onMasterBots={handleMasterBotsView}
-            onStreamChat={handleStreamChatView}
-          />
-        );
+  if (currentView === "search") {
+    return (
+      <ChatSearch
+        conversations={conversations}
+        onBack={handleBackToList}
+        onConversationSelect={handleConversationSelect}
+      />
+    );
+  }
 
-      case "conversation":
-        return selectedConversation ? (
-          <ChatConversation
-            conversation={selectedConversation}
-            currentUser={currentUser}
-            onBack={handleBackToList}
-          />
-        ) : null;
+  if (currentView === "new-chat") {
+    return (
+      <NewChatModal
+        onClose={handleCloseNewChatModal}
+        onConversationSelect={handleConversationSelect}
+      />
+    );
+  }
 
-      case "search":
-        return (
-          <ChatSearch
-            currentUser={currentUser}
-            onBack={handleBackToListFromSearch}
-            onStartConversation={handleStartNewConversation}
-          />
-        );
+  if (currentView === "master-bots") {
+    return (
+      <MasterBotIntegration
+        onBack={handleBackToList}
+        onStartBotChat={handleStartBotChat}
+        onStreamChat={handleStreamChat}
+      />
+    );
+  }
 
-      case "master-bots":
-        return (
-          <div className="min-h-screen bg-background p-4">
-            <div className="max-w-md mx-auto">
-              <div className="flex items-center mb-4">
-                <button
-                  onClick={handleBackFromMasterBots}
-                  className="mr-3 p-2 hover:bg-gray-100 rounded-full"
-                >
-                  ←
-                </button>
-                <h1 className="text-xl font-bold text-[#0B1F3A]">
-                  Master Bot League
-                </h1>
-              </div>
-              <MasterBotIntegration
-                onBotSelect={startBotChat}
-                showChatInterface={false}
-              />
-            </div>
-          </div>
-        );
-
-      case "stream-chat":
-        return (
-          <StreamChatIntegration
-            onBack={handleBackFromStreamChat}
-            onBotSelect={startBotChat}
-          />
-        );
-
-      default:
-        return (
-          <ChatList
-            conversations={conversations}
-            currentUser={currentUser}
-            onSelectConversation={handleSelectConversation}
-            onOpenSearch={handleOpenSearch}
-            onNewChat={handleNewChat}
-            onMasterBots={handleMasterBotsView}
-            onStreamChat={handleStreamChatView}
-          />
-        );
-    }
-  };
+  if (currentView === "stream-chat") {
+    return (
+      <StreamChatIntegration
+        onBack={handleBackToMasterBots}
+        onStartBotChat={handleStartBotChat}
+      />
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      {renderCurrentView()}
+    <div className="min-h-screen bg-gray-50">
+      <ChatList
+        conversations={conversations}
+        currentUser={currentUser}
+        loading={loading}
+        onConversationSelect={handleConversationSelect}
+        onNewChat={handleNewChat}
+        onSearch={handleSearch}
+        onMasterBots={handleMasterBots}
+        onStreamChat={handleStreamChat}
+      />
 
+      {/* Master Bot Chat Overlay */}
+      {showBotChat && activeBotId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-md h-96 flex flex-col">
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Master Bot Chat</h3>
+              <button
+                onClick={handleCloseBotChat}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 p-4">
+              <p className="text-gray-600">
+                Chat with Master Bot {activeBotId} coming soon...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New Chat Modal */}
       {isNewChatModalOpen && (
         <NewChatModal
-          isOpen={isNewChatModalOpen}
-          onClose={() => setIsNewChatModalOpen(false)}
-          onStartConversation={handleStartNewConversation}
-          currentUser={currentUser}
+          onClose={handleCloseNewChatModal}
+          onConversationSelect={handleConversationSelect}
         />
       )}
     </div>

@@ -1,4 +1,3 @@
-import { Bookmark, Bot, Heart, MapPin, Share2, Verified } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { SafeRestaurantImage } from "../ui/SafeRestaurantImage";
 
@@ -9,14 +8,27 @@ interface SwipeCardProps {
   profileName: string;
   profileDesignation: string;
   tags: string[];
-  onSwipe: (direction: "left" | "right") => void;
+  onSwipe: (direction: "left" | "right" | "up" | "down") => void;
   isActive: boolean;
   isMasterBot?: boolean;
   botData?: {
     username: string;
     specialties: string[];
     location?: string;
+    avatar_url?: string;
+    restaurant?: {
+      name: string;
+      location: string;
+      rating: number;
+      price_range: string;
+      cuisine: string;
+      reviews_count: number;
+    };
   };
+  onLike?: () => void;
+  onSkip?: () => void;
+  onSaveToPlate?: () => void;
+  onShare?: () => void;
 }
 
 export function SwipeCard({
@@ -30,6 +42,10 @@ export function SwipeCard({
   isActive,
   isMasterBot = false,
   botData,
+  onLike,
+  onSkip,
+  onSaveToPlate,
+  onShare,
 }: SwipeCardProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -58,8 +74,15 @@ export function SwipeCard({
     setIsDragging(false);
 
     const threshold = 100;
+    const verticalThreshold = 80;
+
+    // Horizontal swipes (left/right)
     if (Math.abs(dragOffset.x) > threshold) {
       onSwipe(dragOffset.x > 0 ? "right" : "left");
+    }
+    // Vertical swipes (up/down)
+    else if (Math.abs(dragOffset.y) > verticalThreshold) {
+      onSwipe(dragOffset.y < 0 ? "up" : "down");
     }
 
     setDragOffset({ x: 0, y: 0 });
@@ -123,25 +146,53 @@ export function SwipeCard({
 
   const getSwipeIndicator = () => {
     if (!isDragging) return null;
-    if (Math.abs(dragOffset.x) < 50) return null;
 
-    return (
-      <div
-        className={`absolute inset-0 flex items-center justify-center rounded-3xl border-4 ${
-          dragOffset.x > 0
-            ? "bg-green-500/20 border-green-500"
-            : "bg-red-500/20 border-red-500"
-        }`}
-      >
+    const horizontalThreshold = 50;
+    const verticalThreshold = 40;
+
+    // Horizontal swipe indicators
+    if (Math.abs(dragOffset.x) > horizontalThreshold) {
+      return (
         <div
-          className={`text-4xl font-bold ${
-            dragOffset.x > 0 ? "text-green-500" : "text-red-500"
+          className={`absolute inset-0 flex items-center justify-center rounded-3xl border-4 ${
+            dragOffset.x > 0
+              ? "bg-green-500/20 border-green-500"
+              : "bg-red-500/20 border-red-500"
           }`}
         >
-          {dragOffset.x > 0 ? "❤️" : "👎"}
+          <div
+            className={`text-4xl font-bold ${
+              dragOffset.x > 0 ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {dragOffset.x > 0 ? "❤️" : "👎"}
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+
+    // Vertical swipe indicators
+    if (Math.abs(dragOffset.y) > verticalThreshold) {
+      return (
+        <div
+          className={`absolute inset-0 flex items-center justify-center rounded-3xl border-4 ${
+            dragOffset.y < 0
+              ? "bg-blue-500/20 border-blue-500"
+              : "bg-yellow-500/20 border-yellow-500"
+          }`}
+        >
+          <div
+            className={`text-4xl font-bold ${
+              dragOffset.y < 0 ? "text-blue-500" : "text-yellow-500"
+            }`}
+          >
+            {dragOffset.y < 0 ? "📤" : "🍽️"}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -169,59 +220,51 @@ export function SwipeCard({
         {/* Swipe Indicator */}
         {getSwipeIndicator()}
 
-        {/* Profile Info - Top Left */}
+        {/* Master Bot Publisher - Top Left */}
         <div className="absolute top-6 left-6 flex items-center space-x-3">
           <div className="relative">
-            <div className="w-12 h-12 bg-[#F14C35] rounded-full flex items-center justify-center">
-              {isMasterBot ? (
-                <Bot className="w-6 h-6 text-white" />
-              ) : (
-                <span className="text-white font-bold">T</span>
-              )}
-            </div>
-            {isMasterBot && (
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-[#FFD74A] rounded-full flex items-center justify-center border-2 border-white">
-                <Verified className="w-2.5 h-2.5 text-[#0B1F3A]" />
+            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg">
+              {botData?.avatar_url ? (
+                <img
+                  src={botData.avatar_url}
+                  alt={profileName}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback to robot emoji if image fails to load
+                    e.currentTarget.style.display = "none";
+                    e.currentTarget.nextElementSibling?.classList.remove(
+                      "hidden"
+                    );
+                  }}
+                />
+              ) : null}
+              <div
+                className={`w-full h-full bg-[#F14C35] flex items-center justify-center ${
+                  botData?.avatar_url ? "hidden" : ""
+                }`}
+              >
+                <span className="text-white font-bold text-lg">🤖</span>
               </div>
-            )}
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-[#FFD74A] rounded-full flex items-center justify-center border-2 border-white">
+              <span className="text-[#0B1F3A] text-xs">✓</span>
+            </div>
           </div>
           <div>
             <div className="flex items-center space-x-1">
               <p className="text-white font-semibold text-sm">{profileName}</p>
-              {isMasterBot && (
-                <span className="px-2 py-0.5 bg-[#FFD74A]/90 text-[#0B1F3A] rounded-full text-xs font-medium">
-                  Master Explorer
-                </span>
-              )}
+              <span className="px-2 py-0.5 bg-[#FFD74A]/90 text-[#0B1F3A] rounded-full text-xs font-medium">
+                {profileDesignation}
+              </span>
             </div>
-            <p className="text-white/80 text-xs">{profileDesignation}</p>
-            {isMasterBot && botData?.location && (
+            {botData?.location && (
               <div className="flex items-center space-x-1 mt-1">
-                <MapPin className="w-3 h-3 text-white/60" />
                 <span className="text-white/60 text-xs">
-                  {botData.location}
+                  📍 {botData.location}
                 </span>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Action Icons - Right Side */}
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-4">
-          {[
-            { icon: Heart, color: "text-pink-400", bg: "bg-white/20" },
-            { icon: Bookmark, color: "text-yellow-400", bg: "bg-white/20" },
-            { icon: Share2, color: "text-blue-400", bg: "bg-white/20" },
-            { icon: MapPin, color: "text-green-400", bg: "bg-white/20" },
-          ].map((item, index) => (
-            <button
-              key={index}
-              className={`w-12 h-12 ${item.bg} backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <item.icon className={`w-5 h-5 ${item.color}`} />
-            </button>
-          ))}
         </div>
 
         {/* Content - Bottom */}
@@ -233,25 +276,48 @@ export function SwipeCard({
             <p className="text-white/90 text-sm leading-relaxed">{subtitle}</p>
           </div>
 
+          {/* Restaurant Details - Show actual data from master bot posts */}
+          <div className="flex items-center space-x-4 text-white/80 text-sm">
+            <span className="flex items-center space-x-1">
+              <span>⭐</span>
+              <span>{botData?.restaurant?.rating || "4.5"}</span>
+            </span>
+            <span className="flex items-center space-x-1">
+              <span>💰</span>
+              <span>{botData?.restaurant?.price_range || "$$$"}</span>
+            </span>
+            <span className="flex items-center space-x-1">
+              <span>👥</span>
+              <span>
+                {botData?.restaurant?.reviews_count
+                  ? `${botData.restaurant.reviews_count}`
+                  : "7.1k"}{" "}
+                reviews
+              </span>
+            </span>
+          </div>
+
+          {/* Restaurant Location */}
+          {botData?.restaurant?.location && (
+            <div className="flex items-center space-x-1 text-white/80 text-sm">
+              <span>📍</span>
+              <span>{botData.restaurant.location}</span>
+            </div>
+          )}
+
           {/* Tags */}
           <div className="flex flex-wrap gap-2">
-            {tags.map((tag, index) => (
+            {tags.slice(0, 4).map((tag, index) => (
               <span
                 key={index}
-                className={`px-3 py-1 backdrop-blur-sm text-white text-sm rounded-full border ${
-                  isMasterBot
-                    ? "bg-[#F14C35]/30 border-[#F14C35]/50"
-                    : "bg-white/20 border-white/30"
-                }`}
+                className="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-sm rounded-full border border-white/30"
               >
                 #{tag}
               </span>
             ))}
-            {isMasterBot && botData?.specialties && (
-              <span className="px-3 py-1 bg-[#FFD74A]/90 text-[#0B1F3A] text-sm rounded-full font-medium">
-                AI Curated
-              </span>
-            )}
+            <span className="px-3 py-1 bg-[#FFD74A]/90 text-[#0B1F3A] text-sm rounded-full font-medium">
+              AI Curated
+            </span>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { sbAnon } from "../../src/lib/supabase";
+import { supabaseContentService } from "../services/supabaseContentService";
 
 export interface BotPost {
   id: string;
@@ -58,6 +58,15 @@ export interface FeedCard {
     username: string;
     location?: string;
     specialties?: string[];
+    avatar_url?: string;
+    restaurant?: {
+      name: string;
+      location: string;
+      rating: number;
+      price_range: string;
+      cuisine: string;
+      reviews_count: number;
+    };
   };
   restaurant?: any;
   post?: BotPost;
@@ -77,46 +86,59 @@ export function useBotPosts() {
     try {
       setLoading(true);
 
-      // Get Supabase client
-      const supabaseClient = sbAnon();
+      // Use the new Supabase content service to get master bot posts
+      const posts = await supabaseContentService.getPosts({ limit: 20 });
 
-      // Fetch bot posts from bot_posts table
-      const { data: posts, error: postsError } = await supabaseClient
-        .from("bot_posts")
-        .select(
-          `
-          *,
-          bot:users!bot_id (
-            username,
-            display_name,
-            avatar_url,
-            master_bots (
-              personality_type,
-              specialties
-            )
-          )
-        `
-        )
-        .eq("is_published", true) // Only published posts
-        .order("published_at", { ascending: false })
-        .limit(20); // Get latest 20 posts
-
-      if (postsError) {
-        throw postsError;
-      }
-
-      // Format the posts with fallback data when join fails
-      const formattedPosts: BotPost[] =
-        posts?.map((post) => ({
-          ...post,
-          bot: {
-            username: post.bot?.username || `master_bot_${post.bot_id?.slice(-4)}`,
-            display_name: post.bot?.display_name || "Master Bot",
-            personality_type:
-              post.bot?.master_bots?.[0]?.personality_type || "Food Explorer",
-            specialties: post.bot?.master_bots?.[0]?.specialties || ["Food Discovery"],
-          },
-        })) || [];
+      // Convert to BotPost format for compatibility
+      const formattedPosts: BotPost[] = posts.map((post) => ({
+        id: post.id,
+        bot_id: post.master_bot_id,
+        user_id: post.master_bot_id,
+        restaurant_id: post.restaurant_id,
+        title: post.title,
+        subtitle: post.content.substring(0, 200) + "...", // Use content as subtitle
+        content: post.content,
+        hero_url: post.image_url,
+        images: post.image_url ? [post.image_url] : [],
+        videos: [],
+        rating: post.restaurant_rating,
+        visit_date: post.created_at,
+        dish_names: post.tags || [],
+        spent_amount: 0,
+        likes_count: post.engagement_likes,
+        comments_count: post.engagement_comments,
+        shares_count: post.engagement_shares,
+        saves_count: 0,
+        visibility: "public",
+        is_featured: false,
+        is_verified: true,
+        kind: post.content_type,
+        payload: {},
+        cta_label: "",
+        cta_url: "",
+        tags: post.tags || [],
+        posted_at: post.created_at,
+        created_at: post.created_at,
+        updated_at: post.updated_at,
+        restaurant_data: {
+          name: post.restaurant_name || "Restaurant",
+          location: post.restaurant_location || "Location",
+          rating: post.restaurant_rating || 4.5,
+          price_range: post.restaurant_price_range || "$$$",
+          cuisine: post.restaurant_cuisine || "Restaurant",
+          reviews_count:
+            post.engagement_likes +
+            post.engagement_comments +
+            post.engagement_shares,
+        },
+        bot: {
+          username: post.bot_username,
+          display_name: post.bot_display_name,
+          avatar_url: post.bot_avatar_url,
+          personality_type: post.personality_trait || "Food Expert",
+          specialties: [post.personality_trait || "Food Expert"],
+        },
+      }));
 
       setBotPosts(formattedPosts);
 
@@ -147,21 +169,26 @@ function convertPostToFeedCard(post: BotPost): FeedCard {
 
   return {
     id: post.id,
-    image: post.image_url || post.hero_url || "", // Use image_url from bot_posts table
-    title: post.title || "Food Discovery",
-    subtitle: post.subtitle || "",
+    image: post.hero_url || "", // Use hero_url from bot_posts table
+    title: restaurant?.name || "Restaurant", // Use restaurant name as title
+    subtitle: post.subtitle || "Amazing food experience",
     profileName: post.bot?.display_name || "Master Bot",
-    profileDesignation: post.bot?.personality_type || "Food Explorer",
+    profileDesignation: post.bot?.personality_type || "Food Expert", // Fixed: use flattened data
     tags: post.tags || [],
     isMasterBot: true,
     botData: {
-      username: post.bot?.username || "@masterbot",
-      location: restaurant
-        ? `${restaurant.city || restaurant.name}, ${getCountryName(
-            restaurant.countryCode
-          )}`
-        : "Global",
-      specialties: post.bot?.specialties || [],
+      username: post.bot?.username || "",
+      location: restaurant?.location || "Location",
+      specialties: post.bot?.specialties || [], // Fixed: use flattened data
+      avatar_url: post.bot?.avatar_url || "",
+      restaurant: {
+        name: restaurant?.name || "Restaurant",
+        location: restaurant?.location || "Location",
+        rating: restaurant?.rating || 4.5,
+        price_range: restaurant?.price_range || "$$$",
+        cuisine: restaurant?.cuisine || "Restaurant",
+        reviews_count: restaurant?.reviews_count || 0,
+      },
     },
     restaurant: restaurant,
     post: post,

@@ -1,0 +1,1963 @@
+[
+  {
+    "id": "sommelier_seb-post-1",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
+    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-1.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-1.jpg",
+    "restaurant": {
+      "id": "restaurant-1",
+      "name": "Robata",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Dim sum restaurant",
+      "Authentic Japanese restaurant",
+      "Delivery Restaurant",
+      "Modern izakaya restaurant",
+      "Okonomiyaki restaurant",
+      "Restaurant",
+      "Sushi restaurant",
+      "Tempura restaurant"
+    ],
+    "engagement": {
+      "likes": 16,
+      "comments": 14,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.873Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-2",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {chef} shared the story behind this {dish}. It...",
+    "content": "The {chef} shared the story behind this {dish}. It's inspired by {inspiration}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-2.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-2.jpg",
+    "restaurant": {
+      "id": "restaurant-2",
+      "name": "Shunka",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Asian restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 79,
+      "comments": 2,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.873Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-3",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 75 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-3.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-3.jpg",
+    "restaurant": {
+      "id": "restaurant-3",
+      "name": "Can Kenji",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Izakaya restaurant",
+      "Mediterranean restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 72,
+      "comments": 14,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.873Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-4",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {dish} should be {adjective} before serving. T...",
+    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-4.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-4.jpg",
+    "restaurant": {
+      "id": "restaurant-4",
+      "name": "IKOYA Izakaya",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Restaurant",
+      "Ramen restaurant",
+      "Sake brewery",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 74,
+      "comments": 13,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.873Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-5",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
+    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-5.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-5.jpg",
+    "restaurant": {
+      "id": "restaurant-5",
+      "name": "Restaurante FUTAMI",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 23,
+      "comments": 17,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.873Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-6",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
+    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
+    "imageUrl": "/images/posts/sommelier_seb/post-6.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-6.jpg",
+    "restaurant": {
+      "id": "restaurant-6",
+      "name": "Matsuri Sushi Bar - Restaurante Japonés",
+      "location": "Barcelona, ES",
+      "rating": 4.4,
+      "priceRange": "€20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 55,
+      "comments": 10,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-7",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
+    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-7.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-7.jpg",
+    "restaurant": {
+      "id": "restaurant-7",
+      "name": "Restaurante Hitsumabushi",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 60,
+      "comments": 18,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-8",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {cuisine} tradition here is {adjective}. The {...",
+    "content": "The {cuisine} tradition here is {adjective}. The {dish} is a {adjective} example.",
+    "imageUrl": "/images/posts/sommelier_seb/post-8.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-8.jpg",
+    "restaurant": {
+      "id": "restaurant-8",
+      "name": "Disfrutar",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€100+",
+      "cuisine": "Fine dining restaurant"
+    },
+    "tags": [
+      "Fine dining restaurant",
+      "Catalonian restaurant",
+      "Mediterranean restaurant",
+      "Spanish restaurant"
+    ],
+    "engagement": {
+      "likes": 58,
+      "comments": 11,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-9",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
+    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-9.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-9.jpg",
+    "restaurant": {
+      "id": "restaurant-9",
+      "name": "Cinc Sentits",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€100+",
+      "cuisine": "Fine dining restaurant"
+    },
+    "tags": [
+      "Fine dining restaurant",
+      "Catalonian restaurant",
+      "Mediterranean restaurant",
+      "Spanish restaurant"
+    ],
+    "engagement": {
+      "likes": 6,
+      "comments": 6,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-10",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
+    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
+    "imageUrl": "/images/posts/sommelier_seb/post-10.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-10.jpg",
+    "restaurant": {
+      "id": "restaurant-10",
+      "name": "Osmosis",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Mediterranean restaurant"
+    },
+    "tags": [
+      "Mediterranean restaurant",
+      "Catalonian restaurant",
+      "Spanish restaurant"
+    ],
+    "engagement": {
+      "likes": 25,
+      "comments": 16,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-11",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
+    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-11.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-11.jpg",
+    "restaurant": {
+      "id": "restaurant-11",
+      "name": "Caelis",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€100+",
+      "cuisine": "Fine dining restaurant"
+    },
+    "tags": [
+      "Fine dining restaurant",
+      "French restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 42,
+      "comments": 8,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-12",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {dish} should be {adjective} before serving. T...",
+    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-12.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-12.jpg",
+    "restaurant": {
+      "id": "restaurant-12",
+      "name": "Cocina Hermanos Torres",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€100+",
+      "cuisine": "Fine dining restaurant"
+    },
+    "tags": [
+      "Fine dining restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 79,
+      "comments": 7,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-13",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I always {technique} when preparing {dish}. The {c...",
+    "content": "I always {technique} when preparing {dish}. The {cuisine} method is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-13.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-13.jpg",
+    "restaurant": {
+      "id": "restaurant-13",
+      "name": "UMA",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€100+",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant",
+      "Castilian restaurant",
+      "Catalonian restaurant",
+      "Caterer",
+      "European restaurant",
+      "Fine dining restaurant",
+      "Function room facility",
+      "Mediterranean restaurant"
+    ],
+    "engagement": {
+      "likes": 60,
+      "comments": 13,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-14",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
+    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-14.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-14.jpg",
+    "restaurant": {
+      "id": "restaurant-14",
+      "name": "Con Gracia",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€100+",
+      "cuisine": "Mediterranean restaurant"
+    },
+    "tags": [
+      "Mediterranean restaurant",
+      "Catalonian restaurant",
+      "Modern European restaurant",
+      "Spanish restaurant"
+    ],
+    "engagement": {
+      "likes": 53,
+      "comments": 12,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-15",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
+    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-15.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-15.jpg",
+    "restaurant": {
+      "id": "restaurant-15",
+      "name": "Villa Bakery",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€1–10",
+      "cuisine": "Bakery"
+    },
+    "tags": [
+      "Bakery",
+      "Cafeteria"
+    ],
+    "engagement": {
+      "likes": 22,
+      "comments": 9,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-16",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {chef} shared the story behind this {dish}. It...",
+    "content": "The {chef} shared the story behind this {dish}. It's inspired by {inspiration}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-16.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-16.jpg",
+    "restaurant": {
+      "id": "restaurant-16",
+      "name": "La Colmena",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Pastry shop"
+    },
+    "tags": [
+      "Pastry shop",
+      "Bakery",
+      "Cafe",
+      "Cake shop",
+      "Candy store",
+      "Chocolate shop",
+      "Confectionery store",
+      "Gift shop",
+      "Souvenir manufacturer"
+    ],
+    "engagement": {
+      "likes": 14,
+      "comments": 12,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-17",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} cellar here is {adjective}. Every bottl...",
+    "content": "The {wine} cellar here is {adjective}. Every bottle tells a story of {region}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-17.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-17.jpg",
+    "restaurant": {
+      "id": "restaurant-17",
+      "name": "Furnos",
+      "location": "Barcelona, ES",
+      "rating": 4.9,
+      "priceRange": "€1–10",
+      "cuisine": "Bakery"
+    },
+    "tags": [
+      "Bakery",
+      "Cafe",
+      "Gourmet grocery store",
+      "Delivery Restaurant",
+      "Takeout Restaurant"
+    ],
+    "engagement": {
+      "likes": 24,
+      "comments": 10,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-18",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
+    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-18.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-18.jpg",
+    "restaurant": {
+      "id": "restaurant-18",
+      "name": "All you eat is love",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€10–20",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 32,
+      "comments": 1,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-19",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
+    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
+    "imageUrl": "/images/posts/sommelier_seb/post-19.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-19.jpg",
+    "restaurant": {
+      "id": "restaurant-19",
+      "name": "Roots & Rolls",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Event venue",
+      "Restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 73,
+      "comments": 13,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-20",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} cellar here is {adjective}. Every bottl...",
+    "content": "The {wine} cellar here is {adjective}. Every bottle tells a story of {region}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-20.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-20.jpg",
+    "restaurant": {
+      "id": "restaurant-20",
+      "name": "Faire. Brunch & Drinks",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€10–20",
+      "cuisine": "Brunch restaurant"
+    },
+    "tags": [
+      "Brunch restaurant",
+      "Breakfast restaurant",
+      "Dog cafe",
+      "Espresso bar",
+      "Vegan restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 12,
+      "comments": 3,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-21",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
+    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-21.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-21.jpg",
+    "restaurant": {
+      "id": "restaurant-21",
+      "name": "Froots & Roots - Healthy Juice Bar",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€10–20",
+      "cuisine": "Health food restaurant"
+    },
+    "tags": [
+      "Health food restaurant",
+      "Açaí shop",
+      "Brunch restaurant",
+      "Cafe",
+      "Juice shop",
+      "Sandwich shop",
+      "Vegan restaurant",
+      "Vegetarian cafe and deli",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 73,
+      "comments": 13,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-22",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
+    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-22.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-22.jpg",
+    "restaurant": {
+      "id": "restaurant-22",
+      "name": "Biocenter",
+      "location": "Barcelona, ES",
+      "rating": 4.4,
+      "priceRange": "€10–20",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 37,
+      "comments": 6,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-23",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
+    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-23.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-23.jpg",
+    "restaurant": {
+      "id": "restaurant-23",
+      "name": "Generation B - Healthy food para todos",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€10–20",
+      "cuisine": "Health food restaurant"
+    },
+    "tags": [
+      "Health food restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 48,
+      "comments": 1,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-24",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Every element on this plate has a purpose. The {cu...",
+    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-24.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-24.jpg",
+    "restaurant": {
+      "id": "restaurant-24",
+      "name": "FitBar - Açai Bowls & Healthy Food",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "€1–10",
+      "cuisine": "Health food restaurant"
+    },
+    "tags": [
+      "Health food restaurant",
+      "Brunch restaurant",
+      "Juice shop",
+      "Vegan restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 75,
+      "comments": 2,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-25",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
+    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-25.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-25.jpg",
+    "restaurant": {
+      "id": "restaurant-25",
+      "name": "The Ranch Smokehouse",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "American restaurant",
+      "Hamburger restaurant"
+    ],
+    "engagement": {
+      "likes": 57,
+      "comments": 15,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-26",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
+    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-26.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-26.jpg",
+    "restaurant": {
+      "id": "restaurant-26",
+      "name": "Yamato BBQ Barcelona",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–40",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 53,
+      "comments": 0,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-27",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Every element on this plate has a purpose. The {cu...",
+    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-27.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-27.jpg",
+    "restaurant": {
+      "id": "restaurant-27",
+      "name": "KIM BBQ",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€20–30",
+      "cuisine": "Korean restaurant"
+    },
+    "tags": [
+      "Korean restaurant"
+    ],
+    "engagement": {
+      "likes": 46,
+      "comments": 0,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-28",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
+    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
+    "imageUrl": "/images/posts/sommelier_seb/post-28.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-28.jpg",
+    "restaurant": {
+      "id": "restaurant-28",
+      "name": "La Parrillada Grill Steak House",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–40",
+      "cuisine": "Argentinian restaurant"
+    },
+    "tags": [
+      "Argentinian restaurant",
+      "Grill",
+      "Brasserie"
+    ],
+    "engagement": {
+      "likes": 99,
+      "comments": 19,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-29",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
+    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-29.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-29.jpg",
+    "restaurant": {
+      "id": "restaurant-29",
+      "name": "MONGOLIAN BBQ",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€10–20",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 11,
+      "comments": 18,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-30",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
+    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
+    "imageUrl": "/images/posts/sommelier_seb/post-30.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-30.jpg",
+    "restaurant": {
+      "id": "restaurant-30",
+      "name": "BUFFET YA (Buffet BBQ)",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–30",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Grill",
+      "Asian restaurant",
+      "Buffet restaurant",
+      "Japanese restaurant",
+      "Yakiniku restaurant"
+    ],
+    "engagement": {
+      "likes": 47,
+      "comments": 8,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-31",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
+    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-31.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-31.jpg",
+    "restaurant": {
+      "id": "restaurant-31",
+      "name": "LAZEEZ BBQ Lebanese restaurant",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Lebanese restaurant"
+    },
+    "tags": [
+      "Lebanese restaurant",
+      "Halal restaurant"
+    ],
+    "engagement": {
+      "likes": 31,
+      "comments": 14,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-32",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 150 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-32.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-32.jpg",
+    "restaurant": {
+      "id": "restaurant-32",
+      "name": "Vegan Mount | Barcelona",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€10–20",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant"
+    ],
+    "engagement": {
+      "likes": 45,
+      "comments": 0,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-33",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {dish} should be {adjective} before serving. T...",
+    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-33.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-33.jpg",
+    "restaurant": {
+      "id": "restaurant-33",
+      "name": "Mundo Vegan",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€10–20",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant"
+    ],
+    "engagement": {
+      "likes": 25,
+      "comments": 2,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-34",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} selection here is {adjective}. Perfect ...",
+    "content": "The {wine} selection here is {adjective}. Perfect for this {cuisine} experience.",
+    "imageUrl": "/images/posts/sommelier_seb/post-34.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-34.jpg",
+    "restaurant": {
+      "id": "restaurant-34",
+      "name": "The Vegan Corner",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€1–10",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant"
+    ],
+    "engagement": {
+      "likes": 79,
+      "comments": 11,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-35",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
+    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-35.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-35.jpg",
+    "restaurant": {
+      "id": "restaurant-35",
+      "name": "Santa Vegana",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€1–10",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Bakery"
+    ],
+    "engagement": {
+      "likes": 72,
+      "comments": 19,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-36",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Every element on this plate has a purpose. The {cu...",
+    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-36.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-36.jpg",
+    "restaurant": {
+      "id": "restaurant-36",
+      "name": "Mad Mad Vegan Barcelona",
+      "location": "Barcelona, ES",
+      "rating": 4.9,
+      "priceRange": "€10–20",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant"
+    ],
+    "engagement": {
+      "likes": 72,
+      "comments": 4,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-37",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {chef} has created something {adjective} here....",
+    "content": "The {chef} has created something {adjective} here. The {dish} is a {adjective} experience.",
+    "imageUrl": "/images/posts/sommelier_seb/post-37.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-37.jpg",
+    "restaurant": {
+      "id": "restaurant-37",
+      "name": "Fat Veggies",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 3,
+      "comments": 14,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-38",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
+    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
+    "imageUrl": "/images/posts/sommelier_seb/post-38.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-38.jpg",
+    "restaurant": {
+      "id": "restaurant-38",
+      "name": "Vegan Tulsi Restaurant",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€10–20",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant"
+    ],
+    "engagement": {
+      "likes": 78,
+      "comments": 9,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-39",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {cuisine} tradition here is {adjective}. The {...",
+    "content": "The {cuisine} tradition here is {adjective}. The {dish} is a {adjective} example.",
+    "imageUrl": "/images/posts/sommelier_seb/post-39.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-39.jpg",
+    "restaurant": {
+      "id": "restaurant-39",
+      "name": "Street food",
+      "location": "Tsim Sha Tsui, HK",
+      "rating": 2.9,
+      "priceRange": "HK$1–50",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 52,
+      "comments": 2,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-40",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
+    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-40.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-40.jpg",
+    "restaurant": {
+      "id": "restaurant-40",
+      "name": "Oh Wahh Street Food",
+      "location": "Tsim Sha Tsui, HK",
+      "rating": 3.9,
+      "priceRange": "HK$1–100",
+      "cuisine": "Hong Kong style fast food restaurant"
+    },
+    "tags": [
+      "Hong Kong style fast food restaurant"
+    ],
+    "engagement": {
+      "likes": 67,
+      "comments": 17,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-41",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
+    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-41.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-41.jpg",
+    "restaurant": {
+      "id": "restaurant-41",
+      "name": "Night street food market",
+      "location": "Yau Ma Tei, HK",
+      "rating": 4.4,
+      "priceRange": "HK$50–100",
+      "cuisine": "Chinese restaurant"
+    },
+    "tags": [
+      "Chinese restaurant"
+    ],
+    "engagement": {
+      "likes": 16,
+      "comments": 3,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-42",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
+    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-42.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-42.jpg",
+    "restaurant": {
+      "id": "restaurant-42",
+      "name": "Bingaz Street Food",
+      "location": "Sai Ying Pun, HK",
+      "rating": 4.1,
+      "priceRange": "$$",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant",
+      "Catering food and drink supplier",
+      "Fusion restaurant"
+    ],
+    "engagement": {
+      "likes": 63,
+      "comments": 15,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-43",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {chef} has created something {adjective} here....",
+    "content": "The {chef} has created something {adjective} here. The {dish} is a {adjective} experience.",
+    "imageUrl": "/images/posts/sommelier_seb/post-43.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-43.jpg",
+    "restaurant": {
+      "id": "restaurant-43",
+      "name": "Fashion Walk Food Street",
+      "location": "Causeway Bay, HK",
+      "rating": 4.1,
+      "priceRange": "$$",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 85,
+      "comments": 17,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-44",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} pairing with this {dish} is {adjective}...",
+    "content": "The {wine} pairing with this {dish} is {adjective}. The {cuisine} technique is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-44.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-44.jpg",
+    "restaurant": {
+      "id": "restaurant-44",
+      "name": "Amber",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "Haute French restaurant"
+    },
+    "tags": [
+      "Haute French restaurant",
+      "French restaurant"
+    ],
+    "engagement": {
+      "likes": 87,
+      "comments": 17,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-45",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Every element on this plate has a purpose. The {cu...",
+    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-45.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-45.jpg",
+    "restaurant": {
+      "id": "restaurant-45",
+      "name": "Caprice",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "French restaurant"
+    },
+    "tags": [
+      "French restaurant",
+      "Fine dining restaurant",
+      "Restaurant",
+      "Vegan restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 84,
+      "comments": 12,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-46",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Pro tip: The {wine} should be {temperature} when p...",
+    "content": "Pro tip: The {wine} should be {temperature} when pairing with {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-46.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-46.jpg",
+    "restaurant": {
+      "id": "restaurant-46",
+      "name": "Restaurant Petrus",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "French restaurant"
+    },
+    "tags": [
+      "French restaurant",
+      "Fine dining restaurant"
+    ],
+    "engagement": {
+      "likes": 63,
+      "comments": 4,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-47",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} cellar here is {adjective}. Every bottl...",
+    "content": "The {wine} cellar here is {adjective}. Every bottle tells a story of {region}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-47.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-47.jpg",
+    "restaurant": {
+      "id": "restaurant-47",
+      "name": "The Chairman Restaurant",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "Cantonese restaurant"
+    },
+    "tags": [
+      "Cantonese restaurant",
+      "Chinese restaurant",
+      "Fine dining restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 34,
+      "comments": 3,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-48",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 200 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-48.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-48.jpg",
+    "restaurant": {
+      "id": "restaurant-48",
+      "name": "Ta Vie",
+      "location": "Central, HK",
+      "rating": 4.6,
+      "priceRange": "HK$500+",
+      "cuisine": "French restaurant"
+    },
+    "tags": [
+      "French restaurant"
+    ],
+    "engagement": {
+      "likes": 78,
+      "comments": 6,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-49",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Every element on this plate has a purpose. The {cu...",
+    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-49.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-49.jpg",
+    "restaurant": {
+      "id": "restaurant-49",
+      "name": "BELON",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "French restaurant"
+    },
+    "tags": [
+      "French restaurant",
+      "Fine dining restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 77,
+      "comments": 2,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-50",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {dish} should be {adjective} before serving. T...",
+    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-50.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-50.jpg",
+    "restaurant": {
+      "id": "restaurant-50",
+      "name": "Mott 32",
+      "location": "Central, HK",
+      "rating": 4.4,
+      "priceRange": "HK$500+",
+      "cuisine": "Chinese restaurant"
+    },
+    "tags": [
+      "Chinese restaurant",
+      "Cocktail bar"
+    ],
+    "engagement": {
+      "likes": 79,
+      "comments": 8,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-51",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I always {technique} when preparing {dish}. The {c...",
+    "content": "I always {technique} when preparing {dish}. The {cuisine} method is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-51.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-51.jpg",
+    "restaurant": {
+      "id": "restaurant-51",
+      "name": "Kanesaka Hong Kong",
+      "location": "Central, HK",
+      "rating": 4.9,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 79,
+      "comments": 11,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-52",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {dish} should be {adjective} before serving. T...",
+    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-52.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-52.jpg",
+    "restaurant": {
+      "id": "restaurant-52",
+      "name": "Sushi Rin",
+      "location": "Sheung Wan, HK",
+      "rating": 4.7,
+      "priceRange": "HK$500+",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 72,
+      "comments": 11,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.874Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-53",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I always {technique} when preparing {dish}. The {c...",
+    "content": "I always {technique} when preparing {dish}. The {cuisine} method is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-53.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-53.jpg",
+    "restaurant": {
+      "id": "restaurant-53",
+      "name": "Sushi Saito",
+      "location": "Central, HK",
+      "rating": 4.6,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Fine dining restaurant",
+      "Japanese restaurant",
+      "Restaurant",
+      "Seafood restaurant"
+    ],
+    "engagement": {
+      "likes": 53,
+      "comments": 1,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-54",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {dish} should be {adjective} before serving. T...",
+    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-54.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-54.jpg",
+    "restaurant": {
+      "id": "restaurant-54",
+      "name": "Sushi Kuu",
+      "location": "Central, HK",
+      "rating": 4.2,
+      "priceRange": "HK$500+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 1,
+      "comments": 15,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-55",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 This {restaurant} showcases {cuisine} at its fines...",
+    "content": "This {restaurant} showcases {cuisine} at its finest. The {dish} is {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-55.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-55.jpg",
+    "restaurant": {
+      "id": "restaurant-55",
+      "name": "Zuma Hong Kong",
+      "location": "Central, HK",
+      "rating": 4.3,
+      "priceRange": "HK$500+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cocktail bar",
+      "Lounge"
+    ],
+    "engagement": {
+      "likes": 42,
+      "comments": 13,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-56",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Every element on this plate has a purpose. The {cu...",
+    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-56.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-56.jpg",
+    "restaurant": {
+      "id": "restaurant-56",
+      "name": "Tokio Joe",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Japanese restaurant",
+      "Takeout Restaurant"
+    ],
+    "engagement": {
+      "likes": 66,
+      "comments": 12,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-57",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {dish} should be {adjective} before serving. T...",
+    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-57.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-57.jpg",
+    "restaurant": {
+      "id": "restaurant-57",
+      "name": "Honjo",
+      "location": "Sheung Wan, HK",
+      "rating": 4.6,
+      "priceRange": "HK$500+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Bar",
+      "Sushi restaurant",
+      "Tempura restaurant"
+    ],
+    "engagement": {
+      "likes": 72,
+      "comments": 14,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-58",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Every element on this plate has a purpose. The {cu...",
+    "content": "Every element on this plate has a purpose. The {cuisine} philosophy is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-58.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-58.jpg",
+    "restaurant": {
+      "id": "restaurant-58",
+      "name": "Bakehouse (Wan Chai)",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "HK$1–100",
+      "cuisine": "Bakery"
+    },
+    "tags": [
+      "Bakery",
+      "Breakfast restaurant"
+    ],
+    "engagement": {
+      "likes": 69,
+      "comments": 0,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-59",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 This {restaurant} showcases {cuisine} at its fines...",
+    "content": "This {restaurant} showcases {cuisine} at its finest. The {dish} is {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-59.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-59.jpg",
+    "restaurant": {
+      "id": "restaurant-59",
+      "name": "TREEHOUSE (Hcode)",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$100–150",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 63,
+      "comments": 9,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Sophisticated"
+  },
+  {
+    "id": "sommelier_seb-post-60",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 This {restaurant} showcases {cuisine} at its fines...",
+    "content": "This {restaurant} showcases {cuisine} at its finest. The {dish} is {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-60.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-60.jpg",
+    "restaurant": {
+      "id": "restaurant-60",
+      "name": "ORKA Restaurant & Bar",
+      "location": "Central, HK",
+      "rating": 4.8,
+      "priceRange": "$$",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant",
+      "Bar",
+      "Cocktail bar",
+      "Event venue",
+      "Meat dish restaurant",
+      "Vegan restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 15,
+      "comments": 1,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-61",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {chef} shared the story behind this {dish}. It...",
+    "content": "The {chef} shared the story behind this {dish}. It's inspired by {inspiration}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-61.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-61.jpg",
+    "restaurant": {
+      "id": "restaurant-61",
+      "name": "Calfit Organic and Healthy Foods",
+      "location": "Tsim Sha Tsui, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Health food restaurant"
+    },
+    "tags": [
+      "Health food restaurant"
+    ],
+    "engagement": {
+      "likes": 35,
+      "comments": 0,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-62",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
+    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-62.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-62.jpg",
+    "restaurant": {
+      "id": "restaurant-62",
+      "name": "Dandy's Organic Cafe",
+      "location": "Sheung Wan, HK",
+      "rating": 4.3,
+      "priceRange": "HK$150–200",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant",
+      "Gluten-free restaurant",
+      "Health food restaurant",
+      "Organic restaurant",
+      "Vegan restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 22,
+      "comments": 11,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-63",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 Want to appreciate {cuisine}? Focus on the {techni...",
+    "content": "Want to appreciate {cuisine}? Focus on the {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-63.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-63.jpg",
+    "restaurant": {
+      "id": "restaurant-63",
+      "name": "TREEHOUSE (Causeway Bay)",
+      "location": "Causeway Bay, HK",
+      "rating": 4.5,
+      "priceRange": "HK$100–150",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 45,
+      "comments": 12,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-64",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
+    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-64.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-64.jpg",
+    "restaurant": {
+      "id": "restaurant-64",
+      "name": "Nutrition Kitchen",
+      "location": "Sheung Wan, HK",
+      "rating": 4.4,
+      "priceRange": "HK$50–100",
+      "cuisine": "Health food restaurant"
+    },
+    "tags": [
+      "Health food restaurant",
+      "Delivery Restaurant"
+    ],
+    "engagement": {
+      "likes": 8,
+      "comments": 12,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-65",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 I learned about {technique} from the {chef}. It's ...",
+    "content": "I learned about {technique} from the {chef}. It's the secret to perfect {dish}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-65.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-65.jpg",
+    "restaurant": {
+      "id": "restaurant-65",
+      "name": "Tallore",
+      "location": "Wan Chai, HK",
+      "rating": 4.7,
+      "priceRange": "HK$50–100",
+      "cuisine": "Western restaurant"
+    },
+    "tags": [
+      "Western restaurant",
+      "Salad shop",
+      "Soup shop"
+    ],
+    "engagement": {
+      "likes": 73,
+      "comments": 9,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-66",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
+    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
+    "imageUrl": "/images/posts/sommelier_seb/post-66.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-66.jpg",
+    "restaurant": {
+      "id": "restaurant-66",
+      "name": "Root Vegan",
+      "location": "Central, HK",
+      "rating": 4.6,
+      "priceRange": "$$",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Coffee store",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 34,
+      "comments": 4,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Refined"
+  },
+  {
+    "id": "sommelier_seb-post-67",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {chef} shared the story behind this {dish}. It...",
+    "content": "The {chef} shared the story behind this {dish}. It's inspired by {inspiration}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-67.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-67.jpg",
+    "restaurant": {
+      "id": "restaurant-67",
+      "name": "Woodlands Indian Vegetarian Restaurant (Tsim Sha Tsui)",
+      "location": "Tsim Sha Tsui, HK",
+      "rating": 4.6,
+      "priceRange": "HK$100–150",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Catering food and drink supplier",
+      "Caterer",
+      "Family restaurant",
+      "Halal restaurant",
+      "Indian restaurant",
+      "Indian takeaway",
+      "Delivery Restaurant",
+      "Restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 56,
+      "comments": 2,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-68",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
+    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
+    "imageUrl": "/images/posts/sommelier_seb/post-68.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-68.jpg",
+    "restaurant": {
+      "id": "restaurant-68",
+      "name": "Veggie 4 love",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$150–200",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 11,
+      "comments": 17,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "sommelier_seb-post-69",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {dish} should be {adjective} before serving. T...",
+    "content": "The {dish} should be {adjective} before serving. The {cuisine} standard is {adjective}.",
+    "imageUrl": "/images/posts/sommelier_seb/post-69.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-69.jpg",
+    "restaurant": {
+      "id": "restaurant-69",
+      "name": "Sangeetha Vegetarian Restaurant, Hong Kong",
+      "location": "Tsim Sha Tsui, HK",
+      "rating": 4.3,
+      "priceRange": "HK$100–150",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 21,
+      "comments": 4,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Detail-oriented"
+  },
+  {
+    "id": "sommelier_seb-post-70",
+    "masterBotId": "78de3261-040d-492e-b511-50f71c0d9986",
+    "title": "🍷 The {wine} notes should {verb} with the {dish}. It...",
+    "content": "The {wine} notes should {verb} with the {dish}. It's a {cuisine} art.",
+    "imageUrl": "/images/posts/sommelier_seb/post-70.jpg",
+    "imageLocalPath": "public/images/posts/sommelier_seb/post-70.jpg",
+    "restaurant": {
+      "id": "restaurant-70",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 26,
+      "comments": 16,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.875Z",
+    "personality": "Sophisticated"
+  }
+]

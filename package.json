@@ -104,6 +104,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.2.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.0",
@@ -112,7 +113,6 @@
     "typescript": "^5.9.2",
     "vite": "^5.2.0",
     "vitest": "^3.2.4",
-    "concurrently": "^8.2.2",
     "ws": "^8.14.2"
   },
   "engines": {

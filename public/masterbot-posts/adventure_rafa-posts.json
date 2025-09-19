@@ -1,0 +1,1976 @@
+[
+  {
+    "id": "adventure_rafa-post-1",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-1.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-1.jpg",
+    "restaurant": {
+      "id": "restaurant-1",
+      "name": "Robata",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Dim sum restaurant",
+      "Authentic Japanese restaurant",
+      "Delivery Restaurant",
+      "Modern izakaya restaurant",
+      "Okonomiyaki restaurant",
+      "Restaurant",
+      "Sushi restaurant",
+      "Tempura restaurant"
+    ],
+    "engagement": {
+      "likes": 33,
+      "comments": 7,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-2",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's a {activit...",
+    "content": "The {cuisine} here is {adjective}. It's a {activity} essential.",
+    "imageUrl": "/images/posts/adventure_rafa/post-2.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-2.jpg",
+    "restaurant": {
+      "id": "restaurant-2",
+      "name": "Disfrutar",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€100+",
+      "cuisine": "Fine dining restaurant"
+    },
+    "tags": [
+      "Fine dining restaurant",
+      "Catalonian restaurant",
+      "Mediterranean restaurant",
+      "Spanish restaurant"
+    ],
+    "engagement": {
+      "likes": 47,
+      "comments": 9,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-3",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-3.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-3.jpg",
+    "restaurant": {
+      "id": "restaurant-3",
+      "name": "Roots & Rolls",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Event venue",
+      "Restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 40,
+      "comments": 19,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-4",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. Perfect for ...",
+    "content": "The {ingredient} here is {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-4.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-4.jpg",
+    "restaurant": {
+      "id": "restaurant-4",
+      "name": "The Ranch Smokehouse",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "American restaurant",
+      "Hamburger restaurant"
+    ],
+    "engagement": {
+      "likes": 77,
+      "comments": 11,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-5",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Pro tip: The {dish} should be {adjective} for {act...",
+    "content": "Pro tip: The {dish} should be {adjective} for {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-5.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-5.jpg",
+    "restaurant": {
+      "id": "restaurant-5",
+      "name": "Yamato BBQ Barcelona",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–40",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 12,
+      "comments": 16,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-6",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I always {technique} when preparing {dish} for {ac...",
+    "content": "I always {technique} when preparing {dish} for {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-6.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-6.jpg",
+    "restaurant": {
+      "id": "restaurant-6",
+      "name": "KIM BBQ",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€20–30",
+      "cuisine": "Korean restaurant"
+    },
+    "tags": [
+      "Korean restaurant"
+    ],
+    "engagement": {
+      "likes": 66,
+      "comments": 4,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-7",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I discovered this {dish} while {activity} in {loca...",
+    "content": "I discovered this {dish} while {activity} in {location}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-7.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-7.jpg",
+    "restaurant": {
+      "id": "restaurant-7",
+      "name": "La Parrillada Grill Steak House",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–40",
+      "cuisine": "Argentinian restaurant"
+    },
+    "tags": [
+      "Argentinian restaurant",
+      "Grill",
+      "Brasserie"
+    ],
+    "engagement": {
+      "likes": 9,
+      "comments": 18,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-8",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Pro tip: The {dish} should be {adjective} for {act...",
+    "content": "Pro tip: The {dish} should be {adjective} for {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-8.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-8.jpg",
+    "restaurant": {
+      "id": "restaurant-8",
+      "name": "MONGOLIAN BBQ",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€10–20",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 99,
+      "comments": 4,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-9",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Pro tip: The {dish} should be {adjective} for {act...",
+    "content": "Pro tip: The {dish} should be {adjective} for {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-9.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-9.jpg",
+    "restaurant": {
+      "id": "restaurant-9",
+      "name": "BUFFET YA (Buffet BBQ)",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–30",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Grill",
+      "Asian restaurant",
+      "Buffet restaurant",
+      "Japanese restaurant",
+      "Yakiniku restaurant"
+    ],
+    "engagement": {
+      "likes": 81,
+      "comments": 17,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-10",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's {activity}...",
+    "content": "The {cuisine} here is {adjective}. It's {activity} fuel at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-10.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-10.jpg",
+    "restaurant": {
+      "id": "restaurant-10",
+      "name": "LAZEEZ BBQ Lebanese restaurant",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Lebanese restaurant"
+    },
+    "tags": [
+      "Lebanese restaurant",
+      "Halal restaurant"
+    ],
+    "engagement": {
+      "likes": 48,
+      "comments": 12,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-11",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Want to master {cuisine}? Try {activity}. It's {ad...",
+    "content": "Want to master {cuisine}? Try {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-11.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-11.jpg",
+    "restaurant": {
+      "id": "restaurant-11",
+      "name": "Night street food market",
+      "location": "Yau Ma Tei, HK",
+      "rating": 4.4,
+      "priceRange": "HK$50–100",
+      "cuisine": "Chinese restaurant"
+    },
+    "tags": [
+      "Chinese restaurant"
+    ],
+    "engagement": {
+      "likes": 56,
+      "comments": 8,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-12",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-12.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-12.jpg",
+    "restaurant": {
+      "id": "restaurant-12",
+      "name": "The Chairman Restaurant",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "Cantonese restaurant"
+    },
+    "tags": [
+      "Cantonese restaurant",
+      "Chinese restaurant",
+      "Fine dining restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 29,
+      "comments": 7,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-13",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. It's {cuisin...",
+    "content": "The {ingredient} here is {adjective}. It's {cuisine} adventure at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-13.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-13.jpg",
+    "restaurant": {
+      "id": "restaurant-13",
+      "name": "Sushi Saito",
+      "location": "Central, HK",
+      "rating": 4.6,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Fine dining restaurant",
+      "Japanese restaurant",
+      "Restaurant",
+      "Seafood restaurant"
+    ],
+    "engagement": {
+      "likes": 74,
+      "comments": 19,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-14",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {chef} shared the story of this {cuisine}. It'...",
+    "content": "The {chef} shared the story of this {cuisine}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-14.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-14.jpg",
+    "restaurant": {
+      "id": "restaurant-14",
+      "name": "Smoke & Barrel",
+      "location": "Central, HK",
+      "rating": 4.2,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 9,
+      "comments": 14,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-15",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Found this {cuisine} gem while {activity}. The {di...",
+    "content": "Found this {cuisine} gem while {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-15.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-15.jpg",
+    "restaurant": {
+      "id": "restaurant-15",
+      "name": "Mr. Korea BBQ",
+      "location": "Causeway Bay, HK",
+      "rating": 4.2,
+      "priceRange": "$$",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Bar & grill",
+      "Barbecue restaurant",
+      "Delivery service",
+      "Korean grocery store",
+      "Korean restaurant",
+      "Takeout Restaurant",
+      "Raw food restaurant"
+    ],
+    "engagement": {
+      "likes": 86,
+      "comments": 15,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-16",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Want to master {cuisine}? Try {activity}. It's {ad...",
+    "content": "Want to master {cuisine}? Try {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-16.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-16.jpg",
+    "restaurant": {
+      "id": "restaurant-16",
+      "name": "AnPing Grill - Mong Kok",
+      "location": "Mong Kok, HK",
+      "rating": 4.3,
+      "priceRange": "HK$350–450",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Grill",
+      "Taiwanese restaurant"
+    ],
+    "engagement": {
+      "likes": 38,
+      "comments": 1,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-17",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. It's {cuisin...",
+    "content": "The {ingredient} here is {adjective}. It's {cuisine} adventure at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-17.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-17.jpg",
+    "restaurant": {
+      "id": "restaurant-17",
+      "name": "Grill ขุนทอง",
+      "location": "Central, HK",
+      "rating": 4.3,
+      "priceRange": "HK$50–150",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 76,
+      "comments": 11,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-18",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} tradition here is {adjective}. It's ...",
+    "content": "The {cuisine} tradition here is {adjective}. It's {activity} culture at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-18.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-18.jpg",
+    "restaurant": {
+      "id": "restaurant-18",
+      "name": "BRAZA Churrascaria",
+      "location": "Central, HK",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Brazilian restaurant"
+    },
+    "tags": [
+      "Brazilian restaurant",
+      "Restaurant",
+      "South American restaurant",
+      "Steak house"
+    ],
+    "engagement": {
+      "likes": 20,
+      "comments": 16,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-19",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Want to master {cuisine}? Try {activity}. It's {ad...",
+    "content": "Want to master {cuisine}? Try {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-19.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-19.jpg",
+    "restaurant": {
+      "id": "restaurant-19",
+      "name": "BBQ 7080",
+      "location": "Tin Hau, HK",
+      "rating": 4.1,
+      "priceRange": "HK$50–100",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 74,
+      "comments": 1,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-20",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Pro tip: The {dish} should be {adjective} for {act...",
+    "content": "Pro tip: The {dish} should be {adjective} for {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-20.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-20.jpg",
+    "restaurant": {
+      "id": "restaurant-20",
+      "name": "Whitehead Barbecue",
+      "location": "Ma On Shan, HK",
+      "rating": 3.8,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 5,
+      "comments": 4,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:24.067Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-21",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's {activity}...",
+    "content": "The {cuisine} here is {adjective}. It's {activity} fuel at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-21.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-21.jpg",
+    "restaurant": {
+      "id": "restaurant-21",
+      "name": "Ziya Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$$",
+      "cuisine": "North Indian restaurant"
+    },
+    "tags": [
+      "North Indian restaurant",
+      "Cafe",
+      "Dessert restaurant",
+      "Seafood restaurant"
+    ],
+    "engagement": {
+      "likes": 92,
+      "comments": 11,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-22",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. Perfect for ...",
+    "content": "The {ingredient} here is {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-22.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-22.jpg",
+    "restaurant": {
+      "id": "restaurant-22",
+      "name": "Masala Library by Jiggs Kalra",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "₹2,000+",
+      "cuisine": "North Indian restaurant"
+    },
+    "tags": [
+      "North Indian restaurant",
+      "Fine dining restaurant"
+    ],
+    "engagement": {
+      "likes": 53,
+      "comments": 16,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-23",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Want to master {cuisine}? Try {activity}. It's {ad...",
+    "content": "Want to master {cuisine}? Try {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-23.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-23.jpg",
+    "restaurant": {
+      "id": "restaurant-23",
+      "name": "Yauatcha Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "₹2,000+",
+      "cuisine": "Chinese restaurant"
+    },
+    "tags": [
+      "Chinese restaurant",
+      "Asian restaurant",
+      "Cantonese restaurant",
+      "Cocktail bar",
+      "Dessert restaurant",
+      "Patisserie",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 28,
+      "comments": 15,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-24",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-24.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-24.jpg",
+    "restaurant": {
+      "id": "restaurant-24",
+      "name": "Dakshin Coastal",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": "$$$$",
+      "cuisine": "South Indian restaurant"
+    },
+    "tags": [
+      "South Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 60,
+      "comments": 18,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-25",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I discovered this {dish} while {activity} in {loca...",
+    "content": "I discovered this {dish} while {activity} in {location}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-25.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-25.jpg",
+    "restaurant": {
+      "id": "restaurant-25",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Indian sizzler restaurant",
+      "Italian restaurant",
+      "Mexican restaurant",
+      "Pizza restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 93,
+      "comments": 17,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-26",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-26.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-26.jpg",
+    "restaurant": {
+      "id": "restaurant-26",
+      "name": "AB's - Absolute Barbecues | Powai, Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "₹800–1,000",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Children's party buffet",
+      "Event venue",
+      "Family restaurant",
+      "Indian restaurant",
+      "Delivery Restaurant",
+      "Takeout Restaurant",
+      "Non vegetarian restaurant",
+      "North Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 41,
+      "comments": 1,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-27",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. It's {cuisin...",
+    "content": "The {ingredient} here is {adjective}. It's {cuisine} adventure at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-27.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-27.jpg",
+    "restaurant": {
+      "id": "restaurant-27",
+      "name": "Barbeque Nation Mumbai Kurla",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "Indian restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 87,
+      "comments": 8,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-28",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. Perfect for ...",
+    "content": "The {ingredient} here is {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-28.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-28.jpg",
+    "restaurant": {
+      "id": "restaurant-28",
+      "name": "Barbeque Shack",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "₹400–600",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 97,
+      "comments": 16,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-29",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-29.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-29.jpg",
+    "restaurant": {
+      "id": "restaurant-29",
+      "name": "Sigree Global Grill | Powai",
+      "location": "Mumbai, IN",
+      "rating": 4.2,
+      "priceRange": "₹1,000–1,200",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "North Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 82,
+      "comments": 5,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-30",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} tradition here is {adjective}. It's ...",
+    "content": "The {cuisine} tradition here is {adjective}. It's {activity} culture at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-30.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-30.jpg",
+    "restaurant": {
+      "id": "restaurant-30",
+      "name": "Barbeque Nation - Mumbai - Worli",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "₹800–1,200",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "Family restaurant",
+      "Indian restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 66,
+      "comments": 11,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-31",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-31.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-31.jpg",
+    "restaurant": {
+      "id": "restaurant-31",
+      "name": "Barbeque Nation - Navi Mumbai - Nerul",
+      "location": "Navi Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "₹800–1,200",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "Family restaurant",
+      "Indian restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 94,
+      "comments": 3,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-32",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-32.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-32.jpg",
+    "restaurant": {
+      "id": "restaurant-32",
+      "name": "Barbeque Nation - Mumbai - Times Square, Sakinaka",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "₹1,000–1,200",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "Family restaurant",
+      "Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 29,
+      "comments": 6,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-33",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} tradition here is {adjective}. It's ...",
+    "content": "The {cuisine} tradition here is {adjective}. It's {activity} culture at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-33.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-33.jpg",
+    "restaurant": {
+      "id": "restaurant-33",
+      "name": "iNCREDi BOWL - Clarke Quay",
+      "location": "Singapore, SG",
+      "rating": 4.3,
+      "priceRange": "SGD 10–30",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant",
+      "Bar & grill",
+      "Brunch restaurant",
+      "Fine dining restaurant",
+      "Halal restaurant",
+      "Health food restaurant",
+      "Lunch restaurant",
+      "Vegan restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 39,
+      "comments": 6,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-34",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I learned about {cuisine} from a {activity} expert...",
+    "content": "I learned about {cuisine} from a {activity} expert. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-34.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-34.jpg",
+    "restaurant": {
+      "id": "restaurant-34",
+      "name": "Decker Barbecue",
+      "location": "Singapore, SG",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "American restaurant",
+      "Western restaurant"
+    ],
+    "engagement": {
+      "likes": 21,
+      "comments": 16,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-35",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. Perfect for ...",
+    "content": "The {ingredient} here is {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-35.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-35.jpg",
+    "restaurant": {
+      "id": "restaurant-35",
+      "name": "Ajoomma Korean Charcoal BBQ Restaurant",
+      "location": "Singapore, SG",
+      "rating": 4.8,
+      "priceRange": "$$",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 94,
+      "comments": 9,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-36",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-36.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-36.jpg",
+    "restaurant": {
+      "id": "restaurant-36",
+      "name": "Hanjip Korean Grill House",
+      "location": "Singapore, SG",
+      "rating": 4.8,
+      "priceRange": "SGD 100+",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Korean restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 96,
+      "comments": 12,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-37",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. Perfect for ...",
+    "content": "The {ingredient} here is {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-37.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-37.jpg",
+    "restaurant": {
+      "id": "restaurant-37",
+      "name": "Tengoku Yakiniku Singapore | Japanese Restaurant Singapore | Japanese BBQ",
+      "location": "Singapore, SG",
+      "rating": 4.8,
+      "priceRange": "SGD 100+",
+      "cuisine": "Yakiniku restaurant"
+    },
+    "tags": [
+      "Yakiniku restaurant",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 10,
+      "comments": 10,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-38",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I learned about {cuisine} from a {activity} expert...",
+    "content": "I learned about {cuisine} from a {activity} expert. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-38.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-38.jpg",
+    "restaurant": {
+      "id": "restaurant-38",
+      "name": "Gangnam BBQ",
+      "location": "Singapore, SG",
+      "rating": 4.6,
+      "priceRange": "$$",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 66,
+      "comments": 18,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-39",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-39.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-39.jpg",
+    "restaurant": {
+      "id": "restaurant-39",
+      "name": "I'm Kim Korean BBQ",
+      "location": "Singapore, SG",
+      "rating": 4.6,
+      "priceRange": "SGD 20–30",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Buffet restaurant",
+      "Korean restaurant"
+    ],
+    "engagement": {
+      "likes": 96,
+      "comments": 7,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-40",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} tradition here is {adjective}. It's ...",
+    "content": "The {cuisine} tradition here is {adjective}. It's {activity} culture at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-40.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-40.jpg",
+    "restaurant": {
+      "id": "restaurant-40",
+      "name": "Nanta BBQ",
+      "location": "Singapore, SG",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Delivery service",
+      "Fried chicken takeaway"
+    ],
+    "engagement": {
+      "likes": 25,
+      "comments": 10,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-41",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's a {activit...",
+    "content": "The {cuisine} here is {adjective}. It's a {activity} essential.",
+    "imageUrl": "/images/posts/adventure_rafa/post-41.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-41.jpg",
+    "restaurant": {
+      "id": "restaurant-41",
+      "name": "The Smokin' Pug",
+      "location": "Pathum Wan, TH",
+      "rating": 4.7,
+      "priceRange": "฿600–800",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 71,
+      "comments": 7,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-42",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I discovered this {dish} while {activity} in {loca...",
+    "content": "I discovered this {dish} while {activity} in {location}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-42.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-42.jpg",
+    "restaurant": {
+      "id": "restaurant-42",
+      "name": "SURA Korean BBQ_by Korean Chef",
+      "location": "Watthana, TH",
+      "rating": 4.7,
+      "priceRange": "฿400–600",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Barbecue restaurant",
+      "Family restaurant",
+      "Korean restaurant",
+      "Pub"
+    ],
+    "engagement": {
+      "likes": 95,
+      "comments": 14,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-43",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {dish} is {adjective} and {adjective}. Perfec...",
+    "content": "This {dish} is {adjective} and {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-43.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-43.jpg",
+    "restaurant": {
+      "id": "restaurant-43",
+      "name": "Roadhouse Barbecue",
+      "location": "Bang Rak, TH",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "American restaurant",
+      "Sports bar",
+      "Steak house"
+    ],
+    "engagement": {
+      "likes": 89,
+      "comments": 5,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-44",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I discovered this {dish} while {activity} in {loca...",
+    "content": "I discovered this {dish} while {activity} in {location}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-44.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-44.jpg",
+    "restaurant": {
+      "id": "restaurant-44",
+      "name": "KBBQ Sukhumvit",
+      "location": "Watthana, TH",
+      "rating": 4.5,
+      "priceRange": "฿400–600",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 43,
+      "comments": 9,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-45",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's a {activit...",
+    "content": "The {cuisine} here is {adjective}. It's a {activity} essential.",
+    "imageUrl": "/images/posts/adventure_rafa/post-45.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-45.jpg",
+    "restaurant": {
+      "id": "restaurant-45",
+      "name": "Seoul BBQ โซล บาร์บีคิว",
+      "location": "Watthana, TH",
+      "rating": 4.3,
+      "priceRange": "฿200–400",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Korean restaurant"
+    ],
+    "engagement": {
+      "likes": 28,
+      "comments": 9,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-46",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {chef} shared the story of this {cuisine}. It'...",
+    "content": "The {chef} shared the story of this {cuisine}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-46.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-46.jpg",
+    "restaurant": {
+      "id": "restaurant-46",
+      "name": "Holy Smokes",
+      "location": "Watthana, TH",
+      "rating": 4.7,
+      "priceRange": "฿300–400",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 30,
+      "comments": 7,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-47",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {chef} shared the story of this {cuisine}. It'...",
+    "content": "The {chef} shared the story of this {cuisine}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-47.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-47.jpg",
+    "restaurant": {
+      "id": "restaurant-47",
+      "name": "NIKU NIKU Japanese BBQ",
+      "location": "Khlong Toei, TH",
+      "rating": 4.9,
+      "priceRange": "฿1,000+",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Japanese restaurant",
+      "Restaurant",
+      "Yakiniku restaurant"
+    ],
+    "engagement": {
+      "likes": 58,
+      "comments": 11,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-48",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's a {activit...",
+    "content": "The {cuisine} here is {adjective}. It's a {activity} essential.",
+    "imageUrl": "/images/posts/adventure_rafa/post-48.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-48.jpg",
+    "restaurant": {
+      "id": "restaurant-48",
+      "name": "Quintonil",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.4,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Fine dining restaurant"
+    },
+    "tags": [
+      "Fine dining restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 61,
+      "comments": 8,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-49",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {dish} is {adjective} and {adjective}. Perfec...",
+    "content": "This {dish} is {adjective} and {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-49.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-49.jpg",
+    "restaurant": {
+      "id": "restaurant-49",
+      "name": "The Capital Grille",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Steak house"
+    },
+    "tags": [
+      "Steak house"
+    ],
+    "engagement": {
+      "likes": 61,
+      "comments": 3,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-50",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} tradition here is {adjective}. It's ...",
+    "content": "The {cuisine} tradition here is {adjective}. It's {activity} culture at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-50.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-50.jpg",
+    "restaurant": {
+      "id": "restaurant-50",
+      "name": "Pujol",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.4,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Mexican restaurant"
+    },
+    "tags": [
+      "Mexican restaurant"
+    ],
+    "engagement": {
+      "likes": 55,
+      "comments": 13,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-51",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-51.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-51.jpg",
+    "restaurant": {
+      "id": "restaurant-51",
+      "name": "Raíz",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Fine dining restaurant"
+    },
+    "tags": [
+      "Fine dining restaurant",
+      "Mexican restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 5,
+      "comments": 1,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-52",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I discovered this {dish} while {activity} in {loca...",
+    "content": "I discovered this {dish} while {activity} in {location}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-52.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-52.jpg",
+    "restaurant": {
+      "id": "restaurant-52",
+      "name": "Rosa Negra",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Latin American restaurant"
+    },
+    "tags": [
+      "Latin American restaurant",
+      "Bar",
+      "Fine dining restaurant"
+    ],
+    "engagement": {
+      "likes": 91,
+      "comments": 14,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-53",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's a {activit...",
+    "content": "The {cuisine} here is {adjective}. It's a {activity} essential.",
+    "imageUrl": "/images/posts/adventure_rafa/post-53.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-53.jpg",
+    "restaurant": {
+      "id": "restaurant-53",
+      "name": "Taquería en la calle (street-food)",
+      "location": "Venustiano Carranza, Mexico City, MX",
+      "rating": 5,
+      "priceRange": "$$",
+      "cuisine": "Mexican restaurant"
+    },
+    "tags": [
+      "Mexican restaurant"
+    ],
+    "engagement": {
+      "likes": 56,
+      "comments": 14,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-54",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {dish} is {adjective} and {adjective}. Perfec...",
+    "content": "This {dish} is {adjective} and {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-54.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-54.jpg",
+    "restaurant": {
+      "id": "restaurant-54",
+      "name": "Street Tacos",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.9,
+      "priceRange": "MX$1–100",
+      "cuisine": "Mexican restaurant"
+    },
+    "tags": [
+      "Mexican restaurant"
+    ],
+    "engagement": {
+      "likes": 75,
+      "comments": 17,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-55",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's {activity}...",
+    "content": "The {cuisine} here is {adjective}. It's {activity} fuel at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-55.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-55.jpg",
+    "restaurant": {
+      "id": "restaurant-55",
+      "name": "BiGOS street tacos",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 5,
+      "priceRange": "$$",
+      "cuisine": "Taco restaurant"
+    },
+    "tags": [
+      "Taco restaurant"
+    ],
+    "engagement": {
+      "likes": 21,
+      "comments": 6,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-56",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Found this {cuisine} gem while {activity}. The {di...",
+    "content": "Found this {cuisine} gem while {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-56.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-56.jpg",
+    "restaurant": {
+      "id": "restaurant-56",
+      "name": "Tacos- Street Food Vendor",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.1,
+      "priceRange": "MX$1–100",
+      "cuisine": "Taco restaurant"
+    },
+    "tags": [
+      "Taco restaurant"
+    ],
+    "engagement": {
+      "likes": 46,
+      "comments": 17,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-57",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I discovered this {dish} while {activity} in {loca...",
+    "content": "I discovered this {dish} while {activity} in {location}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-57.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-57.jpg",
+    "restaurant": {
+      "id": "restaurant-57",
+      "name": "Birria Estilo Jalisco - Food Stand",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "MX$1–100",
+      "cuisine": "Mexican restaurant"
+    },
+    "tags": [
+      "Mexican restaurant"
+    ],
+    "engagement": {
+      "likes": 73,
+      "comments": 3,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-58",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {chef} shared the story of this {cuisine}. It'...",
+    "content": "The {chef} shared the story of this {cuisine}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-58.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-58.jpg",
+    "restaurant": {
+      "id": "restaurant-58",
+      "name": "Kura",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Modern izakaya restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 88,
+      "comments": 6,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-59",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. Perfect for ...",
+    "content": "The {ingredient} here is {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-59.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-59.jpg",
+    "restaurant": {
+      "id": "restaurant-59",
+      "name": "Ryoshi",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.9,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 52,
+      "comments": 18,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-60",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's {activity}...",
+    "content": "The {cuisine} here is {adjective}. It's {activity} fuel at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-60.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-60.jpg",
+    "restaurant": {
+      "id": "restaurant-60",
+      "name": "La Pitahaya Vegana",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "MX$200–300",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Mexican restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 10,
+      "comments": 5,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-61",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {cuisine} here is {adjective}. It's {activity}...",
+    "content": "The {cuisine} here is {adjective}. It's {activity} fuel at its finest.",
+    "imageUrl": "/images/posts/adventure_rafa/post-61.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-61.jpg",
+    "restaurant": {
+      "id": "restaurant-61",
+      "name": "Seven Dials Market",
+      "location": "London, GB",
+      "rating": 4.5,
+      "priceRange": "£10–20",
+      "cuisine": "Food court"
+    },
+    "tags": [
+      "Food court",
+      "Bar",
+      "Book store",
+      "Cocktail bar",
+      "Market",
+      "Restaurant",
+      "Wine bar"
+    ],
+    "engagement": {
+      "likes": 95,
+      "comments": 17,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-62",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Want to master {cuisine}? Try {activity}. It's {ad...",
+    "content": "Want to master {cuisine}? Try {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-62.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-62.jpg",
+    "restaurant": {
+      "id": "restaurant-62",
+      "name": "Street Food Market - StreetFoodish",
+      "location": "London, GB",
+      "rating": 4.8,
+      "priceRange": "£10–20",
+      "cuisine": "Food court"
+    },
+    "tags": [
+      "Food court"
+    ],
+    "engagement": {
+      "likes": 85,
+      "comments": 5,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-63",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ I always {technique} when preparing {dish} for {ac...",
+    "content": "I always {technique} when preparing {dish} for {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-63.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-63.jpg",
+    "restaurant": {
+      "id": "restaurant-63",
+      "name": "Maltby Street Market",
+      "location": "London, GB",
+      "rating": 4.6,
+      "priceRange": "$$",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant",
+      "Bar",
+      "Market",
+      "Tourist attraction"
+    ],
+    "engagement": {
+      "likes": 15,
+      "comments": 9,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-64",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {ingredient} here is {adjective}. Perfect for ...",
+    "content": "The {ingredient} here is {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-64.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-64.jpg",
+    "restaurant": {
+      "id": "restaurant-64",
+      "name": "Borough Market",
+      "location": "London, GB",
+      "rating": 4.6,
+      "priceRange": "$$",
+      "cuisine": "Fresh food market"
+    },
+    "tags": [
+      "Fresh food market",
+      "Farmers' market",
+      "Market",
+      "Tourist attraction"
+    ],
+    "engagement": {
+      "likes": 44,
+      "comments": 14,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-65",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Pro tip: The {dish} should be {adjective} for {act...",
+    "content": "Pro tip: The {dish} should be {adjective} for {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-65.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-65.jpg",
+    "restaurant": {
+      "id": "restaurant-65",
+      "name": "Mercato Metropolitano",
+      "location": "London, GB",
+      "rating": 4.6,
+      "priceRange": "£10–20",
+      "cuisine": "Food court"
+    },
+    "tags": [
+      "Food court",
+      "Bakery",
+      "Brewery",
+      "Coffee shop",
+      "Distillery",
+      "Fresh food market",
+      "Wine bar"
+    ],
+    "engagement": {
+      "likes": 74,
+      "comments": 6,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-66",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {chef} shared the story of this {cuisine}. It'...",
+    "content": "The {chef} shared the story of this {cuisine}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-66.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-66.jpg",
+    "restaurant": {
+      "id": "restaurant-66",
+      "name": "Porco Rosso",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.6,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "American restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 77,
+      "comments": 13,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Outdoorsy"
+  },
+  {
+    "id": "adventure_rafa-post-67",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {restaurant} is {adjective} for {activity}. T...",
+    "content": "This {restaurant} is {adjective} for {activity}. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-67.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-67.jpg",
+    "restaurant": {
+      "id": "restaurant-67",
+      "name": "Pinche Gringo BBQ Patio - Narvarte",
+      "location": "Benito Juarez, Mexico City, MX",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Pub"
+    ],
+    "engagement": {
+      "likes": 59,
+      "comments": 15,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Spontaneous"
+  },
+  {
+    "id": "adventure_rafa-post-68",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ This {dish} is {adjective} and {adjective}. Perfec...",
+    "content": "This {dish} is {adjective} and {adjective}. Perfect for {activity} in {location}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-68.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-68.jpg",
+    "restaurant": {
+      "id": "restaurant-68",
+      "name": "All Wood BBQ & Taproom",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Bar",
+      "Bar & grill",
+      "Beer garden",
+      "Beer store",
+      "Brewery"
+    ],
+    "engagement": {
+      "likes": 73,
+      "comments": 11,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  },
+  {
+    "id": "adventure_rafa-post-69",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ The {chef} shared the story of this {cuisine}. It'...",
+    "content": "The {chef} shared the story of this {cuisine}. It's {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-69.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-69.jpg",
+    "restaurant": {
+      "id": "restaurant-69",
+      "name": "Smoky Barbecue",
+      "location": "Benito Juarez, Mexico City, MX",
+      "rating": 4.9,
+      "priceRange": "MX$200–300",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 25,
+      "comments": 2,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Energetic"
+  },
+  {
+    "id": "adventure_rafa-post-70",
+    "masterBotId": "86efa684-37ae-49bb-8e7c-2c0829aa6474",
+    "title": "🏄‍♂️ Want to master {cuisine}? Try {activity}. It's {ad...",
+    "content": "Want to master {cuisine}? Try {activity}. It's {adjective}.",
+    "imageUrl": "/images/posts/adventure_rafa/post-70.jpg",
+    "imageLocalPath": "public/images/posts/adventure_rafa/post-70.jpg",
+    "restaurant": {
+      "id": "restaurant-70",
+      "name": "Texas Ribs",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "American restaurant",
+      "Sports bar"
+    ],
+    "engagement": {
+      "likes": 94,
+      "comments": 16,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:24.069Z",
+    "personality": "Adventurous"
+  }
+]

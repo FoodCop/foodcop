@@ -1,0 +1,1961 @@
+[
+  {
+    "id": "zen_minimalist_jun-post-1",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Pro tip: The {technique} should be {adjective} for...",
+    "content": "Pro tip: The {technique} should be {adjective} for perfect {dish}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-1.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-1.jpg",
+    "restaurant": {
+      "id": "restaurant-1",
+      "name": "Robata",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Dim sum restaurant",
+      "Authentic Japanese restaurant",
+      "Delivery Restaurant",
+      "Modern izakaya restaurant",
+      "Okonomiyaki restaurant",
+      "Restaurant",
+      "Sushi restaurant",
+      "Tempura restaurant"
+    ],
+    "engagement": {
+      "likes": 85,
+      "comments": 4,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-2",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 50 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-2.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-2.jpg",
+    "restaurant": {
+      "id": "restaurant-2",
+      "name": "Shunka",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Asian restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 96,
+      "comments": 8,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-3",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
+    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-3.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-3.jpg",
+    "restaurant": {
+      "id": "restaurant-3",
+      "name": "Can Kenji",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Izakaya restaurant",
+      "Mediterranean restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 80,
+      "comments": 10,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-4",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} in this {dish} is {adjective}. Eve...",
+    "content": "The {technique} in this {dish} is {adjective}. Every element is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-4.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-4.jpg",
+    "restaurant": {
+      "id": "restaurant-4",
+      "name": "IKOYA Izakaya",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Restaurant",
+      "Ramen restaurant",
+      "Sake brewery",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 2,
+      "comments": 16,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-5",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
+    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-5.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-5.jpg",
+    "restaurant": {
+      "id": "restaurant-5",
+      "name": "Restaurante FUTAMI",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 96,
+      "comments": 19,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-6",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 200 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-6.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-6.jpg",
+    "restaurant": {
+      "id": "restaurant-6",
+      "name": "Matsuri Sushi Bar - Restaurante Japonés",
+      "location": "Barcelona, ES",
+      "rating": 4.4,
+      "priceRange": "€20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 45,
+      "comments": 7,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-7",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Pro tip: The {technique} should be {adjective} for...",
+    "content": "Pro tip: The {technique} should be {adjective} for perfect {dish}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-7.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-7.jpg",
+    "restaurant": {
+      "id": "restaurant-7",
+      "name": "Restaurante Hitsumabushi",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 12,
+      "comments": 4,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-8",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
+    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-8.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-8.jpg",
+    "restaurant": {
+      "id": "restaurant-8",
+      "name": "Roots & Rolls",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Event venue",
+      "Restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 35,
+      "comments": 1,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-9",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
+    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-9.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-9.jpg",
+    "restaurant": {
+      "id": "restaurant-9",
+      "name": "Yamato BBQ Barcelona",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–40",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 99,
+      "comments": 15,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-10",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I discovered {technique} in {location}. It's the e...",
+    "content": "I discovered {technique} in {location}. It's the essence of {cuisine}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-10.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-10.jpg",
+    "restaurant": {
+      "id": "restaurant-10",
+      "name": "BUFFET YA (Buffet BBQ)",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–30",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Grill",
+      "Asian restaurant",
+      "Buffet restaurant",
+      "Japanese restaurant",
+      "Yakiniku restaurant"
+    ],
+    "engagement": {
+      "likes": 7,
+      "comments": 3,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-11",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
+    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-11.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-11.jpg",
+    "restaurant": {
+      "id": "restaurant-11",
+      "name": "Kanesaka Hong Kong",
+      "location": "Central, HK",
+      "rating": 4.9,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 50,
+      "comments": 19,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-12",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
+    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-12.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-12.jpg",
+    "restaurant": {
+      "id": "restaurant-12",
+      "name": "Sushi Rin",
+      "location": "Sheung Wan, HK",
+      "rating": 4.7,
+      "priceRange": "HK$500+",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 49,
+      "comments": 11,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-13",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} in this {dish} is {adjective}. Eve...",
+    "content": "The {technique} in this {dish} is {adjective}. Every element is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-13.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-13.jpg",
+    "restaurant": {
+      "id": "restaurant-13",
+      "name": "Sushi Saito",
+      "location": "Central, HK",
+      "rating": 4.6,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Fine dining restaurant",
+      "Japanese restaurant",
+      "Restaurant",
+      "Seafood restaurant"
+    ],
+    "engagement": {
+      "likes": 31,
+      "comments": 5,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-14",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
+    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-14.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-14.jpg",
+    "restaurant": {
+      "id": "restaurant-14",
+      "name": "Sushi Kuu",
+      "location": "Central, HK",
+      "rating": 4.2,
+      "priceRange": "HK$500+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 72,
+      "comments": 16,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-15",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Pro tip: The {technique} should be {adjective} for...",
+    "content": "Pro tip: The {technique} should be {adjective} for perfect {dish}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-15.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-15.jpg",
+    "restaurant": {
+      "id": "restaurant-15",
+      "name": "Zuma Hong Kong",
+      "location": "Central, HK",
+      "rating": 4.3,
+      "priceRange": "HK$500+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cocktail bar",
+      "Lounge"
+    ],
+    "engagement": {
+      "likes": 53,
+      "comments": 17,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-16",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {chef} shared the {cuisine} philosophy behind ...",
+    "content": "The {chef} shared the {cuisine} philosophy behind this {dish}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-16.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-16.jpg",
+    "restaurant": {
+      "id": "restaurant-16",
+      "name": "Tokio Joe",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Japanese restaurant",
+      "Takeout Restaurant"
+    ],
+    "engagement": {
+      "likes": 70,
+      "comments": 6,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-17",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
+    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-17.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-17.jpg",
+    "restaurant": {
+      "id": "restaurant-17",
+      "name": "Honjo",
+      "location": "Sheung Wan, HK",
+      "rating": 4.6,
+      "priceRange": "HK$500+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Bar",
+      "Sushi restaurant",
+      "Tempura restaurant"
+    ],
+    "engagement": {
+      "likes": 1,
+      "comments": 13,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-18",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {ingredient} should be {adjective} before {tec...",
+    "content": "The {ingredient} should be {adjective} before {technique}. It's {cuisine} wisdom.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-18.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-18.jpg",
+    "restaurant": {
+      "id": "restaurant-18",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 50,
+      "comments": 11,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-19",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
+    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-19.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-19.jpg",
+    "restaurant": {
+      "id": "restaurant-19",
+      "name": "Wasabi by Morimoto",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 71,
+      "comments": 1,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-20",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
+    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-20.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-20.jpg",
+    "restaurant": {
+      "id": "restaurant-20",
+      "name": "Izumi Bandra",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "₹2,000+",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 76,
+      "comments": 5,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-21",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {ingredient} quality here is {adjective}. It's...",
+    "content": "The {ingredient} quality here is {adjective}. It's {cuisine} perfection.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-21.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-21.jpg",
+    "restaurant": {
+      "id": "restaurant-21",
+      "name": "Kuuraku Bandra West Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": "₹2,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 33,
+      "comments": 6,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-22",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
+    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-22.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-22.jpg",
+    "restaurant": {
+      "id": "restaurant-22",
+      "name": "Kofuku (Cloud Kitchen)",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Japanese curry restaurant",
+      "Ramen restaurant",
+      "Restaurant",
+      "Teppanyaki restaurant"
+    ],
+    "engagement": {
+      "likes": 15,
+      "comments": 19,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-23",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {chef} shared the {cuisine} philosophy behind ...",
+    "content": "The {chef} shared the {cuisine} philosophy behind this {dish}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-23.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-23.jpg",
+    "restaurant": {
+      "id": "restaurant-23",
+      "name": "KOKO Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": "$$$$",
+      "cuisine": "Asian restaurant"
+    },
+    "tags": [
+      "Asian restaurant"
+    ],
+    "engagement": {
+      "likes": 52,
+      "comments": 13,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-24",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
+    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-24.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-24.jpg",
+    "restaurant": {
+      "id": "restaurant-24",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Korean restaurant"
+    ],
+    "engagement": {
+      "likes": 67,
+      "comments": 8,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-25",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} in this {dish} is {adjective}. Eve...",
+    "content": "The {technique} in this {dish} is {adjective}. Every element is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-25.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-25.jpg",
+    "restaurant": {
+      "id": "restaurant-25",
+      "name": "Mizu",
+      "location": "Pali, Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "₹2,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 1,
+      "comments": 1,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-26",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
+    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-26.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-26.jpg",
+    "restaurant": {
+      "id": "restaurant-26",
+      "name": "Tengoku Yakiniku Singapore | Japanese Restaurant Singapore | Japanese BBQ",
+      "location": "Singapore, SG",
+      "rating": 4.8,
+      "priceRange": "SGD 100+",
+      "cuisine": "Yakiniku restaurant"
+    },
+    "tags": [
+      "Yakiniku restaurant",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 45,
+      "comments": 9,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-27",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {chef} shared the {cuisine} philosophy behind ...",
+    "content": "The {chef} shared the {cuisine} philosophy behind this {dish}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-27.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-27.jpg",
+    "restaurant": {
+      "id": "restaurant-27",
+      "name": "Sushi Juban Asok Branch",
+      "location": "Watthana, TH",
+      "rating": 4.9,
+      "priceRange": "฿1,000+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 97,
+      "comments": 5,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-28",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
+    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-28.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-28.jpg",
+    "restaurant": {
+      "id": "restaurant-28",
+      "name": "SUSHI JUBAN Takumi",
+      "location": "Watthana, TH",
+      "rating": 4.9,
+      "priceRange": "฿2,000+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 13,
+      "comments": 1,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-29",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
+    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-29.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-29.jpg",
+    "restaurant": {
+      "id": "restaurant-29",
+      "name": "Zuma Bangkok",
+      "location": "Pathum Wan, TH",
+      "rating": 4.4,
+      "priceRange": "฿2,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cocktail bar",
+      "Fine dining restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 4,
+      "comments": 14,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-30",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
+    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-30.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-30.jpg",
+    "restaurant": {
+      "id": "restaurant-30",
+      "name": "Akira Back",
+      "location": "Khlong Toei, TH",
+      "rating": 4.7,
+      "priceRange": "฿1,400–1,600",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Asian fusion restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 30,
+      "comments": 15,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-31",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
+    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-31.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-31.jpg",
+    "restaurant": {
+      "id": "restaurant-31",
+      "name": "SUSHI SEKI",
+      "location": "Watthana, TH",
+      "rating": 4.8,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 41,
+      "comments": 6,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-32",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
+    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-32.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-32.jpg",
+    "restaurant": {
+      "id": "restaurant-32",
+      "name": "Sushi Yorokobu",
+      "location": "Watthana, TH",
+      "rating": 4.8,
+      "priceRange": "฿1,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 36,
+      "comments": 7,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-33",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 300 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-33.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-33.jpg",
+    "restaurant": {
+      "id": "restaurant-33",
+      "name": "Sushi Sora",
+      "location": "Bang Rak, TH",
+      "rating": 4.9,
+      "priceRange": "฿2,000+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 3,
+      "comments": 2,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-34",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
+    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-34.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-34.jpg",
+    "restaurant": {
+      "id": "restaurant-34",
+      "name": "NIKU NIKU Japanese BBQ",
+      "location": "Khlong Toei, TH",
+      "rating": 4.9,
+      "priceRange": "฿1,000+",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Japanese restaurant",
+      "Restaurant",
+      "Yakiniku restaurant"
+    ],
+    "engagement": {
+      "likes": 53,
+      "comments": 4,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-35",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
+    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-35.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-35.jpg",
+    "restaurant": {
+      "id": "restaurant-35",
+      "name": "Ling Ling by Hakkasan",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.9,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 71,
+      "comments": 2,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-36",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
+    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-36.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-36.jpg",
+    "restaurant": {
+      "id": "restaurant-36",
+      "name": "Kura",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Modern izakaya restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 32,
+      "comments": 6,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-37",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
+    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-37.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-37.jpg",
+    "restaurant": {
+      "id": "restaurant-37",
+      "name": "Tori Tori Polanco",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Authentic Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 43,
+      "comments": 1,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-38",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
+    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-38.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-38.jpg",
+    "restaurant": {
+      "id": "restaurant-38",
+      "name": "Ryoshi",
+      "location": "Miguel Hidalgo, Mexico City, MX",
+      "rating": 4.9,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 64,
+      "comments": 10,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-39",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
+    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-39.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-39.jpg",
+    "restaurant": {
+      "id": "restaurant-39",
+      "name": "Suntory Del Valle",
+      "location": "Benito Juarez, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "MX$1,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Authentic Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 35,
+      "comments": 14,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-40",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
+    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-40.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-40.jpg",
+    "restaurant": {
+      "id": "restaurant-40",
+      "name": "Nagaoka",
+      "location": "Benito Juarez, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 64,
+      "comments": 6,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-41",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
+    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-41.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-41.jpg",
+    "restaurant": {
+      "id": "restaurant-41",
+      "name": "Mog Bistro",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Restaurant",
+      "Sushi restaurant",
+      "Taiwanese restaurant"
+    ],
+    "engagement": {
+      "likes": 1,
+      "comments": 9,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-42",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
+    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-42.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-42.jpg",
+    "restaurant": {
+      "id": "restaurant-42",
+      "name": "Gin Chan",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 6,
+      "comments": 0,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-43",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Want to master {cuisine}? Focus on {technique}. It...",
+    "content": "Want to master {cuisine}? Focus on {technique}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-43.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-43.jpg",
+    "restaurant": {
+      "id": "restaurant-43",
+      "name": "Plantasia",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Asian restaurant"
+    },
+    "tags": [
+      "Asian restaurant",
+      "Asian fusion restaurant",
+      "Chinese restaurant",
+      "Japanese restaurant",
+      "Pan-Asian restaurant",
+      "Vegan restaurant"
+    ],
+    "engagement": {
+      "likes": 18,
+      "comments": 0,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-44",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
+    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-44.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-44.jpg",
+    "restaurant": {
+      "id": "restaurant-44",
+      "name": "Seven Dials Market",
+      "location": "London, GB",
+      "rating": 4.5,
+      "priceRange": "£10–20",
+      "cuisine": "Food court"
+    },
+    "tags": [
+      "Food court",
+      "Bar",
+      "Book store",
+      "Cocktail bar",
+      "Market",
+      "Restaurant",
+      "Wine bar"
+    ],
+    "engagement": {
+      "likes": 51,
+      "comments": 15,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-45",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 100 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-45.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-45.jpg",
+    "restaurant": {
+      "id": "restaurant-45",
+      "name": "LOS LOOSERS",
+      "location": "Cuauhtémoc, Mexico City, MX",
+      "rating": 4.1,
+      "priceRange": "$$",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Asian fusion restaurant",
+      "Asian restaurant",
+      "Japanese restaurant",
+      "Korean restaurant",
+      "Mexican restaurant",
+      "Oaxacan restaurant",
+      "Ramen restaurant",
+      "Taco restaurant"
+    ],
+    "engagement": {
+      "likes": 54,
+      "comments": 12,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-46",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 Pro tip: The {technique} should be {adjective} for...",
+    "content": "Pro tip: The {technique} should be {adjective} for perfect {dish}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-46.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-46.jpg",
+    "restaurant": {
+      "id": "restaurant-46",
+      "name": "SUSHISAMBA",
+      "location": "London, GB",
+      "rating": 4.5,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Brazilian restaurant",
+      "Cocktail bar",
+      "Peruvian restaurant",
+      "Restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 13,
+      "comments": 4,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-47",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} in this {dish} is {adjective}. Eve...",
+    "content": "The {technique} in this {dish} is {adjective}. Every element is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-47.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-47.jpg",
+    "restaurant": {
+      "id": "restaurant-47",
+      "name": "The Sushi Co - Waterloo",
+      "location": "London, GB",
+      "rating": 4.8,
+      "priceRange": "£10–20",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Sushi restaurant",
+      "Sushi takeaway"
+    ],
+    "engagement": {
+      "likes": 74,
+      "comments": 9,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-48",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
+    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-48.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-48.jpg",
+    "restaurant": {
+      "id": "restaurant-48",
+      "name": "SUSHINOEN",
+      "location": "London, GB",
+      "rating": 4.6,
+      "priceRange": "£20–40",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Asian restaurant",
+      "Halal restaurant",
+      "Authentic Japanese restaurant",
+      "Restaurant",
+      "Sushi restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 49,
+      "comments": 2,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-49",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
+    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-49.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-49.jpg",
+    "restaurant": {
+      "id": "restaurant-49",
+      "name": "The Sushi Co - Kensington",
+      "location": "London, GB",
+      "rating": 4.8,
+      "priceRange": "£10–20",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Japanese restaurant",
+      "Sushi takeaway"
+    ],
+    "engagement": {
+      "likes": 19,
+      "comments": 5,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-50",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {ingredient} quality here is {adjective}. It's...",
+    "content": "The {ingredient} quality here is {adjective}. It's {cuisine} perfection.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-50.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-50.jpg",
+    "restaurant": {
+      "id": "restaurant-50",
+      "name": "Eat Tokyo (Soho)",
+      "location": "London, GB",
+      "rating": 4.3,
+      "priceRange": "£10–20",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Authentic Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 53,
+      "comments": 9,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-51",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {ingredient} quality here is {adjective}. It's...",
+    "content": "The {ingredient} quality here is {adjective}. It's {cuisine} perfection.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-51.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-51.jpg",
+    "restaurant": {
+      "id": "restaurant-51",
+      "name": "Cubé",
+      "location": "London, GB",
+      "rating": 4.6,
+      "priceRange": "£100+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Authentic Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 61,
+      "comments": 14,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-52",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {ingredient} should be {adjective} before {tec...",
+    "content": "The {ingredient} should be {adjective} before {technique}. It's {cuisine} wisdom.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-52.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-52.jpg",
+    "restaurant": {
+      "id": "restaurant-52",
+      "name": "Machiya",
+      "location": "London, GB",
+      "rating": 4.6,
+      "priceRange": "£20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 87,
+      "comments": 5,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-53",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 100 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-53.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-53.jpg",
+    "restaurant": {
+      "id": "restaurant-53",
+      "name": "Bageriet",
+      "location": "London, GB",
+      "rating": 4.7,
+      "priceRange": "£1–10",
+      "cuisine": "Bakery"
+    },
+    "tags": [
+      "Bakery",
+      "Cafe",
+      "Patisserie"
+    ],
+    "engagement": {
+      "likes": 44,
+      "comments": 0,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-54",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
+    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-54.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-54.jpg",
+    "restaurant": {
+      "id": "restaurant-54",
+      "name": "Traditional Pure",
+      "location": "London, GB",
+      "rating": 4.8,
+      "priceRange": "£1–10",
+      "cuisine": "Health food restaurant"
+    },
+    "tags": [
+      "Health food restaurant",
+      "Breakfast restaurant",
+      "Health food store",
+      "Takeout Restaurant",
+      "Salad shop"
+    ],
+    "engagement": {
+      "likes": 88,
+      "comments": 4,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-55",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
+    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-55.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-55.jpg",
+    "restaurant": {
+      "id": "restaurant-55",
+      "name": "THAI STREET FOOD",
+      "location": "Toshima City, JP",
+      "rating": 4,
+      "priceRange": "¥1,000–2,000",
+      "cuisine": "Thai restaurant"
+    },
+    "tags": [
+      "Thai restaurant",
+      "Asian restaurant",
+      "Brewpub",
+      "Japanese curry restaurant",
+      "Takeout Restaurant"
+    ],
+    "engagement": {
+      "likes": 65,
+      "comments": 6,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-56",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
+    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-56.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-56.jpg",
+    "restaurant": {
+      "id": "restaurant-56",
+      "name": "Tokyo Ramen Street",
+      "location": "Chiyoda City, JP",
+      "rating": 4,
+      "priceRange": "¥1,000–2,000",
+      "cuisine": "Food court"
+    },
+    "tags": [
+      "Food court",
+      "Ramen restaurant"
+    ],
+    "engagement": {
+      "likes": 6,
+      "comments": 18,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-57",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {ingredient} quality here is {adjective}. It's...",
+    "content": "The {ingredient} quality here is {adjective}. It's {cuisine} perfection.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-57.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-57.jpg",
+    "restaurant": {
+      "id": "restaurant-57",
+      "name": "Luke's Lobster Shibuya Park Street Shop",
+      "location": "Shibuya, JP",
+      "rating": 4,
+      "priceRange": "¥2,000–3,000",
+      "cuisine": "Seafood restaurant"
+    },
+    "tags": [
+      "Seafood restaurant",
+      "Cafe",
+      "Ramen restaurant",
+      "Sandwich shop",
+      "Wholesale bakery"
+    ],
+    "engagement": {
+      "likes": 73,
+      "comments": 3,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-58",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's a {cuisi...",
+    "content": "The {technique} here is {adjective}. It's a {cuisine} masterpiece.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-58.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-58.jpg",
+    "restaurant": {
+      "id": "restaurant-58",
+      "name": "Tapas Molecular Bar",
+      "location": "Chuo City, JP",
+      "rating": 4.6,
+      "priceRange": "¥10,000+",
+      "cuisine": "Tapas restaurant"
+    },
+    "tags": [
+      "Tapas restaurant",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 94,
+      "comments": 12,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-59",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
+    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-59.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-59.jpg",
+    "restaurant": {
+      "id": "restaurant-59",
+      "name": "L’Effervescence",
+      "location": "Minato City, JP",
+      "rating": 4.6,
+      "priceRange": "¥10,000+",
+      "cuisine": "Haute French restaurant"
+    },
+    "tags": [
+      "Haute French restaurant",
+      "French restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 56,
+      "comments": 9,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-60",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {cuisine} tradition here is {adjective}. The {...",
+    "content": "The {cuisine} tradition here is {adjective}. The {technique} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-60.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-60.jpg",
+    "restaurant": {
+      "id": "restaurant-60",
+      "name": "Narisawa",
+      "location": "Minato City, JP",
+      "rating": 4.6,
+      "priceRange": "¥10,000+",
+      "cuisine": "Kaiseki restaurant"
+    },
+    "tags": [
+      "Kaiseki restaurant",
+      "French restaurant",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 94,
+      "comments": 14,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.973Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-61",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {technique} here is {adjective}. It's {cuisine...",
+    "content": "The {technique} here is {adjective}. It's {cuisine} at its purest.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-61.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-61.jpg",
+    "restaurant": {
+      "id": "restaurant-61",
+      "name": "Den",
+      "location": "Shibuya, JP",
+      "rating": 4.4,
+      "priceRange": "¥10,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Kaiseki restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 79,
+      "comments": 9,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Precise"
+  },
+  {
+    "id": "zen_minimalist_jun-post-62",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
+    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-62.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-62.jpg",
+    "restaurant": {
+      "id": "restaurant-62",
+      "name": "Sushi no Midori",
+      "location": "Chuo City, JP",
+      "rating": 4.2,
+      "priceRange": "$",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 13,
+      "comments": 12,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-63",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
+    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-63.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-63.jpg",
+    "restaurant": {
+      "id": "restaurant-63",
+      "name": "KABUKI Sushi",
+      "location": "Shinjuku City, JP",
+      "rating": 4.6,
+      "priceRange": "$$",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 36,
+      "comments": 3,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-64",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 The {chef} shared the {cuisine} philosophy behind ...",
+    "content": "The {chef} shared the {cuisine} philosophy behind this {dish}. It's {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-64.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-64.jpg",
+    "restaurant": {
+      "id": "restaurant-64",
+      "name": "Sushisho Masa",
+      "location": "Minato City, JP",
+      "rating": 4.7,
+      "priceRange": "¥10,000+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Fine dining restaurant"
+    ],
+    "engagement": {
+      "likes": 9,
+      "comments": 8,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-65",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I always {technique} when preparing {dish}. The {c...",
+    "content": "I always {technique} when preparing {dish}. The {cuisine} way is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-65.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-65.jpg",
+    "restaurant": {
+      "id": "restaurant-65",
+      "name": "Sushi m",
+      "location": "Minato City, JP",
+      "rating": 4.6,
+      "priceRange": "¥10,000+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Fine dining restaurant",
+      "Gourmet grocery store",
+      "Japanese restaurant",
+      "Wine bar"
+    ],
+    "engagement": {
+      "likes": 49,
+      "comments": 19,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-66",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 I learned about {technique} from a {cuisine} maste...",
+    "content": "I learned about {technique} from a {cuisine} master. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-66.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-66.jpg",
+    "restaurant": {
+      "id": "restaurant-66",
+      "name": "TOKYO SUSHI ITAMAE SUSHI Akasaka",
+      "location": "Minato City, JP",
+      "rating": 4.2,
+      "priceRange": "$$",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 45,
+      "comments": 19,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-67",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 50 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-67.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-67.jpg",
+    "restaurant": {
+      "id": "restaurant-67",
+      "name": "Ginza Kyūbey Honten",
+      "location": "Chuo City, JP",
+      "rating": 4.4,
+      "priceRange": "¥10,000+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 52,
+      "comments": 6,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "zen_minimalist_jun-post-68",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} has been perfecting {cuisine} fo...",
+    "content": "This {restaurant} has been perfecting {cuisine} for 200 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-68.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-68.jpg",
+    "restaurant": {
+      "id": "restaurant-68",
+      "name": "Sushi｜Yurakucho Kakida｜Tokyo",
+      "location": "Shibuya, JP",
+      "rating": 4.5,
+      "priceRange": "¥10,000+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Japanese grocery store",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 62,
+      "comments": 17,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Thoughtful"
+  },
+  {
+    "id": "zen_minimalist_jun-post-69",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
+    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-69.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-69.jpg",
+    "restaurant": {
+      "id": "restaurant-69",
+      "name": "Brown Rice Tokyo Omotesando",
+      "location": "Shibuya, JP",
+      "rating": 4.5,
+      "priceRange": "¥2,000–3,000",
+      "cuisine": "Organic restaurant"
+    },
+    "tags": [
+      "Organic restaurant",
+      "Japanese restaurant",
+      "Vegan restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 86,
+      "comments": 14,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Minimalist"
+  },
+  {
+    "id": "zen_minimalist_jun-post-70",
+    "masterBotId": "7cb0c0d0-996e-4afc-9c7a-95ed0152f63e",
+    "title": "🍣 This {restaurant} embodies {cuisine} philosophy. T...",
+    "content": "This {restaurant} embodies {cuisine} philosophy. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/zen_minimalist_jun/post-70.jpg",
+    "imageLocalPath": "public/images/posts/zen_minimalist_jun/post-70.jpg",
+    "restaurant": {
+      "id": "restaurant-70",
+      "name": "Vegan Eat Tokyo",
+      "location": "Taito City, JP",
+      "rating": 4.7,
+      "priceRange": "¥2,000–3,000",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Organic restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 95,
+      "comments": 13,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.974Z",
+    "personality": "Traditional"
+  }
+]

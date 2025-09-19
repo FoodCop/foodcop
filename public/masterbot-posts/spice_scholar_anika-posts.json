@@ -1,0 +1,1975 @@
+[
+  {
+    "id": "spice_scholar_anika-post-1",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
+    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-1.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-1.jpg",
+    "restaurant": {
+      "id": "restaurant-1",
+      "name": "Robata",
+      "location": "Barcelona, ES",
+      "rating": 4.5,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Dim sum restaurant",
+      "Authentic Japanese restaurant",
+      "Delivery Restaurant",
+      "Modern izakaya restaurant",
+      "Okonomiyaki restaurant",
+      "Restaurant",
+      "Sushi restaurant",
+      "Tempura restaurant"
+    ],
+    "engagement": {
+      "likes": 10,
+      "comments": 4,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.800Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-2",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I always {technique} when making {dish}. The {spic...",
+    "content": "I always {technique} when making {dish}. The {spice} needs to be {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-2.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-2.jpg",
+    "restaurant": {
+      "id": "restaurant-2",
+      "name": "Shunka",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Asian restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 26,
+      "comments": 12,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.800Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-3",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
+    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-3.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-3.jpg",
+    "restaurant": {
+      "id": "restaurant-3",
+      "name": "Can Kenji",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Izakaya restaurant",
+      "Mediterranean restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 13,
+      "comments": 17,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.800Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-4",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Want to master {cuisine}? Start with {spice}. It's...",
+    "content": "Want to master {cuisine}? Start with {spice}. It's the foundation of {dish}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-4.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-4.jpg",
+    "restaurant": {
+      "id": "restaurant-4",
+      "name": "IKOYA Izakaya",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Restaurant",
+      "Ramen restaurant",
+      "Sake brewery",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 7,
+      "comments": 16,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.800Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-5",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
+    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-5.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-5.jpg",
+    "restaurant": {
+      "id": "restaurant-5",
+      "name": "Restaurante FUTAMI",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 35,
+      "comments": 16,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.800Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-6",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
+    "content": "This {cuisine} restaurant has been using the same {spice} blend for 100 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-6.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-6.jpg",
+    "restaurant": {
+      "id": "restaurant-6",
+      "name": "Matsuri Sushi Bar - Restaurante Japonés",
+      "location": "Barcelona, ES",
+      "rating": 4.4,
+      "priceRange": "€20–30",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 78,
+      "comments": 5,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-7",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} ratio in {dish} is {adjective}. Too mu...",
+    "content": "The {spice} ratio in {dish} is {adjective}. Too much and it's {adjective}, too little and it's {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-7.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-7.jpg",
+    "restaurant": {
+      "id": "restaurant-7",
+      "name": "Restaurante Hitsumabushi",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 17,
+      "comments": 6,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-8",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
+    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-8.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-8.jpg",
+    "restaurant": {
+      "id": "restaurant-8",
+      "name": "Roots & Rolls",
+      "location": "Barcelona, ES",
+      "rating": 4.6,
+      "priceRange": "€20–30",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Event venue",
+      "Restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 41,
+      "comments": 8,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-9",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
+    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-9.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-9.jpg",
+    "restaurant": {
+      "id": "restaurant-9",
+      "name": "Yamato BBQ Barcelona",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–40",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 4,
+      "comments": 5,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-10",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
+    "content": "This {cuisine} restaurant has been using the same {spice} blend for 50 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-10.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-10.jpg",
+    "restaurant": {
+      "id": "restaurant-10",
+      "name": "KIM BBQ",
+      "location": "Barcelona, ES",
+      "rating": 4.7,
+      "priceRange": "€20–30",
+      "cuisine": "Korean restaurant"
+    },
+    "tags": [
+      "Korean restaurant"
+    ],
+    "engagement": {
+      "likes": 82,
+      "comments": 2,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "spice_scholar_anika-post-11",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
+    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-11.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-11.jpg",
+    "restaurant": {
+      "id": "restaurant-11",
+      "name": "BUFFET YA (Buffet BBQ)",
+      "location": "Barcelona, ES",
+      "rating": 4.8,
+      "priceRange": "€20–30",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Grill",
+      "Asian restaurant",
+      "Buffet restaurant",
+      "Japanese restaurant",
+      "Yakiniku restaurant"
+    ],
+    "engagement": {
+      "likes": 39,
+      "comments": 15,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-12",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
+    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-12.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-12.jpg",
+    "restaurant": {
+      "id": "restaurant-12",
+      "name": "Night street food market",
+      "location": "Yau Ma Tei, HK",
+      "rating": 4.4,
+      "priceRange": "HK$50–100",
+      "cuisine": "Chinese restaurant"
+    },
+    "tags": [
+      "Chinese restaurant"
+    ],
+    "engagement": {
+      "likes": 92,
+      "comments": 9,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-13",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
+    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-13.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-13.jpg",
+    "restaurant": {
+      "id": "restaurant-13",
+      "name": "The Chairman Restaurant",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "Cantonese restaurant"
+    },
+    "tags": [
+      "Cantonese restaurant",
+      "Chinese restaurant",
+      "Fine dining restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 24,
+      "comments": 6,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "spice_scholar_anika-post-14",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} ratio in {dish} is {adjective}. Too mu...",
+    "content": "The {spice} ratio in {dish} is {adjective}. Too much and it's {adjective}, too little and it's {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-14.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-14.jpg",
+    "restaurant": {
+      "id": "restaurant-14",
+      "name": "Mott 32",
+      "location": "Central, HK",
+      "rating": 4.4,
+      "priceRange": "HK$500+",
+      "cuisine": "Chinese restaurant"
+    },
+    "tags": [
+      "Chinese restaurant",
+      "Cocktail bar"
+    ],
+    "engagement": {
+      "likes": 39,
+      "comments": 2,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-15",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
+    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-15.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-15.jpg",
+    "restaurant": {
+      "id": "restaurant-15",
+      "name": "Kanesaka Hong Kong",
+      "location": "Central, HK",
+      "rating": 4.9,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 12,
+      "comments": 15,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-16",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
+    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-16.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-16.jpg",
+    "restaurant": {
+      "id": "restaurant-16",
+      "name": "Sushi Rin",
+      "location": "Sheung Wan, HK",
+      "rating": 4.7,
+      "priceRange": "HK$500+",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 52,
+      "comments": 7,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-17",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
+    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-17.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-17.jpg",
+    "restaurant": {
+      "id": "restaurant-17",
+      "name": "Sushi Saito",
+      "location": "Central, HK",
+      "rating": 4.6,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Fine dining restaurant",
+      "Japanese restaurant",
+      "Restaurant",
+      "Seafood restaurant"
+    ],
+    "engagement": {
+      "likes": 9,
+      "comments": 10,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-18",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
+    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-18.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-18.jpg",
+    "restaurant": {
+      "id": "restaurant-18",
+      "name": "Sushi Kuu",
+      "location": "Central, HK",
+      "rating": 4.2,
+      "priceRange": "HK$500+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 99,
+      "comments": 15,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-19",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} should be {adjective} before adding to...",
+    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-19.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-19.jpg",
+    "restaurant": {
+      "id": "restaurant-19",
+      "name": "Zuma Hong Kong",
+      "location": "Central, HK",
+      "rating": 4.3,
+      "priceRange": "HK$500+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cocktail bar",
+      "Lounge"
+    ],
+    "engagement": {
+      "likes": 28,
+      "comments": 14,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-20",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
+    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-20.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-20.jpg",
+    "restaurant": {
+      "id": "restaurant-20",
+      "name": "Tokio Joe",
+      "location": "Central, HK",
+      "rating": 4.5,
+      "priceRange": "HK$500+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant",
+      "Japanese restaurant",
+      "Takeout Restaurant"
+    ],
+    "engagement": {
+      "likes": 16,
+      "comments": 10,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-21",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
+    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-21.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-21.jpg",
+    "restaurant": {
+      "id": "restaurant-21",
+      "name": "Honjo",
+      "location": "Sheung Wan, HK",
+      "rating": 4.6,
+      "priceRange": "HK$500+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Bar",
+      "Sushi restaurant",
+      "Tempura restaurant"
+    ],
+    "engagement": {
+      "likes": 54,
+      "comments": 12,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-22",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
+    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-22.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-22.jpg",
+    "restaurant": {
+      "id": "restaurant-22",
+      "name": "Tai Cheong Bakery",
+      "location": "Central, HK",
+      "rating": 3.9,
+      "priceRange": "HK$1–50",
+      "cuisine": "Bakery"
+    },
+    "tags": [
+      "Bakery",
+      "Chinese bakery"
+    ],
+    "engagement": {
+      "likes": 31,
+      "comments": 10,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-23",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
+    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-23.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-23.jpg",
+    "restaurant": {
+      "id": "restaurant-23",
+      "name": "Door Door Bakery",
+      "location": "Mei Foo Sun Chuen, HK",
+      "rating": 4,
+      "priceRange": "HK$1–50",
+      "cuisine": "Chinese bakery"
+    },
+    "tags": [
+      "Chinese bakery"
+    ],
+    "engagement": {
+      "likes": 19,
+      "comments": 17,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-24",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
+    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-24.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-24.jpg",
+    "restaurant": {
+      "id": "restaurant-24",
+      "name": "Woodlands Indian Vegetarian Restaurant (Tsim Sha Tsui)",
+      "location": "Tsim Sha Tsui, HK",
+      "rating": 4.6,
+      "priceRange": "HK$100–150",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Catering food and drink supplier",
+      "Caterer",
+      "Family restaurant",
+      "Halal restaurant",
+      "Indian restaurant",
+      "Indian takeaway",
+      "Delivery Restaurant",
+      "Restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 29,
+      "comments": 13,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-25",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
+    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-25.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-25.jpg",
+    "restaurant": {
+      "id": "restaurant-25",
+      "name": "Sangeetha Vegetarian Restaurant, Hong Kong",
+      "location": "Tsim Sha Tsui, HK",
+      "rating": 4.3,
+      "priceRange": "HK$100–150",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 10,
+      "comments": 0,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-26",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} should be {adjective} before adding to...",
+    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-26.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-26.jpg",
+    "restaurant": {
+      "id": "restaurant-26",
+      "name": "Isoya Japanese Vegetarian Restaurant",
+      "location": "Wan Chai, HK",
+      "rating": 4.4,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 5,
+      "comments": 0,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-27",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
+    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-27.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-27.jpg",
+    "restaurant": {
+      "id": "restaurant-27",
+      "name": "Mr. Korea BBQ",
+      "location": "Causeway Bay, HK",
+      "rating": 4.2,
+      "priceRange": "$$",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Bar & grill",
+      "Barbecue restaurant",
+      "Delivery service",
+      "Korean grocery store",
+      "Korean restaurant",
+      "Takeout Restaurant",
+      "Raw food restaurant"
+    ],
+    "engagement": {
+      "likes": 43,
+      "comments": 4,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-28",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} ratio in {dish} is {adjective}. Too mu...",
+    "content": "The {spice} ratio in {dish} is {adjective}. Too much and it's {adjective}, too little and it's {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-28.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-28.jpg",
+    "restaurant": {
+      "id": "restaurant-28",
+      "name": "AnPing Grill - Mong Kok",
+      "location": "Mong Kok, HK",
+      "rating": 4.3,
+      "priceRange": "HK$350–450",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Grill",
+      "Taiwanese restaurant"
+    ],
+    "engagement": {
+      "likes": 1,
+      "comments": 15,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-29",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
+    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-29.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-29.jpg",
+    "restaurant": {
+      "id": "restaurant-29",
+      "name": "BBQ 7080",
+      "location": "Tin Hau, HK",
+      "rating": 4.1,
+      "priceRange": "HK$50–100",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant"
+    ],
+    "engagement": {
+      "likes": 8,
+      "comments": 14,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-30",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
+    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-30.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-30.jpg",
+    "restaurant": {
+      "id": "restaurant-30",
+      "name": "Wasabi by Morimoto",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 28,
+      "comments": 7,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "spice_scholar_anika-post-31",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} should be {adjective} before adding to...",
+    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-31.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-31.jpg",
+    "restaurant": {
+      "id": "restaurant-31",
+      "name": "Izumi Bandra",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "₹2,000+",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 29,
+      "comments": 16,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-32",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
+    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-32.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-32.jpg",
+    "restaurant": {
+      "id": "restaurant-32",
+      "name": "Kuuraku Bandra West Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": "₹2,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 46,
+      "comments": 9,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "spice_scholar_anika-post-33",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Pro tip: The key to perfect {dish} is {technique}....",
+    "content": "Pro tip: The key to perfect {dish} is {technique}. The {spice} should be {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-33.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-33.jpg",
+    "restaurant": {
+      "id": "restaurant-33",
+      "name": "Kofuku (Cloud Kitchen)",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Japanese curry restaurant",
+      "Ramen restaurant",
+      "Restaurant",
+      "Teppanyaki restaurant"
+    ],
+    "engagement": {
+      "likes": 4,
+      "comments": 19,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-34",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Want to master {cuisine}? Start with {spice}. It's...",
+    "content": "Want to master {cuisine}? Start with {spice}. It's the foundation of {dish}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-34.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-34.jpg",
+    "restaurant": {
+      "id": "restaurant-34",
+      "name": "KOKO Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": "$$$$",
+      "cuisine": "Asian restaurant"
+    },
+    "tags": [
+      "Asian restaurant"
+    ],
+    "engagement": {
+      "likes": 79,
+      "comments": 13,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-35",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
+    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-35.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-35.jpg",
+    "restaurant": {
+      "id": "restaurant-35",
+      "name": "Origami Japanese & Korean Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Authentic Japanese restaurant"
+    },
+    "tags": [
+      "Authentic Japanese restaurant",
+      "Korean restaurant"
+    ],
+    "engagement": {
+      "likes": 75,
+      "comments": 8,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-36",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I always {technique} when making {dish}. The {spic...",
+    "content": "I always {technique} when making {dish}. The {spice} needs to be {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-36.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-36.jpg",
+    "restaurant": {
+      "id": "restaurant-36",
+      "name": "Mizu",
+      "location": "Pali, Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "₹2,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 19,
+      "comments": 2,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-37",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
+    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-37.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-37.jpg",
+    "restaurant": {
+      "id": "restaurant-37",
+      "name": "Ziya Restaurant",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "$$$$",
+      "cuisine": "North Indian restaurant"
+    },
+    "tags": [
+      "North Indian restaurant",
+      "Cafe",
+      "Dessert restaurant",
+      "Seafood restaurant"
+    ],
+    "engagement": {
+      "likes": 21,
+      "comments": 1,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-38",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
+    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-38.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-38.jpg",
+    "restaurant": {
+      "id": "restaurant-38",
+      "name": "Masala Library by Jiggs Kalra",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "₹2,000+",
+      "cuisine": "North Indian restaurant"
+    },
+    "tags": [
+      "North Indian restaurant",
+      "Fine dining restaurant"
+    ],
+    "engagement": {
+      "likes": 30,
+      "comments": 3,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "spice_scholar_anika-post-39",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
+    "content": "This {cuisine} restaurant has been using the same {spice} blend for 200 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-39.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-39.jpg",
+    "restaurant": {
+      "id": "restaurant-39",
+      "name": "The Sahib Room & Kipling Bar",
+      "location": "Mumbai, IN",
+      "rating": 4.8,
+      "priceRange": "$$$$",
+      "cuisine": "Indian restaurant"
+    },
+    "tags": [
+      "Indian restaurant",
+      "Bar",
+      "Fine dining restaurant",
+      "Indian takeaway",
+      "Delivery Restaurant",
+      "Takeout Restaurant",
+      "Mughlai restaurant"
+    ],
+    "engagement": {
+      "likes": 55,
+      "comments": 11,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-40",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} should be {adjective} before adding to...",
+    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-40.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-40.jpg",
+    "restaurant": {
+      "id": "restaurant-40",
+      "name": "Yauatcha Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.5,
+      "priceRange": "₹2,000+",
+      "cuisine": "Chinese restaurant"
+    },
+    "tags": [
+      "Chinese restaurant",
+      "Asian restaurant",
+      "Cantonese restaurant",
+      "Cocktail bar",
+      "Dessert restaurant",
+      "Patisserie",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 1,
+      "comments": 4,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-41",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
+    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-41.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-41.jpg",
+    "restaurant": {
+      "id": "restaurant-41",
+      "name": "JYRAN - TANDOOR DINING & LOUNGE",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": "₹2,000+",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 87,
+      "comments": 17,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-42",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
+    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-42.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-42.jpg",
+    "restaurant": {
+      "id": "restaurant-42",
+      "name": "Dakshin Coastal",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": "$$$$",
+      "cuisine": "South Indian restaurant"
+    },
+    "tags": [
+      "South Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 4,
+      "comments": 4,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-43",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {dish} reminds me why I fell in love with {cu...",
+    "content": "This {dish} reminds me why I fell in love with {cuisine}. The {spice} notes are {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-43.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-43.jpg",
+    "restaurant": {
+      "id": "restaurant-43",
+      "name": "Rare Earth Cafe | 100% Pure Veg",
+      "location": "Mumbai, IN",
+      "rating": 4.6,
+      "priceRange": "$$",
+      "cuisine": "Gluten-free restaurant"
+    },
+    "tags": [
+      "Gluten-free restaurant",
+      "Coffee shop",
+      "Health food restaurant",
+      "Modern Indian restaurant",
+      "Pizza delivery",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 50,
+      "comments": 7,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-44",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} in this {dish} transports me straight ...",
+    "content": "The {spice} in this {dish} transports me straight to {region}. Every bite tells a story of {culture}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-44.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-44.jpg",
+    "restaurant": {
+      "id": "restaurant-44",
+      "name": "Relish International Veg Cuisine",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Indian sizzler restaurant",
+      "Italian restaurant",
+      "Mexican restaurant",
+      "Pizza restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 35,
+      "comments": 8,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-45",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
+    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-45.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-45.jpg",
+    "restaurant": {
+      "id": "restaurant-45",
+      "name": "Thank Gourd",
+      "location": "Mumbai, IN",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Asian fusion restaurant",
+      "Italian restaurant",
+      "Pan-Asian restaurant"
+    ],
+    "engagement": {
+      "likes": 25,
+      "comments": 8,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-46",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
+    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-46.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-46.jpg",
+    "restaurant": {
+      "id": "restaurant-46",
+      "name": "Govindas International- The Higher Taste",
+      "location": "Mumbai, IN",
+      "rating": 4.4,
+      "priceRange": "₹200–600",
+      "cuisine": "Vegetarian restaurant"
+    },
+    "tags": [
+      "Vegetarian restaurant",
+      "Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 26,
+      "comments": 0,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-47",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
+    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-47.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-47.jpg",
+    "restaurant": {
+      "id": "restaurant-47",
+      "name": "SpiceKlub",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Gluten-free restaurant",
+      "Modern Indian restaurant",
+      "North Indian restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 23,
+      "comments": 9,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-48",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
+    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-48.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-48.jpg",
+    "restaurant": {
+      "id": "restaurant-48",
+      "name": "AB's - Absolute Barbecues | Powai, Mumbai",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "₹800–1,000",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Children's party buffet",
+      "Event venue",
+      "Family restaurant",
+      "Indian restaurant",
+      "Delivery Restaurant",
+      "Takeout Restaurant",
+      "Non vegetarian restaurant",
+      "North Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 10,
+      "comments": 3,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-49",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
+    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-49.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-49.jpg",
+    "restaurant": {
+      "id": "restaurant-49",
+      "name": "Barbeque Nation Mumbai Kurla",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "$$$",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "Indian restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 99,
+      "comments": 7,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-50",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
+    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-50.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-50.jpg",
+    "restaurant": {
+      "id": "restaurant-50",
+      "name": "Sigree Global Grill | Powai",
+      "location": "Mumbai, IN",
+      "rating": 4.2,
+      "priceRange": "₹1,000–1,200",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "North Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 59,
+      "comments": 8,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "spice_scholar_anika-post-51",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} vendor in {location} shared the secret...",
+    "content": "The {spice} vendor in {location} shared the secret to perfect {dish}. It's all about {technique}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-51.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-51.jpg",
+    "restaurant": {
+      "id": "restaurant-51",
+      "name": "Barbeque Nation - Mumbai - Worli",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "₹800–1,200",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "Family restaurant",
+      "Indian restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 3,
+      "comments": 14,
+      "shares": 7
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "spice_scholar_anika-post-52",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
+    "content": "This {cuisine} restaurant has been using the same {spice} blend for 200 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-52.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-52.jpg",
+    "restaurant": {
+      "id": "restaurant-52",
+      "name": "Barbeque Nation - Navi Mumbai - Nerul",
+      "location": "Navi Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "₹800–1,200",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "Family restaurant",
+      "Indian restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 50,
+      "comments": 2,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-53",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} should be {adjective} before adding to...",
+    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-53.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-53.jpg",
+    "restaurant": {
+      "id": "restaurant-53",
+      "name": "Barbeque Nation - Mumbai - Times Square, Sakinaka",
+      "location": "Mumbai, IN",
+      "rating": 4.3,
+      "priceRange": "₹1,000–1,200",
+      "cuisine": "Barbecue restaurant"
+    },
+    "tags": [
+      "Barbecue restaurant",
+      "Buffet restaurant",
+      "Dessert restaurant",
+      "Family restaurant",
+      "Indian restaurant"
+    ],
+    "engagement": {
+      "likes": 57,
+      "comments": 6,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-54",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Pro tip: The key to perfect {dish} is {technique}....",
+    "content": "Pro tip: The key to perfect {dish} is {technique}. The {spice} should be {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-54.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-54.jpg",
+    "restaurant": {
+      "id": "restaurant-54",
+      "name": "Ajoomma Korean Charcoal BBQ Restaurant",
+      "location": "Singapore, SG",
+      "rating": 4.8,
+      "priceRange": "$$",
+      "cuisine": "Restaurant"
+    },
+    "tags": [
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 32,
+      "comments": 5,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.801Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-55",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
+    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-55.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-55.jpg",
+    "restaurant": {
+      "id": "restaurant-55",
+      "name": "Hanjip Korean Grill House",
+      "location": "Singapore, SG",
+      "rating": 4.8,
+      "priceRange": "SGD 100+",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Korean restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 62,
+      "comments": 11,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-56",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
+    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-56.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-56.jpg",
+    "restaurant": {
+      "id": "restaurant-56",
+      "name": "Tengoku Yakiniku Singapore | Japanese Restaurant Singapore | Japanese BBQ",
+      "location": "Singapore, SG",
+      "rating": 4.8,
+      "priceRange": "SGD 100+",
+      "cuisine": "Yakiniku restaurant"
+    },
+    "tags": [
+      "Yakiniku restaurant",
+      "Japanese restaurant"
+    ],
+    "engagement": {
+      "likes": 4,
+      "comments": 17,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-57",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
+    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-57.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-57.jpg",
+    "restaurant": {
+      "id": "restaurant-57",
+      "name": "Gangnam BBQ",
+      "location": "Singapore, SG",
+      "rating": 4.6,
+      "priceRange": "$$",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 9,
+      "comments": 14,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-58",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
+    "content": "This {cuisine} restaurant has been using the same {spice} blend for 300 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-58.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-58.jpg",
+    "restaurant": {
+      "id": "restaurant-58",
+      "name": "I'm Kim Korean BBQ",
+      "location": "Singapore, SG",
+      "rating": 4.6,
+      "priceRange": "SGD 20–30",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Buffet restaurant",
+      "Korean restaurant"
+    ],
+    "engagement": {
+      "likes": 85,
+      "comments": 18,
+      "shares": 8
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-59",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Every {spice} in this {dish} has a purpose. The {c...",
+    "content": "Every {spice} in this {dish} has a purpose. The {cuisine} tradition is alive and well here.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-59.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-59.jpg",
+    "restaurant": {
+      "id": "restaurant-59",
+      "name": "Nanta BBQ",
+      "location": "Singapore, SG",
+      "rating": 4.7,
+      "priceRange": "$$",
+      "cuisine": "Korean barbecue restaurant"
+    },
+    "tags": [
+      "Korean barbecue restaurant",
+      "Delivery service",
+      "Fried chicken takeaway"
+    ],
+    "engagement": {
+      "likes": 78,
+      "comments": 9,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-60",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
+    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-60.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-60.jpg",
+    "restaurant": {
+      "id": "restaurant-60",
+      "name": "Genesis Vegan Restaurant",
+      "location": "Singapore, SG",
+      "rating": 4.4,
+      "priceRange": "SGD 10–20",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Restaurant",
+      "Vegetarian cafe and deli",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 43,
+      "comments": 4,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-61",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} vendor in {location} shared the secret...",
+    "content": "The {spice} vendor in {location} shared the secret to perfect {dish}. It's all about {technique}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-61.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-61.jpg",
+    "restaurant": {
+      "id": "restaurant-61",
+      "name": "The Boneless Kitchen - Korean Vegetarian and Vegan Cuisine",
+      "location": "Singapore, SG",
+      "rating": 4.4,
+      "priceRange": "SGD 20–30",
+      "cuisine": "Vegan restaurant"
+    },
+    "tags": [
+      "Vegan restaurant",
+      "Vegetarian restaurant"
+    ],
+    "engagement": {
+      "likes": 78,
+      "comments": 6,
+      "shares": 2
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-62",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
+    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-62.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-62.jpg",
+    "restaurant": {
+      "id": "restaurant-62",
+      "name": "Cheaper & Better Street Food",
+      "location": "Bang Rak, TH",
+      "rating": 4.7,
+      "priceRange": "฿1–200",
+      "cuisine": "Thai restaurant"
+    },
+    "tags": [
+      "Thai restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 12,
+      "comments": 16,
+      "shares": 9
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Passionate"
+  },
+  {
+    "id": "spice_scholar_anika-post-63",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} trail led me here, and I'm not disappo...",
+    "content": "The {spice} trail led me here, and I'm not disappointed. This {dish} is {adjective} and {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-63.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-63.jpg",
+    "restaurant": {
+      "id": "restaurant-63",
+      "name": "Thai Street Food Place",
+      "location": "Watthana, TH",
+      "rating": 4.6,
+      "priceRange": "฿1–100",
+      "cuisine": "Food court"
+    },
+    "tags": [
+      "Food court",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 87,
+      "comments": 2,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-64",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
+    "content": "This {cuisine} restaurant has been using the same {spice} blend for 50 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-64.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-64.jpg",
+    "restaurant": {
+      "id": "restaurant-64",
+      "name": "Central World Square Street Food",
+      "location": "Pathum Wan, TH",
+      "rating": 3.7,
+      "priceRange": "$$",
+      "cuisine": "Thai restaurant"
+    },
+    "tags": [
+      "Thai restaurant"
+    ],
+    "engagement": {
+      "likes": 1,
+      "comments": 10,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-65",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Want to master {cuisine}? Start with {spice}. It's...",
+    "content": "Want to master {cuisine}? Start with {spice}. It's the foundation of {dish}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-65.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-65.jpg",
+    "restaurant": {
+      "id": "restaurant-65",
+      "name": "Sushi Juban Asok Branch",
+      "location": "Watthana, TH",
+      "rating": 4.9,
+      "priceRange": "฿1,000+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 48,
+      "comments": 18,
+      "shares": 1
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "spice_scholar_anika-post-66",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ This {cuisine} restaurant has been using the same ...",
+    "content": "This {cuisine} restaurant has been using the same {spice} blend for 75 years. The {dish} is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-66.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-66.jpg",
+    "restaurant": {
+      "id": "restaurant-66",
+      "name": "SUSHI JUBAN Takumi",
+      "location": "Watthana, TH",
+      "rating": 4.9,
+      "priceRange": "฿2,000+",
+      "cuisine": "Sushi restaurant"
+    },
+    "tags": [
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 61,
+      "comments": 14,
+      "shares": 0
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-67",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ I learned about {spice} from a {age} grandmother i...",
+    "content": "I learned about {spice} from a {age} grandmother in {region}. Her {dish} recipe is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-67.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-67.jpg",
+    "restaurant": {
+      "id": "restaurant-67",
+      "name": "Zuma Bangkok",
+      "location": "Pathum Wan, TH",
+      "rating": 4.4,
+      "priceRange": "฿2,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Cocktail bar",
+      "Fine dining restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 14,
+      "comments": 5,
+      "shares": 6
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Knowledgeable"
+  },
+  {
+    "id": "spice_scholar_anika-post-68",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} should be {adjective} before adding to...",
+    "content": "The {spice} should be {adjective} before adding to {dish}. It makes all the difference.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-68.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-68.jpg",
+    "restaurant": {
+      "id": "restaurant-68",
+      "name": "Akira Back",
+      "location": "Khlong Toei, TH",
+      "rating": 4.7,
+      "priceRange": "฿1,400–1,600",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Asian fusion restaurant",
+      "Restaurant"
+    ],
+    "engagement": {
+      "likes": 90,
+      "comments": 9,
+      "shares": 4
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Cultural"
+  },
+  {
+    "id": "spice_scholar_anika-post-69",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ The {spice} market in {location} is a {adjective} ...",
+    "content": "The {spice} market in {location} is a {adjective} experience. Every {spice} tells a story.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-69.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-69.jpg",
+    "restaurant": {
+      "id": "restaurant-69",
+      "name": "SUSHI SEKI",
+      "location": "Watthana, TH",
+      "rating": 4.8,
+      "priceRange": "$$",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 80,
+      "comments": 9,
+      "shares": 3
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Traditional"
+  },
+  {
+    "id": "spice_scholar_anika-post-70",
+    "masterBotId": "f2e517b0-7dd2-4534-a678-5b64d4795b3a",
+    "title": "🌶️ Found this hidden gem serving {cuisine} that's bee...",
+    "content": "Found this hidden gem serving {cuisine} that's been passed down for generations. The {spice} blend is {adjective}.",
+    "imageUrl": "/images/posts/spice_scholar_anika/post-70.jpg",
+    "imageLocalPath": "public/images/posts/spice_scholar_anika/post-70.jpg",
+    "restaurant": {
+      "id": "restaurant-70",
+      "name": "Sushi Yorokobu",
+      "location": "Watthana, TH",
+      "rating": 4.8,
+      "priceRange": "฿1,000+",
+      "cuisine": "Japanese restaurant"
+    },
+    "tags": [
+      "Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "engagement": {
+      "likes": 11,
+      "comments": 18,
+      "shares": 5
+    },
+    "createdAt": "2025-09-19T16:21:23.802Z",
+    "personality": "Passionate"
+  }
+]

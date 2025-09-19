@@ -5,7 +5,7 @@ import {
   spoonacularService,
 } from "../src/lib/spoonacular";
 import { BottomNavigation } from "./BottomNavigation";
-import { Recipe, mockRecipes } from "./constants/recipesData";
+import { Recipe } from "./constants/recipesData";
 import { NewRecipe, RecipeCreatorPage } from "./features/RecipeCreatorPage";
 import { GamificationPopup } from "./recipes/GamificationPopup";
 import { RecipeCard } from "./recipes/RecipeCard";
@@ -50,12 +50,8 @@ export function RecipesPage({
     }
   };
 
-  // Combine all recipe sources - prioritize backend recipes, then user recipes, then mock as fallback
-  const allRecipes = [
-    ...backendRecipes,
-    ...userRecipes,
-    ...(backendRecipes.length === 0 ? mockRecipes : []),
-  ];
+  // Use only real data - no mock fallback
+  const allRecipes = [...backendRecipes, ...userRecipes];
 
   // Filter recipes based on search query
   const filteredRecipes = allRecipes.filter(
@@ -97,52 +93,45 @@ export function RecipesPage({
       }
     } catch (err: any) {
       console.error("❌ Failed to load recipes from Spoonacular API:", err);
-      setError(`Failed to load recipes: ${err.message}`);
-      console.log("📚 Falling back to local recipe data only");
+      setError("Failed to load recipes. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Debounced backend search
-  useEffect(() => {
-    if (searchQuery.trim()) {
-      const timeoutId = setTimeout(() => {
-        searchBackendRecipes(searchQuery);
-      }, 500);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [searchQuery]);
+  const handleSaveNewRecipe = (newRecipe: NewRecipe) => {
+    const recipe: Recipe = {
+      id: `user_${Date.now()}`,
+      title: newRecipe.title,
+      cuisine: newRecipe.cuisine,
+      difficulty: newRecipe.difficulty,
+      prepTime: newRecipe.prepTime,
+      cookTime: newRecipe.cookTime,
+      servings: newRecipe.servings,
+      rating: 0,
+      reviewCount: 0,
+      isBookmarked: false,
+      isLiked: false,
+      tags: newRecipe.tags,
+      ingredients: newRecipe.ingredients,
+      instructions: newRecipe.instructions,
+      nutrition: newRecipe.nutrition,
+      mainImage: newRecipe.mainImage || "",
+      images: newRecipe.images || [],
+      author: {
+        id: "current_user",
+        name: "You",
+        avatar:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+        verified: true,
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-  const searchBackendRecipes = async (query: string) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      console.log(`🔍 Searching Spoonacular API for: "${query}"`);
-      const response = await spoonacularService.searchRecipes({
-        query: query,
-        number: 12,
-      });
-
-      if (response.results && response.results.length > 0) {
-        const convertedRecipes: Recipe[] = response.results.map(
-          convertSpoonacularRecipe
-        );
-        setBackendRecipes(convertedRecipes);
-        console.log(
-          `✅ Found ${convertedRecipes.length} recipes for "${query}"`
-        );
-      } else {
-        console.warn(`⚠️ No recipes found for "${query}"`);
-        setError(`No recipes found for "${query}"`);
-      }
-    } catch (err: any) {
-      console.error("❌ Spoonacular recipe search failed:", err);
-      setError(`Search failed: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
+    setUserRecipes((prev) => [recipe, ...prev]);
+    setShowGamification(true);
+    setUserPoints((prev) => prev + 50); // Award points for creating recipe
   };
 
   const handleRecipeSelect = (recipe: Recipe) => {
@@ -155,257 +144,231 @@ export function RecipesPage({
     setSelectedRecipe(null);
   };
 
-  const handleSaveRecipe = () => {
-    // Mock save action - in real app would save to user's collection
-    setUserPoints((prev) => prev + 10);
-    setShowGamification(true);
+  const handleBookmark = (recipeId: string) => {
+    setBackendRecipes((prev) =>
+      prev.map((recipe) =>
+        recipe.id === recipeId
+          ? { ...recipe, isBookmarked: !recipe.isBookmarked }
+          : recipe
+      )
+    );
+    setUserRecipes((prev) =>
+      prev.map((recipe) =>
+        recipe.id === recipeId
+          ? { ...recipe, isBookmarked: !recipe.isBookmarked }
+          : recipe
+      )
+    );
   };
 
-  const handleShareRecipe = () => {
-    // Mock share action
-    setUserPoints((prev) => prev + 20);
-    setShowGamification(true);
+  const handleLike = (recipeId: string) => {
+    setBackendRecipes((prev) =>
+      prev.map((recipe) =>
+        recipe.id === recipeId
+          ? { ...recipe, isLiked: !recipe.isLiked }
+          : recipe
+      )
+    );
+    setUserRecipes((prev) =>
+      prev.map((recipe) =>
+        recipe.id === recipeId
+          ? { ...recipe, isLiked: !recipe.isLiked }
+          : recipe
+      )
+    );
   };
 
-  const handleCreateRecipe = () => {
-    setCurrentView("create");
-  };
-
-  const handleSaveNewRecipe = (newRecipe: NewRecipe) => {
-    // Convert NewRecipe to Recipe format
-    const recipe: Recipe = {
-      id: `user_${Date.now()}`,
-      title: newRecipe.title,
-      description: newRecipe.description,
-      image: newRecipe.mainImage || "",
-      cookingTime: newRecipe.cookingTime,
-      difficulty: newRecipe.difficulty,
-      servings: newRecipe.servings,
-      cuisine: newRecipe.cuisine,
-      rating: 0,
-      reviews: 0,
-      author: {
-        name: "You",
-        avatar:
-          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-        verified: false,
-      },
-      ingredients: newRecipe.ingredients.map((ing) => ({
-        id: Math.random().toString(36),
-        name: ing.name,
-        amount: ing.amount,
-        unit: ing.unit,
-      })),
-      instructions: newRecipe.steps.map((step, index) => ({
-        id: Math.random().toString(36),
-        step: index + 1,
-        description: step.instruction,
-      })),
-      tags: newRecipe.tags,
-      nutrition: newRecipe.nutritionInfo || {
-        calories: 0,
-        protein: 0,
-        carbs: 0,
-        fat: 0,
-        fiber: 0,
-        sugar: 0,
-        sodium: 0,
-      },
-      calories: newRecipe.nutritionInfo?.calories || 0,
-      preparationTime: 15,
-      totalTime: newRecipe.cookingTime + 15,
-      nutritionInfo: newRecipe.nutritionInfo,
-      isSaved: false,
-      isUserCreated: true,
-    };
-
-    setUserRecipes((prev) => [recipe, ...prev]);
-    setUserPoints((prev) => prev + 50); // Bonus points for creating a recipe
-    setCurrentView("feed");
-    setShowGamification(true);
-  };
-
-  if (currentView === "create") {
+  if (currentView === "detail" && selectedRecipe) {
     return (
-      <RecipeCreatorPage
-        onNavigateBack={handleBackToFeed}
-        onSaveRecipe={handleSaveNewRecipe}
+      <RecipeDetail
+        recipe={selectedRecipe}
+        onBack={handleBackToFeed}
+        onBookmark={handleBookmark}
+        onLike={handleLike}
       />
     );
   }
 
-  if (currentView === "detail" && selectedRecipe) {
+  if (currentView === "create") {
     return (
-      <>
-        <RecipeDetail
-          recipe={selectedRecipe}
-          onBack={handleBackToFeed}
-          onSave={handleSaveRecipe}
-          onShare={handleShareRecipe}
-        />
-        {showGamification && (
-          <GamificationPopup
-            points={selectedRecipe.isUserCreated ? 50 : 20}
-            action={
-              selectedRecipe.isUserCreated
-                ? "creating a recipe"
-                : "saving a recipe"
-            }
-            currentPoints={userPoints}
-            onClose={() => setShowGamification(false)}
-          />
-        )}
-      </>
+      <RecipeCreatorPage
+        onBack={handleBackToFeed}
+        onSave={handleSaveNewRecipe}
+      />
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-100">
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center space-x-4">
-            {onNavigateBack && (
-              <button
-                onClick={onNavigateBack}
-                className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5 text-[#0B1F3A]" />
-              </button>
-            )}
-            <div>
-              <h1 className="text-2xl font-bold text-[#0B1F3A]">Bites</h1>
-              <p className="text-sm text-gray-600">Discover amazing recipes</p>
-            </div>
-          </div>
-
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="px-4 py-3 flex items-center justify-between">
           <button
-            onClick={handleCreateRecipe}
-            className="w-10 h-10 rounded-full bg-[#F14C35] flex items-center justify-center hover:bg-[#E63E26] transition-colors"
+            onClick={onNavigateBack}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
-            <Plus className="w-5 h-5 text-white" />
+            <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
+          <h1 className="text-lg font-semibold text-gray-900">Bites</h1>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <Filter className="w-5 h-5 text-gray-600" />
+            </button>
+            <button
+              onClick={() => setCurrentView("create")}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <Plus className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
         </div>
 
         {/* Search Bar */}
-        <div className="px-4 pb-4">
+        <div className="px-4 pb-3">
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
-            </div>
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search recipes, cuisines, ingredients..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl bg-[#F8F9FA] focus:outline-none focus:border-[#F14C35] focus:ring-2 focus:ring-[#F14C35]/20 transition-colors"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center"
-            >
-              <Filter className="h-5 w-5 text-[#F14C35]" />
-            </button>
           </div>
         </div>
 
-        {/* Filter Tags (when expanded) */}
-        {showFilters && (
-          <div className="px-4 pb-4">
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Quick",
-                "Healthy",
-                "Vegetarian",
-                "High-Protein",
-                "Low-Carb",
-                "Dessert",
-              ].map((filter) => (
-                <button
-                  key={filter}
-                  className="px-4 py-2 bg-gray-100 hover:bg-[#F14C35] hover:text-white rounded-full text-sm font-medium transition-colors"
-                >
-                  {filter}
-                </button>
-              ))}
-            </div>
+        {/* Tabs */}
+        <div className="px-4 pb-3">
+          <div className="flex space-x-6">
+            <button
+              onClick={() => handleTabChange("bites")}
+              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === "bites"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Bites
+            </button>
+            <button
+              onClick={() => handleTabChange("feed")}
+              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === "feed"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Feed
+            </button>
+            <button
+              onClick={() => handleTabChange("scout")}
+              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === "scout"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Scout
+            </button>
+            <button
+              onClick={() => handleTabChange("snap")}
+              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === "snap"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Snap
+            </button>
           </div>
-        )}
+        </div>
       </div>
 
-      {/* Recipe Feed */}
+      {/* Content */}
       <div className="p-4">
-        {/* Error Display */}
-        {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl">
-            <div className="flex items-center">
-              <div className="w-5 h-5 text-red-500 mr-3">⚠️</div>
-              <div>
-                <p className="text-sm font-medium text-red-800">{error}</p>
-                <p className="text-xs text-red-600 mt-1">
-                  Showing local recipes as fallback
-                </p>
-              </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading recipes...</p>
             </div>
           </div>
-        )}
-
-        {/* Loading State */}
-        {loading && (
-          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-            <div className="flex items-center">
-              <div className="w-5 h-5 text-blue-500 mr-3 animate-spin">⏳</div>
-              <p className="text-sm text-blue-800">
-                {searchQuery
-                  ? `Searching for "${searchQuery}"...`
-                  : "Loading recipes..."}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {searchQuery && !loading && (
-          <div className="mb-4">
-            <p className="text-sm text-gray-600">
-              {filteredRecipes.length} recipe
-              {filteredRecipes.length !== 1 ? "s" : ""} found for "{searchQuery}
-              "
-            </p>
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              onClick={() => handleRecipeSelect(recipe)}
-              onSave={handleSaveRecipe}
-              onShare={handleShareRecipe}
-            />
-          ))}
-        </div>
-
-        {filteredRecipes.length === 0 && searchQuery && (
+        ) : error ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <Search className="w-8 h-8 text-gray-400" />
+            <div className="text-red-500 mb-4">
+              <svg
+                className="w-12 h-12 mx-auto"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
+              </svg>
             </div>
-            <h3 className="text-lg font-medium text-[#0B1F3A] mb-2">
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Failed to load recipes
+            </h3>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <button
+              onClick={loadBackendRecipes}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : filteredRecipes.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <svg
+                className="w-12 h-12 mx-auto"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 6.291A7.962 7.962 0 0012 5c-2.34 0-4.29 1.009-5.824 2.709"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
               No recipes found
             </h3>
-            <p className="text-gray-600">
-              Try searching for something else or browse our featured recipes.
+            <p className="text-gray-600 mb-4">
+              {searchQuery
+                ? "Try adjusting your search terms"
+                : "No recipes available at the moment"}
             </p>
+            {!searchQuery && (
+              <button
+                onClick={loadBackendRecipes}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Refresh
+              </button>
+            )}
           </div>
-        )}
-
-        {/* Load More Button (for infinite scroll simulation) */}
-        {filteredRecipes.length > 0 && (
-          <div className="text-center mt-8">
-            <button className="px-6 py-3 bg-[#F14C35] text-white rounded-xl font-medium hover:bg-[#E63E26] transition-colors">
-              Load More Recipes
-            </button>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredRecipes.map((recipe) => (
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                onSelect={handleRecipeSelect}
+                onBookmark={handleBookmark}
+                onLike={handleLike}
+              />
+            ))}
           </div>
         )}
       </div>
@@ -413,15 +376,20 @@ export function RecipesPage({
       {/* Gamification Popup */}
       {showGamification && (
         <GamificationPopup
-          points={10}
-          action="exploring recipes"
-          currentPoints={userPoints}
+          points={50}
+          message="Recipe created! +50 points"
           onClose={() => setShowGamification(false)}
         />
       )}
 
       {/* Bottom Navigation */}
-      <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+      <BottomNavigation
+        activeTab="bites"
+        onTabChange={handleTabChange}
+        onNavigateToFeed={onNavigateToFeed}
+        onNavigateToScout={onNavigateToScout}
+        onNavigateToSnap={onNavigateToSnap}
+      />
     </div>
   );
 }

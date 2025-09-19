@@ -1,28 +1,8 @@
 import { useEffect, useState } from "react";
-import { sbAnon } from "../../src/lib/supabase";
+import { MasterBot, masterBotService } from "../services/masterBotService";
 
-export interface DatabaseMasterBot {
-  id: string;
-  email: string;
-  username: string;
-  display_name: string;
-  bio: string;
-  avatar_url: string;
-  location_city: string;
-  location_country: string;
-  total_points: number;
-  followers_count: number;
-  following_count: number;
-  is_master_bot: boolean;
-  created_at: string;
-
-  // From master_bots table
-  bot_name?: string;
-  personality_type?: string;
-  specialties?: string[];
-  system_prompt?: string;
-  is_active?: boolean;
-}
+// Re-export the MasterBot interface for compatibility
+export type DatabaseMasterBot = MasterBot;
 
 export interface FeedCard {
   id: string;
@@ -53,44 +33,15 @@ export function useMasterBots() {
   const fetchMasterBots = async () => {
     try {
       setLoading(true);
+      setError(null);
 
-      // Fetch Master Bot users with their configurations
-      const { data: users, error: usersError } = await sbAnon()
-        .from("users")
-        .select(
-          `
-          *,
-          master_bots (
-            bot_name,
-            personality_type,
-            specialties,
-            system_prompt,
-            is_active
-          )
-        `
-        )
-        .eq("is_master_bot", true)
-        .eq("master_bots.is_active", true)
-        .order("total_points", { ascending: false });
+      // Use the simplified masterBotService
+      const masterBotsData = await masterBotService.getAllMasterBots();
 
-      if (usersError) {
-        throw usersError;
-      }
-
-      const formattedBots: DatabaseMasterBot[] =
-        users?.map((user) => ({
-          ...user,
-          bot_name: user.master_bots?.[0]?.bot_name,
-          personality_type: user.master_bots?.[0]?.personality_type,
-          specialties: user.master_bots?.[0]?.specialties || [],
-          system_prompt: user.master_bots?.[0]?.system_prompt,
-          is_active: user.master_bots?.[0]?.is_active,
-        })) || [];
-
-      setMasterBots(formattedBots);
+      setMasterBots(masterBotsData);
 
       // Convert to simple feed cards for compatibility
-      const fallbackCards = formattedBots.map((bot) =>
+      const fallbackCards = masterBotsData.map((bot) =>
         convertBotToFeedCard(bot)
       );
       setFeedCards(fallbackCards);
@@ -109,28 +60,57 @@ export function useMasterBots() {
 
 // Convert database Master Bot to feed card format
 function convertBotToFeedCard(bot: DatabaseMasterBot): FeedCard {
-  // Generate sample content based on bot personality
+  // Generate sample content based on bot name/specialty
   const sampleContent = generateSampleContent(bot);
+  const specialty = getBotSpecialty(bot);
 
   return {
     id: bot.id,
-    image: bot.avatar_url || getDefaultAvatar(bot.personality_type),
+    image: bot.avatar_url || getDefaultAvatar(specialty),
     title: sampleContent.title,
     subtitle: sampleContent.subtitle,
     profileName: bot.display_name,
-    profileDesignation: bot.personality_type || "Food Explorer",
-    tags: bot.specialties?.slice(0, 4) || ["food", "discovery"],
+    profileDesignation: specialty,
+    tags: [specialty.toLowerCase().replace(/\s+/g, "_"), "food", "discovery"],
     isMasterBot: true,
     botData: {
       username: bot.username,
-      location: `${bot.location_city}, ${bot.location_country}`,
-      specialties: bot.specialties || [],
+      location: `${bot.location_city || ""}, ${
+        bot.location_country || ""
+      }`.replace(/^,\s*|,\s*$/g, ""),
+      specialties: [specialty],
     },
   };
 }
 
-// Generate sample content based on bot personality
+// Get bot specialty based on username or display name
+function getBotSpecialty(bot: DatabaseMasterBot): string {
+  const username = bot.username.toLowerCase();
+  const displayName = bot.display_name.toLowerCase();
+
+  if (username.includes("nomad") || username.includes("aurelia")) {
+    return "Street Food Explorer";
+  } else if (username.includes("sommelier") || username.includes("sebastian")) {
+    return "Fine Dining Expert";
+  } else if (username.includes("plant") || username.includes("lila")) {
+    return "Vegan Specialist";
+  } else if (username.includes("adventure") || username.includes("rafa")) {
+    return "Adventure Foodie";
+  } else if (username.includes("spice") || username.includes("anika")) {
+    return "Indian/Asian Cuisine Expert";
+  } else if (username.includes("coffee") || username.includes("omar")) {
+    return "Coffee Culture Expert";
+  } else if (username.includes("zen") || username.includes("jun")) {
+    return "Japanese Cuisine Master";
+  }
+
+  return "Food Expert";
+}
+
+// Generate sample content based on bot specialty
 function generateSampleContent(bot: DatabaseMasterBot) {
+  const specialty = getBotSpecialty(bot);
+
   const contentTemplates = {
     "Street Food Explorer": {
       title: "Hidden Street Food Gem",
@@ -162,8 +142,7 @@ function generateSampleContent(bot: DatabaseMasterBot) {
     },
   };
 
-  const template =
-    contentTemplates[bot.personality_type as keyof typeof contentTemplates];
+  const template = contentTemplates[specialty as keyof typeof contentTemplates];
   return (
     template || {
       title: "Culinary Discovery",

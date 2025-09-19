@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url("./maplibre-custom.css");
+@import "tailwindcss";
 
 @theme {
   --color-background: var(--fuzo-white);

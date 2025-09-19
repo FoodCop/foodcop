@@ -13,10 +13,7 @@ const supabase = createClient(
 
 async function checkUsersSchema() {
   try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .limit(1);
+    const { data, error } = await supabase.from("users").select("*").limit(1);
 
     if (error) {
       console.error("Error:", error);
@@ -30,13 +27,13 @@ async function checkUsersSchema() {
       });
     } else {
       console.log("No users found, checking schema...");
-      
+
       // Try to get schema info
       const { data: schemaData, error: schemaError } = await supabase
         .from("users")
         .select("*")
         .limit(0);
-        
+
       if (schemaError) {
         console.error("Schema error:", schemaError);
       }
