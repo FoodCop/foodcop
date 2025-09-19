@@ -1,7 +1,7 @@
 import { ArrowLeft, MessageCircle, Send } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { StreamChat } from "stream-chat";
-import { getAllMasterBots } from "../constants/masterBotsData";
+import { useMasterBots } from "../hooks/useMasterBots";
 import { Avatar } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -23,7 +23,7 @@ export function StreamChatIntegration({
   const [messageText, setMessageText] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
 
-  const bots = getAllMasterBots();
+  const { masterBots: bots, loading: botsLoading } = useMasterBots();
 
   useEffect(() => {
     const initStreamChat = async () => {

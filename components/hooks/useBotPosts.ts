@@ -77,53 +77,8 @@ export function useBotPosts() {
     try {
       setLoading(true);
 
-      // Check if Supabase is available
-      let supabaseClient;
-      try {
-        supabaseClient = sbAnon();
-      } catch (supabaseError) {
-        console.warn(
-          "⚠️ Supabase not available, using mock data:",
-          supabaseError
-        );
-        // Use mock data when Supabase is not available
-        const mockPosts: BotPost[] = [
-          {
-            id: "mock-1",
-            bot_id: "mock-bot-1",
-            user_id: "mock-user-1",
-            title: "Welcome to FUZO! 🍽️",
-            subtitle: "Discover amazing food experiences",
-            content:
-              "This is a demo post while we set up the database connection. Try exploring the app features!",
-            hero_url:
-              "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800",
-            likes_count: 42,
-            comments_count: 8,
-            shares_count: 3,
-            saves_count: 12,
-            visibility: "public",
-            is_featured: true,
-            is_verified: false,
-            tags: ["demo", "welcome", "food"],
-            posted_at: new Date().toISOString(),
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            bot: {
-              username: "fuzo_demo",
-              display_name: "FUZO Demo Bot",
-              personality_type: "friendly",
-              specialties: ["food discovery", "restaurant recommendations"],
-            },
-          },
-        ];
-
-        setBotPosts(mockPosts);
-        const cards = mockPosts.map((post) => convertPostToFeedCard(post));
-        setFeedCards(cards);
-        setLoading(false);
-        return;
-      }
+      // Get Supabase client
+      const supabaseClient = sbAnon();
 
       // Fetch bot posts from bot_posts table
       const { data: posts, error: postsError } = await supabaseClient

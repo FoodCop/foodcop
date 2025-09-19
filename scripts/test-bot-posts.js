@@ -56,12 +56,15 @@ async function testBotPosts() {
     posts?.slice(0, 5).forEach((post, index) => {
       const restaurant = post.restaurant_data;
       const botName = post.bot?.display_name || "Master Bot";
-      const botUsername = post.bot?.username || `master_bot_${post.bot_id?.slice(-4)}`;
-      
+      const botUsername =
+        post.bot?.username || `master_bot_${post.bot_id?.slice(-4)}`;
+
       console.log(`${index + 1}. ${post.title}`);
       console.log(`   👤 Bot: ${botName} (@${botUsername})`);
       console.log(
-        `   🏪 Restaurant: ${restaurant?.title || "Restaurant"} in ${restaurant?.city || "City"}, ${restaurant?.countryCode || "Country"}`
+        `   🏪 Restaurant: ${restaurant?.title || "Restaurant"} in ${
+          restaurant?.city || "City"
+        }, ${restaurant?.countryCode || "Country"}`
       );
       console.log(
         `   💰 Price: ${restaurant?.price || "N/A"} | ⭐ ${
@@ -128,12 +131,3 @@ async function testBotPosts() {
 }
 
 testBotPosts();
-
-
-
-
-
-
-
-
-

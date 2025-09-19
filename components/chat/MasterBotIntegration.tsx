@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import { Card } from '../ui/card';
 import { Avatar } from '../ui/avatar';
 import { Badge } from '../ui/badge';
-import { getAllMasterBots } from '../constants/masterBotsData';
+import { useMasterBots } from '../hooks/useMasterBots';
 import { getAllPersonalities } from '../constants/masterBotPersonalities';
 // import { MasterBotChatSystem } from '../debug/MasterBotChatSystem'; // Moved to debug folder
 
@@ -40,7 +40,7 @@ export function MasterBotIntegration({
   const [featuredBots, setFeaturedBots] = useState<string[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const bots = getAllMasterBots();
+  const { masterBots: bots, loading: botsLoading } = useMasterBots();
   const personalities = getAllPersonalities();
 
   useEffect(() => {
