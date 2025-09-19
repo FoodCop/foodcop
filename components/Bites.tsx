@@ -50,8 +50,12 @@ export function RecipesPage({
     }
   };
 
-  // Combine all recipe sources
-  const allRecipes = [...mockRecipes, ...userRecipes, ...backendRecipes];
+  // Combine all recipe sources - prioritize backend recipes, then user recipes, then mock as fallback
+  const allRecipes = [
+    ...backendRecipes,
+    ...userRecipes,
+    ...(backendRecipes.length === 0 ? mockRecipes : []),
+  ];
 
   // Filter recipes based on search query
   const filteredRecipes = allRecipes.filter(
@@ -173,9 +177,7 @@ export function RecipesPage({
       id: `user_${Date.now()}`,
       title: newRecipe.title,
       description: newRecipe.description,
-      image:
-        newRecipe.mainImage ||
-        "https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400",
+      image: newRecipe.mainImage || "",
       cookingTime: newRecipe.cookingTime,
       difficulty: newRecipe.difficulty,
       servings: newRecipe.servings,

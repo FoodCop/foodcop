@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
+import { RecipesPage } from "./Bites";
 import { ChatPage } from "./ChatPage";
 import { FeedPage } from "./FeedPage";
 import { LandingPage } from "./LandingPage";
 import { OnboardingFlow } from "./OnboardingFlow";
 import { ProfilePage } from "./ProfilePage";
-import { RecipesPage } from "./RecipesPage";
 import { ScoutPage } from "./ScoutPage";
 import { SnapPage } from "./SnapPage";
 import { AboutUsPage } from "./info/AboutUsPage";

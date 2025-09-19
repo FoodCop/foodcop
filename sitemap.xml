@@ -103,7 +103,7 @@
     <priority>0.8</priority>
     <changefreq>daily</changefreq>
     <!--
-      Component: RecipesPage.tsx
+      Component: Bites.tsx
       Purpose: Recipe discovery hub with community features
       Features: Recipe search, detailed instructions, community ratings, collections
       Navigation: ↔ Feed, Scout, Snap via bottom nav

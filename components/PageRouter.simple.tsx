@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
-import { ArrowLeft, Menu } from 'lucide-react';
-import { FeedPage } from './FeedPage';
-import { LandingPage } from './LandingPage';
-import { OnboardingFlow } from './OnboardingFlow';
-import { ScoutPage } from './ScoutPage';
-import { SnapPage } from './SnapPage';
-import { ChatPage } from './ChatPage';
-import { RecipesPage } from './RecipesPage';
-import { ProfilePage } from './ProfilePage';
-import { UniversalHeader } from './UniversalHeader';
+import { ArrowLeft, Menu } from "lucide-react";
+import React, { useState } from "react";
+import { RecipesPage } from "./Bites";
+import { ChatPage } from "./ChatPage";
+import { FeedPage } from "./FeedPage";
+import { LandingPage } from "./LandingPage";
+import { OnboardingFlow } from "./OnboardingFlow";
+import { ProfilePage } from "./ProfilePage";
+import { ScoutPage } from "./ScoutPage";
+import { SnapPage } from "./SnapPage";
+import { UniversalHeader } from "./UniversalHeader";
 
-type PageType = 'landing' | 'feed' | 'onboarding' | 'scout' | 'snap' | 'chat' | 'recipes' | 'profile';
+type PageType =
+  | "landing"
+  | "feed"
+  | "onboarding"
+  | "scout"
+  | "snap"
+  | "chat"
+  | "recipes"
+  | "profile";
 
 interface Page {
   id: PageType;
@@ -20,45 +28,47 @@ interface Page {
 
 const pages: Page[] = [
   {
-    id: 'landing',
-    title: 'Landing Page',
-    description: 'FUZO brand showcase with Tako mascot and feature sections'
+    id: "landing",
+    title: "Landing Page",
+    description: "FUZO brand showcase with Tako mascot and feature sections",
   },
   {
-    id: 'feed',
-    title: 'Feed Page',
-    description: 'Tinder-style swipe interface for food discovery'
+    id: "feed",
+    title: "Feed Page",
+    description: "Tinder-style swipe interface for food discovery",
   },
   {
-    id: 'recipes',
-    title: 'Bites (Recipes)',
-    description: 'Recipe discovery hub with detailed instructions and community'
+    id: "recipes",
+    title: "Bites (Recipes)",
+    description:
+      "Recipe discovery hub with detailed instructions and community",
   },
   {
-    id: 'scout',
-    title: 'Scout Page',
-    description: 'Map-based restaurant discovery with detailed views'
+    id: "scout",
+    title: "Scout Page",
+    description: "Map-based restaurant discovery with detailed views",
   },
   {
-    id: 'snap',
-    title: 'Snap Page',
-    description: 'Camera interface with tagging and gamification'
+    id: "snap",
+    title: "Snap Page",
+    description: "Camera interface with tagging and gamification",
   },
   {
-    id: 'chat',
-    title: 'Chat Page',
-    description: 'Stream Chat integration with comprehensive messaging'
+    id: "chat",
+    title: "Chat Page",
+    description: "Stream Chat integration with comprehensive messaging",
   },
   {
-    id: 'profile',
-    title: 'Profile Page',
-    description: 'User identity hub with crew, plate, photos, rewards, and points'
+    id: "profile",
+    title: "Profile Page",
+    description:
+      "User identity hub with crew, plate, photos, rewards, and points",
   },
   {
-    id: 'onboarding',
-    title: 'Onboarding Flow',
-    description: 'Complete 8-screen signup and onboarding experience'
-  }
+    id: "onboarding",
+    title: "Onboarding Flow",
+    description: "Complete 8-screen signup and onboarding experience",
+  },
 ];
 
 interface PageRouterProps {
@@ -66,117 +76,139 @@ interface PageRouterProps {
   initialPage?: PageType;
 }
 
-export function PageRouter({ onExitDemo, initialPage = 'landing' }: PageRouterProps = {}) {
+export function PageRouter({
+  onExitDemo,
+  initialPage = "landing",
+}: PageRouterProps = {}) {
   const [currentPage, setCurrentPage] = useState<PageType>(initialPage);
   const [showPageSelector, setShowPageSelector] = useState(false);
 
   // Log initial page setup
   React.useEffect(() => {
-    console.log('🎯 PageRouter: Initialized with page:', initialPage);
+    console.log("🎯 PageRouter: Initialized with page:", initialPage);
   }, [initialPage]);
 
   React.useEffect(() => {
-    console.log('📱 PageRouter: Current page changed to:', currentPage);
+    console.log("📱 PageRouter: Current page changed to:", currentPage);
 
     const handleNavigateToProfile = () => {
-      console.log('🔄 Navigation: Navigating to profile');
-      setCurrentPage('profile');
+      console.log("🔄 Navigation: Navigating to profile");
+      setCurrentPage("profile");
     };
 
     const handleNavigateToPage = (event: CustomEvent) => {
       const pageId = event.detail as PageType;
-      if (pages.find(page => page.id === pageId)) {
-        console.log('🔄 Navigation: Navigating to page:', pageId);
+      if (pages.find((page) => page.id === pageId)) {
+        console.log("🔄 Navigation: Navigating to page:", pageId);
         setCurrentPage(pageId);
       } else {
-        console.warn('⚠️ Navigation: Unknown page requested:', pageId);
+        console.warn("⚠️ Navigation: Unknown page requested:", pageId);
       }
     };
 
-    window.addEventListener('navigateToProfile', handleNavigateToProfile);
-    window.addEventListener('navigateToPage', handleNavigateToPage as EventListener);
-    
+    window.addEventListener("navigateToProfile", handleNavigateToProfile);
+    window.addEventListener(
+      "navigateToPage",
+      handleNavigateToPage as EventListener
+    );
+
     return () => {
-      window.removeEventListener('navigateToProfile', handleNavigateToProfile);
-      window.removeEventListener('navigateToPage', handleNavigateToPage as EventListener);
+      window.removeEventListener("navigateToProfile", handleNavigateToProfile);
+      window.removeEventListener(
+        "navigateToPage",
+        handleNavigateToPage as EventListener
+      );
     };
   }, [currentPage]);
 
   const renderCurrentPage = () => {
-    console.log('🎬 PageRouter: Rendering page:', currentPage);
-    
+    console.log("🎬 PageRouter: Rendering page:", currentPage);
+
     switch (currentPage) {
-      case 'landing':
-        return <LandingPage onNavigateToSignup={() => setCurrentPage('onboarding')} />;
-      case 'feed':
-        return <FeedPage 
-          onNavigateToScout={() => setCurrentPage('scout')} 
-          onNavigateToSnap={() => setCurrentPage('snap')}
-          onNavigateToChat={() => setCurrentPage('chat')}
-          onNavigateToRecipes={() => setCurrentPage('recipes')}
-          onNavigateToProfile={() => setCurrentPage('profile')}
-          onTogglePageSelector={togglePageSelector}
-        />;
-      case 'recipes':
-        return <RecipesPage onNavigateBack={() => setCurrentPage('feed')} />;
-      case 'scout':
-        return <ScoutPage onNavigateBack={() => setCurrentPage('feed')} />;
-      case 'snap':
+      case "landing":
+        return (
+          <LandingPage
+            onNavigateToSignup={() => setCurrentPage("onboarding")}
+          />
+        );
+      case "feed":
+        return (
+          <FeedPage
+            onNavigateToScout={() => setCurrentPage("scout")}
+            onNavigateToSnap={() => setCurrentPage("snap")}
+            onNavigateToChat={() => setCurrentPage("chat")}
+            onNavigateToRecipes={() => setCurrentPage("recipes")}
+            onNavigateToProfile={() => setCurrentPage("profile")}
+            onTogglePageSelector={togglePageSelector}
+          />
+        );
+      case "recipes":
+        return <RecipesPage onNavigateBack={() => setCurrentPage("feed")} />;
+      case "scout":
+        return <ScoutPage onNavigateBack={() => setCurrentPage("feed")} />;
+      case "snap":
         return <SnapPage />;
-      case 'chat':
+      case "chat":
         return <ChatPage />;
-      case 'profile':
-        return <ProfilePage 
-          onNavigateBack={() => setCurrentPage('feed')}
-        />;
-      case 'onboarding':
-        return <OnboardingFlow 
-          onComplete={() => setCurrentPage('feed')} 
-          onBack={() => setCurrentPage('landing')} 
-        />;
+      case "profile":
+        return <ProfilePage onNavigateBack={() => setCurrentPage("feed")} />;
+      case "onboarding":
+        return (
+          <OnboardingFlow
+            onComplete={() => setCurrentPage("feed")}
+            onBack={() => setCurrentPage("landing")}
+          />
+        );
       default:
-        console.warn('⚠️ PageRouter: Unknown page, defaulting to landing:', currentPage);
-        return <LandingPage onNavigateToSignup={() => setCurrentPage('onboarding')} />;
+        console.warn(
+          "⚠️ PageRouter: Unknown page, defaulting to landing:",
+          currentPage
+        );
+        return (
+          <LandingPage
+            onNavigateToSignup={() => setCurrentPage("onboarding")}
+          />
+        );
     }
   };
 
   const togglePageSelector = () => {
-    console.log('🎛️ UI: Toggling page selector');
+    console.log("🎛️ UI: Toggling page selector");
     setShowPageSelector(!showPageSelector);
   };
 
   const selectPage = (pageId: PageType) => {
-    console.log('🎯 UI: Page selected:', pageId);
+    console.log("🎯 UI: Page selected:", pageId);
     setCurrentPage(pageId);
     setShowPageSelector(false);
   };
 
-  const currentPageInfo = pages.find(page => page.id === currentPage);
+  const currentPageInfo = pages.find((page) => page.id === currentPage);
 
   // Helper function to determine if a page needs the universal header
   const getHeaderConfig = (pageId: PageType) => {
     switch (pageId) {
-      case 'landing':
-      case 'onboarding':
+      case "landing":
+      case "onboarding":
         return null; // These pages have their own navigation
-      case 'feed':
+      case "feed":
         return null; // Feed has its own header with FUZO branding
-      case 'scout':
+      case "scout":
         return null; // Scout has its own complex header with search and tabs
-      case 'snap':
-      case 'recipes':
-      case 'profile':
-      case 'chat':
+      case "snap":
+      case "recipes":
+      case "profile":
+      case "chat":
         return {
           title: currentPageInfo?.title,
-          showChatButton: pageId !== 'chat',
-          showProfileButton: pageId !== 'profile'
+          showChatButton: pageId !== "chat",
+          showProfileButton: pageId !== "profile",
         };
       default:
         return {
           title: currentPageInfo?.title,
           showChatButton: true,
-          showProfileButton: true
+          showProfileButton: true,
         };
     }
   };
@@ -221,7 +253,7 @@ export function PageRouter({ onExitDemo, initialPage = 'landing' }: PageRouterPr
                 </button>
               </div>
             </div>
-            
+
             <div className="space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pr-2 -mr-2">
               {pages.map((page) => (
                 <button
@@ -229,8 +261,8 @@ export function PageRouter({ onExitDemo, initialPage = 'landing' }: PageRouterPr
                   onClick={() => selectPage(page.id)}
                   className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
                     currentPage === page.id
-                      ? 'border-[#F14C35] bg-[#F14C35]/5'
-                      : 'border-gray-200 hover:border-[#F14C35]/50 hover:bg-gray-50'
+                      ? "border-[#F14C35] bg-[#F14C35]/5"
+                      : "border-gray-200 hover:border-[#F14C35]/50 hover:bg-gray-50"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -256,8 +288,8 @@ export function PageRouter({ onExitDemo, initialPage = 'landing' }: PageRouterPr
       {/* Universal Header - Only shown on specific pages */}
       {headerConfig && (
         <UniversalHeader
-          onNavigateToChat={() => setCurrentPage('chat')}
-          onNavigateToProfile={() => setCurrentPage('profile')}
+          onNavigateToChat={() => setCurrentPage("chat")}
+          onNavigateToProfile={() => setCurrentPage("profile")}
           onTogglePageSelector={togglePageSelector}
           unreadChatCount={unreadChatCount}
           {...headerConfig}
@@ -285,9 +317,7 @@ export function PageRouter({ onExitDemo, initialPage = 'landing' }: PageRouterPr
       </div>
 
       {/* Page Content */}
-      <div className={headerConfig ? 'pt-0' : ''}>
-        {renderCurrentPage()}
-      </div>
+      <div className={headerConfig ? "pt-0" : ""}>{renderCurrentPage()}</div>
     </div>
   );
 }

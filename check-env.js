@@ -5,18 +5,25 @@
  * Run this script to debug environment variable loading issues
  */
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 console.log("🔍 Environment Variable Debug Checker");
 console.log("=====================================\n");
 
-// Check if .env file exists
+// Check if .env or .env.local file exists
 const envPath = path.join(process.cwd(), ".env");
+const envLocalPath = path.join(process.cwd(), ".env.local");
 const envExists = fs.existsSync(envPath);
+const envLocalExists = fs.existsSync(envLocalPath);
 
 console.log("📁 File System Check:");
 console.log(`- .env file exists: ${envExists ? "✅ Yes" : "❌ No"}`);
+console.log(`- .env.local file exists: ${envLocalExists ? "✅ Yes" : "❌ No"}`);
 
 if (envExists) {
   try {
@@ -53,7 +60,46 @@ if (envExists) {
   } catch (error) {
     console.log(`- .env file readable: ❌ No (${error.message})`);
   }
-} else {
+}
+
+if (envLocalExists) {
+  try {
+    const envLocalContent = fs.readFileSync(envLocalPath, "utf8");
+    const lines = envLocalContent.split("\n");
+    const hasGoogleKey = lines.some((line) =>
+      line.startsWith("VITE_GOOGLE_MAPS_API_KEY=")
+    );
+
+    console.log(`- .env.local file readable: ✅ Yes`);
+    console.log(
+      `- Contains Google Maps key: ${hasGoogleKey ? "✅ Yes" : "❌ No"}`
+    );
+    console.log(`- File size: ${envLocalContent.length} characters`);
+    console.log(`- Number of lines: ${lines.length}`);
+
+    if (hasGoogleKey) {
+      const keyLine = lines.find((line) =>
+        line.startsWith("VITE_GOOGLE_MAPS_API_KEY=")
+      );
+      const keyValue = keyLine.split("=")[1];
+      console.log(`- Key length: ${keyValue?.length || 0} characters`);
+      console.log(
+        `- Key starts with AIza: ${
+          keyValue?.startsWith("AIza") ? "✅ Yes" : "❌ No"
+        }`
+      );
+      console.log(
+        `- Key preview: ${
+          keyValue ? keyValue.substring(0, 12) + "..." : "Empty"
+        }`
+      );
+    }
+  } catch (error) {
+    console.log(`- .env.local file readable: ❌ No (${error.message})`);
+  }
+}
+
+if (!envExists && !envLocalExists) {
   console.log("💡 Create a .env file in your project root with:");
   console.log("   VITE_GOOGLE_MAPS_API_KEY=your_api_key_here");
 }

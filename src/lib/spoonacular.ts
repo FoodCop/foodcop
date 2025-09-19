@@ -3,7 +3,7 @@
 
 import { getEnv } from "../../utils/env";
 
-const SPOONACULAR_API_KEY = getEnv('VITE_SPOONACULAR_API_KEY') || import.meta.env.VITE_SPOONACULAR_API_KEY;
+const SPOONACULAR_API_KEY = import.meta.env.VITE_SPOONACULAR_API_KEY;
 const SPOONACULAR_BASE_URL = "https://api.spoonacular.com/recipes";
 
 interface SpoonacularRecipe {
@@ -148,9 +148,7 @@ export function convertSpoonacularRecipe(recipe: SpoonacularRecipe): any {
     title: recipe.title || "Untitled Recipe",
     description:
       recipe.summary?.replace(/<[^>]*>/g, "") || "No description available",
-    image:
-      recipe.image ||
-      "https://images.unsplash.com/photo-1556909065-f3d8ab622461?w=400",
+    image: recipe.image || "",
     cookingTime: recipe.readyInMinutes || 30,
     difficulty: "Medium" as const,
     servings: recipe.servings || 4,

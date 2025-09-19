@@ -24,7 +24,7 @@ export const LazyChatPage = lazy(() =>
   import("./ChatPage").then((module) => ({ default: module.ChatPage }))
 );
 export const LazyRecipesPage = lazy(() =>
-  import("./RecipesPage").then((module) => ({ default: module.RecipesPage }))
+  import("./Bites").then((module) => ({ default: module.RecipesPage }))
 );
 export const LazyScoutPage = lazy(() =>
   import("./ScoutPage").then((module) => ({ default: module.ScoutPage }))

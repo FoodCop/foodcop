@@ -54,9 +54,7 @@ export interface Restaurant {
 const convertAPIRestaurant = (apiRestaurant: APIRestaurant): Restaurant => ({
   id: apiRestaurant.id,
   name: apiRestaurant.name,
-  image:
-    apiRestaurant.photos[0] ||
-    "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400",
+  image: "", // Let SafeRestaurantImage handle image fetching
   rating: apiRestaurant.rating,
   reviewCount: Math.floor(Math.random() * 500) + 50, // Mock review count
   cuisine: apiRestaurant.cuisine,
@@ -303,7 +301,7 @@ export function ScoutPage({
         return {
           id: place.id || `restaurant_${Math.random()}`,
           name: place.displayName?.text || "Unknown Restaurant",
-          image: getFallbackImageForRestaurant(place.types || [], index), // Will be resolved by SafeRestaurantImage
+          image: "", // Let SafeRestaurantImage handle image fetching using placeId
           rating: place.rating || 4.0,
           reviewCount:
             place.userRatingCount || Math.floor(Math.random() * 500) + 50,
@@ -351,37 +349,6 @@ export function ScoutPage({
 
   const toRadians = (degrees: number): number => {
     return degrees * (Math.PI / 180);
-  };
-
-  // Helper function to get variety of fallback images based on restaurant type
-  const getFallbackImageForRestaurant = (
-    types: string[],
-    index: number
-  ): string => {
-    const cuisineImages: Record<string, string> = {
-      italian_restaurant:
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400",
-      chinese_restaurant:
-        "https://images.unsplash.com/photo-1526318896980-cf78c088247c?w=400",
-      japanese_restaurant:
-        "https://images.unsplash.com/photo-1725122194872-ace87e5a1a8d?w=400",
-      mexican_restaurant:
-        "https://images.unsplash.com/photo-1700625915228-f2b3d88c6676?w=400",
-    };
-
-    const generalImages = [
-      "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400",
-      "https://images.unsplash.com/photo-1725122194872-ace87e5a1a8d?w=400",
-      "https://images.unsplash.com/photo-1700625915228-f2b3d88c6676?w=400",
-    ];
-
-    for (const type of types) {
-      if (cuisineImages[type]) {
-        return cuisineImages[type];
-      }
-    }
-
-    return generalImages[index % generalImages.length];
   };
 
   // Helper function to extract cuisine types
