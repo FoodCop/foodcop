@@ -5,17 +5,17 @@ import { BottomNavigation } from "./BottomNavigation";
 import { FuzoTabs } from "./global/FuzoTabs";
 
 import { TakoToast } from "./ai/TakoToast";
+import { PlatesTab } from "./global/PlatesTab";
 import { FriendsTab } from "./scout/FriendsTab";
 import { MapView } from "./scout/MapView";
 import { RestaurantCard } from "./scout/RestaurantCard";
 import { RestaurantDetailSheet } from "./scout/RestaurantDetailSheet";
-import { SavedItemsTab } from "./scout/SavedItemsTab";
 import {
   Restaurant as APIRestaurant,
   Location,
   RouteInfo,
 } from "./services/locationServiceBackend";
-import { savedItemsService } from "./services/savedItemsService";
+import { platesService } from "./services/platesService";
 
 import {
   GeolocationResult,
@@ -147,7 +147,7 @@ export function ScoutPage({
   // Load saved restaurants from backend
   const loadSavedRestaurants = async () => {
     try {
-      const savedRestaurants = await savedItemsService.getSavedRestaurants();
+      const savedRestaurants = await platesService.getSavedRestaurants();
       setSavedRestaurants(savedRestaurants);
       console.log("✅ Loaded saved restaurants:", savedRestaurants.length);
     } catch (error) {
@@ -430,7 +430,7 @@ export function ScoutPage({
     try {
       if (restaurant.isSaved) {
         // Unsave restaurant
-        const result = await savedItemsService.unsaveRestaurant(
+        const result = await platesService.unsaveRestaurant(
           restaurant.placeId || restaurant.id
         );
         if (result.success) {
@@ -452,7 +452,7 @@ export function ScoutPage({
         }
       } else {
         // Save restaurant
-        const result = await savedItemsService.saveRestaurant({
+        const result = await platesService.saveRestaurant({
           id: restaurant.id,
           place_id: restaurant.placeId || restaurant.id,
           name: restaurant.name,
@@ -764,9 +764,14 @@ export function ScoutPage({
         )}
 
         {activeTab === "saved" && (
-          <SavedItemsTab
+          <PlatesTab
+            variant="scout"
             onRestaurantClick={handleRestaurantClick}
             onRestaurantUnsave={handleSaveRestaurant}
+            showSearch={true}
+            showFilters={true}
+            showViewToggle={true}
+            showStats={false}
           />
         )}
 

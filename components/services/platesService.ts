@@ -2,7 +2,7 @@ import { projectId, publicAnonKey } from "../../utils/supabase/info";
 
 const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-5976446e`;
 
-export interface SavedRestaurant {
+export interface PlateRestaurant {
   id: string;
   place_id: string;
   name: string;
@@ -15,7 +15,7 @@ export interface SavedRestaurant {
   geometry?: any;
 }
 
-export interface SavedPhoto {
+export interface PlatePhoto {
   id: string;
   image: string;
   caption: string;
@@ -26,7 +26,7 @@ export interface SavedPhoto {
   location?: string | null;
 }
 
-class SavedItemsService {
+class PlatesService {
   private async getAuthToken(): Promise<string> {
     try {
       // Dynamically import to avoid circular dependencies
@@ -78,14 +78,12 @@ class SavedItemsService {
   }
 
   // Restaurant methods
-  async saveRestaurant(
-    restaurant: any
-  ): Promise<{
+  async saveRestaurant(restaurant: any): Promise<{
     success: boolean;
     message: string;
-    savedRestaurant?: SavedRestaurant;
+    savedRestaurant?: PlateRestaurant;
   }> {
-    console.log("💾 Saving restaurant:", restaurant.name);
+    console.log("💾 Saving restaurant to plates:", restaurant.name);
 
     try {
       const result = await this.makeAuthenticatedRequest(
@@ -96,10 +94,10 @@ class SavedItemsService {
         }
       );
 
-      console.log("✅ Restaurant saved:", result);
+      console.log("✅ Restaurant saved to plates:", result);
       return result;
     } catch (error) {
-      console.error("❌ Failed to save restaurant:", error);
+      console.error("❌ Failed to save restaurant to plates:", error);
       return {
         success: false,
         message:
@@ -111,7 +109,7 @@ class SavedItemsService {
   async unsaveRestaurant(
     placeId: string
   ): Promise<{ success: boolean; message: string }> {
-    console.log("🗑️ Unsaving restaurant:", placeId);
+    console.log("🗑️ Removing restaurant from plates:", placeId);
 
     try {
       const result = await this.makeAuthenticatedRequest(
@@ -121,31 +119,31 @@ class SavedItemsService {
         }
       );
 
-      console.log("✅ Restaurant unsaved:", result);
+      console.log("✅ Restaurant removed from plates:", result);
       return result;
     } catch (error) {
-      console.error("❌ Failed to unsave restaurant:", error);
+      console.error("❌ Failed to remove restaurant from plates:", error);
       return {
         success: false,
         message:
           error instanceof Error
             ? error.message
-            : "Failed to unsave restaurant",
+            : "Failed to remove restaurant",
       };
     }
   }
 
-  async getSavedRestaurants(): Promise<SavedRestaurant[]> {
-    console.log("📋 Getting saved restaurants");
+  async getSavedRestaurants(): Promise<PlateRestaurant[]> {
+    console.log("📋 Getting restaurants from plates");
 
     try {
       const result = await this.makeAuthenticatedRequest(
         "/profile/saved-restaurants"
       );
-      console.log("✅ Retrieved saved restaurants:", result.totalCount);
+      console.log("✅ Retrieved restaurants from plates:", result.totalCount);
       return result.restaurants || [];
     } catch (error) {
-      console.error("❌ Failed to get saved restaurants:", error);
+      console.error("❌ Failed to get restaurants from plates:", error);
       return [];
     }
   }
@@ -169,8 +167,8 @@ class SavedItemsService {
     tags?: string[];
     points?: number;
     location?: string | null;
-  }): Promise<{ success: boolean; message: string; savedPhoto?: SavedPhoto }> {
-    console.log("📷 Saving photo:", photo.caption);
+  }): Promise<{ success: boolean; message: string; savedPhoto?: PlatePhoto }> {
+    console.log("📷 Saving photo to plates:", photo.caption);
 
     try {
       const result = await this.makeAuthenticatedRequest(
@@ -181,10 +179,10 @@ class SavedItemsService {
         }
       );
 
-      console.log("✅ Photo saved:", result);
+      console.log("✅ Photo saved to plates:", result);
       return result;
     } catch (error) {
-      console.error("❌ Failed to save photo:", error);
+      console.error("❌ Failed to save photo to plates:", error);
       return {
         success: false,
         message:
@@ -193,23 +191,23 @@ class SavedItemsService {
     }
   }
 
-  async getSavedPhotos(): Promise<SavedPhoto[]> {
-    console.log("🖼️ Getting saved photos");
+  async getSavedPhotos(): Promise<PlatePhoto[]> {
+    console.log("🖼️ Getting photos from plates");
 
     try {
       const result = await this.makeAuthenticatedRequest(
         "/profile/saved-photos"
       );
-      console.log("✅ Retrieved saved photos:", result.totalCount);
+      console.log("✅ Retrieved photos from plates:", result.totalCount);
       return result.photos || [];
     } catch (error) {
-      console.error("❌ Failed to get saved photos:", error);
+      console.error("❌ Failed to get photos from plates:", error);
       return [];
     }
   }
 
   // Convenience methods
-  async getSavedItemsCount(): Promise<{ restaurants: number; photos: number }> {
+  async getPlatesCount(): Promise<{ restaurants: number; photos: number }> {
     try {
       const [restaurants, photos] = await Promise.all([
         this.getSavedRestaurants(),
@@ -221,11 +219,16 @@ class SavedItemsService {
         photos: photos.length,
       };
     } catch (error) {
-      console.error("❌ Failed to get saved items count:", error);
+      console.error("❌ Failed to get plates count:", error);
       return { restaurants: 0, photos: 0 };
     }
   }
 }
 
 // Export singleton instance
-export const savedItemsService = new SavedItemsService();
+export const platesService = new PlatesService();
+
+// Legacy export for backward compatibility
+export const savedItemsService = platesService;
+export type SavedRestaurant = PlateRestaurant;
+export type SavedPhoto = PlatePhoto;

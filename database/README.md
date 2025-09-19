@@ -18,13 +18,15 @@ The FUZO database is designed to support a comprehensive social food discovery p
 ## Files
 
 ### `schema.sql`
+
 The main database schema file containing all table definitions, indexes, triggers, and Row Level Security (RLS) policies.
 
 **Key Tables:**
+
 - `users` - User profiles and account information
 - `user_relationships` - Friends and following connections
 - `restaurants` - Restaurant data with location and details
-- `saved_items` - User's personal restaurant collections (their "plate")
+- `plates` - User's personal restaurant collections (their "plate")
 - `posts` - User-generated content (reviews, photos, check-ins)
 - `photos` - Media content with metadata
 - `conversations` & `messages` - Chat system
@@ -35,6 +37,7 @@ The main database schema file containing all table definitions, indexes, trigger
 - `activity_logs` - User activity tracking
 
 ### `seed_data.sql`
+
 Sample data to populate the database with realistic test content including:
 
 - 5 template users with diverse profiles and preferences
@@ -46,6 +49,7 @@ Sample data to populate the database with realistic test content including:
 - Chat conversations and messages
 
 ### `database_utils.sql`
+
 Helper functions and procedures for common database operations:
 
 - User management (creation, onboarding, profile updates)
@@ -59,6 +63,7 @@ Helper functions and procedures for common database operations:
 ## Setup Instructions
 
 ### 1. Prerequisites
+
 - PostgreSQL 14+ with PostGIS extension
 - Supabase project (recommended) or local PostgreSQL instance
 
@@ -89,36 +94,42 @@ If using Supabase:
 ## Key Features
 
 ### User System
+
 - **Comprehensive Profiles**: Display name, bio, avatar, location, dietary preferences
 - **Gamification**: Points, levels, experience tracking, achievement system
 - **Social Stats**: Followers, friends, posts count, activity tracking
 - **Privacy Controls**: Private/public profiles, visibility settings
 
 ### Social Features
+
 - **Relationships**: Friends, followers, blocking system
 - **Content Sharing**: Posts, photos, reviews with rich media
 - **Interactions**: Likes, comments, shares with notification system
 - **Messaging**: Direct and group conversations with file sharing
 
 ### Restaurant Data
+
 - **Rich Information**: Name, location, cuisine, price level, hours
 - **User Generated Content**: Reviews, ratings, photos
 - **Spatial Queries**: Location-based search with PostGIS
 - **Social Validation**: Save counts, review aggregation
 
 ### Saved Items (Plate)
+
 - **Personal Collections**: Want to try, favorites, visited, wishlists
 - **Rich Metadata**: Notes, tags, priority levels, visit history
 - **Social Sharing**: Share saved items and collections
 - **Smart Organization**: Auto-categorization and filtering
 
 ### Messaging System
+
 - **Real-time Chat**: Direct and group conversations
 - **Rich Content**: Text, images, files, location sharing
 - **Restaurant Sharing**: Send restaurant recommendations in chat
 - **Read Status**: Message delivery and read tracking
 
 ### Gamification
+
 - **Points System**: Earn points for various activities
 - **Levels**: Progressive user levels based on experience
 - **Achievements**: Unlockable badges for milestones
@@ -127,6 +138,7 @@ If using Supabase:
 ## Usage Examples
 
 ### Create a New User
+
 ```sql
 SELECT create_user_profile(
     'user@example.com',
@@ -139,6 +151,7 @@ SELECT create_user_profile(
 ```
 
 ### Save a Restaurant
+
 ```sql
 SELECT save_restaurant_to_plate(
     'user-uuid',
@@ -151,6 +164,7 @@ SELECT save_restaurant_to_plate(
 ```
 
 ### Create a Post
+
 ```sql
 SELECT create_user_post(
     'user-uuid',
@@ -164,6 +178,7 @@ SELECT create_user_post(
 ```
 
 ### Search Restaurants
+
 ```sql
 SELECT * FROM search_restaurants(
     'italian pizza',
@@ -176,6 +191,7 @@ SELECT * FROM search_restaurants(
 ```
 
 ### Get Recommendations
+
 ```sql
 SELECT * FROM get_restaurant_recommendations(
     'user-uuid',
@@ -186,6 +202,7 @@ SELECT * FROM get_restaurant_recommendations(
 ## Security
 
 The schema includes Row Level Security (RLS) policies to ensure:
+
 - Users can only access their own private data
 - Public content is visible to all authenticated users
 - Friend-only content respects relationship status
@@ -194,13 +211,16 @@ The schema includes Row Level Security (RLS) policies to ensure:
 ## Performance Considerations
 
 ### Indexes
+
 The schema includes optimized indexes for:
+
 - Text search using GIN indexes on tsvector columns
 - Spatial queries using PostGIS GIST indexes
 - Social queries on user relationships
 - Timeline queries on created_at timestamps
 
 ### Scalability
+
 - Partitioning strategies for large tables (activity_logs, messages)
 - Proper foreign key constraints with cascading deletes
 - Efficient counter caching with triggers
@@ -209,12 +229,14 @@ The schema includes optimized indexes for:
 ## Maintenance
 
 ### Regular Tasks
+
 - Run `update_user_levels()` daily to update user progression
 - Clean up old notifications and activity logs
 - Update restaurant ratings from review aggregations
 - Backup user-generated content and media
 
 ### Monitoring
+
 - Track table sizes and growth rates
 - Monitor slow queries and optimize as needed
 - Watch for foreign key constraint violations
@@ -223,6 +245,7 @@ The schema includes optimized indexes for:
 ## Extension Points
 
 The schema is designed to be extensible:
+
 - Add new achievement types and requirements
 - Extend user preferences with new fields
 - Add restaurant metadata (menus, specials, events)
@@ -232,6 +255,7 @@ The schema is designed to be extensible:
 ## Integration
 
 This schema is designed to work with:
+
 - Supabase for backend-as-a-service
 - PostGIS for location-based queries
 - Full-text search for content discovery

@@ -49,7 +49,7 @@ const KNOWN_TABLES = [
   "users",
   "user_relationships",
   "restaurants",
-  "saved_items",
+  "plates",
   "posts",
   "photos",
   "conversations",

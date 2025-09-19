@@ -11,7 +11,7 @@ INSERT INTO users (
     first_name, last_name, location_city, location_state, location_country,
     dietary_preferences, cuisine_preferences, spice_tolerance, price_range_preference,
     total_points, current_level, experience_points, is_verified, followers_count, following_count
-) VALUES 
+) VALUES
 (
     '550e8400-e29b-41d4-a716-446655440001',
     'alex.chen@fuzo.app',
@@ -87,7 +87,7 @@ INSERT INTO users (
     id, email, username, display_name, bio, avatar_url,
     location_city, location_country, is_master_bot, is_verified,
     total_points, current_level
-) VALUES 
+) VALUES
 (
     '550e8400-e29b-41d4-a716-446655440010',
     'tako@fuzo.app',
@@ -120,7 +120,7 @@ INSERT INTO users (
 INSERT INTO master_bots (
     id, user_id, bot_name, personality_type, specialties, favorite_cuisines,
     system_prompt, interactions_count, recommendations_given, success_rate, is_featured
-) VALUES 
+) VALUES
 (
     '550e8400-e29b-41d4-a716-446655440020',
     '550e8400-e29b-41d4-a716-446655440010',
@@ -160,7 +160,7 @@ INSERT INTO restaurants (
     id, name, description, address, city, state, country,
     coordinates, cuisine_types, price_level, phone, website,
     rating, review_count, images, cover_image_url
-) VALUES 
+) VALUES
 (
     '660e8400-e29b-41d4-a716-446655440001',
     'Sakura Sushi Bar',
@@ -207,7 +207,7 @@ INSERT INTO restaurants (
 
 INSERT INTO user_relationships (
     follower_id, following_id, relationship_type, status
-) VALUES 
+) VALUES
 -- Alex Chen's connections
 ('550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440002', 'friend', 'accepted'),
 ('550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440004', 'follow', 'accepted'),
@@ -234,9 +234,9 @@ INSERT INTO user_relationships (
 -- 5. SAVED ITEMS (User's Plate)
 -- =====================================================
 
-INSERT INTO saved_items (
+INSERT INTO plates (
     user_id, restaurant_id, saved_type, notes, tags, priority, user_rating, visit_date
-) VALUES 
+) VALUES
 -- Alex Chen's saved items
 ('550e8400-e29b-41d4-a716-446655440001', '660e8400-e29b-41d4-a716-446655440001', 'favorite', 'Best omakase in the city!', '["sushi", "date-night", "special-occasion"]'::jsonb, 5, 4.9, '2024-01-15'),
 ('550e8400-e29b-41d4-a716-446655440001', '660e8400-e29b-41d4-a716-446655440002', 'want_to_try', 'Heard they have amazing carbonara', '["italian", "pasta"]'::jsonb, 4, null, null),
@@ -254,7 +254,7 @@ INSERT INTO saved_items (
 
 INSERT INTO posts (
     id, user_id, restaurant_id, content, post_type, rating, images, likes_count, comments_count
-) VALUES 
+) VALUES
 (
     '770e8400-e29b-41d4-a716-446655440001',
     '550e8400-e29b-41d4-a716-446655440001',
@@ -292,7 +292,7 @@ INSERT INTO posts (
 
 INSERT INTO photos (
     id, user_id, post_id, restaurant_id, url, caption, photo_type, likes_count
-) VALUES 
+) VALUES
 (
     '880e8400-e29b-41d4-a716-446655440001',
     '550e8400-e29b-41d4-a716-446655440001',
@@ -320,7 +320,7 @@ INSERT INTO photos (
 
 INSERT INTO achievements (
     id, name, description, achievement_type, requirement_count, points_reward
-) VALUES 
+) VALUES
 (
     '990e8400-e29b-41d4-a716-446655440001',
     'First Bite',
@@ -358,7 +358,7 @@ INSERT INTO achievements (
 
 INSERT INTO user_achievements (
     user_id, achievement_id, current_progress, is_completed, completed_at
-) VALUES 
+) VALUES
 -- Alex Chen achievements
 ('550e8400-e29b-41d4-a716-446655440001', '990e8400-e29b-41d4-a716-446655440001', 1, true, '2024-01-10'),
 ('550e8400-e29b-41d4-a716-446655440001', '990e8400-e29b-41d4-a716-446655440002', 8, false, null),
@@ -378,7 +378,7 @@ INSERT INTO user_achievements (
 
 INSERT INTO conversations (
     id, name, conversation_type, created_by, participant_count, message_count
-) VALUES 
+) VALUES
 (
     'aa0e8400-e29b-41d4-a716-446655440001',
     null,
@@ -400,7 +400,7 @@ INSERT INTO conversations (
 
 INSERT INTO conversation_participants (
     conversation_id, user_id, role, unread_count
-) VALUES 
+) VALUES
 -- Direct conversation between Alex and Sarah
 ('aa0e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440001', 'member', 0),
 ('aa0e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440002', 'member', 2),
@@ -417,7 +417,7 @@ INSERT INTO conversation_participants (
 
 INSERT INTO messages (
     id, conversation_id, sender_id, content, message_type, created_at
-) VALUES 
+) VALUES
 (
     'bb0e8400-e29b-41d4-a716-446655440001',
     'aa0e8400-e29b-41d4-a716-446655440001',
@@ -449,7 +449,7 @@ INSERT INTO messages (
 
 INSERT INTO activity_logs (
     user_id, activity_type, description, restaurant_id, post_id, points_earned
-) VALUES 
+) VALUES
 ('550e8400-e29b-41d4-a716-446655440001', 'restaurant_review', 'Posted review for Sakura Sushi Bar', '660e8400-e29b-41d4-a716-446655440001', '770e8400-e29b-41d4-a716-446655440001', 50),
 ('550e8400-e29b-41d4-a716-446655440001', 'photo_upload', 'Uploaded food photo', null, '770e8400-e29b-41d4-a716-446655440001', 25),
 ('550e8400-e29b-41d4-a716-446655440002', 'restaurant_save', 'Saved restaurant to plate', '660e8400-e29b-41d4-a716-446655440003', null, 10),
@@ -457,14 +457,14 @@ INSERT INTO activity_logs (
 ('550e8400-e29b-41d4-a716-446655440005', 'achievement_earned', 'Earned First Bite achievement', null, null, 100);
 
 -- Update user counters to match actual data
-UPDATE users SET 
+UPDATE users SET
     posts_count = (SELECT COUNT(*) FROM posts WHERE posts.user_id = users.id),
     photos_count = (SELECT COUNT(*) FROM photos WHERE photos.user_id = users.id),
-    saved_items_count = (SELECT COUNT(*) FROM saved_items WHERE saved_items.user_id = users.id);
+    plates_count = (SELECT COUNT(*) FROM plates WHERE plates.user_id = users.id);
 
 -- Update restaurant stats
-UPDATE restaurants SET 
-    save_count = (SELECT COUNT(*) FROM saved_items WHERE saved_items.restaurant_id = restaurants.id),
+UPDATE restaurants SET
+    save_count = (SELECT COUNT(*) FROM plates WHERE plates.restaurant_id = restaurants.id),
     review_count = (SELECT COUNT(*) FROM posts WHERE posts.restaurant_id = restaurants.id AND posts.post_type = 'review');
 
 -- =====================================================
@@ -473,23 +473,23 @@ UPDATE restaurants SET
 
 -- View all users with their stats
 /*
-SELECT 
-    username, 
-    display_name, 
+SELECT
+    username,
+    display_name,
     location_city,
     posts_count,
     photos_count,
-    saved_items_count,
+    plates_count,
     total_points,
     current_level
-FROM users 
+FROM users
 WHERE is_master_bot = false
 ORDER BY total_points DESC;
 */
 
 -- View user relationships
 /*
-SELECT 
+SELECT
     u1.username as follower,
     u2.username as following,
     ur.relationship_type,
@@ -502,7 +502,7 @@ ORDER BY ur.created_at DESC;
 
 -- View posts with user and restaurant info
 /*
-SELECT 
+SELECT
     p.content,
     u.username,
     r.name as restaurant_name,
