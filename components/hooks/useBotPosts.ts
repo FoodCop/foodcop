@@ -150,16 +150,16 @@ export function useBotPosts() {
         throw postsError;
       }
 
-      // Format the posts
+      // Format the posts with fallback data when join fails
       const formattedPosts: BotPost[] =
         posts?.map((post) => ({
           ...post,
           bot: {
-            username: post.bot?.username || "",
-            display_name: post.bot?.display_name || "",
+            username: post.bot?.username || `master_bot_${post.bot_id?.slice(-4)}`,
+            display_name: post.bot?.display_name || "Master Bot",
             personality_type:
-              post.bot?.master_bots?.[0]?.personality_type || "",
-            specialties: post.bot?.master_bots?.[0]?.specialties || [],
+              post.bot?.master_bots?.[0]?.personality_type || "Food Explorer",
+            specialties: post.bot?.master_bots?.[0]?.specialties || ["Food Discovery"],
           },
         })) || [];
 

@@ -121,7 +121,7 @@ export function DailyPicksSection({
         </div>
       </div>
 
-      <style jsx>{`
+      <style jsx="true">{`
         @keyframes float {
           0%,
           100% {

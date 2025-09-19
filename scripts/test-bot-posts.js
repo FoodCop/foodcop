@@ -30,9 +30,10 @@ async function testBotPosts() {
       .select(
         `
         *,
-        bot:users (
+        bot:users!bot_id (
           username,
           display_name,
+          avatar_url,
           master_bots (
             personality_type,
             specialties
@@ -51,19 +52,20 @@ async function testBotPosts() {
 
     console.log(`✅ Successfully fetched ${posts?.length || 0} bot posts\n`);
 
-    // Display sample posts
+    // Display sample posts with fallback data
     posts?.slice(0, 5).forEach((post, index) => {
       const restaurant = post.restaurant_data;
+      const botName = post.bot?.display_name || "Master Bot";
+      const botUsername = post.bot?.username || `master_bot_${post.bot_id?.slice(-4)}`;
+      
       console.log(`${index + 1}. ${post.title}`);
+      console.log(`   👤 Bot: ${botName} (@${botUsername})`);
       console.log(
-        `   👤 Bot: ${post.bot?.display_name} (@${post.bot?.username})`
-      );
-      console.log(
-        `   🏪 Restaurant: ${restaurant?.title} in ${restaurant?.city}, ${restaurant?.countryCode}`
+        `   🏪 Restaurant: ${restaurant?.title || "Restaurant"} in ${restaurant?.city || "City"}, ${restaurant?.countryCode || "Country"}`
       );
       console.log(
         `   💰 Price: ${restaurant?.price || "N/A"} | ⭐ ${
-          restaurant?.totalScore
+          restaurant?.totalScore || "N/A"
         }/5`
       );
       console.log(`   🏷️ Tags: ${post.tags?.join(", ")}`);
