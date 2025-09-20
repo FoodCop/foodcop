@@ -48,12 +48,7 @@
         "hours": "1 PM to 12 AM"
       }
     ],
-    "tags": [
-      "Japanese restaurant",
-      "Eixample",
-      "Barcelona",
-      "ES"
-    ]
+    "tags": ["Japanese restaurant", "Eixample", "Barcelona", "ES"]
   },
   {
     "id": "restaurant-zen_minimalist_jun-2",
@@ -103,12 +98,7 @@
         "hours": "1:30 to 4 PM"
       }
     ],
-    "tags": [
-      "Japanese restaurant",
-      "Ciutat Vella",
-      "Barcelona",
-      "ES"
-    ]
+    "tags": ["Japanese restaurant", "Ciutat Vella", "Barcelona", "ES"]
   },
   {
     "id": "restaurant-zen_minimalist_jun-3",
@@ -158,11 +148,7 @@
         "hours": "Closed"
       }
     ],
-    "tags": [
-      "Vegetarian restaurant",
-      "Wan Chai",
-      "HK"
-    ]
+    "tags": ["Vegetarian restaurant", "Wan Chai", "HK"]
   },
   {
     "id": "restaurant-zen_minimalist_jun-4",
@@ -213,12 +199,7 @@
         "hours": "12:30 to 2:45 PM, 7 to 11:45 PM"
       }
     ],
-    "tags": [
-      "Japanese restaurant",
-      "Apollo Bandar, Colaba",
-      "Mumbai",
-      "IN"
-    ]
+    "tags": ["Japanese restaurant", "Apollo Bandar, Colaba", "Mumbai", "IN"]
   },
   {
     "id": "restaurant-zen_minimalist_jun-5",
@@ -325,12 +306,7 @@
         "hours": "12 to 4 PM, 7 PM to 1:30 AM"
       }
     ],
-    "tags": [
-      "Asian restaurant",
-      "Lower Parel",
-      "Mumbai",
-      "IN"
-    ]
+    "tags": ["Asian restaurant", "Lower Parel", "Mumbai", "IN"]
   },
   {
     "id": "restaurant-zen_minimalist_jun-7",
@@ -604,12 +580,7 @@
         "hours": "11:30 AM to 3 AM"
       }
     ],
-    "tags": [
-      "Sushi restaurant",
-      "3 Chome Akasaka",
-      "Minato City",
-      "JP"
-    ]
+    "tags": ["Sushi restaurant", "3 Chome Akasaka", "Minato City", "JP"]
   },
   {
     "id": "restaurant-zen_minimalist_jun-12",
@@ -659,12 +630,7 @@
         "hours": "11 AM to 11 PM"
       }
     ],
-    "tags": [
-      "Yakiniku restaurant",
-      "7 Chome Roppongi",
-      "Minato City",
-      "JP"
-    ]
+    "tags": ["Yakiniku restaurant", "7 Chome Roppongi", "Minato City", "JP"]
   },
   {
     "id": "restaurant-zen_minimalist_jun-13",
@@ -715,11 +681,6 @@
         "hours": "11:30 AM to 9 PM"
       }
     ],
-    "tags": [
-      "Barbecue restaurant",
-      "5 Chome Jingumae",
-      "Shibuya",
-      "JP"
-    ]
+    "tags": ["Barbecue restaurant", "5 Chome Jingumae", "Shibuya", "JP"]
   }
 ]

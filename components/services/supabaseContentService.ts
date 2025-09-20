@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { getSupabaseClient } from "../../utils/supabase";
 
 export interface Post {
   id: string;
@@ -40,10 +40,7 @@ export class SupabaseContentService {
   private supabase;
 
   private constructor() {
-    this.supabase = createClient(
-      import.meta.env.VITE_SUPABASE_URL!,
-      import.meta.env.VITE_SUPABASE_ANON_KEY!
-    );
+    this.supabase = getSupabaseClient()!;
   }
 
   public static getInstance(): SupabaseContentService {

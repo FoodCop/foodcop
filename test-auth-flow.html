@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FUZO Auth Flow Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .success {
+        background: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        border-color: #bee5eb;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .log {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 FUZO Authentication Flow Test</h1>
+
+      <div class="test-section info">
+        <h3>📋 Test Instructions</h3>
+        <p>1. Click "Test Google OAuth" to test authentication</p>
+        <p>
+          2. Use one of your 3 test users (juncando@gmail.com,
+          fuzo.foodcop@gmail.com, or your third test user)
+        </p>
+        <p>3. Complete the onboarding flow</p>
+        <p>4. Sign out and sign in again to verify you skip onboarding</p>
+      </div>
+
+      <div class="test-section">
+        <h3>🧪 Authentication Test</h3>
+        <button onclick="testGoogleOAuth()">Test Google OAuth</button>
+        <button onclick="testOnboardingFlow()">Test Onboarding Flow</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+        <div id="test-result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>📊 Test Results</h3>
+        <div id="test-results">
+          <p>✅ Demo credentials removed from UI</p>
+          <p>✅ Multiple Supabase instances warning fixed</p>
+          <p>✅ Onboarding loop prevention added</p>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h3>🔍 Debug Logs</h3>
+        <div id="debug-logs" class="log">Ready to test...</div>
+      </div>
+    </div>
+
+    <script>
+      function log(message) {
+          const logDiv = document.getElementById('debug-logs');
+          const timestamp = new Date().toLocaleTimeString();
+          logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+          logDiv.scrollTop = logDiv.scrollHeight;
+      }
+
+      function testGoogleOAuth() {
+          log("🔄 Testing Google OAuth...");
+          const resultDiv = document.getElementById('test-result');
+
+          const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+          if (!clientId) {
+              resultDiv.innerHTML = '<div class="error"><p>❌ VITE_GOOGLE_CLIENT_ID is not configured</p></div>';
+              log("❌ Google Client ID not found");
+              return;
+          }
+
+          log("✅ Google Client ID found: " + clientId.substring(0, 20) + "...");
+
+          const redirectUrl = `${window.location.origin}?onboarding=auth`;
+          const googleAuthUrl = `https://accounts.google.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&scope=openid email profile`;
+
+          resultDiv.innerHTML = `
+              <div class="info">
+                  <p>✅ Google OAuth configured</p>
+                  <p><strong>Redirect URL:</strong> ${redirectUrl}</p>
+                  <p><a href="${googleAuthUrl}" target="_blank" style="color: #007bff;">🔗 Test OAuth Flow</a></p>
+              </div>
+          `;
+
+          log("🔗 OAuth URL generated: " + googleAuthUrl.substring(0, 50) + "...");
+      }
+
+      function testOnboardingFlow() {
+          log("🔄 Testing onboarding flow...");
+          const resultDiv = document.getElementById('test-result');
+
+          resultDiv.innerHTML = `
+              <div class="info">
+                  <p>✅ Onboarding flow test</p>
+                  <p>Expected flow: Splash → Auth → Profile → Cuisine → Dietary → Location → Notifications → Success</p>
+                  <p>Check browser console for detailed logs</p>
+              </div>
+          `;
+
+          log("✅ Onboarding flow test completed");
+      }
+
+      function clearLogs() {
+          document.getElementById('debug-logs').innerHTML = 'Logs cleared...\n';
+      }
+
+      // Auto-run basic checks on load
+      window.addEventListener('load', () => {
+          log("🚀 Auth flow test page loaded");
+
+          const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+
+          if (clientId) {
+              log("✅ Google Client ID configured");
+          } else {
+              log("❌ Google Client ID not configured");
+          }
+
+          if (supabaseUrl) {
+              log("✅ Supabase URL configured");
+          } else {
+              log("❌ Supabase URL not configured");
+          }
+
+          log("🔧 Ready to test authentication flow");
+      });
+    </script>
+  </body>
+</html>

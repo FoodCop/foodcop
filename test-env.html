@@ -3,59 +3,187 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Environment Variables Test</title>
+    <title>FUZO Environment Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .success {
+        background: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        border-color: #bee5eb;
+      }
+      .log {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+      }
+    </style>
   </head>
   <body>
-    <h1>Environment Variables Test</h1>
-    <div id="results"></div>
+    <div class="container">
+      <h1>🔧 FUZO Environment Test</h1>
+
+      <div class="test-section">
+        <h3>Environment Variables</h3>
+        <div id="env-results"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>Supabase Client Test</h3>
+        <button onclick="testSupabaseClient()">Test Supabase Client</button>
+        <div id="supabase-results"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>Debug Logs</h3>
+        <div id="debug-logs" class="log">Starting environment test...\n</div>
+      </div>
+    </div>
 
     <script type="module">
-      // Test if environment variables are accessible
-      const results = document.getElementById("results");
-
-      function addResult(label, value, status) {
-        const div = document.createElement("div");
-        div.innerHTML = `
-                <strong>${label}:</strong>
-                <span style="color: ${status === "success" ? "green" : "red"}">
-                    ${value || "Not found"}
-                </span>
-            `;
-        results.appendChild(div);
+      function log(message) {
+        const logDiv = document.getElementById("debug-logs");
+        const timestamp = new Date().toLocaleTimeString();
+        logDiv.textContent += `[${timestamp}] ${message}\n`;
+        logDiv.scrollTop = logDiv.scrollHeight;
       }
 
-      // Test environment variables
-      addResult(
-        "VITE_GOOGLE_MAPS_API_KEY",
-        import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-        import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? "success" : "error"
-      );
-
-      addResult(
-        "VITE_SUPABASE_URL",
-        import.meta.env.VITE_SUPABASE_URL,
-        import.meta.env.VITE_SUPABASE_URL ? "success" : "error"
-      );
-
-      addResult(
-        "VITE_SUPABASE_ANON_KEY",
-        import.meta.env.VITE_SUPABASE_ANON_KEY,
-        import.meta.env.VITE_SUPABASE_ANON_KEY ? "success" : "error"
-      );
-
-      // Test Google Places API
-      if (import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
-        addResult(
-          "API Key Length",
-          import.meta.env.VITE_GOOGLE_MAPS_API_KEY.length,
-          "success"
-        );
-        addResult(
-          "API Key Preview",
-          import.meta.env.VITE_GOOGLE_MAPS_API_KEY.substring(0, 12) + "...",
-          "success"
-        );
+      function updateResults(elementId, content, isSuccess = true) {
+        const element = document.getElementById(elementId);
+        const className = isSuccess ? "success" : "error";
+        element.innerHTML = `<div class="${className}">${content}</div>`;
       }
+
+      async function testEnvironment() {
+        log("🔍 Testing environment variables...");
+
+        const envVars = {
+          VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
+          VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
+          VITE_GOOGLE_CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        };
+
+        log("Environment variables:");
+        Object.entries(envVars).forEach(([key, value]) => {
+          const status = value ? "✅" : "❌";
+          const displayValue = value
+            ? value.length > 50
+              ? value.substring(0, 50) + "..."
+              : value
+            : "Not set";
+          log(`${status} ${key}: ${displayValue}`);
+        });
+
+        const hasSupabase =
+          envVars.VITE_SUPABASE_URL && envVars.VITE_SUPABASE_ANON_KEY;
+        const hasGoogle = envVars.VITE_GOOGLE_CLIENT_ID;
+
+        if (hasSupabase && hasGoogle) {
+          updateResults(
+            "env-results",
+            "✅ All required environment variables are configured",
+            true
+          );
+        } else {
+          updateResults(
+            "env-results",
+            "❌ Some environment variables are missing",
+            false
+          );
+        }
+      }
+
+      async function testSupabaseClient() {
+        log("🧪 Testing Supabase client creation...");
+
+        try {
+          // Import the Supabase client function
+          const { getSupabaseClient } = await import("./utils/supabase.ts");
+
+          log("📦 Supabase client function imported successfully");
+
+          const client = getSupabaseClient();
+
+          if (client) {
+            log("✅ Supabase client created successfully");
+            updateResults(
+              "supabase-results",
+              "✅ Supabase client created successfully",
+              true
+            );
+
+            // Test a simple operation
+            try {
+              const { data, error } = await client.auth.getSession();
+              if (error) {
+                log(`⚠️ Session check error: ${error.message}`);
+              } else {
+                log(
+                  `ℹ️ Session check: ${
+                    data.session ? "Active session" : "No active session"
+                  }`
+                );
+              }
+            } catch (err) {
+              log(`⚠️ Session check failed: ${err.message}`);
+            }
+          } else {
+            log("❌ Supabase client creation failed");
+            updateResults(
+              "supabase-results",
+              "❌ Supabase client creation failed",
+              false
+            );
+          }
+        } catch (error) {
+          log(`❌ Error importing Supabase client: ${error.message}`);
+          updateResults(
+            "supabase-results",
+            `❌ Error: ${error.message}`,
+            false
+          );
+        }
+      }
+
+      // Auto-run environment test on load
+      window.addEventListener("load", async () => {
+        log("🚀 Environment test started");
+        await testEnvironment();
+        log("✅ Environment test completed");
+      });
+
+      // Make function available globally
+      window.testSupabaseClient = testSupabaseClient;
     </script>
   </body>
 </html>

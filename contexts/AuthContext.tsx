@@ -23,6 +23,7 @@ interface Profile {
   dietary_preferences?: string[];
   cuisine_preferences?: string[];
   total_points?: number;
+  onboarding_completed?: boolean;
 }
 
 interface AuthContextValue {
@@ -51,7 +52,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   // Check for existing session on mount
   useEffect(() => {
     const getInitialSession = async () => {
+      console.log("🔍 AuthContext: Getting initial session...");
       if (!supabase) {
+        console.log("❌ AuthContext: No Supabase client available");
         setLoading(false);
         return;
       }
@@ -60,13 +63,19 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
         const {
           data: { session },
         } = await supabase.auth.getSession();
+        console.log("🔍 AuthContext: Session data:", {
+          hasSession: !!session,
+          hasUser: !!session?.user,
+          userEmail: session?.user?.email,
+        });
         if (session?.user) {
           setUser(session.user);
           await fetchUserProfile(session.user.id);
         }
       } catch (error) {
-        console.error("Error getting initial session:", error);
+        console.error("❌ AuthContext: Error getting initial session:", error);
       } finally {
+        console.log("✅ AuthContext: Initial session check complete");
         setLoading(false);
       }
     };

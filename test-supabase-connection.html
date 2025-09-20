@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FUZO Supabase Connection Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .success {
+        background: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        border-color: #bee5eb;
+      }
+      .warning {
+        background: #fff3cd;
+        border-color: #ffeaa7;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .log {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 400px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔗 FUZO Supabase Connection Test</h1>
+
+      <div class="test-section info">
+        <h3>📋 Test Instructions</h3>
+        <p>This page tests the Supabase connection and OAuth configuration.</p>
+      </div>
+
+      <div class="test-section">
+        <h3>🔧 Environment Variables</h3>
+        <div id="env-status"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>🔗 Supabase Connection</h3>
+        <button onclick="testConnection()">Test Supabase Connection</button>
+        <div id="connection-status"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>🔐 OAuth Configuration</h3>
+        <button onclick="testOAuth()">Test OAuth Configuration</button>
+        <div id="oauth-status"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>📊 Debug Logs</h3>
+        <div id="debug-logs" class="log">
+          Starting Supabase connection test...\n
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      function log(message) {
+        const logDiv = document.getElementById("debug-logs");
+        const timestamp = new Date().toLocaleTimeString();
+        logDiv.textContent += `[${timestamp}] ${message}\n`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+      }
+
+      function updateStatus(elementId, status, message) {
+        const element = document.getElementById(elementId);
+        const className =
+          status === "success"
+            ? "success"
+            : status === "error"
+            ? "error"
+            : "warning";
+        element.innerHTML = `<div class="${className}">${status.toUpperCase()}: ${message}</div>`;
+      }
+
+      async function checkEnvironment() {
+        log("🔍 Checking environment variables...");
+
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+        log(`VITE_SUPABASE_URL: ${supabaseUrl ? "Set" : "Missing"}`);
+        log(`VITE_SUPABASE_ANON_KEY: ${supabaseKey ? "Set" : "Missing"}`);
+        log(`VITE_GOOGLE_CLIENT_ID: ${googleClientId ? "Set" : "Missing"}`);
+
+        if (supabaseUrl && supabaseKey && googleClientId) {
+          updateStatus(
+            "env-status",
+            "success",
+            "All environment variables configured"
+          );
+        } else {
+          updateStatus("env-status", "error", "Missing environment variables");
+        }
+      }
+
+      async function testConnection() {
+        log("🔗 Testing Supabase connection...");
+
+        try {
+          // Test direct Supabase connection
+          const { createClient } = await import(
+            "https://cdn.skypack.dev/@supabase/supabase-js@2"
+          );
+
+          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+          const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+          if (!supabaseUrl || !supabaseKey) {
+            throw new Error("Supabase environment variables not configured");
+          }
+
+          const supabase = createClient(supabaseUrl, supabaseKey);
+          log("✅ Supabase client created");
+
+          // Test connection by getting session
+          const { data, error } = await supabase.auth.getSession();
+          if (error) {
+            log(`⚠️ Session error: ${error.message}`);
+          } else {
+            log(
+              `ℹ️ Session status: ${
+                data.session ? "Active" : "No active session"
+              }`
+            );
+          }
+
+          // Test a simple query
+          const { data: testData, error: testError } = await supabase
+            .from("users")
+            .select("count")
+            .limit(1);
+
+          if (testError) {
+            log(`⚠️ Query error: ${testError.message}`);
+            updateStatus(
+              "connection-status",
+              "warning",
+              "Supabase connected but query failed"
+            );
+          } else {
+            log("✅ Supabase query successful");
+            updateStatus(
+              "connection-status",
+              "success",
+              "Supabase connection successful"
+            );
+          }
+        } catch (error) {
+          log(`❌ Connection error: ${error.message}`);
+          updateStatus(
+            "connection-status",
+            "error",
+            `Connection failed: ${error.message}`
+          );
+        }
+      }
+
+      async function testOAuth() {
+        log("🔐 Testing OAuth configuration...");
+
+        try {
+          const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+
+          if (!googleClientId) {
+            throw new Error("Google Client ID not configured");
+          }
+
+          if (!supabaseUrl) {
+            throw new Error("Supabase URL not configured");
+          }
+
+          // Test OAuth URL construction
+          const redirectUrl = `${window.location.origin}?onboarding=auth`;
+          const googleAuthUrl = `https://accounts.google.com/oauth/authorize?client_id=${googleClientId}&redirect_uri=${encodeURIComponent(
+            redirectUrl
+          )}&response_type=code&scope=openid email profile`;
+
+          log(`Redirect URL: ${redirectUrl}`);
+          log(`Google Auth URL: ${googleAuthUrl.substring(0, 100)}...`);
+
+          // Test if the redirect URL is accessible
+          try {
+            const response = await fetch(redirectUrl, { method: "HEAD" });
+            if (response.ok) {
+              log("✅ Redirect URL is accessible");
+              updateStatus(
+                "oauth-status",
+                "success",
+                "OAuth configuration valid"
+              );
+            } else {
+              log(`⚠️ Redirect URL returned status: ${response.status}`);
+              updateStatus(
+                "oauth-status",
+                "warning",
+                `Redirect URL returned ${response.status}`
+              );
+            }
+          } catch (fetchError) {
+            log(`⚠️ Redirect URL test failed: ${fetchError.message}`);
+            updateStatus("oauth-status", "warning", "Redirect URL test failed");
+          }
+        } catch (error) {
+          log(`❌ OAuth test error: ${error.message}`);
+          updateStatus(
+            "oauth-status",
+            "error",
+            `OAuth test failed: ${error.message}`
+          );
+        }
+      }
+
+      // Auto-run tests on load
+      window.addEventListener("load", async () => {
+        log("🚀 Supabase connection test started");
+        await checkEnvironment();
+        log("✅ Environment check completed");
+      });
+
+      // Make functions available globally
+      window.testConnection = testConnection;
+      window.testOAuth = testOAuth;
+    </script>
+  </body>
+</html>

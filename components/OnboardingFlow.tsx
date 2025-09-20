@@ -14,9 +14,9 @@ import {
   Wheat,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 import { FuzoButton } from "./global/FuzoButton";
 import { FuzoInput } from "./global/FuzoInput";
-import { useAuth } from '../contexts/AuthContext';
 
 interface OnboardingFlowProps {
   onComplete?: () => void;
@@ -74,10 +74,15 @@ const DUMMY_CREDENTIALS = {
 export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>("splash");
 
-  // Debug logging for step changes
-  useEffect(() => {
-    console.log("🎯 OnboardingFlow: Current step changed to:", currentStep);
-  }, [currentStep]);
+  // Use AuthContext for authentication
+  const {
+    signInWithGoogle: authSignInWithGoogle,
+    user,
+    profile,
+    loading,
+    updateProfile,
+  } = useAuth();
+
   const [userData, setUserData] = useState<UserData>({
     email: "",
     password: "",
@@ -93,8 +98,15 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
   const [error, setError] = useState<string | null>(null);
   const [isSigningIn, setIsSigningIn] = useState(false);
 
-  // Use AuthContext for authentication
-  const { signInWithGoogle: authSignInWithGoogle, user, profile } = useAuth();
+  // Debug logging for step changes
+  useEffect(() => {
+    console.log("🎯 OnboardingFlow: Current step changed to:", currentStep);
+    console.log("🎯 OnboardingFlow: User state:", {
+      user: user?.email,
+      profile: profile?.onboarding_completed,
+      loading,
+    });
+  }, [currentStep, user, profile, loading]);
 
   // Real Google OAuth sign-in
   const signInWithGoogle = async () => {
@@ -108,7 +120,29 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
       setIsSigningIn(false);
     }
   };
-  const loading = false;
+
+  // Save onboarding completion to database
+  const saveOnboardingCompletion = async () => {
+    if (!user) {
+      console.warn("No user found for onboarding completion");
+      return;
+    }
+
+    try {
+      // Update user profile with onboarding data
+      await updateProfile({
+        dietary_preferences: userData.dietary,
+        cuisine_preferences: userData.cuisines,
+        bio: userData.bio,
+        display_name: userData.fullName,
+        username: userData.username,
+        onboarding_completed: true,
+      });
+      console.log("✅ Onboarding completion saved to database");
+    } catch (error) {
+      console.error("❌ Failed to save onboarding completion:", error);
+    }
+  };
 
   // Note: Authentication auto-advance is now handled directly in handleAuth() for demo purposes
 
@@ -120,6 +154,8 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
     });
     if (currentStep === "success" && onComplete) {
       console.log("🎉 Onboarding completed, calling onComplete");
+      // Save onboarding completion to database
+      saveOnboardingCompletion();
       // Small delay to show success screen briefly
       const timer = setTimeout(() => {
         console.log("🎉 Calling onComplete callback");
@@ -142,10 +178,31 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
   // Check authentication state and advance to profile step
   useEffect(() => {
     if (user && currentStep === "auth") {
-      console.log("✅ User is authenticated, advancing to profile step");
-      setCurrentStep("profile");
+      console.log("✅ User is authenticated, checking onboarding status", {
+        user: user.email,
+        profile: profile?.onboarding_completed,
+        currentStep,
+      });
+
+      // Small delay to ensure profile is loaded
+      const timer = setTimeout(() => {
+        // Check if user has already completed onboarding
+        if (profile?.onboarding_completed) {
+          console.log(
+            "✅ User has already completed onboarding, skipping to feed"
+          );
+          if (onComplete) {
+            onComplete();
+          }
+        } else {
+          console.log("✅ User needs onboarding, advancing to profile step");
+          setCurrentStep("profile");
+        }
+      }, 500);
+
+      return () => clearTimeout(timer);
     }
-  }, [user, currentStep]);
+  }, [user, profile, currentStep, onComplete]);
 
   const handleAuth = async () => {
     console.log("🔐 handleAuth called", {
@@ -176,8 +233,8 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
         return;
       } else {
         // Real login with Supabase (disabled for now)
-        console.log("🚀 Real authentication disabled - use demo credentials");
-        setError("Please use demo credentials: juncando@gmail.com / fuzo123");
+        console.log("🚀 Real authentication disabled - use Google OAuth");
+        setError("Please use Google OAuth sign-in instead");
         return;
       }
     } else {
@@ -487,25 +544,6 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
                 <p style={{ color: "#6B7280" }}>
                   Welcome to your food adventure
                 </p>
-                {isLogin && (
-                  <div
-                    style={{
-                      marginTop: "16px",
-                      padding: "12px",
-                      backgroundColor: "rgba(255, 215, 74, 0.2)",
-                      borderRadius: "12px",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "0.75rem",
-                        color: "var(--fuzo-orange-brown)",
-                      }}
-                    >
-                      <strong>Demo:</strong> Use juncando@gmail.com / fuzo123
-                    </p>
-                  </div>
-                )}
               </div>
 
               {/* Error Message */}

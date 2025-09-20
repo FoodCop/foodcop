@@ -112,7 +112,7 @@ $vercelEnvVars = @{
     "VITE_GOOGLE_MAPS_API_KEY" = $envVars["GOOGLE_MAPS_API_KEY"]
     "VITE_OPENAI_API_KEY" = $envVars["OPENAI_API_KEY"]
     "VITE_SPOONACULAR_API_KEY" = $envVars["SPOONACULAR_API_KEY"]
-    "VITE_STREAM_KEY" = $envVars["STREAM_KEY"]
+    "VITE_STREAM_CHAT_API_KEY" = $envVars["STREAM_KEY"]
     "VITE_TEST_USER_ID" = $envVars["TEST_USER_ID"]
 }
 

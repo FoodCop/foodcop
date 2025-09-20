@@ -1,15 +1,12 @@
 // Master Bot Service - Simplified approach
 // Master Bots are just users with is_master_bot = true
 
-import { createClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { getSupabaseClient } from "../../utils/supabase";
 
-// Use anonymous key for Master Bot operations
+// Use singleton Supabase client for Master Bot operations
 // Note: RLS policies should allow public read access to master bot data
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
+const supabase = getSupabaseClient()!;
 
 export interface MasterBot {
   id: string;

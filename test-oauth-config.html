@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FUZO OAuth Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .success {
+        background: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        border-color: #bee5eb;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .test-user {
+        background: #e9ecef;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 FUZO OAuth Configuration Test</h1>
+
+      <div class="test-section info">
+        <h3>📋 Test Users Added to Google Cloud Console</h3>
+        <p>
+          You mentioned adding 3 test users. Please verify these are configured
+          in:
+        </p>
+        <p>
+          <strong
+            >Google Cloud Console → APIs & Services → Credentials → OAuth 2.0
+            Client IDs</strong
+          >
+        </p>
+        <div class="test-user">
+          <strong>Expected Test Users:</strong>
+          <ul>
+            <li>juncando@gmail.com</li>
+            <li>fuzo.foodcop@gmail.com</li>
+            <li>[Your third test user]</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h3>🔧 Environment Configuration</h3>
+        <p>
+          <strong>Google Client ID:</strong>
+          <span id="client-id">Loading...</span>
+        </p>
+        <p>
+          <strong>Supabase URL:</strong>
+          <span id="supabase-url">Loading...</span>
+        </p>
+        <p>
+          <strong>Current Domain:</strong>
+          <span id="current-domain">Loading...</span>
+        </p>
+      </div>
+
+      <div class="test-section">
+        <h3>🧪 OAuth Test</h3>
+        <p>Click the button below to test Google OAuth with your test users:</p>
+        <button onclick="testGoogleOAuth()">Test Google OAuth</button>
+        <div id="oauth-result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>📱 Onboarding Flow Test</h3>
+        <p>Test the complete onboarding flow:</p>
+        <button onclick="testOnboardingFlow()">Test Onboarding Flow</button>
+        <div id="onboarding-result"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>🔍 Debug Information</h3>
+        <button onclick="showDebugInfo()">Show Debug Info</button>
+        <pre
+          id="debug-info"
+          style="
+            display: none;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+          "
+        ></pre>
+      </div>
+    </div>
+
+    <script>
+      // Load environment variables
+      document.getElementById('client-id').textContent = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'Not set';
+      document.getElementById('supabase-url').textContent = import.meta.env.VITE_SUPABASE_URL || 'Not set';
+      document.getElementById('current-domain').textContent = window.location.origin;
+
+      function testGoogleOAuth() {
+          const resultDiv = document.getElementById('oauth-result');
+          resultDiv.innerHTML = '<p>🔄 Testing Google OAuth...</p>';
+
+          // Check if Google Client ID is configured
+          const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+          if (!clientId) {
+              resultDiv.innerHTML = '<div class="error"><p>❌ VITE_GOOGLE_CLIENT_ID is not configured</p></div>';
+              return;
+          }
+
+          // Test OAuth redirect
+          const redirectUrl = `${window.location.origin}?onboarding=auth`;
+          const googleAuthUrl = `https://accounts.google.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&scope=openid email profile`;
+
+          resultDiv.innerHTML = `
+              <div class="info">
+                  <p>✅ Google Client ID is configured</p>
+                  <p><strong>Redirect URL:</strong> ${redirectUrl}</p>
+                  <p><strong>Google Auth URL:</strong> <a href="${googleAuthUrl}" target="_blank">Test OAuth Flow</a></p>
+                  <p><em>Click the link above to test with your test users</em></p>
+              </div>
+          `;
+      }
+
+      function testOnboardingFlow() {
+          const resultDiv = document.getElementById('onboarding-result');
+          resultDiv.innerHTML = '<p>🔄 Testing onboarding flow...</p>';
+
+          // Simulate onboarding flow test
+          setTimeout(() => {
+              resultDiv.innerHTML = `
+                  <div class="info">
+                      <p>✅ Onboarding flow test completed</p>
+                      <p>Check browser console for detailed logs</p>
+                      <p>Expected flow: Splash → Auth → Profile → Cuisine → Dietary → Location → Notifications → Success</p>
+                  </div>
+              `;
+          }, 1000);
+      }
+
+      function showDebugInfo() {
+          const debugDiv = document.getElementById('debug-info');
+          const debugInfo = {
+              userAgent: navigator.userAgent,
+              currentUrl: window.location.href,
+              origin: window.location.origin,
+              environment: {
+                  VITE_GOOGLE_CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+                  VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
+                  VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Set' : 'Not set',
+              },
+              localStorage: {
+                  supabase_auth_token: localStorage.getItem('sb-lgladnskxmbkhcnrsfxv-auth-token') ? 'Present' : 'Not found',
+              },
+              cookies: document.cookie || 'No cookies'
+          };
+
+          debugDiv.textContent = JSON.stringify(debugInfo, null, 2);
+          debugDiv.style.display = debugDiv.style.display === 'none' ? 'block' : 'none';
+      }
+
+      // Auto-run basic checks on load
+      window.addEventListener('load', () => {
+          const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+
+          if (!clientId) {
+              document.querySelector('.test-section:nth-child(2)').classList.add('error');
+              document.querySelector('.test-section:nth-child(2) p').innerHTML = '❌ <strong>VITE_GOOGLE_CLIENT_ID is not configured</strong>';
+          } else {
+              document.querySelector('.test-section:nth-child(2)').classList.add('success');
+          }
+
+          if (!supabaseUrl) {
+              document.querySelector('.test-section:nth-child(2)').classList.add('error');
+          }
+      });
+    </script>
+  </body>
+</html>

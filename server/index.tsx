@@ -242,6 +242,7 @@ app.get("/make-server-5976446e/auth/profile", async (c) => {
       total_points: profileRow.total_points || 0,
       current_level: profileRow.current_level || 1,
       is_private: profileRow.is_private || false,
+      onboarding_completed: profileRow.onboarding_completed || false,
       created_at: profileRow.created_at || user.created_at,
       last_seen_at: new Date().toISOString(),
     };

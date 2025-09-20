@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FUZO Auth Debug</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .debug-section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .success {
+        background: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        border-color: #bee5eb;
+      }
+      .warning {
+        background: #fff3cd;
+        border-color: #ffeaa7;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .log {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+      }
+      .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+      }
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .status.warning {
+        background: #fff3cd;
+        color: #856404;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔍 FUZO Authentication Debug</h1>
+
+      <div class="debug-section info">
+        <h3>📋 Debug Instructions</h3>
+        <p>
+          This page helps debug authentication issues. Check the logs below for
+          detailed information.
+        </p>
+      </div>
+
+      <div class="debug-section">
+        <h3>🔧 Environment Check</h3>
+        <div id="env-status">
+          <p>Checking environment variables...</p>
+        </div>
+      </div>
+
+      <div class="debug-section">
+        <h3>🔗 Supabase Client Check</h3>
+        <div id="supabase-status">
+          <p>Checking Supabase client instances...</p>
+        </div>
+      </div>
+
+      <div class="debug-section">
+        <h3>🧪 Authentication Test</h3>
+        <button onclick="testAuth()">Test Authentication</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+        <div id="auth-result"></div>
+      </div>
+
+      <div class="debug-section">
+        <h3>📊 Debug Logs</h3>
+        <div id="debug-logs" class="log">Starting debug session...\n</div>
+      </div>
+    </div>
+
+    <script type="module">
+      function log(message) {
+        const logDiv = document.getElementById("debug-logs");
+        const timestamp = new Date().toLocaleTimeString();
+        logDiv.textContent += `[${timestamp}] ${message}\n`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+      }
+
+      function updateStatus(elementId, status, message) {
+        const element = document.getElementById(elementId);
+        const statusClass =
+          status === "success"
+            ? "success"
+            : status === "error"
+            ? "error"
+            : "warning";
+        element.innerHTML = `<span class="status ${statusClass}">${status.toUpperCase()}</span> ${message}`;
+      }
+
+      async function checkEnvironment() {
+        log("🔍 Checking environment variables...");
+
+        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        if (clientId) {
+          updateStatus("env-status", "success", "Google Client ID configured");
+          log("✅ Google Client ID: " + clientId.substring(0, 20) + "...");
+        } else {
+          updateStatus("env-status", "error", "Google Client ID missing");
+          log("❌ Google Client ID not found");
+        }
+
+        if (supabaseUrl && supabaseKey) {
+          updateStatus("env-status", "success", "Supabase configuration found");
+          log("✅ Supabase URL: " + supabaseUrl);
+        } else {
+          updateStatus("env-status", "error", "Supabase configuration missing");
+          log("❌ Supabase configuration incomplete");
+        }
+      }
+
+      async function checkSupabaseClient() {
+        log("🔍 Checking Supabase client instances...");
+
+        try {
+          // Check if there are multiple Supabase instances
+          const supabaseInstances = [];
+
+          // Check for global instances
+          if (window.__fuzo_supabase_client) {
+            supabaseInstances.push("Global singleton client");
+            log("✅ Found global singleton client");
+          }
+
+          // Check localStorage for auth tokens
+          const authKeys = Object.keys(localStorage).filter(
+            (key) => key.includes("supabase") || key.includes("auth")
+          );
+          if (authKeys.length > 0) {
+            log("🔑 Found auth keys in localStorage: " + authKeys.join(", "));
+          } else {
+            log("ℹ️ No auth keys found in localStorage");
+          }
+
+          if (supabaseInstances.length === 1) {
+            updateStatus(
+              "supabase-status",
+              "success",
+              "Single Supabase client instance detected"
+            );
+          } else if (supabaseInstances.length > 1) {
+            updateStatus(
+              "supabase-status",
+              "warning",
+              "Multiple Supabase client instances detected"
+            );
+          } else {
+            updateStatus(
+              "supabase-status",
+              "warning",
+              "No Supabase client instances found"
+            );
+          }
+        } catch (error) {
+          updateStatus(
+            "supabase-status",
+            "error",
+            "Error checking Supabase client: " + error.message
+          );
+          log("❌ Error checking Supabase client: " + error.message);
+        }
+      }
+
+      async function testAuth() {
+        log("🧪 Testing authentication...");
+        const resultDiv = document.getElementById("auth-result");
+
+        try {
+          const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+          if (!clientId) {
+            resultDiv.innerHTML =
+              '<div class="error"><p>❌ Google Client ID not configured</p></div>';
+            return;
+          }
+
+          const redirectUrl = `${window.location.origin}?onboarding=auth`;
+          const googleAuthUrl = `https://accounts.google.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+            redirectUrl
+          )}&response_type=code&scope=openid email profile`;
+
+          resultDiv.innerHTML = `
+                    <div class="info">
+                        <p>✅ Authentication test ready</p>
+                        <p><strong>Redirect URL:</strong> ${redirectUrl}</p>
+                        <p><a href="${googleAuthUrl}" target="_blank" style="color: #007bff;">🔗 Test OAuth Flow</a></p>
+                        <p><em>Use one of your 3 test users to test the flow</em></p>
+                    </div>
+                `;
+
+          log("🔗 OAuth test URL generated");
+        } catch (error) {
+          resultDiv.innerHTML =
+            '<div class="error"><p>❌ Authentication test failed: ' +
+            error.message +
+            "</p></div>";
+          log("❌ Authentication test failed: " + error.message);
+        }
+      }
+
+      function clearLogs() {
+        document.getElementById("debug-logs").textContent = "Logs cleared...\n";
+      }
+
+      // Auto-run checks on load
+      window.addEventListener("load", async () => {
+        log("🚀 Debug session started");
+        await checkEnvironment();
+        await checkSupabaseClient();
+        log("✅ Debug checks completed");
+      });
+
+      // Make functions available globally
+      window.testAuth = testAuth;
+      window.clearLogs = clearLogs;
+    </script>
+  </body>
+</html>
