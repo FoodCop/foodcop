@@ -36,18 +36,10 @@ export function RecipesPage({
   const [backendRecipes, setBackendRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState("bites");
+  const [activeTab, setActiveTab] = useState("recipes");
 
   const handleTabChange = (tab: string) => {
-    if (tab === "feed" && onNavigateToFeed) {
-      onNavigateToFeed();
-    } else if (tab === "scout" && onNavigateToScout) {
-      onNavigateToScout();
-    } else if (tab === "snap" && onNavigateToSnap) {
-      onNavigateToSnap();
-    } else {
-      setActiveTab(tab);
-    }
+    setActiveTab(tab);
   };
 
   // Use only real data - no mock fallback
@@ -204,7 +196,7 @@ export function RecipesPage({
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="px-4 py-3 flex items-center justify-between">
           <button
-            onClick={onNavigateBack}
+            onClick={onNavigateBack || (() => window.history.back())}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
             <ArrowLeft className="w-5 h-5 text-gray-600" />
@@ -244,52 +236,56 @@ export function RecipesPage({
         <div className="px-4 pb-3">
           <div className="flex space-x-6">
             <button
-              onClick={() => handleTabChange("bites")}
+              onClick={() => handleTabChange("recipes")}
               className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === "bites"
+                activeTab === "recipes"
                   ? "border-blue-500 text-blue-600"
                   : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >
-              Bites
+              Recipes
             </button>
             <button
-              onClick={() => handleTabChange("feed")}
+              onClick={() => handleTabChange("video")}
               className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === "feed"
+                activeTab === "video"
                   ? "border-blue-500 text-blue-600"
                   : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >
-              Feed
-            </button>
-            <button
-              onClick={() => handleTabChange("scout")}
-              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === "scout"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Scout
-            </button>
-            <button
-              onClick={() => handleTabChange("snap")}
-              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === "snap"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Snap
+              Video Feed
             </button>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4">
-        {loading ? (
+      <div className="px-4 py-4">
+        {activeTab === "video" ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <svg
+                className="w-12 h-12 mx-auto"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Video Feed Coming Soon
+            </h3>
+            <p className="text-gray-600">
+              Cooking videos and tutorials will be available here soon!
+            </p>
+          </div>
+        ) : loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
@@ -359,7 +355,7 @@ export function RecipesPage({
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="w-full recipe-grid">
             {filteredRecipes.map((recipe) => (
               <RecipeCard
                 key={recipe.id}
@@ -385,7 +381,15 @@ export function RecipesPage({
       {/* Bottom Navigation */}
       <BottomNavigation
         activeTab="bites"
-        onTabChange={handleTabChange}
+        onTabChange={(tab) => {
+          if (tab === "feed" && onNavigateToFeed) {
+            onNavigateToFeed();
+          } else if (tab === "scout" && onNavigateToScout) {
+            onNavigateToScout();
+          } else if (tab === "snap" && onNavigateToSnap) {
+            onNavigateToSnap();
+          }
+        }}
         onNavigateToFeed={onNavigateToFeed}
         onNavigateToScout={onNavigateToScout}
         onNavigateToSnap={onNavigateToSnap}
