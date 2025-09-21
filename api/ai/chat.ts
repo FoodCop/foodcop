@@ -1,0 +1,33 @@
+import { createOpenAI } from "@ai-sdk/openai";
+import { streamText } from "ai";
+
+export async function POST(req: Request) {
+  try {
+    const { messages } = await req.json();
+
+    if (!messages || !Array.isArray(messages)) {
+      return new Response("Messages array is required", { status: 400 });
+    }
+
+    // Get OpenAI API key from server environment
+    const openaiApiKey = process.env.OPENAI_API_KEY;
+
+    if (!openaiApiKey) {
+      return new Response("OpenAI API key not configured", { status: 500 });
+    }
+
+    const openai = createOpenAI({
+      apiKey: openaiApiKey,
+    });
+
+    const result = await streamText({
+      model: openai("gpt-4o-mini"),
+      messages,
+    });
+
+    return result.toDataStreamResponse();
+  } catch (error) {
+    console.error("AI chat error:", error);
+    return new Response("Internal server error", { status: 500 });
+  }
+}

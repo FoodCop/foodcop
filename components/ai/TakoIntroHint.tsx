@@ -2,7 +2,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-// import (figma asset) - DISABLED:9566fb321ba47b7b112f8b4d7803d27b9ea2dbaf.png';
+
+// Tako AI mascot image - using a placeholder for now
+const takoAI =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGMTQzMzUiLz4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMiIgZmlsbD0iI0ZGRkZGRiIvPgo8Y2lyY2xlIGN4PSIyNCIgY3k9IjE2IiByPSIyIiBmaWxsPSIjRkZGRkZGIi8+CjxwYXRoIGQ9Ik0xNiAyNEMxNiAyNCAxOCAyNiAyMCAyNkMyMiAyNiAyNCAyNCAyNCAyNCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K";
 
 interface TakoIntroHintProps {
   onDismiss?: () => void;

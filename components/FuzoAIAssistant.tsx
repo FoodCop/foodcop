@@ -10,10 +10,13 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { projectId, publicAnonKey } from "../utils/supabase/info";
+import { projectId } from "../utils/supabase/info";
 import { TakoIntroHint } from "./ai/TakoIntroHint";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-// import (figma asset) - DISABLED:9566fb321ba47b7b112f8b4d7803d27b9ea2dbaf.png';
+
+// Tako AI mascot image - using a placeholder for now
+const takoAI =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGMTQzMzUiLz4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMiIgZmlsbD0iI0ZGRkZGRiIvPgo8Y2lyY2xlIGN4PSIyNCIgY3k9IjE2IiByPSIyIiBmaWxsPSIjRkZGRkZGIi8+CjxwYXRoIGQ9Ik0xNiAyNEMxNiAyNCAxOCAyNiAyMCAyNkMyMiAyNiAyNCAyNCAyNCAyNCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K";
 
 export interface AIMessage {
   id: string;
@@ -112,53 +115,18 @@ export function FuzoAIAssistant({
         conversationLength: messages.length,
       });
 
-      // Call the real OpenAI backend
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-5976446e/tako-chat`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${publicAnonKey}`,
-          },
-          body: JSON.stringify({
-            message: text,
-            conversation: messages.map((msg) => ({
-              type: msg.type,
-              content: msg.content,
-            })),
-          }),
-        }
+      // For now, use the fallback response system since the AI backend isn't deployed
+      // In the future, this can be updated to call a real AI endpoint
+      console.log(
+        "🐙 Tako AI: Using fallback response system (AI backend not deployed)"
       );
 
-      console.log("🐙 Tako AI: Response status:", response.status);
+      // Simulate API call delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("🐙 Tako AI: API Error Details:", {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText,
-        });
-        throw new Error(`API Error: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log("🐙 Tako AI: Success! Got response from OpenAI:", {
-        hasMessage: !!data.message,
-        messageLength: data.message?.length,
-        cardsCount: data.cards?.length || 0,
-      });
-
-      const aiResponse: AIMessage = {
-        id: Date.now().toString() + "_ai",
-        type: "ai",
-        content: data.message,
-        timestamp: new Date(),
-        cards: data.cards || [],
-      };
-
-      setMessages((prev) => [...prev, aiResponse]);
+      // Use the fallback response system
+      const fallbackResponse = generateFallbackResponse(text);
+      setMessages((prev) => [...prev, fallbackResponse]);
       setIsTyping(false);
     } catch (error) {
       console.error(
@@ -351,57 +319,29 @@ export function FuzoAIAssistant({
 
   const handleQuickSuggestion = async (suggestion: string) => {
     if (suggestion === "Test AI Connection") {
-      // Test backend health and AI connection
+      // Test AI connection status
       setIsTyping(true);
-      try {
-        console.log("🔍 Testing backend health...");
-        const healthResponse = await fetch(
-          `https://${projectId}.supabase.co/functions/v1/make-server-5976446e/health`,
-          {
-            headers: {
-              Authorization: `Bearer ${publicAnonKey}`,
-            },
-          }
-        );
 
-        const healthData = await healthResponse.json();
-        console.log("🔍 Backend health check:", healthData);
+      const testMessage: AIMessage = {
+        id: Date.now().toString(),
+        type: "ai",
+        content:
+          `🔧 **AI Connection Status:**\n\n` +
+          `• AI Backend: ❌ Not Deployed (Using Fallback Mode)\n` +
+          `• Fallback System: ✅ Active\n` +
+          `• Response Quality: 🟡 Basic (Limited to predefined responses)\n` +
+          `• Real-time AI: ❌ Disabled\n\n` +
+          `**Note:** The AI backend isn't deployed yet, so I'm using my fallback response system. This still provides helpful food-related responses!`,
+        timestamp: new Date(),
+      };
 
-        const testMessage: AIMessage = {
-          id: Date.now().toString(),
-          type: "ai",
-          content:
-            `🔧 **Backend Health Check Results:**\n\n` +
-            `• Server Status: ${healthData.status || "Unknown"}\n` +
-            `• OpenAI Configured: ${
-              healthData.services?.openai_configured ? "✅ Yes" : "❌ No"
-            }\n` +
-            `• Google Maps Configured: ${
-              healthData.services?.google_maps_configured ? "✅ Yes" : "❌ No"
-            }\n` +
-            `• Timestamp: ${healthData.timestamp || "Unknown"}\n\n` +
-            `Now testing actual AI chat...`,
-          timestamp: new Date(),
-        };
+      setMessages((prev) => [...prev, testMessage]);
+      setIsTyping(false);
 
-        setMessages((prev) => [...prev, testMessage]);
-        setIsTyping(false);
-
-        // Now test the actual AI chat
-        setTimeout(() => {
-          handleSendMessage("Hello Tako! This is a test message.");
-        }, 1000);
-      } catch (error) {
-        console.error("🔍 Backend health check failed:", error);
-        const errorMessage: AIMessage = {
-          id: Date.now().toString(),
-          type: "ai",
-          content: `🚨 **Backend Health Check Failed:**\n\nError: ${error.message}\n\nThis suggests there's a connection issue with the backend server.`,
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, errorMessage]);
-        setIsTyping(false);
-      }
+      // Test the fallback system
+      setTimeout(() => {
+        handleSendMessage("Hello Tako! This is a test message.");
+      }, 1000);
       return;
     }
 

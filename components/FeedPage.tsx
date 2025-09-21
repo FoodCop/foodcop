@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BottomNavigation } from "./BottomNavigation";
 import { FeedHeader } from "./feed/FeedHeader";
 import { SwipeDeck } from "./feed/SwipeDeck";
+import { FuzoAIAssistant } from "./FuzoAIAssistant";
 
 interface FeedPageProps {
   onNavigateToScout?: () => void;
@@ -55,6 +56,22 @@ export function FeedPage({
 
       {/* Bottom Navigation */}
       <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+
+      {/* AI Assistant */}
+      <FuzoAIAssistant
+        onNavigateToMap={() => onNavigateToScout?.()}
+        onNavigateToRecipe={(recipeId) => {
+          console.log("Navigate to recipe:", recipeId);
+          // You can add recipe navigation logic here
+        }}
+        onSaveRestaurant={(restaurantId) => {
+          console.log("Save restaurant:", restaurantId);
+          // You can add restaurant saving logic here
+        }}
+        onNavigateToFeed={() => setActiveTab("feed")}
+        onNavigateToScout={() => onNavigateToScout?.()}
+        onNavigateToBites={() => onNavigateToRecipes?.()}
+      />
     </div>
   );
 }

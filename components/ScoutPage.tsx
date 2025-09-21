@@ -5,6 +5,7 @@ import { BottomNavigation } from "./BottomNavigation";
 import { FuzoTabs } from "./global/FuzoTabs";
 
 import { TakoToast } from "./ai/TakoToast";
+import { FuzoAIAssistant } from "./FuzoAIAssistant";
 import { PlatesTab } from "./global/PlatesTab";
 import { FriendsTab } from "./scout/FriendsTab";
 import { MapView } from "./scout/MapView";
@@ -842,6 +843,27 @@ export function ScoutPage({
       <BottomNavigation
         activeTab={activeNavTab}
         onTabChange={handleNavTabChange}
+      />
+
+      {/* AI Assistant */}
+      <FuzoAIAssistant
+        onNavigateToMap={(location) => {
+          if (location) {
+            setCurrentLocation(location);
+            setActiveTab("map");
+          }
+        }}
+        onNavigateToRecipe={(recipeId) => {
+          console.log("Navigate to recipe:", recipeId);
+          // You can add recipe navigation logic here
+        }}
+        onSaveRestaurant={(restaurantId) => {
+          console.log("Save restaurant:", restaurantId);
+          // You can add restaurant saving logic here
+        }}
+        onNavigateToFeed={() => onNavigateToFeed?.()}
+        onNavigateToScout={() => {}}
+        onNavigateToBites={() => onNavigateToRecipes?.()}
       />
     </div>
   );

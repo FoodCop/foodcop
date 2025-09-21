@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Components Test</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+      }
+      .test-container {
+        max-width: 400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .test-button {
+        background: #f14c35;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 10px 5px;
+        font-size: 14px;
+      }
+      .test-button:hover {
+        background: #e63e26;
+      }
+      .status {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 8px;
+        background: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h2>🤖 AI Components Test</h2>
+      <p>This page tests the AI components integration.</p>
+
+      <div>
+        <button class="test-button" onclick="testAIAssistant()">
+          Test AI Assistant
+        </button>
+        <button class="test-button" onclick="testTakoToast()">
+          Test Tako Toast
+        </button>
+        <button class="test-button" onclick="testTakoIntro()">
+          Test Tako Intro
+        </button>
+      </div>
+
+      <div class="status" id="status">
+        <strong>Status:</strong> Ready to test AI components
+      </div>
+
+      <div style="margin-top: 20px">
+        <h3>Instructions:</h3>
+        <ol>
+          <li>Click "Test AI Assistant" to see the floating Tako bubble</li>
+          <li>Click the bubble to open the chat interface</li>
+          <li>Try typing a message like "Find me good sushi nearby"</li>
+          <li>Test the "Test AI Connection" button to check backend health</li>
+        </ol>
+      </div>
+    </div>
+
+    <script>
+      function testAIAssistant() {
+        document.getElementById("status").innerHTML =
+          "<strong>Status:</strong> AI Assistant should appear as a floating bubble in the bottom right. Click it to open the chat interface.";
+      }
+
+      function testTakoToast() {
+        document.getElementById("status").innerHTML =
+          "<strong>Status:</strong> Tako Toast component is available but needs to be triggered by restaurant selection.";
+      }
+
+      function testTakoIntro() {
+        document.getElementById("status").innerHTML =
+          "<strong>Status:</strong> Tako Intro Hint should appear automatically for first-time users.";
+      }
+    </script>
+  </body>
+</html>
