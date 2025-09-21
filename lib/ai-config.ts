@@ -1,6 +1,5 @@
-import type { LanguageModel } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
-import { getEnvVar } from "../components/utils/envUtils.basic";
+import type { LanguageModel } from "ai";
 
 // AI Configuration shape (extendable if we add providers later)
 export interface AIConfig {
@@ -25,8 +24,8 @@ function resolveServerEnv(key: string): string {
 
 // Get AI configuration from environment variables
 export function getAIConfig(): AIConfig {
-  const openaiApiKey =
-    resolveServerEnv("OPENAI_API_KEY") || getEnvVar("VITE_OPENAI_API_KEY");
+  // Only use server-side environment variables for security
+  const openaiApiKey = resolveServerEnv("OPENAI_API_KEY");
 
   return {
     openai: {

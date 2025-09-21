@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FUZO Environment Debug</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .warning {
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+      }
+      pre {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 3px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🐙 FUZO Environment Debug</h1>
+
+    <div class="section">
+      <h2>Environment Variables Check</h2>
+      <div id="env-check"></div>
+    </div>
+
+    <div class="section">
+      <h2>Vite Environment</h2>
+      <div id="vite-env"></div>
+    </div>
+
+    <div class="section">
+      <h2>Process Environment</h2>
+      <div id="process-env"></div>
+    </div>
+
+    <div class="section">
+      <h2>Window Environment</h2>
+      <div id="window-env"></div>
+    </div>
+
+    <script>
+      function createStatusElement(text, type = 'info') {
+          const div = document.createElement('div');
+          div.className = type;
+          div.innerHTML = text;
+          return div;
+      }
+
+      function checkEnvVar(key) {
+          // Check import.meta.env
+          if (typeof import !== 'undefined' && import.meta && import.meta.env) {
+              const value = import.meta.env[key];
+              if (value) {
+                  return { source: 'import.meta.env', value: value };
+              }
+          }
+
+          // Check process.env
+          if (typeof process !== 'undefined' && process.env) {
+              const value = process.env[key];
+              if (value) {
+                  return { source: 'process.env', value: value };
+              }
+          }
+
+          // Check window.__VITE_ENV__
+          if (typeof window !== 'undefined' && window.__VITE_ENV__) {
+              const value = window.__VITE_ENV__[key];
+              if (value) {
+                  return { source: 'window.__VITE_ENV__', value: value };
+              }
+          }
+
+          return null;
+      }
+
+      function displayEnvCheck() {
+          const envCheckDiv = document.getElementById('env-check');
+          const keys = ['OPENAI_API_KEY', 'VITE_OPENAI_API_KEY', 'VITE_GOOGLE_MAPS_API_KEY', 'VITE_SUPABASE_URL'];
+
+          keys.forEach(key => {
+              const result = checkEnvVar(key);
+              if (result) {
+                  const displayValue = result.value.length > 20 ? result.value.substring(0, 20) + '...' : result.value;
+                  envCheckDiv.appendChild(createStatusElement(
+                      `✅ ${key}: ${displayValue} (from ${result.source})`, 'success'
+                  ));
+              } else {
+                  envCheckDiv.appendChild(createStatusElement(
+                      `❌ ${key}: NOT FOUND`, 'error'
+                  ));
+              }
+          });
+      }
+
+      function displayViteEnv() {
+          const viteEnvDiv = document.getElementById('vite-env');
+
+          if (typeof import !== 'undefined' && import.meta && import.meta.env) {
+              const viteVars = Object.keys(import.meta.env).filter(key => key.startsWith('VITE_'));
+              viteEnvDiv.appendChild(createStatusElement(
+                  `Found ${viteVars.length} VITE_ variables:`, 'success'
+              ));
+              viteVars.forEach(key => {
+                  const value = import.meta.env[key];
+                  const displayValue = value && value.length > 20 ? value.substring(0, 20) + '...' : value;
+                  viteEnvDiv.appendChild(createStatusElement(
+                      `  ${key}: ${displayValue}`, 'info'
+                  ));
+              });
+          } else {
+              viteEnvDiv.appendChild(createStatusElement(
+                  '❌ import.meta.env not available', 'error'
+              ));
+          }
+      }
+
+      function displayProcessEnv() {
+          const processEnvDiv = document.getElementById('process-env');
+
+          if (typeof process !== 'undefined' && process.env) {
+              const envKeys = Object.keys(process.env).filter(key =>
+                  key.includes('OPENAI') || key.includes('GOOGLE') || key.includes('SUPABASE')
+              );
+              processEnvDiv.appendChild(createStatusElement(
+                  `Found ${envKeys.length} relevant process.env variables:`, 'success'
+              ));
+              envKeys.forEach(key => {
+                  const value = process.env[key];
+                  const displayValue = value && value.length > 20 ? value.substring(0, 20) + '...' : value;
+                  processEnvDiv.appendChild(createStatusElement(
+                      `  ${key}: ${displayValue}`, 'info'
+                  ));
+              });
+          } else {
+              processEnvDiv.appendChild(createStatusElement(
+                  '❌ process.env not available', 'error'
+              ));
+          }
+      }
+
+      function displayWindowEnv() {
+          const windowEnvDiv = document.getElementById('window-env');
+
+          if (typeof window !== 'undefined') {
+              const windowKeys = Object.keys(window).filter(key =>
+                  key.includes('VITE_') || key.includes('ENV')
+              );
+              windowEnvDiv.appendChild(createStatusElement(
+                  `Found ${windowKeys.length} relevant window variables:`, 'success'
+              ));
+              windowKeys.forEach(key => {
+                  const value = window[key];
+                  const displayValue = typeof value === 'string' && value.length > 20 ? value.substring(0, 20) + '...' : value;
+                  windowEnvDiv.appendChild(createStatusElement(
+                      `  ${key}: ${displayValue}`, 'info'
+                  ));
+              });
+          } else {
+              windowEnvDiv.appendChild(createStatusElement(
+                  '❌ window not available', 'error'
+              ));
+          }
+      }
+
+      // Run all checks
+      displayEnvCheck();
+      displayViteEnv();
+      displayProcessEnv();
+      displayWindowEnv();
+    </script>
+  </body>
+</html>

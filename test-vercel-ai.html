@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FUZO Vercel AI SDK Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        max-width: 800px;
+      }
+      .section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .warning {
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+      }
+      button {
+        background: #f14c35;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #e63e26;
+      }
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+      #output {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        font-family: monospace;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🐙 FUZO Vercel AI SDK Test</h1>
+
+    <div class="section">
+      <h2>AI Status Check</h2>
+      <button onclick="checkAIStatus()">Check AI Status</button>
+      <div id="status-output"></div>
+    </div>
+
+    <div class="section">
+      <h2>AI Chat Test</h2>
+      <input
+        type="text"
+        id="message-input"
+        placeholder="Ask Tako something..."
+        style="width: 300px; padding: 8px; margin-right: 10px"
+      />
+      <button onclick="testAIChat()">Send Message</button>
+      <div id="chat-output"></div>
+    </div>
+
+    <div class="section">
+      <h2>Test Output</h2>
+      <div id="output"></div>
+    </div>
+
+    <script>
+      function log(message) {
+        const output = document.getElementById("output");
+        const timestamp = new Date().toLocaleTimeString();
+        output.textContent += `[${timestamp}] ${message}\n`;
+        output.scrollTop = output.scrollHeight;
+      }
+
+      async function checkAIStatus() {
+        const statusOutput = document.getElementById("status-output");
+        statusOutput.innerHTML =
+          '<div class="warning">Checking AI status...</div>';
+
+        try {
+          log("Checking AI status...");
+          const response = await fetch("/api/ai/status");
+          const data = await response.json();
+
+          if (response.ok) {
+            statusOutput.innerHTML = `
+              <div class="success">
+                <strong>AI Status:</strong><br>
+                • Configured: ${data.configured ? "✅ Yes" : "❌ No"}<br>
+                • Provider: ${data.provider || "None"}<br>
+                • Model: ${data.model || "None"}<br>
+                • Available Models: ${
+                  data.availableModels?.join(", ") || "None"
+                }
+              </div>
+            `;
+            log(`AI Status: ${JSON.stringify(data)}`);
+          } else {
+            statusOutput.innerHTML = `<div class="error">Error: ${response.status} ${response.statusText}</div>`;
+            log(`AI Status Error: ${response.status} ${response.statusText}`);
+          }
+        } catch (error) {
+          statusOutput.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+          log(`AI Status Error: ${error.message}`);
+        }
+      }
+
+      async function testAIChat() {
+        const messageInput = document.getElementById("message-input");
+        const chatOutput = document.getElementById("chat-output");
+        const message = messageInput.value.trim();
+
+        if (!message) {
+          alert("Please enter a message");
+          return;
+        }
+
+        chatOutput.innerHTML =
+          '<div class="warning">Sending message to AI...</div>';
+        log(`Sending message: "${message}"`);
+
+        try {
+          const response = await fetch("/api/ai/complete", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              prompt: `You are Tako, FUZO's friendly AI food assistant. Help users discover amazing food experiences with enthusiasm and local knowledge.
+
+User Message: ${message}
+
+Please respond as Tako with helpful food-related advice, restaurant recommendations, or cooking tips. Be friendly and enthusiastic!`,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`AI request failed: ${response.status}`);
+          }
+
+          // Read the streaming response
+          const reader = response.body?.getReader();
+          if (!reader) {
+            throw new Error("No response body");
+          }
+
+          let result = "";
+          const decoder = new TextDecoder();
+
+          chatOutput.innerHTML =
+            '<div class="warning">Receiving AI response...</div>';
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value);
+            const lines = chunk.split("\n");
+
+            for (const line of lines) {
+              if (line.startsWith("0:")) {
+                try {
+                  const data = JSON.parse(line.slice(2));
+                  if (data.type === "text-delta") {
+                    result += data.textDelta;
+                    chatOutput.innerHTML = `<div class="success"><strong>Tako:</strong> ${result}</div>`;
+                  }
+                } catch (e) {
+                  // Ignore parsing errors for malformed chunks
+                }
+              }
+            }
+          }
+
+          log(`AI Response: "${result}"`);
+          chatOutput.innerHTML = `<div class="success"><strong>Tako:</strong> ${result}</div>`;
+          messageInput.value = "";
+        } catch (error) {
+          chatOutput.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+          log(`AI Chat Error: ${error.message}`);
+        }
+      }
+
+      // Auto-check status on load
+      window.onload = function () {
+        log("Page loaded, checking AI status...");
+        checkAIStatus();
+      };
+    </script>
+  </body>
+</html>

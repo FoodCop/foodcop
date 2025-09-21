@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useVercelAIChat, useVercelAIStatus } from "../hooks/useVercelAI";
 import { projectId } from "../utils/supabase/info";
 import { TakoIntroHint } from "./ai/TakoIntroHint";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
@@ -67,6 +68,16 @@ export function FuzoAIAssistant({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // AI Integration using Vercel AI SDK
+  const { generateResponse } = useVercelAIChat();
+  const {
+    configured: aiConfigured,
+    provider,
+    model,
+    isLoading: aiStatusLoading,
+    error: aiStatusError,
+  } = useVercelAIStatus();
+
   const quickSuggestions = [
     "Nearby Food",
     "Recipes",
@@ -109,24 +120,53 @@ export function FuzoAIAssistant({
     setIsTyping(true);
 
     try {
-      console.log("🐙 Tako AI: Sending request to backend...", {
+      console.log("🐙 Tako AI: Sending request to AI backend...", {
         projectId,
         message: text,
         conversationLength: messages.length,
+        aiConfigured,
+        provider,
+        model,
       });
 
-      // For now, use the fallback response system since the AI backend isn't deployed
-      // In the future, this can be updated to call a real AI endpoint
-      console.log(
-        "🐙 Tako AI: Using fallback response system (AI backend not deployed)"
-      );
+      // Check if AI is properly configured
+      if (!aiConfigured) {
+        console.warn("🐙 Tako AI: AI not configured, using fallback system");
+        throw new Error("AI not configured - using fallback system");
+      }
 
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Use the real AI backend
+      const aiResponse = (await generateResponse(
+        text,
+        "food assistant conversation"
+      )) as any;
 
-      // Use the fallback response system
-      const fallbackResponse = generateFallbackResponse(text);
-      setMessages((prev) => [...prev, fallbackResponse]);
+      console.log("🐙 Tako AI: Received AI response:", aiResponse);
+
+      // Convert AI response to our message format
+      const aiMessage: AIMessage = {
+        id: Date.now().toString() + "_ai",
+        type: "ai",
+        content:
+          aiResponse?.message ||
+          "I'm not sure how to respond to that. Can you try asking me about food, restaurants, or recipes?",
+        timestamp: new Date(),
+        // Add cards if the AI response includes suggestions
+        cards: aiResponse?.suggestions
+          ? aiResponse.suggestions.map((suggestion: string, index: number) => ({
+              id: `suggestion_${index}`,
+              type: "action" as const,
+              data: {
+                title: suggestion,
+                description: "Click to explore this suggestion",
+                action: "navigate_feed",
+                icon: "heart",
+              },
+            }))
+          : undefined,
+      };
+
+      setMessages((prev) => [...prev, aiMessage]);
       setIsTyping(false);
     } catch (error) {
       console.error(
@@ -139,8 +179,9 @@ export function FuzoAIAssistant({
       const errorMessage: AIMessage = {
         id: Date.now().toString() + "_error",
         type: "ai",
-        content:
-          "🐙 Oops! I'm having trouble connecting to my AI brain right now. Let me give you a helpful response while I try to reconnect...",
+        content: aiConfigured
+          ? "🐙 Oops! I'm having trouble connecting to my AI brain right now. Let me give you a helpful response while I try to reconnect..."
+          : "🐙 I'm currently using my backup responses because my AI brain isn't configured yet. For full AI assistance, please set up your OpenAI API key!",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -322,26 +363,54 @@ export function FuzoAIAssistant({
       // Test AI connection status
       setIsTyping(true);
 
+      let statusContent = `🔧 **AI Connection Status:**\n\n`;
+
+      if (aiStatusLoading) {
+        statusContent += `• Status: 🔄 Checking AI configuration...\n`;
+        statusContent += `• Please wait while I check the server configuration.\n\n`;
+        statusContent += `**Note:** This checks the server-side AI configuration securely.`;
+      } else if (aiStatusError) {
+        statusContent += `• AI Backend: ❌ Error\n`;
+        statusContent += `• Error: ${aiStatusError}\n`;
+        statusContent += `• Fallback System: ✅ Active\n`;
+        statusContent += `• Response Quality: 🟡 Basic (Using fallback responses)\n\n`;
+        statusContent += `**Issue:** There was an error checking the AI configuration. The server may not be running or the API key may not be configured properly.`;
+      } else {
+        statusContent += `• AI Backend: ${aiConfigured ? "✅" : "❌"} ${
+          aiConfigured ? "Configured" : "Not Configured"
+        }\n`;
+        statusContent += `• Provider: ${provider || "None"}\n`;
+        statusContent += `• Model: ${model || "None"}\n`;
+        statusContent += `• Fallback System: ✅ Active\n`;
+        statusContent += `• Response Quality: ${aiConfigured ? "🟢" : "🟡"} ${
+          aiConfigured ? "Full AI" : "Basic (Limited to predefined responses)"
+        }\n`;
+        statusContent += `• Real-time AI: ${aiConfigured ? "✅" : "❌"} ${
+          aiConfigured ? "Enabled" : "Disabled"
+        }\n\n`;
+        statusContent += `${
+          aiConfigured
+            ? "**Great!** My AI brain is properly configured and ready to help you with intelligent responses!"
+            : "**Setup Required:** To enable full AI functionality, please set up your OpenAI API key in the server environment variables (not client-side for security)."
+        }`;
+      }
+
       const testMessage: AIMessage = {
         id: Date.now().toString(),
         type: "ai",
-        content:
-          `🔧 **AI Connection Status:**\n\n` +
-          `• AI Backend: ❌ Not Deployed (Using Fallback Mode)\n` +
-          `• Fallback System: ✅ Active\n` +
-          `• Response Quality: 🟡 Basic (Limited to predefined responses)\n` +
-          `• Real-time AI: ❌ Disabled\n\n` +
-          `**Note:** The AI backend isn't deployed yet, so I'm using my fallback response system. This still provides helpful food-related responses!`,
+        content: statusContent,
         timestamp: new Date(),
       };
 
       setMessages((prev) => [...prev, testMessage]);
       setIsTyping(false);
 
-      // Test the fallback system
-      setTimeout(() => {
-        handleSendMessage("Hello Tako! This is a test message.");
-      }, 1000);
+      // Test the AI system if it's configured
+      if (aiConfigured && !aiStatusLoading && !aiStatusError) {
+        setTimeout(() => {
+          handleSendMessage("Hello Tako! This is a test message.");
+        }, 1000);
+      }
       return;
     }
 

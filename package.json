@@ -18,6 +18,8 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:auth": "playwright test tests/auth/",
     "test:auth": "npm run test:e2e:auth",
+    "setup:ai": "node setup-ai.js",
+    "test:ai": "node test-ai-integration.js",
     "seed:masterbots": "node --loader ts-node/esm ./scripts/seedMasterBots.ts",
     "test:mcp": "node --loader ts-node/esm ./scripts/testMCPSeeding.ts",
     "test:mcp:powershell": "powershell -ExecutionPolicy Bypass -File ./scripts/test-mcp.ps1",
