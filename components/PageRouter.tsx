@@ -7,6 +7,7 @@ import { OnboardingFlow } from "./OnboardingFlow";
 import { ProfilePage } from "./ProfilePage";
 import { ScoutPage } from "./ScoutPage";
 import { SnapPage } from "./SnapPage";
+import { AuthCallback } from "./auth/AuthCallback";
 import { AboutUsPage } from "./info/AboutUsPage";
 import { AccessibilityPage } from "./info/AccessibilityPage";
 import { CareersPage } from "./info/CareersPage";
@@ -17,6 +18,7 @@ import { PressPage } from "./info/PressPage";
 import { PrivacyPolicyPage } from "./info/PrivacyPolicyPage";
 import { RestaurantPartnersPage } from "./info/RestaurantPartnersPage";
 import { TermsOfServicePage } from "./info/TermsOfServicePage";
+import { isOAuthCallback } from "../utils/authRedirect";
 
 type PageType =
   | "landing"
@@ -27,6 +29,7 @@ type PageType =
   | "chat"
   | "recipes"
   | "profile"
+  | "auth-callback"
   | "about-us"
   | "careers"
   | "press"
@@ -46,14 +49,11 @@ interface PageRouterProps {
 export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
   const [currentPage, setCurrentPage] = useState<PageType>(initialPage);
 
-  // Check for OAuth redirect and redirect to onboarding
+  // Check for OAuth callback and handle appropriately
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("onboarding") === "auth") {
-      console.log("🔄 OAuth redirect detected, navigating to onboarding");
-      setCurrentPage("onboarding");
-      // Clean up the URL
-      window.history.replaceState({}, document.title, window.location.pathname);
+    if (isOAuthCallback()) {
+      console.log("🔄 OAuth callback detected, navigating to auth callback handler");
+      setCurrentPage("auth-callback");
     }
   }, []);
 
@@ -73,6 +73,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
           "chat",
           "recipes",
           "profile",
+          "auth-callback",
           "about-us",
           "careers",
           "press",
@@ -170,6 +171,24 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
 
       case "profile":
         return <ProfilePage onNavigateBack={() => setCurrentPage("feed")} />;
+
+      case "auth-callback":
+        return (
+          <AuthCallback
+            onAuthComplete={(destination) => {
+              console.log("✅ Auth completed, redirecting to:", destination);
+              if (destination === '/onboarding') {
+                setCurrentPage("onboarding");
+              } else {
+                setCurrentPage("feed");
+              }
+            }}
+            onAuthError={(error) => {
+              console.error("❌ Auth error:", error);
+              setCurrentPage("landing");
+            }}
+          />
+        );
 
       case "about-us":
         return <AboutUsPage />;

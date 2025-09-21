@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getSupabaseClient } from "../utils/supabase";
+import { getOAuthRedirectUrl } from "../utils/authRedirect";
 
 interface User {
   id: string;
@@ -62,12 +63,21 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
       try {
         const {
           data: { session },
+          error,
         } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error("❌ AuthContext: Session error:", error);
+          setLoading(false);
+          return;
+        }
+
         console.log("🔍 AuthContext: Session data:", {
           hasSession: !!session,
           hasUser: !!session?.user,
           userEmail: session?.user?.email,
         });
+        
         if (session?.user) {
           setUser(session.user);
           await fetchUserProfile(session.user.id);
@@ -90,17 +100,30 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("🔄 AuthContext: Auth state change:", { event, hasSession: !!session, hasUser: !!session?.user });
+      
+      // Prevent race conditions by checking if we're already loading
+      if (loading) {
+        console.log("⏳ AuthContext: Still loading initial session, skipping state change");
+        return;
+      }
+
       if (event === "SIGNED_IN" && session?.user) {
+        console.log("✅ AuthContext: User signed in");
         setUser(session.user);
         await fetchUserProfile(session.user.id);
       } else if (event === "SIGNED_OUT") {
+        console.log("👋 AuthContext: User signed out");
         setUser(null);
         setProfile(null);
+      } else if (event === "TOKEN_REFRESHED" && session?.user) {
+        console.log("🔄 AuthContext: Token refreshed");
+        setUser(session.user);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase]);
+  }, [supabase, loading]);
 
   // Fetch user profile from backend
   const fetchUserProfile = async (userId: string) => {
@@ -132,10 +155,17 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   const signInWithGoogle = async () => {
     if (!supabase) return;
 
+    const redirectUrl = getOAuthRedirectUrl();
+    console.log("🔗 OAuth redirect URL:", redirectUrl);
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}?onboarding=auth`,
+        redirectTo: redirectUrl,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       },
     });
 

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth Flow Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #F14C35;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background: #E03D2A;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status.info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>🔐 OAuth Flow Test Suite</h1>
+    
+    <div class="test-section">
+        <h2>Current URL Analysis</h2>
+        <div id="url-analysis"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>OAuth Flow Tests</h2>
+        <button class="test-button" onclick="testOAuthRedirect()">Test OAuth Redirect</button>
+        <button class="test-button" onclick="testCallbackDetection()">Test Callback Detection</button>
+        <button class="test-button" onclick="testURLCleanup()">Test URL Cleanup</button>
+        <button class="test-button" onclick="clearLogs()">Clear Logs</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Console Logs</h2>
+        <div id="console-logs" class="log"></div>
+    </div>
+
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function addLog(message, type = 'log') {
+            const logDiv = document.getElementById('console-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span style="color: #666;">[${timestamp}]</span> <span style="color: ${type === 'error' ? '#dc3545' : type === 'warn' ? '#ffc107' : '#000'};">${message}</span>`;
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLog(args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addLog(args.join(' '), 'warn');
+        };
+
+        // Test functions
+        function analyzeCurrentURL() {
+            const url = new URL(window.location.href);
+            const analysis = {
+                fullURL: url.href,
+                pathname: url.pathname,
+                search: url.search,
+                hash: url.hash,
+                isOAuthCallback: url.pathname === '/auth/callback' || url.searchParams.has('code') || url.searchParams.has('error'),
+                hasCode: url.searchParams.has('code'),
+                hasState: url.searchParams.has('state'),
+                hasError: url.searchParams.has('error'),
+                hasOnboarding: url.searchParams.has('onboarding'),
+                params: Object.fromEntries(url.searchParams.entries())
+            };
+            
+            document.getElementById('url-analysis').innerHTML = `
+                <div class="status ${analysis.isOAuthCallback ? 'info' : 'success'}">
+                    <strong>OAuth Callback:</strong> ${analysis.isOAuthCallback ? 'Yes' : 'No'}
+                </div>
+                <pre>${JSON.stringify(analysis, null, 2)}</pre>
+            `;
+            
+            return analysis;
+        }
+
+        function testOAuthRedirect() {
+            console.log('🧪 Testing OAuth redirect URL generation...');
+            
+            // Simulate the redirect URL generation
+            const redirectUrl = `${window.location.origin}/auth/callback`;
+            console.log('Generated redirect URL:', redirectUrl);
+            
+            addTestResult('OAuth Redirect', 'success', `Redirect URL: ${redirectUrl}`);
+        }
+
+        function testCallbackDetection() {
+            console.log('🧪 Testing callback detection...');
+            
+            const analysis = analyzeCurrentURL();
+            const isCallback = analysis.isOAuthCallback;
+            
+            addTestResult('Callback Detection', isCallback ? 'success' : 'info', 
+                `Detected as callback: ${isCallback}`);
+        }
+
+        function testURLCleanup() {
+            console.log('🧪 Testing URL cleanup...');
+            
+            const originalURL = window.location.href;
+            console.log('Original URL:', originalURL);
+            
+            // Simulate URL cleanup
+            const url = new URL(window.location.href);
+            const paramsToRemove = ['code', 'state', 'error', 'error_description', 'onboarding'];
+            paramsToRemove.forEach(param => {
+                url.searchParams.delete(param);
+            });
+            
+            console.log('Cleaned URL:', url.toString());
+            
+            addTestResult('URL Cleanup', 'success', `Original: ${originalURL}<br>Cleaned: ${url.toString()}`);
+        }
+
+        function addTestResult(testName, status, message) {
+            const resultsDiv = document.getElementById('test-results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `status ${status}`;
+            resultDiv.innerHTML = `<strong>${testName}:</strong> ${message}`;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        function clearLogs() {
+            document.getElementById('console-logs').innerHTML = '';
+            document.getElementById('test-results').innerHTML = '';
+        }
+
+        // Initialize
+        console.log('🚀 OAuth Flow Test Suite initialized');
+        analyzeCurrentURL();
+    </script>
+</body>
+</html>
