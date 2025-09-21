@@ -101,14 +101,47 @@ function classifyTopic(text: string): string {
 
   // Food-related keywords
   const foodKeywords = [
-    "food", "eat", "restaurant", "recipe", "cook", "kitchen", "meal", "dinner",
-    "lunch", "breakfast", "snack", "taste", "flavor", "ingredient", "dish",
-    "cuisine", "chef", "menu", "delicious", "yummy", "tasty", "hungry",
-    "pizza", "pasta", "burger", "salad", "soup", "dessert", "cake", "bread",
-    "meat", "chicken", "beef", "fish", "vegetable", "fruit", "spice", "herb"
+    "food",
+    "eat",
+    "restaurant",
+    "recipe",
+    "cook",
+    "kitchen",
+    "meal",
+    "dinner",
+    "lunch",
+    "breakfast",
+    "snack",
+    "taste",
+    "flavor",
+    "ingredient",
+    "dish",
+    "cuisine",
+    "chef",
+    "menu",
+    "delicious",
+    "yummy",
+    "tasty",
+    "hungry",
+    "pizza",
+    "pasta",
+    "burger",
+    "salad",
+    "soup",
+    "dessert",
+    "cake",
+    "bread",
+    "meat",
+    "chicken",
+    "beef",
+    "fish",
+    "vegetable",
+    "fruit",
+    "spice",
+    "herb",
   ];
 
-  const hasFoodKeywords = foodKeywords.some(keyword => 
+  const hasFoodKeywords = foodKeywords.some((keyword) =>
     lowerText.includes(keyword)
   );
 
@@ -124,12 +157,12 @@ function deflectAndPivot(
 ): string {
   const specialty = specialties[0] || "food";
   const country = userCountry ? ` in ${userCountry}` : "";
-  
+
   const responses = [
     `That's interesting! As a ${specialty} expert, I'd love to talk about amazing ${specialty}${country} instead. What's your favorite ${specialty}?`,
     `I'm all about ${specialty}! Let's chat about the best ${specialty} spots${country}. What do you think?`,
     `As a ${specialty} connoisseur, I'm curious about your ${specialty} preferences${country}. Tell me more!`,
-    `That's cool! But I'm really passionate about ${specialty}${country}. What's your go-to ${specialty}?`
+    `That's cool! But I'm really passionate about ${specialty}${country}. What's your go-to ${specialty}?`,
   ];
 
   return responses[Math.floor(Math.random() * responses.length)];
@@ -216,19 +249,19 @@ Deno.serve(async (req) => {
     switch (event.type) {
       case "message.new":
         return await handleMessageNew(event);
-      
+
       case "user.presence.changed":
         return await handleUserPresenceChanged(event);
-      
+
       case "channel.updated":
         return await handleChannelUpdated(event);
-      
+
       case "member.added":
         return await handleMemberAdded(event);
-      
+
       case "member.removed":
         return await handleMemberRemoved(event);
-      
+
       default:
         console.log(`Unhandled event type: ${event.type}`);
         return new Response("ignored", { status: 200 });
@@ -244,7 +277,7 @@ Deno.serve(async (req) => {
 // Handle new message events
 async function handleMessageNew(event: any): Promise<Response> {
   const msg = event.message;
-  
+
   // Skip bot messages
   if (!msg || msg.user?.id?.startsWith("mb_")) {
     return new Response("ignore-bot-msg", { status: 200 });
@@ -261,13 +294,13 @@ async function handleMessageNew(event: any): Promise<Response> {
   const channel = event.channel || {};
   const members: any[] = channel.members || [];
   const botMember = members.find((m) => m.user?.id?.startsWith("mb_"));
-  
+
   if (!botMember) {
     // No bot in channel, just log the message
     console.log("User message in channel without bot:", {
       channelId,
       userId: msg.user?.id,
-      message: msg.text
+      message: msg.text,
     });
     return new Response("no-bot", { status: 200 });
   }
@@ -334,12 +367,12 @@ async function handleMessageNew(event: any): Promise<Response> {
 async function handleUserPresenceChanged(event: any): Promise<Response> {
   console.log("User presence changed:", {
     userId: event.user?.id,
-    status: event.user?.status
+    status: event.user?.status,
   });
-  
+
   // You can add custom logic here for presence changes
   // For example, update user status in your database
-  
+
   return new Response("success", { status: 200 });
 }
 
@@ -347,12 +380,12 @@ async function handleUserPresenceChanged(event: any): Promise<Response> {
 async function handleChannelUpdated(event: any): Promise<Response> {
   console.log("Channel updated:", {
     channelId: event.channel?.id,
-    updates: event.channel
+    updates: event.channel,
   });
-  
+
   // You can add custom logic here for channel updates
   // For example, sync channel data with your database
-  
+
   return new Response("success", { status: 200 });
 }
 
@@ -361,12 +394,12 @@ async function handleMemberAdded(event: any): Promise<Response> {
   console.log("Member added:", {
     channelId: event.channel?.id,
     userId: event.user?.id,
-    memberId: event.member?.user_id
+    memberId: event.member?.user_id,
   });
-  
+
   // You can add custom logic here for new members
   // For example, send welcome messages or update permissions
-  
+
   return new Response("success", { status: 200 });
 }
 
@@ -375,11 +408,11 @@ async function handleMemberRemoved(event: any): Promise<Response> {
   console.log("Member removed:", {
     channelId: event.channel?.id,
     userId: event.user?.id,
-    memberId: event.member?.user_id
+    memberId: event.member?.user_id,
   });
-  
+
   // You can add custom logic here for removed members
   // For example, cleanup or notifications
-  
+
   return new Response("success", { status: 200 });
 }

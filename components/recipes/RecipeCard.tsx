@@ -1,13 +1,5 @@
-import {
-  Bookmark,
-  Clock,
-  Flame,
-  Heart,
-  Share2,
-  Star,
-  Users,
-} from "lucide-react";
-import React, { useState } from "react";
+import { Clock, Flame, Share2, Star, Users } from "lucide-react";
+import React from "react";
 import { Recipe } from "../constants/recipesData";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
@@ -15,9 +7,6 @@ interface RecipeCardProps {
   recipe: Recipe;
   onClick?: () => void;
   onSelect?: (recipe: Recipe) => void;
-  onSave?: () => void;
-  onBookmark?: (recipeId: string) => void;
-  onLike?: (recipeId: string) => void;
   onShare?: () => void;
 }
 
@@ -25,30 +14,11 @@ export function RecipeCard({
   recipe,
   onClick,
   onSelect,
-  onSave,
-  onBookmark,
-  onLike,
   onShare,
 }: RecipeCardProps) {
-  const [isSaved, setIsSaved] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-
-  const handleSave = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsSaved(!isSaved);
-    if (!isSaved) {
-      onSave();
-    }
-  };
-
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onShare();
-  };
-
-  const handleLike = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsLiked(!isLiked);
+    onShare?.();
   };
 
   const handleClick = () => {
@@ -71,30 +41,6 @@ export function RecipeCard({
           alt={recipe.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
-
-        {/* Overlay Actions */}
-        <div className="absolute top-3 right-3 flex space-x-2">
-          <button
-            onClick={handleLike}
-            className={`w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 transition-colors ${
-              isLiked
-                ? "bg-[#F14C35] text-white"
-                : "bg-white/80 text-gray-700 hover:bg-white"
-            }`}
-          >
-            <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
-          </button>
-          <button
-            onClick={handleSave}
-            className={`w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 transition-colors ${
-              isSaved
-                ? "bg-[#F14C35] text-white"
-                : "bg-white/80 text-gray-700 hover:bg-white"
-            }`}
-          >
-            <Bookmark className={`w-4 h-4 ${isSaved ? "fill-current" : ""}`} />
-          </button>
-        </div>
 
         {/* Difficulty Badge */}
         <div className="absolute top-3 left-3">

@@ -1,7 +1,6 @@
-import React from 'react';
-import { UserPlus, Users, MessageCircle } from 'lucide-react';
-import { Friend } from '../constants/profileData';
-import { ImageWithFallback } from '../figma/ImageWithFallback';
+import { MessageCircle, UserPlus, Users } from "lucide-react";
+import { Friend } from "../constants/profileData";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 interface CrewTabProps {
   crew: Friend[];
@@ -29,8 +28,13 @@ export function CrewTab({ crew, onFriendClick }: CrewTabProps) {
           <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
             <Users className="w-8 h-8 text-gray-400" />
           </div>
-          <h3 className="text-lg font-medium text-[#0B1F3A] mb-2">Build Your Food Crew</h3>
-          <p className="text-gray-600 mb-6">Connect with fellow food lovers to discover amazing restaurants together.</p>
+          <h3 className="text-lg font-medium text-[#0B1F3A] mb-2">
+            Build Your Food Crew
+          </h3>
+          <p className="text-gray-600 mb-6">
+            Connect with fellow food lovers to discover amazing restaurants
+            together.
+          </p>
           <button className="px-6 py-3 bg-[#F14C35] text-white rounded-xl font-medium hover:bg-[#E63E26] transition-colors">
             Find Friends
           </button>
@@ -59,16 +63,20 @@ export function CrewTab({ crew, onFriendClick }: CrewTabProps) {
                 {/* Friend Info */}
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-semibold text-[#0B1F3A]">{friend.displayName}</h3>
+                    <h3 className="font-semibold text-[#0B1F3A]">
+                      {friend.displayName}
+                    </h3>
                     <div className="flex items-center space-x-1 text-sm text-[#F14C35] font-medium">
                       <span>{friend.points}</span>
                       <span>pts</span>
                     </div>
                   </div>
-                  
+
                   <p className="text-sm text-gray-600 mb-2">{friend.handle}</p>
-                  
-                  <p className="text-sm text-gray-700 line-clamp-2 mb-3">{friend.bio}</p>
+
+                  <p className="text-sm text-gray-700 line-clamp-2 mb-3">
+                    {friend.bio}
+                  </p>
 
                   {/* Preferences */}
                   <div className="flex flex-wrap gap-1 mb-3">
@@ -121,7 +129,7 @@ export function CrewTab({ crew, onFriendClick }: CrewTabProps) {
           <h3 className="font-medium text-[#0B1F3A] mb-1">Find Nearby</h3>
           <p className="text-sm text-gray-600">Discover foodies in your area</p>
         </button>
-        
+
         <button className="p-4 bg-[#F8F9FA] rounded-xl text-left hover:bg-gray-100 transition-colors border border-gray-200">
           <UserPlus className="w-6 h-6 text-[#F14C35] mb-2" />
           <h3 className="font-medium text-[#0B1F3A] mb-1">Invite Contacts</h3>

@@ -67,11 +67,9 @@ interface PlatesTabProps {
 function ListRestaurantCard({
   restaurant,
   onClick,
-  onSave,
 }: {
   restaurant: Restaurant;
   onClick: () => void;
-  onSave: () => void;
 }) {
   const getPriceLevelDisplay = (level: number) => {
     return "$".repeat(level) + "·".repeat(Math.max(0, 3 - level));
@@ -142,19 +140,6 @@ function ListRestaurantCard({
               {getPriceLevelDisplay(restaurant.priceLevel)}
             </span>
           </div>
-        </div>
-
-        {/* Save Button */}
-        <div className="flex items-center px-4">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onSave();
-            }}
-            className="w-10 h-10 bg-[#F14C35]/10 text-[#F14C35] rounded-full flex items-center justify-center hover:bg-[#F14C35] hover:text-white transition-colors"
-          >
-            <Heart className="w-4 h-4 fill-current" />
-          </button>
         </div>
       </div>
     </motion.div>

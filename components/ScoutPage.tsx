@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Filter, Heart, Loader, MapPin, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BottomNavigation } from "./BottomNavigation";
-import { FuzoTabs } from "./global/FuzoTabs";
 
 import { TakoToast } from "./ai/TakoToast";
 import { FuzoAIAssistant } from "./FuzoAIAssistant";
@@ -190,6 +189,7 @@ export function ScoutPage({
       console.log("✅ Direct Google Places API results:", {
         count: restaurants.length,
         location: { lat: geoResult.latitude, lng: geoResult.longitude },
+        restaurants: restaurants.slice(0, 3), // Log first 3 restaurants for debugging
       });
 
       // Update restaurants with saved state
@@ -201,6 +201,10 @@ export function ScoutPage({
         ),
       }));
 
+      console.log(
+        "✅ Setting restaurants with saved state:",
+        restaurantsWithSavedState.length
+      );
       setRestaurants(restaurantsWithSavedState);
 
       if (restaurants.length === 0) {
@@ -468,30 +472,40 @@ export function ScoutPage({
   );
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-white border-b border-gray-200 px-3 py-3">
-        <div className="flex items-center space-x-2">
+    <div className="min-h-screen bg-white relative">
+      {/* Full Screen Map */}
+      <div className="absolute inset-0">
+        <MapView
+          restaurants={filteredRestaurants}
+          selectedRestaurant={selectedMapRestaurant}
+          onRestaurantSelect={handleRestaurantClick}
+          currentLocation={currentLocation}
+        />
+      </div>
+
+      {/* Floating Header */}
+      <div className="absolute top-0 left-0 right-0 z-40 p-4">
+        <div className="flex items-center justify-between">
           {/* Back Button */}
           {onNavigateBack && (
             <button
               onClick={onNavigateBack}
-              className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+              className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors shadow-lg"
             >
-              <ArrowLeft className="w-4 h-4 text-[#0B1F3A]" />
+              <ArrowLeft className="w-5 h-5 text-[#0B1F3A]" />
             </button>
           )}
 
           {/* Filter Button */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-lg ${
               showFilters
                 ? "bg-[#F14C35] text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                : "bg-white/90 backdrop-blur-sm text-gray-600 hover:bg-white"
             }`}
           >
-            <Filter className="w-4 h-4" />
+            <Filter className="w-5 h-5" />
           </button>
         </div>
 
@@ -501,7 +515,7 @@ export function ScoutPage({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="mt-3 p-3 bg-gray-50 rounded-lg"
+            className="mt-3 p-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg"
           >
             <div className="space-y-3">
               {/* Quick Filters */}
@@ -595,162 +609,124 @@ export function ScoutPage({
             </div>
           </motion.div>
         )}
-
-        {/* Tabs */}
-        <div className="mt-3">
-          <FuzoTabs
-            tabs={tabs}
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            variant="compact"
-            showContent={false}
-          />
-        </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1">
-        {activeTab === "nearby" && (
-          <div className="flex flex-col h-[calc(100vh-120px)]">
-            {/* Map Section - Larger for better visibility */}
-            <div className="h-[60%] relative">
-              <MapView
-                restaurants={filteredRestaurants}
-                selectedRestaurant={selectedMapRestaurant}
-                onRestaurantSelect={handleRestaurantClick}
-                currentLocation={currentLocation}
-              />
+      {/* Floating Tab Buttons */}
+      <div className="absolute top-20 left-4 z-30 flex flex-col space-y-2">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-lg ${
+              activeTab === tab.id
+                ? "bg-[#F14C35] text-white scale-110"
+                : "bg-white/90 backdrop-blur-sm text-gray-600 hover:bg-white hover:scale-105"
+            }`}
+          >
+            <tab.icon className="w-5 h-5" />
+          </button>
+        ))}
+      </div>
 
-              {/* Map Controls */}
-              <div className="absolute top-3 right-3 flex flex-col space-y-2">
+      {/* Floating Restaurant Cards */}
+      {activeTab === "nearby" && (
+        <div className="absolute bottom-4 left-4 right-4 z-30">
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+            {/* Restaurant Count Header */}
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-bold text-[#0B1F3A]">
+                {loading
+                  ? "Finding restaurants..."
+                  : `${filteredRestaurants.length} restaurants nearby`}
+              </h3>
+              {!loading && (
                 <button
-                  onClick={handleLocationRefresh}
-                  disabled={refreshingLocation}
-                  className="w-9 h-9 bg-white rounded-lg shadow-md flex items-center justify-center hover:shadow-lg transition-shadow"
+                  onClick={() => loadNearbyRestaurants()}
+                  className="text-[#F14C35] text-xs font-medium hover:underline"
                 >
-                  <MapPin
-                    className={`w-4 h-4 text-[#F14C35] ${
-                      refreshingLocation ? "animate-pulse" : ""
-                    }`}
-                  />
+                  Refresh
                 </button>
-              </div>
+              )}
             </div>
 
-            {/* Restaurant Cards - Compact Bottom Section */}
-            <div className="h-[40%] bg-gray-50">
-              <div className="p-3">
-                {/* Location Status Card */}
-                {geolocation && (
-                  <div className="mb-3 p-3 bg-white rounded-xl border border-gray-200">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="w-4 h-4 text-[#F14C35]" />
-                        <div>
-                          <span className="text-sm font-medium text-[#0B1F3A]">
-                            {geolocation.city
-                              ? `${geolocation.city}, ${geolocation.region}`
-                              : "Current Location"}
-                          </span>
-                          <div className="text-xs text-gray-500">
-                            {geolocation.method === "browser" &&
-                              "📍 GPS Location (Most Accurate)"}
-                            {geolocation.method === "ip_geolocation" &&
-                              "🌐 IP-based Location"}
-                            {geolocation.method === "default" &&
-                              "📌 Default Location (San Francisco)"}
-                          </div>
-                        </div>
-                      </div>
-                      <button
-                        onClick={handleLocationRefresh}
-                        disabled={refreshingLocation}
-                        className="text-xs text-[#F14C35] font-medium hover:underline disabled:opacity-50"
-                      >
-                        {refreshingLocation ? "Updating..." : "Update"}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Restaurant Count Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-bold text-[#0B1F3A]">
-                    {loading
-                      ? "Finding restaurants..."
-                      : `${filteredRestaurants.length} restaurants nearby`}
-                  </h3>
-                  {!loading && (
+            {loading ? (
+              <div className="flex items-center justify-center py-4">
+                <Loader className="w-5 h-5 text-[#F14C35] animate-spin" />
+                <span className="ml-2 text-gray-600 text-sm">
+                  Finding restaurants...
+                </span>
+              </div>
+            ) : error ? (
+              <div className="text-center py-4">
+                <p className="text-gray-600 mb-2 text-sm">{error}</p>
+                <button
+                  onClick={() => loadNearbyRestaurants()}
+                  className="text-[#F14C35] font-medium hover:underline text-sm"
+                >
+                  Try again
+                </button>
+              </div>
+            ) : (
+              <div className="flex space-x-3 overflow-x-auto pb-2">
+                {filteredRestaurants.length > 0 ? (
+                  filteredRestaurants.map((restaurant) => (
+                    <RestaurantCard
+                      key={restaurant.id}
+                      restaurant={restaurant}
+                      onClick={() => handleRestaurantClick(restaurant)}
+                      variant="grid"
+                    />
+                  ))
+                ) : (
+                  <div className="text-center py-4 w-full">
+                    <p className="text-gray-600 mb-2 text-sm">
+                      No restaurants found
+                    </p>
+                    <p className="text-xs text-gray-500 mb-2">
+                      Try adjusting your search or location
+                    </p>
                     <button
                       onClick={() => loadNearbyRestaurants()}
-                      className="text-[#F14C35] text-xs font-medium hover:underline"
+                      className="text-[#F14C35] font-medium hover:underline text-sm"
                     >
                       Refresh
                     </button>
-                  )}
-                </div>
-
-                {loading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader className="w-6 h-6 text-[#F14C35] animate-spin" />
-                    <span className="ml-2 text-gray-600">
-                      Finding restaurants...
-                    </span>
-                  </div>
-                ) : error ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-600 mb-2">{error}</p>
-                    <button
-                      onClick={() => loadNearbyRestaurants()}
-                      className="text-[#F14C35] font-medium hover:underline"
-                    >
-                      Try again
-                    </button>
-                  </div>
-                ) : filteredRestaurants.length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-600 mb-2">No restaurants found</p>
-                    <p className="text-sm text-gray-500">
-                      Try adjusting your search or location
-                    </p>
-                  </div>
-                ) : (
-                  <div className="flex space-x-3 overflow-x-auto pb-4">
-                    {filteredRestaurants.map((restaurant) => (
-                      <RestaurantCard
-                        key={restaurant.id}
-                        restaurant={restaurant}
-                        onClick={() => handleRestaurantClick(restaurant)}
-                        onSave={() => handleSaveRestaurant(restaurant)}
-                      />
-                    ))}
                   </div>
                 )}
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
+      )}
 
-        {activeTab === "saved" && (
-          <PlatesTab
-            variant="scout"
-            onRestaurantClick={handleRestaurantClick}
-            onRestaurantUnsave={handleSaveRestaurant}
-            showSearch={true}
-            showFilters={true}
-            showViewToggle={true}
-            showStats={false}
-          />
-        )}
+      {/* Floating Content for Other Tabs */}
+      {activeTab === "saved" && (
+        <div className="absolute bottom-4 left-4 right-4 z-30">
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg max-h-96 overflow-y-auto">
+            <PlatesTab
+              variant="scout"
+              onRestaurantClick={handleRestaurantClick}
+              onRestaurantUnsave={handleSaveRestaurant}
+              showSearch={true}
+              showFilters={true}
+              showViewToggle={true}
+              showStats={false}
+            />
+          </div>
+        </div>
+      )}
 
-        {activeTab === "friends" && (
-          <FriendsTab
-            friends={[]}
-            onRestaurantClick={handleRestaurantClick}
-            onCopyToPlate={handleSaveRestaurant}
-          />
-        )}
-      </div>
+      {activeTab === "friends" && (
+        <div className="absolute bottom-4 left-4 right-4 z-30">
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg max-h-96 overflow-y-auto">
+            <FriendsTab
+              friends={[]}
+              onRestaurantClick={handleRestaurantClick}
+              onCopyToPlate={handleSaveRestaurant}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Restaurant Detail Sheet */}
       {selectedRestaurant && (
@@ -758,8 +734,6 @@ export function ScoutPage({
           restaurant={selectedRestaurant}
           isOpen={showDetailSheet}
           onClose={() => setShowDetailSheet(false)}
-          onViewOnMap={() => handleViewOnMap(selectedRestaurant)}
-          onSave={() => handleSaveRestaurant(selectedRestaurant)}
         />
       )}
 
@@ -840,17 +814,14 @@ export function ScoutPage({
       )}
 
       {/* Bottom Navigation */}
-      <BottomNavigation
-        activeTab={activeNavTab}
-        onTabChange={handleNavTabChange}
-      />
+      <BottomNavigation activeTab="scout" onTabChange={handleNavTabChange} />
 
       {/* AI Assistant */}
       <FuzoAIAssistant
         onNavigateToMap={(location) => {
           if (location) {
             setCurrentLocation(location);
-            setActiveTab("map");
+            setActiveTab("nearby");
           }
         }}
         onNavigateToRecipe={(recipeId) => {

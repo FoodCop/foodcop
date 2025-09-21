@@ -1,4 +1,4 @@
-import { Bookmark, Heart, Share2, X } from "lucide-react";
+import { Share2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useBotPosts } from "../hooks/useBotPosts";
 import { SwipeCard } from "./SwipeCard";
@@ -79,24 +79,10 @@ export function SwipeDeck() {
     }, 300);
   };
 
-  const handleLike = () => {
-    if (!currentCard) return;
-    setLikedCards((prev) => [...prev, currentCard.id]);
-    // TODO: Save to user profile for AI training
-    getNextCard();
-  };
-
   const handleSkip = () => {
     if (!currentCard) return;
     setSkippedCards((prev) => [...prev, currentCard.id]);
     // TODO: Save to user profile for AI training
-    getNextCard();
-  };
-
-  const handleSaveToPlate = () => {
-    if (!currentCard) return;
-    // TODO: Save to user's plate
-    console.log("Saved to plate:", currentCard.title);
     getNextCard();
   };
 
@@ -163,9 +149,7 @@ export function SwipeDeck() {
         {...currentCard}
         onSwipe={handleSwipe}
         isActive={true}
-        onLike={handleLike}
         onSkip={handleSkip}
-        onSaveToPlate={handleSaveToPlate}
         onShare={handleShare}
       />
 
@@ -176,18 +160,6 @@ export function SwipeDeck() {
           className="w-14 h-14 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
         >
           <X className="w-6 h-6" />
-        </button>
-        <button
-          onClick={handleLike}
-          className="w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
-        >
-          <Heart className="w-6 h-6" />
-        </button>
-        <button
-          onClick={handleSaveToPlate}
-          className="w-14 h-14 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
-        >
-          <Bookmark className="w-6 h-6" />
         </button>
         <button
           onClick={handleShare}

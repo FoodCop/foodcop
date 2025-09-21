@@ -1,4 +1,5 @@
-import { Camera, ChefHat, Home, Map } from "lucide-react";
+import { Camera, ChefHat, Home, Map, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface BottomNavigationProps {
   activeTab: string;
@@ -15,70 +16,134 @@ export function BottomNavigation({
   onNavigateToScout,
   onNavigateToSnap,
 }: BottomNavigationProps) {
-  const tabs = [
-    { id: "feed", label: "Feed", icon: Home },
-    { id: "scout", label: "Scout", icon: Map },
-    { id: "snap", label: "Snap", icon: Camera, isCenter: true },
-    { id: "bites", label: "Bites", icon: ChefHat },
+  const [open, setOpen] = useState(false);
+
+  // Close on ESC
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Sub actions exposed by the FAB
+  const actions = [
+    {
+      id: "feed",
+      label: "Feed",
+      icon: Home,
+      onClick: () => {
+        onNavigateToFeed ? onNavigateToFeed() : onTabChange("feed");
+      },
+      // position when expanded (relative to FAB)
+      className: "-translate-y-20 -translate-x-24", // up-left
+    },
+    {
+      id: "scout",
+      label: "Scout",
+      icon: Map,
+      onClick: () => {
+        onNavigateToScout ? onNavigateToScout() : onTabChange("scout");
+      },
+      className: "-translate-y-20 -translate-x-8", // up-left-center
+    },
+    {
+      id: "snap",
+      label: "Snap",
+      icon: Camera,
+      onClick: () => {
+        onNavigateToSnap ? onNavigateToSnap() : onTabChange("snap");
+      },
+      className: "-translate-y-20 translate-x-8", // up-right-center
+    },
+    {
+      id: "bites",
+      label: "Bites",
+      icon: ChefHat,
+      onClick: () => onTabChange("bites"),
+      className: "-translate-y-20 translate-x-24", // up-right
+    },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-1.5 z-50">
-      <div className="flex justify-around items-end max-w-md mx-auto">
-        {tabs.map((tab) => {
-          const isActive = activeTab === tab.id;
-          const IconComponent = tab.icon;
-          const isCenter = tab.id === "snap";
+    <>
+      {/* Backdrop (click to close) */}
+      {open && (
+        <button
+          aria-label="Close menu"
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[1px]"
+          onClick={() => setOpen(false)}
+        />
+      )}
 
-          if (isCenter) {
-            // Special center button for camera
-            return (
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-50"
+        role="navigation"
+        aria-label="Bottom navigation"
+      >
+        {/* Bar */}
+        <div className="mx-auto max-w-md px-4 pb-4">
+          <div className="relative flex items-end justify-center">
+            {/* Floating Action Button + sub buttons container */}
+            <div className="relative">
+              {/* Sub buttons */}
+              {actions.map((a) => {
+                const Icon = a.icon;
+                return (
+                  <button
+                    key={a.id}
+                    onClick={() => {
+                      a.onClick();
+                      setOpen(false);
+                    }}
+                    aria-label={a.label}
+                    className={[
+                      "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+                      "rounded-full shadow-lg bg-white border border-gray-200",
+                      "p-3 focus:outline-none focus:ring-2 focus:ring-[#F14C35]",
+                      "transition-all duration-300 ease-out",
+                      open
+                        ? `opacity-100 scale-100 ${a.className}`
+                        : "opacity-0 scale-75 pointer-events-none",
+                    ].join(" ")}
+                  >
+                    <Icon className="h-5 w-5 text-[#0B1F3A]" />
+                  </button>
+                );
+              })}
+
+              {/* Main FAB */}
               <button
-                key={tab.id}
-                onClick={() => onTabChange(tab.id)}
-                className="flex flex-col items-center justify-center p-1 transition-all duration-200 -mt-1"
+                onClick={() => {
+                  setOpen((s) => !s);
+                }}
+                aria-expanded={open}
+                aria-haspopup="true"
+                aria-label={open ? "Close menu" : "Open menu"}
+                className={[
+                  "relative z-50 flex h-14 w-14 items-center justify-center rounded-full",
+                  "bg-[#F14C35] text-white shadow-xl transition-all duration-300",
+                  open ? "scale-105 rotate-90" : "hover:scale-105",
+                ].join(" ")}
               >
-                <div
-                  className={`p-3 rounded-full shadow-lg transition-all ${
-                    isActive
-                      ? "bg-[#A6471E] scale-105"
-                      : "bg-[#F14C35] hover:bg-[#A6471E] hover:scale-105"
-                  }`}
-                >
-                  <IconComponent className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xs font-medium mt-0.5 text-[#F14C35]">
-                  {tab.label}
-                </span>
+                {open ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <img
+                    src="/images/landing/Images/fav_logo.png"
+                    alt="Fuzo"
+                    className="h-8 w-8 object-contain"
+                  />
+                )}
               </button>
-            );
-          }
+            </div>
+          </div>
 
-          return (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange(tab.id)}
-              className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 relative ${
-                isActive
-                  ? "bg-[#F14C35]/10 text-[#F14C35]"
-                  : "text-gray-500 hover:text-[#0B1F3A] hover:bg-gray-50"
-              }`}
-            >
-              <div
-                className={`p-2 rounded-xl relative ${
-                  isActive ? "bg-[#F14C35]" : ""
-                }`}
-              >
-                <IconComponent
-                  className={`w-5 h-5 ${isActive ? "text-white" : "inherit"}`}
-                  fill={isActive ? "currentColor" : "none"}
-                />
-              </div>
-              <span className="text-xs font-medium mt-1">{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </nav>
+          {/* Bottom safe area spacer */}
+          <div className="h-4" />
+        </div>
+      </nav>
+    </>
   );
 }
