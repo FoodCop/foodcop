@@ -1,0 +1,93 @@
+
+                   SSUUMMMMAARRYY OOFF LLEESSSS CCOOMMMMAANNDDSS
+
+      Commands marked with * may be preceded by a number, _N.
+      Notes in parentheses indicate the behavior if _N is given.
+      A key preceded by a caret indicates the Ctrl key; thus ^K is ctrl-K.
+
+  h  H                 Display this help.
+  q  :q  Q  :Q  ZZ     Exit.
+ ---------------------------------------------------------------------------
+
+                           MMOOVVIINNGG
+
+  e  ^E  j  ^N  CR  *  Forward  one line   (or _N lines).
+  y  ^Y  k  ^K  ^P  *  Backward one line   (or _N lines).
+  ESC-j             *  Forward  one file line (or _N file lines).
+  ESC-k             *  Backward one file line (or _N file lines).
+  f  ^F  ^V  SPACE  *  Forward  one window (or _N lines).
+  b  ^B  ESC-v      *  Backward one window (or _N lines).
+  z                 *  Forward  one window (and set window to _N).
+  w                 *  Backward one window (and set window to _N).
+  ESC-SPACE         *  Forward  one window, but don't stop at end-of-file.
+  ESC-b             *  Backward one window, but don't stop at beginning-of-file.
+  d  ^D             *  Forward  one half-window (and set half-window to _N).
+  u  ^U             *  Backward one half-window (and set half-window to _N).
+  ESC-)  RightArrow *  Right one half screen width (or _N positions).
+  ESC-(  LeftArrow  *  Left  one half screen width (or _N positions).
+  ESC-}  ^RightArrow   Right to last column displayed.
+  ESC-{  ^LeftArrow    Left  to first column.
+  F                    Forward forever; like "tail -f".
+warning: in the working copy of 'contexts/AuthContext.tsx', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/contexts/AuthContext.tsx b/contexts/AuthContext.tsx[m
+[1mindex f21eed4..839bfb6 100644[m
+[1m--- a/contexts/AuthContext.tsx[m
+[1m+++ b/contexts/AuthContext.tsx[m
+[36m@@ -1,6 +1,6 @@[m
+ import React, { createContext, useContext, useEffect, useState } from "react";[m
+[31m-import { getSupabaseClient } from "../utils/supabase";[m
+ import { getOAuthRedirectUrl } from "../utils/authRedirect";[m
+[32m+[m[32mimport { getSupabaseClient } from "../utils/supabase";[m
+ [m
+ interface User {[m
+   id: string;[m
+[36m@@ -65,7 +65,7 @@[m [mexport const AuthProvider: React.FC<React.PropsWithChildren> = ({[m
+           data: { session },[m
+           error,[m
+         } = await supabase.auth.getSession();[m
+[31m-        [m
+[32m+[m
+         if (error) {[m
+           console.error("❌ AuthContext: Session error:", error);[m
+           setLoading(false);[m
+[36m@@ -77,7 +77,7 @@[m [mexport const AuthProvider: React.FC<React.PropsWithChildren> = ({[m
+           hasUser: !!session?.user,[m
+           userEmail: session?.user?.email,[m
+         });[m
+[31m-        [m
+[32m+[m
+         if (session?.user) {[m
+           setUser(session.user);[m
+           await fetchUserProfile(session.user.id);[m
+[36m@@ -100,11 +100,17 @@[m [mexport const AuthProvider: React.FC<React.PropsWithChildren> = ({[m
+     const {[m
+       data: { subscription },[m
+     } = supabase.auth.onAuthStateChange(async (event, session) => {[m
+[31m-      console.log("🔄 AuthContext: Auth state change:", { event, hasSession: !!session, hasUser: !!session?.user });[m
+[31m-      [m
+[32m+[m[32m      console.log("🔄 AuthContext: Auth state change:", {[m
+[32m+[m[32m        event,[m
+[32m+[m[32m        hasSession: !!session,[m
+[32m+[m[32m        hasUser: !!session?.user,[m
+[32m+[m[32m      });[m
+[32m+[m
+       // Prevent race conditions by checking if we're already loading[m
+       if (loading) {[m
+[31m-        console.log("⏳ AuthContext: Still loading initial session, skipping state change");[m
+[32m+[m[32m        console.log([m
+[32m+[m[32m          "⏳ AuthContext: Still loading initial session, skipping state change"[m
+[32m+[m[32m        );[m
+         return;[m
+       }[m
+ [m
+[36m@@ -163,8 +169,8 @@[m [mexport const AuthProvider: React.FC<React.PropsWithChildren> = ({[m
+       options: {[m
+         redirectTo: redirectUrl,[m
+         queryParams: {[m
+[31m-          access_type: 'offline',[m
+[31m-          prompt: 'consent',[m
+[32m+[m[32m          access_type: "offline",[m
+[32m+[m[32m          prompt: "consent",[m
+         },[m
+       },[m
+     });[m

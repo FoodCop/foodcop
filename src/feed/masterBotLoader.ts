@@ -7,6 +7,7 @@ export interface MasterBotPlace {
   name?: string;
   description?: string;
   // Add more fields as needed from your JSON
+}
 
 // Loader for MasterBotBucket2.json
 export function loadMasterBotJson(jsonPath?: string): MasterBotPlace[] {

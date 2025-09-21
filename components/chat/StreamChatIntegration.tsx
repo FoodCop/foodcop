@@ -1,115 +1,120 @@
 import { ArrowLeft, MessageCircle, Send } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { StreamChat } from "stream-chat";
+import React, { useCallback, useEffect, useState } from "react";
+import { Channel } from "stream-chat";
 import { useMasterBots } from "../hooks/useMasterBots";
 import { Avatar } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { useAIStreamChat } from "./AIStreamChatProvider";
 
 interface StreamChatIntegrationProps {
   onBack: () => void;
-  onBotSelect: (botId: string) => void;
+  onBotSelect?: (botId: string) => void;
 }
 
 export function StreamChatIntegration({
   onBack,
   onBotSelect,
 }: StreamChatIntegrationProps) {
-  const [streamClient, setStreamClient] = useState<StreamChat | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [pendingInvites, setPendingInvites] = useState<any[]>([]);
-  const [channels, setChannels] = useState<any[]>([]);
-  const [selectedChannel, setSelectedChannel] = useState<any>(null);
+  const [pendingInvites, setPendingInvites] = useState<Channel[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [messageText, setMessageText] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
 
-  const { masterBots: bots, loading: botsLoading } = useMasterBots();
+  const { masterBots: bots } = useMasterBots();
+  const {
+    client,
+    isConnected,
+    isConnecting,
+    error,
+    queryChannels,
+    sendAIMessage,
+    aiEnabled,
+    toggleAI,
+  } = useAIStreamChat();
 
+  // Load channels when connected
+  const loadChannels = useCallback(async () => {
+    if (!isConnected || !queryChannels) return;
+
+    try {
+      // Query channels with proper filters
+      const allChannels = await queryChannels(
+        { type: "messaging" }, // Valid channel type filter
+        [{ last_message_at: -1 }] // Sort by last message
+      );
+      setChannels(allChannels);
+
+      // Query pending invites with proper filter
+      const pending = await queryChannels(
+        { type: "messaging", invite: "pending" },
+        [{ created_at: -1 }]
+      );
+      setPendingInvites(pending);
+
+      // Auto-accept pending invites
+      for (const ch of pending) {
+        try {
+          await ch.acceptInvite();
+        } catch (err) {
+          console.error("Failed to accept invite:", err);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load channels:", error);
+    }
+  }, [isConnected, queryChannels]);
+
+  // Load channels when connected
   useEffect(() => {
-    const initStreamChat = async () => {
-      try {
-        const apiKey = import.meta.env.VITE_STREAM_CHAT_API_KEY;
-        const apiSecret = import.meta.env.VITE_STREAM_CHAT_API_SECRET;
+    if (isConnected) {
+      loadChannels();
+    }
+  }, [isConnected, loadChannels]);
 
-        if (!apiKey) {
-          throw new Error("Stream Chat API Key not found");
-        }
+  // Set up message listeners when client is available
+  useEffect(() => {
+    if (!client || !isConnected) return;
 
-        // Initialize client with API Key only (for client-side)
-        const client = StreamChat.getInstance(apiKey);
-
-        // For now, we'll use a test user - in production, this would be the actual logged-in user
-        const testUser = {
-          id: import.meta.env.VITE_TEST_USER_ID || "test_user_123",
-          name: "Test User",
-        };
-
-        // Generate a proper token using the API Secret
-        // Note: In production, this should be done server-side for security
-        let token: string;
-
-        if (apiSecret) {
-          // Use the API Secret to generate a proper token
-          const tempClient = StreamChat.getInstance(apiKey, apiSecret);
-          token = tempClient.createToken(testUser.id);
-        } else {
-          // Fallback to development token if no secret available
-          console.warn("No API Secret found, using development token");
-          token = "development_token_" + testUser.id;
-        }
-
-        await client.connectUser(testUser, token);
-
-        setStreamClient(client);
-        setIsConnected(true);
-
-        // Auto-accept pending invites
-        const pending = await client.queryChannels({ invite: "pending" });
-        setPendingInvites(pending);
-
-        for (const ch of pending) {
-          await ch.acceptInvite({ message: { text: "Accepted! 👋" } });
-        }
-
-        // Load channels
-        const allChannels = await client.queryChannels({});
-        setChannels(allChannels);
-
-        // Set up message listeners
-        client.on("message.new", (event) => {
-          if (selectedChannel && event.channel_id === selectedChannel.id) {
-            setMessages((prev) => [...prev, event.message]);
-          }
-        });
-      } catch (error) {
-        console.error("Stream Chat connection failed:", error);
+    const handleNewMessage = (event: any) => {
+      if (selectedChannel && event.channel_id === selectedChannel.id) {
+        setMessages((prev) => [...prev, event.message]);
       }
     };
 
-    initStreamChat();
+    client.on("message.new", handleNewMessage);
 
     return () => {
-      if (streamClient) {
-        streamClient.disconnectUser();
-      }
+      client.off("message.new", handleNewMessage);
     };
-  }, []);
+  }, [client, isConnected, selectedChannel]);
 
-  const handleChannelSelect = async (channel: any) => {
+  const handleChannelSelect = async (channel: Channel) => {
     setSelectedChannel(channel);
 
-    // Load messages for this channel
-    const state = await channel.watch();
-    setMessages(state.messages || []);
+    try {
+      // Load messages for this channel
+      const state = await channel.watch();
+      setMessages(state.messages || []);
+    } catch (error) {
+      console.error("Failed to load channel messages:", error);
+      setMessages([]);
+    }
   };
 
   const sendMessage = async () => {
     if (!selectedChannel || !messageText.trim()) return;
 
     try {
-      await selectedChannel.sendMessage({
-        text: messageText,
-      });
+      // Get bot specialty for AI enhancement
+      const botId =
+        selectedChannel.id?.replace("messaging-", "").split("-")[0] || "";
+      const bot = bots.find((b) => b.id === botId);
+      const botSpecialty = bot?.bio || "Food Expert";
+
+      // Use AI-enhanced message sending
+      await sendAIMessage(selectedChannel.id!, messageText, botSpecialty);
       setMessageText("");
     } catch (error) {
       console.error("Failed to send message:", error);
@@ -123,7 +128,7 @@ export function StreamChatIntegration({
     }
   };
 
-  if (!isConnected) {
+  if (isConnecting) {
     return (
       <div className="min-h-screen bg-background p-4">
         <div className="max-w-md mx-auto">
@@ -145,32 +150,102 @@ export function StreamChatIntegration({
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background p-4">
+        <div className="max-w-md mx-auto">
+          <div className="flex items-center mb-4">
+            <button
+              onClick={onBack}
+              className="mr-3 p-2 hover:bg-gray-100 rounded-full"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-xl font-bold text-[#0B1F3A]">Master Bot DMs</h1>
+          </div>
+          <Card className="p-6 text-center">
+            <div className="text-red-500 mb-4">Warning</div>
+            <p className="text-red-600 mb-4">
+              Failed to connect to Stream Chat
+            </p>
+            <p className="text-sm text-gray-500 mb-4">{error}</p>
+            <Button
+              onClick={() => window.location.reload()}
+              className="bg-[#F14C35] hover:bg-[#d63e2a]"
+            >
+              Retry
+            </Button>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isConnected) {
+    return (
+      <div className="min-h-screen bg-background p-4">
+        <div className="max-w-md mx-auto">
+          <div className="flex items-center mb-4">
+            <button
+              onClick={onBack}
+              className="mr-3 p-2 hover:bg-gray-100 rounded-full"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-xl font-bold text-[#0B1F3A]">Master Bot DMs</h1>
+          </div>
+          <Card className="p-6 text-center">
+            <div className="text-gray-500 mb-4">Chat</div>
+            <p className="text-gray-600">Stream Chat not connected</p>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   if (selectedChannel) {
     // Chat interface
-    const botId = selectedChannel.id.replace("messaging-", "").split("-")[0];
+    const botId =
+      selectedChannel.id?.replace("messaging-", "").split("-")[0] || "";
     const bot = bots.find((b) => b.id === botId);
 
     return (
       <div className="min-h-screen bg-background">
         {/* Header */}
         <div className="bg-white border-b border-gray-200 px-4 py-3">
-          <div className="flex items-center">
-            <button
-              onClick={() => setSelectedChannel(null)}
-              className="mr-3 p-2 hover:bg-gray-100 rounded-full"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <Avatar
-              src={bot?.avatar_url || ""}
-              alt={bot?.bot_name || "Bot"}
-              className="w-10 h-10 mr-3"
-            />
-            <div>
-              <h2 className="font-semibold text-[#0B1F3A]">
-                {bot?.bot_name || "Bot"}
-              </h2>
-              <p className="text-sm text-gray-500">Online</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <button
+                onClick={() => setSelectedChannel(null)}
+                className="mr-3 p-2 hover:bg-gray-100 rounded-full"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <Avatar className="w-10 h-10 mr-3">
+                <img
+                  src={bot?.avatar_url || ""}
+                  alt={bot?.display_name || "Bot"}
+                  className="w-full h-full object-cover"
+                />
+              </Avatar>
+              <div>
+                <h2 className="font-semibold text-[#0B1F3A]">
+                  {bot?.display_name || "Bot"}
+                </h2>
+                <p className="text-sm text-gray-500">Online</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={toggleAI}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                  aiEnabled
+                    ? "bg-green-100 text-green-700 hover:bg-green-200"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                {aiEnabled ? "AI Bot On" : "AI Bot Off"}
+              </button>
             </div>
           </div>
         </div>
@@ -255,7 +330,7 @@ export function StreamChatIntegration({
                   className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
                 >
                   <span className="text-sm text-gray-600">
-                    Invited to {invite.data?.name || "chat"}
+                    Invited to {invite.id || "chat"}
                   </span>
                   <span className="text-xs text-green-600">Accepted</span>
                 </div>
@@ -269,11 +344,10 @@ export function StreamChatIntegration({
           <h3 className="font-semibold text-[#0B1F3A] mb-4">Available Bots</h3>
           <div className="space-y-2">
             {channels
-              .filter((ch) => ch.data?.name?.includes("Bot"))
+              .filter((ch) => ch.id?.includes("bot"))
               .map((channel) => {
-                const botId = channel.id
-                  .replace("messaging-", "")
-                  .split("-")[0];
+                const botId =
+                  channel.id?.replace("messaging-", "")?.split("-")[0] || "";
                 const bot = bots.find((b) => b.id === botId);
 
                 return (
@@ -282,17 +356,19 @@ export function StreamChatIntegration({
                     onClick={() => handleChannelSelect(channel)}
                     className="w-full flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors"
                   >
-                    <Avatar
-                      src={bot?.avatar_url || ""}
-                      alt={bot?.bot_name || "Bot"}
-                      className="w-10 h-10 mr-3"
-                    />
+                    <Avatar className="w-10 h-10 mr-3">
+                      <img
+                        src={bot?.avatar_url || ""}
+                        alt={bot?.display_name || "Bot"}
+                        className="w-full h-full object-cover"
+                      />
+                    </Avatar>
                     <div className="flex-1 text-left">
                       <h4 className="font-medium text-[#0B1F3A]">
-                        {bot?.bot_name || channel.data?.name || "Bot"}
+                        {bot?.display_name || "Bot"}
                       </h4>
                       <p className="text-sm text-gray-500">
-                        {bot?.specialties?.join(", ") || "Food expert"}
+                        {bot?.bio || "Food expert"}
                       </p>
                     </div>
                     <MessageCircle className="w-5 h-5 text-gray-400" />

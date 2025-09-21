@@ -45,6 +45,11 @@
     "console:test": "node -e \"const ws = new WebSocket('ws://localhost:3001/console'); ws.on('open', () => { console.log('Connected'); ws.send(JSON.stringify({type: 'subscribe'})); }); ws.on('message', (data) => console.log('Received:', JSON.parse(data.toString())));\""
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.17",
+    "@ai-sdk/google": "^2.0.14",
+    "@ai-sdk/openai": "^2.0.32",
+    "@ai-sdk/react": "^2.0.48",
+    "@ai-sdk/vercel": "^1.0.18",
     "@modelcontextprotocol/sdk": "^0.5.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -73,6 +78,7 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@supabase/supabase-js": "^2.57.4",
+    "ai": "^5.0.48",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.0.0",
     "dotenv": "^16.6.1",
@@ -94,10 +100,11 @@
     "sonner": "2.0.3",
     "stream-chat": "^9.19.1",
     "tailwind-merge": "^2.0.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.0",
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/vite": "^4.0.0-alpha.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile & Plates Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Profile & Plates Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Profile Creation Test</h2>
+        <p>Test creating and updating user profiles</p>
+        <button class="test-button" onclick="testProfileCreation()">Test Profile Creation</button>
+        <button class="test-button" onclick="testProfileUpdate()">Test Profile Update</button>
+        <div id="profile-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Plate Saving Test</h2>
+        <p>Test saving restaurants to user plates</p>
+        <button class="test-button" onclick="testPlateSaving()">Test Save Restaurant</button>
+        <button class="test-button" onclick="testPlateRetrieval()">Test Get Saved Plates</button>
+        <button class="test-button" onclick="testPlateRemoval()">Test Remove from Plate</button>
+        <div id="plate-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Photo Saving Test</h2>
+        <p>Test saving photos to user profile</p>
+        <button class="test-button" onclick="testPhotoSaving()">Test Save Photo</button>
+        <button class="test-button" onclick="testPhotoRetrieval()">Test Get Saved Photos</button>
+        <div id="photo-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Data Persistence Test</h2>
+        <p>Test that data persists across sessions</p>
+        <button class="test-button" onclick="testDataPersistence()">Test Data Persistence</button>
+        <div id="persistence-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. Error Handling Test</h2>
+        <p>Test error handling and edge cases</p>
+        <button class="test-button" onclick="testErrorHandling()">Test Error Handling</button>
+        <div id="error-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Log</h2>
+        <div id="test-log" class="log"></div>
+        <button class="test-button" onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/make-server-5976446e';
+        const MOCK_AUTH_TOKEN = 'mock-auth-token';
+        
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}\n`;
+            logElement.textContent += logMessage;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(message);
+        }
+        
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="test-result ${type}">${message}</div>`;
+        }
+        
+        function clearLog() {
+            document.getElementById('test-log').textContent = '';
+        }
+        
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${MOCK_AUTH_TOKEN}`,
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                const data = await response.json();
+                return { response, data };
+            } catch (error) {
+                log(`❌ Request failed: ${error.message}`, 'error');
+                return { error };
+            }
+        }
+        
+        async function testProfileCreation() {
+            log('🧪 Testing profile creation...');
+            
+            const profileData = {
+                display_name: "Test User Profile",
+                bio: "Testing profile creation functionality",
+                dietary_preferences: ["vegetarian", "gluten-free"],
+                cuisine_preferences: ["italian", "japanese"],
+                onboarding_completed: true
+            };
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/auth/profile`, {
+                method: 'PATCH',
+                body: JSON.stringify(profileData)
+            });
+            
+            if (error) {
+                showResult('profile-results', `❌ Profile creation failed: ${error.message}`, 'error');
+                return;
+            }
+            
+            if (response.ok && data.success) {
+                showResult('profile-results', `✅ Profile created successfully!<br>Name: ${data.profile.display_name}<br>Bio: ${data.profile.bio}`, 'success');
+                log('✅ Profile creation test passed');
+            } else {
+                showResult('profile-results', `❌ Profile creation failed: ${data.error || 'Unknown error'}`, 'error');
+                log('❌ Profile creation test failed');
+            }
+        }
+        
+        async function testProfileUpdate() {
+            log('🧪 Testing profile update...');
+            
+            const updateData = {
+                display_name: "Updated Test User",
+                bio: "Updated bio - testing profile updates",
+                dietary_preferences: ["vegan", "keto"],
+                cuisine_preferences: ["mexican", "thai"]
+            };
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/auth/profile`, {
+                method: 'PATCH',
+                body: JSON.stringify(updateData)
+            });
+            
+            if (error) {
+                showResult('profile-results', `❌ Profile update failed: ${error.message}`, 'error');
+                return;
+            }
+            
+            if (response.ok && data.success) {
+                showResult('profile-results', `✅ Profile updated successfully!<br>New Name: ${data.profile.display_name}<br>New Bio: ${data.profile.bio}`, 'success');
+                log('✅ Profile update test passed');
+            } else {
+                showResult('profile-results', `❌ Profile update failed: ${data.error || 'Unknown error'}`, 'error');
+                log('❌ Profile update test failed');
+            }
+        }
+        
+        async function testPlateSaving() {
+            log('🧪 Testing plate saving...');
+            
+            const restaurantData = {
+                restaurant: {
+                    id: "test-restaurant-" + Date.now(),
+                    place_id: "ChIJTest" + Math.random().toString(36).substr(2, 9),
+                    name: "Test Restaurant " + Date.now(),
+                    image: "https://example.com/restaurant.jpg",
+                    rating: 4.5,
+                    cuisine: ["Italian", "Pizza"],
+                    price_level: 2,
+                    address: "123 Test Street, Test City",
+                    geometry: {
+                        location: {
+                            lat: 40.7128,
+                            lng: -74.0060
+                        }
+                    }
+                }
+            };
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/profile/save-restaurant`, {
+                method: 'POST',
+                body: JSON.stringify(restaurantData)
+            });
+            
+            if (error) {
+                showResult('plate-results', `❌ Plate saving failed: ${error.message}`, 'error');
+                return;
+            }
+            
+            if (response.ok && data.success) {
+                showResult('plate-results', `✅ Restaurant saved successfully!<br>Name: ${data.savedRestaurant.name}<br>Total Saved: ${data.totalSaved}`, 'success');
+                log('✅ Plate saving test passed');
+            } else {
+                showResult('plate-results', `❌ Plate saving failed: ${data.error || 'Unknown error'}`, 'error');
+                log('❌ Plate saving test failed');
+            }
+        }
+        
+        async function testPlateRetrieval() {
+            log('🧪 Testing plate retrieval...');
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/profile/saved-restaurants`);
+            
+            if (error) {
+                showResult('plate-results', `❌ Plate retrieval failed: ${error.message}`, 'error');
+                return;
+            }
+            
+            if (response.ok && data.restaurants) {
+                showResult('plate-results', `✅ Retrieved ${data.restaurants.length} saved restaurants<br>Last Updated: ${data.lastUpdated || 'N/A'}`, 'success');
+                log(`✅ Plate retrieval test passed - found ${data.restaurants.length} restaurants`);
+            } else {
+                showResult('plate-results', `❌ Plate retrieval failed: ${data.error || 'Unknown error'}`, 'error');
+                log('❌ Plate retrieval test failed');
+            }
+        }
+        
+        async function testPlateRemoval() {
+            log('🧪 Testing plate removal...');
+            
+            // First save a restaurant
+            const restaurantData = {
+                restaurant: {
+                    id: "removal-test-" + Date.now(),
+                    place_id: "ChIJRemoval" + Math.random().toString(36).substr(2, 9),
+                    name: "Removal Test Restaurant",
+                    image: "https://example.com/removal.jpg",
+                    rating: 3.5,
+                    cuisine: ["American"],
+                    price_level: 2,
+                    address: "789 Removal Street"
+                }
+            };
+            
+            // Save it first
+            const saveResult = await makeRequest(`${API_BASE}/profile/save-restaurant`, {
+                method: 'POST',
+                body: JSON.stringify(restaurantData)
+            });
+            
+            if (saveResult.error || !saveResult.response.ok) {
+                showResult('plate-results', `❌ Could not save restaurant for removal test: ${saveResult.error?.message || 'Unknown error'}`, 'error');
+                return;
+            }
+            
+            // Now remove it
+            const { response, data, error } = await makeRequest(`${API_BASE}/profile/saved-restaurants/${restaurantData.restaurant.place_id}`, {
+                method: 'DELETE'
+            });
+            
+            if (error) {
+                showResult('plate-results', `❌ Plate removal failed: ${error.message}`, 'error');
+                return;
+            }
+            
+            if (response.ok && data.success) {
+                showResult('plate-results', `✅ Restaurant removed successfully!<br>Message: ${data.message}`, 'success');
+                log('✅ Plate removal test passed');
+            } else {
+                showResult('plate-results', `❌ Plate removal failed: ${data.error || 'Unknown error'}`, 'error');
+                log('❌ Plate removal test failed');
+            }
+        }
+        
+        async function testPhotoSaving() {
+            log('🧪 Testing photo saving...');
+            
+            const photoData = {
+                photo: {
+                    image: "https://example.com/food-photo-" + Date.now() + ".jpg",
+                    caption: "Delicious test food " + Date.now(),
+                    tags: ["test", "food", "delicious"],
+                    points: 15,
+                    location: "Test Restaurant"
+                }
+            };
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/profile/save-photo`, {
+                method: 'POST',
+                body: JSON.stringify(photoData)
+            });
+            
+            if (error) {
+                showResult('photo-results', `❌ Photo saving failed: ${error.message}`, 'error');
+                return;
+            }
+            
+            if (response.ok && data.success) {
+                showResult('photo-results', `✅ Photo saved successfully!<br>Caption: ${data.savedPhoto.caption}<br>Total Photos: ${data.totalPhotos}`, 'success');
+                log('✅ Photo saving test passed');
+            } else {
+                showResult('photo-results', `❌ Photo saving failed: ${data.error || 'Unknown error'}`, 'error');
+                log('❌ Photo saving test failed');
+            }
+        }
+        
+        async function testPhotoRetrieval() {
+            log('🧪 Testing photo retrieval...');
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/profile/saved-photos`);
+            
+            if (error) {
+                showResult('photo-results', `❌ Photo retrieval failed: ${error.message}`, 'error');
+                return;
+            }
+            
+            if (response.ok && data.photos) {
+                showResult('photo-results', `✅ Retrieved ${data.photos.length} saved photos<br>Last Updated: ${data.lastUpdated || 'N/A'}`, 'success');
+                log(`✅ Photo retrieval test passed - found ${data.photos.length} photos`);
+            } else {
+                showResult('photo-results', `❌ Photo retrieval failed: ${data.error || 'Unknown error'}`, 'error');
+                log('❌ Photo retrieval test failed');
+            }
+        }
+        
+        async function testDataPersistence() {
+            log('🧪 Testing data persistence...');
+            
+            // This test would require simulating a new session
+            // For now, we'll just test that we can retrieve previously saved data
+            const { response, data, error } = await makeRequest(`${API_BASE}/profile/saved-restaurants`);
+            
+            if (error) {
+                showResult('persistence-results', `❌ Data persistence test failed: ${error.message}`, 'error');
+                return;
+            }
+            
+            if (response.ok && data.restaurants) {
+                showResult('persistence-results', `✅ Data persistence test passed!<br>Found ${data.restaurants.length} persisted restaurants`, 'success');
+                log('✅ Data persistence test passed');
+            } else {
+                showResult('persistence-results', `❌ Data persistence test failed: ${data.error || 'Unknown error'}`, 'error');
+                log('❌ Data persistence test failed');
+            }
+        }
+        
+        async function testErrorHandling() {
+            log('🧪 Testing error handling...');
+            
+            // Test invalid profile data
+            const invalidProfileData = {
+                display_name: "", // Empty name should fail
+                bio: "x".repeat(1001), // Bio too long should fail
+                dietary_preferences: "not-an-array" // Should be array
+            };
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/auth/profile`, {
+                method: 'PATCH',
+                body: JSON.stringify(invalidProfileData)
+            });
+            
+            if (response.status === 400 && data.error === "Validation failed") {
+                showResult('error-results', `✅ Error handling test passed!<br>Correctly rejected invalid data: ${data.error}`, 'success');
+                log('✅ Error handling test passed');
+            } else {
+                showResult('error-results', `❌ Error handling test failed: Expected validation error, got ${response.status}`, 'error');
+                log('❌ Error handling test failed');
+            }
+        }
+        
+        // Initialize
+        log('🚀 Profile & Plates Test Suite initialized');
+        log('📝 Click the test buttons above to run individual tests');
+    </script>
+</body>
+</html>

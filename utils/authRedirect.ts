@@ -14,12 +14,12 @@ export interface RedirectConfig {
  */
 export function getRedirectUrl(config: RedirectConfig): string {
   const { hostname, isDevelopment, defaultRedirect } = config;
-  
+
   // In development, always use localhost
   if (isDevelopment) {
     return `${window.location.origin}/auth/callback`;
   }
-  
+
   // In production, use the configured hostname
   return `${window.location.protocol}//${hostname}/auth/callback`;
 }
@@ -30,33 +30,36 @@ export function getRedirectUrl(config: RedirectConfig): string {
 export function getOAuthRedirectUrl(): string {
   const isDevelopment = import.meta.env.DEV;
   const hostname = window.location.hostname;
-  
+
   return getRedirectUrl({
     hostname,
     isDevelopment,
-    defaultRedirect: '/auth/callback'
+    defaultRedirect: "/auth/callback",
   });
 }
 
 /**
- * Clean up URL parameters after OAuth callback
+ * Clean up URL parameters after OAuth callback and replace pathname
  */
 export function cleanupOAuthCallback(): void {
   const url = new URL(window.location.href);
-  
+
   // Remove OAuth-related parameters
   const paramsToRemove = [
-    'code',
-    'state',
-    'error',
-    'error_description',
-    'onboarding'
+    "code",
+    "state",
+    "error",
+    "error_description",
+    "onboarding",
   ];
-  
-  paramsToRemove.forEach(param => {
+
+  paramsToRemove.forEach((param) => {
     url.searchParams.delete(param);
   });
-  
+
+  // Replace the pathname to prevent re-triggering the callback
+  url.pathname = "/";
+
   // Update the URL without triggering a page reload
   window.history.replaceState({}, document.title, url.toString());
 }
@@ -66,9 +69,11 @@ export function cleanupOAuthCallback(): void {
  */
 export function isOAuthCallback(): boolean {
   const url = new URL(window.location.href);
-  return url.pathname === '/auth/callback' || 
-         url.searchParams.has('code') || 
-         url.searchParams.has('error');
+  return (
+    url.pathname === "/auth/callback" ||
+    url.searchParams.has("code") ||
+    url.searchParams.has("error")
+  );
 }
 
 /**
@@ -76,8 +81,8 @@ export function isOAuthCallback(): boolean {
  */
 export function getPostAuthDestination(): string {
   const url = new URL(window.location.href);
-  const intended = url.searchParams.get('redirect_to');
-  
+  const intended = url.searchParams.get("redirect_to");
+
   // Default to onboarding for new users, feed for existing users
-  return intended || '/onboarding';
+  return intended || "/onboarding";
 }

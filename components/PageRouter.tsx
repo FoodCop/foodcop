@@ -52,7 +52,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
   // Check for OAuth callback and handle appropriately
   useEffect(() => {
     if (isOAuthCallback()) {
-      console.log("🔄 OAuth callback detected, navigating to auth callback handler");
+      console.log("[PageRouter] OAuth callback detected, navigating to auth callback handler");
       setCurrentPage("auth-callback");
     }
   }, []);
@@ -94,7 +94,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
       window.removeEventListener("navigateToPage", handleNavigateToPage);
   }, []);
 
-  console.log("🎯 PageRouter: Current page:", currentPage);
+  console.log("[PageRouter] Current page:", currentPage);
 
   const renderCurrentPage = () => {
     switch (currentPage) {
@@ -102,7 +102,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
         return (
           <LandingPage
             onNavigateToSignup={() => {
-              console.log("🚀 Navigating to OnboardingFlow");
+              console.log("[PageRouter] Navigating to onboarding flow");
               setCurrentPage("onboarding");
             }}
           />
@@ -112,17 +112,13 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
         return (
           <OnboardingFlow
             onComplete={() => {
-              console.log("✅ Onboarding completed - ready for Feed");
-              console.log(
-                "🔄 PageRouter: Changing page from onboarding to feed"
-              );
+              console.log("[PageRouter] Onboarding completed");
+              console.log("[PageRouter] Changing page from onboarding to feed");
               setCurrentPage("feed");
             }}
             onBack={() => {
-              console.log("⬅️ Going back to Landing");
-              console.log(
-                "🔄 PageRouter: Changing page from onboarding to landing"
-              );
+              console.log("[PageRouter] Returning to landing page");
+              console.log("[PageRouter] Changing page from onboarding to landing");
               setCurrentPage("landing");
             }}
           />
@@ -176,15 +172,29 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
         return (
           <AuthCallback
             onAuthComplete={(destination) => {
-              console.log("✅ Auth completed, redirecting to:", destination);
-              if (destination === '/onboarding') {
-                setCurrentPage("onboarding");
-              } else {
-                setCurrentPage("feed");
-              }
+              console.log("[PageRouter] Auth completed, redirecting to:", destination);
+              
+              // Map destination paths to page types
+              const destinationMap: Record<string, PageType> = {
+                '/onboarding': 'onboarding',
+                '/feed': 'feed',
+                '/scout': 'scout',
+                '/snap': 'snap',
+                '/chat': 'chat',
+                '/recipes': 'recipes',
+                '/profile': 'profile',
+                '/': 'landing'
+              };
+              
+              // Extract pathname from destination
+              const pathname = destination.startsWith('/') ? destination : `/${destination}`;
+              const pageType = destinationMap[pathname] || 'feed'; // Default to feed for unknown destinations
+              
+              console.log(`[PageRouter] Mapping destination ${destination} to page type: ${pageType}`);
+              setCurrentPage(pageType);
             }}
             onAuthError={(error) => {
-              console.error("❌ Auth error:", error);
+              console.error("[PageRouter] Auth error:", error);
               setCurrentPage("landing");
             }}
           />

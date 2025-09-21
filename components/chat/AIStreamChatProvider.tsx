@@ -8,10 +8,11 @@ import {
 } from "react";
 import { Channel, StreamChat, User } from "stream-chat";
 import { useAuth } from "../../contexts/AuthContext";
+import { useAIChat, useMasterBotAI } from "../../hooks/useAI";
 import { getSupabaseClient } from "../../utils/supabase";
 import { generateStreamToken, getStreamChatConfig } from "./StreamChatConfig";
 
-interface StreamChatContextType {
+interface AIStreamChatContextType {
   client: StreamChat | null;
   user: User | null;
   isConnected: boolean;
@@ -20,6 +21,11 @@ interface StreamChatContextType {
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   sendMessage: (channelId: string, message: string) => Promise<void>;
+  sendAIMessage: (
+    channelId: string,
+    message: string,
+    botSpecialty?: string
+  ) => Promise<void>;
   createChannel: (
     type: string,
     members: string[],
@@ -27,23 +33,28 @@ interface StreamChatContextType {
   ) => Promise<Channel>;
   markAsRead: (channelId: string) => Promise<void>;
   queryChannels: (filters: any, sort?: any) => Promise<Channel[]>;
+  aiEnabled: boolean;
+  toggleAI: () => void;
 }
 
-const StreamChatContext = createContext<StreamChatContextType | null>(null);
+const AIStreamChatContext = createContext<AIStreamChatContextType | null>(null);
 
-interface StreamChatProviderProps {
+interface AIStreamChatProviderProps {
   children: ReactNode;
 }
 
-export function StreamChatProvider({ children }: StreamChatProviderProps) {
+export function AIStreamChatProvider({ children }: AIStreamChatProviderProps) {
   const [client, setClient] = useState<StreamChat | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [aiEnabled, setAiEnabled] = useState(true);
 
   const { user: authUser, loading: authLoading } = useAuth();
   const supabase = getSupabaseClient();
+  const { generateBotResponse, isLoading: aiLoading } = useMasterBotAI();
+  const { generateResponse, analyzeSentiment } = useAIChat();
 
   const connect = useCallback(async () => {
     if (!authUser || isConnecting || isConnected || !supabase) return;
@@ -91,12 +102,12 @@ export function StreamChatProvider({ children }: StreamChatProviderProps) {
       setUser(streamUser);
       setIsConnected(true);
 
-      console.log("[StreamChat] Connected successfully");
+      console.log("[AIStreamChat] Connected successfully");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to connect to Stream Chat";
       setError(errorMessage);
-      console.error("[StreamChat] Connection failed:", errorMessage);
+      console.error("[AIStreamChat] Connection failed:", errorMessage);
     } finally {
       setIsConnecting(false);
     }
@@ -111,9 +122,9 @@ export function StreamChatProvider({ children }: StreamChatProviderProps) {
       setUser(null);
       setIsConnected(false);
       setError(null);
-      console.log("[StreamChat] Disconnected");
+      console.log("[AIStreamChat] Disconnected");
     } catch (err) {
-      console.error("[StreamChat] Disconnect failed:", err);
+      console.error("[AIStreamChat] Disconnect failed:", err);
     }
   }, [client, isConnected]);
 
@@ -148,6 +159,64 @@ export function StreamChatProvider({ children }: StreamChatProviderProps) {
       }
     },
     [client, isConnected]
+  );
+
+  const sendAIMessage = useCallback(
+    async (channelId: string, message: string, botSpecialty?: string) => {
+      if (!client || !isConnected) {
+        throw new Error("Not connected to Stream Chat");
+      }
+
+      try {
+        const channel = client.channel("messaging", channelId);
+
+        // Send the original message
+        await channel.sendMessage({ text: message });
+
+        // If AI is enabled, generate and send AI response
+        if (aiEnabled && botSpecialty) {
+          try {
+            // Analyze sentiment of the message
+            const sentiment = await analyzeSentiment(message);
+
+            // Generate AI response based on bot specialty
+            const aiResponse = await generateBotResponse(message, botSpecialty);
+
+            // Send AI response as a separate message
+            await channel.sendMessage({
+              text: `[AI] ${aiResponse.response}`,
+              metadata: {
+                aiGenerated: true,
+                specialty: aiResponse.specialty,
+                confidence: aiResponse.confidence,
+                sentiment: sentiment,
+              },
+            });
+
+            // If there are follow-up questions, suggest them
+            if (aiResponse.nextQuestions.length > 0) {
+              const followUpText = `[AI hint] You might also ask: ${aiResponse.nextQuestions
+                .slice(0, 2)
+                .join(" or ")}`;
+              await channel.sendMessage({
+                text: followUpText,
+                metadata: {
+                  aiGenerated: true,
+                  type: "suggestion",
+                },
+              });
+            }
+          } catch (aiError) {
+            console.error("AI response generation failed:", aiError);
+            // Don't fail the entire message if AI fails
+          }
+        }
+      } catch (err) {
+        console.error("Failed to send AI message:", err);
+        throw err;
+      }
+    },
+    [client, isConnected, aiEnabled, generateBotResponse, analyzeSentiment]
   );
 
   const createChannel = useCallback(
@@ -209,7 +278,11 @@ export function StreamChatProvider({ children }: StreamChatProviderProps) {
     [client, isConnected]
   );
 
-  const contextValue: StreamChatContextType = {
+  const toggleAI = useCallback(() => {
+    setAiEnabled((prev) => !prev);
+  }, []);
+
+  const contextValue: AIStreamChatContextType = {
     client,
     user,
     isConnected,
@@ -218,55 +291,27 @@ export function StreamChatProvider({ children }: StreamChatProviderProps) {
     connect,
     disconnect,
     sendMessage,
+    sendAIMessage,
     createChannel,
     markAsRead,
     queryChannels,
+    aiEnabled,
+    toggleAI,
   };
 
   return (
-    <StreamChatContext.Provider value={contextValue}>
+    <AIStreamChatContext.Provider value={contextValue}>
       {children}
-    </StreamChatContext.Provider>
+    </AIStreamChatContext.Provider>
   );
 }
 
-export function useStreamChat() {
-  const context = useContext(StreamChatContext);
+export function useAIStreamChat() {
+  const context = useContext(AIStreamChatContext);
   if (!context) {
-    throw new Error("useStreamChat must be used within a StreamChatProvider");
+    throw new Error(
+      "useAIStreamChat must be used within an AIStreamChatProvider"
+    );
   }
   return context;
 }
-
-// Example usage in a real application:
-/*
-import { StreamChat } from 'stream-chat';
-import { Chat, Channel, ChannelList, MessageList, MessageInput, Thread, Window } from 'stream-chat-react';
-
-const chatClient = StreamChat.getInstance('your-api-key');
-
-export function RealStreamChatApp() {
-  useEffect(() => {
-    const connectUser = async () => {
-      await chatClient.connectUser(
-        { id: 'user-id', name: 'User Name' },
-        'user-token'
-      );
-    };
-    connectUser();
-  }, []);
-
-  return (
-    <Chat client={chatClient}>
-      <ChannelList />
-      <Channel>
-        <Window>
-          <MessageList />
-          <MessageInput />
-        </Window>
-        <Thread />
-      </Channel>
-    </Chat>
-  );
-}
-*/

@@ -1,0 +1,129 @@
+[1mdiff --git a/tests/auth/login_success.spec.ts b/tests/auth/login_success.spec.ts[m
+[1mindex ffae40e..82f8b17 100644[m
+[1m--- a/tests/auth/login_success.spec.ts[m
+[1m+++ b/tests/auth/login_success.spec.ts[m
+[36m@@ -1,75 +1,81 @@[m
+[31m-import { test, expect } from '@playwright/test';[m
+[32m+[m[32mimport { expect, test } from "@playwright/test";[m
+ [m
+[31m-test.describe('OAuth Login Success Flow', () => {[m
+[32m+[m[32mtest.describe("OAuth Login Success Flow", () => {[m
+   test.beforeEach(async ({ page }) => {[m
+     // Navigate to the app[m
+[31m-    await page.goto('http://localhost:5173');[m
+[32m+[m[32m    await page.goto("http://localhost:5173");[m
+   });[m
+ [m
+[31m-  test('should complete OAuth login flow successfully', async ({ page }) => {[m
+[32m+[m[32m  test("should complete OAuth login flow successfully", async ({ page }) => {[m
+     // Wait for the landing page to load[m
+[31m-    await expect(page.locator('text=Build your food map')).toBeVisible();[m
+[31m-    [m
+[32m+[m[32m    await expect(page.locator("text=Build your food map")).toBeVisible();[m
+[32m+[m
+     // Click on sign up/login button[m
+[31m-    await page.click('text=Start pinning');[m
+[31m-    [m
+[32m+[m[32m    await page.click("text=Start pinning");[m
+[32m+[m
+     // Wait for onboarding page[m
+[31m-    await expect(page.locator('text=Cook it tonight')).toBeVisible();[m
+[31m-    [m
+[32m+[m[32m    await expect(page.locator("text=Cook it tonight")).toBeVisible();[m
+[32m+[m
+     // Click on Google sign in button[m
+[31m-    await page.click('text=Continue with Google');[m
+[31m-    [m
+[32m+[m[32m    await page.click("text=Continue with Google");[m
+[32m+[m
+     // Wait for Google OAuth popup[m
+[31m-    const popup = await page.waitForEvent('popup');[m
+[31m-    [m
+[32m+[m[32m    const popup = await page.waitForEvent("popup");[m
+[32m+[m
+     // Handle Google OAuth flow[m
+[31m-    await popup.waitForLoadState('networkidle');[m
+[31m-    [m
+[32m+[m[32m    await popup.waitForLoadState("networkidle");[m
+[32m+[m
+     // Fill in Google credentials (you'll need to replace with test credentials)[m
+[31m-    await popup.fill('input[type="email"]', 'test@example.com');[m
+[31m-    await popup.click('text=Next');[m
+[31m-    [m
+[31m-    await popup.fill('input[type="password"]', 'testpassword');[m
+[31m-    await popup.click('text=Next');[m
+[31m-    [m
+[32m+[m[32m    await popup.fill('input[type="email"]', "test@example.com");[m
+[32m+[m[32m    await popup.click("text=Next");[m
+[32m+[m
+[32m+[m[32m    await popup.fill('input[type="password"]', "testpassword");[m
+[32m+[m[32m    await popup.click("text=Next");[m
+[32m+[m
+     // Wait for OAuth to complete and popup to close[m
+[31m-    await popup.waitForEvent('close');[m
+[31m-    [m
+[32m+[m[32m    await popup.waitForEvent("close");[m
+[32m+[m
+     // Wait for redirect to auth callback[m
+[31m-    await page.waitForURL('**/auth/callback**');[m
+[31m-    [m
+[32m+[m[32m    await page.waitForURL("**/auth/callback**");[m
+[32m+[m
+     // Wait for auth callback to process[m
+[31m-    await page.waitForLoadState('networkidle');[m
+[31m-    [m
+[32m+[m[32m    await page.waitForLoadState("networkidle");[m
+[32m+[m
+     // Should redirect to onboarding or feed[m
+     await expect(page.url()).toMatch(/\/(onboarding|feed)/);[m
+[31m-    [m
+[32m+[m
+     // Verify user is authenticated[m
+[31m-    await expect(page.locator('text=Welcome')).toBeVisible();[m
+[32m+[m[32m    await expect(page.locator("text=Welcome")).toBeVisible();[m
+   });[m
+ [m
+[31m-  test('should handle OAuth callback with valid session', async ({ page }) => {[m
+[32m+[m[32m  test("should handle OAuth callback with valid session", async ({ page }) => {[m
+     // Simulate OAuth callback with valid session[m
+[31m-    await page.goto('http://localhost:5173/auth/callback?code=valid_code&state=valid_state');[m
+[31m-    [m
+[32m+[m[32m    await page.goto([m
+[32m+[m[32m      "http://localhost:5173/auth/callback?code=valid_code&state=valid_state"[m
+[32m+[m[32m    );[m
+[32m+[m
+     // Wait for auth callback processing[m
+[31m-    await page.waitForLoadState('networkidle');[m
+[31m-    [m
+[32m+[m[32m    await page.waitForLoadState("networkidle");[m
+[32m+[m
+     // Should redirect to appropriate page[m
+     await expect(page.url()).toMatch(/\/(onboarding|feed)/);[m
+   });[m
+ [m
+[31m-  test('should clean up URL parameters after OAuth callback', async ({ page }) => {[m
+[32m+[m[32m  test("should clean up URL parameters after OAuth callback", async ({[m
+[32m+[m[32m    page,[m
+[32m+[m[32m  }) => {[m
+     // Navigate to callback with parameters[m
+[31m-    await page.goto('http://localhost:5173/auth/callback?code=test&state=test&onboarding=auth');[m
+[31m-    [m
+[32m+[m[32m    await page.goto([m
+[32m+[m[32m      "http://localhost:5173/auth/callback?code=test&state=test&onboarding=auth"[m
+[32m+[m[32m    );[m
+[32m+[m
+     // Wait for processing[m
+[31m-    await page.waitForLoadState('networkidle');[m
+[31m-    [m
+[32m+[m[32m    await page.waitForLoadState("networkidle");[m
+[32m+[m
+     // URL should be cleaned up (no query parameters)[m
+     const url = new URL(page.url());[m
+[31m-    expect(url.searchParams.has('code')).toBeFalsy();[m
+[31m-    expect(url.searchParams.has('state')).toBeFalsy();[m
+[31m-    expect(url.searchParams.has('onboarding')).toBeFalsy();[m
+[32m+[m[32m    expect(url.searchParams.has("code")).toBeFalsy();[m
+[32m+[m[32m    expect(url.searchParams.has("state")).toBeFalsy();[m
+[32m+[m[32m    expect(url.searchParams.has("onboarding")).toBeFalsy();[m
+   });[m
+ });[m

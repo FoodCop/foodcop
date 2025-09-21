@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getSupabaseClient } from "../utils/supabase";
 import { getOAuthRedirectUrl } from "../utils/authRedirect";
+import { getSupabaseClient } from "../utils/supabase";
 
 interface User {
   id: string;
@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
           data: { session },
           error,
         } = await supabase.auth.getSession();
-        
+
         if (error) {
           console.error("❌ AuthContext: Session error:", error);
           setLoading(false);
@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
           hasUser: !!session?.user,
           userEmail: session?.user?.email,
         });
-        
+
         if (session?.user) {
           setUser(session.user);
           await fetchUserProfile(session.user.id);
@@ -100,11 +100,17 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("🔄 AuthContext: Auth state change:", { event, hasSession: !!session, hasUser: !!session?.user });
-      
+      console.log("🔄 AuthContext: Auth state change:", {
+        event,
+        hasSession: !!session,
+        hasUser: !!session?.user,
+      });
+
       // Prevent race conditions by checking if we're already loading
       if (loading) {
-        console.log("⏳ AuthContext: Still loading initial session, skipping state change");
+        console.log(
+          "⏳ AuthContext: Still loading initial session, skipping state change"
+        );
         return;
       }
 
@@ -163,8 +169,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
       options: {
         redirectTo: redirectUrl,
         queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
+          access_type: "offline",
+          prompt: "consent",
         },
       },
     });
