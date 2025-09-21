@@ -32,8 +32,8 @@ export const LazyScoutPage = lazy(() =>
 export const LazySnapPage = lazy(() =>
   import("./SnapPage").then((module) => ({ default: module.SnapPage }))
 );
-export const LazyProfilePage = lazy(() =>
-  import("./ProfilePage").then((module) => ({ default: module.ProfilePage }))
+export const LazyPlatePage = lazy(() =>
+  import("./PlatePage").then((module) => ({ default: module.PlatePage }))
 );
 export const LazyGroupDiningPage = lazy(() =>
   import("../features/GroupDiningPage").then((module) => ({
@@ -99,9 +99,9 @@ export const SnapPageLazy = (props: any) => (
   </LazyWrapper>
 );
 
-export const ProfilePageLazy = (props: any) => (
-  <LazyWrapper componentName="Profile">
-    <LazyProfilePage {...props} />
+export const PlatePageLazy = (props: any) => (
+  <LazyWrapper componentName="Plate">
+    <LazyPlatePage {...props} />
   </LazyWrapper>
 );
 

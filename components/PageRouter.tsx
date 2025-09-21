@@ -5,7 +5,7 @@ import { ChatPage } from "./ChatPage";
 import { FeedPage } from "./FeedPage";
 import { LandingPage } from "./LandingPage";
 import { OnboardingFlow } from "./OnboardingFlow";
-import { ProfilePage } from "./ProfilePage";
+import { PlatePage } from "./PlatePage";
 import { ScoutPage } from "./ScoutPage";
 import { SnapPage } from "./SnapPage";
 import { AuthCallback } from "./auth/AuthCallback";
@@ -28,7 +28,7 @@ type PageType =
   | "snap"
   | "chat"
   | "recipes"
-  | "profile"
+  | "plate"
   | "auth-callback"
   | "about-us"
   | "careers"
@@ -74,7 +74,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
           "snap",
           "chat",
           "recipes",
-          "profile",
+          "plate",
           "auth-callback",
           "about-us",
           "careers",
@@ -135,7 +135,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
             onNavigateToSnap={() => setCurrentPage("snap")}
             onNavigateToChat={() => setCurrentPage("chat")}
             onNavigateToRecipes={() => setCurrentPage("recipes")}
-            onNavigateToProfile={() => setCurrentPage("profile")}
+            onNavigateToPlate={() => setCurrentPage("plate")}
           />
         );
 
@@ -169,8 +169,8 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
           />
         );
 
-      case "profile":
-        return <ProfilePage onNavigateBack={() => setCurrentPage("feed")} />;
+      case "plate":
+        return <PlatePage onNavigateBack={() => setCurrentPage("feed")} />;
 
       case "auth-callback":
         return (
@@ -189,7 +189,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
                 "/snap": "snap",
                 "/chat": "chat",
                 "/recipes": "recipes",
-                "/profile": "profile",
+                "/plate": "plate",
                 "/": "landing",
               };
 

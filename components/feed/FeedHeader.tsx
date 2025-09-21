@@ -3,14 +3,14 @@ import { Badge } from "../ui/badge";
 
 interface FeedHeaderProps {
   onNavigateToChat?: () => void;
-  onNavigateToProfile?: () => void;
+  onNavigateToPlate?: () => void;
   onTogglePageSelector?: () => void;
   unreadChatCount?: number;
 }
 
 export function FeedHeader({
   onNavigateToChat,
-  onNavigateToProfile,
+  onNavigateToPlate,
   onTogglePageSelector,
   unreadChatCount = 0,
 }: FeedHeaderProps) {
@@ -40,7 +40,7 @@ export function FeedHeader({
             )}
           </button>
           <button
-            onClick={onNavigateToProfile}
+            onClick={onNavigateToPlate}
             className="w-9 h-9 rounded-xl bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition-colors"
           >
             <User className="w-4 h-4 text-gray-600" />

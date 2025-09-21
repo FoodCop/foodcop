@@ -9,7 +9,7 @@ interface FeedPageProps {
   onNavigateToSnap?: () => void;
   onNavigateToChat?: () => void;
   onNavigateToRecipes?: () => void;
-  onNavigateToProfile?: () => void;
+  onNavigateToPlate?: () => void;
   onTogglePageSelector?: () => void;
 }
 
@@ -18,7 +18,7 @@ export function FeedPage({
   onNavigateToSnap,
   onNavigateToChat,
   onNavigateToRecipes,
-  onNavigateToProfile,
+  onNavigateToPlate,
   onTogglePageSelector,
 }: FeedPageProps) {
   const [activeTab, setActiveTab] = useState("feed"); // Default to feed tab
@@ -41,7 +41,7 @@ export function FeedPage({
       {/* Header */}
       <FeedHeader
         onNavigateToChat={onNavigateToChat}
-        onNavigateToProfile={onNavigateToProfile}
+        onNavigateToPlate={onNavigateToPlate}
         onTogglePageSelector={onTogglePageSelector}
         unreadChatCount={unreadChatCount}
       />

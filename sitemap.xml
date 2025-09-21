@@ -130,16 +130,16 @@
   </url>
 
   <url>
-    <loc>/profile</loc>
+    <loc>/plate</loc>
     <priority>0.7</priority>
     <changefreq>weekly</changefreq>
     <!--
-      Component: ProfilePage.tsx
+      Component: PlatePage.tsx
       Purpose: User identity hub with comprehensive profile management
-      Features: Crew (friends), Plate (saved items), Photos, Points, Rewards
+      Features: Crew (friends), Places (saved restaurants), Recipes, Photos, Videos, Points, Rewards
       Navigation: → Friend profiles, ← Feed/other pages
-      Dependencies: CrewTab, PlatesTab, PhotosTab, PointsTab, RewardsTab
-      Sub-tabs: profile/CrewTab, profile/PhotosTab, global/PlatesTab, profile/PointsTab, profile/RewardsTab
+      Dependencies: CrewTab, PlacesTab, RecipesTab, PhotosTab, VideosTab, PointsTab, RewardsTab
+      Sub-tabs: plate/CrewTab, plate/PlacesTab, plate/RecipesTab, plate/PhotosTab, plate/VideosTab, plate/PointsTab, plate/RewardsTab
     -->
   </url>
 

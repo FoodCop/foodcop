@@ -5,7 +5,7 @@ import { ChatPage } from "./ChatPage";
 import { FeedPage } from "./FeedPage";
 import { LandingPage } from "./LandingPage";
 import { OnboardingFlow } from "./OnboardingFlow";
-import { ProfilePage } from "./ProfilePage";
+import { PlatePage } from "./PlatePage";
 import { ScoutPage } from "./ScoutPage";
 import { SnapPage } from "./SnapPage";
 import { UniversalHeader } from "./UniversalHeader";
@@ -18,7 +18,7 @@ type PageType =
   | "snap"
   | "chat"
   | "recipes"
-  | "profile";
+  | "plate";
 
 interface Page {
   id: PageType;
@@ -59,10 +59,10 @@ const pages: Page[] = [
     description: "Stream Chat integration with comprehensive messaging",
   },
   {
-    id: "profile",
-    title: "Profile Page",
+    id: "plate",
+    title: "Plate Page",
     description:
-      "User identity hub with crew, plate, photos, rewards, and points",
+      "User identity hub with crew, places, recipes, photos, videos, rewards, and points",
   },
   {
     id: "onboarding",
@@ -138,7 +138,7 @@ export function PageRouter({
             onNavigateToSnap={() => setCurrentPage("snap")}
             onNavigateToChat={() => setCurrentPage("chat")}
             onNavigateToRecipes={() => setCurrentPage("recipes")}
-            onNavigateToProfile={() => setCurrentPage("profile")}
+            onNavigateToPlate={() => setCurrentPage("plate")}
             onTogglePageSelector={togglePageSelector}
           />
         );
@@ -150,8 +150,8 @@ export function PageRouter({
         return <SnapPage />;
       case "chat":
         return <ChatPage />;
-      case "profile":
-        return <ProfilePage onNavigateBack={() => setCurrentPage("feed")} />;
+      case "plate":
+        return <PlatePage onNavigateBack={() => setCurrentPage("feed")} />;
       case "onboarding":
         return (
           <OnboardingFlow
@@ -197,12 +197,12 @@ export function PageRouter({
         return null; // Scout has its own complex header with search and tabs
       case "snap":
       case "recipes":
-      case "profile":
+      case "plate":
       case "chat":
         return {
           title: currentPageInfo?.title,
           showChatButton: pageId !== "chat",
-          showProfileButton: pageId !== "profile",
+          showPlateButton: pageId !== "plate",
         };
       default:
         return {
@@ -289,7 +289,7 @@ export function PageRouter({
       {headerConfig && (
         <UniversalHeader
           onNavigateToChat={() => setCurrentPage("chat")}
-          onNavigateToProfile={() => setCurrentPage("profile")}
+          onNavigateToPlate={() => setCurrentPage("plate")}
           onTogglePageSelector={togglePageSelector}
           unreadChatCount={unreadChatCount}
           {...headerConfig}

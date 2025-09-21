@@ -2,36 +2,47 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft,
   Award,
-  Bookmark,
   Camera,
+  ChefHat,
   Edit,
   LogOut,
+  MapPin,
   Settings,
   Star,
   Users,
+  Video,
 } from "lucide-react";
 import { useState } from "react";
 // Removed mock data import - using only real user data
 import { useAuth } from "../contexts/AuthContext";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { PlatesTab } from "./global/PlatesTab";
-import { CrewTab } from "./profile/CrewTab";
-import { PhotosTab } from "./profile/PhotosTab";
-import { PointsTab } from "./profile/PointsTab";
-import { RewardsTab } from "./profile/RewardsTab";
+import { CrewTab } from "./plate/CrewTab";
+import { PhotosTab } from "./plate/PhotosTab";
+import { PlacesTab } from "./plate/PlacesTab";
+import { PointsTab } from "./plate/PointsTab";
+import { RecipesTab } from "./plate/RecipesTab";
+import { RewardsTab } from "./plate/RewardsTab";
+import { VideosTab } from "./plate/VideosTab";
 
-type ProfileTab = "crew" | "plate" | "photos" | "rewards" | "points";
+type PlateTab =
+  | "crew"
+  | "places"
+  | "recipes"
+  | "photos"
+  | "videos"
+  | "rewards"
+  | "points";
 
-interface ProfilePageProps {
+interface PlatePageProps {
   onNavigateBack?: () => void;
   onNavigateToFriend?: (friendId: string) => void;
 }
 
-export function ProfilePage({
+export function PlatePage({
   onNavigateBack,
   onNavigateToFriend,
-}: ProfilePageProps) {
-  const [activeTab, setActiveTab] = useState<ProfileTab>("crew");
+}: PlatePageProps) {
+  const [activeTab, setActiveTab] = useState<PlateTab>("crew");
   const [isEditing, setIsEditing] = useState(false);
   const { user, profile, signOut } = useAuth();
 
@@ -65,6 +76,7 @@ export function ProfilePage({
     savedPlaces: [],
     savedRecipes: [],
     photos: [],
+    videos: [],
     badges: [],
     achievements: [],
   };
@@ -89,12 +101,14 @@ export function ProfilePage({
   // };
 
   const tabs = [
-    { id: "crew" as ProfileTab, label: "Crew", icon: Users, count: 0 }, // Will be loaded from backend
-    { id: "plate" as ProfileTab, label: "Plate", icon: Bookmark, count: 0 }, // Will be loaded from backend
-    { id: "photos" as ProfileTab, label: "Photos", icon: Camera, count: 0 }, // Will be loaded from backend
-    { id: "rewards" as ProfileTab, label: "Rewards", icon: Award, count: 0 }, // Will be loaded from backend
+    { id: "crew" as PlateTab, label: "Crew", icon: Users, count: 0 }, // Will be loaded from backend
+    { id: "places" as PlateTab, label: "Places", icon: MapPin, count: 0 }, // Renamed from "Plate"
+    { id: "recipes" as PlateTab, label: "Recipes", icon: ChefHat, count: 0 }, // New tab
+    { id: "photos" as PlateTab, label: "Photos", icon: Camera, count: 0 }, // Will be loaded from backend
+    { id: "videos" as PlateTab, label: "Videos", icon: Video, count: 0 }, // New tab
+    { id: "rewards" as PlateTab, label: "Rewards", icon: Award, count: 0 }, // Will be loaded from backend
     {
-      id: "points" as ProfileTab,
+      id: "points" as PlateTab,
       label: "Points",
       icon: Star,
       count: userProfile.points,
@@ -107,9 +121,9 @@ export function ProfilePage({
         return (
           <CrewTab crew={userProfile.crew} onFriendClick={onNavigateToFriend} />
         );
-      case "plate":
+      case "places":
         return (
-          <PlatesTab
+          <PlacesTab
             variant="profile"
             showSearch={false}
             showFilters={true}
@@ -117,8 +131,12 @@ export function ProfilePage({
             showStats={true}
           />
         );
+      case "recipes":
+        return <RecipesTab recipes={userProfile.savedRecipes} />;
       case "photos":
         return <PhotosTab photos={userProfile.photos} />;
+      case "videos":
+        return <VideosTab videos={userProfile.videos} />;
       case "rewards":
         return (
           <RewardsTab
