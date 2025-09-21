@@ -19,7 +19,8 @@ export function PinFoodSection({
   return (
     <section
       ref={sectionRef}
-      className="py-20 bg-gradient-to-br from-yellow-100 to-orange-100"
+      className="py-20 bg-gradient-to-br from-yellow-100 to-orange-100 relative"
+      style={{ position: "relative" }} // Ensure non-static position for Framer Motion
     >
       <div className="max-w-6xl mx-auto px-6">
         <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl">

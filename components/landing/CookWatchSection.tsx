@@ -24,6 +24,7 @@ export function CookWatchSection({
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        position: "relative", // Ensure non-static position for Framer Motion
       }}
     >
       <div className="max-w-6xl mx-auto px-6">

@@ -5,7 +5,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 
 /**
  * A reusable element that displays three phones in a fanning animation on scroll.
@@ -25,10 +25,18 @@ export function PhoneFan({
   containerRef?: React.RefObject<HTMLElement>;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Handle hydration by ensuring component is mounted before using useScroll
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // progress = 0 when the section top hits viewport bottom; 1 when section bottom hits viewport top
   const { scrollYProgress } = useScroll({
     target: containerRef || ref,
     offset: ["start end", "end start"],
+    layoutEffect: false, // Prevent hydration issues
   });
   const prefersReduced = useReducedMotion();
 
@@ -74,6 +82,18 @@ export function PhoneFan({
   );
 
   const MotionDiv = prefersReduced ? "div" : motion.div;
+
+  // Don't render animated content until mounted to prevent hydration issues
+  if (!isMounted) {
+    return (
+      <div ref={ref} className={`relative ${className}`}>
+        {/* Static fallback during hydration */}
+        <div className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
+          <PhoneFrame src={centerSrc} elevated />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} className={`relative ${className}`}>
@@ -147,6 +167,7 @@ export function PhoneFanSection({
   return (
     <section
       className="relative overflow-hidden py-28 md:py-36"
+      style={{ position: "relative" }} // Ensure non-static position for Framer Motion
       aria-label="FUZO mobile previews"
     >
       {/* soft gradient backdrop */}
