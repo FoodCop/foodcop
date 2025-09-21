@@ -38,6 +38,18 @@ export interface NewRecipe {
   tags: string[];
   ingredients: RecipeIngredient[];
   steps: RecipeStep[];
+  prepTime?: number;
+  cookTime?: number;
+  instructions?: string[];
+  nutrition?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    fiber: number;
+    sugar: number;
+    sodium: number;
+  };
   nutritionInfo?: {
     calories: number;
     protein: number;
@@ -47,10 +59,13 @@ export interface NewRecipe {
     sugar: number;
     sodium: number;
   };
+  images?: string[];
 }
 
 interface RecipeCreatorPageProps {
   onNavigateBack?: () => void;
+  onBack?: () => void;
+  onSave?: (recipe: NewRecipe) => void;
   onSaveRecipe?: (recipe: NewRecipe) => void;
 }
 
@@ -63,6 +78,8 @@ type CreatorStep =
 
 export function RecipeCreatorPage({
   onNavigateBack,
+  onBack,
+  onSave,
   onSaveRecipe,
 }: RecipeCreatorPageProps) {
   const [currentStep, setCurrentStep] = useState<CreatorStep>("basic");
@@ -185,8 +202,16 @@ export function RecipeCreatorPage({
   };
 
   const handleSave = () => {
-    onSaveRecipe?.(recipe);
-    onNavigateBack?.();
+    if (onSave) {
+      onSave(recipe);
+    } else if (onSaveRecipe) {
+      onSaveRecipe(recipe);
+    }
+    if (onBack) {
+      onBack();
+    } else if (onNavigateBack) {
+      onNavigateBack();
+    }
   };
 
   const renderStepContent = () => {
@@ -233,7 +258,7 @@ export function RecipeCreatorPage({
       <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
         <div className="flex items-center justify-between p-4">
           <button
-            onClick={onNavigateBack}
+            onClick={onBack || onNavigateBack}
             className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
           >
             <ArrowLeft className="w-5 h-5 text-[#0B1F3A]" />

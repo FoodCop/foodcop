@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { isOAuthCallback } from "../utils/authRedirect";
 import { RecipesPage } from "./Bites";
 import { ChatPage } from "./ChatPage";
 import { FeedPage } from "./FeedPage";
@@ -18,7 +19,6 @@ import { PressPage } from "./info/PressPage";
 import { PrivacyPolicyPage } from "./info/PrivacyPolicyPage";
 import { RestaurantPartnersPage } from "./info/RestaurantPartnersPage";
 import { TermsOfServicePage } from "./info/TermsOfServicePage";
-import { isOAuthCallback } from "../utils/authRedirect";
 
 type PageType =
   | "landing"
@@ -52,7 +52,9 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
   // Check for OAuth callback and handle appropriately
   useEffect(() => {
     if (isOAuthCallback()) {
-      console.log("[PageRouter] OAuth callback detected, navigating to auth callback handler");
+      console.log(
+        "[PageRouter] OAuth callback detected, navigating to auth callback handler"
+      );
       setCurrentPage("auth-callback");
     }
   }, []);
@@ -118,7 +120,9 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
             }}
             onBack={() => {
               console.log("[PageRouter] Returning to landing page");
-              console.log("[PageRouter] Changing page from onboarding to landing");
+              console.log(
+                "[PageRouter] Changing page from onboarding to landing"
+              );
               setCurrentPage("landing");
             }}
           />
@@ -172,25 +176,32 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
         return (
           <AuthCallback
             onAuthComplete={(destination) => {
-              console.log("[PageRouter] Auth completed, redirecting to:", destination);
-              
+              console.log(
+                "[PageRouter] Auth completed, redirecting to:",
+                destination
+              );
+
               // Map destination paths to page types
               const destinationMap: Record<string, PageType> = {
-                '/onboarding': 'onboarding',
-                '/feed': 'feed',
-                '/scout': 'scout',
-                '/snap': 'snap',
-                '/chat': 'chat',
-                '/recipes': 'recipes',
-                '/profile': 'profile',
-                '/': 'landing'
+                "/onboarding": "onboarding",
+                "/feed": "feed",
+                "/scout": "scout",
+                "/snap": "snap",
+                "/chat": "chat",
+                "/recipes": "recipes",
+                "/profile": "profile",
+                "/": "landing",
               };
-              
+
               // Extract pathname from destination
-              const pathname = destination.startsWith('/') ? destination : `/${destination}`;
-              const pageType = destinationMap[pathname] || 'feed'; // Default to feed for unknown destinations
-              
-              console.log(`[PageRouter] Mapping destination ${destination} to page type: ${pageType}`);
+              const pathname = destination.startsWith("/")
+                ? destination
+                : `/${destination}`;
+              const pageType = destinationMap[pathname] || "feed"; // Default to feed for unknown destinations
+
+              console.log(
+                `[PageRouter] Mapping destination ${destination} to page type: ${pageType}`
+              );
               setCurrentPage(pageType);
             }}
             onAuthError={(error) => {

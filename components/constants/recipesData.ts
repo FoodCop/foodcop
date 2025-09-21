@@ -1,4 +1,5 @@
 export interface Author {
+  id: string;
   name: string;
   avatar: string;
   verified: boolean;
@@ -27,6 +28,15 @@ export interface Recipe {
   reviews?: number;
   nutritionInfo?: any;
   isSaved?: boolean;
+  isBookmarked?: boolean;
+  isLiked?: boolean;
+  reviewCount?: number;
+  prepTime?: number;
+  cookTime?: number;
+  mainImage?: string;
+  images?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Ingredient {

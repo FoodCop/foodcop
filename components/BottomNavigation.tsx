@@ -3,11 +3,17 @@ import { Camera, ChefHat, Home, Map } from "lucide-react";
 interface BottomNavigationProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  onNavigateToFeed?: () => void;
+  onNavigateToScout?: () => void;
+  onNavigateToSnap?: () => void;
 }
 
 export function BottomNavigation({
   activeTab,
   onTabChange,
+  onNavigateToFeed,
+  onNavigateToScout,
+  onNavigateToSnap,
 }: BottomNavigationProps) {
   const tabs = [
     { id: "feed", label: "Feed", icon: Home },

@@ -1,33 +1,66 @@
-import React, { useEffect, useState } from 'react';
-import { X, Trophy, Star, Award, ChefHat } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
+import { ChefHat, Star, Trophy, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface GamificationPopupProps {
   points: number;
-  action: string;
-  currentPoints: number;
+  action?: string;
+  message?: string;
+  currentPoints?: number;
   onClose: () => void;
 }
 
 const badgeData = [
-  { name: 'Home Chef', minPoints: 0, maxPoints: 499, icon: ChefHat, color: '#A6471E' },
-  { name: 'Recipe Explorer', minPoints: 500, maxPoints: 1499, icon: Star, color: '#FFD74A' },
-  { name: 'Master Chef', minPoints: 1500, maxPoints: Infinity, icon: Trophy, color: '#F14C35' }
+  {
+    name: "Home Chef",
+    minPoints: 0,
+    maxPoints: 499,
+    icon: ChefHat,
+    color: "#A6471E",
+  },
+  {
+    name: "Recipe Explorer",
+    minPoints: 500,
+    maxPoints: 1499,
+    icon: Star,
+    color: "#FFD74A",
+  },
+  {
+    name: "Master Chef",
+    minPoints: 1500,
+    maxPoints: Infinity,
+    icon: Trophy,
+    color: "#F14C35",
+  },
 ];
 
-export function GamificationPopup({ points, action, currentPoints, onClose }: GamificationPopupProps) {
+export function GamificationPopup({
+  points,
+  action,
+  message,
+  currentPoints,
+  onClose,
+}: GamificationPopupProps) {
   const [showAnimation, setShowAnimation] = useState(false);
-  
-  const currentBadge = badgeData.find(badge => 
-    currentPoints >= badge.minPoints && currentPoints <= badge.maxPoints
-  ) || badgeData[0];
 
-  const nextBadge = badgeData.find(badge => 
-    badge.minPoints > currentPoints
+  const currentBadge =
+    badgeData.find(
+      (badge) =>
+        (currentPoints || 0) >= badge.minPoints &&
+        (currentPoints || 0) <= badge.maxPoints
+    ) || badgeData[0];
+
+  const nextBadge = badgeData.find(
+    (badge) => badge.minPoints > (currentPoints || 0)
   );
 
-  const progressToNext = nextBadge 
-    ? Math.min(((currentPoints - currentBadge.minPoints) / (nextBadge.minPoints - currentBadge.minPoints)) * 100, 100)
+  const progressToNext = nextBadge
+    ? Math.min(
+        (((currentPoints || 0) - currentBadge.minPoints) /
+          (nextBadge.minPoints - currentBadge.minPoints)) *
+          100,
+        100
+      )
     : 100;
 
   useEffect(() => {
@@ -80,9 +113,11 @@ export function GamificationPopup({ points, action, currentPoints, onClose }: Ga
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <h2 className="text-xl font-bold text-[#0B1F3A] mb-2">Great job!</h2>
+            <h2 className="text-xl font-bold text-[#0B1F3A] mb-2">
+              Great job!
+            </h2>
             <p className="text-gray-600 mb-4">
-              +{points} points for {action} 🎉
+              {message || `+${points} points for ${action || "your action"} 🎉`}
             </p>
           </motion.div>
 
@@ -90,7 +125,7 @@ export function GamificationPopup({ points, action, currentPoints, onClose }: Ga
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+            transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
             className="bg-gradient-to-r from-[#F14C35] to-[#A6471E] text-white rounded-xl p-4 mb-4"
           >
             <div className="flex items-center justify-center space-x-2 mb-2">
@@ -108,13 +143,15 @@ export function GamificationPopup({ points, action, currentPoints, onClose }: Ga
             className="mb-4"
           >
             <div className="flex items-center justify-center space-x-2 mb-2">
-              <div 
+              <div
                 className="w-8 h-8 rounded-full flex items-center justify-center"
                 style={{ backgroundColor: currentBadge.color }}
               >
                 <currentBadge.icon className="w-4 h-4 text-white" />
               </div>
-              <span className="font-medium text-[#0B1F3A]">{currentBadge.name}</span>
+              <span className="font-medium text-[#0B1F3A]">
+                {currentBadge.name}
+              </span>
             </div>
 
             {/* Progress to Next Badge */}
@@ -150,7 +187,8 @@ export function GamificationPopup({ points, action, currentPoints, onClose }: Ga
               <div className="w-4 h-4 bg-[#F8F9FA] rotate-45"></div>
             </div>
             <p className="text-sm text-gray-700 italic">
-              "Keep exploring delicious recipes! You're doing amazing!" - Tako 🐙
+              "Keep exploring delicious recipes! You're doing amazing!" - Tako
+              🐙
             </p>
           </motion.div>
 
@@ -183,30 +221,30 @@ export function GamificationPopup({ points, action, currentPoints, onClose }: Ga
           {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}
-              initial={{ 
-                x: '50%', 
-                y: '50%', 
+              initial={{
+                x: "50%",
+                y: "50%",
                 scale: 0,
-                rotate: 0
+                rotate: 0,
               }}
               animate={{
                 x: `${50 + (Math.random() - 0.5) * 200}%`,
                 y: `${50 + (Math.random() - 0.5) * 200}%`,
                 scale: [0, 1, 0],
-                rotate: 360
+                rotate: 360,
               }}
               transition={{
                 duration: 2,
                 delay: 0.5 + i * 0.1,
-                ease: 'easeOut'
+                ease: "easeOut",
               }}
               className="absolute text-2xl"
               style={{
                 left: 0,
-                top: 0
+                top: 0,
               }}
             >
-              {['🎉', '✨', '🌟', '🏆'][i % 4]}
+              {["🎉", "✨", "🌟", "🏆"][i % 4]}
             </motion.div>
           ))}
         </motion.div>

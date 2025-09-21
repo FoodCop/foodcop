@@ -1,16 +1,35 @@
-import React, { useState } from 'react';
-import { Clock, Users, Flame, Heart, Share2, Bookmark, Star } from 'lucide-react';
-import { Recipe } from '../constants/recipesData';
-import { ImageWithFallback } from '../figma/ImageWithFallback';
+import {
+  Bookmark,
+  Clock,
+  Flame,
+  Heart,
+  Share2,
+  Star,
+  Users,
+} from "lucide-react";
+import React, { useState } from "react";
+import { Recipe } from "../constants/recipesData";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 interface RecipeCardProps {
   recipe: Recipe;
-  onClick: () => void;
-  onSave: () => void;
-  onShare: () => void;
+  onClick?: () => void;
+  onSelect?: (recipe: Recipe) => void;
+  onSave?: () => void;
+  onBookmark?: (recipeId: string) => void;
+  onLike?: (recipeId: string) => void;
+  onShare?: () => void;
 }
 
-export function RecipeCard({ recipe, onClick, onSave, onShare }: RecipeCardProps) {
+export function RecipeCard({
+  recipe,
+  onClick,
+  onSelect,
+  onSave,
+  onBookmark,
+  onLike,
+  onShare,
+}: RecipeCardProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -32,9 +51,17 @@ export function RecipeCard({ recipe, onClick, onSave, onShare }: RecipeCardProps
     setIsLiked(!isLiked);
   };
 
+  const handleClick = () => {
+    if (onSelect) {
+      onSelect(recipe);
+    } else if (onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <div 
-      onClick={onClick}
+    <div
+      onClick={handleClick}
       className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
     >
       {/* Recipe Image */}
@@ -44,38 +71,42 @@ export function RecipeCard({ recipe, onClick, onSave, onShare }: RecipeCardProps
           alt={recipe.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        
+
         {/* Overlay Actions */}
         <div className="absolute top-3 right-3 flex space-x-2">
           <button
             onClick={handleLike}
             className={`w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 transition-colors ${
-              isLiked 
-                ? 'bg-[#F14C35] text-white' 
-                : 'bg-white/80 text-gray-700 hover:bg-white'
+              isLiked
+                ? "bg-[#F14C35] text-white"
+                : "bg-white/80 text-gray-700 hover:bg-white"
             }`}
           >
-            <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
+            <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
           </button>
           <button
             onClick={handleSave}
             className={`w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 transition-colors ${
-              isSaved 
-                ? 'bg-[#F14C35] text-white' 
-                : 'bg-white/80 text-gray-700 hover:bg-white'
+              isSaved
+                ? "bg-[#F14C35] text-white"
+                : "bg-white/80 text-gray-700 hover:bg-white"
             }`}
           >
-            <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+            <Bookmark className={`w-4 h-4 ${isSaved ? "fill-current" : ""}`} />
           </button>
         </div>
 
         {/* Difficulty Badge */}
         <div className="absolute top-3 left-3">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm border border-white/20 ${
-            recipe.difficulty === 'Easy' ? 'bg-green-500/80 text-white' :
-            recipe.difficulty === 'Medium' ? 'bg-yellow-500/80 text-white' :
-            'bg-red-500/80 text-white'
-          }`}>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm border border-white/20 ${
+              recipe.difficulty === "Easy"
+                ? "bg-green-500/80 text-white"
+                : recipe.difficulty === "Medium"
+                ? "bg-yellow-500/80 text-white"
+                : "bg-red-500/80 text-white"
+            }`}
+          >
             {recipe.difficulty}
           </span>
         </div>
@@ -83,7 +114,9 @@ export function RecipeCard({ recipe, onClick, onSave, onShare }: RecipeCardProps
         {/* Recipe Rating */}
         <div className="absolute bottom-3 left-3 flex items-center space-x-1 bg-white/80 backdrop-blur-sm rounded-full px-2 py-1">
           <Star className="w-3 h-3 text-yellow-500 fill-current" />
-          <span className="text-xs font-medium text-gray-900">{recipe.rating}</span>
+          <span className="text-xs font-medium text-gray-900">
+            {recipe.rating}
+          </span>
         </div>
       </div>
 
@@ -91,8 +124,12 @@ export function RecipeCard({ recipe, onClick, onSave, onShare }: RecipeCardProps
       <div className="p-4">
         {/* Title and Cuisine */}
         <div className="mb-3">
-          <h3 className="font-semibold text-[#0B1F3A] mb-1 line-clamp-1">{recipe.title}</h3>
-          <p className="text-sm text-gray-600">{recipe.cuisine} • by {recipe.author.name}</p>
+          <h3 className="font-semibold text-[#0B1F3A] mb-1 line-clamp-1">
+            {recipe.title}
+          </h3>
+          <p className="text-sm text-gray-600">
+            {recipe.cuisine} • by {recipe.author.name}
+          </p>
         </div>
 
         {/* Tags */}
@@ -120,7 +157,9 @@ export function RecipeCard({ recipe, onClick, onSave, onShare }: RecipeCardProps
           </div>
           <div className="flex items-center space-x-1">
             <Flame className="w-4 h-4" />
-            <span>{recipe.nutrition?.calories || recipe.calories || 0} cal</span>
+            <span>
+              {recipe.nutrition?.calories || recipe.calories || 0} cal
+            </span>
           </div>
           <div className="flex items-center space-x-1">
             <Users className="w-4 h-4" />
@@ -131,7 +170,7 @@ export function RecipeCard({ recipe, onClick, onSave, onShare }: RecipeCardProps
         {/* Action Buttons */}
         <div className="flex space-x-2">
           <button
-            onClick={onClick}
+            onClick={handleClick}
             className="flex-1 bg-[#F14C35] text-white py-2 px-4 rounded-xl font-medium hover:bg-[#E63E26] transition-colors"
           >
             View Recipe
