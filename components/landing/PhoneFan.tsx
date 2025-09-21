@@ -5,7 +5,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * A reusable element that displays three phones in a fanning animation on scroll.
@@ -26,7 +26,7 @@ export function PhoneFan({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
-  
+
   // Handle hydration by ensuring component is mounted before using useScroll
   useEffect(() => {
     setIsMounted(true);
