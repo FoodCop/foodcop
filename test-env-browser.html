@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Environment Variables Test</title>
+  </head>
+  <body>
+    <h1>Environment Variables Test</h1>
+    <div id="status">Testing...</div>
+    <div id="data"></div>
+
+    <script type="module">
+      // Test if we can access environment variables
+      console.log("Testing environment variables...");
+
+      // Check if import.meta is available
+      if (typeof import.meta !== "undefined") {
+        console.log("import.meta is available");
+        console.log("VITE_SUPABASE_URL:", import.meta.env.VITE_SUPABASE_URL);
+        console.log(
+          "VITE_SUPABASE_ANON_KEY:",
+          import.meta.env.VITE_SUPABASE_ANON_KEY
+        );
+
+        document.getElementById("status").innerHTML =
+          "✅ import.meta is available";
+        document.getElementById("data").innerHTML = `
+                <h3>Environment Variables:</h3>
+                <p>VITE_SUPABASE_URL: ${
+                  import.meta.env.VITE_SUPABASE_URL || "undefined"
+                }</p>
+                <p>VITE_SUPABASE_ANON_KEY: ${
+                  import.meta.env.VITE_SUPABASE_ANON_KEY ? "Present" : "Missing"
+                }</p>
+            `;
+      } else {
+        console.log("import.meta is not available");
+        document.getElementById("status").innerHTML =
+          "❌ import.meta is not available";
+      }
+    </script>
+  </body>
+</html>

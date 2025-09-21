@@ -1,6 +1,7 @@
 import { Share2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useBotPosts } from "../hooks/useBotPosts";
+import { SaveToPlate } from "../plate/SaveToPlate";
 import { SwipeCard } from "./SwipeCard";
 
 interface FoodCard {
@@ -32,6 +33,13 @@ export function SwipeDeck() {
   const [skippedCards, setSkippedCards] = useState<string[]>([]);
   const { feedCards: botPostCards, loading, error } = useBotPosts();
 
+  console.log("🔄 SwipeDeck: Component rendered", {
+    botPostCardsLength: botPostCards?.length || 0,
+    loading,
+    error,
+    hasCurrentCard: !!currentCard,
+  });
+
   // Use master bot posts with restaurant data
   const foodCards = botPostCards || [];
 
@@ -44,7 +52,19 @@ export function SwipeDeck() {
 
   // Initialize with a random card
   useEffect(() => {
+    console.log("🔄 SwipeDeck useEffect:", {
+      foodCardsLength: foodCards.length,
+      hasCurrentCard: !!currentCard,
+      loading,
+      error,
+    });
+
     if (foodCards.length > 0 && !currentCard) {
+      console.log(
+        "🎯 Setting current card from",
+        foodCards.length,
+        "available cards"
+      );
       setCurrentCard(getRandomCard());
     }
   }, [foodCards]);
@@ -91,6 +111,12 @@ export function SwipeDeck() {
     // TODO: Share functionality
     console.log("Shared:", currentCard.title);
     getNextCard();
+  };
+
+  const handleSaveToPlate = () => {
+    if (!currentCard) return;
+    console.log("Save to plate:", currentCard.title);
+    // The SaveToPlate component will handle the actual saving
   };
 
   // Show loading state while fetching restaurant data
@@ -151,6 +177,7 @@ export function SwipeDeck() {
         isActive={true}
         onSkip={handleSkip}
         onShare={handleShare}
+        onSaveToPlate={handleSaveToPlate}
       />
 
       {/* Desktop Action Buttons - Below Card */}
@@ -161,11 +188,45 @@ export function SwipeDeck() {
         >
           <X className="w-6 h-6" />
         </button>
+        <SaveToPlate
+          itemId={currentCard.id}
+          itemType="restaurant"
+          title={currentCard.title}
+          imageUrl={currentCard.image}
+          variant="icon"
+          size="lg"
+          onSaved={handleSaveToPlate}
+        />
         <button
           onClick={handleShare}
           className="w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
         >
           <Share2 className="w-6 h-6" />
+        </button>
+      </div>
+
+      {/* Mobile Action Buttons - Below Card */}
+      <div className="md:hidden flex absolute top-full left-1/2 transform -translate-x-1/2 z-20 space-x-4 mt-6">
+        <button
+          onClick={handleSkip}
+          className="w-12 h-12 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        <SaveToPlate
+          itemId={currentCard.id}
+          itemType="restaurant"
+          title={currentCard.title}
+          imageUrl={currentCard.image}
+          variant="icon"
+          size="md"
+          onSaved={handleSaveToPlate}
+        />
+        <button
+          onClick={handleShare}
+          className="w-12 h-12 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors shadow-lg"
+        >
+          <Share2 className="w-5 h-5" />
         </button>
       </div>
     </div>

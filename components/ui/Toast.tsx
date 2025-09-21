@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle, X, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export type ToastType = "success" | "error" | "info";
 
@@ -149,6 +149,3 @@ export function useToast() {
   }
   return context;
 }
-
-// Import React for the context
-import React from "react";

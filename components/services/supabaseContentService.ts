@@ -40,7 +40,17 @@ export class SupabaseContentService {
   private supabase;
 
   private constructor() {
-    this.supabase = getSupabaseClient()!;
+    this.supabase = getSupabaseClient();
+    console.log(
+      "🔧 SupabaseContentService: Initialized with client:",
+      !!this.supabase
+    );
+
+    if (!this.supabase) {
+      console.error(
+        "❌ SupabaseContentService: Failed to initialize - no Supabase client"
+      );
+    }
   }
 
   public static getInstance(): SupabaseContentService {
@@ -52,6 +62,16 @@ export class SupabaseContentService {
 
   // Get posts with filters
   async getPosts(filters: PostFilters = {}): Promise<Post[]> {
+    console.log(
+      "🔄 SupabaseContentService: Starting getPosts with filters:",
+      filters
+    );
+
+    if (!this.supabase) {
+      console.error("❌ SupabaseContentService: No Supabase client available");
+      return [];
+    }
+
     let query = this.supabase.from("public_master_bot_posts").select("*");
 
     // Apply filters
@@ -96,10 +116,15 @@ export class SupabaseContentService {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Error fetching posts:", error);
+      console.error("❌ SupabaseContentService: Error fetching posts:", error);
       return [];
     }
 
+    console.log(
+      "✅ SupabaseContentService: Successfully fetched",
+      data?.length || 0,
+      "posts"
+    );
     let posts = data || [];
 
     // Apply random sorting if needed

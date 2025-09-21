@@ -70,6 +70,12 @@ export function SaveToPlate({
   const handleConfirmSave = async () => {
     setLoading(true);
     try {
+      console.log("🔄 SaveToPlate: Starting save operation", {
+        itemId,
+        itemType,
+        title,
+      });
+
       await plateSave({
         itemId,
         itemType,
@@ -80,6 +86,7 @@ export function SaveToPlate({
         },
       });
 
+      console.log("✅ SaveToPlate: Successfully saved to plate");
       setIsSaved(true);
       setShowDialog(false);
       onSaved?.();
@@ -90,7 +97,7 @@ export function SaveToPlate({
         title ? `${title} has been saved` : "Item saved successfully"
       );
     } catch (error) {
-      console.error("Error saving to plate:", error);
+      console.error("❌ SaveToPlate: Error saving to plate:", error);
       // Show error toast
       showError("Failed to save to Plate", "Please try again later");
     } finally {

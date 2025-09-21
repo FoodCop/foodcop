@@ -131,30 +131,75 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
     return () => subscription.unsubscribe();
   }, [supabase, loading]);
 
-  // Fetch user profile from backend
+  // Fetch user profile from Supabase plates table
   const fetchUserProfile = async (userId: string) => {
-    if (!supabase) return;
+    if (!supabase || !user) return;
 
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session?.access_token) return;
+      // Fetch profile directly from Supabase plates table
+      const { data: plateData, error: plateError } = await supabase
+        .from("plates")
+        .select("*")
+        .eq("user_id", userId)
+        .single();
 
-      const response = await fetch("/make-server-5976446e/auth/profile", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setProfile(data.profile);
+      if (plateError) {
+        console.warn(
+          "Could not fetch plate profile, using fallback:",
+          plateError.message
+        );
+        // Create a fallback profile
+        setProfile({
+          id: user.id,
+          email: user.email || "",
+          display_name: user.user_metadata?.full_name || "User",
+          username: user.email?.split("@")[0] || "user",
+          avatar_url: user.user_metadata?.avatar_url,
+          bio: "",
+          location_city: "",
+          location_state: "",
+          location_country: "",
+          dietary_preferences: [],
+          cuisine_preferences: [],
+          total_points: 0,
+          onboarding_completed: false,
+        });
+      } else {
+        // Convert plate data to profile format
+        setProfile({
+          id: plateData.user_id,
+          email: user.email || "",
+          display_name: plateData.display_name || "User",
+          username: plateData.username || user.email?.split("@")[0] || "user",
+          avatar_url: plateData.avatar_url,
+          bio: plateData.bio || "",
+          location_city: plateData.location_city || "",
+          location_state: plateData.location_state || "",
+          location_country: plateData.location_country || "",
+          dietary_preferences: plateData.dietary_preferences || [],
+          cuisine_preferences: plateData.cuisine_preferences || [],
+          total_points: plateData.total_points || 0,
+          onboarding_completed: true, // Assume completed if plate exists
+        });
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
+      // Create a fallback profile
+      setProfile({
+        id: user.id,
+        email: user.email || "",
+        display_name: user.user_metadata?.full_name || "User",
+        username: user.email?.split("@")[0] || "user",
+        avatar_url: user.user_metadata?.avatar_url,
+        bio: "",
+        location_city: "",
+        location_state: "",
+        location_country: "",
+        dietary_preferences: [],
+        cuisine_preferences: [],
+        total_points: 0,
+        onboarding_completed: false,
+      });
     }
   };
 

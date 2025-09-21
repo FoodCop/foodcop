@@ -47,36 +47,79 @@ export async function plateSave(
       throw new Error("User not authenticated");
     }
 
-    // Get or create the user's plate
-    const { data: plate, error: plateError } = await supabase
-      .from("plates")
-      .select("id")
-      .eq("user_id", user.id)
-      .single();
+    // Check if plates table exists by trying to query it
+    let plateId: string | null = null;
 
-    if (plateError && plateError.code !== "PGRST116") {
-      throw new Error(`Failed to get plate: ${plateError.message}`);
-    }
-
-    let plateId = plate?.id;
-
-    // Create plate if it doesn't exist
-    if (!plateId) {
-      const { data: newPlate, error: createError } = await supabase
+    try {
+      const { data: plate, error: plateError } = await supabase
         .from("plates")
-        .insert({
-          user_id: user.id,
-          display_name: user.user_metadata?.full_name || "User",
-          username: user.email?.split("@")[0] || "user",
-        })
         .select("id")
+        .eq("user_id", user.id)
         .single();
 
-      if (createError) {
-        throw new Error(`Failed to create plate: ${createError.message}`);
+      if (plateError && plateError.code !== "PGRST116") {
+        // If it's a table doesn't exist error, we'll handle it below
+        if (
+          plateError.code === "PGRST301" ||
+          (plateError.message.includes("relation") &&
+            plateError.message.includes("does not exist"))
+        ) {
+          console.warn(
+            "Plates table doesn't exist yet. Please run the database migrations."
+          );
+          throw new Error(
+            "Database tables not set up. Please run migrations first."
+          );
+        }
+        throw new Error(`Failed to get plate: ${plateError.message}`);
       }
 
-      plateId = newPlate.id;
+      plateId = plate?.id;
+
+      // Create plate if it doesn't exist
+      if (!plateId) {
+        console.log("Creating new plate for user:", user.id);
+        const { data: newPlate, error: createError } = await supabase
+          .from("plates")
+          .insert({
+            user_id: user.id,
+            display_name: user.user_metadata?.full_name || "User",
+            username: user.email?.split("@")[0] || "user",
+            bio: "",
+            avatar_url: null,
+            cover_photo_url: null,
+            location_city: null,
+            location_state: null,
+            location_country: null,
+            dietary_preferences: [],
+            cuisine_preferences: [],
+            total_points: 0,
+            current_level: 1,
+            streak_count: 0,
+            friends_count: 0,
+            saved_places_count: 0,
+            saved_recipes_count: 0,
+            saved_photos_count: 0,
+            saved_videos_count: 0,
+          })
+          .select("id")
+          .single();
+
+        if (createError) {
+          console.error("Error creating plate:", createError);
+          throw new Error(`Failed to create plate: ${createError.message}`);
+        }
+
+        plateId = newPlate.id;
+        console.log("Created new plate with ID:", plateId);
+      } else {
+        console.log("Using existing plate with ID:", plateId);
+      }
+    } catch (error) {
+      console.error("Database error:", error);
+      throw new Error(
+        "Database not set up. Please run the migrations to create the required tables."
+      );
     }
 
     // Insert the plate item with idempotency
@@ -138,6 +181,16 @@ export async function plateList(
     if (plateError) {
       if (plateError.code === "PGRST116") {
         // No plate found, return empty array
+        return [];
+      }
+      if (
+        plateError.code === "PGRST301" ||
+        (plateError.message.includes("relation") &&
+          plateError.message.includes("does not exist"))
+      ) {
+        console.warn(
+          "Plates table doesn't exist yet. Please run the database migrations."
+        );
         return [];
       }
       throw new Error(`Failed to get plate: ${plateError.message}`);

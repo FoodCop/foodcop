@@ -17,9 +17,9 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { PlateItem, plateList, plateRemove } from "../../src/lib/plate";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { FuzoTabs } from "../global/FuzoTabs";
-import { platesService } from "../services/platesService";
 
 export interface Restaurant {
   id: string;
@@ -177,22 +177,22 @@ export function PlacesTab({
   const loadSavedItems = async () => {
     try {
       setLoading(true);
-      const savedRestaurants = await platesService.getSavedRestaurants();
+      const plateItems = await plateList({ itemType: "restaurant" });
 
-      // Convert SavedRestaurant to Restaurant format
-      const convertedRestaurants: Restaurant[] = savedRestaurants.map(
-        (saved) => ({
-          id: saved.id,
-          placeId: saved.place_id,
-          name: saved.name,
-          image: saved.image || "",
-          rating: saved.rating,
-          cuisine: saved.cuisine.split(", "),
-          priceLevel: saved.price.length,
-          address: saved.location,
-          coordinates: saved.geometry?.location || { lat: 0, lng: 0 },
+      // Convert PlateItem to Restaurant format
+      const convertedRestaurants: Restaurant[] = plateItems.map(
+        (item: PlateItem) => ({
+          id: item.id,
+          placeId: item.item_id,
+          name: item.metadata.title || "Unknown Restaurant",
+          image: item.metadata.imageUrl || "",
+          rating: item.metadata.rating || 4.5,
+          cuisine: item.metadata.cuisine || ["Restaurant"],
+          priceLevel: item.metadata.priceLevel || 2,
+          address: item.metadata.address || "Unknown Address",
+          coordinates: item.metadata.coordinates || { lat: 0, lng: 0 },
           isSaved: true,
-          photos: [],
+          photos: item.metadata.photos || [],
         })
       );
 
@@ -207,11 +207,9 @@ export function PlacesTab({
 
   const handleUnsaveRestaurant = async (placeId: string) => {
     try {
-      const result = await platesService.unsaveRestaurant(placeId);
-      if (result.success) {
-        setRestaurants((prev) => prev.filter((r) => r.placeId !== placeId));
-        console.log("✅ Restaurant removed from saved list");
-      }
+      await plateRemove(placeId, "restaurant");
+      setRestaurants((prev) => prev.filter((r) => r.placeId !== placeId));
+      console.log("✅ Restaurant removed from saved list");
     } catch (error) {
       console.error("Failed to unsave restaurant:", error);
     }

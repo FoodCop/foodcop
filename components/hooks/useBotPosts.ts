@@ -78,16 +78,25 @@ export function useBotPosts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  console.log("🔄 useBotPosts: Hook initialized", {
+    loading,
+    error,
+    feedCardsLength: feedCards.length,
+  });
+
   useEffect(() => {
+    console.log("🔄 useBotPosts: useEffect triggered, calling fetchBotPosts");
     fetchBotPosts();
   }, []);
 
   const fetchBotPosts = async () => {
     try {
       setLoading(true);
+      console.log("🔄 useBotPosts: Starting to fetch posts...");
 
       // Use the new Supabase content service to get master bot posts
       const posts = await supabaseContentService.getPosts({ limit: 20 });
+      console.log("📊 useBotPosts: Fetched", posts.length, "posts");
 
       // Convert to BotPost format for compatibility
       const formattedPosts: BotPost[] = posts.map((post) => ({
@@ -141,16 +150,19 @@ export function useBotPosts() {
       }));
 
       setBotPosts(formattedPosts);
+      console.log("✅ useBotPosts: Set bot posts", formattedPosts.length);
 
       // Convert to feed cards
       const cards = formattedPosts.map((post) => convertPostToFeedCard(post));
       setFeedCards(cards);
+      console.log("✅ useBotPosts: Set feed cards", cards.length);
     } catch (err) {
+      console.error("❌ useBotPosts: Error fetching bot posts:", err);
       setError(
         err instanceof Error ? err.message : "Failed to fetch bot posts"
       );
-      console.error("Error fetching bot posts:", err);
     } finally {
+      console.log("🏁 useBotPosts: Setting loading to false");
       setLoading(false);
     }
   };

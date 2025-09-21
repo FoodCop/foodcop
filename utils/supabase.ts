@@ -18,6 +18,13 @@ export function getSupabaseClient(): SupabaseClientInstance | null {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+  console.log("[Supabase] Environment check:", {
+    hasUrl: Boolean(supabaseUrl),
+    hasKey: Boolean(supabaseKey),
+    url: supabaseUrl ? supabaseUrl.substring(0, 20) + "..." : "missing",
+    key: supabaseKey ? supabaseKey.substring(0, 20) + "..." : "missing",
+  });
+
   if (!supabaseUrl || !supabaseKey) {
     console.warn("[Supabase] Environment variables are missing", {
       hasUrl: Boolean(supabaseUrl),
