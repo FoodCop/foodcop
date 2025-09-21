@@ -1,50 +1,37 @@
+import { useRef } from "react";
+import { PhoneFan } from "./PhoneFan";
+
 interface PinFoodSectionProps {
   onNavigateToSignup?: () => void;
+  leftSrc?: string;
+  centerSrc?: string;
+  rightSrc?: string;
 }
 
-export function PinFoodSection({ onNavigateToSignup }: PinFoodSectionProps) {
+export function PinFoodSection({
+  onNavigateToSignup,
+  leftSrc = "/img/screen-left.jpg",
+  centerSrc = "/img/screen-center.jpg",
+  rightSrc = "/img/screen-right.jpg",
+}: PinFoodSectionProps) {
+  const sectionRef = useRef(null);
+
   return (
-    <section className="py-20 bg-gradient-to-br from-yellow-100 to-orange-100">
+    <section
+      ref={sectionRef}
+      className="py-20 bg-gradient-to-br from-yellow-100 to-orange-100"
+    >
       <div className="max-w-6xl mx-auto px-6">
         <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Image with animated pins */}
-            <div className="relative">
-              <div className="relative w-full h-80 bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl overflow-hidden">
-                <img
-                  src="/images/landing/Images/radar.png"
-                  alt="Food map with pins"
-                  className="w-full h-full object-cover"
-                />
-
-                {/* Animated floating pins */}
-                <div className="absolute top-8 right-8 w-8 h-8 bg-[#F14C35] rounded-full flex items-center justify-center text-white text-sm font-bold animate-bounce">
-                  📍
-                </div>
-                <div
-                  className="absolute top-16 left-12 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs animate-pulse"
-                  style={{ animationDelay: "0.5s" }}
-                >
-                  📌
-                </div>
-                <div
-                  className="absolute bottom-16 right-16 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs animate-pulse"
-                  style={{ animationDelay: "1s" }}
-                >
-                  📌
-                </div>
-                <div
-                  className="absolute bottom-8 left-8 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-xs animate-pulse"
-                  style={{ animationDelay: "1.5s" }}
-                >
-                  📌
-                </div>
-              </div>
-
-              <div className="absolute top-4 right-4 bg-[#F14C35] text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                📍 Map View
-              </div>
-            </div>
+            <PhoneFan
+              containerRef={sectionRef}
+              leftSrc={leftSrc}
+              centerSrc={centerSrc}
+              rightSrc={rightSrc}
+              className="min-h-[600px]"
+            />
 
             <div>
               <h2 className="text-4xl md:text-5xl font-bold text-[#0B1F3A] mb-6">

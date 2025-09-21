@@ -26,7 +26,7 @@ export function HeroSection({ onNavigateToSignup }: HeroSectionProps) {
 
       <div className="relative text-center text-white z-10 max-w-4xl mx-auto px-6">
         <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-          Discover extraordinary eats—hand-picked by our AI connoisseurs.
+          Discover extraordinary eats, hand-picked by our AI connoisseurs.
         </h1>
 
         <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed">

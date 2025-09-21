@@ -1,12 +1,23 @@
+import { useRef } from "react";
+import { PhoneFan } from "./PhoneFan";
+
 interface CookWatchSectionProps {
   onNavigateToSignup?: () => void;
+  leftSrc?: string;
+  centerSrc?: string;
+  rightSrc?: string;
 }
 
 export function CookWatchSection({
   onNavigateToSignup,
+  leftSrc = "/img/screen-left.jpg",
+  centerSrc = "/img/screen-center.jpg",
+  rightSrc = "/img/screen-right.jpg",
 }: CookWatchSectionProps) {
+  const sectionRef = useRef(null);
   return (
     <section
+      ref={sectionRef}
       className="py-20 relative"
       style={{
         backgroundImage: `linear-gradient(rgba(11, 31, 58, 0.7), rgba(11, 31, 58, 0.7)), url('/images/landing/Images/camera_image.png')`,
@@ -16,8 +27,17 @@ export function CookWatchSection({
       }}
     >
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex justify-center">
-          <div className="bg-white rounded-3xl p-8 md:p-12 max-w-2xl text-center shadow-2xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* PhoneFan component */}
+          <PhoneFan
+            containerRef={sectionRef}
+            leftSrc={leftSrc}
+            centerSrc={centerSrc}
+            rightSrc={rightSrc}
+            className="min-h-[600px]"
+          />
+
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl">
             <div>
               <div className="flex justify-center mb-8">
                 <div className="w-20 h-20 bg-[#F14C35] rounded-full flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-300">

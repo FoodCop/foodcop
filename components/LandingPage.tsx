@@ -20,9 +20,9 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
         <HeroSection onNavigateToSignup={onNavigateToSignup} />
         <DailyPicksSection onNavigateToSignup={onNavigateToSignup} />
         <PinFoodSection onNavigateToSignup={onNavigateToSignup} />
+        <ExploreFoodSection onNavigateToSignup={onNavigateToSignup} />
         <CookWatchSection onNavigateToSignup={onNavigateToSignup} />
         <TakoBuddySection onNavigateToSignup={onNavigateToSignup} />
-        <ExploreFoodSection onNavigateToSignup={onNavigateToSignup} />
       </main>
       <FuzoFooter />
 

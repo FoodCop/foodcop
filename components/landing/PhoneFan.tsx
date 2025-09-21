@@ -8,22 +8,26 @@ import {
 import { useRef } from "react";
 
 /**
- * Props: pass image URLs for the three phone screens.
- * Place <PhoneFan /> anywhere on the LP (usually after the hero).
+ * A reusable element that displays three phones in a fanning animation on scroll.
+ * Control the size of this element with the `className` prop.
  */
-export default function PhoneFan({
+export function PhoneFan({
   leftSrc = "/img/screen-left.jpg",
   centerSrc = "/img/screen-center.jpg",
   rightSrc = "/img/screen-right.jpg",
+  className = "",
+  containerRef,
 }: {
   leftSrc?: string;
   centerSrc?: string;
   rightSrc?: string;
+  className?: string;
+  containerRef?: React.RefObject<HTMLElement>;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   // progress = 0 when the section top hits viewport bottom; 1 when section bottom hits viewport top
   const { scrollYProgress } = useScroll({
-    target: ref,
+    target: containerRef || ref,
     offset: ["start end", "end start"],
   });
   const prefersReduced = useReducedMotion();
@@ -32,9 +36,14 @@ export default function PhoneFan({
   const key = [0, 0.3, 0.5, 0.7, 1];
 
   // Left phone transforms
-  const leftX = useTransform(scrollYProgress, key, [0, -90, -110, -90, 0]);
-  const leftR = useTransform(scrollYProgress, key, [0, -12, -14, -12, 0]);
-  const leftS = useTransform(scrollYProgress, key, [0.96, 1, 1.02, 1, 0.96]);
+  const leftX = useTransform(scrollYProgress, key, [0, -120, -150, -120, 0]);
+  const leftY = useTransform(scrollYProgress, key, [49, -21, -51, -21, 49]);
+  const leftR = useTransform(scrollYProgress, key, [0, -15, -20, -15, 0]);
+  const leftS = useTransform(
+    scrollYProgress,
+    key,
+    [0.562, 0.585, 0.597, 0.585, 0.562]
+  );
   const leftShadow = useTransform(
     scrollYProgress,
     key,
@@ -43,12 +52,21 @@ export default function PhoneFan({
 
   // Center phone pops slightly
   const cY = useTransform(scrollYProgress, key, [10, 0, -10, 0, 10]);
-  const cS = useTransform(scrollYProgress, key, [0.95, 1, 1.04, 1, 0.95]);
+  const cS = useTransform(
+    scrollYProgress,
+    key,
+    [0.6175, 0.65, 0.676, 0.65, 0.6175]
+  );
 
   // Right phone transforms (mirror of left)
-  const rightX = useTransform(scrollYProgress, key, [0, 90, 110, 90, 0]);
-  const rightR = useTransform(scrollYProgress, key, [0, 12, 14, 12, 0]);
-  const rightS = useTransform(scrollYProgress, key, [0.96, 1, 1.02, 1, 0.96]);
+  const rightX = useTransform(scrollYProgress, key, [0, 120, 150, 120, 0]);
+  const rightY = useTransform(scrollYProgress, key, [49, -21, -51, -21, 49]);
+  const rightR = useTransform(scrollYProgress, key, [0, 15, 20, 15, 0]);
+  const rightS = useTransform(
+    scrollYProgress,
+    key,
+    [0.562, 0.585, 0.597, 0.585, 0.562]
+  );
   const rightShadow = useTransform(
     scrollYProgress,
     key,
@@ -58,57 +76,88 @@ export default function PhoneFan({
   const MotionDiv = prefersReduced ? "div" : motion.div;
 
   return (
+    <div ref={ref} className={`relative ${className}`}>
+      {/* Left phone */}
+      <MotionDiv
+        className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 will-change-transform"
+        style={
+          !prefersReduced
+            ? ({
+                x: leftX,
+                y: leftY,
+                rotateZ: leftR,
+                scale: leftS,
+              } as any)
+            : undefined
+        }
+        aria-hidden
+      >
+        <PhoneFrame
+          src={leftSrc}
+          shadowOpacity={!prefersReduced ? leftShadow : undefined}
+          className="origin-bottom"
+        />
+      </MotionDiv>
+
+      {/* Center phone */}
+      <MotionDiv
+        className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 will-change-transform"
+        style={!prefersReduced ? ({ y: cY, scale: cS } as any) : undefined}
+      >
+        <PhoneFrame src={centerSrc} elevated />
+      </MotionDiv>
+
+      {/* Right phone */}
+      <MotionDiv
+        className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 will-change-transform"
+        style={
+          !prefersReduced
+            ? ({
+                x: rightX,
+                y: rightY,
+                rotateZ: rightR,
+                scale: rightS,
+              } as any)
+            : undefined
+        }
+        aria-hidden
+      >
+        <PhoneFrame
+          src={rightSrc}
+          shadowOpacity={!prefersReduced ? rightShadow : undefined}
+          className="origin-bottom"
+        />
+      </MotionDiv>
+    </div>
+  );
+}
+
+/**
+ * A full-width section component that showcases the PhoneFan animation.
+ */
+export function PhoneFanSection({
+  leftSrc,
+  centerSrc,
+  rightSrc,
+}: {
+  leftSrc?: string;
+  centerSrc?: string;
+  rightSrc?: string;
+}) {
+  return (
     <section
-      ref={ref}
       className="relative overflow-hidden py-28 md:py-36"
       aria-label="FUZO mobile previews"
     >
       {/* soft gradient backdrop */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F14C35]/10 via-[#FF8C3A]/10 to-[#FFD74A]/20" />
       <div className="mx-auto grid max-w-6xl place-items-center px-6">
-        <div className="relative h-[70vh] w-full max-w-5xl">
-          {/* Left phone */}
-          <MotionDiv
-            className="absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 will-change-transform"
-            style={
-              !prefersReduced
-                ? { x: leftX, rotateZ: leftR, scale: leftS }
-                : undefined
-            }
-            aria-hidden
-          >
-            <PhoneFrame
-              src={leftSrc}
-              shadowOpacity={!prefersReduced ? leftShadow : undefined}
-              className="origin-center"
-            />
-          </MotionDiv>
-
-          {/* Center phone */}
-          <MotionDiv
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform"
-            style={!prefersReduced ? { y: cY, scale: cS } : undefined}
-          >
-            <PhoneFrame src={centerSrc} elevated />
-          </MotionDiv>
-
-          {/* Right phone */}
-          <MotionDiv
-            className="absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 will-change-transform"
-            style={
-              !prefersReduced
-                ? { x: rightX, rotateZ: rightR, scale: rightS }
-                : undefined
-            }
-            aria-hidden
-          >
-            <PhoneFrame
-              src={rightSrc}
-              shadowOpacity={!prefersReduced ? rightShadow : undefined}
-              className="origin-center"
-            />
-          </MotionDiv>
-        </div>
+        <PhoneFan
+          leftSrc={leftSrc}
+          centerSrc={centerSrc}
+          rightSrc={rightSrc}
+          className="h-[70vh] w-full max-w-5xl"
+        />
       </div>
     </section>
   );
@@ -155,5 +204,3 @@ function PhoneFrame({
     </motion.div>
   );
 }
-
-
