@@ -15,7 +15,7 @@ import {
   Location,
   RouteInfo,
 } from "./services/locationServiceBackend";
-import { platesService } from "./services/platesService";
+import { savedItemsService } from "./services/savedItemsService";
 
 import {
   GeolocationResult,
@@ -145,9 +145,33 @@ export function ScoutPage({
   // Load saved restaurants from backend
   const loadSavedRestaurants = async () => {
     try {
-      const savedRestaurants = await platesService.getSavedRestaurants();
-      setSavedRestaurants(savedRestaurants);
-      console.log("✅ Loaded saved restaurants:", savedRestaurants.length);
+      const savedItems = await savedItemsService.listSavedItems({
+        itemType: "restaurant",
+      });
+      
+      // Convert SavedItem to Restaurant format
+      const convertedRestaurants: Restaurant[] = savedItems.map((item) => ({
+        id: item.id,
+        placeId: item.item_id,
+        name: item.metadata.title || "Unknown Restaurant",
+        image: item.metadata.imageUrl || "",
+        rating: item.metadata.rating || 4.5,
+        cuisine: item.metadata.cuisine || ["Restaurant"],
+        priceLevel: item.metadata.priceLevel || 2,
+        address: item.metadata.address || "Unknown Address",
+        coordinates: item.metadata.coordinates || { lat: 0, lng: 0 },
+        isSaved: true,
+        photos: item.metadata.photos || [],
+        openHours: item.metadata.openHours || "Unknown",
+        reviewCount: item.metadata.reviewCount || 0,
+        distance: item.metadata.distance || "Unknown",
+        isOpen: item.metadata.isOpen ?? true,
+        phone: item.metadata.phone,
+        website: item.metadata.website,
+      }));
+      
+      setSavedRestaurants(convertedRestaurants);
+      console.log("✅ Loaded saved restaurants:", convertedRestaurants.length);
     } catch (error) {
       console.error("❌ Failed to load saved restaurants:", error);
     }

@@ -18,7 +18,7 @@ import {
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { platesService } from "../services/platesService";
+import { savedItemsService } from "../services/savedItemsService";
 import { FuzoTabs } from "./FuzoTabs";
 
 export interface Restaurant {
@@ -177,24 +177,24 @@ export function PlatesTab({
   const loadSavedItems = async () => {
     try {
       setLoading(true);
-      const savedRestaurants = await platesService.getSavedRestaurants();
+      const savedItems = await savedItemsService.listSavedItems({
+        itemType: "restaurant",
+      });
 
-      // Convert SavedRestaurant to Restaurant format
-      const convertedRestaurants: Restaurant[] = savedRestaurants.map(
-        (saved) => ({
-          id: saved.id,
-          placeId: saved.place_id,
-          name: saved.name,
-          image: saved.image || "",
-          rating: saved.rating,
-          cuisine: saved.cuisine.split(", "),
-          priceLevel: saved.price.length,
-          address: saved.location,
-          coordinates: saved.geometry?.location || { lat: 0, lng: 0 },
-          isSaved: true,
-          photos: [],
-        })
-      );
+      // Convert SavedItem to Restaurant format
+      const convertedRestaurants: Restaurant[] = savedItems.map((item) => ({
+        id: item.id,
+        placeId: item.item_id,
+        name: item.metadata.title || "Unknown Restaurant",
+        image: item.metadata.imageUrl || "",
+        rating: item.metadata.rating || 4.5,
+        cuisine: item.metadata.cuisine || ["Restaurant"],
+        priceLevel: item.metadata.priceLevel || 2,
+        address: item.metadata.address || "Unknown Address",
+        coordinates: item.metadata.coordinates || { lat: 0, lng: 0 },
+        isSaved: true,
+        photos: item.metadata.photos || [],
+      }));
 
       setRestaurants(convertedRestaurants);
       console.log("✅ Loaded saved restaurants:", convertedRestaurants.length);
@@ -207,9 +207,14 @@ export function PlatesTab({
 
   const handleUnsaveRestaurant = async (placeId: string) => {
     try {
-      const result = await platesService.unsaveRestaurant(placeId);
+      const result = await savedItemsService.unsaveItem({
+        itemId: placeId,
+        itemType: "restaurant",
+      });
+      
       if (result.success) {
-        setRestaurants((prev) => prev.filter((r) => r.place_id !== placeId));
+        setRestaurants((prev) => prev.filter((r) => r.placeId !== placeId));
+        onRestaurantUnsave?.(placeId);
         console.log("✅ Restaurant removed from saved list");
       }
     } catch (error) {
