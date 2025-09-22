@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { PlateItem, plateList, plateRemove } from "../../src/lib/plate";
+import { savedItemsService } from "../services/savedItemsService";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { FuzoTabs } from "../global/FuzoTabs";
 
@@ -197,11 +197,11 @@ export function PlacesTab({
   const loadSavedItems = async () => {
     try {
       setLoading(true);
-      const plateItems = await plateList({ itemType: "restaurant" });
+      const savedItems = await savedItemsService.listSavedItems({ itemType: "restaurant" });
 
-      // Convert PlateItem to Restaurant format
-      const convertedRestaurants: Restaurant[] = plateItems.map(
-        (item: PlateItem) => ({
+      // Convert SavedItem to Restaurant format
+      const convertedRestaurants: Restaurant[] = savedItems.map(
+        (item) => ({
           id: item.id,
           placeId: item.item_id,
           name: item.metadata.title || "Unknown Restaurant",
@@ -227,9 +227,16 @@ export function PlacesTab({
 
   const handleUnsaveRestaurant = async (placeId: string) => {
     try {
-      await plateRemove(placeId, "restaurant");
-      setRestaurants((prev) => prev.filter((r) => r.placeId !== placeId));
-      console.log("✅ Restaurant removed from saved list");
+      const result = await savedItemsService.unsaveItem({
+        itemId: placeId,
+        itemType: "restaurant",
+      });
+      
+      if (result.success) {
+        setRestaurants((prev) => prev.filter((r) => r.placeId !== placeId));
+        onRestaurantUnsave?.(placeId);
+        console.log("✅ Restaurant removed from saved list");
+      }
     } catch (error) {
       console.error("Failed to unsave restaurant:", error);
     }
