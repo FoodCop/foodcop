@@ -237,18 +237,14 @@ class SavedItemsService {
         .eq("user_id", user.id)
         .eq("item_type", itemType)
         .eq("item_id", itemId)
-        .single();
+        .limit(1);
 
       if (error) {
-        if (error.code === "PGRST116") {
-          // No rows returned - item not saved
-          return false;
-        }
         console.error("Check saved item error:", error);
         return false;
       }
 
-      return !!data;
+      return data && data.length > 0;
     } catch (error) {
       console.error("Check saved item error:", error);
       return false;
