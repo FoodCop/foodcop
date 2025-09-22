@@ -26,7 +26,11 @@ interface FoodCard {
 // Note: Real data is now fetched via useBotPosts hook
 // No more hardcoded mock data - only real masterbot posts from Supabase
 
-export function SwipeDeck() {
+interface SwipeDeckProps {
+  onMasterBotSelect?: (botId: string) => void;
+}
+
+export function SwipeDeck({ onMasterBotSelect }: SwipeDeckProps) {
   const [currentCard, setCurrentCard] = useState<FoodCard | null>(null);
   const [cardCount, setCardCount] = useState(1);
   const [likedCards, setLikedCards] = useState<string[]>([]);
@@ -178,6 +182,7 @@ export function SwipeDeck() {
         onSkip={handleSkip}
         onShare={handleShare}
         onSaveToPlate={handleSaveToPlate}
+        onMasterBotSelect={onMasterBotSelect}
       />
 
       {/* Desktop Action Buttons - Below Card */}

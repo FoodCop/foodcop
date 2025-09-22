@@ -94,12 +94,42 @@ export function useBotPosts() {
       setLoading(true);
       console.log("🔄 useBotPosts: Starting to fetch posts...");
 
-      // Use the new Supabase content service to get master bot posts
-      const posts = await supabaseContentService.getPosts({ limit: 20 });
-      console.log("📊 useBotPosts: Fetched", posts.length, "posts");
+      // Get posts from all Masterbots to ensure diversity
+      const allMasterBots = [
+        "nomad_aurelia",
+        "spice_scholar_anika",
+        "sommelier_seb",
+        "plant_pioneer_lila",
+        "zen_minimalist_jun",
+        "coffee_pilgrim_omar",
+        "adventure_rafa",
+      ];
+
+      // Fetch posts from each Masterbot and mix them
+      const postsPerBot = Math.ceil(20 / allMasterBots.length);
+      const allPosts = [];
+
+      for (const botUsername of allMasterBots) {
+        const botPosts = await supabaseContentService.getPosts({
+          botUsername,
+          limit: postsPerBot,
+          sortBy: "random",
+        });
+        allPosts.push(...botPosts);
+      }
+
+      // Shuffle the mixed posts and take the first 20
+      const shuffledPosts = allPosts
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 20);
+      console.log(
+        "📊 useBotPosts: Fetched",
+        shuffledPosts.length,
+        "posts from all Masterbots"
+      );
 
       // Convert to BotPost format for compatibility
-      const formattedPosts: BotPost[] = posts.map((post) => ({
+      const formattedPosts: BotPost[] = shuffledPosts.map((post) => ({
         id: post.id,
         bot_id: post.master_bot_id,
         user_id: post.master_bot_id,
@@ -143,7 +173,7 @@ export function useBotPosts() {
         bot: {
           username: post.bot_username,
           display_name: post.bot_display_name,
-          avatar_url: post.bot_avatar_url,
+          avatar_url: getCorrectAvatarUrl(post.bot_username),
           personality_type: post.personality_trait || "Food Expert",
           specialties: [post.personality_trait || "Food Expert"],
         },
@@ -248,4 +278,19 @@ function getCountryName(countryCode: string): string {
   };
 
   return countryMap[countryCode] || countryCode;
+}
+
+// Get the correct avatar URL for each Masterbot using local images
+function getCorrectAvatarUrl(username: string): string {
+  const avatarMap: { [key: string]: string } = {
+    nomad_aurelia: "/images/users/Aurelia Voss.png",
+    sommelier_seb: "/images/users/Sebastian LeClair.png",
+    plant_pioneer_lila: "/images/users/Lila Cheng.png",
+    adventure_rafa: "/images/users/Rafael Mendez.png",
+    spice_scholar_anika: "/images/users/Anika Kapoor.png",
+    coffee_pilgrim_omar: "/images/users/Omar Darzi.png",
+    zen_minimalist_jun: "/images/users/Jun Tanaka.png",
+  };
+
+  return avatarMap[username] || "/images/users/Aurelia Voss.png";
 }

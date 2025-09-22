@@ -61,6 +61,9 @@ interface PlacesTabProps {
   showViewToggle?: boolean;
   showStats?: boolean;
   className?: string;
+  // External data props for Masterbot profiles
+  externalRestaurants?: Restaurant[];
+  externalRecipes?: Recipe[];
 }
 
 // List view component for restaurants
@@ -156,6 +159,8 @@ export function PlacesTab({
   showViewToggle = true,
   showStats = true,
   className = "",
+  externalRestaurants,
+  externalRecipes,
 }: PlacesTabProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortBy>("recent");
@@ -167,12 +172,27 @@ export function PlacesTab({
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
-  // Load saved items from backend
+  // Load saved items from backend or use external data
   useEffect(() => {
-    if (user) {
+    if (externalRestaurants || externalRecipes) {
+      // Use external data (for Masterbot profiles)
+      console.log("🔍 PlacesTab: Using external data", {
+        restaurants: externalRestaurants?.length || 0,
+        recipes: externalRecipes?.length || 0,
+        sampleRestaurants: externalRestaurants?.slice(0, 3).map((r) => ({
+          id: r.id,
+          name: r.name,
+          placeId: r.placeId,
+        })),
+      });
+      setRestaurants(externalRestaurants || []);
+      setRecipes(externalRecipes || []);
+      setLoading(false);
+    } else if (user) {
+      // Load user's saved items
       loadSavedItems();
     }
-  }, [user]);
+  }, [user, externalRestaurants, externalRecipes]);
 
   const loadSavedItems = async () => {
     try {
@@ -314,6 +334,17 @@ export function PlacesTab({
           return 0; // Keep original order for 'recent'
       }
     });
+
+  // Debug logging for filtered restaurants
+  console.log("🔍 PlacesTab: Filtered restaurants", {
+    total: restaurants.length,
+    filtered: filteredRestaurants.length,
+    sample: filteredRestaurants.slice(0, 3).map((r) => ({
+      id: r.id,
+      name: r.name,
+      placeId: r.placeId,
+    })),
+  });
 
   const filteredRecipes = recipes.filter((recipe) => {
     const matchesSearch =

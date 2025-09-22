@@ -3,6 +3,7 @@ import { BottomNavigation } from "./BottomNavigation";
 import { FeedHeader } from "./feed/FeedHeader";
 import { SwipeDeck } from "./feed/SwipeDeck";
 import { FuzoAIAssistant } from "./FuzoAIAssistant";
+import { PlatePage } from "./PlatePage";
 
 interface FeedPageProps {
   onNavigateToScout?: () => void;
@@ -23,6 +24,9 @@ export function FeedPage({
 }: FeedPageProps) {
   const [activeTab, setActiveTab] = useState("feed"); // Default to feed tab
   const [unreadChatCount, setUnreadChatCount] = useState(3); // Mock unread count
+  const [selectedMasterBot, setSelectedMasterBot] = useState<string | null>(
+    null
+  );
 
   const handleTabChange = (tab: string) => {
     if (tab === "scout" && onNavigateToScout) {
@@ -35,6 +39,28 @@ export function FeedPage({
       setActiveTab(tab);
     }
   };
+
+  const handleMasterBotSelect = (botId: string) => {
+    setSelectedMasterBot(botId);
+  };
+
+  const handleCloseMasterBotProfile = () => {
+    setSelectedMasterBot(null);
+  };
+
+  // Show Masterbot profile if selected (using PlatePage)
+  if (selectedMasterBot) {
+    return (
+      <PlatePage
+        onNavigateBack={handleCloseMasterBotProfile}
+        onNavigateToFriend={(friendId) => {
+          // Handle friend navigation if needed
+          console.log("Navigate to friend:", friendId);
+        }}
+        masterBotId={selectedMasterBot}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col relative">
@@ -50,7 +76,7 @@ export function FeedPage({
       <div className="flex-1 flex flex-col items-center justify-center p-3 pb-20">
         {/* Card Container */}
         <div className="relative w-full max-w-sm h-[550px] mx-auto">
-          <SwipeDeck />
+          <SwipeDeck onMasterBotSelect={handleMasterBotSelect} />
         </div>
       </div>
 

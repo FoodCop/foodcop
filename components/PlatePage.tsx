@@ -12,10 +12,12 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // Removed mock data import - using only real user data
 import { useAuth } from "../contexts/AuthContext";
+import { getMasterBotById } from "./constants/masterBotsData";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useMasterBotPlateData } from "./hooks/useMasterBotPlateData";
 import { CrewTab } from "./plate/CrewTab";
 import { PhotosTab } from "./plate/PhotosTab";
 import { PlacesTab } from "./plate/PlacesTab";
@@ -36,50 +38,146 @@ type PlateTab =
 interface PlatePageProps {
   onNavigateBack?: () => void;
   onNavigateToFriend?: (friendId: string) => void;
+  masterBotId?: string;
 }
 
 export function PlatePage({
   onNavigateBack,
   onNavigateToFriend,
+  masterBotId,
 }: PlatePageProps) {
   const [activeTab, setActiveTab] = useState<PlateTab>("crew");
   const [isEditing, setIsEditing] = useState(false);
   const { user, profile, signOut } = useAuth();
 
-  // Use only real profile data from context
-  const userProfile = {
-    id: user?.id || "new_user",
-    displayName:
-      profile?.display_name ||
-      user?.user_metadata?.full_name ||
-      user?.email?.split("@")[0] ||
-      "FUZO User",
-    handle: `@${profile?.username || user?.email?.split("@")[0] || "user"}`,
-    avatar: profile?.avatar_url || user?.user_metadata?.avatar_url || null,
-    email: profile?.email || user?.email || "",
-    bio: profile?.bio || "",
-    location:
-      [
-        profile?.location_city,
-        profile?.location_state,
-        profile?.location_country,
-      ]
-        .filter(Boolean)
-        .join(", ") || "",
-    preferences: [
-      ...(profile?.dietary_preferences || []),
-      ...(profile?.cuisine_preferences || []),
-    ],
-    points: profile?.total_points || 0,
-    // Fresh profile data - no mock data
-    crew: [],
-    savedPlaces: [],
-    savedRecipes: [],
-    photos: [],
-    videos: [],
-    badges: [],
-    achievements: [],
+  // Fetch Masterbot plate data if viewing a Masterbot
+  const { plateData: masterBotPlateData, loading: plateDataLoading } =
+    useMasterBotPlateData(masterBotId);
+
+  // Set default tab to "places" when viewing a Masterbot
+  useEffect(() => {
+    if (masterBotId) {
+      setActiveTab("places");
+    }
+  }, [masterBotId]);
+
+  // Get Masterbot profile if masterBotId is provided
+  const masterBot = masterBotId ? getMasterBotById(masterBotId) : null;
+
+  // Get correct avatar URL for Masterbots (local images)
+  const getMasterBotAvatarUrl = (botId: string): string => {
+    const avatarMap: { [key: string]: string } = {
+      "aurelia-voss": "/images/users/Aurelia Voss.png",
+      "sebastian-leclair": "/images/users/Sebastian LeClair.png",
+      "lila-cheng": "/images/users/Lila Cheng.png",
+      "rafael-mendez": "/images/users/Rafael Mendez.png",
+      "anika-kapoor": "/images/users/Anika Kapoor.png",
+      "omar-darzi": "/images/users/Omar Darzi.png",
+      "jun-tanaka": "/images/users/Jun Tanaka.png",
+    };
+    return avatarMap[botId] || "/images/users/Aurelia Voss.png";
   };
+
+  // Convert Masterbot places to Restaurant format for PlacesTab
+  const convertMasterBotPlacesToRestaurants = (places: any[]) => {
+    return places.map((place) => ({
+      id: place.id,
+      placeId: place.id,
+      name: place.name,
+      image: place.image,
+      rating: place.rating,
+      cuisine: [place.cuisine],
+      location: place.location,
+      priceRange: place.price_range,
+      savedAt: place.saved_at,
+      tags: place.tags || [],
+      metadata: {
+        title: place.name,
+        imageUrl: place.image,
+        description: place.description,
+        restaurant_name: place.restaurant_name,
+        content_type: place.content_type,
+        personality_trait: place.personality_trait,
+        post_id: place.post_id,
+        post_index: place.post_index,
+      },
+    }));
+  };
+
+  // Convert Masterbot recipes to Recipe format for PlacesTab
+  const convertMasterBotRecipesToRecipes = (recipes: any[]) => {
+    return recipes.map((recipe) => ({
+      id: recipe.id,
+      title: recipe.title,
+      image: recipe.image,
+      description: recipe.description,
+      difficulty: recipe.difficulty,
+      prepTime: recipe.prep_time,
+      cuisine: recipe.cuisine,
+      savedAt: recipe.saved_at,
+      tags: recipe.tags || [],
+      metadata: {
+        title: recipe.title,
+        imageUrl: recipe.image,
+        description: recipe.description,
+      },
+    }));
+  };
+
+  // Use Masterbot profile or real user profile data
+  const userProfile = masterBot
+    ? {
+        id: masterBot.id,
+        displayName: masterBot.name,
+        handle: masterBot.username,
+        avatar: getMasterBotAvatarUrl(masterBotId),
+        email: "",
+        bio: masterBot.bio,
+        location: masterBot.location,
+        preferences: masterBot.specialty,
+        points: masterBot.stats.points,
+        // Masterbot data from their own posts
+        crew: masterBotPlateData.crew,
+        savedPlaces: masterBotPlateData.savedPlaces,
+        savedRecipes: masterBotPlateData.savedRecipes,
+        photos: masterBotPlateData.photos,
+        videos: masterBotPlateData.videos,
+        badges: masterBot.badges,
+        achievements: [],
+      }
+    : {
+        id: user?.id || "new_user",
+        displayName:
+          profile?.display_name ||
+          user?.user_metadata?.full_name ||
+          user?.email?.split("@")[0] ||
+          "FUZO User",
+        handle: `@${profile?.username || user?.email?.split("@")[0] || "user"}`,
+        avatar: profile?.avatar_url || user?.user_metadata?.avatar_url || null,
+        email: profile?.email || user?.email || "",
+        bio: profile?.bio || "",
+        location:
+          [
+            profile?.location_city,
+            profile?.location_state,
+            profile?.location_country,
+          ]
+            .filter(Boolean)
+            .join(", ") || "",
+        preferences: [
+          ...(profile?.dietary_preferences || []),
+          ...(profile?.cuisine_preferences || []),
+        ],
+        points: profile?.total_points || 0,
+        // Fresh profile data - no mock data
+        crew: [],
+        savedPlaces: [],
+        savedRecipes: [],
+        photos: [],
+        videos: [],
+        badges: [],
+        achievements: [],
+      };
 
   const handleSignOut = async () => {
     try {
@@ -129,6 +227,20 @@ export function PlatePage({
             showFilters={true}
             showViewToggle={false}
             showStats={true}
+            externalRestaurants={
+              masterBot
+                ? convertMasterBotPlacesToRestaurants(
+                    masterBotPlateData.savedPlaces
+                  )
+                : undefined
+            }
+            externalRecipes={
+              masterBot
+                ? convertMasterBotRecipesToRecipes(
+                    masterBotPlateData.savedRecipes
+                  )
+                : undefined
+            }
           />
         );
       case "recipes":
@@ -179,16 +291,20 @@ export function PlatePage({
               </button>
             )}
             <div className="flex space-x-2">
-              <button className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors border border-gray-200">
-                <Settings className="w-5 h-5 text-[#0B1F3A]" />
-              </button>
-              <button
-                onClick={handleSignOut}
-                className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors border border-gray-200"
-                title="Sign Out"
-              >
-                <LogOut className="w-5 h-5 text-[#0B1F3A]" />
-              </button>
+              {!masterBot && (
+                <>
+                  <button className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors border border-gray-200">
+                    <Settings className="w-5 h-5 text-[#0B1F3A]" />
+                  </button>
+                  <button
+                    onClick={handleSignOut}
+                    className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors border border-gray-200"
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-5 h-5 text-[#0B1F3A]" />
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
@@ -202,13 +318,15 @@ export function PlatePage({
                   alt={userProfile.displayName}
                   className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-white shadow-lg"
                 />
-                <button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className="absolute bottom-0 right-0 w-8 h-8 bg-[#F14C35] rounded-full flex items-center justify-center shadow-lg border-2 border-white hover:bg-[#E63E26] transition-colors"
-                  style={{ transform: "translate(25%, 25%)" }}
-                >
-                  <Edit className="w-4 h-4 text-white" />
-                </button>
+                {!masterBot && (
+                  <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className="absolute bottom-0 right-0 w-8 h-8 bg-[#F14C35] rounded-full flex items-center justify-center shadow-lg border-2 border-white hover:bg-[#E63E26] transition-colors"
+                    style={{ transform: "translate(25%, 25%)" }}
+                  >
+                    <Edit className="w-4 h-4 text-white" />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -218,6 +336,13 @@ export function PlatePage({
                 {userProfile.displayName}
               </h1>
               <p className="text-[#A6471E] font-medium">{userProfile.handle}</p>
+              {masterBot && (
+                <div className="mt-2">
+                  <span className="px-3 py-1 bg-[#F14C35] text-white rounded-full text-sm font-medium">
+                    Master Bot
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Bio */}

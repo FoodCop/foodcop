@@ -29,6 +29,7 @@ interface SwipeCardProps {
   onSkip?: () => void;
   onSaveToPlate?: () => void;
   onShare?: () => void;
+  onMasterBotSelect?: (botId: string) => void;
 }
 
 export function SwipeCard({
@@ -46,6 +47,7 @@ export function SwipeCard({
   onSkip,
   onSaveToPlate,
   onShare,
+  onMasterBotSelect,
 }: SwipeCardProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -116,6 +118,26 @@ export function SwipeCard({
 
   const handleTouchEnd = () => {
     handleEnd();
+  };
+
+  // Handle Masterbot avatar click
+  const handleMasterBotAvatarClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isMasterBot && botData?.username && onMasterBotSelect) {
+      // Convert username to bot ID format (kebab-case)
+      const username = botData.username.replace("@", "");
+      const botIdMap: { [key: string]: string } = {
+        nomad_aurelia: "aurelia-voss",
+        sommelier_seb: "sebastian-leclair",
+        plant_pioneer_lila: "lila-cheng",
+        adventure_rafa: "rafael-mendez",
+        spice_scholar_anika: "anika-kapoor",
+        coffee_pilgrim_omar: "omar-darzi",
+        zen_minimalist_jun: "jun-tanaka",
+      };
+      const botId = botIdMap[username] || username;
+      onMasterBotSelect(botId);
+    }
   };
 
   useEffect(() => {
@@ -223,7 +245,14 @@ export function SwipeCard({
         {/* Master Bot Publisher - Top Left */}
         <div className="absolute top-6 left-6 flex items-center space-x-3">
           <div className="relative">
-            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg">
+            <div
+              className={`w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg ${
+                isMasterBot
+                  ? "cursor-pointer hover:scale-105 transition-transform"
+                  : ""
+              }`}
+              onClick={isMasterBot ? handleMasterBotAvatarClick : undefined}
+            >
               {botData?.avatar_url ? (
                 <img
                   src={botData.avatar_url}

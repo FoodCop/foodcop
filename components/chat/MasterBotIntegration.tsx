@@ -8,9 +8,8 @@ import { Avatar } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-// import { MasterBotChatSystem } from '../debug/MasterBotChatSystem'; // Moved to debug folder
 
-// Simple placeholder for MasterBotChatSystem
+// MasterBotChatSystem placeholder - will be implemented when needed
 const MasterBotChatSystem = ({
   botId,
   onClose,
@@ -27,7 +26,7 @@ const MasterBotChatSystem = ({
     </div>
     <div className="flex-1 p-4">
       <p className="text-gray-500">
-        Chat interface temporarily disabled. Component moved to debug folder.
+        Chat interface temporarily disabled. Will be implemented soon.
       </p>
     </div>
   </div>
