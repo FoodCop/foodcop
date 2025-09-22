@@ -15,7 +15,7 @@ import {
 import { useEffect, useState } from "react";
 // Removed mock data import - using only real user data
 import { useAuth } from "../contexts/AuthContext";
-import { getMasterBotById } from "./constants/masterBotsData";
+import { getAllMasterBots, getMasterBotById } from "./constants/masterBotsData";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { useMasterBotPlateData } from "./hooks/useMasterBotPlateData";
 import { CrewTab } from "./plate/CrewTab";
@@ -39,20 +39,23 @@ interface PlatePageProps {
   onNavigateBack?: () => void;
   onNavigateToFriend?: (friendId: string) => void;
   masterBotId?: string;
+  userId?: string; // If provided, viewing another user's profile
 }
 
 export function PlatePage({
   onNavigateBack,
   onNavigateToFriend,
   masterBotId,
+  userId,
 }: PlatePageProps) {
   const [activeTab, setActiveTab] = useState<PlateTab>("crew");
   const [isEditing, setIsEditing] = useState(false);
   const { user, profile, signOut } = useAuth();
 
   // Fetch Masterbot plate data if viewing a Masterbot
-  const { plateData: masterBotPlateData, loading: plateDataLoading } =
-    useMasterBotPlateData(masterBotId);
+  const { plateData: masterBotPlateData } = useMasterBotPlateData(
+    masterBotId || null
+  );
 
   // Set default tab to "places" when viewing a Masterbot
   useEffect(() => {
@@ -63,6 +66,39 @@ export function PlatePage({
 
   // Get Masterbot profile if masterBotId is provided
   const masterBot = masterBotId ? getMasterBotById(masterBotId) : null;
+
+  // Determine if we're viewing our own profile
+  const isOwnProfile = !masterBotId && !userId;
+
+  // Create crew of other Master Bots when viewing a Master Bot profile
+  const getMasterBotCrew = (currentBotId: string) => {
+    const allBots = getAllMasterBots();
+    return allBots
+      .filter((bot) => bot.id !== currentBotId)
+      .map((bot) => ({
+        id: bot.id,
+        displayName: bot.name,
+        handle: bot.username,
+        avatar: getMasterBotAvatarUrl(bot.id),
+        bio: bot.bio,
+        points: bot.stats.points,
+        preferences: bot.specialty,
+        badges: bot.badges.map((badge) => ({
+          id: badge.id,
+          name: badge.name,
+          description: badge.description,
+          icon: badge.icon,
+          color: badge.color,
+          earnedAt: new Date().toISOString(),
+          isUnlocked: true,
+        })),
+        isFollowing: false,
+        mutualFriends: Math.floor(Math.random() * 5) + 1, // Random mutual friends for variety
+        savedPlaces: [],
+        photos: [],
+        reviews: [],
+      }));
+  };
 
   // Get correct avatar URL for Masterbots (local images)
   const getMasterBotAvatarUrl = (botId: string): string => {
@@ -130,14 +166,16 @@ export function PlatePage({
         id: masterBot.id,
         displayName: masterBot.name,
         handle: masterBot.username,
-        avatar: getMasterBotAvatarUrl(masterBotId),
+        avatar: getMasterBotAvatarUrl(masterBotId!),
         email: "",
         bio: masterBot.bio,
         location: masterBot.location,
         preferences: masterBot.specialty,
         points: masterBot.stats.points,
-        // Masterbot data from their own posts
-        crew: masterBotPlateData.crew,
+        // Masterbot crew - other Master Bots
+        crew: masterBotId
+          ? getMasterBotCrew(masterBotId)
+          : masterBotPlateData.crew,
         savedPlaces: masterBotPlateData.savedPlaces,
         savedRecipes: masterBotPlateData.savedRecipes,
         photos: masterBotPlateData.photos,
@@ -217,7 +255,11 @@ export function PlatePage({
     switch (activeTab) {
       case "crew":
         return (
-          <CrewTab crew={userProfile.crew} onFriendClick={onNavigateToFriend} />
+          <CrewTab
+            crew={userProfile.crew}
+            onFriendClick={onNavigateToFriend}
+            isMasterBotCrew={!!masterBot}
+          />
         );
       case "places":
         return (
@@ -260,7 +302,11 @@ export function PlatePage({
         return <PointsTab currentPoints={userProfile.points} />;
       default:
         return (
-          <CrewTab crew={userProfile.crew} onFriendClick={onNavigateToFriend} />
+          <CrewTab
+            crew={userProfile.crew}
+            onFriendClick={onNavigateToFriend}
+            isMasterBotCrew={!!masterBot}
+          />
         );
     }
   };
@@ -291,7 +337,7 @@ export function PlatePage({
               </button>
             )}
             <div className="flex space-x-2">
-              {!masterBot && (
+              {!masterBot && isOwnProfile && (
                 <>
                   <button className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-colors border border-gray-200">
                     <Settings className="w-5 h-5 text-[#0B1F3A]" />
@@ -318,7 +364,7 @@ export function PlatePage({
                   alt={userProfile.displayName}
                   className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-white shadow-lg"
                 />
-                {!masterBot && (
+                {!masterBot && isOwnProfile && (
                   <button
                     onClick={() => setIsEditing(!isEditing)}
                     className="absolute bottom-0 right-0 w-8 h-8 bg-[#F14C35] rounded-full flex items-center justify-center shadow-lg border-2 border-white hover:bg-[#E63E26] transition-colors"
@@ -384,10 +430,12 @@ export function PlatePage({
               </div>
             </div>
 
-            {/* Edit Profile Button */}
-            <button className="px-6 py-3 bg-[#F14C35] text-white rounded-xl font-medium hover:bg-[#E63E26] transition-colors">
-              Edit Profile
-            </button>
+            {/* Edit Profile Button - Only show for own profile */}
+            {isOwnProfile && (
+              <button className="px-6 py-3 bg-[#F14C35] text-white rounded-xl font-medium hover:bg-[#E63E26] transition-colors">
+                Edit Profile
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -5,21 +5,34 @@ import { ImageWithFallback } from "../figma/ImageWithFallback";
 interface CrewTabProps {
   crew: Friend[];
   onFriendClick?: (friendId: string) => void;
+  isMasterBotCrew?: boolean;
 }
 
-export function CrewTab({ crew, onFriendClick }: CrewTabProps) {
+export function CrewTab({
+  crew,
+  onFriendClick,
+  isMasterBotCrew = false,
+}: CrewTabProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-[#0B1F3A]">Your Crew</h2>
-          <p className="text-sm text-gray-600">{crew.length} food explorers</p>
+          <h2 className="text-lg font-semibold text-[#0B1F3A]">
+            {isMasterBotCrew ? "Master Bot Crew" : "Your Crew"}
+          </h2>
+          <p className="text-sm text-gray-600">
+            {isMasterBotCrew
+              ? `${crew.length} master food explorers`
+              : `${crew.length} food explorers`}
+          </p>
         </div>
-        <button className="px-4 py-2 bg-[#F14C35] text-white rounded-xl font-medium hover:bg-[#E63E26] transition-colors flex items-center space-x-2">
-          <UserPlus className="w-4 h-4" />
-          <span>Invite Friends</span>
-        </button>
+        {!isMasterBotCrew && (
+          <button className="px-4 py-2 bg-[#F14C35] text-white rounded-xl font-medium hover:bg-[#E63E26] transition-colors flex items-center space-x-2">
+            <UserPlus className="w-4 h-4" />
+            <span>Invite Friends</span>
+          </button>
+        )}
       </div>
 
       {crew.length === 0 ? (
