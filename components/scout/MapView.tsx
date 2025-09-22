@@ -663,10 +663,10 @@ export function MapView({
   // Load nearby places from Google Places via backend
   const loadNearbyPlaces = async () => {
     try {
-      const places = await mapLibreLocationService.searchNearbyPlaces(
+      const places = await mapLibreLocationService.getNearbyPlaces(
         centerCoords,
-        5000, // 5km radius
-        "restaurant"
+        "restaurant",
+        5000 // 5km radius
       );
 
       setNearbyPlaces(places);
