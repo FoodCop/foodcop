@@ -3,10 +3,18 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { UserPhoto } from "../constants/profileData";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import {
-  platesService,
-  PlatePhoto as SavedPhoto,
-} from "../services/platesService";
+import { savedItemsService, SavedItem } from "../services/savedItemsService";
+
+interface SavedPhoto {
+  id: string;
+  image: string;
+  caption: string;
+  tags: string[];
+  points: number;
+  likes: number;
+  uploadedAt: string;
+  location?: string | null;
+}
 
 interface PhotosTabProps {
   photos: UserPhoto[];
@@ -28,7 +36,22 @@ export function PhotosTab({ photos }: PhotosTabProps) {
   const loadSavedPhotos = async () => {
     try {
       setLoading(true);
-      const photos = await platesService.getSavedPhotos();
+      const savedItems = await savedItemsService.listSavedItems({
+        itemType: "photo",
+      });
+      
+      // Convert SavedItem to SavedPhoto format
+      const photos: SavedPhoto[] = savedItems.map((item) => ({
+        id: item.id,
+        image: item.metadata.imageUrl || "",
+        caption: item.metadata.caption || "",
+        tags: item.metadata.tags || [],
+        points: item.metadata.points || 0,
+        likes: item.metadata.likes || 0,
+        uploadedAt: item.created_at,
+        location: item.metadata.location || null,
+      }));
+      
       setSavedPhotos(photos);
     } catch (error) {
       console.error("Failed to load saved photos:", error);
@@ -51,9 +74,25 @@ export function PhotosTab({ photos }: PhotosTabProps) {
         location: "My Kitchen",
       };
 
-      const result = await platesService.savePhoto(samplePhoto);
-      if (result.success && result.savedPhoto) {
-        setSavedPhotos((prev) => [result.savedPhoto!, ...prev]);
+      const result = await savedItemsService.saveItem({
+        itemId: `photo-${Date.now()}`,
+        itemType: "photo",
+        metadata: samplePhoto,
+      });
+      
+      if (result.success) {
+        const newPhoto: SavedPhoto = {
+          id: result.savedItem!.id,
+          image: samplePhoto.image,
+          caption: samplePhoto.caption,
+          tags: samplePhoto.tags,
+          points: samplePhoto.points,
+          likes: 0,
+          uploadedAt: result.savedItem!.created_at,
+          location: samplePhoto.location,
+        };
+        
+        setSavedPhotos((prev) => [newPhoto, ...prev]);
         console.log("✅ Photo added successfully");
       }
     } catch (error) {

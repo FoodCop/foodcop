@@ -426,9 +426,10 @@ export function ScoutPage({
     try {
       if (restaurant.isSaved) {
         // Unsave restaurant
-        const result = await platesService.unsaveRestaurant(
-          restaurant.placeId || restaurant.id
-        );
+        const result = await savedItemsService.unsaveItem({
+          itemId: restaurant.placeId || restaurant.id,
+          itemType: "restaurant",
+        });
         if (result.success) {
           const updatedRestaurants = restaurants.map((r) =>
             r.id === restaurant.id ? { ...r, isSaved: false } : r
@@ -448,18 +449,25 @@ export function ScoutPage({
         }
       } else {
         // Save restaurant
-        const result = await platesService.saveRestaurant({
-          id: restaurant.id,
-          place_id: restaurant.placeId || restaurant.id,
-          name: restaurant.name,
-          image: restaurant.image,
-          rating: restaurant.rating,
-          cuisine: restaurant.cuisine.join(", "),
-          price: "$".repeat(restaurant.priceLevel),
-          location: restaurant.address,
-          savedAt: new Date().toISOString(),
-          geometry: {
-            location: restaurant.coordinates,
+        const result = await savedItemsService.saveItem({
+          itemId: restaurant.placeId || restaurant.id,
+          itemType: "restaurant",
+          metadata: {
+            title: restaurant.name,
+            imageUrl: restaurant.image,
+            rating: restaurant.rating,
+            cuisine: restaurant.cuisine,
+            priceLevel: restaurant.priceLevel,
+            address: restaurant.address,
+            coordinates: restaurant.coordinates,
+            openHours: restaurant.openHours,
+            reviewCount: restaurant.reviewCount,
+            distance: restaurant.distance,
+            isOpen: restaurant.isOpen,
+            phone: restaurant.phone,
+            website: restaurant.website,
+            photos: restaurant.photos,
+            savedAt: new Date().toISOString(),
           },
         });
 
