@@ -7,11 +7,31 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "api/ai/status.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/ai/complete.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/ai/actions.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/ai/chat.ts",
+      "use": "@vercel/node"
     }
   ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "routes": [
+    {
+      "src": "/api/ai/(.*)",
+      "dest": "/api/ai/$1"
+    },
     {
       "src": "/assets/(.*)",
       "dest": "/assets/$1"
