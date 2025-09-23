@@ -4,10 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { API_CONFIG } from "../config/apiConfig";
 import type { Restaurant } from "../ScoutPage";
 import { backendService } from "../services/backendService";
-import {
-  LocationData,
-  mapLibreLocationService,
-} from "../services/mapLibreLocationService";
+import { LocationData } from "../services/mapLibreLocationService";
 // MapLibre custom styles are imported in globals.css
 
 // MapLibre GL JS types
@@ -17,6 +14,7 @@ interface MapViewProps {
   selectedRestaurant: Restaurant | null;
   onRestaurantSelect: (restaurant: Restaurant) => void;
   currentLocation?: { lat: number; lng: number }; // Add current location prop
+  searchRadius?: number; // Add search radius prop
 }
 
 export function MapView({
@@ -24,6 +22,7 @@ export function MapView({
   selectedRestaurant,
   onRestaurantSelect,
   currentLocation,
+  searchRadius = 5000,
 }: MapViewProps) {
   const [zoomLevel, setZoomLevel] = useState(14);
   const [centerCoords, setCenterCoords] = useState({
@@ -43,6 +42,7 @@ export function MapView({
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
   const popupRef = useRef<maplibregl.Popup | null>(null);
   const userLocationMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const searchRadiusCircleRef = useRef<maplibregl.CircleLayer | null>(null);
 
   // Check backend availability and initialize MapLibre
   useEffect(() => {
@@ -395,6 +395,66 @@ export function MapView({
     }
   }, [currentLocation]);
 
+  // Update search radius circle on map
+  const updateSearchRadiusCircle = () => {
+    if (!mapLibreRef.current || !currentLocation) return;
+
+    // Remove existing circle if it exists
+    if (searchRadiusCircleRef.current) {
+      if (mapLibreRef.current.getLayer("search-radius")) {
+        mapLibreRef.current.removeLayer("search-radius");
+      }
+      if (mapLibreRef.current.getSource("search-radius")) {
+        mapLibreRef.current.removeSource("search-radius");
+      }
+    }
+
+    // Add new circle for search radius
+    mapLibreRef.current.addSource("search-radius", {
+      type: "geojson",
+      data: {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [currentLocation.lng, currentLocation.lat],
+        },
+      },
+    });
+
+    // Add circle layer
+    mapLibreRef.current.addLayer({
+      id: "search-radius",
+      type: "circle",
+      source: "search-radius",
+      paint: {
+        "circle-radius": {
+          stops: [
+            [0, 0],
+            [20, (searchRadius / 111320) * 100], // Convert meters to approximate degrees
+          ],
+          base: 1.75,
+        },
+        "circle-color": "#F14C35",
+        "circle-opacity": 0.1,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#F14C35",
+        "circle-stroke-opacity": 0.3,
+      },
+    });
+
+    searchRadiusCircleRef.current = mapLibreRef.current.getLayer(
+      "search-radius"
+    ) as maplibregl.CircleLayer;
+  };
+
+  // Reload nearby places when search radius changes
+  useEffect(() => {
+    if (currentLocation && mapLoaded && backendAvailable) {
+      loadNearbyPlaces();
+      updateSearchRadiusCircle();
+    }
+  }, [searchRadius, currentLocation, mapLoaded, backendAvailable]);
+
   // Update markers when restaurants change
   useEffect(() => {
     if (!mapLibreRef.current || !mapLoaded) return;
@@ -660,18 +720,73 @@ export function MapView({
       .addTo(mapLibreRef.current);
   };
 
-  // Load nearby places from Google Places via backend
+  // Load nearby places using Google Places API (same as ScoutPage)
   const loadNearbyPlaces = async () => {
     try {
-      const places = await mapLibreLocationService.getNearbyPlaces(
-        centerCoords,
-        "restaurant",
-        5000 // 5km radius
+      console.log(
+        "🔍 MapView: Loading nearby places with Google Places API..."
       );
 
-      setNearbyPlaces(places);
+      const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+      if (!API_KEY) {
+        console.warn("⚠️ Google Maps API key not found for MapView");
+        return;
+      }
+
+      // Use Google Places API (New) - Nearby Search
+      const response = await fetch(
+        `https://places.googleapis.com/v1/places:searchNearby`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": API_KEY,
+            "X-Goog-FieldMask":
+              "places.id,places.displayName,places.rating,places.userRatingCount,places.priceLevel,places.businessStatus,places.location,places.photos,places.types,places.formattedAddress,places.websiteUri,places.nationalPhoneNumber",
+          },
+          body: JSON.stringify({
+            includedTypes: ["restaurant"],
+            maxResultCount: 20,
+            locationRestriction: {
+              circle: {
+                center: {
+                  latitude: centerCoords.lat,
+                  longitude: centerCoords.lng,
+                },
+                radius: searchRadius, // Dynamic radius from search
+              },
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(
+          "Google Places API error in MapView:",
+          response.status,
+          errorText
+        );
+        return;
+      }
+
+      const data = await response.json();
+      const places = data.places || [];
+
+      // Convert Google Places results to LocationData format for MapView
+      const locationData: LocationData[] = places.map((place: any) => ({
+        id: place.id || `place_${Math.random()}`,
+        name: place.displayName?.text || "Unknown Restaurant",
+        address: place.formattedAddress || "Address not available",
+        rating: place.rating || 4.0,
+        types: place.types || ["restaurant"],
+        place_id: place.id,
+      }));
+
+      console.log("✅ MapView: Loaded nearby places:", locationData.length);
+      setNearbyPlaces(locationData);
     } catch (error) {
-      console.warn("Error loading nearby places:", error);
+      console.warn("❌ MapView: Error loading nearby places:", error);
     }
   };
 

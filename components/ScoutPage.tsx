@@ -1,5 +1,13 @@
 import { motion } from "framer-motion";
-import { ArrowLeft, Filter, Heart, Loader, MapPin, Users } from "lucide-react";
+import {
+  ArrowLeft,
+  Filter,
+  Heart,
+  Loader,
+  MapPin,
+  Search,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { BottomNavigation } from "./BottomNavigation";
 
@@ -14,6 +22,7 @@ import {
   Restaurant as APIRestaurant,
   Location,
   RouteInfo,
+  locationServiceBackend,
 } from "./services/locationServiceBackend";
 import { savedItemsService } from "./services/savedItemsService";
 
@@ -118,18 +127,22 @@ export function ScoutPage({
   const [showRouteInfo, setShowRouteInfo] = useState(false);
 
   const handleNavTabChange = (tab: string) => {
+    setActiveNavTab(tab);
     if (tab === "feed" && onNavigateToFeed) {
       onNavigateToFeed();
     } else if (tab === "snap" && onNavigateToSnap) {
       onNavigateToSnap();
     } else if (tab === "bites" && onNavigateToRecipes) {
       onNavigateToRecipes();
-    } else {
-      setActiveNavTab(tab);
+    } else if (tab === "scout") {
+      // Already on scout page, just update the active tab
+      console.log("Scout tab is active");
     }
   };
   const [refreshingLocation, setRefreshingLocation] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchRadius, setSearchRadius] = useState(500); // Default 500m
   const [selectedCuisine, setSelectedCuisine] = useState<string>("");
   const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState<"distance" | "rating" | "price">(
@@ -142,13 +155,27 @@ export function ScoutPage({
     loadSavedRestaurants();
   }, []);
 
+  // Close search when clicking outside or pressing escape
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && showSearch) {
+        setShowSearch(false);
+      }
+    };
+
+    if (showSearch) {
+      document.addEventListener("keydown", handleKeyDown);
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [showSearch]);
+
   // Load saved restaurants from backend
   const loadSavedRestaurants = async () => {
     try {
       const savedItems = await savedItemsService.listSavedItems({
         itemType: "restaurant",
       });
-      
+
       // Convert SavedItem to Restaurant format
       const convertedRestaurants: Restaurant[] = savedItems.map((item) => ({
         id: item.id,
@@ -169,7 +196,7 @@ export function ScoutPage({
         phone: item.metadata.phone,
         website: item.metadata.website,
       }));
-      
+
       setSavedRestaurants(convertedRestaurants);
       console.log("✅ Loaded saved restaurants:", convertedRestaurants.length);
     } catch (error) {
@@ -178,7 +205,8 @@ export function ScoutPage({
   };
 
   const loadNearbyRestaurants = async (
-    forceRefreshLocation: boolean = false
+    forceRefreshLocation: boolean = false,
+    radius: number = searchRadius
   ) => {
     try {
       setLoading(true);
@@ -198,17 +226,33 @@ export function ScoutPage({
       const location: Location = {
         lat: geoResult.latitude,
         lng: geoResult.longitude,
-        city: geoResult.city,
-        country: geoResult.country,
       };
       setCurrentLocation(location);
 
-      // Call Google Places API directly
-      const restaurants = await searchNearbyRestaurants(
-        geoResult.latitude,
-        geoResult.longitude,
-        5000
-      );
+      // Try backend API first, then fallback to direct Google API
+      let restaurants: Restaurant[] = [];
+      try {
+        // Try backend API first
+        const backendRestaurants =
+          await locationServiceBackend.getNearbyRestaurants(location, radius);
+
+        // Convert backend restaurants to our format
+        restaurants = backendRestaurants.map(convertAPIRestaurant);
+        console.log("✅ Using backend API results:", restaurants.length);
+      } catch (backendError) {
+        console.warn(
+          "⚠️ Backend API failed, falling back to direct Google API:",
+          backendError
+        );
+
+        // Fallback to direct Google Places API
+        restaurants = await searchNearbyRestaurants(
+          geoResult.latitude,
+          geoResult.longitude,
+          radius
+        );
+        console.log("✅ Using direct Google API results:", restaurants.length);
+      }
 
       console.log("✅ Direct Google Places API results:", {
         count: restaurants.length,
@@ -221,7 +265,7 @@ export function ScoutPage({
         ...restaurant,
         isSaved: savedRestaurants.some(
           (saved) =>
-            saved.place_id === restaurant.placeId || saved.id === restaurant.id
+            saved.placeId === restaurant.placeId || saved.id === restaurant.id
         ),
       }));
 
@@ -307,7 +351,7 @@ export function ScoutPage({
       );
 
       // Convert Google Places results to our Restaurant format
-      return places.map((place: any, index: number) => {
+      return places.map((place: any) => {
         // Prepare photos array for SafeRestaurantImage
         const photos = place.photos
           ? place.photos.map((photo: any) => ({
@@ -405,6 +449,69 @@ export function ScoutPage({
     await loadNearbyRestaurants(true);
   };
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Close search toast after search is performed
+    setShowSearch(false);
+  };
+
+  const handleRadiusChange = async (newRadius: number) => {
+    setSearchRadius(newRadius);
+    console.log("🔍 Radius changed to:", newRadius, "meters");
+    // Reload restaurants with new radius
+    await loadNearbyRestaurants(false, newRadius);
+  };
+
+  const handlePlanRoute = async (restaurant: Restaurant) => {
+    try {
+      if (!currentLocation) {
+        console.error("No current location available for route planning");
+        return;
+      }
+
+      console.log("🗺️ Planning route to:", restaurant.name);
+
+      // Use Google Directions API to get route information
+      const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+      if (!API_KEY) {
+        throw new Error("Google Maps API key not found");
+      }
+
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${currentLocation.lat},${currentLocation.lng}&destination=${restaurant.coordinates.lat},${restaurant.coordinates.lng}&key=${API_KEY}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Directions API failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.routes && data.routes.length > 0) {
+        const route = data.routes[0];
+        const leg = route.legs[0];
+
+        const routeInfo: RouteInfo = {
+          distance: leg.distance.text,
+          duration: leg.duration.text,
+          distanceValue: leg.distance.value,
+          durationValue: leg.duration.value,
+        };
+
+        setRouteInfo(routeInfo);
+        setShowRouteInfo(true);
+        console.log("✅ Route planned successfully:", routeInfo);
+      } else {
+        throw new Error("No routes found");
+      }
+    } catch (error) {
+      console.error("❌ Failed to plan route:", error);
+      // Fallback: open in Google Maps
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation?.lat},${currentLocation?.lng}&destination=${restaurant.coordinates.lat},${restaurant.coordinates.lng}`;
+      window.open(url, "_blank");
+    }
+  };
+
   const tabs = [
     { id: "nearby", label: "Nearby", icon: MapPin },
     { id: "saved", label: "Saved Items", icon: Heart },
@@ -495,13 +602,45 @@ export function ScoutPage({
     }
   };
 
-  const filteredRestaurants = restaurants.filter(
-    (restaurant) =>
-      restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      restaurant.cuisine.some((c) =>
-        c.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-  );
+  const filteredRestaurants = restaurants
+    .filter((restaurant) => {
+      // Search query filter
+      const matchesSearch =
+        restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        restaurant.cuisine.some((c) =>
+          c.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+      // Cuisine filter
+      const matchesCuisine =
+        !selectedCuisine ||
+        selectedCuisine === "All" ||
+        restaurant.cuisine.some((c) =>
+          c.toLowerCase().includes(selectedCuisine.toLowerCase())
+        );
+
+      // Price range filter
+      const matchesPrice =
+        selectedPriceRange.length === 0 ||
+        selectedPriceRange.includes(restaurant.priceLevel);
+
+      return matchesSearch && matchesCuisine && matchesPrice;
+    })
+    .sort((a, b) => {
+      // Sort by selected criteria
+      switch (sortBy) {
+        case "distance":
+          const distanceA = parseFloat(a.distance.replace(/[^\d.]/g, ""));
+          const distanceB = parseFloat(b.distance.replace(/[^\d.]/g, ""));
+          return distanceA - distanceB;
+        case "rating":
+          return b.rating - a.rating;
+        case "price":
+          return a.priceLevel - b.priceLevel;
+        default:
+          return 0;
+      }
+    });
 
   return (
     <div className="min-h-screen bg-white relative">
@@ -511,7 +650,12 @@ export function ScoutPage({
           restaurants={filteredRestaurants}
           selectedRestaurant={selectedMapRestaurant}
           onRestaurantSelect={handleRestaurantClick}
-          currentLocation={currentLocation}
+          currentLocation={
+            currentLocation
+              ? { lat: currentLocation.lat, lng: currentLocation.lng }
+              : undefined
+          }
+          searchRadius={searchRadius}
         />
       </div>
 
@@ -528,6 +672,34 @@ export function ScoutPage({
             </button>
           )}
 
+          {/* Search Active Indicator */}
+          {searchQuery && (
+            <div className="flex items-center space-x-2 px-3 py-1 bg-[#F14C35]/10 rounded-full">
+              <Search className="w-4 h-4 text-[#F14C35]" />
+              <span className="text-xs text-[#F14C35] font-medium">
+                "{searchQuery}"
+              </span>
+              <button
+                onClick={() => setSearchQuery("")}
+                className="text-[#F14C35] hover:text-[#E63E26]"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          {/* Search Button */}
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-lg ${
+              showSearch
+                ? "bg-[#F14C35] text-white"
+                : "bg-white/90 backdrop-blur-sm text-gray-600 hover:bg-white"
+            }`}
+          >
+            <Search className="w-5 h-5" />
+          </button>
+
           {/* Filter Button */}
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -540,6 +712,100 @@ export function ScoutPage({
             <Filter className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Collapsible Search Toast */}
+        {showSearch && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="mt-3 p-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg"
+          >
+            <form onSubmit={handleSearchSubmit}>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search restaurants or cuisines..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2 pl-10 pr-10 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F14C35] focus:border-transparent text-sm"
+                  autoFocus
+                />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                  <Search className="w-4 h-4 text-gray-400" />
+                </div>
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </form>
+
+            {/* Distance Slider */}
+            <div className="mt-4">
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-medium text-gray-700">
+                  Search Radius
+                </label>
+                <span className="text-xs text-[#F14C35] font-medium">
+                  {searchRadius < 1000
+                    ? `${searchRadius}m`
+                    : `${(searchRadius / 1000).toFixed(1)}km`}
+                </span>
+              </div>
+
+              <div className="relative">
+                <input
+                  type="range"
+                  min="50"
+                  max="2000"
+                  step="50"
+                  value={searchRadius}
+                  onChange={(e) => handleRadiusChange(parseInt(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                  style={{
+                    background: `linear-gradient(to right, #F14C35 0%, #F14C35 ${
+                      ((searchRadius - 50) / (2000 - 50)) * 100
+                    }%, #e5e7eb ${
+                      ((searchRadius - 50) / (2000 - 50)) * 100
+                    }%, #e5e7eb 100%)`,
+                  }}
+                />
+
+                {/* Distance markers */}
+                <div className="flex justify-between text-xs text-gray-400 mt-1">
+                  <span>50m</span>
+                  <span>500m</span>
+                  <span>1km</span>
+                  <span>1.5km</span>
+                  <span>2km</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Search Results Count */}
+            <div className="mt-2 text-xs text-gray-600">
+              {searchQuery ? (
+                <>
+                  {filteredRestaurants.length} restaurants found for "
+                  {searchQuery}"
+                </>
+              ) : (
+                <>
+                  {filteredRestaurants.length} restaurants within{" "}
+                  {searchRadius < 1000
+                    ? `${searchRadius}m`
+                    : `${(searchRadius / 1000).toFixed(1)}km`}
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
 
         {/* Collapsible Filters */}
         {showFilters && (
@@ -666,26 +932,67 @@ export function ScoutPage({
           <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
             {/* Restaurant Count Header */}
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-[#0B1F3A]">
-                {loading
-                  ? "Finding restaurants..."
-                  : `${filteredRestaurants.length} restaurants nearby`}
-              </h3>
+              <div>
+                <h3 className="text-sm font-bold text-[#0B1F3A]">
+                  {loading
+                    ? "Finding restaurants..."
+                    : `${filteredRestaurants.length} restaurants nearby`}
+                </h3>
+                {activeNavTab === "scout" && (
+                  <p className="text-xs text-[#F14C35] font-medium mt-1">
+                    🗺️ Scout Mode Active
+                  </p>
+                )}
+                {geolocation && (
+                  <p className="text-xs text-gray-500 mt-1 flex items-center">
+                    {refreshingLocation ? (
+                      <>
+                        <Loader className="w-3 h-3 animate-spin mr-1" />
+                        <span>Updating location...</span>
+                      </>
+                    ) : (
+                      <>
+                        📍{" "}
+                        {geolocation.accuracy
+                          ? `±${Math.round(geolocation.accuracy)}m`
+                          : ""}
+                        {geolocation.timestamp && (
+                          <span className="ml-2">
+                            {new Date(
+                              geolocation.timestamp
+                            ).toLocaleTimeString()}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </p>
+                )}
+              </div>
               {!loading && (
                 <button
-                  onClick={() => loadNearbyRestaurants()}
-                  className="text-[#F14C35] text-xs font-medium hover:underline"
+                  onClick={handleLocationRefresh}
+                  disabled={refreshingLocation}
+                  className="text-[#F14C35] text-xs font-medium hover:underline disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
                 >
-                  Refresh
+                  {refreshingLocation ? (
+                    <>
+                      <Loader className="w-3 h-3 animate-spin" />
+                      <span>Refreshing...</span>
+                    </>
+                  ) : (
+                    "Refresh"
+                  )}
                 </button>
               )}
             </div>
 
-            {loading ? (
+            {loading || refreshingLocation ? (
               <div className="flex items-center justify-center py-4">
                 <Loader className="w-5 h-5 text-[#F14C35] animate-spin" />
                 <span className="ml-2 text-gray-600 text-sm">
-                  Finding restaurants...
+                  {refreshingLocation
+                    ? "Refreshing location..."
+                    : "Finding restaurants..."}
                 </span>
               </div>
             ) : error ? (
@@ -707,6 +1014,8 @@ export function ScoutPage({
                       restaurant={restaurant}
                       onClick={() => handleRestaurantClick(restaurant)}
                       variant="grid"
+                      showMapIcon={true}
+                      onMapClick={() => handleViewOnMap(restaurant)}
                     />
                   ))
                 ) : (
@@ -737,8 +1046,32 @@ export function ScoutPage({
           <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg max-h-96 overflow-y-auto">
             <PlatesTab
               variant="scout"
-              onRestaurantClick={handleRestaurantClick}
-              onRestaurantUnsave={handleSaveRestaurant}
+              onRestaurantClick={(restaurant) => {
+                // Convert PlatesTab Restaurant to ScoutPage Restaurant format
+                const scoutRestaurant: Restaurant = {
+                  ...restaurant,
+                  reviewCount: 0, // Default value since PlatesTab doesn't have this
+                  openHours: "Unknown", // Default value since PlatesTab doesn't have this
+                  phone: undefined, // PlatesTab doesn't have phone property
+                  website: undefined, // PlatesTab doesn't have website property
+                  photos: restaurant.photos || [],
+                  placeId: restaurant.placeId,
+                  distance: restaurant.distance || "0.0 mi", // Ensure distance is string
+                  isOpen: restaurant.isOpen ?? true, // Ensure isOpen is boolean, default to true
+                };
+                handleRestaurantClick(scoutRestaurant);
+              }}
+              onRestaurantUnsave={(placeId: string) => {
+                // Find the restaurant in savedRestaurants by placeId
+                // Updated to use placeId instead of restaurant object
+                // TypeScript fix: interface now accepts placeId string
+                const restaurant = savedRestaurants.find(
+                  (r) => r.placeId === placeId
+                );
+                if (restaurant) {
+                  handleSaveRestaurant(restaurant);
+                }
+              }}
               showSearch={true}
               showFilters={true}
               showViewToggle={true}
@@ -794,15 +1127,13 @@ export function ScoutPage({
                   <div>
                     <p className="font-medium text-[#0B1F3A]">Distance</p>
                     <p className="text-sm text-gray-600">
-                      {routeInfo.distance.text}
+                      {routeInfo.distance}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="font-medium text-[#0B1F3A]">Drive Time</p>
-                  <p className="text-sm text-gray-600">
-                    {routeInfo.duration.text}
-                  </p>
+                  <p className="text-sm text-gray-600">{routeInfo.duration}</p>
                 </div>
               </div>
 
@@ -835,7 +1166,7 @@ export function ScoutPage({
           restaurant={selectedMapRestaurant}
           onPlanRoute={() => {
             setShowTakoToast(false);
-            // handlePlanRoute(selectedMapRestaurant);
+            handlePlanRoute(selectedMapRestaurant);
           }}
           onSaveToPlate={() => {
             handleSaveRestaurant(selectedMapRestaurant);

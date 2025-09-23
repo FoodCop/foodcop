@@ -54,7 +54,7 @@ interface PlatesTabProps {
   // Optional props for different contexts
   variant?: "profile" | "scout";
   onRestaurantClick?: (restaurant: Restaurant) => void;
-  onRestaurantUnsave?: (restaurant: Restaurant) => void;
+  onRestaurantUnsave?: (placeId: string) => void; // FIXED: Now accepts placeId string instead of Restaurant object
   onRecipeClick?: (recipe: Recipe) => void;
   showSearch?: boolean;
   showFilters?: boolean;
@@ -211,7 +211,7 @@ export function PlatesTab({
         itemId: placeId,
         itemType: "restaurant",
       });
-      
+
       if (result.success) {
         setRestaurants((prev) => prev.filter((r) => r.placeId !== placeId));
         onRestaurantUnsave?.(placeId);
@@ -649,7 +649,7 @@ export function PlatesTab({
                     <ListRestaurantCard
                       restaurant={restaurant}
                       onClick={() => onRestaurantClick?.(restaurant)}
-                      onSave={() => onRestaurantUnsave?.(restaurant)}
+                      onSave={() => onRestaurantUnsave?.(restaurant.placeId)}
                     />
                   )}
                 </motion.div>
