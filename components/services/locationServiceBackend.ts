@@ -78,12 +78,12 @@ class LocationServiceBackend {
 
     if (!this.serviceAvailability?.backend) {
       console.warn("❌ Backend service not available");
-      return [];
+      throw new Error("Backend service not available");
     }
 
     if (!this.serviceAvailability?.googleMaps) {
       console.warn("⚠️ Google Maps not configured in backend");
-      return [];
+      throw new Error("Google Maps not configured in backend");
     }
 
     try {
@@ -102,14 +102,14 @@ class LocationServiceBackend {
 
       if (!response.ok) {
         console.error("❌ Backend Places search failed:", response.statusText);
-        return [];
+        throw new Error(`Backend Places search failed: ${response.statusText}`);
       }
 
       const data = await response.json();
 
       if (data.status !== "OK" || !data.results || data.results.length === 0) {
         console.warn("⚠️ No results from Places API:", data.status);
-        return [];
+        throw new Error("No results from Places API");
       }
 
       const restaurants = data.results.map((place: any) =>

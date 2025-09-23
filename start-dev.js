@@ -62,3 +62,7 @@ setTimeout(() => {
   console.log("📊 AI Status: http://localhost:3001/api/ai/status");
   console.log("\nPress Ctrl+C to stop all servers\n");
 }, 3000);
+
+
+
+

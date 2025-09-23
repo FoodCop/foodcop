@@ -146,22 +146,32 @@ test.describe("User Profile and Plates Functionality", () => {
     // Step 2: Click edit profile button
     await page.click('button:has-text("Edit Profile")');
 
-    // Step 3: Update profile information
+    // Step 3: Wait for modal to open and update profile information
+    await expect(page.locator("text=Edit Profile")).toBeVisible();
+
     await page.fill('input[placeholder*="Display Name"]', "Updated Test User");
+    await page.fill('input[placeholder*="Username"]', "updated_user");
     await page.fill(
       'textarea[placeholder*="Bio"]',
       "Updated bio - food enthusiast"
     );
 
     // Update dietary preferences
-    await page.click("text=Vegetarian"); // Toggle off
+    await page.click("text=Vegetarian"); // Toggle off if selected
     await page.click("text=Vegan"); // Toggle on
+
+    // Update cuisine preferences
+    await page.click("text=Italian"); // Toggle on
+    await page.click("text=Japanese"); // Toggle on
 
     // Save changes
     await page.click('button:has-text("Save Changes")');
 
-    // Step 4: Verify changes are saved
+    // Step 4: Wait for modal to close and verify changes are saved
+    await expect(page.locator("text=Edit Profile")).not.toBeVisible();
+
     await expect(page.locator("text=Updated Test User")).toBeVisible();
+    await expect(page.locator("text=updated_user")).toBeVisible();
     await expect(
       page.locator("text=Updated bio - food enthusiast")
     ).toBeVisible();

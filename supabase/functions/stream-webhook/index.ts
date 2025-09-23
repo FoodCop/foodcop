@@ -229,6 +229,47 @@ async function sendStreamMessage(
   }
 }
 
+// Idempotency key generation
+function generateIdempotencyKey(event: any): string {
+  const key = `${event.type}:${event.channel?.id}:${
+    event.message?.id || event.user?.id
+  }:${Date.now()}`;
+  return btoa(key).replace(/[^a-zA-Z0-9]/g, "");
+}
+
+// Check and store idempotency key
+async function handleIdempotency(
+  key: string,
+  tenantId: string,
+  result: any
+): Promise<any | null> {
+  try {
+    // Check if key exists
+    const { data: existing } = await sb
+      .from("idempotency_keys")
+      .select("result")
+      .eq("key", key)
+      .maybeSingle();
+
+    if (existing) {
+      console.log("Idempotency key found, returning cached result");
+      return existing.result;
+    }
+
+    // Store new result
+    await sb.from("idempotency_keys").insert({
+      key,
+      tenant_id: tenantId,
+      result,
+    });
+
+    return null; // No cached result, proceed with execution
+  } catch (error) {
+    console.error("Idempotency handling error:", error);
+    return null; // Continue with execution on error
+  }
+}
+
 // Main Edge Function - Now handles all Stream Chat events
 Deno.serve(async (req) => {
   try {
@@ -245,27 +286,52 @@ Deno.serve(async (req) => {
     const event = JSON.parse(body);
     console.log("Stream Chat webhook event:", event.type);
 
+    // Generate idempotency key
+    const idempotencyKey = generateIdempotencyKey(event);
+    const tenantId = event.channel?.id || "default"; // Use channel ID as tenant for now
+
+    // Check idempotency
+    const cachedResult = await handleIdempotency(
+      idempotencyKey,
+      tenantId,
+      null
+    );
+    if (cachedResult) {
+      return new Response(JSON.stringify(cachedResult), { status: 200 });
+    }
+
     // Handle different event types
+    let result: any;
     switch (event.type) {
       case "message.new":
-        return await handleMessageNew(event);
+        result = await handleMessageNew(event);
+        break;
 
       case "user.presence.changed":
-        return await handleUserPresenceChanged(event);
+        result = await handleUserPresenceChanged(event);
+        break;
 
       case "channel.updated":
-        return await handleChannelUpdated(event);
+        result = await handleChannelUpdated(event);
+        break;
 
       case "member.added":
-        return await handleMemberAdded(event);
+        result = await handleMemberAdded(event);
+        break;
 
       case "member.removed":
-        return await handleMemberRemoved(event);
+        result = await handleMemberRemoved(event);
+        break;
 
       default:
         console.log(`Unhandled event type: ${event.type}`);
-        return new Response("ignored", { status: 200 });
+        result = { status: "ignored" };
     }
+
+    // Store result in idempotency cache
+    await handleIdempotency(idempotencyKey, tenantId, result);
+
+    return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error("Edge function error:", error);
     return new Response(JSON.stringify({ error: String(error) }), {
@@ -275,19 +341,19 @@ Deno.serve(async (req) => {
 });
 
 // Handle new message events
-async function handleMessageNew(event: any): Promise<Response> {
+async function handleMessageNew(event: any): Promise<any> {
   const msg = event.message;
 
   // Skip bot messages
   if (!msg || msg.user?.id?.startsWith("mb_")) {
-    return new Response("ignore-bot-msg", { status: 200 });
+    return { status: "ignore-bot-msg" };
   }
 
   // Rate limiting check
   const channelId = event.channel?.id;
   if (!checkRateLimit(channelId)) {
     console.log("Rate limited for channel:", channelId);
-    return new Response("rate-limited", { status: 200 });
+    return { status: "rate-limited" };
   }
 
   // Check if there's a bot in the channel
@@ -302,13 +368,13 @@ async function handleMessageNew(event: any): Promise<Response> {
       userId: msg.user?.id,
       message: msg.text,
     });
-    return new Response("no-bot", { status: 200 });
+    return { status: "no-bot" };
   }
 
   // Handle bot response
   const botUserId = botMember.user.id as string;
   const bot = await fetchBot(botUserId);
-  if (!bot) return new Response("bot-not-found", { status: 200 });
+  if (!bot) return { status: "bot-not-found" };
 
   // Load system prompt
   const { data: prompt } = await sb
@@ -346,7 +412,7 @@ async function handleMessageNew(event: any): Promise<Response> {
 
   if (!messageSent) {
     console.error("Failed to send message to Stream Chat");
-    return new Response("send-failed", { status: 500 });
+    return { status: "send-failed" };
   }
 
   // Log metrics
@@ -360,11 +426,11 @@ async function handleMessageNew(event: any): Promise<Response> {
     })
   );
 
-  return new Response("success", { status: 200 });
+  return { status: "success" };
 }
 
 // Handle user presence changes
-async function handleUserPresenceChanged(event: any): Promise<Response> {
+async function handleUserPresenceChanged(event: any): Promise<any> {
   console.log("User presence changed:", {
     userId: event.user?.id,
     status: event.user?.status,
@@ -373,11 +439,11 @@ async function handleUserPresenceChanged(event: any): Promise<Response> {
   // You can add custom logic here for presence changes
   // For example, update user status in your database
 
-  return new Response("success", { status: 200 });
+  return { status: "success" };
 }
 
 // Handle channel updates
-async function handleChannelUpdated(event: any): Promise<Response> {
+async function handleChannelUpdated(event: any): Promise<any> {
   console.log("Channel updated:", {
     channelId: event.channel?.id,
     updates: event.channel,
@@ -386,11 +452,11 @@ async function handleChannelUpdated(event: any): Promise<Response> {
   // You can add custom logic here for channel updates
   // For example, sync channel data with your database
 
-  return new Response("success", { status: 200 });
+  return { status: "success" };
 }
 
 // Handle member added to channel
-async function handleMemberAdded(event: any): Promise<Response> {
+async function handleMemberAdded(event: any): Promise<any> {
   console.log("Member added:", {
     channelId: event.channel?.id,
     userId: event.user?.id,
@@ -400,11 +466,11 @@ async function handleMemberAdded(event: any): Promise<Response> {
   // You can add custom logic here for new members
   // For example, send welcome messages or update permissions
 
-  return new Response("success", { status: 200 });
+  return { status: "success" };
 }
 
 // Handle member removed from channel
-async function handleMemberRemoved(event: any): Promise<Response> {
+async function handleMemberRemoved(event: any): Promise<any> {
   console.log("Member removed:", {
     channelId: event.channel?.id,
     userId: event.user?.id,
@@ -414,5 +480,5 @@ async function handleMemberRemoved(event: any): Promise<Response> {
   // You can add custom logic here for removed members
   // For example, cleanup or notifications
 
-  return new Response("success", { status: 200 });
+  return { status: "success" };
 }

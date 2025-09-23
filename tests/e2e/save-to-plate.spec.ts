@@ -194,6 +194,52 @@ test.describe("Save to Plate Flow", () => {
     await expect(page.locator("text=Save to Plate?")).not.toBeVisible();
   });
 
+  test("should be idempotent under rapid clicking", async ({ page }) => {
+    const saveButton = page
+      .locator('[data-testid="save-restaurant-button"]')
+      .first();
+
+    // Rapidly click save button 5 times
+    for (let i = 0; i < 5; i++) {
+      await saveButton.click();
+      // Only first click should show dialog
+      if (i === 0) {
+        await expect(page.locator("text=Save to Plate?")).toBeVisible();
+        await page.locator('button:has-text("Save")').click();
+        await expect(page.locator("text=Saved to your Plate")).toBeVisible();
+      } else {
+        // Subsequent clicks should not show dialog
+        await expect(page.locator("text=Save to Plate?")).not.toBeVisible();
+      }
+    }
+
+    // Button should show as saved
+    await expect(saveButton.locator("text=Saved")).toBeVisible();
+  });
+
+  test("should handle retry after network timeout", async ({ page }) => {
+    const saveButton = page
+      .locator('[data-testid="save-restaurant-button"]')
+      .first();
+
+    // Simulate network timeout on first attempt
+    await page.route("**/save-item", async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await route.abort();
+    });
+
+    // First attempt should fail
+    await saveButton.click();
+    await page.locator('button:has-text("Save")').click();
+    await expect(page.locator("text=Failed to save to Plate")).toBeVisible();
+
+    // Remove timeout and retry
+    await page.unroute("**/save-item");
+    await saveButton.click();
+    await page.locator('button:has-text("Save")').click();
+    await expect(page.locator("text=Saved to your Plate")).toBeVisible();
+  });
+
   test("should show loading state during save", async ({ page }) => {
     // Slow down network to see loading state
     await page.route("**/save-item", async (route) => {

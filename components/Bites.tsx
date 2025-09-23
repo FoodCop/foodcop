@@ -7,6 +7,7 @@ import {
 import { BottomNavigation } from "./BottomNavigation";
 import { Recipe } from "./constants/recipesData";
 import { NewRecipe, RecipeCreatorPage } from "./features/RecipeCreatorPage";
+import { FilterModal, FilterOptions } from "./recipes/FilterModal";
 import { GamificationPopup } from "./recipes/GamificationPopup";
 import { RecipeCard } from "./recipes/RecipeCard";
 import { RecipeDetail } from "./recipes/RecipeDetail";
@@ -29,17 +30,136 @@ export function RecipesPage({
   const [currentView, setCurrentView] = useState<RecipeView>("feed");
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
   const [showGamification, setShowGamification] = useState(false);
-  const [userPoints, setUserPoints] = useState(1240); // Mock user points
   const [userRecipes, setUserRecipes] = useState<Recipe[]>([]); // User-created recipes
   const [backendRecipes, setBackendRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("recipes");
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState<FilterOptions>({
+    sortBy: "relevance",
+    sortOrder: "desc",
+    categories: [],
+    diet: [],
+    cuisine: [],
+    mainIngredients: [],
+    occasion: [],
+    appliances: [],
+    type: [],
+  });
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+  };
+
+  // Client-side filtering helper function
+  const applyClientSideFilters = (
+    recipes: Recipe[],
+    filters: FilterOptions
+  ): Recipe[] => {
+    return recipes.filter((recipe) => {
+      // Filter by categories (dish types)
+      if (filters.categories.length > 0) {
+        const hasMatchingCategory = filters.categories.some((category) =>
+          recipe.tags.some((tag) =>
+            tag.toLowerCase().includes(category.toLowerCase())
+          )
+        );
+        if (!hasMatchingCategory) return false;
+      }
+
+      // Filter by occasion
+      if (filters.occasion.length > 0) {
+        const hasMatchingOccasion = filters.occasion.some(
+          (occasion) =>
+            recipe.tags.some((tag) =>
+              tag.toLowerCase().includes(occasion.toLowerCase())
+            ) || recipe.title.toLowerCase().includes(occasion.toLowerCase())
+        );
+        if (!hasMatchingOccasion) return false;
+      }
+
+      // Filter by appliances (cooking methods)
+      if (filters.appliances.length > 0) {
+        const hasMatchingAppliance = filters.appliances.some(
+          (appliance) =>
+            recipe.tags.some((tag) =>
+              tag.toLowerCase().includes(appliance.toLowerCase())
+            ) ||
+            recipe.instructions.some((instruction) =>
+              instruction.description
+                .toLowerCase()
+                .includes(appliance.toLowerCase())
+            )
+        );
+        if (!hasMatchingAppliance) return false;
+      }
+
+      return true;
+    });
+  };
+
+  // Sorting helper function
+  const applySorting = (
+    recipes: Recipe[],
+    filters: FilterOptions
+  ): Recipe[] => {
+    const sorted = [...recipes];
+
+    switch (filters.sortBy) {
+      case "likes":
+        sorted.sort((a, b) => {
+          const aLikes = a.reviewCount || 0;
+          const bLikes = b.reviewCount || 0;
+          return filters.sortOrder === "desc"
+            ? bLikes - aLikes
+            : aLikes - bLikes;
+        });
+        break;
+      case "rating":
+        sorted.sort((a, b) => {
+          const aRating = a.rating || 0;
+          const bRating = b.rating || 0;
+          return filters.sortOrder === "desc"
+            ? bRating - aRating
+            : aRating - bRating;
+        });
+        break;
+      case "calories":
+        sorted.sort((a, b) => {
+          const aCalories = a.calories || 0;
+          const bCalories = b.calories || 0;
+          return filters.sortOrder === "desc"
+            ? bCalories - aCalories
+            : aCalories - bCalories;
+        });
+        break;
+      case "preparation_time":
+        sorted.sort((a, b) => {
+          const aTime = a.prepTime || 0;
+          const bTime = b.prepTime || 0;
+          return filters.sortOrder === "desc" ? bTime - aTime : aTime - bTime;
+        });
+        break;
+      case "release_date":
+        sorted.sort((a, b) => {
+          const aDate = new Date(a.createdAt || 0).getTime();
+          const bDate = new Date(b.createdAt || 0).getTime();
+          return filters.sortOrder === "desc" ? bDate - aDate : aDate - bDate;
+        });
+        break;
+      default: // relevance
+        // Keep original order for relevance
+        break;
+    }
+
+    return sorted;
+  };
+
+  const handleApplyFilters = (filters: FilterOptions) => {
+    setCurrentFilters(filters);
+    loadBackendRecipes(filters);
   };
 
   // Use only real data - no mock fallback
@@ -60,21 +180,59 @@ export function RecipesPage({
     loadBackendRecipes();
   }, []);
 
-  const loadBackendRecipes = async () => {
+  const loadBackendRecipes = async (filters?: FilterOptions) => {
     try {
       setLoading(true);
       setError(null);
 
-      console.log("🍽️ Loading recipes from Spoonacular API...");
+      const appliedFilters = filters || currentFilters;
+
+      // Build search query from filters
+      let query = "";
+      if (appliedFilters.mainIngredients.length > 0) {
+        query = appliedFilters.mainIngredients.join(" ");
+      }
+      if (appliedFilters.type.length > 0) {
+        query += " " + appliedFilters.type.join(" ");
+      }
+
+      // Build cuisine parameter
+      const cuisine =
+        appliedFilters.cuisine.length > 0
+          ? appliedFilters.cuisine.join(",")
+          : undefined;
+
+      // Build diet parameter
+      const diet =
+        appliedFilters.diet.length > 0
+          ? appliedFilters.diet.join(",")
+          : undefined;
+
+      console.log(
+        "🍽️ Loading recipes from Spoonacular API with filters:",
+        appliedFilters
+      );
       const response = await spoonacularService.searchRecipes({
-        query: "",
+        query: query.trim(),
+        cuisine,
+        diet,
         number: 12,
       });
 
       if (response.results && response.results.length > 0) {
-        const convertedRecipes: Recipe[] = response.results.map(
+        let convertedRecipes: Recipe[] = response.results.map(
           convertSpoonacularRecipe
         );
+
+        // Apply additional client-side filtering
+        convertedRecipes = applyClientSideFilters(
+          convertedRecipes,
+          appliedFilters
+        );
+
+        // Apply sorting
+        convertedRecipes = applySorting(convertedRecipes, appliedFilters);
+
         setBackendRecipes(convertedRecipes);
         console.log(
           `✅ Loaded ${convertedRecipes.length} recipes from Spoonacular API`
@@ -95,21 +253,30 @@ export function RecipesPage({
     const recipe: Recipe = {
       id: `user_${Date.now()}`,
       title: newRecipe.title,
-      cuisine: newRecipe.cuisine,
-      difficulty: newRecipe.difficulty,
-      prepTime: newRecipe.prepTime,
-      cookTime: newRecipe.cookTime,
+      image: newRecipe.mainImage || "",
+      cookingTime: newRecipe.cookingTime,
+      calories: newRecipe.nutrition?.calories || 0,
       servings: newRecipe.servings,
+      cuisine: newRecipe.cuisine,
       rating: 0,
-      reviewCount: 0,
-      isBookmarked: false,
-      isLiked: false,
       tags: newRecipe.tags,
+      difficulty: newRecipe.difficulty,
       ingredients: newRecipe.ingredients,
-      instructions: newRecipe.instructions,
-      nutrition: newRecipe.nutrition,
-      mainImage: newRecipe.mainImage || "",
-      images: newRecipe.images || [],
+      instructions:
+        newRecipe.steps?.map((step) => ({
+          id: step.id,
+          step: step.stepNumber,
+          description: step.instruction,
+        })) || [],
+      nutrition: newRecipe.nutrition || {
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+        fiber: 0,
+        sugar: 0,
+        sodium: 0,
+      },
       author: {
         id: "current_user",
         name: "You",
@@ -117,13 +284,22 @@ export function RecipesPage({
           "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
         verified: true,
       },
+      description: newRecipe.description,
+      preparationTime: newRecipe.prepTime || 15,
+      totalTime: newRecipe.cookingTime + (newRecipe.prepTime || 15),
+      reviewCount: 0,
+      isBookmarked: false,
+      isLiked: false,
+      prepTime: newRecipe.prepTime,
+      cookTime: newRecipe.cookTime,
+      mainImage: newRecipe.mainImage || "",
+      images: newRecipe.images || [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
     setUserRecipes((prev) => [recipe, ...prev]);
     setShowGamification(true);
-    setUserPoints((prev) => prev + 50); // Award points for creating recipe
   };
 
   const handleRecipeSelect = (recipe: Recipe) => {
@@ -204,7 +380,7 @@ export function RecipesPage({
           <h1 className="text-lg font-semibold text-gray-900">Bites</h1>
           <div className="flex items-center space-x-2">
             <button
-              onClick={() => setShowFilters(!showFilters)}
+              onClick={() => setShowFilterModal(true)}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
               <Filter className="w-5 h-5 text-gray-600" />
@@ -314,7 +490,7 @@ export function RecipesPage({
             </h3>
             <p className="text-gray-600 mb-4">{error}</p>
             <button
-              onClick={loadBackendRecipes}
+              onClick={() => loadBackendRecipes()}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               Try Again
@@ -347,7 +523,7 @@ export function RecipesPage({
             </p>
             {!searchQuery && (
               <button
-                onClick={loadBackendRecipes}
+                onClick={() => loadBackendRecipes()}
                 className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
               >
                 Refresh
@@ -361,13 +537,20 @@ export function RecipesPage({
                 key={recipe.id}
                 recipe={recipe}
                 onSelect={handleRecipeSelect}
-                onBookmark={handleBookmark}
-                onLike={handleLike}
               />
             ))}
           </div>
         )}
       </div>
+
+      {/* Filter Modal */}
+      <FilterModal
+        isOpen={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        onApplyFilters={handleApplyFilters}
+        currentFilters={currentFilters}
+        resultCount={filteredRecipes.length}
+      />
 
       {/* Gamification Popup */}
       {showGamification && (

@@ -1,4 +1,4 @@
-import { Camera, ChefHat, Home, Map, X } from "lucide-react";
+import { Camera, ChefHat, Home, LayoutDashboard, Map, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface BottomNavigationProps {
@@ -7,6 +7,7 @@ interface BottomNavigationProps {
   onNavigateToFeed?: () => void;
   onNavigateToScout?: () => void;
   onNavigateToSnap?: () => void;
+  onNavigateToDashboard?: () => void;
 }
 
 export function BottomNavigation({
@@ -15,6 +16,7 @@ export function BottomNavigation({
   onNavigateToFeed,
   onNavigateToScout,
   onNavigateToSnap,
+  onNavigateToDashboard,
 }: BottomNavigationProps) {
   const [open, setOpen] = useState(false);
 
@@ -30,14 +32,25 @@ export function BottomNavigation({
   // Sub actions exposed by the FAB
   const actions = [
     {
+      id: "dashboard",
+      label: "Dashboard",
+      icon: LayoutDashboard,
+      onClick: () => {
+        onNavigateToDashboard
+          ? onNavigateToDashboard()
+          : onTabChange("dashboard");
+      },
+      // position when expanded (relative to FAB)
+      className: "-translate-y-20 -translate-x-24", // up-left
+    },
+    {
       id: "feed",
       label: "Feed",
       icon: Home,
       onClick: () => {
         onNavigateToFeed ? onNavigateToFeed() : onTabChange("feed");
       },
-      // position when expanded (relative to FAB)
-      className: "-translate-y-20 -translate-x-24", // up-left
+      className: "-translate-y-20 -translate-x-8", // up-left-center
     },
     {
       id: "scout",
@@ -46,7 +59,7 @@ export function BottomNavigation({
       onClick: () => {
         onNavigateToScout ? onNavigateToScout() : onTabChange("scout");
       },
-      className: "-translate-y-20 -translate-x-8", // up-left-center
+      className: "-translate-y-20 translate-x-8", // up-right-center
     },
     {
       id: "snap",
@@ -55,14 +68,14 @@ export function BottomNavigation({
       onClick: () => {
         onNavigateToSnap ? onNavigateToSnap() : onTabChange("snap");
       },
-      className: "-translate-y-20 translate-x-8", // up-right-center
+      className: "-translate-y-20 translate-x-24", // up-right
     },
     {
       id: "bites",
       label: "Bites",
       icon: ChefHat,
       onClick: () => onTabChange("bites"),
-      className: "-translate-y-20 translate-x-24", // up-right
+      className: "-translate-y-20 translate-x-40", // up-far-right
     },
   ];
 

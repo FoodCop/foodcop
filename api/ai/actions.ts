@@ -62,12 +62,12 @@ Preferences: ${payload.preferences?.join(", ") || "None specified"}
 Dietary Restrictions: ${payload.dietaryRestrictions?.join(", ") || "None"}
 
 Provide 3-5 detailed recommendations with ratings, difficulty, and prep time.`;
-        
+
         const result = await generateText({
           model: openai("gpt-4o-mini"),
           prompt,
         });
-        
+
         return Response.json({ recommendations: result.text });
       }
       case "chat-response": {
@@ -76,12 +76,12 @@ Message: ${payload.message}
 Context: ${payload.context || "General conversation"}
 
 Consider the user's sentiment and provide appropriate suggestions.`;
-        
+
         const result = await generateText({
           model: openai("gpt-4o-mini"),
           prompt,
         });
-        
+
         return Response.json({ response: result.text });
       }
       case "masterbot-response": {
@@ -92,25 +92,27 @@ User Message: ${payload.userMessage}
 Conversation History: ${historyContext}
 
 Provide an expert response that showcases your specialty knowledge.`;
-        
+
         const result = await generateText({
           model: openai("gpt-4o-mini"),
           prompt,
         });
-        
+
         return Response.json({ response: result.text });
       }
       case "masterbot-post": {
-        const prompt = `As a ${payload.specialty} expert, create an engaging social media post about ${payload.topic}.
+        const prompt = `As a ${
+          payload.specialty
+        } expert, create an engaging social media post about ${payload.topic}.
 ${payload.location ? `Location context: ${payload.location}` : ""}
 
 Make it informative, engaging, and showcase your expertise.`;
-        
+
         const result = await generateText({
           model: openai("gpt-4o-mini"),
           prompt,
         });
-        
+
         return Response.json({ text: result.text });
       }
       case "sentiment": {
@@ -118,12 +120,12 @@ Make it informative, engaging, and showcase your expertise.`;
 Message: "${payload.message}"
 
 Return only: positive, negative, or neutral`;
-        
+
         const result = await generateText({
           model: openai("gpt-4o-mini"),
           prompt,
         });
-        
+
         return Response.json({ sentiment: result.text.trim().toLowerCase() });
       }
       default:

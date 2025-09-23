@@ -6,6 +6,7 @@ import { FuzoAIAssistant } from "./FuzoAIAssistant";
 import { PlatePage } from "./PlatePage";
 
 interface FeedPageProps {
+  onNavigateToDashboard?: () => void;
   onNavigateToScout?: () => void;
   onNavigateToSnap?: () => void;
   onNavigateToChat?: () => void;
@@ -15,6 +16,7 @@ interface FeedPageProps {
 }
 
 export function FeedPage({
+  onNavigateToDashboard,
   onNavigateToScout,
   onNavigateToSnap,
   onNavigateToChat,
@@ -81,7 +83,14 @@ export function FeedPage({
       </div>
 
       {/* Bottom Navigation */}
-      <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+      <BottomNavigation
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        onNavigateToDashboard={onNavigateToDashboard}
+        onNavigateToFeed={() => setActiveTab("feed")}
+        onNavigateToScout={onNavigateToScout}
+        onNavigateToSnap={onNavigateToSnap}
+      />
 
       {/* AI Assistant */}
       <FuzoAIAssistant

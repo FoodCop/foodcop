@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fuzo Dashboard Test</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10/dist/framer-motion.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .line-clamp-1 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+      }
+      .line-clamp-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState } = React;
+      const { motion, AnimatePresence } = Motion;
+
+      // Mock components for testing
+      const FuzoButton = ({
+        children,
+        variant = "primary",
+        size = "md",
+        className = "",
+        onClick,
+        ...props
+      }) => {
+        const baseClasses =
+          "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+        const variants = {
+          primary: "bg-[#F14C35] text-white hover:bg-[#E63E26]",
+          secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
+          tertiary: "bg-transparent text-gray-600 hover:bg-gray-100",
+        };
+        const sizes = {
+          sm: "px-3 py-1.5 text-sm",
+          md: "px-4 py-2 text-sm",
+          lg: "px-6 py-3 text-base",
+        };
+
+        return (
+          <button
+            className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
+            onClick={onClick}
+            {...props}
+          >
+            {children}
+          </button>
+        );
+      };
+
+      const FuzoInput = ({
+        placeholder,
+        value,
+        onChange,
+        className = "",
+        onKeyPress,
+        ...props
+      }) => {
+        return (
+          <input
+            type="text"
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            onKeyPress={onKeyPress}
+            className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F14C35] focus:border-transparent ${className}`}
+            {...props}
+          />
+        );
+      };
+
+      const AIFoodRecommendations = () => {
+        return (
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              AI-Powered Food Recommendations
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-gray-50 rounded-lg p-4">
+                  <div className="w-full h-32 bg-gray-200 rounded-lg mb-3"></div>
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    Recommended Dish {i}
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    AI-generated recommendation based on your preferences
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      };
+
+      const DashboardPage = () => {
+        const [searchQuery, setSearchQuery] = useState("");
+        const [location] = useState("LaunchPad @ one-north, 75 Ay...");
+        const [isLoading, setIsLoading] = useState(false);
+
+        const restaurants = [
+          {
+            id: "1",
+            name: "Ishiro Fusion Bowl (Timbre+)",
+            image:
+              "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
+            rating: 4.5,
+            deliveryTime: "30 min",
+            deliveryFee: "S$ 0",
+            cuisine: ["Japanese", "Asian", "Chicken", "Rice"],
+            priceRange: "$$",
+            isTopRestaurant: true,
+            offer: "$6 off $28: LIKEAPANDA",
+          },
+          {
+            id: "2",
+            name: "Takagi Ramen",
+            image:
+              "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop",
+            rating: 4.3,
+            deliveryTime: "40 min",
+            deliveryFee: "S$ 0",
+            cuisine: ["Ramen", "Japanese"],
+            priceRange: "$$",
+            offer: "$6 off $28: LIKE",
+          },
+          {
+            id: "3",
+            name: "McDonald's",
+            image:
+              "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=300&fit=crop",
+            rating: 4.1,
+            deliveryTime: "40 min",
+            deliveryFee: "Free",
+            cuisine: ["Fast Food", "American"],
+            priceRange: "$",
+            offer: "Welcome gift: free delivery",
+          },
+        ];
+
+        const recipeVideos = [
+          {
+            id: "1",
+            title: "Perfect Ramen Bowl in 15 Minutes",
+            thumbnail:
+              "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=225&fit=crop",
+            duration: "15:30",
+            chef: "Chef Tako",
+            views: 12500,
+          },
+          {
+            id: "2",
+            title: "Authentic Japanese Sushi Making",
+            thumbnail:
+              "https://images.unsplash.com/photo-1579584425555-c3ce17fd1871?w=400&h=225&fit=crop",
+            duration: "22:45",
+            chef: "Chef Yuki",
+            views: 8900,
+          },
+        ];
+
+        const friends = [
+          {
+            id: "1",
+            name: "Alex Chen",
+            avatar:
+              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+            isOnline: true,
+            lastActive: "now",
+          },
+          {
+            id: "2",
+            name: "Sarah Kim",
+            avatar:
+              "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+            isOnline: false,
+            lastActive: "2h ago",
+          },
+          {
+            id: "3",
+            name: "Mike Johnson",
+            avatar:
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+            isOnline: true,
+            lastActive: "now",
+          },
+        ];
+
+        const NAVIGATION_SECTIONS = [
+          {
+            id: "feed",
+            label: "Feed",
+            icon: "❤️",
+            color: "from-pink-500 to-rose-500",
+          },
+          {
+            id: "scout",
+            label: "Scout",
+            icon: "📍",
+            color: "from-blue-500 to-cyan-500",
+          },
+          {
+            id: "snap",
+            label: "Snap",
+            icon: "📷",
+            color: "from-purple-500 to-violet-500",
+          },
+          {
+            id: "bites",
+            label: "Bites",
+            icon: "🍽️",
+            color: "from-orange-500 to-amber-500",
+          },
+          {
+            id: "chat",
+            label: "Chat",
+            icon: "💬",
+            color: "from-green-500 to-emerald-500",
+          },
+          {
+            id: "plate",
+            label: "Plate",
+            icon: "👨‍🍳",
+            color: "from-red-500 to-pink-500",
+          },
+        ];
+
+        const handleSearch = () => {
+          setIsLoading(true);
+          setTimeout(() => setIsLoading(false), 1000);
+        };
+
+        return (
+          <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[#F14C35] to-[#E63E26] text-white">
+              {/* Status Bar */}
+              <div className="flex justify-between items-center px-4 pt-2 pb-1">
+                <span className="text-sm font-medium">9:41</span>
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-2 bg-white rounded-sm"></div>
+                  <div className="w-4 h-2 bg-white rounded-sm"></div>
+                  <div className="w-4 h-2 bg-white rounded-sm"></div>
+                  <div className="w-4 h-2 bg-white rounded-sm"></div>
+                </div>
+              </div>
+
+              {/* Location and Cart */}
+              <div className="flex items-center justify-between px-4 py-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 bg-white/20 rounded flex items-center justify-center">
+                    <div className="w-3 h-3 bg-white rounded-sm"></div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">{location}</p>
+                    <p className="text-xs opacity-90">Singapore, 139953</p>
+                  </div>
+                </div>
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  ❤️
+                </div>
+              </div>
+
+              {/* Search Bar */}
+              <div className="px-4 pb-4">
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400">
+                    🔍
+                  </div>
+                  <FuzoInput
+                    placeholder="Search for shops & restaurants"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-white text-gray-900 placeholder-gray-500 rounded-xl border-0 shadow-lg"
+                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation Sections */}
+            <div className="bg-white px-4 py-4">
+              <div className="flex gap-4 overflow-x-auto scrollbar-hide">
+                {NAVIGATION_SECTIONS.map((section) => (
+                  <div
+                    key={section.id}
+                    className="flex flex-col items-center gap-2 min-w-[60px] cursor-pointer hover:scale-105 transition-transform"
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-full bg-gradient-to-r ${section.color} flex items-center justify-center shadow-lg`}
+                    >
+                      <span className="text-white text-lg">{section.icon}</span>
+                    </div>
+                    <span className="text-xs font-medium text-gray-700">
+                      {section.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="px-4 pb-20">
+              {/* AI Recommendations Section */}
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-[#F14C35]">✨</span>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    AI Recommendations
+                  </h2>
+                </div>
+                <AIFoodRecommendations />
+              </div>
+
+              {/* Free Delivery Section */}
+              <div className="mb-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">
+                  Free delivery
+                </h2>
+                <div className="flex gap-4 overflow-x-auto scrollbar-hide">
+                  {restaurants.map((restaurant) => (
+                    <div
+                      key={restaurant.id}
+                      className="min-w-[280px] bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                    >
+                      <div className="relative h-40">
+                        <img
+                          src={restaurant.image}
+                          alt={restaurant.name}
+                          className="w-full h-full object-cover"
+                        />
+                        {restaurant.offer && (
+                          <div className="absolute top-2 left-2 bg-[#F14C35] text-white px-2 py-1 rounded text-xs font-medium">
+                            {restaurant.offer}
+                          </div>
+                        )}
+                        {restaurant.isTopRestaurant && (
+                          <div className="absolute top-2 right-2 bg-gray-800 text-white px-2 py-1 rounded text-xs font-medium">
+                            Top restaurant
+                          </div>
+                        )}
+                        <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1">
+                          <span className="text-sm font-medium text-gray-900">
+                            {restaurant.deliveryTime}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-bold text-gray-900 mb-1 line-clamp-1">
+                          {restaurant.name}
+                        </h3>
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center gap-1">
+                            <span className="text-yellow-500">⭐</span>
+                            <span className="text-sm text-gray-600">
+                              {restaurant.rating}
+                            </span>
+                          </div>
+                          <span className="text-sm text-gray-600">
+                            {restaurant.priceRange}
+                          </span>
+                          <span className="text-sm text-gray-600">•</span>
+                          <span className="text-sm text-gray-600">
+                            {restaurant.cuisine[0]}
+                          </span>
+                        </div>
+                        <p className="text-sm text-green-600 font-medium">
+                          {restaurant.deliveryFee} Delivery fee
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recipe Videos Section */}
+              <div className="mb-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">
+                  Recipe Videos
+                </h2>
+                <div className="flex gap-4 overflow-x-auto scrollbar-hide">
+                  {recipeVideos.map((video) => (
+                    <div
+                      key={video.id}
+                      className="min-w-[200px] bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                    >
+                      <div className="relative h-32">
+                        <img
+                          src={video.thumbnail}
+                          alt={video.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                          {video.duration}
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
+                            <div className="w-0 h-0 border-l-[8px] border-l-[#F14C35] border-y-[6px] border-y-transparent ml-1"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-3">
+                        <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
+                          {video.title}
+                        </h3>
+                        <p className="text-xs text-gray-600 mb-1">
+                          by {video.chef}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {video.views.toLocaleString()} views
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Friends Section */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-900">
+                    Your Friends
+                  </h2>
+                  <FuzoButton variant="tertiary" size="sm">
+                    ➕ Add Friends
+                  </FuzoButton>
+                </div>
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+                  {friends.map((friend) => (
+                    <div
+                      key={friend.id}
+                      className="flex flex-col items-center gap-2 min-w-[80px] cursor-pointer hover:scale-105 transition-transform"
+                    >
+                      <div className="relative">
+                        <img
+                          src={friend.avatar}
+                          alt={friend.name}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
+                        {friend.isOnline && (
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                        )}
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs font-medium text-gray-900 line-clamp-1">
+                          {friend.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {friend.isOnline ? "Online" : friend.lastActive}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Chef/Restaurant CTA */}
+              <div className="bg-gradient-to-r from-[#F14C35] to-[#E63E26] rounded-2xl p-6 text-white text-center hover:scale-102 transition-transform">
+                <div className="text-4xl mb-4">👨‍🍳</div>
+                <h3 className="text-xl font-bold mb-2">
+                  Are you a Chef or Restaurant?
+                </h3>
+                <p className="text-sm opacity-90 mb-4">
+                  Join Fuzo and showcase your culinary creations to thousands of
+                  food lovers
+                </p>
+                <FuzoButton className="bg-white text-[#F14C35] hover:bg-gray-100">
+                  Sign Up Now →
+                </FuzoButton>
+              </div>
+            </div>
+
+            {/* Loading Overlay */}
+            {isLoading && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-2xl p-6 flex items-center gap-3">
+                  <div className="w-6 h-6 border-2 border-[#F14C35] border-t-transparent rounded-full animate-spin"></div>
+                  <span className="text-gray-900 font-medium">
+                    Searching...
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      // Render the app
+      ReactDOM.render(<DashboardPage />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

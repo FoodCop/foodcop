@@ -25,6 +25,7 @@ import { PointsTab } from "./plate/PointsTab";
 import { RecipesTab } from "./plate/RecipesTab";
 import { RewardsTab } from "./plate/RewardsTab";
 import { VideosTab } from "./plate/VideosTab";
+import { ProfileEditModal } from "./profile/ProfileEditModal";
 
 type PlateTab =
   | "crew"
@@ -50,6 +51,7 @@ export function PlatePage({
 }: PlatePageProps) {
   const [activeTab, setActiveTab] = useState<PlateTab>("crew");
   const [isEditing, setIsEditing] = useState(false);
+  const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
   const { user, profile, signOut } = useAuth();
 
   // Fetch Masterbot plate data if viewing a Masterbot
@@ -432,7 +434,10 @@ export function PlatePage({
 
             {/* Edit Profile Button - Only show for own profile */}
             {isOwnProfile && (
-              <button className="px-6 py-3 bg-[#F14C35] text-white rounded-xl font-medium hover:bg-[#E63E26] transition-colors">
+              <button
+                onClick={() => setIsProfileEditModalOpen(true)}
+                className="px-6 py-3 bg-[#F14C35] text-white rounded-xl font-medium hover:bg-[#E63E26] transition-colors"
+              >
                 Edit Profile
               </button>
             )}
@@ -493,6 +498,16 @@ export function PlatePage({
           {renderTabContent()}
         </motion.div>
       </div>
+
+      {/* Profile Edit Modal */}
+      <ProfileEditModal
+        isOpen={isProfileEditModalOpen}
+        onClose={() => setIsProfileEditModalOpen(false)}
+        onSave={() => {
+          setIsProfileEditModalOpen(false);
+          // Profile will be automatically updated via AuthContext
+        }}
+      />
     </div>
   );
 }

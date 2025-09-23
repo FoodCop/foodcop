@@ -8,7 +8,7 @@ export function HeroSection({ onNavigateToSignup }: HeroSectionProps) {
       className="relative py-20 min-h-screen flex items-center justify-center"
       style={{
         background: "linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%)",
-        backgroundImage: `url('/images/landing/Images/share-image.png')`,
+        backgroundImage: `url('/images/landing/Images/hero_image.png')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

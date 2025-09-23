@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { isOAuthCallback } from "../utils/authRedirect";
 import { RecipesPage } from "./Bites";
 import { ChatPage } from "./ChatPage";
+import { DashboardPage } from "./DashboardPage";
 import { FeedPage } from "./FeedPage";
 import { LandingPage } from "./LandingPage";
 import { OnboardingFlow } from "./OnboardingFlow";
@@ -23,6 +24,7 @@ import { TermsOfServicePage } from "./info/TermsOfServicePage";
 type PageType =
   | "landing"
   | "onboarding"
+  | "dashboard"
   | "feed"
   | "scout"
   | "snap"
@@ -69,6 +71,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
         [
           "landing",
           "onboarding",
+          "dashboard",
           "feed",
           "scout",
           "snap",
@@ -115,8 +118,10 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
           <OnboardingFlow
             onComplete={() => {
               console.log("[PageRouter] Onboarding completed");
-              console.log("[PageRouter] Changing page from onboarding to feed");
-              setCurrentPage("feed");
+              console.log(
+                "[PageRouter] Changing page from onboarding to dashboard"
+              );
+              setCurrentPage("dashboard");
             }}
             onBack={() => {
               console.log("[PageRouter] Returning to landing page");
@@ -128,9 +133,22 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
           />
         );
 
+      case "dashboard":
+        return (
+          <DashboardPage
+            onNavigateToFeed={() => setCurrentPage("feed")}
+            onNavigateToScout={() => setCurrentPage("scout")}
+            onNavigateToSnap={() => setCurrentPage("snap")}
+            onNavigateToBites={() => setCurrentPage("recipes")}
+            onNavigateToChat={() => setCurrentPage("chat")}
+            onNavigateToPlate={() => setCurrentPage("plate")}
+          />
+        );
+
       case "feed":
         return (
           <FeedPage
+            onNavigateToDashboard={() => setCurrentPage("dashboard")}
             onNavigateToScout={() => setCurrentPage("scout")}
             onNavigateToSnap={() => setCurrentPage("snap")}
             onNavigateToChat={() => setCurrentPage("chat")}
@@ -184,6 +202,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
               // Map destination paths to page types
               const destinationMap: Record<string, PageType> = {
                 "/onboarding": "onboarding",
+                "/dashboard": "dashboard",
                 "/feed": "feed",
                 "/scout": "scout",
                 "/snap": "snap",
@@ -197,7 +216,7 @@ export function PageRouter({ initialPage = "landing" }: PageRouterProps = {}) {
               const pathname = destination.startsWith("/")
                 ? destination
                 : `/${destination}`;
-              const pageType = destinationMap[pathname] || "feed"; // Default to feed for unknown destinations
+              const pageType = destinationMap[pathname] || "dashboard"; // Default to dashboard for unknown destinations
 
               console.log(
                 `[PageRouter] Mapping destination ${destination} to page type: ${pageType}`

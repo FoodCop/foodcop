@@ -3,6 +3,8 @@
  * Generates personalized posts matching each bot's personality
  */
 
+import { getEnv } from "../../utils/env";
+
 interface OpenAIConfig {
   apiKey: string;
   baseUrl: string;
@@ -59,9 +61,9 @@ class OpenAIClient {
   }
 
   private getApiKey(): string {
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = getEnv("VITE_OPENAI_API_KEY");
     if (!apiKey) {
-      throw new Error("OPENAI_API_KEY environment variable is required");
+      throw new Error("VITE_OPENAI_API_KEY environment variable is required");
     }
     return apiKey;
   }

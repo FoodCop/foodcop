@@ -2,6 +2,7 @@ import { ArrowLeft, Menu } from "lucide-react";
 import React, { useState } from "react";
 import { RecipesPage } from "./Bites";
 import { ChatPage } from "./ChatPage";
+import { DashboardPage } from "./DashboardPage";
 import { FeedPage } from "./FeedPage";
 import { LandingPage } from "./LandingPage";
 import { OnboardingFlow } from "./OnboardingFlow";
@@ -12,6 +13,7 @@ import { UniversalHeader } from "./UniversalHeader";
 
 type PageType =
   | "landing"
+  | "dashboard"
   | "feed"
   | "onboarding"
   | "scout"
@@ -31,6 +33,12 @@ const pages: Page[] = [
     id: "landing",
     title: "Landing Page",
     description: "FUZO brand showcase with Tako mascot and feature sections",
+  },
+  {
+    id: "dashboard",
+    title: "Dashboard",
+    description:
+      "AI-powered home dashboard with recommendations and navigation",
   },
   {
     id: "feed",
@@ -131,9 +139,21 @@ export function PageRouter({
             onNavigateToSignup={() => setCurrentPage("onboarding")}
           />
         );
+      case "dashboard":
+        return (
+          <DashboardPage
+            onNavigateToFeed={() => setCurrentPage("feed")}
+            onNavigateToScout={() => setCurrentPage("scout")}
+            onNavigateToSnap={() => setCurrentPage("snap")}
+            onNavigateToBites={() => setCurrentPage("recipes")}
+            onNavigateToChat={() => setCurrentPage("chat")}
+            onNavigateToPlate={() => setCurrentPage("plate")}
+          />
+        );
       case "feed":
         return (
           <FeedPage
+            onNavigateToDashboard={() => setCurrentPage("dashboard")}
             onNavigateToScout={() => setCurrentPage("scout")}
             onNavigateToSnap={() => setCurrentPage("snap")}
             onNavigateToChat={() => setCurrentPage("chat")}
@@ -155,7 +175,7 @@ export function PageRouter({
       case "onboarding":
         return (
           <OnboardingFlow
-            onComplete={() => setCurrentPage("feed")}
+            onComplete={() => setCurrentPage("dashboard")}
             onBack={() => setCurrentPage("landing")}
           />
         );
@@ -191,6 +211,8 @@ export function PageRouter({
       case "landing":
       case "onboarding":
         return null; // These pages have their own navigation
+      case "dashboard":
+        return null; // Dashboard has its own header
       case "feed":
         return null; // Feed has its own header with FUZO branding
       case "scout":

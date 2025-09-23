@@ -129,16 +129,23 @@ export function OnboardingFlow({ onComplete, onBack }: OnboardingFlowProps) {
     }
 
     try {
-      // Update user profile with onboarding data
+      // Update user profile with all onboarding data
       await updateProfile({
-        dietary_preferences: userData.dietary,
-        cuisine_preferences: userData.cuisines,
-        bio: userData.bio,
         display_name: userData.fullName,
         username: userData.username,
+        bio: userData.bio,
+        avatar_url: userData.avatar,
+        dietary_preferences: userData.dietary,
+        cuisine_preferences: userData.cuisines,
         onboarding_completed: true,
       });
-      console.log("✅ Onboarding completion saved to database");
+      console.log("✅ Onboarding completion saved to database with all data:", {
+        display_name: userData.fullName,
+        username: userData.username,
+        bio: userData.bio,
+        dietary_preferences: userData.dietary,
+        cuisine_preferences: userData.cuisines,
+      });
     } catch (error) {
       console.error("❌ Failed to save onboarding completion:", error);
     }

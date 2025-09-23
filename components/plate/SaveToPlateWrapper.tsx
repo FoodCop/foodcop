@@ -1,11 +1,16 @@
 import { motion } from "framer-motion";
 import { Heart, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ItemType, savedItemsService } from "../services/savedItemsService";
+import {
+  ItemType,
+  ensureRemoved,
+  ensureSaved,
+  isItemSaved,
+} from "../../src/lib/plate";
 import { useToast } from "../ui/Toast";
 import { SaveConfirmDialog } from "./SaveConfirmDialog";
 
-interface SaveToPlateProps {
+interface SaveToPlateWrapperProps {
   itemId: string;
   itemType: ItemType;
   title?: string;
@@ -16,9 +21,11 @@ interface SaveToPlateProps {
   onUnsaved?: () => void;
   className?: string;
   size?: "sm" | "md" | "lg";
+  tenantId?: string;
+  userId?: string;
 }
 
-export function SaveToPlate({
+export function SaveToPlateWrapper({
   itemId,
   itemType,
   title,
@@ -29,7 +36,9 @@ export function SaveToPlate({
   onUnsaved,
   className = "",
   size = "md",
-}: SaveToPlateProps) {
+  tenantId = "default-tenant", // Default tenant for single-tenant apps
+  userId,
+}: SaveToPlateWrapperProps) {
   const [isSaved, setIsSaved] = useState(defaultSaved);
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -39,12 +48,16 @@ export function SaveToPlate({
   // Check if item is already saved on mount
   useEffect(() => {
     const checkSavedStatus = async () => {
+      if (!userId) return;
+
       try {
-        const result = await savedItemsService.isItemSaved({
-          itemId,
+        const saved = await isItemSaved({
+          tenantId,
+          userId,
           itemType,
+          itemId,
         });
-        setIsSaved(result.isSaved);
+        setIsSaved(saved);
       } catch (error) {
         console.error("Error checking saved status:", error);
       } finally {
@@ -53,7 +66,7 @@ export function SaveToPlate({
     };
 
     checkSavedStatus();
-  }, [itemId, itemType]);
+  }, [itemId, itemType, tenantId, userId]);
 
   const handleClick = () => {
     if (isSaved) {
@@ -66,38 +79,43 @@ export function SaveToPlate({
   };
 
   const handleConfirmSave = async () => {
+    if (!userId) {
+      showError("Authentication required", "Please sign in to save items");
+      return;
+    }
+
     setLoading(true);
     try {
       console.log("🔄 SaveToPlate: Starting save operation", {
         itemId,
         itemType,
         title,
+        tenantId,
+        userId,
       });
 
-      const result = await savedItemsService.saveItem({
-        itemId,
+      await ensureSaved({
+        tenantId,
+        userId,
         itemType,
-        metadata: {
+        itemId,
+        meta: {
           title,
           imageUrl,
           saved_at: new Date().toISOString(),
         },
       });
 
-      if (result.success) {
-        console.log("✅ SaveToPlate: Successfully saved to plate");
-        setIsSaved(true);
-        setShowDialog(false);
-        onSaved?.();
+      console.log("✅ SaveToPlate: Successfully saved to plate");
+      setIsSaved(true);
+      setShowDialog(false);
+      onSaved?.();
 
-        // Show success toast
-        showSuccess(
-          "Saved to your Plate!",
-          title ? `${title} has been saved` : "Item saved successfully"
-        );
-      } else {
-        throw new Error(result.message);
-      }
+      // Show success toast
+      showSuccess(
+        "Saved to your Plate!",
+        title ? `${title} has been saved` : "Item saved successfully"
+      );
     } catch (error) {
       console.error("❌ SaveToPlate: Error saving to plate:", error);
       // Show error toast
@@ -108,25 +126,31 @@ export function SaveToPlate({
   };
 
   const handleUnsave = async () => {
+    if (!userId) {
+      showError(
+        "Authentication required",
+        "Please sign in to manage your saved items"
+      );
+      return;
+    }
+
     setLoading(true);
     try {
-      const result = await savedItemsService.unsaveItem({
-        itemId,
+      await ensureRemoved({
+        tenantId,
+        userId,
         itemType,
+        itemId,
       });
 
-      if (result.success) {
-        setIsSaved(false);
-        onUnsaved?.();
+      setIsSaved(false);
+      onUnsaved?.();
 
-        // Show success toast
-        showSuccess(
-          "Removed from your Plate",
-          title ? `${title} has been removed` : "Item removed successfully"
-        );
-      } else {
-        throw new Error(result.message);
-      }
+      // Show success toast
+      showSuccess(
+        "Removed from your Plate",
+        title ? `${title} has been removed` : "Item removed successfully"
+      );
     } catch (error) {
       console.error("Error removing from plate:", error);
       // Show error toast
@@ -215,3 +239,4 @@ export function SaveToPlate({
     </>
   );
 }
+

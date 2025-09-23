@@ -108,7 +108,8 @@ app.post("/make-server-5976446e/auth/signup", async (c) => {
 // PATCH endpoint to update/create profile (with Zod validation)
 import { z } from "npm:zod";
 const profileSchema = z.object({
-  display_name: z.string().min(2).max(100),
+  display_name: z.string().min(2).max(100).optional(),
+  username: z.string().min(2).max(50).optional(),
   bio: z.string().max(1000).optional(),
   avatar_url: z.string().url().optional(),
   dietary_preferences: z.array(z.string()).optional(),
