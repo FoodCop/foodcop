@@ -1,48 +1,11 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "api/ai/status.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/ai/complete.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/ai/actions.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/ai/chat.ts",
-      "use": "@vercel/node"
-    }
-  ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/ai/(.*)",
-      "dest": "/api/ai/$1"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/api/ai/(.*)",
+      "destination": "/api/ai/$1"
     }
   ]
 }
