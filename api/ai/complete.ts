@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       prompt,
     });
 
-    return result.toDataStreamResponse();
+    return result.toTextStreamResponse();
   } catch (error) {
     console.error("AI completion error:", error);
     return new Response("Internal server error", { status: 500 });
