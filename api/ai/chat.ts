@@ -23,7 +23,8 @@ export async function POST(req: Request) {
     // Add system message to make Tako more food-focused
     const systemMessage = {
       role: "system",
-      content: "You are Tako, a friendly AI food assistant for FUZO. Help users discover amazing food experiences, restaurants, and recipes. Be helpful, engaging, and food-focused in your responses."
+      content:
+        "You are Tako, a friendly AI food assistant for FUZO. Help users discover amazing food experiences, restaurants, and recipes. Be helpful, engaging, and food-focused in your responses.",
     };
 
     const result = await streamText({
