@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // Hook for AI chat using Vercel AI SDK
 export function useVercelAIChat() {
@@ -112,7 +112,14 @@ export function useVercelAIStatus() {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to load AI status";
       setError(errorMessage);
-      // Set default status when there's an error
+
+      // Fallback: Check if we can determine AI status from client-side
+      // This is a fallback for when the API endpoint is not available
+      console.warn(
+        "🐙 Tako AI: API endpoint not available, using fallback status check"
+      );
+
+      // Set status as not configured when API is not available
       setStatus({
         configured: false,
         provider: null,
@@ -123,6 +130,11 @@ export function useVercelAIStatus() {
       setIsLoading(false);
     }
   }, []);
+
+  // Load status on mount
+  useEffect(() => {
+    void loadStatus();
+  }, [loadStatus]);
 
   return {
     configured: status?.configured ?? false,

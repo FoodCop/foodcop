@@ -78,6 +78,17 @@ export function FuzoAIAssistant({
     error: aiStatusError,
   } = useVercelAIStatus();
 
+  // Debug logging for AI status (can be removed in production)
+  useEffect(() => {
+    console.log("🐙 Tako AI: Status update:", {
+      aiConfigured,
+      provider,
+      model,
+      aiStatusLoading,
+      aiStatusError,
+    });
+  }, [aiConfigured, provider, model, aiStatusLoading, aiStatusError]);
+
   const quickSuggestions = [
     "Nearby Food",
     "Recipes",

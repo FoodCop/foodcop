@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 5173 --open --force",
+    "dev:ai": "tsx server/ai-server.ts",
+    "dev:full": "concurrently \"npm run dev:ai\" \"npm run dev\"",
+    "start": "node start-dev.js",
     "build": "vite build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
@@ -44,7 +47,10 @@
     "console:monitor": "node server/console-monitor-server.js",
     "console:monitor:dev": "node server/console-monitor-server.js 3001",
     "dev:with-monitor": "concurrently \"npm run console:monitor\" \"npm run dev\"",
-    "console:test": "node -e \"const ws = new WebSocket('ws://localhost:3001/console'); ws.on('open', () => { console.log('Connected'); ws.send(JSON.stringify({type: 'subscribe'})); }); ws.on('message', (data) => console.log('Received:', JSON.parse(data.toString())));\""
+    "console:test": "node -e \"const ws = new WebSocket('ws://localhost:3001/console'); ws.on('open', () => { console.log('Connected'); ws.send(JSON.stringify({type: 'subscribe'})); }); ws.on('message', (data) => console.log('Received:', JSON.parse(data.toString())));\"",
+    "monitor:idempotency": "node scripts/monitor-idempotency.js",
+    "setup:monitoring": "node scripts/setup-vercel-monitoring.js",
+    "test:idempotency": "npm run test:run -- plateIdempotency && npm run test:e2e -- plate-idempotency"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.17",
@@ -83,7 +89,9 @@
     "ai": "^5.0.48",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.6.1",
+    "express": "^5.1.0",
     "framer-motion": "^11.0.0",
     "hono": "^4.9.7",
     "lucide-react": "^0.400.0",
