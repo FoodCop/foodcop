@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 import type { Restaurant } from "../ScoutPage";
 import { SafeRestaurantImage } from "../ui/SafeRestaurantImage";
 
@@ -7,20 +7,41 @@ interface RestaurantCardProps {
   restaurant: Restaurant;
   onClick: () => void;
   variant?: "horizontal" | "grid";
+  showMapIcon?: boolean;
+  onMapClick?: () => void;
 }
 
 export function RestaurantCard({
   restaurant,
   onClick,
-  variant = "horizontal",
+  variant = "horizontal", // TODO: Implement variant-specific layouts
+  showMapIcon = false,
+  onMapClick,
 }: RestaurantCardProps) {
+  // Suppress unused parameter warning - variant will be used for different layouts
+  void variant;
+
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="flex-shrink-0 w-64 bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
+      className="flex-shrink-0 w-64 bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer relative"
     >
+      {/* Map Icon */}
+      {showMapIcon && onMapClick && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onMapClick();
+          }}
+          className="absolute top-2 right-2 z-10 p-1.5 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors"
+          title="View on Map"
+        >
+          <MapPin className="w-4 h-4 text-[#F14C35]" />
+        </button>
+      )}
+
       <div className="p-3">
         <div className="flex items-center space-x-3">
           {/* Restaurant Image */}

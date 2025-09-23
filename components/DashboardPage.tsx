@@ -7,7 +7,6 @@ import {
   Loader2,
   MapPin,
   MessageCircle,
-  Play,
   Plus,
   RefreshCw,
   Search,
@@ -17,13 +16,14 @@ import { useState } from "react";
 import { useLocation } from "../hooks/useLocation";
 import { useMasterbotRecommendations } from "../hooks/useMasterbotRecommendations";
 import { useNearbyRestaurants } from "../hooks/useNearbyRestaurants";
+import { useSpoonacularRecipes } from "../hooks/useSpoonacularRecipes";
 import { Restaurant } from "./ScoutPage";
 import { MasterbotPostCard } from "./dashboard/MasterbotPostCard";
 import { NearbyRestaurantCard } from "./dashboard/NearbyRestaurantCard";
 import { FuzoButton } from "./global/FuzoButton";
 import { FuzoInput } from "./global/FuzoInput";
+import { RecipeCard } from "./recipes/RecipeCard";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Card, CardContent, CardTitle } from "./ui/card";
 
 interface DashboardPageProps {
   onNavigateToFeed?: () => void;
@@ -32,15 +32,6 @@ interface DashboardPageProps {
   onNavigateToBites?: () => void;
   onNavigateToChat?: () => void;
   onNavigateToPlate?: () => void;
-}
-
-interface RecipeVideo {
-  id: string;
-  title: string;
-  thumbnail: string;
-  duration: string;
-  chef: string;
-  views: number;
 }
 
 interface Friend {
@@ -89,44 +80,6 @@ const NAVIGATION_SECTIONS = [
     color: "from-red-500 to-pink-500",
   },
 ];
-
-// Recipe Video Card Component
-function RecipeVideoCard({ video }: { video: RecipeVideo }) {
-  return (
-    <motion.div
-      className="min-w-[200px] cursor-pointer"
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-        <div className="relative h-32">
-          <img
-            src={video.thumbnail}
-            alt={video.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
-            {video.duration}
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
-              <Play className="w-6 h-6 text-[#F14C35] ml-1" />
-            </div>
-          </div>
-        </div>
-        <CardContent className="p-3">
-          <CardTitle className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">
-            {video.title}
-          </CardTitle>
-          <p className="text-xs text-gray-600 mb-1">by {video.chef}</p>
-          <p className="text-xs text-gray-500">
-            {video.views.toLocaleString()} views
-          </p>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
 
 // Friend Card Component
 function FriendCard({ friend }: { friend: Friend }) {
@@ -187,35 +140,15 @@ export function DashboardPage({
     refetch: refetchRestaurants,
   } = useNearbyRestaurants();
 
-  const [recipeVideos] = useState<RecipeVideo[]>([
-    {
-      id: "1",
-      title: "Perfect Ramen Bowl in 15 Minutes",
-      thumbnail:
-        "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=225&fit=crop",
-      duration: "15:30",
-      chef: "Chef Tako",
-      views: 12500,
-    },
-    {
-      id: "2",
-      title: "Authentic Japanese Sushi Making",
-      thumbnail:
-        "https://images.unsplash.com/photo-1579584425555-c3ce17fd1871?w=400&h=225&fit=crop",
-      duration: "22:45",
-      chef: "Chef Yuki",
-      views: 8900,
-    },
-    {
-      id: "3",
-      title: "Quick Korean Bibimbap",
-      thumbnail:
-        "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=225&fit=crop",
-      duration: "18:20",
-      chef: "Chef Min",
-      views: 15600,
-    },
-  ]);
+  // Fetch Spoonacular recipes
+  const {
+    recipes: spoonacularRecipes,
+    loading: recipesLoading,
+    error: recipesError,
+    refetch: refetchRecipes,
+  } = useSpoonacularRecipes({
+    number: 6,
+  });
 
   const [friends] = useState<Friend[]>([
     {
@@ -283,6 +216,22 @@ export function DashboardPage({
   const handleRestaurantClick = (restaurant: Restaurant) => {
     console.log("Restaurant clicked:", restaurant);
     // TODO: Navigate to restaurant details or implement restaurant interaction
+  };
+
+  const handleRestaurantMapClick = (restaurant: Restaurant) => {
+    console.log("View restaurant on map:", restaurant);
+    // TODO: Navigate to Scout page with restaurant focused on map
+    onNavigateToScout?.();
+  };
+
+  const handleRecipeClick = (recipe: any) => {
+    console.log("Recipe clicked:", recipe);
+    // TODO: Navigate to recipe details page
+  };
+
+  const handleRecipeShare = (recipe: any) => {
+    console.log("Share recipe:", recipe);
+    // TODO: Implement share functionality
   };
 
   const handleSectionClick = (sectionId: string) => {
@@ -490,6 +439,7 @@ export function DashboardPage({
                     key={restaurant.id}
                     restaurant={restaurant}
                     onClick={() => handleRestaurantClick(restaurant)}
+                    onMapClick={() => handleRestaurantMapClick(restaurant)}
                   />
                 ))
               ) : (
@@ -512,16 +462,66 @@ export function DashboardPage({
           )}
         </div>
 
-        {/* Recipe Videos Section */}
+        {/* Today's Recipes Section */}
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Recipe Videos
-          </h2>
-          <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-            {recipeVideos.map((video) => (
-              <RecipeVideoCard key={video.id} video={video} />
-            ))}
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900">Today's Recipes</h2>
+            <FuzoButton
+              variant="tertiary"
+              size="sm"
+              onClick={refetchRecipes}
+              disabled={recipesLoading}
+            >
+              <RefreshCw
+                className={`w-4 h-4 mr-1 ${
+                  recipesLoading ? "animate-spin" : ""
+                }`}
+              />
+              Refresh
+            </FuzoButton>
           </div>
+
+          {recipesError && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+              <p className="text-red-600 text-sm">
+                Failed to load recipes. Please try again.
+              </p>
+            </div>
+          )}
+
+          {recipesLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-[#F14C35] mr-2" />
+              <span className="text-gray-600">Loading recipes...</span>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 items-stretch">
+              {spoonacularRecipes.length > 0 ? (
+                spoonacularRecipes.map((recipe) => (
+                  <div key={recipe.id} className="flex">
+                    <RecipeCard
+                      recipe={recipe}
+                      onClick={() => handleRecipeClick(recipe)}
+                      onShare={() => handleRecipeShare(recipe)}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-2 text-center py-8">
+                  <p className="text-gray-600 mb-2 text-sm">No recipes found</p>
+                  <p className="text-xs text-gray-500 mb-2">
+                    Try refreshing or check your connection
+                  </p>
+                  <button
+                    onClick={refetchRecipes}
+                    className="text-[#F14C35] font-medium hover:underline text-sm"
+                  >
+                    Refresh
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Friends Section */}

@@ -32,7 +32,7 @@ export function RecipeCard({
   return (
     <div
       onClick={handleClick}
-      className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
+      className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer group h-full flex flex-col"
     >
       {/* Recipe Image */}
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -67,20 +67,20 @@ export function RecipeCard({
       </div>
 
       {/* Recipe Info */}
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-1">
         {/* Title and Cuisine */}
-        <div className="mb-3">
-          <h3 className="font-semibold text-[#0B1F3A] mb-1 line-clamp-1">
+        <div className="mb-3 flex-shrink-0">
+          <h3 className="font-semibold text-[#0B1F3A] mb-1 line-clamp-2 h-10">
             {recipe.title}
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 line-clamp-1">
             {recipe.cuisine} • by {recipe.author.name}
           </p>
         </div>
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-1 mb-3">
-          {recipe.tags.slice(0, 3).map((tag) => (
+        <div className="flex flex-wrap gap-1 mb-3 flex-shrink-0">
+          {recipe.tags.slice(0, 2).map((tag) => (
             <span
               key={tag}
               className="px-2 py-1 bg-[#F8F9FA] text-xs font-medium text-gray-600 rounded-full"
@@ -88,15 +88,15 @@ export function RecipeCard({
               #{tag}
             </span>
           ))}
-          {recipe.tags.length > 3 && (
+          {recipe.tags.length > 2 && (
             <span className="px-2 py-1 bg-[#F8F9FA] text-xs font-medium text-gray-600 rounded-full">
-              +{recipe.tags.length - 3}
+              +{recipe.tags.length - 2}
             </span>
           )}
         </div>
 
         {/* Metadata */}
-        <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+        <div className="flex items-center justify-between text-sm text-gray-600 mb-4 flex-shrink-0">
           <div className="flex items-center space-x-1">
             <Clock className="w-4 h-4" />
             <span>{recipe.cookingTime}m</span>
@@ -109,12 +109,12 @@ export function RecipeCard({
           </div>
           <div className="flex items-center space-x-1">
             <Users className="w-4 h-4" />
-            <span>{recipe.servings} servings</span>
+            <span>{recipe.servings}</span>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 mt-auto">
           <button
             onClick={handleClick}
             className="flex-1 bg-[#F14C35] text-white py-2 px-4 rounded-xl font-medium hover:bg-[#E63E26] transition-colors"

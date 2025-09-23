@@ -14,7 +14,8 @@ FUZO is a comprehensive food discovery platform featuring Tako the octopus masco
 - **Smooth Onboarding**: Google OAuth integration with profile setup
 - **Camera Functionality**: Snap and tag food photos
 - **Chat System**: Real-time messaging with Stream Chat API
-- **Recipe Discovery Hub**: Powered by Spoonacular API
+- **Recipe Discovery Hub**: Powered by Spoonacular API with real-time recipe recommendations
+- **Today's Recipes**: Dynamic recipe cards with consistent sizing and real-time data
 - **AI Assistant**: Tako-powered food recommendations with OpenAI
 - **Fresh Profile System**: Users start with clean profiles and build their food journey
 - **Visual Feedback**: Interactive save buttons with hover and click effects
@@ -315,6 +316,13 @@ Each bot has a unique personality, system prompt, and specialization for authent
 
 ## 🆕 Recent Improvements
 
+### New Features
+
+- **✅ Today's Recipes Section**: Duplicated Recipe Videos section with real-time Spoonacular API integration
+- **✅ Dynamic Recipe Cards**: Consistent card sizing with normalized heights for better visual consistency
+- **✅ Real-time Recipe Data**: Live recipe recommendations powered by Spoonacular API
+- **✅ Custom Recipe Hook**: Created `useSpoonacularRecipes` hook for seamless API integration
+
 ### Data Persistence & User Experience
 
 - **✅ Fixed Saved Items Persistence**: Restaurants now properly save to backend and persist across navigation
@@ -330,6 +338,7 @@ Each bot has a unique personality, system prompt, and specialization for authent
 - **✅ Loading States**: Proper loading indicators and empty states throughout the app
 - **✅ Error Handling**: Graceful fallbacks and user-friendly error messages
 - **✅ Code Quality**: Removed mock data dependencies and improved TypeScript types
+- **✅ Recipe API Integration**: Seamless Spoonacular API integration with proper error handling
 
 ### User Interface Enhancements
 
@@ -337,6 +346,7 @@ Each bot has a unique personality, system prompt, and specialization for authent
 - **✅ Loading Animations**: Tako-themed loading states for better user feedback
 - **✅ Empty States**: Helpful messages when no data is available
 - **✅ Responsive Design**: Optimized for mobile and desktop experiences
+- **✅ Normalized Card Layout**: Consistent recipe card heights with proper content management
 
 ## 🚀 Deployment
 
