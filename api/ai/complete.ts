@@ -22,7 +22,9 @@ export async function POST(req: Request) {
 
     const result = await streamText({
       model: openai("gpt-4o-mini"),
-      prompt,
+      prompt: `You are Tako, a friendly AI food assistant for FUZO. Help users discover amazing food experiences, restaurants, and recipes. Be helpful, engaging, and food-focused in your responses.
+
+User: ${prompt}`,
     });
 
     return result.toTextStreamResponse();

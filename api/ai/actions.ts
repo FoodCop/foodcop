@@ -1,4 +1,5 @@
-import { aiUtils } from "../../lib/ai-utils";
+import { createOpenAI } from "@ai-sdk/openai";
+import { generateText } from "ai";
 
 interface FoodRequest {
   action: "food";
@@ -41,43 +42,89 @@ type AIActionRequest =
 
 export async function POST(req: Request) {
   try {
+    const openaiApiKey = process.env.OPENAI_API_KEY;
+
+    if (!openaiApiKey) {
+      return new Response("OpenAI API key not configured", { status: 500 });
+    }
+
+    const openai = createOpenAI({
+      apiKey: openaiApiKey,
+    });
+
     const payload = (await req.json()) as AIActionRequest;
 
     switch (payload.action) {
       case "food": {
-        const result = await aiUtils.generateFoodRecommendations(
-          payload.userInput,
-          payload.preferences,
-          payload.dietaryRestrictions
-        );
-        return Response.json(result);
+        const prompt = `As a food expert, provide personalized food recommendations based on:
+User Input: ${payload.userInput}
+Preferences: ${payload.preferences?.join(", ") || "None specified"}
+Dietary Restrictions: ${payload.dietaryRestrictions?.join(", ") || "None"}
+
+Provide 3-5 detailed recommendations with ratings, difficulty, and prep time.`;
+        
+        const result = await generateText({
+          model: openai("gpt-4o-mini"),
+          prompt,
+        });
+        
+        return Response.json({ recommendations: result.text });
       }
       case "chat-response": {
-        const result = await aiUtils.generateChatResponse(
-          payload.message,
-          payload.context
-        );
-        return Response.json(result);
+        const prompt = `Analyze this chat message and provide a helpful response:
+Message: ${payload.message}
+Context: ${payload.context || "General conversation"}
+
+Consider the user's sentiment and provide appropriate suggestions.`;
+        
+        const result = await generateText({
+          model: openai("gpt-4o-mini"),
+          prompt,
+        });
+        
+        return Response.json({ response: result.text });
       }
       case "masterbot-response": {
-        const result = await aiUtils.generateMasterBotResponse(
-          payload.userMessage,
-          payload.botSpecialty,
-          payload.conversationHistory
-        );
-        return Response.json(result);
+        const historyContext = payload.conversationHistory?.join("\n") || "";
+        const prompt = `You are a ${payload.botSpecialty} expert Master Bot. Respond to this user message:
+
+User Message: ${payload.userMessage}
+Conversation History: ${historyContext}
+
+Provide an expert response that showcases your specialty knowledge.`;
+        
+        const result = await generateText({
+          model: openai("gpt-4o-mini"),
+          prompt,
+        });
+        
+        return Response.json({ response: result.text });
       }
       case "masterbot-post": {
-        const result = await aiUtils.generateMasterBotPost(
-          payload.specialty,
-          payload.topic,
-          payload.location
-        );
-        return Response.json({ text: result });
+        const prompt = `As a ${payload.specialty} expert, create an engaging social media post about ${payload.topic}.
+${payload.location ? `Location context: ${payload.location}` : ""}
+
+Make it informative, engaging, and showcase your expertise.`;
+        
+        const result = await generateText({
+          model: openai("gpt-4o-mini"),
+          prompt,
+        });
+        
+        return Response.json({ text: result.text });
       }
       case "sentiment": {
-        const sentiment = await aiUtils.analyzeSentiment(payload.message);
-        return Response.json({ sentiment });
+        const prompt = `Analyze the sentiment of this message and provide insights:
+Message: "${payload.message}"
+
+Return only: positive, negative, or neutral`;
+        
+        const result = await generateText({
+          model: openai("gpt-4o-mini"),
+          prompt,
+        });
+        
+        return Response.json({ sentiment: result.text.trim().toLowerCase() });
       }
       default:
         return new Response("Unsupported AI action", { status: 400 });
