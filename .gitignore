@@ -1,0 +1,27 @@
+.next/
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+
+# debug & backups
+app/_debug/
+**/*.backup
+**/*.bak
+**/*.back
+**/*.old
+
+# Ignore trace files specifically
+**/.next/trace
+**/.next/trace.*

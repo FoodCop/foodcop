@@ -1,0 +1,19 @@
+/* Mobile responsive styles for PhoneFan component */
+@media (max-width: 640px) {
+  .phonefanContainer [aria-hidden="true"] {
+    display: none !important;
+  }
+
+  /* Ensure center phone has good visual weight on mobile */
+  .phonefanContainer .phoneFrame {
+    transform: scale(1.1) !important;
+  }
+}
+
+/* Ensure proper height constraints */
+.phonefanContainer {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

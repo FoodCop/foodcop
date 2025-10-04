@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masterbot Avatar Uploader</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .avatar-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+        .avatar-info {
+            margin-bottom: 10px;
+        }
+        .avatar-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .avatar-username {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .file-input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .upload-button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .upload-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .upload-button:hover:not(:disabled) {
+            background: #45a049;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .config-section {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .config-input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Masterbot Avatar Uploader</h1>
+        <p>Upload custom avatars for each masterbot to Supabase Storage</p>
+
+        <!-- Supabase Configuration -->
+        <div class="config-section">
+            <h3>Supabase Configuration</h3>
+            <input type="text" id="supabaseUrl" class="config-input" placeholder="Supabase URL (from .env.local)" />
+            <input type="text" id="supabaseKey" class="config-input" placeholder="Supabase Service Role Key (from .env.local)" />
+            <small>Get these values from your .env.local file</small>
+        </div>
+
+        <!-- Upload Section -->
+        <div id="uploadSection" style="display: none;">
+            <div id="avatarList"></div>
+            <button id="uploadAllBtn" class="upload-button" onclick="uploadAllAvatars()">
+                Upload All Avatars to Supabase
+            </button>
+        </div>
+
+        <div id="status"></div>
+    </div>
+
+    <script>
+        const MASTERBOT_AVATARS = [
+            { username: 'spice_scholar_anika', name: 'Anika Kapoor', filename: 'anika_spice_scholar.png' },
+            { username: 'sommelier_seb', name: 'Sebastian LeClair', filename: 'sebastian_sommelier.png' },
+            { username: 'coffee_pilgrim_omar', name: 'Omar Darzi', filename: 'omar_coffee_pilgrim.png' },
+            { username: 'zen_minimalist_jun', name: 'Jun Tanaka', filename: 'jun_zen_minimalist.png' },
+            { username: 'nomad_aurelia', name: 'Aurelia Voss', filename: 'aurelia_nomad.png' },
+            { username: 'adventure_rafa', name: 'Rafael Mendez', filename: 'rafael_adventure.png' },
+            { username: 'plant_pioneer_lila', name: 'Lila Cheng', filename: 'lila_plant_pioneer.png' }
+        ];
+
+        let supabase = null;
+        let selectedFiles = {};
+
+        // Initialize configuration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-fill if values exist in localStorage
+            const savedUrl = localStorage.getItem('supabaseUrl');
+            const savedKey = localStorage.getItem('supabaseKey');
+            
+            if (savedUrl) document.getElementById('supabaseUrl').value = savedUrl;
+            if (savedKey) document.getElementById('supabaseKey').value = savedKey;
+
+            // Setup event listeners
+            document.getElementById('supabaseUrl').addEventListener('input', checkConfig);
+            document.getElementById('supabaseKey').addEventListener('input', checkConfig);
+
+            // Create avatar upload list
+            createAvatarList();
+            checkConfig();
+        });
+
+        function checkConfig() {
+            const url = document.getElementById('supabaseUrl').value.trim();
+            const key = document.getElementById('supabaseKey').value.trim();
+
+            if (url && key) {
+                // Save to localStorage
+                localStorage.setItem('supabaseUrl', url);
+                localStorage.setItem('supabaseKey', key);
+
+                // Initialize Supabase client
+                try {
+                    supabase = window.supabase.createClient(url, key);
+                    document.getElementById('uploadSection').style.display = 'block';
+                    showStatus('✅ Supabase client initialized successfully!', 'success');
+                } catch (error) {
+                    showStatus('❌ Error initializing Supabase: ' + error.message, 'error');
+                }
+            } else {
+                document.getElementById('uploadSection').style.display = 'none';
+            }
+        }
+
+        function createAvatarList() {
+            const listContainer = document.getElementById('avatarList');
+            
+            MASTERBOT_AVATARS.forEach(avatar => {
+                const avatarDiv = document.createElement('div');
+                avatarDiv.className = 'avatar-item';
+                avatarDiv.innerHTML = `
+                    <div class="avatar-info">
+                        <div class="avatar-name">${avatar.name}</div>
+                        <div class="avatar-username">@${avatar.username}</div>
+                        <div style="font-size: 0.8em; color: #888;">Expected file: ${avatar.filename}</div>
+                    </div>
+                    <input type="file" 
+                           class="file-input" 
+                           accept="image/*" 
+                           data-username="${avatar.username}"
+                           onchange="handleFileSelect(this)" />
+                `;
+                listContainer.appendChild(avatarDiv);
+            });
+        }
+
+        function handleFileSelect(input) {
+            const username = input.dataset.username;
+            const file = input.files[0];
+            
+            if (file) {
+                selectedFiles[username] = file;
+                showStatus(`📁 Selected file for ${username}: ${file.name}`, 'success');
+            }
+        }
+
+        async function uploadAllAvatars() {
+            if (!supabase) {
+                showStatus('❌ Supabase not configured', 'error');
+                return;
+            }
+
+            const fileCount = Object.keys(selectedFiles).length;
+            if (fileCount === 0) {
+                showStatus('❌ No files selected', 'error');
+                return;
+            }
+
+            const uploadBtn = document.getElementById('uploadAllBtn');
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+
+            showStatus(`🚀 Starting upload of ${fileCount} files...`, 'success');
+
+            const results = [];
+
+            for (const [username, file] of Object.entries(selectedFiles)) {
+                const avatar = MASTERBOT_AVATARS.find(a => a.username === username);
+                
+                try {
+                    showStatus(`📤 Uploading ${avatar.name}...`, 'success');
+
+                    // Upload to Supabase Storage
+                    const storagePath = `avatars/${file.name}`;
+                    const { data, error: uploadError } = await supabase.storage
+                        .from('master-bot-posts')
+                        .upload(storagePath, file, {
+                            cacheControl: '3600',
+                            upsert: true
+                        });
+
+                    if (uploadError) {
+                        throw new Error(uploadError.message);
+                    }
+
+                    // Get public URL
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('master-bot-posts')
+                        .getPublicUrl(storagePath);
+
+                    // Update user record
+                    const { error: updateError } = await supabase
+                        .from('users')
+                        .update({ avatar_url: publicUrl })
+                        .eq('username', username)
+                        .eq('is_master_bot', true);
+
+                    if (updateError) {
+                        throw new Error(`Database update failed: ${updateError.message}`);
+                    }
+
+                    results.push({ username, success: true, url: publicUrl });
+                    showStatus(`✅ ${avatar.name} uploaded successfully!`, 'success');
+
+                } catch (error) {
+                    results.push({ username, success: false, error: error.message });
+                    showStatus(`❌ Failed to upload ${avatar.name}: ${error.message}`, 'error');
+                }
+            }
+
+            // Summary
+            const successful = results.filter(r => r.success).length;
+            const failed = results.filter(r => !r.success).length;
+
+            showStatus(`
+                🎉 Upload Complete!<br>
+                ✅ Successful: ${successful}<br>
+                ❌ Failed: ${failed}<br>
+                <br>
+                ${results.filter(r => r.success).map(r => 
+                    `✅ ${MASTERBOT_AVATARS.find(a => a.username === r.username).name}: ${r.url}`
+                ).join('<br>')}
+            `, successful === results.length ? 'success' : 'error');
+
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = 'Upload All Avatars to Supabase';
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = message;
+            statusDiv.className = `status ${type}`;
+        }
+    </script>
+</body>
+</html>

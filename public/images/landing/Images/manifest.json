@@ -1,0 +1,52 @@
+{
+  "name": "FUZO - Food Discovery & Social Sharing",
+  "short_name": "FUZO",
+  "description": "Discover, capture, and share your favorite dining experiences with FUZO. Find the best restaurants, share food photos, and connect with food lovers worldwide.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff2a68",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["food", "social", "lifestyle"],
+  "icons": [
+    {
+      "src": "/logo_trans.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo_trans.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/share-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "FUZO Food Discovery App"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Discover Food",
+      "short_name": "Discover",
+      "description": "Find new restaurants and food spots",
+      "url": "/",
+      "icons": [{ "src": "/logo_trans.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "My Profile",
+      "short_name": "Profile",
+      "description": "View your profile and saved restaurants",
+      "url": "/profile",
+      "icons": [{ "src": "/logo_trans.png", "sizes": "96x96" }]
+    }
+  ]
+} 

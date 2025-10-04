@@ -1,0 +1,45 @@
+@import "../styles/tokens.css"; /* TweakCN import is here */
+@import "../styles/scout-map.css";
+@import "../styles/restaurant-markers.css";
+@import "../styles/scout-responsive.css";
+@import "../styles/scout-page.css";
+@import "../styles/scout-page-wrapper.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .theme {
+    /* TweakCN provides fonts: Inter, Source Serif 4, JetBrains Mono */
+    /* Let TweakCN handle font definitions */
+    --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+    --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+    --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+    --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+    --tracking-widest: calc(var(--tracking-normal) + 0.1em)
+  }
+  
+  /* TweakCN will provide all color tokens automatically */
+  /* Remove manual token definitions to avoid conflicts */
+  
+  :root {
+    /* Let TweakCN handle all tokens - minimal overrides only for app-specific needs */
+    --tracking-normal: 0.1em; /* App-specific letter spacing */
+  }
+  
+  /* TweakCN handles dark mode automatically - no manual overrides needed */
+  
+  body {
+    letter-spacing: var(--tracking-normal);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

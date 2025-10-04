@@ -1,0 +1,160 @@
+📁 Folder structure for: app
+
+├── _debug/
+│   ├── ai-activation-route-backup.ts
+│   ├── api/
+│   │   ├── _debug/
+│   │   │   ├── bites/
+│   │   │   │   └── recipe-search/
+│   │   │   │       └── route.ts
+│   │   │   └── scout/
+│   │   │       └── restaurant-search/
+│   │   │           └── route.ts
+│   │   ├── ai-activation-route-backup.ts
+│   │   ├── bites-debug/
+│   │   │   └── recipe-search/
+│   │   │       ├── recipe-search/
+│   │   │       │   └── route.ts
+│   │   │       └── route.ts.backup
+│   │   ├── debug/
+│   │   │   ├── debug/
+│   │   │   │   ├── bites-recipe-search/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── collections/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── database-tables/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── env-vars/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── google-maps/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── google-places/
+│   │   │   │   │   ├── google-places/
+│   │   │   │   │   │   └── route.ts
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── oauth/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── openai/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── saved-recipes/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── saved-restaurants/
+│   │   │   │   │   ├── route.ts
+│   │   │   │   │   └── saved-restaurants/
+│   │   │   │   │       └── route.ts
+│   │   │   │   ├── scout-restaurant-search/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── spoonacular/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── stream-chat/
+│   │   │   │   ├── supabase/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── supabase-storage/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── users/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── youtube/
+│   │   │   │       └── route.ts
+│   │   │   ├── google-places/
+│   │   │   │   └── route.ts.backup
+│   │   │   └── saved-restaurants/
+│   │   │       └── route.ts.backup
+│   │   ├── save-restaurant/
+│   │   │   └── route.ts.backup
+│   │   ├── scout-debug/
+│   │   │   └── restaurant-search/
+│   │   │       └── route.ts
+│   │   └── user-profile/
+│   │       └── [username]/
+│   │           └── route.ts.backup
+│   ├── auth-debug-simple/
+│   │   └── page.tsx
+│   ├── chat-debug/
+│   │   └── page.tsx
+│   └── cron-debug/
+│       └── page.tsx
+├── ai/
+│   └── page.tsx
+├── api/
+│   ├── check-auth/
+│   │   └── route.ts
+│   ├── directions/
+│   │   └── route.ts
+│   ├── masterbot-interactions/
+│   │   └── route.ts
+│   ├── respond-to-share/
+│   │   └── route.ts
+│   ├── save-restaurant/
+│   │   └── route.ts
+│   ├── save-to-plate/
+│   │   └── route.ts
+│   ├── share-to-friend/
+│   │   └── route.ts
+│   ├── snap-upload/
+│   │   └── route.ts
+│   ├── stream-token/
+│   ├── test-accept-friend/
+│   │   └── route.ts
+│   ├── user-profile/
+│   │   └── [username]/
+│   │       └── route.ts
+│   └── view-friend-plate/
+│       └── route.ts
+├── auth/
+│   └── callback/
+│       ├── page.tsx
+│       └── route.ts
+├── auth-callback-test/
+│   └── page.tsx
+├── auth-debug/
+│   └── page.tsx
+├── auth-state-test/
+│   └── page.tsx
+├── auth-success/
+│   └── page.tsx
+├── bites/
+│   └── page.tsx
+├── chat/
+│   ├── page.tsx
+│   └── page.tsx.backup
+├── dashboard/
+│   └── page.tsx
+├── feed/
+│   ├── page.tsx
+│   └── page.tsx.backup
+├── folder structure.txt
+├── friends/
+│   └── page.tsx
+├── globals.css
+├── layout.tsx
+├── onboarding/
+│   └── page.tsx
+├── onboarding-demo/
+│   └── page.tsx
+├── order-tracking-demo/
+│   └── page.tsx
+├── page.tsx
+├── plate/
+│   ├── page.tsx
+│   └── page.tsx.backup
+├── quick-signin/
+│   └── page.tsx
+├── scan_structure.py
+├── scout/
+│   ├── page-new.tsx
+│   ├── page.tsx
+│   └── page.tsx.backup
+├── snap/
+│   └── page.tsx
+├── social-demo/
+│   └── page.tsx
+├── test-save-to-plate-disabled/
+│   └── page.tsx
+├── tweakcn-test/
+│   └── page.tsx
+├── tweakcn-validation/
+│   └── page.tsx
+└── users/
+    ├── [username]/
+    │   └── page.tsx
+    └── page.tsx

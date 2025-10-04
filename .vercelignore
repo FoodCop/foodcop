@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+.next/
+out/
+dist/
+
+# Development files
+.env*.local
+.env.local.backup
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode/
+.cursor/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.nyc_output/
+coverage/
+playwright-report/
+test-results/
+
+# Misc
+*.tgz
+*.tar.gz
+
+# Documentation and specs (optional - uncomment if you don't want to deploy docs)
+# docs/
+# specs/
+
+# Database and certificates
+database/
+certificates/
+
+# Backup files
+*.backup
+*.bak

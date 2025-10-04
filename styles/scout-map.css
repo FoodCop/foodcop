@@ -1,0 +1,163 @@
+/* MapLibre GL JS styles for Scout page */
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+/* Scout map container styles */
+.scout-map-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.scout-map {
+  border-radius: 8px;
+}
+
+.scout-map-loading {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.scout-map-error {
+  border-radius: 8px;
+  border: 1px solid #f87171;
+  background-color: #fef2f2;
+}
+
+/* MapLibre control customization */
+.scout-map-container .maplibregl-ctrl-group {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.scout-map-container .maplibregl-ctrl-group button {
+  background-color: white;
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.scout-map-container .maplibregl-ctrl-group button:last-child {
+  border-bottom: none;
+}
+
+.scout-map-container .maplibregl-ctrl-group button:hover {
+  background-color: #329937;
+  color: white;
+}
+
+.scout-map-container .maplibregl-ctrl-group button:focus {
+  outline: 2px solid #329937;
+  outline-offset: 2px;
+}
+
+/* Geolocation control styling */
+.scout-map-container .maplibregl-ctrl-geolocate {
+  background-color: white;
+}
+
+.scout-map-container .maplibregl-ctrl-geolocate:hover {
+  background-color: #329937 !important;
+}
+
+.scout-map-container .maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active {
+  background-color: #329937;
+  color: white;
+}
+
+/* Scale control styling */
+.scout-map-container .maplibregl-ctrl-scale {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: #333;
+}
+
+/* Attribution control */
+.scout-map-container .maplibregl-ctrl-attrib {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.scout-map-container .maplibregl-ctrl-attrib a {
+  color: #329937;
+  text-decoration: none;
+}
+
+.scout-map-container .maplibregl-ctrl-attrib a:hover {
+  text-decoration: underline;
+}
+
+/* Popup styling (for future restaurant popups) */
+.scout-map-container .maplibregl-popup-content {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  max-width: 300px;
+}
+
+.scout-map-container .maplibregl-popup-close-button {
+  color: #666;
+  font-size: 18px;
+  padding: 4px;
+  line-height: 1;
+}
+
+.scout-map-container .maplibregl-popup-close-button:hover {
+  background-color: #f3f4f6;
+  border-radius: 3px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .scout-map-container .maplibregl-ctrl-group {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .scout-map-container .maplibregl-ctrl-group button {
+    padding: 8px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  .scout-map-container .maplibregl-popup-content {
+    max-width: calc(100vw - 40px);
+    font-size: 14px;
+  }
+}
+
+/* Loading animation for map initialization */
+@keyframes scoutMapSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.scout-map-loading .loading-spinner {
+  animation: scoutMapSpin 1s linear infinite;
+}
+
+/* Accessibility improvements */
+.scout-map-container .maplibregl-ctrl button:focus {
+  outline: 2px solid #329937;
+  outline-offset: 2px;
+}
+
+.scout-map-container [role="button"] {
+  cursor: pointer;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .scout-map-container .maplibregl-ctrl-group {
+    border: 2px solid #000;
+  }
+  
+  .scout-map-container .maplibregl-ctrl-group button:hover {
+    background-color: #000;
+    color: #fff;
+  }
+}
