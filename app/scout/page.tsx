@@ -1,6 +1,7 @@
 import { SimpleUserStatus } from "@/components/auth/SimpleUserStatus";
 import { ScoutClient } from "@/components/scout/ScoutClient";
 import { ScoutDebug } from "@/components/debug/ScoutDebug";
+import { ScoutSidebar } from "@/components/scout/ScoutSidebar";
 
 export const metadata = { title: "Scout | FUZO" };
 
@@ -12,23 +13,27 @@ export default function ScoutPage() {
           <h1 className="text-3xl font-bold">Scout</h1>
           <SimpleUserStatus />
         </div>
-        <p className="text-lg text-muted-foreground">
-          Discover nearby restaurants with our interactive map powered by MapLibre GL JS.
-        </p>
         
-        {/* MapLibre Interactive Map - Using Dynamic Loading Approach */}
-        <div className="scout-map-section">
+        {/* MapLibre Interactive Map with Sidebar Overlay */}
+        <div className="scout-map-section relative">
           <ScoutClient
             style={{ width: '100%', height: '500px' }}
             className="border border-gray-200 rounded-lg shadow-sm"
           />
+          
+          {/* ScoutSidebar Overlay */}
+          <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm border shadow-lg rounded-lg max-h-[460px] overflow-y-auto">
+            <ScoutSidebar />
+          </div>
         </div>
 
-        {/* Debug Section */}
+        {/* Debug Section - Commented out for now */}
+        {/*
         <div className="border-t pt-6">
           <h2 className="text-lg font-semibold mb-4">Debug Information</h2>
           <ScoutDebug />
         </div>
+        */}
       </div>
     </main>
   );

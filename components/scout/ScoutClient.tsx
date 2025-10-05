@@ -29,7 +29,8 @@ export function ScoutClient({ className, style }: ScoutClientProps) {
         }}
       />
       
-      {/* Location Debug Information */}
+      {/* Location Debug Information - Commented out for now */}
+      {/*
       {locationData && (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <h3 className="font-semibold text-green-800 mb-2">📍 Location Detected</h3>
@@ -80,6 +81,7 @@ export function ScoutClient({ className, style }: ScoutClientProps) {
           </div>
         </div>
       )}
+      */}
       
       {/* Map Error Information */}
       {mapError && (
