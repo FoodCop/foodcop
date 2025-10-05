@@ -56,7 +56,7 @@ const SectionTwo = ({
         </div>
         <div className="flex relative">
           <Image
-            src="/images/landing/Images/hero_image.png"
+            src="/images/landing/Images/radar.jpg"
             alt="placeholder hero"
             width={600}
             height={800}

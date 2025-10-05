@@ -24,38 +24,52 @@ interface CuisineSectionProps {
 const defaultFeatures: FeatureItem[] = [
   {
     id: 1,
-    title: "Ready-to-Use UI Blocks",
-    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-1.svg",
+    title: "Street Food",
+    image: "/images/landing/images/categories/streetfood.png",
     description:
-      "Browse through our extensive collection of pre-built UI blocks designed with shadcn/ui. Each block is carefully crafted to be responsive, accessible, and easily customizable. Simply copy and paste the code into your project.",
+      "Late-night legends & hawker icons.",
   },
   {
     id: 2,
-    title: "Tailwind CSS & TypeScript",
-    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-2.svg",
+    title: "Fine Dining",
+    image: "/images/landing/images/categories/fine-dining.png",
     description:
-      "Built with Tailwind CSS for rapid styling and TypeScript for type safety. Our blocks leverage the full power of Tailwind's utility classes while maintaining clean, type-safe code that integrates seamlessly with your Next.js projects.",
+      "Tasting menus worth dressing up for.",
   },
   {
     id: 3,
-    title: "Dark Mode & Customization",
-    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-3.svg",
+    title: "Pastry",
+    image: "/images/landing/images/categories/pastry.png",
     description:
-      "Every block supports dark mode out of the box and can be customized to match your brand. Modify colors, spacing, and typography using Tailwind's configuration. The shadcn/ui theming system makes it easy to maintain consistency across your site.",
+      "Flaky, buttery, photogenic joy.",
   },
   {
     id: 4,
-    title: "Accessibility First",
-    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-4.svg",
+    title: "Healthy",
+    image: "/images/landing/images/categories/Healthy.png",
     description:
-      "All blocks are built with accessibility in mind, following WCAG guidelines. They include proper ARIA labels, keyboard navigation support, and semantic HTML structure. Ensure your website is usable by everyone without extra effort.",
+      "Bowls, salads, smart swaps.",
   },
   {
     id: 5,
-    title: "Modern Development Stack",
-    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-5.svg",
+    title: "BBQ",
+    image: "/images/landing/images/categories/BBQ.png",
     description:
-      "Built for modern web development with React 18, Next.js 14, and the latest shadcn/ui components. Take advantage of React Server Components, TypeScript strict mode, and other cutting-edge features while maintaining excellent performance.",
+      "Smoke, char and slow-cooked bliss.",
+  },
+   {
+    id: 6,
+    title: "Vegan",
+    image: "/images/landing/images/categories/vegan.png",
+    description:
+      "Bold flavors, zero compromise.",
+  },
+  {
+    id: 7,
+    title: "Sushi",
+    image: "/images/landing/images/categories/Sushi.png",
+    description:
+      "Omakase and immaculate cuts.",
   },
 ];
 
@@ -66,6 +80,11 @@ const CuisineSection = ({ features = defaultFeatures }: CuisineSectionProps) => 
   return (
     <section className="py-32">
       <div className="container mx-auto">
+        <div className="mb-12 text-center">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            The World on your Plate
+          </h2>
+        </div>
         <div className="mb-12 flex w-full items-start justify-between gap-12">
           <div className="w-full md:w-1/2">
             <Accordion type="single" className="w-full" defaultValue="item-1">
@@ -102,13 +121,13 @@ const CuisineSection = ({ features = defaultFeatures }: CuisineSectionProps) => 
               ))}
             </Accordion>
           </div>
-          <div className="relative m-auto hidden w-1/2 overflow-hidden rounded-xl bg-muted md:block">
+          <div className="relative m-auto hidden w-[400px] h-[400px] overflow-hidden rounded-xl bg-muted md:block">
             <Image
               src={activeImage}
               alt="Feature preview"
-              className="aspect-4/3 rounded-md object-cover pl-4"
+              className="aspect-square rounded-xl object-cover w-full h-full"
               width={400}
-              height={300}
+              height={400}
             />
           </div>
         </div>

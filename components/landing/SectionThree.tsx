@@ -34,7 +34,7 @@ const SectionThree = ({
         {/* Image on the left */}
         <div className="flex relative order-2 lg:order-1">
           <Image
-            src="/images/landing/Images/hero_image.png"
+            src="/images/landing/Images/scout.jpg"
             alt="placeholder hero"
             width={600}
             height={800}

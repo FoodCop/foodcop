@@ -35,7 +35,7 @@ const SectionOne = ({
     }    
   },
   image = {
-    src: "/images/landing/Images/hero_image.png",
+    src: "/images/landing/Images/feed_image.png",
     alt: "FUZO App Preview",
   },
 }: Hero47Props) => {
@@ -76,7 +76,7 @@ const SectionOne = ({
                 {/* Screen */}
                 <Image
                   alt="FUZO App Preview"
-                  src="/images/landing/Images/hero_image.png"
+                  src="/images/landing/Images/feed_image.png"
                   fill
                   className="object-cover"
                 />

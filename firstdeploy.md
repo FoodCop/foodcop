@@ -74,20 +74,24 @@ The following images are referenced in code but missing from the file system:
 
 ## 🧹 Recommended Cleanup Actions
 
-### Test/Demo Routes to Remove
-These routes were created for testing and should be removed before production:
+### ✅ Test/Demo Routes Cleanup - COMPLETED
+The following routes have been successfully removed from production:
+
+~~3. **`/app/test-save-to-plate-disabled/`** - Feature testing~~ ✅ **REMOVED**
+~~4. **`/app/tweakcn-test/`** - Theme testing~~ ✅ **REMOVED**
+~~5. **`/app/tweakcn-validation/`** - Theme validation~~ ✅ **REMOVED**
+~~7. **`/app/order-tracking-demo/`** - Order tracking demo~~ ✅ **REMOVED**
+
+### Test/Demo Routes Kept for Now
+These routes are still present (as requested):
 
 1. **`/app/auth-callback-test/`** - Auth testing page
-2. **`/app/auth-state-test/`** - Auth state testing
-3. **`/app/test-save-to-plate-disabled/`** - Feature testing
-4. **`/app/tweakcn-test/`** - Theme testing
-5. **`/app/tweakcn-validation/`** - Theme validation
+2. **`/app/auth-state-test/`** - Auth state testing  
 6. **`/app/social-demo/`** - Social feature demo
-7. **`/app/order-tracking-demo/`** - Order tracking demo
 8. **`/app/onboarding-demo/`** - Onboarding demo
 
-### Backup Files to Remove
-1. **`tailwind.config.ts.backup`** - Old Tailwind config
+### ✅ Backup Files - VERIFIED
+~~1. **`tailwind.config.ts.backup`** - Old Tailwind config~~ ✅ **NOT PRESENT** (already clean)
 
 ### Debug Routes (Consider Removal for Production)
 - **`/app/_debug/`** - Debug utilities
@@ -108,7 +112,7 @@ The `/scripts/` directory contains database seeding and avatar upload scripts. T
 - [ ] Set up domain-specific configurations
 
 ### 2. Build Optimization
-- [ ] Remove test/demo routes
+- [x] Remove test/demo routes (partial cleanup completed)
 - [ ] Clean up unused images
 - [ ] Optimize image sizes
 - [ ] Review and remove debug routes

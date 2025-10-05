@@ -53,7 +53,7 @@ const SectionFour = ({
                 {/* Screen */}
                 <Image
                   alt="FUZO App Preview"
-                  src="/images/landing/Images/hero_image.png"
+                  src="/images/landing/Images/radar_image.png"
                   fill
                   className="object-cover"
                 />
