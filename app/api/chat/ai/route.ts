@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { OpenAIService } from '@/lib/services/openai-service';
 
 // GET /api/chat/ai - Get AI chat messages with masterbot
 export async function GET(request: NextRequest) {
@@ -165,8 +166,24 @@ export async function POST(request: NextRequest) {
       }, { status: 500 });
     }
 
-    // Generate AI response (simplified for now)
-    const aiResponse = await generateAIResponse(message, masterbotData);
+    // Get recent conversation history for context
+    const { data: recentMessages } = await supabase
+      .from('chat_messages')
+      .select('content, is_ai_generated')
+      .eq('room_id', aiRoomId)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    // Convert to conversation history format
+    const conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = (recentMessages || [])
+      .reverse()
+      .map(msg => ({
+        role: msg.is_ai_generated ? 'assistant' : 'user',
+        content: msg.content
+      }));
+
+    // Generate AI response with conversation context
+    const aiResponse = await generateAIResponse(message, masterbotData, conversationHistory);
 
     // Insert AI response
     const { data: aiMessage, error: aiMessageError } = await supabase
@@ -207,32 +224,55 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Simple AI response generator (to be enhanced with OpenAI later)
-async function generateAIResponse(userMessage: string, masterbot: any): Promise<string> {
-  // For now, return a simple response based on masterbot personality
-  const responses = {
-    'tako': [
-      "That sounds delicious! I love experimenting with Japanese flavors. 🐙",
-      "Tako here! Have you tried adding some umami to that dish?",
-      "Interesting choice! In Japan, we often pair that with..."
-    ],
-    'chef-sophia': [
-      "Excellent choice! The technique you're describing reminds me of classical French methods.",
-      "Chef Sophia here - have you considered the temperature control for that recipe?",
-      "That's a wonderful dish! I'd suggest pairing it with..."
-    ],
-    'street-food-samurai': [
-      "Street food warrior here! That sounds like authentic street cuisine!",
-      "Yo! That's exactly the kind of bold flavor I love to see!",
-      "Street-style cooking is all about that authentic taste - you're on the right track!"
-    ]
-  };
+// Enhanced AI response generator using OpenAI
+async function generateAIResponse(userMessage: string, masterbot: any, conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = []): Promise<string> {
+  try {
+    // Use OpenAI service to generate intelligent responses
+    const response = await OpenAIService.generateMasterbotResponse(
+      userMessage,
+      masterbot.username,
+      conversationHistory
+    );
+    
+    return response;
+  } catch (error) {
+    console.error('Error generating AI response:', error);
+    
+    // Fallback to simple responses if OpenAI fails
+    const responses = {
+      'tako': [
+        "That sounds delicious! I love experimenting with Japanese flavors. 🐙",
+        "Tako here! Have you tried adding some umami to that dish?",
+        "Interesting choice! In Japan, we often pair that with..."
+      ],
+      'chef-sophia': [
+        "Excellent choice! The technique you're describing reminds me of classical French methods.",
+        "Chef Sophia here - have you considered the temperature control for that recipe?",
+        "That's a wonderful dish! I'd suggest pairing it with..."
+      ],
+      'street-food-samurai': [
+        "Street food warrior here! That sounds like authentic street cuisine!",
+        "Yo! That's exactly the kind of bold flavor I love to see!",
+        "Street-style cooking is all about that authentic taste - you're on the right track!"
+      ],
+      'coffee-pilgrim-omar': [
+        "Omar here! That sounds like a perfect coffee pairing opportunity.",
+        "Have you considered what coffee would complement that flavor profile?",
+        "Coffee pilgrim approved! That's exactly the kind of experience I love."
+      ],
+      'adventure-rafa': [
+        "Adventure time! That sounds like an exciting culinary challenge!",
+        "Rafael here - I love your adventurous spirit with food!",
+        "That's the kind of bold flavor adventure I'm talking about!"
+      ]
+    };
 
-  const botResponses = responses[masterbot.username as keyof typeof responses] || [
-    "That's interesting! Tell me more about your food experience.",
-    "Great choice! I'd love to help you explore more culinary adventures.",
-    "Delicious! Food is such a wonderful way to connect with others."
-  ];
+    const botResponses = responses[masterbot.username as keyof typeof responses] || [
+      "That's interesting! Tell me more about your food experience.",
+      "Great choice! I'd love to help you explore more culinary adventures.",
+      "Delicious! Food is such a wonderful way to connect with others."
+    ];
 
-  return botResponses[Math.floor(Math.random() * botResponses.length)];
+    return botResponses[Math.floor(Math.random() * botResponses.length)];
+  }
 }

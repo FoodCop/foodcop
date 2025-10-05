@@ -1,5 +1,5 @@
-import { BitesDebug } from "@/components/debug/BitesDebug";
 import { SimpleUserStatus } from "@/components/auth/SimpleUserStatus";
+import { BitesDebug } from "@/components/debug/BitesDebug";
 
 export const metadata = { title: "Bites | FUZO" };
 
@@ -17,7 +17,12 @@ export default function BitesPage() {
         <div className="h-96 bg-muted/20 rounded-lg flex items-center justify-center">
           <p className="text-muted-foreground">Video content coming soon...</p>
         </div>
-        <BitesDebug />
+
+        {/* Debug Section */}
+        <div className="border-t pt-6">
+          <h2 className="text-lg font-semibold mb-4">Debug Information</h2>
+          <BitesDebug />
+        </div>
       </div>
     </main>
   );

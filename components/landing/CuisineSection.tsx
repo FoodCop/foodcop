@@ -25,49 +25,49 @@ const defaultFeatures: FeatureItem[] = [
   {
     id: 1,
     title: "Street Food",
-    image: "/images/landing/images/categories/streetfood.png",
+    image: "/images/landing/Images/categories/streetfood.png",
     description:
       "Late-night legends & hawker icons.",
   },
   {
     id: 2,
     title: "Fine Dining",
-    image: "/images/landing/images/categories/fine-dining.png",
+    image: "/images/landing/Images/categories/fine-dining.png",
     description:
       "Tasting menus worth dressing up for.",
   },
   {
     id: 3,
     title: "Pastry",
-    image: "/images/landing/images/categories/pastry.png",
+    image: "/images/landing/Images/categories/pastry.png",
     description:
       "Flaky, buttery, photogenic joy.",
   },
   {
     id: 4,
     title: "Healthy",
-    image: "/images/landing/images/categories/Healthy.png",
+    image: "/images/landing/Images/categories/Healthy.png",
     description:
       "Bowls, salads, smart swaps.",
   },
   {
     id: 5,
     title: "BBQ",
-    image: "/images/landing/images/categories/BBQ.png",
+    image: "/images/landing/Images/categories/BBQ.png",
     description:
       "Smoke, char and slow-cooked bliss.",
   },
    {
     id: 6,
     title: "Vegan",
-    image: "/images/landing/images/categories/vegan.png",
+    image: "/images/landing/Images/categories/vegan.png",
     description:
       "Bold flavors, zero compromise.",
   },
   {
     id: 7,
     title: "Sushi",
-    image: "/images/landing/images/categories/Sushi.png",
+    image: "/images/landing/Images/categories/Sushi.png",
     description:
       "Omakase and immaculate cuts.",
   },

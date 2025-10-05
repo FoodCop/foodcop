@@ -1,6 +1,6 @@
-import { ScoutDebug } from "@/components/debug/ScoutDebug";
 import { SimpleUserStatus } from "@/components/auth/SimpleUserStatus";
 import { ScoutClient } from "@/components/scout/ScoutClient";
+import { ScoutDebug } from "@/components/debug/ScoutDebug";
 
 export const metadata = { title: "Scout | FUZO" };
 
@@ -23,9 +23,10 @@ export default function ScoutPage() {
             className="border border-gray-200 rounded-lg shadow-sm"
           />
         </div>
-        
+
         {/* Debug Section */}
-        <div className="mt-8">
+        <div className="border-t pt-6">
+          <h2 className="text-lg font-semibold mb-4">Debug Information</h2>
           <ScoutDebug />
         </div>
       </div>
