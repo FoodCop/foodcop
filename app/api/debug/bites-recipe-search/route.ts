@@ -107,6 +107,10 @@ export async function GET(request: NextRequest) {
     const ranking = searchParams.get('ranking') || '2';
     const sort = searchParams.get('sort') || 'popularity';
     const addRecipeNutrition = searchParams.get('addRecipeNutrition') === 'true';
+    
+    // Parse ingredient filtering parameters
+    const includeIngredients = searchParams.get('includeIngredients') || '';
+    const excludeIngredients = searchParams.get('excludeIngredients') || '';
 
     // Build API URL
     const baseUrl = 'https://api.spoonacular.com/recipes/complexSearch';
@@ -121,6 +125,14 @@ export async function GET(request: NextRequest) {
     // Add query if provided
     if (query.trim()) {
       urlParams.append('query', query.trim());
+    }
+
+    // Add direct ingredient filtering (takes precedence over enhanced filters)
+    if (includeIngredients.trim()) {
+      urlParams.append('includeIngredients', includeIngredients.trim());
+    }
+    if (excludeIngredients.trim()) {
+      urlParams.append('excludeIngredients', excludeIngredients.trim());
     }
 
     // Add diet filters
@@ -144,9 +156,9 @@ export async function GET(request: NextRequest) {
           urlParams.append('addRecipeNutrition', 'true');
         }
         
-        // Add diet-specific enhanced filters for the first diet
+        // Add diet-specific enhanced filters for the first diet (only if no direct ingredient filters)
         const primaryDiet = diets[0].toLowerCase();
-        if (SPOONACULAR_DIETS[primaryDiet]?.enhancedFilters) {
+        if (SPOONACULAR_DIETS[primaryDiet]?.enhancedFilters && !includeIngredients && !excludeIngredients) {
           const filters = SPOONACULAR_DIETS[primaryDiet].enhancedFilters;
           
           if (filters.includeIngredients) {
