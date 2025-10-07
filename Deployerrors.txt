@@ -1,0 +1,362 @@
+13:25:11.908 Running build in Washington, D.C., USA (East) – iad1
+13:25:11.909 Build machine configuration: 2 cores, 8 GB
+13:25:11.927 Cloning github.com/FoodCop/foodcop (Branch: main, Commit: df758dc)
+13:25:14.339 Cloning completed: 2.412s
+13:25:14.409 Found .vercelignore
+13:25:14.420 Removed 28 ignored files defined in .vercelignore
+13:25:14.421   /.cursor/mcp_vscode.json
+13:25:14.421   /.cursor/mcp.json
+13:25:14.421   /.vscode/mcp.json
+13:25:14.421   /.vscode/settings.json
+13:25:14.421   /.vscode/tasks.json
+13:25:14.421   /database/database_utils.sql
+13:25:14.421   /database/debug_saved_items.sql
+13:25:14.422   /database/migrations/001_add_chat_messages.sql
+13:25:14.422   /database/migrations/003_master_bots_feed.sql
+13:25:14.422   /database/migrations/004_evolution_phase2.sql
+13:25:14.486 Restored build cache from previous deployment (4nvhrTBZWQdVUc9KY5BnuqhD8fzZ)
+13:25:15.045 Running "vercel build"
+13:25:15.754 Vercel CLI 48.2.0
+13:25:16.129 Running "install" command: `npm install`...
+13:25:17.946 
+13:25:17.948 > fuzo-next@0.1.0 postinstall
+13:25:17.948 > patch-package
+13:25:17.949 
+13:25:18.145 patch-package 8.0.1
+13:25:18.146 Applying patches...
+13:25:18.152 next@14.2.33 ✔
+13:25:18.162 
+13:25:18.162 up to date, audited 551 packages in 2s
+13:25:18.163 
+13:25:18.163 161 packages are looking for funding
+13:25:18.163   run `npm fund` for details
+13:25:18.165 
+13:25:18.165 found 0 vulnerabilities
+13:25:18.197 Detected Next.js version: 14.2.33
+13:25:18.200 Running "npm run build"
+13:25:18.346 
+13:25:18.347 > fuzo-next@0.1.0 build
+13:25:18.347 > next build
+13:25:18.347 
+13:25:19.031   ▲ Next.js 14.2.33
+13:25:19.032 
+13:25:19.096    Creating an optimized production build ...
+13:25:33.869  ✓ Compiled successfully
+13:25:33.871    Linting and checking validity of types ...
+13:25:45.478 
+13:25:45.479 ./app/auth-callback-test/page.tsx
+13:25:45.480 54:6  Warning: React Hook useEffect has a missing dependency: 'runAuthTests'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+13:25:45.480 
+13:25:45.480 ./app/master-debug/components/MapsLocationTab.tsx
+13:25:45.481 31:6  Warning: React Hook useEffect has a missing dependency: 'initializeMap'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+13:25:45.481 
+13:25:45.481 ./app/master-debug/components/RecipesAITab.tsx
+13:25:45.481 221:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+13:25:45.482 
+13:25:45.482 ./app/snap/page.tsx
+13:25:45.482 73:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+13:25:45.483 
+13:25:45.483 ./components/SaveToPlate.tsx
+13:25:45.483 217:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+13:25:45.484 279:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+13:25:45.484 
+13:25:45.484 ./components/auth/PersonalizedGreeting.tsx
+13:25:45.485 71:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+13:25:45.485 
+13:25:45.485 ./components/debug/ScoutDebug.tsx
+13:25:45.486 616:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+13:25:45.486 
+13:25:45.488 ./components/landing/Hero1.tsx
+13:25:45.490 78:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+13:25:45.491 
+13:25:45.491 ./components/landing/PhoneFan.tsx
+13:25:45.492 139:7  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+13:25:45.495 
+13:25:45.495 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+13:25:54.562    Collecting page data ...
+13:25:56.949    Generating static pages (0/68) ...
+13:25:57.396 Chat friends API error: n [Error]: Dynamic server usage: Route /api/chat/friends couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:25:57.396     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:25:57.397     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:25:57.397     at d (/vercel/path0/.next/server/app/api/chat/friends/route.js:1:1082)
+13:25:57.397     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:25:57.397     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:25:57.397     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:25:57.397     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:25:57.397     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:25:57.397     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+13:25:57.398     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+13:25:57.398   description: "Route /api/chat/friends couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:25:57.398   digest: 'DYNAMIC_SERVER_USAGE'
+13:25:57.398 }
+13:25:57.493 Unexpected error in check-auth: n [Error]: Dynamic server usage: Route /api/check-auth couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:25:57.494     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:25:57.494     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:25:57.494     at n (/vercel/path0/.next/server/chunks/9692.js:1:166)
+13:25:57.494     at c (/vercel/path0/.next/server/app/api/check-auth/route.js:1:1064)
+13:25:57.494     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:25:57.495     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:25:57.495     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:25:57.495     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:25:57.495     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:25:57.496     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+13:25:57.496   description: "Route /api/check-auth couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:25:57.496   digest: 'DYNAMIC_SERVER_USAGE'
+13:25:57.496 }
+13:25:57.511 AI insights API error: n [Error]: Dynamic server usage: Route /api/dashboard/ai-insights couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:25:57.511     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:25:57.511     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:25:57.513     at d (/vercel/path0/.next/server/app/api/dashboard/ai-insights/route.js:1:1081)
+13:25:57.514     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:25:57.514     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:25:57.514     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:25:57.515     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:25:57.515     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:25:57.515     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+13:25:57.515     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+13:25:57.516   description: "Route /api/dashboard/ai-insights couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:25:57.516   digest: 'DYNAMIC_SERVER_USAGE'
+13:25:57.517 }
+13:25:57.556 Dashboard stats API error: n [Error]: Dynamic server usage: Route /api/dashboard/stats couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:25:57.556     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:25:57.556     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:25:57.556     at l (/vercel/path0/.next/server/app/api/dashboard/stats/route.js:1:1082)
+13:25:57.557     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:25:57.557     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:25:57.557     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:25:57.557     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:25:57.557     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:25:57.557     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+13:25:57.557     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+13:25:57.557   description: "Route /api/dashboard/stats couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:25:57.557   digest: 'DYNAMIC_SERVER_USAGE'
+13:25:57.557 }
+13:25:57.588 Recipe search error: B [Error]: Dynamic server usage: Route /api/debug/bites-recipe-search couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:25:57.589     at V (/vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+13:25:57.589     at Object.get (/vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+13:25:57.589     at c (/vercel/path0/.next/server/app/api/debug/bites-recipe-search/route.js:1:2511)
+13:25:57.589     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:25:57.589     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:25:57.589     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:25:57.589     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:25:57.589     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:25:57.589     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+13:25:57.589     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+13:25:57.589   description: "Route /api/debug/bites-recipe-search couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:25:57.589   digest: 'DYNAMIC_SERVER_USAGE'
+13:25:57.589 }
+13:25:58.081 Error fetching tables: {
+13:25:58.081   code: 'PGRST205',
+13:25:58.081   details: null,
+13:25:58.083   hint: null,
+13:25:58.083   message: "Could not find the table 'public.information_schema.tables' in the schema cache"
+13:25:58.083 }
+13:25:58.222 Collections test error: n [Error]: Dynamic server usage: Route /api/debug/collections couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:25:58.222     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:25:58.222     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:25:58.222     at n (/vercel/path0/.next/server/chunks/9692.js:1:166)
+13:25:58.222     at p (/vercel/path0/.next/server/app/api/debug/collections/route.js:1:1064)
+13:25:58.223     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:25:58.223     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:25:58.223     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:25:58.223     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:25:58.223     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:25:58.223     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+13:25:58.223   description: "Route /api/debug/collections couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:25:58.224   digest: 'DYNAMIC_SERVER_USAGE'
+13:25:58.224 }
+13:25:58.231    Generating static pages (17/68) 
+13:25:58.273 Database tables test error: n [Error]: Dynamic server usage: Route /api/debug/database-tables couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:25:58.274     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:25:58.274     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:25:58.275     at n (/vercel/path0/.next/server/chunks/9692.js:1:166)
+13:25:58.276     at c (/vercel/path0/.next/server/app/api/debug/database-tables/route.js:1:1060)
+13:25:58.276     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:25:58.276     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:25:58.277     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:25:58.277     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:25:58.280     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:25:58.280     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+13:25:58.281   description: "Route /api/debug/database-tables couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:25:58.281   digest: 'DYNAMIC_SERVER_USAGE'
+13:25:58.281 }
+13:26:00.669 Supabase Storage test error: n [Error]: Dynamic server usage: Route /api/debug/supabase-storage couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:26:00.669     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:26:00.670     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:26:00.670     at n (/vercel/path0/.next/server/chunks/9692.js:1:166)
+13:26:00.670     at p (/vercel/path0/.next/server/app/api/debug/supabase-storage/route.js:1:1064)
+13:26:00.670     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:26:00.671     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:26:00.671     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:26:00.671     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:26:00.671     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:26:00.671     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+13:26:00.671   description: "Route /api/debug/supabase-storage couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:26:00.672   digest: 'DYNAMIC_SERVER_USAGE'
+13:26:00.672 }
+13:26:01.685 Reverse geocoding error: B [Error]: Dynamic server usage: Route /api/geocoding/reverse couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:26:01.686     at V (/vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+13:26:01.686     at Object.get (/vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+13:26:01.686     at u (/vercel/path0/.next/server/app/api/geocoding/reverse/route.js:1:546)
+13:26:01.686     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:26:01.686     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:26:01.687     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:26:01.687     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:26:01.687     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:26:01.687     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+13:26:01.687     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+13:26:01.688   description: "Route /api/geocoding/reverse couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:26:01.688   digest: 'DYNAMIC_SERVER_USAGE'
+13:26:01.688 }
+13:26:01.699    Generating static pages (34/68) 
+13:26:01.706 Profile API error: n [Error]: Dynamic server usage: Route /api/profile couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:26:01.707     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:26:01.707     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:26:01.707     at n (/vercel/path0/.next/server/chunks/9692.js:1:166)
+13:26:01.708     at u (/vercel/path0/.next/server/app/api/profile/route.js:1:1073)
+13:26:01.708     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:26:01.708     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:26:01.712     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:26:01.712     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:26:01.713     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:26:01.713     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+13:26:01.713   description: "Route /api/profile couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:26:01.713   digest: 'DYNAMIC_SERVER_USAGE'
+13:26:01.713 }
+13:26:01.776 Unexpected error in test-accept-friend: n [Error]: Dynamic server usage: Route /api/test-accept-friend couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:26:01.777     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:26:01.777     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:26:01.777     at n (/vercel/path0/.next/server/chunks/9692.js:1:166)
+13:26:01.778     at c (/vercel/path0/.next/server/app/api/test-accept-friend/route.js:1:1064)
+13:26:01.778     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:26:01.778     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:26:01.778     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:26:01.778     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:26:01.778     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:26:01.779     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+13:26:01.779   description: "Route /api/test-accept-friend couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:26:01.779   digest: 'DYNAMIC_SERVER_USAGE'
+13:26:01.779 }
+13:26:01.806 Error in view-friend-plate API: n [Error]: Dynamic server usage: Route /api/view-friend-plate couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+13:26:01.806     at l (/vercel/path0/.next/server/chunks/9276.js:1:37220)
+13:26:01.807     at p (/vercel/path0/.next/server/app/api/admin/upload-masterbot-avatars/route.js:1:6531)
+13:26:01.807     at n (/vercel/path0/.next/server/chunks/9692.js:1:166)
+13:26:01.808     at d (/vercel/path0/.next/server/app/api/view-friend-plate/route.js:1:1064)
+13:26:01.808     at /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+13:26:01.808     at /vercel/path0/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+13:26:01.809     at NoopContextManager.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+13:26:01.809     at ContextAPI.with (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+13:26:01.809     at NoopTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+13:26:01.809     at ProxyTracer.startActiveSpan (/vercel/path0/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+13:26:01.810   description: "Route /api/view-friend-plate couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+13:26:01.810   digest: 'DYNAMIC_SERVER_USAGE'
+13:26:01.810 }
+13:26:02.174 Failed to load status: TypeError: Failed to parse URL from /api/admin/upload-masterbot-avatars
+13:26:02.174     at new Request (node:internal/deps/undici/undici:9588:19)
+13:26:02.175     at /vercel/path0/.next/server/chunks/9276.js:2:2050
+13:26:02.175     ... 2 lines matching cause stack trace ...
+13:26:02.176     at async h (/vercel/path0/.next/server/app/admin/masterbot-avatars/page.js:1:3539) {
+13:26:02.176   [cause]: TypeError: Invalid URL
+13:26:02.176       at new URL (node:internal/url:825:25)
+13:26:02.177       at new Request (node:internal/deps/undici/undici:9586:25)
+13:26:02.177       at /vercel/path0/.next/server/chunks/9276.js:2:2050
+13:26:02.177       at B (/vercel/path0/.next/server/chunks/9276.js:2:8941)
+13:26:02.178       at /vercel/path0/.next/server/chunks/9276.js:2:11303
+13:26:02.178       at async h (/vercel/path0/.next/server/app/admin/masterbot-avatars/page.js:1:3539) {
+13:26:02.178     code: 'ERR_INVALID_URL',
+13:26:02.178     input: '/api/admin/upload-masterbot-avatars'
+13:26:02.179   }
+13:26:02.179 }
+13:26:02.568    Generating static pages (51/68) 
+13:26:03.527  ✓ Generating static pages (68/68)
+13:26:03.545    Finalizing page optimization ...
+13:26:03.545    Collecting build traces ...
+13:26:03.554 
+13:26:03.579 Route (app)                              Size     First Load JS
+13:26:03.579 ┌ ○ /                                    59.7 kB         174 kB
+13:26:03.579 ├ ○ /_not-found                          876 B          88.2 kB
+13:26:03.579 ├ ○ /admin/masterbot-avatars             2.61 kB        98.8 kB
+13:26:03.580 ├ ○ /ai                                  9.14 kB         153 kB
+13:26:03.580 ├ ƒ /api/admin/upload-masterbot-avatars  0 B                0 B
+13:26:03.580 ├ ƒ /api/ai-activation                   0 B                0 B
+13:26:03.580 ├ ƒ /api/ai/general                      0 B                0 B
+13:26:03.580 ├ ƒ /api/ai/recommendations              0 B                0 B
+13:26:03.580 ├ ƒ /api/chat/ai                         0 B                0 B
+13:26:03.580 ├ ƒ /api/chat/friends                    0 B                0 B
+13:26:03.580 ├ ƒ /api/chat/messages                   0 B                0 B
+13:26:03.580 ├ ƒ /api/chat/share                      0 B                0 B
+13:26:03.580 ├ ƒ /api/check-auth                      0 B                0 B
+13:26:03.580 ├ ƒ /api/check-username/[username]       0 B                0 B
+13:26:03.580 ├ ƒ /api/dashboard/ai-insights           0 B                0 B
+13:26:03.580 ├ ƒ /api/dashboard/generate-insights     0 B                0 B
+13:26:03.580 ├ ƒ /api/dashboard/stats                 0 B                0 B
+13:26:03.580 ├ ƒ /api/debug/bites-recipe-search       0 B                0 B
+13:26:03.580 ├ ƒ /api/debug/check-supabase-tables     0 B                0 B
+13:26:03.580 ├ ƒ /api/debug/collections               0 B                0 B
+13:26:03.580 ├ ƒ /api/debug/database-tables           0 B                0 B
+13:26:03.580 ├ ○ /api/debug/env-vars                  0 B                0 B
+13:26:03.580 ├ ƒ /api/debug/google-maps               0 B                0 B
+13:26:03.581 ├ ƒ /api/debug/google-places             0 B                0 B
+13:26:03.581 ├ ƒ /api/debug/oauth                     0 B                0 B
+13:26:03.581 ├ ○ /api/debug/openai                    0 B                0 B
+13:26:03.581 ├ ○ /api/debug/saved-recipes             0 B                0 B
+13:26:03.582 ├ ○ /api/debug/saved-restaurants         0 B                0 B
+13:26:03.582 ├ ƒ /api/debug/scout-restaurant-search   0 B                0 B
+13:26:03.582 ├ ○ /api/debug/spoonacular               0 B                0 B
+13:26:03.582 ├ ƒ /api/debug/supabase                  0 B                0 B
+13:26:03.582 ├ ƒ /api/debug/supabase-storage          0 B                0 B
+13:26:03.582 ├ ○ /api/debug/users                     0 B                0 B
+13:26:03.582 ├ ○ /api/debug/youtube                   0 B                0 B
+13:26:03.582 ├ ƒ /api/directions                      0 B                0 B
+13:26:03.582 ├ ƒ /api/geocoding/reverse               0 B                0 B
+13:26:03.582 ├ ƒ /api/masterbot-interactions          0 B                0 B
+13:26:03.582 ├ ƒ /api/profile                         0 B                0 B
+13:26:03.582 ├ ƒ /api/respond-to-share                0 B                0 B
+13:26:03.582 ├ ƒ /api/save-restaurant                 0 B                0 B
+13:26:03.582 ├ ƒ /api/save-to-plate                   0 B                0 B
+13:26:03.582 ├ ƒ /api/share-to-friend                 0 B                0 B
+13:26:03.582 ├ ƒ /api/snap-upload                     0 B                0 B
+13:26:03.582 ├ ○ /api/stream-token                    0 B                0 B
+13:26:03.582 ├ ƒ /api/test-accept-friend              0 B                0 B
+13:26:03.582 ├ ○ /api/user-profile                    0 B                0 B
+13:26:03.582 ├ ƒ /api/user-profile/[username]         0 B                0 B
+13:26:03.582 ├ ƒ /api/user/presence                   0 B                0 B
+13:26:03.582 ├ ƒ /api/view-friend-plate               0 B                0 B
+13:26:03.582 ├ ○ /auth-callback-test                  3.79 kB         144 kB
+13:26:03.582 ├ ○ /auth-debug                          6.45 kB         167 kB
+13:26:03.582 ├ ○ /auth-state-test                     2.62 kB         134 kB
+13:26:03.582 ├ ○ /auth-success                        2.69 kB         134 kB
+13:26:03.582 ├ ƒ /auth/callback                       0 B                0 B
+13:26:03.582 ├ ○ /bites                               8.8 kB          140 kB
+13:26:03.582 ├ ○ /chat                                33.1 kB         195 kB
+13:26:03.582 ├ ○ /dashboard                           5.73 kB         146 kB
+13:26:03.582 ├ ○ /feed                                4.12 kB         136 kB
+13:26:03.582 ├ ○ /friends                             6.21 kB         184 kB
+13:26:03.582 ├ ○ /master-debug                        19.6 kB         184 kB
+13:26:03.583 ├ ○ /onboarding                          469 B          99.4 kB
+13:26:03.583 ├ ○ /onboarding-demo                     1.1 kB          100 kB
+13:26:03.583 ├ ○ /plate                               15.1 kB         186 kB
+13:26:03.583 ├ ○ /quick-signin                        3.36 kB         164 kB
+13:26:03.583 ├ ○ /scout                               8.39 kB         140 kB
+13:26:03.583 ├ ○ /snap                                1.05 kB        88.4 kB
+13:26:03.583 ├ ○ /social-demo                         216 B           169 kB
+13:26:03.583 ├ ○ /users                               2.83 kB         135 kB
+13:26:03.583 └ ƒ /users/[username]                    5.43 kB         156 kB
+13:26:03.583 + First Load JS shared by all            87.3 kB
+13:26:03.583   ├ chunks/2117-315c1aa75503d010.js      31.7 kB
+13:26:03.583   ├ chunks/fd9d1056-3378abdbff6e1469.js  53.6 kB
+13:26:03.583   └ other shared chunks (total)          1.98 kB
+13:26:03.583 
+13:26:03.583 
+13:26:03.583 ƒ Middleware                             63.8 kB
+13:26:03.583 
+13:26:03.583 ○  (Static)   prerendered as static content
+13:26:03.583 ƒ  (Dynamic)  server-rendered on demand
+13:26:03.583 
+13:26:03.868 Traced Next.js server files in: 33.558ms
+13:26:04.075 Created all serverless functions in: 206.788ms
+13:26:04.168 Collected static files (public/, static/, .next/static): 11.965ms
+13:26:04.530 Build Completed in /vercel/output [48s]
+13:26:04.737 Deploying outputs...
+13:26:17.333 Deployment completed
+13:26:18.283 Creating build cache...

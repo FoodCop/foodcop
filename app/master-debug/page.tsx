@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw, Activity, Shield, Map, Bot, Users, Zap } from "lucide-react";
 import { SystemStatusTab } from "./components/SystemStatusTab";
 import { AuthenticationTab } from "./components/AuthenticationTab";
+
+// Force dynamic rendering for debug pages
+export const dynamic = 'force-dynamic';
 import { MapsLocationTab } from "./components/MapsLocationTab";
 import { RecipesAITab } from "./components/RecipesAITab";
 import { SocialFeaturesTab } from "./components/SocialFeaturesTab";
