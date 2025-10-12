@@ -16,9 +16,9 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!itemType || !['restaurant', 'recipe', 'photo', 'other'].includes(itemType)) {
+    if (!itemType || !['restaurant', 'recipe', 'photo', 'video', 'other'].includes(itemType)) {
       return NextResponse.json(
-        { success: false, error: "Valid itemType is required (restaurant, recipe, photo, other)" },
+        { success: false, error: "Valid itemType is required (restaurant, recipe, photo, video, other)" },
         { status: 400 }
       );
     }

@@ -2,10 +2,11 @@ import { SimpleUserStatus } from "@/components/auth/SimpleUserStatus";
 import { ScoutClient } from "@/components/scout/ScoutClient";
 import { ScoutDebug } from "@/components/debug/ScoutDebug";
 import { ScoutSidebar } from "@/components/scout/ScoutSidebar";
+import { Suspense } from "react";
 
 export const metadata = { title: "Scout | FUZO" };
 
-export default function ScoutPage() {
+function ScoutContent() {
   return (
     <main className="container py-10">
       <div className="space-y-4">
@@ -36,5 +37,13 @@ export default function ScoutPage() {
         */}
       </div>
     </main>
+  );
+}
+
+export default function ScoutPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ScoutContent />
+    </Suspense>
   );
 }

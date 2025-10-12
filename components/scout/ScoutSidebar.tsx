@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { RefreshCw } from "lucide-react";
 import { reverseGeocodingService } from "@/lib/scout/reverseGeocodingService";
 
 function getGeolocationErrorMessage(code: number): string {
@@ -30,6 +32,8 @@ const RESTAURANT_TYPES = [
 ];
 
 export function ScoutSidebar() {
+  const searchParams = useSearchParams();
+  
   // Location state
   const [locationInfo, setLocationInfo] = useState<any>(null);
   const [locationLoading, setLocationLoading] = useState(false);
@@ -52,7 +56,71 @@ export function ScoutSidebar() {
   const [savedRestaurantIds, setSavedRestaurantIds] = useState<Set<string>>(new Set());
   const [saveMessages, setSaveMessages] = useState<{ [key: string]: string }>({});
 
-  const testLocation = async () => {
+  // Check for URL parameters and automatically set location if coming from Plate
+  useEffect(() => {
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
+    const name = searchParams.get('name');
+    const focus = searchParams.get('focus');
+
+    if (lat && lng && focus === 'true') {
+      const coordinates = {
+        latitude: parseFloat(lat),
+        longitude: parseFloat(lng)
+      };
+      
+      if (!isNaN(coordinates.latitude) && !isNaN(coordinates.longitude)) {
+        // Set location info directly from URL parameters
+        setLocationInfo({
+          ...coordinates,
+          accuracy: 10, // Good accuracy for saved restaurants
+          timestamp: new Date().toLocaleString(),
+          address: `${name || 'Restaurant Location'}`,
+          formatted_address: `Saved restaurant at ${coordinates.latitude.toFixed(6)}, ${coordinates.longitude.toFixed(6)}`,
+          geocodingSuccess: true,
+          geocoding_success: true,
+          fromUrlParams: true
+        });
+
+        // Helper function to search restaurants at a specific location
+        const searchRestaurantsAtLocation = async (lat: number, lng: number) => {
+          setSearchLoading(true);
+          setSearchError(null);
+
+          try {
+            const apiUrl = `/api/debug/scout-restaurant-search?latitude=${lat}&longitude=${lng}&radius=${searchRadius}&type=all`;
+            
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (!data.success) {
+              setSearchError(data.error || 'Failed to search restaurants');
+              return;
+            }
+
+            setRestaurants(data.restaurants || []);
+            setLastSearchMethod('url_focus');
+            console.log(`🗺️ Found ${data.restaurants?.length || 0} restaurants near focused location`);
+          } catch (error) {
+            console.error('Restaurant search error:', error);
+            setSearchError(error instanceof Error ? error.message : 'Failed to search restaurants');
+          } finally {
+            setSearchLoading(false);
+          }
+        };
+
+        // Automatically search for restaurants at this location
+        setTimeout(() => {
+          searchRestaurantsAtLocation(coordinates.latitude, coordinates.longitude);
+        }, 500);
+      }
+    } else {
+      // Automatically detect location on first load if no URL parameters
+      refreshLocation();
+    }
+  }, [searchParams, searchRadius]);
+
+  const refreshLocation = async () => {
     setLocationLoading(true);
     setLocationError(null);
     
@@ -256,95 +324,83 @@ export function ScoutSidebar() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "400px" }}>
-      <h3 style={{ marginBottom: "20px", color: "var(--foreground)" }}>🍽️ Restaurant Scout</h3>
+    <div className="p-5 max-w-sm space-y-6">
+      <h3 className="text-lg font-semibold text-foreground">🍽️ Restaurant Scout</h3>
       
       {/* Location Section */}
-      <div style={{ marginBottom: "30px" }}>
-        <button
-          onClick={testLocation}
-          disabled={locationLoading}
-          style={{
-            padding: "12px 24px",
-            backgroundColor: "#329937",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: locationLoading ? "not-allowed" : "pointer",
-            fontSize: "14px",
-            fontWeight: "600",
-            opacity: locationLoading ? 0.6 : 1,
-            width: "100%"
-          }}
-        >
-          {locationLoading ? "Getting Location..." : "📍 Get My Location"}
-        </button>
+      <div className="space-y-3">
 
         {locationError && (
-          <div style={{ 
-            marginTop: "15px",
-            padding: "12px", 
-            backgroundColor: "#fee", 
-            border: "1px solid #fcc", 
-            borderRadius: "8px", 
-            color: "#900",
-            fontSize: "14px"
-          }}>
+          <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
             <strong>Location Error:</strong> {locationError}
           </div>
         )}
 
         {locationInfo && (
-          <div style={{ 
-            marginTop: "15px",
-            padding: "12px",
-            backgroundColor: "#f0f9ff",
-            border: "1px solid #bae6fd",
-            borderRadius: "8px",
-            fontSize: "14px"
-          }}>
-            <div><strong>📍 Current Location</strong></div>
-            <div style={{ marginTop: "8px", color: "#666" }}>
-              {locationInfo.address}
+          <div className={`p-3 rounded-lg border text-sm ${
+            locationInfo.fromUrlParams 
+              ? 'bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800'
+              : 'bg-muted border-border'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="font-medium text-foreground mb-1">
+                  {locationInfo.fromUrlParams ? "🗺️ Restaurant Location" : " Detected Location"}
+                </div>
+                <div className="text-muted-foreground text-xs leading-relaxed">
+                  {locationInfo.address}
+                </div>
+                {locationInfo.fromUrlParams && (
+                  <div className="text-amber-700 dark:text-amber-400 text-xs mt-1">
+                    From your Plate
+                  </div>
+                )}
+              </div>
+              {!locationInfo.fromUrlParams && (
+                <button
+                  onClick={refreshLocation}
+                  disabled={locationLoading}
+                  className="ml-2 p-1.5 hover:bg-accent rounded-md transition-colors disabled:opacity-50"
+                  title="Refresh location"
+                >
+                  <RefreshCw 
+                    className={`h-4 w-4 text-muted-foreground ${locationLoading ? 'animate-spin' : ''}`} 
+                  />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Show initial location detection on first load */}
+        {!locationInfo && !locationError && (
+          <div className="p-3 bg-muted border border-border rounded-lg text-sm">
+            <div className="flex items-center justify-between">
+              <div className="text-muted-foreground">
+                📍 Detecting your location...
+              </div>
+              <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
             </div>
           </div>
         )}
       </div>
 
       {/* Search Section */}
-      <div style={{ marginBottom: "20px" }}>
+      <div className="space-y-4">
         {/* Search Bar */}
-        <div style={{ marginBottom: "15px" }}>
+        <div className="space-y-3">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && searchRestaurants()}
             placeholder="Search restaurants..."
-            style={{
-              width: "100%",
-              padding: "12px",
-              border: "2px solid #e5e7eb",
-              borderRadius: "8px",
-              fontSize: "14px",
-              marginBottom: "10px"
-            }}
+            className="w-full p-3 border-2 border-input rounded-lg text-sm focus:border-ring focus:outline-none"
           />
           <button
             onClick={() => searchRestaurants()}
             disabled={!locationInfo || searchLoading}
-            style={{
-              width: "100%",
-              padding: "12px 24px",
-              backgroundColor: "#047DD4",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: (!locationInfo || searchLoading) ? "not-allowed" : "pointer",
-              fontSize: "14px",
-              fontWeight: "600",
-              opacity: (!locationInfo || searchLoading) ? 0.6 : 1
-            }}
+            className="w-full p-3 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed border-none rounded-lg text-sm font-semibold"
           >
             {searchLoading ? "Searching..." : "🔍 Find Restaurants"}
           </button>

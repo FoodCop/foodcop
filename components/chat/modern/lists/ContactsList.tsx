@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MessageCircle, Camera } from 'lucide-react';
+import { MessageCircle, Camera, Bot } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -89,8 +89,11 @@ export function ContactsList({
             {/* Contact Info */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <h3 className="font-semibold text-gray-900 truncate">
+                <h3 className="font-semibold text-gray-900 truncate flex items-center gap-1">
                   {contact.name}
+                  {contact.is_master_bot && (
+                    <Bot className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                  )}
                   {contact.is_group && contact.group_member_count && (
                     <span className="ml-1 text-xs text-gray-500">
                       ({contact.group_member_count})

@@ -1,7 +1,7 @@
 import { AuthProvider } from "@/components/auth/AuthProvider";
-import { Footer } from "@/components/Footer";
-import NavBar from "@/components/NavBar";
+import { ConditionalLayout } from "@/components/ConditionalLayout";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata = { title: "FUZO", description: "Food discovery" };
@@ -20,9 +20,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <NavBar />
-            <div className="min-h-[60vh]">{children}</div>
-            <Footer />
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
+            <Toaster />
           </AuthProvider>
         </ThemeProvider>
       </body>

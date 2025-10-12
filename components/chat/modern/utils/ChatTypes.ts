@@ -18,6 +18,7 @@ export interface ChatContact {
   story_active: boolean;
   is_group?: boolean;
   group_member_count?: number;
+  is_master_bot?: boolean;
 }
 
 export interface UserStory {

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { savedItemsService } from '@/lib/savedItemsService';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface Recipe {
   id: string;
@@ -29,9 +30,30 @@ interface RecipesTabProps {
 export function RecipesTab({ recipes, loading, error, onRefresh }: RecipesTabProps) {
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const router = useRouter();
 
   const handleImageError = (recipeId: string) => {
     setImageErrors(prev => new Set(prev).add(recipeId));
+  };
+
+  const viewRecipe = (recipe: Recipe) => {
+    // Convert saved recipe to recipe viewer format and navigate
+    const recipeForViewer = {
+      id: recipe.recipe_id,
+      title: recipe.title,
+      image: recipe.image,
+      readyInMinutes: recipe.readyInMinutes || 30,
+      servings: recipe.servings || 1,
+      diets: recipe.diets || [],
+      // Add default values for other required fields
+      healthScore: 50,
+      summary: `Delicious ${recipe.title} recipe`,
+      spoonacularSourceUrl: `https://spoonacular.com/recipes/${recipe.title?.toLowerCase().replace(/\s+/g, '-')}-${recipe.recipe_id}`,
+    };
+    
+    // Navigate to recipe page with recipe data
+    const recipeData = encodeURIComponent(JSON.stringify(recipeForViewer));
+    router.push(`/bites/recipe/${recipe.recipe_id}?data=${recipeData}`);
   };
 
   const handleRemove = async (recipeId: string, title: string) => {
@@ -185,12 +207,7 @@ export function RecipesTab({ recipes, loading, error, onRefresh }: RecipesTabPro
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => {
-                    // TODO: Open recipe details or link to Spoonacular
-                    const spoonacularId = recipe.recipe_id;
-                    const recipeSlug = recipe.title?.toLowerCase().replace(/\s+/g, '-');
-                    window.open(`https://spoonacular.com/recipes/${recipeSlug}-${spoonacularId}`, '_blank');
-                  }}
+                  onClick={() => viewRecipe(recipe)}
                   className="flex-1"
                 >
                   <ExternalLink className="w-4 h-4 mr-2" />

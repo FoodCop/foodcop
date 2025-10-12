@@ -14,6 +14,14 @@ interface MapViewDynamicProps {
   onMapError?: (error: Error) => void;
   className?: string;
   style?: React.CSSProperties;
+  focusedRestaurant?: {
+    name: string;
+    coordinates: { lat: number; lng: number };
+    address?: string;
+    rating?: number;
+    cuisine?: string;
+    priceLevel?: string;
+  } | null;
 }
 
 export function MapViewDynamic({
@@ -23,6 +31,7 @@ export function MapViewDynamic({
   onMapError,
   className,
   style,
+  focusedRestaurant,
 }: MapViewDynamicProps) {
   const [zoomLevel, setZoomLevel] = useState(15);
   const [centerCoords, setCenterCoords] = useState({
@@ -37,6 +46,7 @@ export function MapViewDynamic({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapLibreRef = useRef<any>(null);
   const userLocationMarkerRef = useRef<any>(null);
+  const restaurantMarkerRef = useRef<any>(null);
 
   // Check backend availability and initialize MapLibre
   useEffect(() => {
@@ -314,6 +324,73 @@ export function MapViewDynamic({
     }
   };
 
+  // Add restaurant marker with info popup (similar to Google Maps)
+  const addRestaurantMarker = useCallback(() => {
+    if (!mapLibreRef.current || !focusedRestaurant || !currentLocation) return;
+
+    // Remove existing restaurant marker
+    if (restaurantMarkerRef.current) {
+      restaurantMarkerRef.current.remove();
+    }
+
+    // Create restaurant marker element with info popup
+    const restaurantElement = document.createElement("div");
+    restaurantElement.className = "restaurant-marker";
+    restaurantElement.innerHTML = `
+      <div class="relative">
+        <!-- Main marker pin -->
+        <div class="flex flex-col items-center">
+          <!-- Info card (like Google Maps) -->
+          <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-3 mb-2 min-w-[200px] max-w-[280px]">
+            <div class="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">
+              ${focusedRestaurant.name}
+            </div>
+            ${focusedRestaurant.rating ? `
+              <div class="flex items-center gap-1 mb-1">
+                <div class="flex text-yellow-400">
+                  ${'★'.repeat(Math.floor(focusedRestaurant.rating))}${'☆'.repeat(5 - Math.floor(focusedRestaurant.rating))}
+                </div>
+                <span class="text-xs text-gray-600">${focusedRestaurant.rating}</span>
+              </div>
+            ` : ''}
+            ${focusedRestaurant.cuisine ? `
+              <div class="text-xs text-gray-600 mb-1">${focusedRestaurant.cuisine}</div>
+            ` : ''}
+            ${focusedRestaurant.priceLevel ? `
+              <div class="text-xs text-gray-600 mb-1">${focusedRestaurant.priceLevel.includes('$') ? focusedRestaurant.priceLevel : '$'.repeat(parseInt(focusedRestaurant.priceLevel) || 1)}</div>
+            ` : ''}
+            ${focusedRestaurant.address ? `
+              <div class="text-xs text-gray-500 line-clamp-2">${focusedRestaurant.address}</div>
+            ` : ''}
+            <div class="mt-2 pt-2 border-t border-gray-100">
+              <div class="text-xs text-blue-600 font-medium">📍 From your Plate</div>
+            </div>
+          </div>
+          <!-- Marker pin -->
+          <div class="w-6 h-6 bg-red-500 rounded-full border-2 border-white shadow-lg relative">
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full"></div>
+            <!-- Pin tail -->
+            <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-red-500"></div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add styles for proper positioning
+    restaurantElement.style.cssText = `
+      transform: translate(-50%, -100%);
+      z-index: 1000;
+      pointer-events: auto;
+    `;
+
+    restaurantMarkerRef.current = new maplibregl.Marker({
+      element: restaurantElement,
+      anchor: "bottom",
+    })
+      .setLngLat([focusedRestaurant.coordinates.lng, focusedRestaurant.coordinates.lat])
+      .addTo(mapLibreRef.current);
+  }, [focusedRestaurant, currentLocation]);
+
   // Update map center when currentLocation changes
   useEffect(() => {
     if (currentLocation) {
@@ -332,6 +409,16 @@ export function MapViewDynamic({
       }
     }
   }, [currentLocation]);
+
+  // Add restaurant marker when focusedRestaurant changes
+  useEffect(() => {
+    if (focusedRestaurant && currentLocation && mapLibreRef.current) {
+      // Small delay to ensure map is ready
+      setTimeout(() => {
+        addRestaurantMarker();
+      }, 500);
+    }
+  }, [focusedRestaurant, currentLocation, addRestaurantMarker]);
 
   // Control handlers
   const handleZoomIn = () => {
@@ -391,6 +478,9 @@ export function MapViewDynamic({
       }
       if (userLocationMarkerRef.current) {
         userLocationMarkerRef.current.remove();
+      }
+      if (restaurantMarkerRef.current) {
+        restaurantMarkerRef.current.remove();
       }
     };
   }, []);

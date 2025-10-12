@@ -121,9 +121,41 @@ export function RealDataChatInterface({
     setIsLoadingMessages(true);
     
     try {
-      // Create room ID for private chat
-      const roomId = `private_${[chatUser?.id, contact.id].sort().join('_')}`;
-      const messages = await loadMessages(roomId);
+      let roomId: string;
+      let messages: Message[];
+
+      if (contact.is_master_bot) {
+        // For master bots, use AI chat endpoint
+        roomId = `ai_${chatUser?.id}_${contact.username}`;
+        
+        // Load AI chat history
+        const response = await fetch(`/api/chat/ai?masterbot=${contact.username}&limit=50`);
+        const data = await response.json();
+        
+        if (data.success) {
+          // Transform AI messages to Message format
+          messages = (data.messages || []).map((msg: any) => ({
+            id: msg.id,
+            conversation_id: roomId,
+            sender_id: msg.user_id,
+            sender_name: msg.user?.display_name || msg.user?.username || 'User',
+            sender_avatar: msg.user?.avatar_url || '',
+            content: msg.content,
+            type: 'text' as const,
+            timestamp: msg.created_at,
+            status: 'delivered' as const,
+            reactions: []
+          }));
+        } else {
+          console.error('Failed to load AI chat history:', data.error);
+          messages = [];
+        }
+      } else {
+        // For regular contacts, use normal chat
+        roomId = `private_${[chatUser?.id, contact.id].sort().join('_')}`;
+        messages = await loadMessages(roomId);
+      }
+      
       setConversationMessages(messages);
     } catch (error) {
       console.error('Error loading messages:', error);
@@ -143,28 +175,92 @@ export function RealDataChatInterface({
   const handleSendMessage = async (content: string, type: 'text' | 'image' | 'voice' | 'video' | 'file' = 'text') => {
     if (!selectedContact || !chatUser || !content.trim()) return;
 
-    // Create room ID for private chat
-    const roomId = `private_${[chatUser.id, selectedContact.id].sort().join('_')}`;
-    
     try {
-      const newMessage = await sendMessage(content, roomId, type);
-      if (newMessage) {
-        setConversationMessages(prev => [...prev, newMessage]);
+      if (selectedContact.is_master_bot) {
+        // For master bots, use AI chat endpoint
+        const response = await fetch('/api/chat/ai', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            masterbot: selectedContact.username,
+            message: content,
+          }),
+        });
+
+        const data = await response.json();
         
-        // Update the contact's last message
-        setContacts(prev => prev.map(contact => 
-          contact.id === selectedContact.id 
-            ? {
-                ...contact,
-                last_message: {
-                  content,
-                  timestamp: newMessage.timestamp,
-                  sender_id: chatUser.id,
-                  type
+        if (data.success) {
+          // Transform and add both user message and AI response
+          const userMessage: Message = {
+            id: data.userMessage.id,
+            conversation_id: `ai_${chatUser.id}_${selectedContact.username}`,
+            sender_id: data.userMessage.user_id,
+            sender_name: data.userMessage.user?.display_name || data.userMessage.user?.username || 'User',
+            sender_avatar: data.userMessage.user?.avatar_url || '',
+            content: data.userMessage.content,
+            type: 'text',
+            timestamp: data.userMessage.created_at,
+            status: 'delivered',
+            reactions: []
+          };
+
+          const aiMessage: Message = {
+            id: data.aiMessage.id,
+            conversation_id: `ai_${chatUser.id}_${selectedContact.username}`,
+            sender_id: data.aiMessage.user_id,
+            sender_name: data.aiMessage.user?.display_name || data.aiMessage.user?.username || selectedContact.name,
+            sender_avatar: data.aiMessage.user?.avatar_url || '',
+            content: data.aiMessage.content,
+            type: 'text',
+            timestamp: data.aiMessage.created_at,
+            status: 'delivered',
+            reactions: []
+          };
+
+          setConversationMessages(prev => [...prev, userMessage, aiMessage]);
+          
+          // Update the contact's last message with AI response
+          setContacts(prev => prev.map(contact => 
+            contact.id === selectedContact.id 
+              ? {
+                  ...contact,
+                  last_message: {
+                    content: aiMessage.content,
+                    timestamp: aiMessage.timestamp,
+                    sender_id: aiMessage.sender_id,
+                    type: aiMessage.type
+                  }
                 }
-              }
-            : contact
-        ));
+              : contact
+          ));
+        } else {
+          console.error('Failed to send AI message:', data.error);
+        }
+      } else {
+        // For regular contacts, use normal chat
+        const roomId = `private_${[chatUser.id, selectedContact.id].sort().join('_')}`;
+        
+        const newMessage = await sendMessage(content, roomId, type);
+        if (newMessage) {
+          setConversationMessages(prev => [...prev, newMessage]);
+          
+          // Update the contact's last message
+          setContacts(prev => prev.map(contact => 
+            contact.id === selectedContact.id 
+              ? {
+                  ...contact,
+                  last_message: {
+                    content,
+                    timestamp: newMessage.timestamp,
+                    sender_id: chatUser.id,
+                    type
+                  }
+                }
+              : contact
+          ));
+        }
       }
     } catch (error) {
       console.error('Error sending message:', error);

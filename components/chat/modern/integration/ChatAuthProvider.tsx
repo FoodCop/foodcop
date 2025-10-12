@@ -112,6 +112,7 @@ export function ChatAuthProvider({ children }: { children: React.ReactNode }) {
     if (!chatUser) return [];
 
     try {
+      // Load regular friends
       const response = await fetch('/api/chat/friends');
       if (!response.ok) {
         throw new Error('Failed to fetch friends');
@@ -120,7 +121,7 @@ export function ChatAuthProvider({ children }: { children: React.ReactNode }) {
       const { friends } = await response.json();
       
       // Transform friends data to ChatContact format
-      const contacts: ChatContact[] = friends.map((friend: any) => ({
+      const friendContacts: ChatContact[] = friends.map((friend: any) => ({
         id: friend.id,
         name: friend.display_name || friend.username,
         username: friend.username,
@@ -135,10 +136,142 @@ export function ChatAuthProvider({ children }: { children: React.ReactNode }) {
         is_online: friend.is_online || false,
         last_seen: friend.last_seen || new Date().toISOString(),
         story_active: false,
-        is_group: false
+        is_group: false,
+        is_master_bot: false
       }));
 
-      return contacts;
+      // Add master bots as contacts
+      const masterBots: ChatContact[] = [
+        {
+          id: 'f2e517b0-7dd2-4534-a678-5b64d4795b3a',
+          name: 'Anika Kapoor',
+          username: 'spice_scholar_anika',
+          avatar_url: '',
+          last_message: {
+            content: 'Ask me about spices and Indian cuisine! 🌶️',
+            timestamp: new Date().toISOString(),
+            sender_id: 'f2e517b0-7dd2-4534-a678-5b64d4795b3a',
+            type: 'text'
+          },
+          unread_count: 0,
+          is_online: true,
+          last_seen: new Date().toISOString(),
+          story_active: false,
+          is_group: false,
+          is_master_bot: true
+        },
+        {
+          id: '78de3261-040d-492e-b511-50f71c0d9986',
+          name: 'Sebastian LeClair',
+          username: 'sommelier_seb',
+          avatar_url: '',
+          last_message: {
+            content: 'Let me help you with wine pairings! 🍷',
+            timestamp: new Date().toISOString(),
+            sender_id: '78de3261-040d-492e-b511-50f71c0d9986',
+            type: 'text'
+          },
+          unread_count: 0,
+          is_online: true,
+          last_seen: new Date().toISOString(),
+          story_active: false,
+          is_group: false,
+          is_master_bot: true
+        },
+        {
+          id: '0a1092da-dea6-4d32-ac2b-fe50a31beae3',
+          name: 'Omar Darzi',
+          username: 'coffee_pilgrim_omar',
+          avatar_url: '',
+          last_message: {
+            content: 'Coffee culture enthusiast at your service! ☕',
+            timestamp: new Date().toISOString(),
+            sender_id: '0a1092da-dea6-4d32-ac2b-fe50a31beae3',
+            type: 'text'
+          },
+          unread_count: 0,
+          is_online: true,
+          last_seen: new Date().toISOString(),
+          story_active: false,
+          is_group: false,
+          is_master_bot: true
+        },
+        {
+          id: '7cb0c0d0-996e-4afc-9c7a-95ed0152f63e',
+          name: 'Jun Tanaka',
+          username: 'zen_minimalist_jun',
+          avatar_url: '',
+          last_message: {
+            content: 'Simple, healthy eating philosophy here 🧘',
+            timestamp: new Date().toISOString(),
+            sender_id: '7cb0c0d0-996e-4afc-9c7a-95ed0152f63e',
+            type: 'text'
+          },
+          unread_count: 0,
+          is_online: true,
+          last_seen: new Date().toISOString(),
+          story_active: false,
+          is_group: false,
+          is_master_bot: true
+        },
+        {
+          id: '1b0f0628-295d-4a4a-85ca-48594eee15b3',
+          name: 'Aurelia Voss',
+          username: 'nomad_aurelia',
+          avatar_url: '',
+          last_message: {
+            content: 'Global street food adventures await! 🌍',
+            timestamp: new Date().toISOString(),
+            sender_id: '1b0f0628-295d-4a4a-85ca-48594eee15b3',
+            type: 'text'
+          },
+          unread_count: 0,
+          is_online: true,
+          last_seen: new Date().toISOString(),
+          story_active: false,
+          is_group: false,
+          is_master_bot: true
+        },
+        {
+          id: '86efa684-37ae-49bb-8e7c-2c0829aa6474',
+          name: 'Rafael Mendez',
+          username: 'adventure_rafa',
+          avatar_url: '',
+          last_message: {
+            content: 'Adventure dining and travel food expert! 🏔️',
+            timestamp: new Date().toISOString(),
+            sender_id: '86efa684-37ae-49bb-8e7c-2c0829aa6474',
+            type: 'text'
+          },
+          unread_count: 0,
+          is_online: true,
+          last_seen: new Date().toISOString(),
+          story_active: false,
+          is_group: false,
+          is_master_bot: true
+        },
+        {
+          id: '2400b343-0e89-43f7-b3dc-6883fa486da3',
+          name: 'Lila Cheng',
+          username: 'plant_pioneer_lila',
+          avatar_url: '',
+          last_message: {
+            content: 'Plant-based and sustainable food solutions! 🌱',
+            timestamp: new Date().toISOString(),
+            sender_id: '2400b343-0e89-43f7-b3dc-6883fa486da3',
+            type: 'text'
+          },
+          unread_count: 0,
+          is_online: true,
+          last_seen: new Date().toISOString(),
+          story_active: false,
+          is_group: false,
+          is_master_bot: true
+        }
+      ];
+
+      // Combine friends and master bots, with master bots first
+      return [...masterBots, ...friendContacts];
     } catch (error) {
       console.error('Error loading contacts:', error);
       return [];

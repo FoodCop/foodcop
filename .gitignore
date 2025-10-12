@@ -25,3 +25,4 @@ app/_debug/
 # Ignore trace files specifically
 **/.next/trace
 **/.next/trace.*
+.vercel

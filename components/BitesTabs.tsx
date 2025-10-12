@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { Search, ArrowLeft, Filter, Plus, User, Settings } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useRouter } from "next/navigation";
+import { YouTubeVideosGrid } from "@/components/youtube/YouTubeVideosGrid";
 
 const DIET_TYPES = [
   { id: "vegetarian", label: "Vegetarian" },
@@ -251,6 +253,9 @@ export function BitesTabs({}: BitesTabsProps = {}) {
   const [autoRecipesError, setAutoRecipesError] = useState<string | null>(null);
   const [lastAutoSearchQuery, setLastAutoSearchQuery] = useState<string>("");
 
+  // Router for navigation
+  const router = useRouter();
+
   // Load user preferences on component mount
   useEffect(() => {
     const loadUserPreferences = async () => {
@@ -387,6 +392,13 @@ export function BitesTabs({}: BitesTabsProps = {}) {
         return newSet;
       });
     }
+  };
+
+  // View recipe function
+  const viewRecipe = (recipe: any) => {
+    // Navigate to recipe page with recipe data
+    const recipeData = encodeURIComponent(JSON.stringify(recipe));
+    router.push(`/bites/recipe/${recipe.id}?data=${recipeData}`);
   };
 
   const searchRecipes = async () => {
@@ -694,7 +706,7 @@ export function BitesTabs({}: BitesTabsProps = {}) {
                   : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >
-              Videos (Coming Soon)
+              Videos
             </button>
           </div>
         </div>
@@ -754,29 +766,7 @@ export function BitesTabs({}: BitesTabsProps = {}) {
       {/* Content */}
       <div className="px-4 py-4">
         {activeTab === "videos" ? (
-          <div className="text-center py-12">
-            <div className="text-gray-400 mb-4">
-              <svg
-                className="w-12 h-12 mx-auto"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Video Feed Coming Soon
-            </h3>
-            <p className="text-gray-600">
-              Cooking videos and tutorials will be available here soon!
-            </p>
-          </div>
+          <YouTubeVideosGrid />
         ) : (
           <>
             {/* Manual Search Results (Priority Display) */}
@@ -851,25 +841,33 @@ export function BitesTabs({}: BitesTabsProps = {}) {
                           </div>
                         )}
 
-                        <button
-                          onClick={() => saveRecipeToPlate(recipe)}
-                          disabled={savingRecipeIds.has(recipe.id) || savedRecipeIds.has(recipe.id)}
-                          className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-                            savedRecipeIds.has(recipe.id)
-                              ? 'bg-green-500 text-white cursor-not-allowed'
-                              : savingRecipeIds.has(recipe.id)
-                              ? 'bg-blue-300 text-white cursor-not-allowed'
-                              : 'bg-blue-500 text-white hover:bg-blue-600'
-                          }`}
-                        >
-                          {savingRecipeIds.has(recipe.id) ? (
-                            <>⏳ Saving...</>
-                          ) : savedRecipeIds.has(recipe.id) ? (
-                            <>✅ Saved to Plate</>
-                          ) : (
-                            <>💾 Save to Plate</>
-                          )}
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => viewRecipe(recipe)}
+                            className="flex-1 py-2 px-4 rounded-lg text-sm font-medium bg-[#F14C35] text-white hover:bg-[#E63E26] transition-colors"
+                          >
+                            View Recipe
+                          </button>
+                          <button
+                            onClick={() => saveRecipeToPlate(recipe)}
+                            disabled={savingRecipeIds.has(recipe.id) || savedRecipeIds.has(recipe.id)}
+                            className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                              savedRecipeIds.has(recipe.id)
+                                ? 'bg-green-500 text-white cursor-not-allowed'
+                                : savingRecipeIds.has(recipe.id)
+                                ? 'bg-blue-300 text-white cursor-not-allowed'
+                                : 'bg-blue-500 text-white hover:bg-blue-600'
+                            }`}
+                          >
+                            {savingRecipeIds.has(recipe.id) ? (
+                              <>⏳ Saving...</>
+                            ) : savedRecipeIds.has(recipe.id) ? (
+                              <>✅ Saved</>
+                            ) : (
+                              <>💾 Save</>
+                            )}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -1019,25 +1017,33 @@ export function BitesTabs({}: BitesTabsProps = {}) {
                                   </div>
                                 )}
 
-                                <button
-                                  onClick={() => saveRecipeToPlate(recipe)}
-                                  disabled={savingRecipeIds.has(recipe.id) || savedRecipeIds.has(recipe.id)}
-                                  className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-                                    savedRecipeIds.has(recipe.id)
-                                      ? 'bg-green-500 text-white cursor-not-allowed'
-                                      : savingRecipeIds.has(recipe.id)
-                                      ? 'bg-green-300 text-white cursor-not-allowed'
-                                      : 'bg-green-500 text-white hover:bg-green-600'
-                                  }`}
-                                >
-                                  {savingRecipeIds.has(recipe.id) ? (
-                                    <>⏳ Saving...</>
-                                  ) : savedRecipeIds.has(recipe.id) ? (
-                                    <>✅ Saved to Plate</>
-                                  ) : (
-                                    <>💾 Save to Plate</>
-                                  )}
-                                </button>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() => viewRecipe(recipe)}
+                                    className="flex-1 py-2 px-4 rounded-lg text-sm font-medium bg-[#F14C35] text-white hover:bg-[#E63E26] transition-colors"
+                                  >
+                                    View Recipe
+                                  </button>
+                                  <button
+                                    onClick={() => saveRecipeToPlate(recipe)}
+                                    disabled={savingRecipeIds.has(recipe.id) || savedRecipeIds.has(recipe.id)}
+                                    className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                                      savedRecipeIds.has(recipe.id)
+                                        ? 'bg-green-500 text-white cursor-not-allowed'
+                                        : savingRecipeIds.has(recipe.id)
+                                        ? 'bg-green-300 text-white cursor-not-allowed'
+                                        : 'bg-green-500 text-white hover:bg-green-600'
+                                    }`}
+                                  >
+                                    {savingRecipeIds.has(recipe.id) ? (
+                                      <>⏳ Saving...</>
+                                    ) : savedRecipeIds.has(recipe.id) ? (
+                                      <>✅ Saved</>
+                                    ) : (
+                                      <>💾 Save</>
+                                    )}
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           ))}

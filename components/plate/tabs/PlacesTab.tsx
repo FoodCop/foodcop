@@ -2,11 +2,12 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { MapPin, Star, DollarSign, ExternalLink, RefreshCw, Trash2 } from 'lucide-react';
+import { MapPin, Star, DollarSign, ExternalLink, RefreshCw, Trash2, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { savedItemsService } from '@/lib/savedItemsService';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface Restaurant {
   id: string;
@@ -32,6 +33,7 @@ interface PlacesTabProps {
 export function PlacesTab({ restaurants, loading, error, onRefresh }: PlacesTabProps) {
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const router = useRouter();
 
   const handleImageError = (restaurantId: string) => {
     setImageErrors(prev => new Set(prev).add(restaurantId));
@@ -120,6 +122,102 @@ export function PlacesTab({ restaurants, loading, error, onRefresh }: PlacesTabP
     const placeId = getRestaurantPlaceId(restaurant);
     const name = getRestaurantName(restaurant);
     return !!(placeId && name !== 'Unknown Restaurant');
+  };
+
+  // Helper function to get restaurant coordinates from different possible locations
+  const getRestaurantCoordinates = (restaurant: Restaurant): { lat: number; lng: number } | null => {
+    const metadata = (restaurant as any).metadata || restaurant;
+    const fullMetadata = (restaurant as any).full_metadata;
+    
+    // Try multiple possible coordinate formats
+    const latitude = metadata.latitude || 
+                    metadata.lat || 
+                    fullMetadata?.latitude || 
+                    fullMetadata?.lat ||
+                    metadata.coordinates?.lat ||
+                    metadata.geometry?.location?.lat;
+    
+    const longitude = metadata.longitude || 
+                     metadata.lng || 
+                     fullMetadata?.longitude || 
+                     fullMetadata?.lng ||
+                     metadata.coordinates?.lng ||
+                     metadata.geometry?.location?.lng;
+    
+    if (latitude && longitude) {
+      return { lat: Number(latitude), lng: Number(longitude) };
+    }
+    
+    return null;
+  };
+  
+  // Helper function to check if restaurant has coordinates for "View on Map" button
+  const canViewOnMap = (restaurant: Restaurant): boolean => {
+    const coordinates = getRestaurantCoordinates(restaurant);
+    return !!coordinates;
+  };
+
+  // Helper function to get restaurant details for map display
+  const getRestaurantDetails = (restaurant: Restaurant) => {
+    const metadata = (restaurant as any).metadata || restaurant;
+    const fullMetadata = (restaurant as any).full_metadata;
+    
+    return {
+      rating: metadata.rating || 
+              fullMetadata?.rating || 
+              metadata.google_rating ||
+              fullMetadata?.google_rating,
+      cuisine: metadata.cuisine || 
+               fullMetadata?.cuisine || 
+               metadata.category ||
+               fullMetadata?.category ||
+               metadata.types?.[0],
+      priceLevel: metadata.price_level || 
+                  fullMetadata?.price_level ||
+                  metadata.priceLevel ||
+                  fullMetadata?.priceLevel,
+      address: metadata.address || 
+               fullMetadata?.address ||
+               metadata.formatted_address ||
+               fullMetadata?.formatted_address ||
+               metadata.vicinity ||
+               fullMetadata?.vicinity
+    };
+  };
+
+  const handleViewOnMap = (restaurant: Restaurant) => {
+    const coordinates = getRestaurantCoordinates(restaurant);
+    const restaurantName = getRestaurantName(restaurant);
+    const details = getRestaurantDetails(restaurant);
+    
+    if (coordinates) {
+      // Navigate to Scout page with coordinates and details as URL parameters
+      const params = new URLSearchParams({
+        lat: coordinates.lat.toString(),
+        lng: coordinates.lng.toString(),
+        name: restaurantName,
+        focus: 'true'
+      });
+
+      // Add optional details if available
+      if (details.rating) {
+        params.set('rating', details.rating.toString());
+      }
+      if (details.cuisine) {
+        params.set('cuisine', details.cuisine);
+      }
+      if (details.priceLevel) {
+        params.set('priceLevel', details.priceLevel.toString());
+      }
+      if (details.address) {
+        params.set('address', details.address);
+      }
+      
+      router.push(`/scout?${params.toString()}`);
+      toast.success(`Showing ${restaurantName} on map`);
+    } else {
+      toast.error('Location not available for this restaurant');
+    }
   };
 
   const handleRemove = async (restaurantId: string, name: string) => {
@@ -280,6 +378,20 @@ export function PlacesTab({ restaurants, loading, error, onRefresh }: PlacesTabP
               
               {/* Actions */}
               <div className="flex gap-2">
+                {/* View on Map - Navigate to Scout page */}
+                {canViewOnMap(restaurant) && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleViewOnMap(restaurant)}
+                    className="flex-1"
+                  >
+                    <Map className="w-4 h-4 mr-2" />
+                    View on Map
+                  </Button>
+                )}
+                
+                {/* External Google Maps link */}
                 {canViewRestaurant(restaurant) && (
                   <Button
                     size="sm"
@@ -291,10 +403,10 @@ export function PlacesTab({ restaurants, loading, error, onRefresh }: PlacesTabP
                         window.open(mapsUrl, '_blank');
                       }
                     }}
-                    className="flex-1"
+                    className={canViewOnMap(restaurant) ? "" : "flex-1"}
                   >
                     <ExternalLink className="w-4 h-4 mr-2" />
-                    View
+                    {canViewOnMap(restaurant) ? "Google" : "View"}
                   </Button>
                 )}
                 
