@@ -1,32 +1,59 @@
+'use client';
+
 import { ChatDebug } from "@/components/debug/ChatDebug";
 import { SimpleUserStatus } from "@/components/auth/SimpleUserStatus";
-import { EnhancedChatInterface } from "@/components/chat/EnhancedChatInterface";
-
-export const metadata = { title: "Chat | FUZO" };
+import { ModernChatInterfaceRealData } from "@/components/chat/modern/ModernChatInterfaceWithRealData";
+import { ChatContact, UserStory } from "@/components/chat/modern/utils/ChatTypes";
 
 export default function ChatPage() {
+  const handleContactClick = (contact: ChatContact) => {
+    console.log('Contact clicked:', contact);
+    // TODO: Navigate to individual chat
+  };
+
+  const handleStoryClick = (story: UserStory) => {
+    console.log('Story clicked:', story);
+    // TODO: Open story viewer
+  };
+
+  const handleNewContact = () => {
+    console.log('New contact clicked');
+    // TODO: Open new contact dialog
+  };
+
+  const handleNewGroup = () => {
+    console.log('New group clicked');
+    // TODO: Open new group dialog
+  };
+
+  const handleCamera = () => {
+    console.log('Camera clicked');
+    // TODO: Open camera interface
+  };
+
   return (
-    <main className="container py-10">
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">FUZO Chat Hub</h1>
-          <SimpleUserStatus />
+    <main className="h-screen">
+      {/* Modern Chat Interface */}
+      <ModernChatInterfaceRealData
+        onContactClick={handleContactClick}
+        onStoryClick={handleStoryClick}
+        onNewContact={handleNewContact}
+        onNewGroup={handleNewGroup}
+        onCamera={handleCamera}
+      />
+      
+      {/* Debug Section - Hidden in production */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed bottom-4 left-4 bg-white rounded-lg shadow-lg p-4 max-w-sm z-50">
+          <details className="cursor-pointer">
+            <summary className="font-semibold text-sm mb-2">Debug Info</summary>
+            <div className="space-y-2 text-xs">
+              <SimpleUserStatus />
+              <ChatDebug />
+            </div>
+          </details>
         </div>
-        <p className="text-lg text-muted-foreground">
-          Connect with friends and AI food experts to share culinary discoveries and get personalized recommendations.
-        </p>
-        
-        {/* Enhanced Chat Interface with Friends & AI Support */}
-        <div className="mb-8">
-          <EnhancedChatInterface />
-        </div>
-        
-        {/* Debug Section */}
-        <div className="border-t pt-6">
-          <h2 className="text-lg font-semibold mb-4">Debug Information</h2>
-          <ChatDebug />
-        </div>
-      </div>
+      )}
     </main>
   );
 }
