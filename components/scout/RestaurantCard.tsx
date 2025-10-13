@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Heart, MapPin, Star, Clock } from 'lucide-react';
+import { Heart, MapPin, Star, Clock, Share2 } from 'lucide-react';
+import RestaurantShareDialog from '../chat/modern/sharing/RestaurantShareDialog';
 
 export interface Restaurant {
   id: string;
@@ -37,6 +38,7 @@ interface RestaurantCardProps {
   restaurant: Restaurant;
   onClick: () => void;
   onSave: () => void;
+  onShare?: (restaurant: Restaurant) => void;
   variant?: 'horizontal' | 'grid' | 'compact';
   selected?: boolean;
   className?: string;
@@ -46,12 +48,24 @@ export function RestaurantCard({
   restaurant,
   onClick,
   onSave,
+  onShare,
   variant = 'horizontal',
   selected = false,
   className = ''
 }: RestaurantCardProps) {
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  
   const getPriceLevelDisplay = (level: number) => {
     return '$'.repeat(level) + '·'.repeat(Math.max(0, 3 - level));
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onShare) {
+      onShare(restaurant);
+    } else {
+      setShowShareDialog(true);
+    }
   };
 
   // Compact variant for desktop sidebar
@@ -174,6 +188,13 @@ export function RestaurantCard({
                   : 'text-gray-600 hover:text-red-500'
               }`}
             />
+          </button>
+
+          <button
+            onClick={handleShare}
+            className="absolute top-3 right-14 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm transition-all duration-200 hover:scale-110 active:scale-95 hover:bg-white hover:shadow-md"
+          >
+            <Share2 className="w-4 h-4 text-gray-600 hover:text-blue-500" />
           </button>
 
           <button
@@ -339,6 +360,31 @@ export function RestaurantCard({
           </div>
         </div>
       </div>
+      
+      {/* Share Dialog */}
+      {showShareDialog && (
+        <RestaurantShareDialog
+          restaurant={{
+            id: restaurant.id,
+            name: restaurant.name,
+            address: restaurant.address,
+            rating: restaurant.rating,
+            price_range: '$'.repeat(restaurant.priceLevel),
+            cuisine_type: restaurant.cuisine.join(', '),
+            photo_url: restaurant.image,
+            phone: restaurant.phone,
+            website: restaurant.website,
+            coordinates: restaurant.coordinates,
+            opening_hours: restaurant.openHours
+          }}
+          isOpen={showShareDialog}
+          onClose={() => setShowShareDialog(false)}
+          onShare={async (targets, message) => {
+            console.log('Sharing restaurant to:', targets, 'with message:', message);
+            setShowShareDialog(false);
+          }}
+        />
+      )}
     </motion.div>
   );
 }

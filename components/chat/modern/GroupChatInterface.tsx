@@ -6,6 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import SharedContentRenderer from './sharing/SharedContentRenderer';
 import {
   MoreHorizontal,
   Crown,
@@ -50,11 +51,34 @@ interface Message {
   sender_name: string;
   sender_avatar?: string;
   content: string;
-  type: 'text' | 'image' | 'voice' | 'video' | 'file';
+  type: 'text' | 'image' | 'voice' | 'video' | 'file' | 'restaurant' | 'recipe';
   timestamp: string;
   status: 'sending' | 'sent' | 'delivered' | 'read';
   reply_to?: string;
   media_url?: string;
+  // Shared content data
+  restaurant_data?: {
+    id: string;
+    name: string;
+    address: string;
+    rating: number;
+    priceLevel: number;
+    cuisine: string;
+    photoUrl?: string;
+    phone?: string;
+    website?: string;
+  };
+  recipe_data?: {
+    id: string;
+    title: string;
+    description: string;
+    totalTime: number;
+    difficulty: 'Easy' | 'Medium' | 'Hard';
+    servings: number;
+    imageUrl?: string;
+    ingredients: string[];
+    tags: string[];
+  };
 }
 
 interface GroupChatInterfaceProps {
@@ -317,7 +341,21 @@ export function GroupChatInterface({
                     {!isOwn && (
                       <p className="text-xs text-gray-500 mb-1">{sender?.display_name}</p>
                     )}
-                    <p className="text-sm">{message.content}</p>
+                    
+                    {/* Render shared content if it's a restaurant or recipe message */}
+                    {(message.type === 'restaurant' || message.type === 'recipe') ? (
+                      <div className="bg-white rounded-lg p-2 mb-2">
+                        <SharedContentRenderer 
+                          message={message}
+                          onSaveToPlate={(content) => console.log('Save to plate:', content)}
+                          onViewDetails={(content) => console.log('View details:', content)}
+                          onGetDirections={(restaurant) => console.log('Get directions:', restaurant)}
+                        />
+                      </div>
+                    ) : (
+                      <p className="text-sm">{message.content}</p>
+                    )}
+                    
                     <p className={`text-xs mt-1 ${isOwn ? 'text-orange-100' : 'text-gray-500'}`}>
                       {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>

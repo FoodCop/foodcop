@@ -172,7 +172,7 @@ export function RealDataChatInterface({
     setConversationMessages([]);
   };
 
-  const handleSendMessage = async (content: string, type: 'text' | 'image' | 'voice' | 'video' | 'file' = 'text') => {
+  const handleSendMessage = async (content: string, type: 'text' | 'image' | 'voice' | 'video' | 'file' | 'restaurant' | 'recipe' = 'text') => {
     if (!selectedContact || !chatUser || !content.trim()) return;
 
     try {

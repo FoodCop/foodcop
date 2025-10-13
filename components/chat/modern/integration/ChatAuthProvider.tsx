@@ -25,11 +25,15 @@ interface ChatAuthContextType {
   // Real data services
   loadContacts: () => Promise<ChatContact[]>;
   loadMessages: (roomId: string) => Promise<Message[]>;
-  sendMessage: (content: string, roomId: string, type?: 'text' | 'image' | 'voice' | 'video' | 'file') => Promise<Message | null>;
+  sendMessage: (content: string, roomId: string, type?: 'text' | 'image' | 'voice' | 'video' | 'file' | 'restaurant' | 'recipe') => Promise<Message | null>;
   loadStories: () => Promise<UserStory[]>;
   // Real-time subscriptions
   subscribeToMessages: (roomId: string, onMessage: (message: Message) => void) => () => void;
   subscribeToUserStatus: (userId: string, onStatusChange: (isOnline: boolean) => void) => () => void;
+  
+  // Shared content functions
+  shareRestaurant: (roomId: string, restaurantData: any, message?: string) => Promise<Message | null>;
+  shareRecipe: (roomId: string, recipeData: any, message?: string) => Promise<Message | null>;
 }
 
 const ChatAuthContext = createContext<ChatAuthContextType | undefined>(undefined);
@@ -313,7 +317,7 @@ export function ChatAuthProvider({ children }: { children: React.ReactNode }) {
   const sendMessage = async (
     content: string, 
     roomId: string, 
-    type: 'text' | 'image' | 'voice' | 'video' | 'file' = 'text'
+    type: 'text' | 'image' | 'voice' | 'video' | 'file' | 'restaurant' | 'recipe' = 'text'
   ): Promise<Message | null> => {
     if (!chatUser || !content.trim()) return null;
 
@@ -418,6 +422,92 @@ export function ChatAuthProvider({ children }: { children: React.ReactNode }) {
     };
   };
 
+  // Share restaurant to chat
+  const shareRestaurant = async (roomId: string, restaurantData: any, message?: string): Promise<Message | null> => {
+    if (!chatUser) return null;
+
+    try {
+      const response = await fetch('/api/chat/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: message || `Shared a restaurant: ${restaurantData.name}`,
+          roomId,
+          type: 'restaurant',
+          restaurant_data: restaurantData
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to share restaurant');
+      }
+
+      const { message: responseMessage } = await response.json();
+      
+      return {
+        id: responseMessage.id,
+        content: responseMessage.content,
+        sender_id: chatUser.id,
+        sender_name: chatUser.display_name,
+        sender_avatar: chatUser.avatar_url,
+        conversation_id: roomId,
+        type: 'restaurant',
+        timestamp: responseMessage.created_at,
+        status: 'delivered',
+        reactions: [],
+        restaurant_data: restaurantData
+      };
+    } catch (error) {
+      console.error('Error sharing restaurant:', error);
+      return null;
+    }
+  };
+
+  // Share recipe to chat
+  const shareRecipe = async (roomId: string, recipeData: any, message?: string): Promise<Message | null> => {
+    if (!chatUser) return null;
+
+    try {
+      const response = await fetch('/api/chat/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: message || `Shared a recipe: ${recipeData.title}`,
+          roomId,
+          type: 'recipe',
+          recipe_data: recipeData
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to share recipe');
+      }
+
+      const { message: responseMessage } = await response.json();
+      
+      return {
+        id: responseMessage.id,
+        content: responseMessage.content,
+        sender_id: chatUser.id,
+        sender_name: chatUser.display_name,
+        sender_avatar: chatUser.avatar_url,
+        conversation_id: roomId,
+        type: 'recipe',
+        timestamp: responseMessage.created_at,
+        status: 'delivered',
+        reactions: [],
+        recipe_data: recipeData
+      };
+    } catch (error) {
+      console.error('Error sharing recipe:', error);
+      return null;
+    }
+  };
+
   const value: ChatAuthContextType = {
     user: chatUser,
     isLoading: authLoading || isLoading,
@@ -427,7 +517,9 @@ export function ChatAuthProvider({ children }: { children: React.ReactNode }) {
     sendMessage,
     loadStories,
     subscribeToMessages,
-    subscribeToUserStatus
+    subscribeToUserStatus,
+    shareRestaurant,
+    shareRecipe
   };
 
   return (

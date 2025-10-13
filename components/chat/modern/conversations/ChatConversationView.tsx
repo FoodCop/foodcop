@@ -14,7 +14,7 @@ interface ChatConversationViewProps {
   isTyping?: boolean;
   typingUser?: string;
   onBack: () => void;
-  onSendMessage: (content: string, type: 'text' | 'image' | 'voice' | 'video' | 'file') => void;
+  onSendMessage: (content: string, type: 'text' | 'image' | 'voice' | 'video' | 'file' | 'restaurant' | 'recipe') => void;
   onReaction?: (messageId: string, reaction: string) => void;
   onTypingStart?: () => void;
   onTypingStop?: () => void;

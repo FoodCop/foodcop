@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { UtensilsCrossed, ChefHat, Share2, ArrowLeft } from 'lucide-react';
+import { UtensilsCrossed, ChefHat, Share2, ArrowLeft, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RestaurantData, RecipeData, ShareTarget } from './types/ShareTypes';
@@ -9,11 +9,13 @@ import RestaurantShareCard from './RestaurantShareCard';
 import RecipeShareCard from './RecipeShareCard';
 import RestaurantShareDialog from './RestaurantShareDialog';
 import RecipeShareDialog from './RecipeShareDialog';
+import SharedContentRenderer from './SharedContentRenderer';
+import { Message } from '../utils/ChatTypes';
 
 export default function SharingIntegrationTest() {
   const [showRestaurantDialog, setShowRestaurantDialog] = useState(false);
   const [showRecipeDialog, setShowRecipeDialog] = useState(false);
-  const [selectedView, setSelectedView] = useState<'menu' | 'restaurant' | 'recipe'>('menu');
+  const [selectedView, setSelectedView] = useState<'menu' | 'restaurant' | 'recipe' | 'chat'>('menu');
 
   // Sample restaurant data
   const sampleRestaurant: RestaurantData = {
@@ -206,6 +208,133 @@ export default function SharingIntegrationTest() {
     );
   }
 
+  // Chat Integration Demo View
+  if (selectedView === 'chat') {
+    // Create sample chat messages with shared content
+    const sampleMessages: Message[] = [
+      {
+        id: 'msg-1',
+        conversation_id: 'demo-chat',
+        sender_id: 'user-1',
+        sender_name: 'Alex Chen',
+        sender_avatar: '/api/placeholder/32/32',
+        content: 'Hey! I found this amazing restaurant, you should check it out!',
+        type: 'restaurant',
+        timestamp: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
+        status: 'delivered',
+        restaurant_data: {
+          id: sampleRestaurant.id,
+          name: sampleRestaurant.name,
+          address: sampleRestaurant.address,
+          rating: sampleRestaurant.rating,
+          priceLevel: 3,
+          cuisine: sampleRestaurant.cuisine_type,
+          photoUrl: sampleRestaurant.photo_url,
+          phone: sampleRestaurant.phone,
+          website: sampleRestaurant.website
+        }
+      },
+      {
+        id: 'msg-2', 
+        conversation_id: 'demo-chat',
+        sender_id: 'user-2',
+        sender_name: 'Sarah Kim',
+        sender_avatar: '/api/placeholder/32/32',
+        content: 'Looks great! Here\'s a recipe I tried recently that would pair well:',
+        type: 'recipe',
+        timestamp: new Date(Date.now() - 120000).toISOString(), // 2 minutes ago
+        status: 'delivered',
+        recipe_data: {
+          id: sampleRecipe.id,
+          title: sampleRecipe.title,
+          description: sampleRecipe.description,
+          totalTime: sampleRecipe.cooking_time!,
+          difficulty: sampleRecipe.difficulty,
+          servings: sampleRecipe.servings!,
+          imageUrl: sampleRecipe.image_url,
+          ingredients: sampleRecipe.ingredients,
+          tags: ['Korean', 'Healthy', 'Rice Bowl']
+        }
+      }
+    ];
+
+    return (
+      <div className="h-screen bg-gray-100 flex items-center justify-center p-4">
+        <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg">
+          {/* Header */}
+          <div className="border-b border-gray-200 p-4 flex items-center gap-4">
+            <Button
+              onClick={() => setSelectedView('menu')}
+              variant="ghost"
+              size="sm"
+              className="text-gray-600 hover:text-gray-900"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <MessageSquare className="w-6 h-6 text-blue-600" />
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900">Chat Integration Demo</h1>
+              <p className="text-sm text-gray-600">Shared restaurant and recipe in chat</p>
+            </div>
+          </div>
+
+          {/* Chat Messages */}
+          <div className="p-6 space-y-4 max-h-96 overflow-y-auto">
+            {sampleMessages.map((message) => (
+              <div key={message.id} className="flex justify-start space-x-3">
+                <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold">
+                  {message.sender_name.split(' ').map(n => n[0]).join('')}
+                </div>
+                <div className="flex-1 max-w-md">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-medium text-gray-900">{message.sender_name}</span>
+                    <span className="text-xs text-gray-500">
+                      {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                  
+                  {/* Regular message content */}
+                  {message.type === 'text' && (
+                    <div className="bg-gray-100 rounded-lg p-3">
+                      <p className="text-sm text-gray-900">{message.content}</p>
+                    </div>
+                  )}
+                  
+                  {/* Shared content */}
+                  {(message.type === 'restaurant' || message.type === 'recipe') && (
+                    <div className="space-y-2">
+                      <div className="bg-gray-100 rounded-lg p-3">
+                        <p className="text-sm text-gray-900">{message.content}</p>
+                      </div>
+                      <SharedContentRenderer 
+                        message={message}
+                        onSaveToPlate={handleSaveToPlate}
+                        onViewDetails={handleViewDetails}
+                        onGetDirections={handleGetDirections}
+                        className="shadow-sm"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Footer Info */}
+          <div className="border-t border-gray-200 p-4 bg-blue-50">
+            <h3 className="font-semibold text-blue-900 mb-2">✅ Integration Complete:</h3>
+            <ul className="text-sm text-blue-700 space-y-1">
+              <li>• Chat system renders shared restaurants and recipes</li>
+              <li>• SharedContentRenderer maps ChatTypes to ShareTypes</li>
+              <li>• Action buttons work for Save, View Details, Directions</li>
+              <li>• Ready for Scout/Bites &ldquo;Share to Chat&rdquo; integration</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen bg-gray-100 flex items-center justify-center">
       <div className="max-w-md w-full mx-4 bg-white rounded-lg shadow-lg p-8 text-center">
@@ -232,6 +361,14 @@ export default function SharingIntegrationTest() {
           >
             <ChefHat className="w-5 h-5" />
             Test Recipe Sharing
+          </Button>
+          
+          <Button
+            onClick={() => setSelectedView('chat')}
+            className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            <MessageSquare className="w-5 h-5" />
+            Chat Integration Demo
           </Button>
           
           <Button

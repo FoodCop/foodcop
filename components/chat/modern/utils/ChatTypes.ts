@@ -10,7 +10,7 @@ export interface ChatContact {
     content: string;
     timestamp: string;
     sender_id: string;
-    type: 'text' | 'image' | 'voice' | 'video' | 'file';
+    type: 'text' | 'image' | 'voice' | 'video' | 'file' | 'restaurant' | 'recipe';
   };
   unread_count: number;
   is_online: boolean;
@@ -39,7 +39,7 @@ export interface Message {
   sender_name: string;
   sender_avatar?: string;
   content: string;
-  type: 'text' | 'image' | 'voice' | 'video' | 'file';
+  type: 'text' | 'image' | 'voice' | 'video' | 'file' | 'restaurant' | 'recipe';
   timestamp: string;
   status: 'sending' | 'sent' | 'delivered' | 'read';
   reply_to?: string;
@@ -50,6 +50,29 @@ export interface Message {
     size?: number;
     dimensions?: { width: number; height: number };
     filename?: string;
+  };
+  // Shared content data
+  restaurant_data?: {
+    id: string;
+    name: string;
+    address: string;
+    rating: number;
+    priceLevel: number;
+    cuisine: string;
+    photoUrl?: string;
+    phone?: string;
+    website?: string;
+  };
+  recipe_data?: {
+    id: string;
+    title: string;
+    description: string;
+    totalTime: number;
+    difficulty: 'Easy' | 'Medium' | 'Hard';
+    servings: number;
+    imageUrl?: string;
+    ingredients: string[];
+    tags: string[];
   };
 }
 

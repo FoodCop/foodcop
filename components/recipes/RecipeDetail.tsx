@@ -3,6 +3,7 @@ import { ArrowLeft, Clock, Users, Flame, Star, Share2, Bookmark, Play, ChevronDo
 import type { Recipe, Comment } from '@/components/recipes/types';
 import Image from 'next/image';
 import { RecipeCommunity } from '@/components/recipes/RecipeCommunity';
+import RecipeShareDialog from '../chat/modern/sharing/RecipeShareDialog';
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -16,6 +17,7 @@ export function RecipeDetail({ recipe, onBack, onSave, onShare, isSaved = false 
   const [activeTab, setActiveTab] = useState<'overview' | 'ingredients' | 'instructions' | 'nutrition' | 'community'>('overview');
   const [checkedIngredients, setCheckedIngredients] = useState<Set<string>>(new Set());
   const [expandedInstructions, setExpandedInstructions] = useState<Set<string>>(new Set());
+  const [showShareDialog, setShowShareDialog] = useState(false);
 
   const handleIngredientCheck = (ingredientId: string) => {
     const newChecked = new Set(checkedIngredients);
@@ -39,6 +41,10 @@ export function RecipeDetail({ recipe, onBack, onSave, onShare, isSaved = false 
 
   const handleSave = () => {
     onSave();
+  };
+
+  const handleShare = () => {
+    setShowShareDialog(true);
   };
 
   const nutritionData = recipe.nutrition ? [
@@ -104,7 +110,7 @@ export function RecipeDetail({ recipe, onBack, onSave, onShare, isSaved = false 
                 <Bookmark className={`w-5 h-5 ${isSaved ? 'text-white fill-current' : 'text-white'}`} />
               </button>
               <button
-                onClick={onShare}
+                onClick={handleShare}
                 className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/20"
               >
                 <Share2 className="w-5 h-5 text-white" />
@@ -387,6 +393,30 @@ export function RecipeDetail({ recipe, onBack, onSave, onShare, isSaved = false 
           <RecipeCommunity recipeId={recipe.id.toString()} comments={comments} />
         )}
       </div>
+      
+      {/* Recipe Share Dialog */}
+      {showShareDialog && (
+        <RecipeShareDialog
+          recipe={{
+            id: recipe.id.toString(),
+            title: recipe.title,
+            description: recipe.summary || '',
+            image_url: recipe.image,
+            cooking_time: recipe.readyInMinutes || 30,
+            difficulty: recipe.difficulty || 'Medium',
+            ingredients: recipe.extendedIngredients?.map(ing => ing.original) || [],
+            servings: recipe.servings || 4,
+            calories: recipe.nutrition?.calories,
+            category: recipe.dishTypes?.[0] || 'Main Course'
+          }}
+          isOpen={showShareDialog}
+          onClose={() => setShowShareDialog(false)}
+          onShare={async (targets, message) => {
+            console.log('Sharing recipe to:', targets, 'with message:', message);
+            setShowShareDialog(false);
+          }}
+        />
+      )}
     </div>
   );
 }

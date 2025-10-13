@@ -11,6 +11,7 @@ import {
   getAvatarGradient,
   getPlaceholderAvatar 
 } from '../utils/ChatUtils';
+import SharedContentRenderer from '../sharing/SharedContentRenderer';
 
 interface MessageBubbleProps {
   message: Message;
@@ -120,7 +121,11 @@ export function MessageBubble({
         
         {/* Message Bubble */}
         <div
-          className={`rounded-2xl px-4 py-2 max-w-full break-words ${
+          className={`rounded-2xl px-4 py-2 break-words ${
+            message.type === 'restaurant' || message.type === 'recipe' 
+              ? 'max-w-md' // Wider for shared content
+              : 'max-w-full'
+          } ${
             isFromCurrentUser
               ? 'bg-gradient-to-r from-[#FF6B35] to-[#F7931E] text-white rounded-br-md'
               : 'bg-gray-100 text-gray-900 rounded-bl-md'
@@ -132,9 +137,16 @@ export function MessageBubble({
           }}
         >
           {/* Message Content */}
-          <div className="text-sm leading-relaxed">
-            {message.content}
-          </div>
+          {message.type === 'restaurant' || message.type === 'recipe' ? (
+            <SharedContentRenderer 
+              message={message}
+              className="mb-2"
+            />
+          ) : (
+            <div className="text-sm leading-relaxed">
+              {message.content}
+            </div>
+          )}
           
           {/* Message reactions */}
           {message.reactions && message.reactions.length > 0 && (

@@ -232,10 +232,10 @@ export const useDeviceOrientation = () => {
     };
   }, []);
 
-  const lockOrientation = useCallback(async (orientation: OrientationLockType) => {
-    if (screen.orientation && screen.orientation.lock) {
+  const lockOrientation = useCallback(async (orientation: OrientationType) => {
+    if (screen.orientation && 'lock' in screen.orientation) {
       try {
-        await screen.orientation.lock(orientation);
+        await (screen.orientation as any).lock(orientation);
         return true;
       } catch (error) {
         console.warn('Failed to lock orientation:', error);
