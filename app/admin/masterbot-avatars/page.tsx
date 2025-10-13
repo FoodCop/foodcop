@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -113,9 +113,9 @@ export default function MasterbotAvatarUpload() {
   };
 
   // Load status on component mount
-  useState(() => {
+  useEffect(() => {
     loadCurrentStatus();
-  });
+  }, []);
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">

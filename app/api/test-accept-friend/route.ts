@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase/server";
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 // Test endpoint to accept the friend request from Quantum Climb to Jun Cando
 export async function GET() {
   try {

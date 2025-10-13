@@ -3,6 +3,9 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { OpenAIService } from '@/lib/services/openai-service';
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 // GET /api/chat/ai - Get AI chat messages with masterbot
 export async function GET(request: NextRequest) {
   try {

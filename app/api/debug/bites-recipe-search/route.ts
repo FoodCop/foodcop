@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 // Enhanced diet configurations with comprehensive parameters
 const SPOONACULAR_DIETS: Record<string, any> = {
   'vegetarian': {
