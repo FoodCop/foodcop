@@ -17,10 +17,6 @@
     },
     {
       "path": "/api/cron/master-bot-posts",
-      "schedule": "0 14 * * *"
-    },
-    {
-      "path": "/api/cron/master-bot-posts",
       "schedule": "0 20 * * *"
     }
   ],
