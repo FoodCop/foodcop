@@ -20,8 +20,16 @@ function verifyCronSecret(request: NextRequest): boolean {
  * POST /api/cron/master-bot-posts
  */
 export async function POST(request: NextRequest) {
+  console.log('CRON master-bot-posts endpoint hit:', {
+    timestamp: new Date().toISOString(),
+    userAgent: request.headers.get('user-agent'),
+    hasAuth: !!request.headers.get('authorization'),
+    hasCronSecret: !!process.env.CRON_SECRET
+  });
+
   // Verify authorization
   if (!verifyCronSecret(request)) {
+    console.error('CRON authorization failed');
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
