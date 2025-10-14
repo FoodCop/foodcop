@@ -1,7 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { User, Settings } from 'lucide-react';
+import { User, Settings, Home, Bug } from 'lucide-react';
+import Link from 'next/link';
 import Image from 'next/image';
 
 interface FeedHeaderProps {
@@ -12,15 +13,16 @@ interface FeedHeaderProps {
 export function FeedHeader({ onProfileClick, onSettingsClick }: FeedHeaderProps) {
   return (
     <div className="flex items-center justify-between px-4 py-3 bg-background/95 backdrop-blur-sm border-b">
-      {/* Profile Button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="w-10 h-10 rounded-full"
-        onClick={onProfileClick}
-      >
-        <User className="h-5 w-5 text-muted-foreground" />
-      </Button>
+      {/* Navigation Button */}
+      <Link href="/">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-10 h-10 rounded-full"
+        >
+          <Home className="h-5 w-5 text-muted-foreground" />
+        </Button>
+      </Link>
 
       {/* Logo */}
       <div className="flex items-center justify-center">
@@ -29,15 +31,16 @@ export function FeedHeader({ onProfileClick, onSettingsClick }: FeedHeaderProps)
         </div>
       </div>
 
-      {/* Settings Button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="w-10 h-10 rounded-full"
-        onClick={onSettingsClick}
-      >
-        <Settings className="h-5 w-5 text-muted-foreground" />
-      </Button>
+      {/* Debug/Settings Button */}
+      <Link href="/auth-debug">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-10 h-10 rounded-full"
+        >
+          <Bug className="h-5 w-5 text-muted-foreground" />
+        </Button>
+      </Link>
     </div>
   );
 }

@@ -74,13 +74,6 @@ const NavBar = () => {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link href="/users" className={navigationMenuTriggerStyle()}>
-                    Users
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
                   <Link href="/auth-debug" className={navigationMenuTriggerStyle()}>
                     Auth Debug
                   </Link>
@@ -136,11 +129,8 @@ const NavBar = () => {
                   <Link href="/dashboard" className="font-medium">
                     Dashboard
                   </Link>
-                  <Link href="/users" className="font-medium">
-                    Users
-                  </Link>
-                  <Link href="/cron-debug" className="font-medium">
-                    CRON Debug
+                  <Link href="/auth-debug" className="font-medium">
+                    Auth Debug
                   </Link>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">

@@ -40,6 +40,7 @@ export async function GET() {
         followers_count,
         following_count,
         is_master_bot,
+        last_seen,
         created_at,
         updated_at
       `)
@@ -53,10 +54,22 @@ export async function GET() {
       });
     }
 
+    // Process users to add online status
+    const processedUsers = (users || []).map(user => {
+      const lastSeenAt = user.last_seen ? new Date(user.last_seen) : null;
+      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+      
+      return {
+        ...user,
+        is_online: lastSeenAt ? lastSeenAt > fiveMinutesAgo : false,
+        last_seen: user.last_seen
+      };
+    });
+
     return NextResponse.json({
       success: true,
-      users: users || [],
-      count: users?.length || 0
+      users: processedUsers,
+      count: processedUsers.length
     });
 
   } catch (error) {

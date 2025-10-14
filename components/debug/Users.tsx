@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { supabaseBrowser } from '@/lib/supabase/client';
 
 interface User {
   id: string;
@@ -25,27 +26,68 @@ export function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const supabase = supabaseBrowser();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("/api/debug/users");
+      const data = await response.json();
+      
+      if (data.success) {
+        setUsers(data.users || []);
+        setError(null);
+      } else {
+        setError(data.error || "Failed to fetch users");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+    }
+  };
+
+  const refreshUsers = async () => {
+    setRefreshing(true);
+    await fetchUsers();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const updateLastSeen = async () => {
       try {
-        const response = await fetch("/api/debug/users");
-        const data = await response.json();
+        // Get current user session
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
         
-        if (data.success) {
-          setUsers(data.users || []);
+        if (authError || !user) {
+          console.log("No authenticated user for last_seen update");
+          return;
+        }
+
+        // Update last_seen directly via Supabase
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({ last_seen: new Date().toISOString() })
+          .eq('email', user.email);
+
+        if (updateError) {
+          console.error("Error updating last_seen:", updateError);
         } else {
-          setError(data.error || "Failed to fetch users");
+          console.log("Successfully updated last_seen timestamp");
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error occurred");
-      } finally {
-        setLoading(false);
+        console.log("Could not update last seen:", err);
       }
     };
 
-    fetchUsers();
-  }, []);
+    // Update last seen timestamp when component mounts
+    updateLastSeen();
+    
+    fetchUsers().finally(() => setLoading(false));
+    
+    // Set up interval to update last seen every 2 minutes
+    const interval = setInterval(updateLastSeen, 2 * 60 * 1000);
+    
+    return () => clearInterval(interval);
+  }, [supabase]);
 
   if (loading) {
     return <div>Loading users...</div>;
@@ -62,7 +104,27 @@ export function Users() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "monospace", fontSize: "14px" }}>
-      <h3>Users Debug - Total Users: {users.length}</h3>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+        <h3>Users Debug - Total Users: {users.length}</h3>
+        <button
+          onClick={() => {
+            setLoading(true);
+            fetchUsers().finally(() => setLoading(false));
+          }}
+          disabled={loading}
+          style={{
+            padding: "5px 10px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: loading ? "not-allowed" : "pointer",
+            opacity: loading ? 0.5 : 1
+          }}
+        >
+          {loading ? "Refreshing..." : "Refresh"}
+        </button>
+      </div>
       
       {users.length === 0 ? (
         <p>No users found in the database.</p>

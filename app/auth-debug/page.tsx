@@ -2,6 +2,8 @@
 
 import { LoginButton } from "@/components/auth/LoginButton";
 import { SupabaseQuickSignIn } from "@/components/auth/SupabaseQuickSignIn";
+import { CronDebugPanel } from "@/components/debug/CronDebugPanel";
+import { Users } from "@/components/debug/Users";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -69,11 +71,21 @@ export default function AuthDebugPage() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-secondary mb-2">
-          Authentication Debug Center
+          Authentication & CRON Debug Center
         </h1>
         <p className="text-muted-foreground">
-          Monitor and test authentication functionality
+          Monitor authentication functionality and CRON job status
         </p>
+      </div>
+
+      {/* CRON Debug Panel */}
+      <div className="mb-6">
+        <CronDebugPanel />
+      </div>
+
+      {/* Users Debug Panel */}
+      <div className="mb-6">
+        <Users />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
