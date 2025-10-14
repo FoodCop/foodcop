@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { FeedHeader } from '@/components/feed/FeedHeader';
 import { RestaurantTinderSwipe } from '@/components/feed/RestaurantTinderSwipe';
 import { SwipeActions } from '@/components/feed/SwipeActions';
+import { CronDebugPanel } from '@/components/debug/CronDebugPanel';
 import { RestaurantFeedClientService } from '@/lib/services/restaurant-feed-client';
 import { RestaurantCard } from '@/types/restaurant-feed';
 import { toast } from 'sonner';
@@ -107,6 +108,11 @@ export default function FeedPage() {
         onProfileClick={() => toast('Profile page coming soon!')}
         onSettingsClick={() => toast('Settings coming soon!')}
       />
+
+      {/* Debug Panel */}
+      <div className="px-4 pt-2">
+        <CronDebugPanel />
+      </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">

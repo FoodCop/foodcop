@@ -13,11 +13,7 @@
   "crons": [
     {
       "path": "/api/cron/master-bot-posts",
-      "schedule": "0 12 * * *"
-    },
-    {
-      "path": "/api/cron/test",
-      "schedule": "0 18 * * *"
+      "schedule": "30 14 * * *"
     }
   ],
   "redirects": [
