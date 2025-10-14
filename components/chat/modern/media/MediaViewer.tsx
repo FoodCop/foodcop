@@ -300,11 +300,20 @@ const MediaViewer: React.FC<MediaViewerProps> = ({
       const link = document.createElement('a');
       link.href = url;
       link.download = currentMedia.metadata?.filename || `media_${currentMedia.id}`;
+      link.style.display = 'none';
+      
+      // Safer DOM manipulation
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
       
-      window.URL.revokeObjectURL(url);
+      // Clean up immediately
+      setTimeout(() => {
+        if (document.body.contains(link)) {
+          document.body.removeChild(link);
+        }
+        window.URL.revokeObjectURL(url);
+      }, 100);
+      
     } catch (error) {
       console.error('Error downloading media:', error);
     }

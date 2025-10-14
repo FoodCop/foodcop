@@ -29,6 +29,7 @@
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.39.0",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@types/maplibre-gl": "^1.13.2",
     "@types/node": "^20.0.0",
     "@types/node-cron": "^3.0.11",

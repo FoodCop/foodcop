@@ -1,16 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useChatAuth } from './ChatAuthProvider';
-import { ChatHeader } from '../headers/ChatHeader';
-import { StoriesBar } from '../lists/StoriesBar';
-import { ContactsList } from '../lists/ContactsList';
-import { ChatFloatingActions } from '../lists/ChatFloatingActions';
-import { ChatConversationView } from '../conversations/ChatConversationView';
-import { ChatContact, UserStory, Message, Conversation } from '../utils/ChatTypes';
-import { filterContacts, sortContactsByLastMessage } from '../utils/ChatUtils';
+import { useChatService } from './hooks/useChatService';
+import { ChatHeader } from './headers/ChatHeader';
+import { StoriesBar } from './lists/StoriesBar';
+import { ContactsList } from './lists/ContactsList';
+import { ChatFloatingActions } from './lists/ChatFloatingActions';
+import { ChatConversationView } from './conversations/ChatConversationView';
+import { ChatContact, UserStory, Message, Conversation } from './utils/ChatTypes';
+import { filterContacts, sortContactsByLastMessage } from './utils/ChatUtils';
 
-interface RealDataChatInterfaceProps {
+interface ChatInterfaceProps {
   onContactClick?: (contact: ChatContact) => void;
   onStoryClick?: (story: UserStory) => void;
   onNewContact?: () => void;
@@ -19,14 +19,14 @@ interface RealDataChatInterfaceProps {
   className?: string;
 }
 
-export function RealDataChatInterface({
+export function ChatInterface({
   onContactClick,
   onStoryClick,
   onNewContact,
   onNewGroup,
   onCamera,
   className = ''
-}: RealDataChatInterfaceProps) {
+}: ChatInterfaceProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [contacts, setContacts] = useState<ChatContact[]>([]);
   const [selectedContact, setSelectedContact] = useState<ChatContact | null>(null);
@@ -46,7 +46,7 @@ export function RealDataChatInterface({
     sendMessage, 
     loadStories,
     subscribeToMessages 
-  } = useChatAuth();
+  } = useChatService();
 
   // Load contacts when component mounts or user changes
   useEffect(() => {

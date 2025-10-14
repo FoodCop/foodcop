@@ -1,0 +1,490 @@
+[
+  {
+    "id": "restaurant-adventure_rafa-1",
+    "placeId": "ChIJc5ON4Xb_AzQR_dqjqgq0XkM",
+    "name": "Bingaz Street Food",
+    "address": "23 High Street G/F Bingaz, Sai Ying Pun, Hong Kong",
+    "street": "23 High Street G/F Bingaz",
+    "city": "Sai Ying Pun",
+    "country": "HK",
+    "postalCode": null,
+    "neighborhood": null,
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 4.1,
+    "reviewsCount": 39,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "website": "https://bingazstreetfood.com/menu/",
+    "phone": "+852 5729 2308",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Restaurant",
+      "Sai Ying Pun",
+      "HK"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-2",
+    "placeId": "ChIJiacH1noABDQRjCkgboqSuqw",
+    "name": "BRAZA Churrascaria",
+    "address": "3/F, Grand Progress Building, 15 Lan Kwai Fong, Central, Hong Kong",
+    "street": "3/F, Grand Progress Building, 15 Lan Kwai Fong",
+    "city": "Central",
+    "country": "HK",
+    "postalCode": null,
+    "neighborhood": null,
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Brazilian restaurant",
+    "rating": 4.4,
+    "reviewsCount": 1131,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noZj0inSt5LMda4-jm969E9UlNDlSMeW-8xC0faFJfbJ3GuxD5V0tAat03aJZbYaSG6abp5HxBhK6QNUueDUgwTgB7f6t2YjdjpPRQjUyvhvxM4e9i2d3wraVidW6K4TBhYOE2k=w408-h725-k-no",
+    "website": "http://www.sandshospitality.com/portfolio/braza",
+    "phone": "+852 2890 9268",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10:30 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10:30 PM"
+      }
+    ],
+    "tags": [
+      "Brazilian restaurant",
+      "Central",
+      "HK"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-3",
+    "placeId": "ChIJOW5d0SLR5zsRdOb864OWRxg",
+    "name": "Street Food stalls",
+    "address": "Watson's Hotel, 144/1, Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400023, India",
+    "street": "Watson's Hotel, 144/1, Mahatma Gandhi Road",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400023",
+    "neighborhood": "Kala Ghoda, Fort",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Food court",
+    "rating": 4.8,
+    "reviewsCount": 68,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "website": null,
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "8 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Food court",
+      "Kala Ghoda, Fort",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-4",
+    "placeId": "ChIJ5TOqIwLJ5zsRNyF9uOKWAec",
+    "name": "Street Food",
+    "address": "Street Food Santacruz, Maharashtra 400055, India",
+    "street": "Street Food Santacruz",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400055",
+    "neighborhood": "Kolivery Village, Vidya Nagari, Kalina, Santacruz East",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Food court",
+    "rating": 4,
+    "reviewsCount": 3,
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "website": null,
+    "phone": null,
+    "openingHours": [],
+    "tags": [
+      "Food court",
+      "Kolivery Village, Vidya Nagari, Kalina, Santacruz East",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-5",
+    "placeId": "ChIJf_-XwIzO5zsRDTUnLL7219A",
+    "name": "SpiceKlub",
+    "description": "Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy.",
+    "address": "Janta Industrial Estate, opposite Phoenix Mills 8A, Lower Parel, Mumbai, Maharashtra 400013, India",
+    "street": "Janta Industrial Estate, opposite Phoenix Mills 8A",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400013",
+    "neighborhood": "Lower Parel",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Vegan restaurant",
+    "rating": 4.3,
+    "reviewsCount": 3540,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "website": "http://spiceklub.com/",
+    "phone": "+91 22 4610 4604",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "Lower Parel",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-6",
+    "placeId": "ChIJSSTzpQCZ4jARTl-EkRb3Jlw",
+    "name": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+    "address": "418 Yaowarat Rd, Khwaeng Samphanthawong, Samphanthawong, Bangkok 10100, Thailand",
+    "street": "418 Yaowarat Rd",
+    "city": "Samphanthawong",
+    "country": "TH",
+    "postalCode": "10100",
+    "neighborhood": "Samphanthawong",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 4.3,
+    "reviewsCount": 117,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "website": null,
+    "phone": "+66 86 995 1020",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "5 to 11 PM"
+      }
+    ],
+    "tags": [
+      "Restaurant",
+      "Samphanthawong",
+      "Samphanthawong",
+      "TH"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-7",
+    "placeId": "ChIJbYao6cif4jARF8mR5mjFcUI",
+    "name": "Central World Square Street Food",
+    "address": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4 Pathum Wan, Bangkok 10330, Thailand",
+    "street": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4",
+    "city": "Pathum Wan",
+    "country": "TH",
+    "postalCode": "10330",
+    "neighborhood": "Pathum Wan",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Thai restaurant",
+    "rating": 3.7,
+    "reviewsCount": 34,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "website": null,
+    "phone": "+66 2 640 7000",
+    "openingHours": [],
+    "tags": [
+      "Thai restaurant",
+      "Pathum Wan",
+      "Pathum Wan",
+      "TH"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-8",
+    "placeId": "ChIJT4EmU7D90YURgBm8QimOZOQ",
+    "name": "Taquería en la calle (street-food)",
+    "address": "Calle Santos Dumont 131(105, Aviación Civil, Venustiano Carranza, 15740 Ciudad de México, CDMX, Mexico",
+    "street": "Calle Santos Dumont 131(105",
+    "city": "Venustiano Carranza, Mexico City",
+    "country": "MX",
+    "postalCode": "15740",
+    "neighborhood": "Aviación Civil",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Mexican restaurant",
+    "rating": 5,
+    "reviewsCount": 2,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "website": null,
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Thursday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Friday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Saturday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Open 24 hours"
+      }
+    ],
+    "tags": [
+      "Mexican restaurant",
+      "Aviación Civil",
+      "Venustiano Carranza, Mexico City",
+      "MX"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-9",
+    "placeId": "ChIJAeuc20X50YURmbaLaj44lKE",
+    "name": "BiGOS street tacos",
+    "address": "C. Artículo 123 133, Colonia Centro, Juárez, Cuauhtémoc, 06000 Ciudad de México, CDMX, Mexico",
+    "street": "C. Artículo 123 133",
+    "city": "Cuauhtémoc, Mexico City",
+    "country": "MX",
+    "postalCode": "06000",
+    "neighborhood": "Colonia Centro, Juárez",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Taco restaurant",
+    "rating": 5,
+    "reviewsCount": 11,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqBmSA8yzS_nknWD7Q6YCNTAzVZ4AH7IrpVSrcE6sDhCdgAGL8qEJGd6Tuz2gykYhRr5jB9qz70FpFNjk0-M4aXbcotZixX-zZNrO28C0CI-S6CiSnab9GgWQrRpfYybtA2zqpymUP379Ym=w519-h240-k-no",
+    "website": null,
+    "phone": null,
+    "openingHours": [],
+    "tags": [
+      "Taco restaurant",
+      "Colonia Centro, Juárez",
+      "Cuauhtémoc, Mexico City",
+      "MX"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-10",
+    "placeId": "ChIJW7PbgAYFdkgRKzZcm_oVjnM",
+    "name": "SUSHISAMBA",
+    "description": "Creative Japanese & Latin American sushi in contemporary surroundings, plus cocktails.",
+    "address": "35 The Market, London WC2E 8RF, United Kingdom",
+    "street": "35 The Market",
+    "city": "London",
+    "country": "GB",
+    "postalCode": "WC2E 8RF",
+    "neighborhood": null,
+    "price": null,
+    "priceLevel": 1,
+    "category": "Japanese restaurant",
+    "rating": 4.5,
+    "reviewsCount": 4743,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4hMA4hBYvASt29sY4P5U_DikD8x7tWHnfOhCSZfuVShOUEWbuu1SVXM50WN8xpHphqTRql9pNYxKCHgCqlFWzJBTCEINg28LxA5ISnb_6Benw4azpWKWC-9EZi9LJaUOScUla=w408-h544-k-no",
+    "website": "https://www.sushisamba.com/locations/uk/london-covent-garden?utm_source=gbp&utm_medium=organic&utm_campaign=covent_garden_gbp",
+    "phone": "+44 20 3053 0000",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 PM to 1 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 PM to 1 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 PM to 1 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 PM to 1 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 PM to 1:30 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 PM to 1:30 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 PM to 12 AM"
+      }
+    ],
+    "tags": [
+      "Japanese restaurant",
+      "London",
+      "GB"
+    ]
+  },
+  {
+    "id": "restaurant-adventure_rafa-11",
+    "placeId": "ChIJwZCWumNZwokRA_PDwYfl0No",
+    "name": "Street food vendor",
+    "address": "2239 Broadway, New York, NY 10024",
+    "street": "2239 Broadway",
+    "city": "New York",
+    "country": "US",
+    "postalCode": "10024",
+    "neighborhood": "Manhattan",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 3.7,
+    "reviewsCount": 9,
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "website": null,
+    "phone": null,
+    "openingHours": [],
+    "tags": [
+      "Restaurant",
+      "Manhattan",
+      "New York",
+      "US"
+    ]
+  }
+]

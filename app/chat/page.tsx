@@ -2,7 +2,7 @@
 
 import { ChatDebug } from "@/components/debug/ChatDebug";
 import { SimpleUserStatus } from "@/components/auth/SimpleUserStatus";
-import { ModernChatInterfaceRealData } from "@/components/chat/modern/ModernChatInterfaceWithRealData";
+import { ChatInterface } from "@/components/chat/modern/ChatInterface";
 import { ChatContact, UserStory } from "@/components/chat/modern/utils/ChatTypes";
 
 export default function ChatPage() {
@@ -34,7 +34,7 @@ export default function ChatPage() {
   return (
     <main className="h-screen">
       {/* Modern Chat Interface */}
-      <ModernChatInterfaceRealData
+      <ChatInterface
         onContactClick={handleContactClick}
         onStoryClick={handleStoryClick}
         onNewContact={handleNewContact}

@@ -1,66 +1,104 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { FeedHeader } from '@/components/feed/FeedHeader';
-import { TinderSwipe } from '@/components/feed/TinderSwipe';
+import { RestaurantTinderSwipe } from '@/components/feed/RestaurantTinderSwipe';
 import { SwipeActions } from '@/components/feed/SwipeActions';
-import { sampleProfiles } from '@/data/sample-profiles';
+import { RestaurantFeedClientService } from '@/lib/services/restaurant-feed-client';
+import { RestaurantCard } from '@/types/restaurant-feed';
 import { toast } from 'sonner';
 
 export default function FeedPage() {
-  const [currentProfiles, setCurrentProfiles] = useState(sampleProfiles);
+  const [restaurants, setRestaurants] = useState<RestaurantCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const handleSwipe = useCallback((direction: 'left' | 'right', profileId: string) => {
-    const profile = currentProfiles.find(p => p.id === profileId);
-    if (profile) {
+  // Load restaurant feed data
+  useEffect(() => {
+    const loadFeed = async () => {
+      try {
+        setLoading(true);
+        const feedData = await RestaurantFeedClientService.getRestaurantFeed(50);
+        setRestaurants(feedData);
+      } catch (error) {
+        console.error('Error loading restaurant feed:', error);
+        toast.error('Failed to load restaurant recommendations');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadFeed();
+  }, []);
+
+  const handleSwipe = useCallback((direction: 'left' | 'right', restaurantId: string) => {
+    const restaurant = restaurants.find(r => r.id === restaurantId);
+    if (restaurant) {
       if (direction === 'right') {
-        toast.success(`You liked ${profile.name}! 💕`);
+        toast.success(`Saved ${restaurant.restaurant_name}! 🍽️`);
+        // TODO: Save to user's favorites
+        RestaurantFeedClientService.saveRestaurant('user-id', restaurantId);
+        RestaurantFeedClientService.likePost(restaurantId);
       } else {
-        toast(`You passed on ${profile.name}`);
+        toast(`Passed on ${restaurant.restaurant_name}`);
       }
     }
     setCurrentIndex(prev => prev + 1);
-  }, [currentProfiles]);
+  }, [restaurants]);
 
   const handleNoMoreCards = useCallback(() => {
-    toast.success('You\'ve seen all the profiles! Check back later for more.');
+    toast.success('You\'ve seen all recommendations! Master Bots post new content daily.');
   }, []);
 
   const handlePass = useCallback(() => {
-    if (currentIndex < currentProfiles.length) {
-      const profile = currentProfiles[currentIndex];
-      handleSwipe('left', profile.id);
+    if (currentIndex < restaurants.length) {
+      const restaurant = restaurants[currentIndex];
+      handleSwipe('left', restaurant.id);
     }
-  }, [currentIndex, currentProfiles, handleSwipe]);
+  }, [currentIndex, restaurants, handleSwipe]);
 
   const handleLike = useCallback(() => {
-    if (currentIndex < currentProfiles.length) {
-      const profile = currentProfiles[currentIndex];
-      handleSwipe('right', profile.id);
+    if (currentIndex < restaurants.length) {
+      const restaurant = restaurants[currentIndex];
+      handleSwipe('right', restaurant.id);
     }
-  }, [currentIndex, currentProfiles, handleSwipe]);
+  }, [currentIndex, restaurants, handleSwipe]);
 
   const handleSuperLike = useCallback(() => {
-    if (currentIndex < currentProfiles.length) {
-      const profile = currentProfiles[currentIndex];
-      toast.success(`You super liked ${profile.name}! ⭐`);
-      handleSwipe('right', profile.id);
+    if (currentIndex < restaurants.length) {
+      const restaurant = restaurants[currentIndex];
+      toast.success(`Super saved ${restaurant.restaurant_name}! ⭐`);
+      handleSwipe('right', restaurant.id);
+      // TODO: Add to special super-liked list
     }
-  }, [currentIndex, currentProfiles, handleSwipe]);
+  }, [currentIndex, restaurants, handleSwipe]);
 
   const handleRewind = useCallback(() => {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1);
-      toast('Rewound to previous profile');
+      toast('Rewound to previous restaurant');
     }
   }, [currentIndex]);
 
   const handleMessage = useCallback(() => {
-    toast('Messaging feature coming soon!');
-  }, []);
+    if (currentIndex < restaurants.length) {
+      const restaurant = restaurants[currentIndex];
+      toast(`Chat with ${restaurant.bot_display_name} about ${restaurant.restaurant_name} coming soon!`);
+    }
+  }, [currentIndex, restaurants]);
 
-  const hasCards = currentIndex < currentProfiles.length;
+  const hasCards = currentIndex < restaurants.length;
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading Master Bot recommendations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col bg-background">
@@ -75,8 +113,8 @@ export default function FeedPage() {
         {/* Card Stack */}
         <div className="flex-1 px-4 py-6">
           <div className="h-full max-w-sm mx-auto">
-            <TinderSwipe
-              profiles={currentProfiles}
+            <RestaurantTinderSwipe
+              restaurants={restaurants}
               onSwipe={handleSwipe}
               onNoMoreCards={handleNoMoreCards}
             />

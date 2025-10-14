@@ -1,5 +1,6 @@
 import { CronJobConfig } from '../types';
 import { supabaseServer } from '@/lib/supabase/server';
+import { RestaurantDataService } from '@/lib/services/restaurant-data';
 
 // FoodCop specific CRON jobs
 export const foodCopJobs: CronJobConfig[] = [
@@ -135,37 +136,33 @@ export const foodCopJobs: CronJobConfig[] = [
     }
   },
   {
-    id: 'update-master-bot-posts',
-    name: 'Update Master Bot Posts',
-    description: 'Generate new content from master bot prompts',
-    schedule: '0 */4 * * *', // Every 4 hours
+    id: 'master-bot-morning-posts',
+    name: 'Master Bot Morning Posts',
+    description: 'Generate morning restaurant posts from Master Bot datasets (3x daily schedule - morning)',
+    schedule: '0 8 * * *', // Daily at 8 AM
     enabled: true,
     handler: async () => {
-      const supabase = await supabaseServer();
-      
-      try {
-        // Get active master bot prompts
-        const { data: prompts, error: promptsError } = await supabase
-          .from('master_bot_prompts')
-          .select('*')
-          .eq('is_active', true);
-        
-        if (promptsError) throw promptsError;
-        
-        if (prompts && prompts.length > 0) {
-          // Generate new posts based on prompts
-          for (const prompt of prompts) {
-            // This would typically call your AI service to generate content
-            // For now, just log the action
-            console.log(`Generating content for prompt: ${prompt.id}`);
-          }
-        }
-        
-        console.log(`Updated master bot posts for ${prompts?.length || 0} prompts`);
-      } catch (error) {
-        console.error('Failed to update master bot posts:', error);
-        throw error;
-      }
+      await handleMasterBotPosting('morning');
+    }
+  },
+  {
+    id: 'master-bot-afternoon-posts', 
+    name: 'Master Bot Afternoon Posts',
+    description: 'Generate afternoon restaurant posts from Master Bot datasets (3x daily schedule - afternoon)',
+    schedule: '0 14 * * *', // Daily at 2 PM
+    enabled: true,
+    handler: async () => {
+      await handleMasterBotPosting('afternoon');
+    }
+  },
+  {
+    id: 'master-bot-evening-posts',
+    name: 'Master Bot Evening Posts', 
+    description: 'Generate evening restaurant posts from Master Bot datasets (3x daily schedule - evening)',
+    schedule: '0 20 * * *', // Daily at 8 PM
+    enabled: true,
+    handler: async () => {
+      await handleMasterBotPosting('evening');
     }
   },
   {
@@ -197,4 +194,116 @@ export const foodCopJobs: CronJobConfig[] = [
     }
   }
 ];
+
+/**
+ * Handle Master Bot posting from restaurant datasets
+ * Creates authentic posts for each Master Bot using their specialized restaurant data
+ */
+async function handleMasterBotPosting(timeOfDay: 'morning' | 'afternoon' | 'evening') {
+  const supabase = await supabaseServer();
+  
+  try {
+    console.log(`🤖 Starting Master Bot ${timeOfDay} posting cycle...`);
+    
+    // Get all Master Bot users
+    const { data: masterBots, error: botsError } = await supabase
+      .from('users')
+      .select('id, username, display_name')
+      .eq('is_master_bot', true);
+      
+    if (botsError) {
+      console.error('Error fetching master bots:', botsError);
+      throw botsError;
+    }
+    
+    if (!masterBots || masterBots.length === 0) {
+      console.log('No master bots found');
+      return;
+    }
+
+    let postsCreated = 0;
+
+    // Generate post for each Master Bot
+    for (const bot of masterBots) {
+      try {
+        // Get a random restaurant for this bot (excluding recent posts)
+        const restaurant = await RestaurantDataService.getRandomRestaurantForBot(bot.username, 30);
+        
+        if (!restaurant) {
+          console.log(`No restaurants available for bot ${bot.username}`);
+          continue;
+        }
+
+        // Generate bot-specific post content
+        const postData = RestaurantDataService.generateBotPost(restaurant, bot.username);
+
+        // Create the post in Supabase
+        const { error: postError } = await supabase
+          .from('master_bot_posts')
+          .insert({
+            master_bot_id: bot.id,
+            title: postData.title,
+            content: postData.content,
+            image_url: restaurant.imageUrl,
+            restaurant_id: restaurant.id,
+            restaurant_name: restaurant.name,
+            restaurant_location: `${restaurant.city}, ${restaurant.country}`,
+            restaurant_rating: restaurant.rating,
+            restaurant_price_range: getPriceLevelText(restaurant.priceLevel),
+            restaurant_cuisine: restaurant.category,
+            tags: restaurant.tags || [],
+            content_type: postData.content_type,
+            personality_trait: getPersonalityTrait(bot.username),
+            is_published: true
+          });
+
+        if (postError) {
+          console.error(`Error creating post for bot ${bot.username}:`, postError);
+        } else {
+          console.log(`✅ Created ${timeOfDay} post for ${bot.display_name}: ${restaurant.name}`);
+          postsCreated++;
+        }
+
+      } catch (error) {
+        console.error(`Error processing bot ${bot.username}:`, error);
+      }
+    }
+
+    console.log(`🎉 Master Bot ${timeOfDay} posting complete: ${postsCreated}/${masterBots.length} posts created`);
+    
+  } catch (error) {
+    console.error(`Failed to handle Master Bot ${timeOfDay} posting:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Helper function to get price level text
+ */
+function getPriceLevelText(priceLevel: number): string {
+  switch (priceLevel) {
+    case 1: return '$';
+    case 2: return '$$';
+    case 3: return '$$$';
+    case 4: return '$$$$';
+    default: return 'Budget-friendly';
+  }
+}
+
+/**
+ * Helper function to get personality trait for a bot
+ */
+function getPersonalityTrait(botUsername: string): string {
+  const traits: Record<string, string> = {
+    'spice_scholar_anika': 'spice expertise',
+    'sommelier_seb': 'culinary sophistication', 
+    'plant_pioneer_lila': 'sustainable dining',
+    'zen_minimalist_jun': 'minimalist perfection',
+    'coffee_pilgrim_omar': 'coffee culture analysis',
+    'adventure_rafa': 'bold exploration',
+    'nomad_aurelia': 'street food wanderlust'
+  };
+  
+  return traits[botUsername] || 'food enthusiasm';
+}
 

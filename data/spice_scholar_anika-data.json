@@ -1,0 +1,685 @@
+[
+  {
+    "id": "restaurant-spice_scholar_anika-1",
+    "placeId": "ChIJc5ON4Xb_AzQR_dqjqgq0XkM",
+    "name": "Bingaz Street Food",
+    "address": "23 High Street G/F Bingaz, Sai Ying Pun, Hong Kong",
+    "street": "23 High Street G/F Bingaz",
+    "city": "Sai Ying Pun",
+    "country": "HK",
+    "postalCode": null,
+    "neighborhood": null,
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 4.1,
+    "reviewsCount": 39,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipPTHzevCt8zk91orCN6u2nOFB6fZzlgS9hi7dFa=w408-h272-k-no",
+    "website": "https://bingazstreetfood.com/menu/",
+    "phone": "+852 5729 2308",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Restaurant",
+      "Sai Ying Pun",
+      "HK"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-2",
+    "placeId": "ChIJbe6CrEQABDQRrjOHziNf7XY",
+    "name": "Isoya Japanese Vegetarian Restaurant",
+    "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+    "street": "9/F 83 wanchai, 83 Wan Chai Rd",
+    "city": "Wan Chai",
+    "country": "HK",
+    "postalCode": null,
+    "neighborhood": null,
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Vegetarian restaurant",
+    "rating": 4.4,
+    "reviewsCount": 352,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "website": "https://www.happycow.net/reviews/isoya-japanese-vegetarian-hong-kong-island-52176",
+    "phone": "+852 5500 8812",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Closed"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-3",
+    "placeId": "ChIJOW5d0SLR5zsRdOb864OWRxg",
+    "name": "Street Food stalls",
+    "address": "Watson's Hotel, 144/1, Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400023, India",
+    "street": "Watson's Hotel, 144/1, Mahatma Gandhi Road",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400023",
+    "neighborhood": "Kala Ghoda, Fort",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Food court",
+    "rating": 4.8,
+    "reviewsCount": 68,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqFTBYzn_U1LcOQnvzW0IQlABncwlNi9QmhoVVdQueZfECDP8Of3pmNotn_ANsPwPbtFgpyNlfEd6pLeJKbwt2v4jeF7NsdD7Qy8Ucv1jFTKkeVokHJjq4110tm3Zs6dqOoqHUgrw=w408-h544-k-no",
+    "website": null,
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "8 AM to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "8 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Food court",
+      "Kala Ghoda, Fort",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-4",
+    "placeId": "ChIJ5TOqIwLJ5zsRNyF9uOKWAec",
+    "name": "Street Food",
+    "address": "Street Food Santacruz, Maharashtra 400055, India",
+    "street": "Street Food Santacruz",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400055",
+    "neighborhood": "Kolivery Village, Vidya Nagari, Kalina, Santacruz East",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Food court",
+    "rating": 4,
+    "reviewsCount": 3,
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mzVBHLN2xMc_Tq5C8vFOmA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=231.8059&pitch=0&thumbfov=100",
+    "website": null,
+    "phone": null,
+    "openingHours": [],
+    "tags": [
+      "Food court",
+      "Kolivery Village, Vidya Nagari, Kalina, Santacruz East",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-5",
+    "placeId": "ChIJ8Z1Svmq35zsReH1AvFZtEFE",
+    "name": "Thank Gourd",
+    "address": "8/B, opp. Palm Beach Apartment, Aram Nagar Part 2, Machlimar, Versova, Andheri West, Mumbai, Maharashtra 400061, India",
+    "street": "8/B, opp. Palm Beach Apartment",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400061",
+    "neighborhood": "Aram Nagar Part 2, Machlimar, Versova, Andheri West",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Vegetarian restaurant",
+    "rating": 4.7,
+    "reviewsCount": 380,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "website": "https://www.thankgourd.com/",
+    "phone": "+91 80973 83644",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "10 AM to 12 AM"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "Aram Nagar Part 2, Machlimar, Versova, Andheri West",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-6",
+    "placeId": "ChIJf_-XwIzO5zsRDTUnLL7219A",
+    "name": "SpiceKlub",
+    "description": "Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy.",
+    "address": "Janta Industrial Estate, opposite Phoenix Mills 8A, Lower Parel, Mumbai, Maharashtra 400013, India",
+    "street": "Janta Industrial Estate, opposite Phoenix Mills 8A",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400013",
+    "neighborhood": "Lower Parel",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Vegan restaurant",
+    "rating": 4.3,
+    "reviewsCount": 3540,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "website": "http://spiceklub.com/",
+    "phone": "+91 22 4610 4604",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "Lower Parel",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-7",
+    "placeId": "ChIJY7_-UC3J5zsR4j4pQh9c_3Y",
+    "name": "Greenr Cafe",
+    "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+    "street": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400050",
+    "neighborhood": "Bandra West",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Vegetarian restaurant",
+    "rating": 4.5,
+    "reviewsCount": 841,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "website": "http://greenr.in/",
+    "phone": "+91 85911 38613",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "9 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "Bandra West",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-8",
+    "placeId": "ChIJSSTzpQCZ4jARTl-EkRb3Jlw",
+    "name": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+    "address": "418 Yaowarat Rd, Khwaeng Samphanthawong, Samphanthawong, Bangkok 10100, Thailand",
+    "street": "418 Yaowarat Rd",
+    "city": "Samphanthawong",
+    "country": "TH",
+    "postalCode": "10100",
+    "neighborhood": "Samphanthawong",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 4.3,
+    "reviewsCount": 117,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5v7Oio1nD_sGY0odcL8UDDme0tTAeGGgVlyrFY5ayfUHCcVkGOep4irQxxmawVZHi8iddYZa7cGAk87exLZUHvM8GRniP5K13oHEAztzg7ZAOma9_xdbeZI66MBhHgMps5VwBjw=w408-h306-k-no",
+    "website": null,
+    "phone": "+66 86 995 1020",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "5 to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "5 to 11 PM"
+      }
+    ],
+    "tags": [
+      "Restaurant",
+      "Samphanthawong",
+      "Samphanthawong",
+      "TH"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-9",
+    "placeId": "ChIJbYao6cif4jARF8mR5mjFcUI",
+    "name": "Central World Square Street Food",
+    "address": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4 Pathum Wan, Bangkok 10330, Thailand",
+    "street": "4 4/1-4 ซ. วิภาวดี 2 แยก 4-4",
+    "city": "Pathum Wan",
+    "country": "TH",
+    "postalCode": "10330",
+    "neighborhood": "Pathum Wan",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Thai restaurant",
+    "rating": 3.7,
+    "reviewsCount": 34,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq60UhYemNJw4X-dOPLB28Tom_n5vPMReOUACc1xw1YhpAHzpetxojY40CAmooFBhMY0JoIGRcHmt0QKg8EbIoQqnWCfzJ2BCQy-ekd2L4hJqvedPyrzKKmw74Tjfykqrde8h5S=w408-h544-k-no",
+    "website": null,
+    "phone": "+66 2 640 7000",
+    "openingHours": [],
+    "tags": [
+      "Thai restaurant",
+      "Pathum Wan",
+      "Pathum Wan",
+      "TH"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-10",
+    "placeId": "ChIJYcxL6AKf4jARaReg9fAzYkM",
+    "name": "Govinda Vegetarian Vegan Restaurant in Bangkok",
+    "address": "6/5-6 Sukhumvit Alley 22, Khlong Tan, Khlong Toei, Bangkok 10110, Thailand",
+    "street": "6/5-6 Sukhumvit Alley 22",
+    "city": "Khlong Toei",
+    "country": "TH",
+    "postalCode": "10110",
+    "neighborhood": "Khlong Tan",
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Vegetarian restaurant",
+    "rating": 4.5,
+    "reviewsCount": 648,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "website": "https://www.govindarestaurantbkk.com/",
+    "phone": "+66 2 663 4970",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 to 11 PM"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "Khlong Tan",
+      "Khlong Toei",
+      "TH"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-11",
+    "placeId": "ChIJT4EmU7D90YURgBm8QimOZOQ",
+    "name": "Taquería en la calle (street-food)",
+    "address": "Calle Santos Dumont 131(105, Aviación Civil, Venustiano Carranza, 15740 Ciudad de México, CDMX, Mexico",
+    "street": "Calle Santos Dumont 131(105",
+    "city": "Venustiano Carranza, Mexico City",
+    "country": "MX",
+    "postalCode": "15740",
+    "neighborhood": "Aviación Civil",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Mexican restaurant",
+    "rating": 5,
+    "reviewsCount": 2,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "website": null,
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Thursday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Friday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Saturday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Open 24 hours"
+      }
+    ],
+    "tags": [
+      "Mexican restaurant",
+      "Aviación Civil",
+      "Venustiano Carranza, Mexico City",
+      "MX"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-12",
+    "placeId": "ChIJO15Tnyj50YUR8xGDGnFwlTk",
+    "name": "Pinche Gringo BBQ Warehouse - Polanco",
+    "address": "Lago Iseo 296, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX, Mexico",
+    "street": "Lago Iseo 296",
+    "city": "Miguel Hidalgo, Mexico City",
+    "country": "MX",
+    "postalCode": "11320",
+    "neighborhood": "Anáhuac I Sección",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Barbecue restaurant",
+    "rating": 4.4,
+    "reviewsCount": 4099,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "website": "https://www.pgbbq.mx/",
+    "phone": "+52 55 6389 1129",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "1 to 7 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "1 to 7 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1 to 7 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1 to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11 AM to 8 PM"
+      }
+    ],
+    "tags": [
+      "Barbecue restaurant",
+      "Anáhuac I Sección",
+      "Miguel Hidalgo, Mexico City",
+      "MX"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-13",
+    "placeId": "ChIJx_3ezKKMGGARQEOKPcBptaE",
+    "name": "Mominoki House",
+    "description": "Intimate venue with wood accents, serving meals made with organic produce, plus vegan options.",
+    "address": "2 Chome-18-5 Jingumae, Shibuya, Tokyo 150-0001, Japan",
+    "street": "2 Chome-18-5 Jingumae",
+    "city": "Shibuya",
+    "country": "JP",
+    "postalCode": "150-0001",
+    "neighborhood": "2 Chome Jingumae",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Vegetarian restaurant",
+    "rating": 4.4,
+    "reviewsCount": 277,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "website": "http://www.mominoki-house.net/",
+    "phone": "+81 3-3405-9144",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11 AM to 3 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11 AM to 3 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11 AM to 3 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11 AM to 3 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11 AM to 3 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11 AM to 3 PM, 5 to 9 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11 AM to 3 PM, 5 to 9 PM"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "2 Chome Jingumae",
+      "Shibuya",
+      "JP"
+    ]
+  },
+  {
+    "id": "restaurant-spice_scholar_anika-14",
+    "placeId": "ChIJwZCWumNZwokRA_PDwYfl0No",
+    "name": "Street food vendor",
+    "address": "2239 Broadway, New York, NY 10024",
+    "street": "2239 Broadway",
+    "city": "New York",
+    "country": "US",
+    "postalCode": "10024",
+    "neighborhood": "Manhattan",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Restaurant",
+    "rating": 3.7,
+    "reviewsCount": 9,
+    "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XHLn8t-hxiLjVQJMp6Qa5g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=293.36102&pitch=0&thumbfov=100",
+    "website": null,
+    "phone": null,
+    "openingHours": [],
+    "tags": [
+      "Restaurant",
+      "Manhattan",
+      "New York",
+      "US"
+    ]
+  }
+]

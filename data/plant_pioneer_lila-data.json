@@ -1,0 +1,1049 @@
+[
+  {
+    "id": "restaurant-plant_pioneer_lila-1",
+    "placeId": "ChIJMSoOkGUBBDQRop7gl29ccgI",
+    "name": "Calfit Organic and Healthy Foods",
+    "address": "Shop G18, G/F Empire Centre, 68 Mody Road Tsim Sha Tsui East, Tsim Sha Tsui, Hong Kong",
+    "street": "Shop G18, G/F Empire Centre, 68 Mody Road Tsim Sha Tsui East",
+    "city": "Tsim Sha Tsui",
+    "country": "HK",
+    "postalCode": null,
+    "neighborhood": null,
+    "price": null,
+    "priceLevel": 1,
+    "category": "Health food restaurant",
+    "rating": 4.4,
+    "reviewsCount": 46,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npcVlDh0CWLaLcfPQy7RLVs0NeZpHXFYeAJQhzcy5cPoXT6Qcuju01X3gzzRb17k2fkWX8-pO9KTdEmLOnYhBi4TlnNmIckn0XIBWoErr9c_XbWH9SciMwdbmYNXfA12LdzVaz-=w408-h306-k-no",
+    "website": "http://www.calfit.me/",
+    "phone": "+852 5393 7474",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 to 3 PM, 6 to 11 PM"
+      }
+    ],
+    "tags": [
+      "Health food restaurant",
+      "Tsim Sha Tsui",
+      "HK"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-2",
+    "placeId": "ChIJadMLwosBBDQRGN2Nj1oLAVk",
+    "name": "Root Vegan",
+    "address": "Hong Kong, Central, 1/F, Sunwise Building, 112-114 Wellington StreetShop 102",
+    "street": "1/F, Sunwise Building, 112-114 Wellington StreetShop 102",
+    "city": "Central",
+    "country": "HK",
+    "postalCode": null,
+    "neighborhood": null,
+    "price": null,
+    "priceLevel": 1,
+    "category": "Vegan restaurant",
+    "rating": 4.6,
+    "reviewsCount": 334,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npydV3vmDz5rjgouaS7fDpYPAHuw6svPPV3feJcxZV_2aOgTLYi6kc6d-fLZjf5Z1yRdFMujCtqOZHQkyc1h-dnFmThDU0i-kBj9YtqMBNXrZDjy_dahXhPkcbwCyfL_RY7QSk=w408-h306-k-no",
+    "website": "http://linktr.ee/rootvegan",
+    "phone": "+852 9850 9558",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 3 PM, 4:30 to 9:30 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 3 PM, 4:30 to 9:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 3 PM, 4:30 to 9:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 3 PM, 4:30 to 9:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 3 PM, 4:30 to 9:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 3 PM, 4:30 to 9:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 to 3 PM, 4:30 to 9:30 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "Central",
+      "HK"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-3",
+    "placeId": "ChIJbe6CrEQABDQRrjOHziNf7XY",
+    "name": "Isoya Japanese Vegetarian Restaurant",
+    "address": "9/F 83 wanchai, 83 Wan Chai Rd, Wan Chai, Hong Kong",
+    "street": "9/F 83 wanchai, 83 Wan Chai Rd",
+    "city": "Wan Chai",
+    "country": "HK",
+    "postalCode": null,
+    "neighborhood": null,
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Vegetarian restaurant",
+    "rating": 4.4,
+    "reviewsCount": 352,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqz2T2KpFDVb4haWGFXiwImwtgN7_uIaKbwBSRlxKz4mDx0Q0fQ0j5AFtZcjOOxHTJuTTkzIvH6knv5GB6IRKos2VQ4gs9KaVt1NbqSC4_2tdDZ-2Ozmd_FZWUwLqtWfQ7bzkMqQA=w426-h240-k-no",
+    "website": "https://www.happycow.net/reviews/isoya-japanese-vegetarian-hong-kong-island-52176",
+    "phone": "+852 5500 8812",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 3 PM, 6 to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Closed"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "Wan Chai",
+      "HK"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-4",
+    "placeId": "ChIJvTblzBbJ5zsRbAsPsBHgL1A",
+    "name": "Rare Earth Cafe | 100% Pure Veg",
+    "description": "Compact, down-to-earth cafe & shop offering vegan dishes in a laid-back dining area.",
+    "address": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors, Khar, Ram Krishna Nagar, Khar West, Mumbai, Maharashtra 400052, India",
+    "street": "RARE EARTH ORGANICS, Sethi Nivas, C/O, opp. Bharat co op bank, behind parmar tailors",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400052",
+    "neighborhood": "Khar, Ram Krishna Nagar, Khar West",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Gluten-free restaurant",
+    "rating": 4.6,
+    "reviewsCount": 564,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqJaaaqin5ATa4tG-gk0tmVAU_Yj1oWzzsbMlL1b9SeMss0iHKMs5U05at-soiPRaA_OJgvAGyOQYn-iLg-sC40aI0sNlnz0zSo5CA8nNb_iYFOQda0c1_AzN8MZxYCUHTcooWwQw=w408-h544-k-no",
+    "website": "http://rareearth.dotpe.in/",
+    "phone": "+91 98200 30868",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11 AM to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11 AM to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11 AM to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11 AM to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11 AM to 11:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11 AM to 11:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11 AM to 11 PM"
+      }
+    ],
+    "tags": [
+      "Gluten-free restaurant",
+      "Khar, Ram Krishna Nagar, Khar West",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-5",
+    "placeId": "ChIJk5q6JnjO5zsR7pDvOa3y_uY",
+    "name": "Flax - Healthy Living (Breach Candy)",
+    "address": "B1, Nitrro Gym, Hubtown Skybay, Breach Candy, Mumbai, Maharashtra 400026, India",
+    "street": "B1, Nitrro Gym, Hubtown Skybay, Breach Candy",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400026",
+    "neighborhood": "Breach Candy, Cumballa Hill",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Health food restaurant",
+    "rating": 4.2,
+    "reviewsCount": 138,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipN7x5htwxStwMiZbjTL3E4zuTmbyV1vETTYk5S6=w408-h286-k-no",
+    "website": "http://www.flaxitup.com/",
+    "phone": "+91 90821 99870",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "9 AM to 11:30 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "9 AM to 11:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "9 AM to 11:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "9 AM to 11:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "9 AM to 11:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "9 AM to 11:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "9 AM to 11:30 PM"
+      }
+    ],
+    "tags": [
+      "Health food restaurant",
+      "Breach Candy, Cumballa Hill",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-6",
+    "placeId": "ChIJ1xZWr53P5zsR45OIjtenfes",
+    "name": "Think healthy",
+    "address": "Shop no 12 , potia estate, J.b, behram marg, Mumbai, Maharashtra 400008, India",
+    "street": "Shop no 12 , potia estate, J.b, behram marg",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400008",
+    "neighborhood": "RBI Staff Colony, Mumbai Central",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Health food restaurant",
+    "rating": 4.3,
+    "reviewsCount": 18,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npoR5kdezF-Gy4PaWUewtLeZqXP9_9up_8i38vGb1e9DstXTt0ZbULmgge8T9ezbn5HJGNgl4CzujH2V2uAQC46WSvJEA2PYnyqKKRgdQfH9a6eSyAyZI8Ht6d96HhNXaf4XL6t=w408-h725-k-no",
+    "website": null,
+    "phone": "+91 87799 70371",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "9 AM to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "9 AM to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "9 AM to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "9 AM to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "9 AM to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "9 AM to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "9 AM to 11 PM"
+      }
+    ],
+    "tags": [
+      "Health food restaurant",
+      "RBI Staff Colony, Mumbai Central",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-7",
+    "placeId": "ChIJaU7vDOjR5zsRXd7WikjgfnE",
+    "name": "Relish International Veg Cuisine",
+    "description": "Global vegetarian cuisine & wine presented in a contemporary locale with banquette seating.",
+    "address": "Prem Court, 1, Dinshaw Vacha Rd, Churchgate, Mumbai, Maharashtra 400020, India",
+    "street": "Prem Court, 1, Dinshaw Vacha Rd",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400020",
+    "neighborhood": "Churchgate",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Vegan restaurant",
+    "rating": 4.4,
+    "reviewsCount": 5494,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipMHcgIpob4yMjkr3UwfAg3TFGCA31GTRqJC862F=w408-h272-k-no",
+    "website": "http://www.relish-restaurant.com/",
+    "phone": "+91 22 4213 5419",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 to 11 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "Churchgate",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-8",
+    "placeId": "ChIJ8Z1Svmq35zsReH1AvFZtEFE",
+    "name": "Thank Gourd",
+    "address": "8/B, opp. Palm Beach Apartment, Aram Nagar Part 2, Machlimar, Versova, Andheri West, Mumbai, Maharashtra 400061, India",
+    "street": "8/B, opp. Palm Beach Apartment",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400061",
+    "neighborhood": "Aram Nagar Part 2, Machlimar, Versova, Andheri West",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Vegetarian restaurant",
+    "rating": 4.7,
+    "reviewsCount": 380,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNSOFNjtd3XLjQzy5HNTMtBnrVwHD0t2MJU90Ml=w408-h272-k-no",
+    "website": "https://www.thankgourd.com/",
+    "phone": "+91 80973 83644",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "10 AM to 12 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "10 AM to 12 AM"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "Aram Nagar Part 2, Machlimar, Versova, Andheri West",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-9",
+    "placeId": "ChIJf_-XwIzO5zsRDTUnLL7219A",
+    "name": "SpiceKlub",
+    "description": "Modern spot for Indian street food, mocktails & sweets prepared with focus on molecular gastronomy.",
+    "address": "Janta Industrial Estate, opposite Phoenix Mills 8A, Lower Parel, Mumbai, Maharashtra 400013, India",
+    "street": "Janta Industrial Estate, opposite Phoenix Mills 8A",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400013",
+    "neighborhood": "Lower Parel",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Vegan restaurant",
+    "rating": 4.3,
+    "reviewsCount": 3540,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nolc3yIcOVsf5yaYRGsGMZhO1J55ZhrTrxaT-36bwgeohblo6l58PKPH7uYxlt9sEIv39w6_PxxRS8JnZDu7gvq9M2QPcP2mYrocnsWy5y0ZjdnOCrm7lQSPQeGrtr0cBHCGP8w=w508-h240-k-no",
+    "website": "http://spiceklub.com/",
+    "phone": "+91 22 4610 4604",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 3:30 PM, 6:30 to 11:30 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "Lower Parel",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-10",
+    "placeId": "ChIJY7_-UC3J5zsR4j4pQh9c_3Y",
+    "name": "Greenr Cafe",
+    "address": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd, Bandra West, Mumbai, Maharashtra 400050, India",
+    "street": "Greenr, 57/116, Drego House, Pali Naka, Dr Ambedkar Rd",
+    "city": "Mumbai",
+    "country": "IN",
+    "postalCode": "400050",
+    "neighborhood": "Bandra West",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Vegetarian restaurant",
+    "rating": 4.5,
+    "reviewsCount": 841,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqTc6L3iRdlTnA7LIOFe7cSKfjHvS_b5qhRKQ6YAfyCFjM7MsvpfqWjSExdLMySNCwxyu-TDJCQT_5KPm0OMK64Scepdds8SGiytNp28giJ-p2zkOqX_u50yd9DiH4SxtdIasI58w=w408-h306-k-no",
+    "website": "http://greenr.in/",
+    "phone": "+91 85911 38613",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "9 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "Bandra West",
+      "Mumbai",
+      "IN"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-11",
+    "placeId": "ChIJ01wV1WwZ2jERSk88-PrWNFE",
+    "name": "Whole Earth",
+    "address": "76 Peck Seah St, Singapore 079331",
+    "street": "76 Peck Seah St",
+    "city": "Singapore",
+    "country": "SG",
+    "postalCode": "079331",
+    "neighborhood": "Chinatown",
+    "price": "$$$",
+    "priceLevel": 3,
+    "category": "Vegan restaurant",
+    "rating": 4.4,
+    "reviewsCount": 1312,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq26F5SGg5qcR3XPsNYTnn0PyvgRzUEC7p4zY3AWjg6WnhO8KJ5p31zS2RxC-HBkVmFVT0fD1HpcjXUpE5cufCikmiwxw7glE5OVeik5QaStQN28jkSk3j3ZWSVVGMrpdr6V3DuPQ=w408-h306-k-no",
+    "website": "http://www.wholeearth.com.sg/",
+    "phone": "+65 6221 6583",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 3 PM, 5:30 to 10 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "Chinatown",
+      "Singapore",
+      "SG"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-12",
+    "placeId": "ChIJYcxL6AKf4jARaReg9fAzYkM",
+    "name": "Govinda Vegetarian Vegan Restaurant in Bangkok",
+    "address": "6/5-6 Sukhumvit Alley 22, Khlong Tan, Khlong Toei, Bangkok 10110, Thailand",
+    "street": "6/5-6 Sukhumvit Alley 22",
+    "city": "Khlong Toei",
+    "country": "TH",
+    "postalCode": "10110",
+    "neighborhood": "Khlong Tan",
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Vegetarian restaurant",
+    "rating": 4.5,
+    "reviewsCount": 648,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipO-xIPoBrWRG_AGgJO8H-sfXpLbFK7Q7a2U2lIM=w408-h268-k-no",
+    "website": "https://www.govindarestaurantbkk.com/",
+    "phone": "+66 2 663 4970",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 to 11 PM"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "Khlong Tan",
+      "Khlong Toei",
+      "TH"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-13",
+    "placeId": "ChIJ_YlsywD_0YURBh8YBWDnANs",
+    "name": "Plantasia",
+    "description": "Inventive plant-based, pan-Asian fare & juices offered in a serene venue with a skylight.",
+    "address": "Puebla 120, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+    "street": "Puebla 120",
+    "city": "Cuauhtémoc, Mexico City",
+    "country": "MX",
+    "postalCode": "06700",
+    "neighborhood": "Roma Norte",
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Asian restaurant",
+    "rating": 4.5,
+    "reviewsCount": 2834,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4np1vBscMLZNzfatbnJUCKA_FleNrgRFuaOl9PvdZUFIB0j7OxF8rx9_RDDpp45kCotKyREI_I74LxEJHjgzpjz3hfRwOIxic8dPdlDE00M0qVI5VWITamtsHNVBye6CW7jNn6Ef=w408-h544-k-no",
+    "website": "https://www.plantasia.cafe/",
+    "phone": "+52 55 5122 7625",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 10:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 10:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 10:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 to 9 PM"
+      }
+    ],
+    "tags": [
+      "Asian restaurant",
+      "Roma Norte",
+      "Cuauhtémoc, Mexico City",
+      "MX"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-14",
+    "placeId": "ChIJH5Wn80X_0YURPKBludA0RHs",
+    "name": "LOS LOOSERS",
+    "address": "Sinaloa 236 B, Roma Nte., Cuauhtémoc, 06700 Ciudad de México, CDMX, Mexico",
+    "street": "Sinaloa 236 B",
+    "city": "Cuauhtémoc, Mexico City",
+    "country": "MX",
+    "postalCode": "06700",
+    "neighborhood": "Roma Norte",
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Vegan restaurant",
+    "rating": 4.1,
+    "reviewsCount": 1690,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrNVWIxcgABM0DGQZ27r5Zv7SrNx8pVF7xrNtWt5XX6yCTZLP-bjH_eIF2-2md73UmAkmrLh7U-8BbSI7bvM0zB4qmhFYMzKqLDAUcsIScNAAEh1CY1jEL4lRhSrSWcWxHraXenFGN6cOoY=w408-h544-k-no",
+    "website": null,
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 8 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 8 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 8 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 8 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 8 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "10:30 AM to 5:30 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "Roma Norte",
+      "Cuauhtémoc, Mexico City",
+      "MX"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-15",
+    "placeId": "ChIJicTFEbADdkgRJTJMF_RX50o",
+    "name": "Mallow Borough Market",
+    "description": "Eco-friendly, bohemian eatery serving plant-based global dishes made from area-sourced ingredients.",
+    "address": "1 Cathedral St, London SE1 9DE, United Kingdom",
+    "street": "1 Cathedral St",
+    "city": "London",
+    "country": "GB",
+    "postalCode": "SE1 9DE",
+    "neighborhood": null,
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Vegan restaurant",
+    "rating": 4.8,
+    "reviewsCount": 3673,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npf8JTMuhtH22AF04hicxja8JoWBTlKv5KlOQW8hpRvcnoRZcb-zGCovPBg4Ngck4QZnWM2i_q5dxJo9bTCu-8Nc5I9n3wLAA9ydcLZ1YE87tUhKvjNQWtxZVmveV7_QRHvmYndXKpIvLk=w408-h544-k-no",
+    "website": "https://mallowlondon.com/locations/borough-market/",
+    "phone": "+44 20 7846 8785",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "9 AM to 11 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "9 AM to 10 PM"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "London",
+      "GB"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-16",
+    "placeId": "ChIJx_3ezKKMGGARQEOKPcBptaE",
+    "name": "Mominoki House",
+    "description": "Intimate venue with wood accents, serving meals made with organic produce, plus vegan options.",
+    "address": "2 Chome-18-5 Jingumae, Shibuya, Tokyo 150-0001, Japan",
+    "street": "2 Chome-18-5 Jingumae",
+    "city": "Shibuya",
+    "country": "JP",
+    "postalCode": "150-0001",
+    "neighborhood": "2 Chome Jingumae",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Vegetarian restaurant",
+    "rating": 4.4,
+    "reviewsCount": 277,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipM9Ycs776n4rJ-MEvy1-SVsATNhD6n2V3UPnelK=w408-h272-k-no",
+    "website": "http://www.mominoki-house.net/",
+    "phone": "+81 3-3405-9144",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11 AM to 3 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11 AM to 3 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11 AM to 3 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11 AM to 3 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11 AM to 3 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11 AM to 3 PM, 5 to 9 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11 AM to 3 PM, 5 to 9 PM"
+      }
+    ],
+    "tags": [
+      "Vegetarian restaurant",
+      "2 Chome Jingumae",
+      "Shibuya",
+      "JP"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-17",
+    "placeId": "ChIJUVvBJZ6LGGARA-kQW4y3epU",
+    "name": "WE ARE THE FARM AZABU",
+    "address": "Japan, 〒106-0046 Tokyo, Minato City, Motoazabu, 3 Chome−10−4 Re-Flat 1F",
+    "street": "Motoazabu, 3 Chome−10−4 Re-Flat 1F",
+    "city": "Minato City",
+    "country": "JP",
+    "postalCode": "106-0046",
+    "neighborhood": "3 Chome Motoazabu",
+    "price": "$$",
+    "priceLevel": 2,
+    "category": "Organic restaurant",
+    "rating": 4.4,
+    "reviewsCount": 788,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4no4WtJ3FDpA_TPbFVRxiR_AJUib1PUbaXqPLP9IqAJso1IOxeAyBiRgmhwUSAbA1sI9cZ2GKPDqBJB3XF_P_6rPB4ZD4tK8BYwmVTjOu3qDaV5OYQcJYHmcqQmzlYAt4GC33US9HRxAWlSK=w408-h306-k-no",
+    "website": "https://wearethefarm-azabu.com/",
+    "phone": "+81 3-6447-5510",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "11:30 AM to 2 PM, 5 to 9:30 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "11:30 AM to 2 PM, 5 to 9:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "11:30 AM to 2 PM, 5 to 9:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "11:30 AM to 2 PM, 5 to 9:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "11:30 AM to 2 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "11:30 AM to 2:30 PM, 5 to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11:30 AM to 2:30 PM, 5 to 9 PM"
+      }
+    ],
+    "tags": [
+      "Organic restaurant",
+      "3 Chome Motoazabu",
+      "Minato City",
+      "JP"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-18",
+    "placeId": "ChIJDXXepRyPGGARsLOuoaIskkA",
+    "name": "ReserveOnly Veganic Monkey Magic",
+    "address": "Japan, 〒111-0032 Tokyo, Asakusa, 2 Chome−27−16 お宿 松むら 1階",
+    "street": "Asakusa, 2 Chome−27−16 お宿 松むら 1階",
+    "city": "Taito City",
+    "country": "JP",
+    "postalCode": "111-0032",
+    "neighborhood": "2 Chome Asakusa",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Vegan restaurant",
+    "rating": 4.9,
+    "reviewsCount": 101,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipP_Rns-Mh9YCXMFIrrx_wwfP-vQrhzA1--2J_WI=w408-h306-k-no",
+    "website": null,
+    "phone": null,
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Thursday",
+        "hours": "7 to 10:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 3:30 PM, 7 to 10:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 2:30 PM, 7 to 10:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Closed"
+      }
+    ],
+    "tags": [
+      "Vegan restaurant",
+      "2 Chome Asakusa",
+      "Taito City",
+      "JP"
+    ]
+  },
+  {
+    "id": "restaurant-plant_pioneer_lila-19",
+    "placeId": "ChIJ40MtxJZZwokRJBnjZstGAgU",
+    "name": "Healthy Choices NYC",
+    "address": "516W34St, New York, NY 10001",
+    "street": "516W34St",
+    "city": "New York",
+    "country": "US",
+    "postalCode": "10001",
+    "neighborhood": "Manhattan",
+    "price": null,
+    "priceLevel": 1,
+    "category": "Food court",
+    "rating": 4.7,
+    "reviewsCount": 14,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noC63QZvVbBc0bLjHyPgDKW4eAJnT5i76KqJy7gZu_hYLg-MoeMc7vNC2NCEsCSZ6XIH2P9DlB2isXJBPw_smjgIZRqPy8HmSm8oOqryheJKDAS6p_rRNM_H3F4Wxx1-E8qm40l=w408-h491-k-no",
+    "website": null,
+    "phone": "(917) 750-5189",
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "5 AM to 4 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "5 AM to 4 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "5 AM to 4 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "5 AM to 4 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "5 AM to 4 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "5 AM to 4 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Closed"
+      }
+    ],
+    "tags": [
+      "Food court",
+      "Manhattan",
+      "New York",
+      "US"
+    ]
+  }
+]

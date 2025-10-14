@@ -1,6 +1,6 @@
 // Modern Chat Components Exports
 // Main interface component
-export { ModernChatInterface } from './ModernChatInterface';
+export { ChatInterface } from './ChatInterface';
 
 // Header components
 export { ChatHeader } from './headers/ChatHeader';
