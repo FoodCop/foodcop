@@ -17,9 +17,12 @@ interface PostsInfo {
   recentPosts: Array<{
     id: string;
     restaurant_name: string;
-    bot_display_name: string;
+    master_bot_id: string;
     created_at: string;
-    post_content?: string;
+    content?: string;
+    users?: {
+      display_name: string;
+    };
   }>;
   recentPostsCount: number;
   totalPosts: number;
@@ -165,7 +168,7 @@ export function CronDebugPanel() {
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <p className="text-xs font-medium">{post.restaurant_name}</p>
-                          <p className="text-xs text-muted-foreground">by {post.bot_display_name}</p>
+                          <p className="text-xs text-muted-foreground">by {post.users?.display_name || 'Unknown Bot'}</p>
                         </div>
                         <p className="text-xs text-muted-foreground">
                           {new Date(post.created_at).toLocaleTimeString()}

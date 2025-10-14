@@ -7,13 +7,14 @@ export async function GET(request: NextRequest) {
     
     // Get recent Master Bot posts (last 24 hours)
     const { data: recentPosts, error: postsError } = await supabase
-      .from('restaurant_posts')
+      .from('master_bot_posts')
       .select(`
         id,
         restaurant_name,
-        bot_display_name,
+        master_bot_id,
         created_at,
-        post_content
+        content,
+        users!master_bot_posts_master_bot_id_fkey(display_name)
       `)
       .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
       .order('created_at', { ascending: false });
@@ -24,17 +25,17 @@ export async function GET(request: NextRequest) {
 
     // Get total posts count
     const { count: totalPosts, error: countError } = await supabase
-      .from('restaurant_posts')
+      .from('master_bot_posts')
       .select('*', { count: 'exact', head: true });
 
     if (countError) {
       console.error('Error fetching total posts count:', countError);
     }
 
-    // Calculate next CRON run time (8PM IST = 14:30 UTC)
+    // Calculate next CRON run time (9PM IST = 15:30 UTC)
     const now = new Date();
     const nextRun = new Date();
-    nextRun.setUTCHours(14, 30, 0, 0);
+    nextRun.setUTCHours(15, 30, 0, 0);
     
     // If today's run has passed, set to next day
     if (now > nextRun) {
@@ -48,10 +49,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       cronStatus: {
-        schedule: "Daily at 8:00 PM IST (2:30 PM UTC)",
+        schedule: "Daily at 9:00 PM IST (3:30 PM UTC)",
         nextRun: nextRun.toISOString(),
         timeUntilNextRun: `${hoursUntilRun}h ${minutesUntilRun}m`,
-        lastRunToday: now.getUTCHours() >= 14 && now.getUTCMinutes() >= 30
+        lastRunToday: now.getUTCHours() >= 15 && now.getUTCMinutes() >= 30
       },
       posts: {
         recentPosts: recentPosts || [],
