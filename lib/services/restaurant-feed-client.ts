@@ -22,7 +22,6 @@ export class RestaurantFeedClientService {
       const { data, error } = await supabase
         .from('public_master_bot_posts')
         .select('*')
-        .eq('is_published', true)
         .order('created_at', { ascending: false })
         .limit(limit);
 
