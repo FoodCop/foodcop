@@ -60,6 +60,13 @@ const NavBar = () => {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
+                  <Link href="/snap" className={navigationMenuTriggerStyle()}>
+                    Snap
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
                   <Link href="/plate" className={navigationMenuTriggerStyle()}>
                     Plate
                   </Link>
@@ -122,6 +129,9 @@ const NavBar = () => {
                   </Link>
                   <Link href="/bites" className="font-medium">
                     Bites
+                  </Link>
+                  <Link href="/snap" className="font-medium">
+                    Snap
                   </Link>
                   <Link href="/plate" className="font-medium">
                     Plate
