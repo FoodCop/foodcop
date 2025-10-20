@@ -80,8 +80,7 @@ export async function POST(req: NextRequest) {
       activity_type: activity || 'snap_created',
       description: `Earned ${points} points for ${activity || 'creating a food snap'}`,
       points_earned: points,
-      metadata: metadata || {},
-      tenant_id: "foodcop"
+      metadata: metadata || {}
     };
 
     const { error: logError } = await sb

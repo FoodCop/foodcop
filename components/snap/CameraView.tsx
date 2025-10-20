@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Camera, RotateCw, X, MapPin, Clock } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Camera, RotateCw, X } from 'lucide-react';
 import { Button } from '../ui/button';
 
 interface CapturedPhoto {
@@ -9,11 +9,6 @@ interface CapturedPhoto {
   imageUrl: string;
   imageBlob: Blob;
   timestamp: Date;
-  location?: {
-    latitude: number;
-    longitude: number;
-    address?: string;
-  };
 }
 
 interface CameraViewProps {
@@ -26,37 +21,17 @@ export function CameraView({ onPhotoCapture, onClose }: CameraViewProps) {
   const [cameraFacing, setCameraFacing] = useState<'user' | 'environment'>('environment');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
-  const [locationStatus, setLocationStatus] = useState<'loading' | 'granted' | 'denied' | 'unavailable'>('loading');
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const checkLocationPermission = React.useCallback(async () => {
-    if (!navigator.geolocation) {
-      setLocationStatus('unavailable');
-      return;
-    }
-
-    try {
-      const permission = await navigator.permissions.query({ name: 'geolocation' });
-      if (permission.state === 'granted') {
-        setLocationStatus('granted');
-      } else if (permission.state === 'denied') {
-        setLocationStatus('denied');
-      } else {
-        setLocationStatus('loading');
-      }
-    } catch (error) {
-      setLocationStatus('unavailable');
-    }
-  }, []);
-
-  const initializeCamera = React.useCallback(async () => {
+  // Simple camera initialization
+  const startCamera = async () => {
     try {
       const constraints = {
         video: { 
           facingMode: cameraFacing,
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
         },
         audio: false,
       };
@@ -66,71 +41,22 @@ export function CameraView({ onPhotoCapture, onClose }: CameraViewProps) {
       
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
+        await videoRef.current.play();
       }
       
       setHasPermission(true);
     } catch (error) {
+      console.error('Camera access error:', error);
       setHasPermission(false);
-      console.error('Camera access denied:', error);
     }
-  }, [cameraFacing]);
-
-  const stopCamera = React.useCallback(() => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-    }
-  }, [stream]);
-
-  useEffect(() => {
-    initializeCamera();
-    checkLocationPermission();
-    return () => {
-      stopCamera();
-    };
-  }, [initializeCamera, checkLocationPermission, stopCamera]);
-
-  const getCurrentLocation = (): Promise<GeolocationPosition | null> => {
-    return new Promise((resolve) => {
-      if (!navigator.geolocation) {
-        resolve(null);
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocationStatus('granted');
-          resolve(position);
-        },
-        (error) => {
-          console.error('Location error:', error);
-          setLocationStatus('denied');
-          resolve(null);
-        },
-        { 
-          enableHighAccuracy: true, 
-          timeout: 10000, 
-          maximumAge: 60000 
-        }
-      );
-    });
   };
 
-  const reverseGeocode = async (lat: number, lng: number): Promise<string | undefined> => {
-    try {
-      const response = await fetch(`/api/geocode?lat=${lat}&lng=${lng}`);
-      const data = await response.json();
-      
-      if (data.success && data.address) {
-        return data.address;
-      }
-    } catch (error) {
-      console.error('Geocoding error:', error);
-    }
-    return undefined;
-  };
-
+  // Simple photo capture
   const capturePhoto = async () => {
-    if (!videoRef.current || !canvasRef.current) return;
+    if (!videoRef.current || !canvasRef.current) {
+      console.error('Video or canvas not available');
+      return;
+    }
 
     setIsCapturing(true);
 
@@ -139,13 +65,17 @@ export function CameraView({ onPhotoCapture, onClose }: CameraViewProps) {
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
 
-      if (!context) return;
+      if (!context) {
+        console.error('Canvas context not available');
+        setIsCapturing(false);
+        return;
+      }
 
-      // Set canvas dimensions to match video
+      // Set canvas size to match video
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
-      // Draw the video frame to canvas
+      // Draw video frame to canvas
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       // Convert to blob
@@ -154,193 +84,128 @@ export function CameraView({ onPhotoCapture, onClose }: CameraViewProps) {
           if (blob) {
             resolve(blob);
           } else {
-            reject(new Error('Failed to create blob from canvas'));
+            reject(new Error('Failed to create image blob'));
           }
-        }, 'image/jpeg', 0.92);
+        }, 'image/jpeg', 0.9);
       });
 
-      // Get current location
-      const position = await getCurrentLocation();
-      let locationData = undefined;
-
-      if (position) {
-        const address = await reverseGeocode(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-
-        locationData = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          address: address || 'Unknown location'
-        };
-      }
-
+      // Create photo object
+      const imageUrl = URL.createObjectURL(blob);
       const photo: CapturedPhoto = {
-        id: `photo_${Date.now()}`,
-        imageUrl: canvas.toDataURL('image/jpeg', 0.92),
+        id: Date.now().toString(),
+        imageUrl,
         imageBlob: blob,
         timestamp: new Date(),
-        location: locationData
       };
 
-      // Simulate capture delay for better UX
-      setTimeout(() => {
-        setIsCapturing(false);
-        onPhotoCapture(photo);
-      }, 300);
-
+      console.log('Photo captured successfully');
+      onPhotoCapture(photo);
+      
     } catch (error) {
-      console.error('Error capturing photo:', error);
+      console.error('Photo capture failed:', error);
+    } finally {
       setIsCapturing(false);
     }
   };
 
-  const flipCamera = () => {
-    setCameraFacing(prev => prev === 'user' ? 'environment' : 'user');
+  // Stop camera
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
   };
 
-  if (hasPermission === false) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center text-white p-8">
-          <Camera className="h-16 w-16 mx-auto mb-4 text-primary" />
-          <h2 className="text-xl mb-2">Camera Access Needed</h2>
-          <p className="text-gray-300 mb-4">
-            FoodCop needs camera access to help you snap and discover food.
-          </p>
-          <Button 
-            onClick={initializeCamera}
-            className="bg-primary hover:bg-primary/90"
-          >
-            Enable Camera
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // Toggle camera
+  const toggleCamera = async () => {
+    stopCamera();
+    setCameraFacing(prev => prev === 'user' ? 'environment' : 'user');
+    // Wait a bit then restart camera
+    setTimeout(() => startCamera(), 100);
+  };
 
-  if (hasPermission === null) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center text-white p-8">
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-300">Initializing camera...</p>
-        </div>
-      </div>
-    );
-  }
+  // Auto-start camera when component mounts
+  React.useEffect(() => {
+    startCamera();
+    return () => stopCamera();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Handle close
+  const handleClose = () => {
+    stopCamera();
+    onClose();
+  };
 
   return (
-    <div className="relative min-h-screen bg-black overflow-hidden">
-      {/* Camera Preview */}
-      <video
-        ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
-        autoPlay
-        playsInline
-        muted
-      />
-      
-      {/* Hidden canvas for photo capture */}
-      <canvas ref={canvasRef} className="hidden" />
-
-      {/* Corner Guides */}
-      <div className="absolute top-8 left-8 w-8 h-8 border-l-4 border-t-4 border-white rounded-tl-lg opacity-60" />
-      <div className="absolute top-8 right-8 w-8 h-8 border-r-4 border-t-4 border-white rounded-tr-lg opacity-60" />
-      <div className="absolute bottom-32 left-8 w-8 h-8 border-l-4 border-b-4 border-white rounded-bl-lg opacity-60" />
-      <div className="absolute bottom-32 right-8 w-8 h-8 border-r-4 border-b-4 border-white rounded-br-lg opacity-60" />
-
-      {/* Top Header */}
-      <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 to-transparent p-4 pt-12">
-        <div className="flex items-center justify-between">
-          <div className="text-white">
-            <h1 className="text-lg font-semibold">Snap Your Food</h1>
-            <div className="flex items-center text-sm text-gray-300 mt-1">
-              <Clock className="h-3 w-3 mr-1" />
-              <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-              
-              {locationStatus === 'granted' && (
-                <>
-                  <MapPin className="h-3 w-3 ml-3 mr-1" />
-                  <span>Location enabled</span>
-                </>
-              )}
-              
-              {locationStatus === 'denied' && (
-                <>
-                  <MapPin className="h-3 w-3 ml-3 mr-1 text-red-400" />
-                  <span className="text-red-400">No location</span>
-                </>
-              )}
-            </div>
-          </div>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="text-white hover:bg-white/20"
-            onClick={onClose}
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Bottom Controls */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pb-8">
-        <div className="flex items-center justify-between">
-          {/* Empty space for symmetry */}
-          <div className="w-12 h-12" />
-
-          {/* Shutter Button */}
-          <div className="relative">
+    <div className="fixed inset-0 z-50 bg-black">
+      {/* Camera view */}
+      <div className="relative h-full w-full">
+        {/* Video element */}
+        <video
+          ref={videoRef}
+          className="h-full w-full object-cover"
+          autoPlay
+          playsInline
+          muted
+        />
+        
+        {/* Hidden canvas for photo capture */}
+        <canvas ref={canvasRef} className="hidden" />
+        
+        {/* UI Controls */}
+        <div className="absolute inset-0 flex flex-col">
+          {/* Top bar */}
+          <div className="flex items-center justify-between p-4">
             <Button
+              variant="ghost"
               size="icon"
-              onClick={capturePhoto}
-              disabled={isCapturing}
-              className="w-20 h-20 rounded-full bg-white hover:bg-gray-100 text-black border-4 border-primary shadow-lg relative overflow-hidden"
+              onClick={handleClose}
+              className="rounded-full bg-black/50 text-white hover:bg-black/70"
             >
-              {isCapturing ? (
-                <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <div className="w-16 h-16 rounded-full bg-primary" />
-              )}
+              <X className="h-6 w-6" />
             </Button>
             
-            {/* Capture animation overlay */}
-            {isCapturing && (
-              <div className="absolute inset-0 bg-white rounded-full animate-ping" />
-            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleCamera}
+              className="rounded-full bg-black/50 text-white hover:bg-black/70"
+            >
+              <RotateCw className="h-6 w-6" />
+            </Button>
           </div>
-
-          {/* Flip Camera */}
-          <Button
-            size="icon"
-            variant="ghost"
-            onClick={flipCamera}
-            className="w-12 h-12 rounded-full text-white hover:bg-white/20"
-          >
-            <RotateCw className="h-6 w-6" />
-          </Button>
-        </div>
-
-        {/* Capture Hint */}
-        <div className="text-center mt-4">
-          <p className="text-white/70 text-sm">
-            Tap to capture your food moment
-          </p>
-          {locationStatus === 'loading' && (
-            <p className="text-white/50 text-xs mt-1">
-              Getting location...
-            </p>
+          
+          {/* Camera permission status */}
+          {hasPermission === false && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+              <div className="text-center text-white">
+                <Camera className="mx-auto mb-4 h-12 w-12" />
+                <h3 className="mb-2 text-lg font-semibold">Camera Access Required</h3>
+                <p className="mb-4 text-sm">Please allow camera access to take photos.</p>
+                <Button onClick={startCamera} variant="outline">
+                  Enable Camera
+                </Button>
+              </div>
+            </div>
           )}
+          
+          {/* Bottom controls */}
+          <div className="mt-auto flex items-center justify-center p-8">
+            <Button
+              onClick={capturePhoto}
+              disabled={isCapturing || hasPermission === false}
+              size="lg"
+              className="rounded-full bg-white p-6 text-black hover:bg-gray-200 disabled:opacity-50"
+            >
+              <Camera className="h-8 w-8" />
+            </Button>
+          </div>
         </div>
       </div>
-
-      {/* Flash overlay for capture effect */}
-      {isCapturing && (
-        <div className="absolute inset-0 bg-white animate-pulse" style={{ animationDuration: '200ms' }} />
-      )}
     </div>
   );
 }

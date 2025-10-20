@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { CameraView } from './CameraView';
 import { TaggingView } from './TaggingView';
 import { GamificationFeedback } from './GamificationFeedback';
+import { SnapErrorBoundary } from './SnapErrorBoundary';
 import { toast } from 'sonner';
 
 interface CapturedPhoto {
@@ -39,9 +40,9 @@ export function SnapContainer() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [savedSnapId, setSavedSnapId] = useState<string | null>(null);
 
-  // Debug log to check if component is mounting properly
+  // Component mount effect for initialization
   React.useEffect(() => {
-    console.log('SnapContainer mounted');
+    // Component mounted and ready
   }, []);
 
   const handlePhotoCapture = (photo: CapturedPhoto) => {
@@ -137,8 +138,8 @@ export function SnapContainer() {
             review: data.review,
             priceRange: data.priceRange,
             visitDate: data.visitDate.toISOString(),
-            location: photo.location,
-            capturedAt: photo.timestamp.toISOString()
+            capturedAt: photo.timestamp.toISOString(),
+            location: photo.location || null // Include GPS coordinates and address if available
           }
         }),
       });
@@ -233,36 +234,44 @@ export function SnapContainer() {
     );
   }
 
-  switch (currentStep) {
-    case 'camera':
-      return (
-        <CameraView 
-          onPhotoCapture={handlePhotoCapture}
-          onClose={handleClose}
-        />
-      );
-    
-    case 'tagging':
-      return capturedPhoto ? (
-        <TaggingView 
-          photo={capturedPhoto}
-          onComplete={handleTaggingComplete}
-          onRetake={handleRetakePhoto}
-          snapId={savedSnapId || undefined}
-        />
-      ) : null;
-    
-    case 'gamification':
-      return (capturedPhoto && taggingData) ? (
-        <GamificationFeedback 
-          pointsEarned={calculatePoints(taggingData)}
-          taggingData={taggingData}
-          onComplete={handleGamificationComplete}
-          onTakeAnother={handleTakeAnother}
-        />
-      ) : null;
-    
-    default:
-      return null;
-  }
+  const renderStep = () => {
+    switch (currentStep) {
+      case 'camera':
+        return (
+          <CameraView 
+            onPhotoCapture={handlePhotoCapture}
+            onClose={handleClose}
+          />
+        );
+      
+      case 'tagging':
+        return capturedPhoto ? (
+          <TaggingView 
+            photo={capturedPhoto}
+            onComplete={handleTaggingComplete}
+            onRetake={handleRetakePhoto}
+            snapId={savedSnapId || undefined}
+          />
+        ) : null;
+      
+      case 'gamification':
+        return (capturedPhoto && taggingData) ? (
+          <GamificationFeedback 
+            pointsEarned={calculatePoints(taggingData)}
+            taggingData={taggingData}
+            onComplete={handleGamificationComplete}
+            onTakeAnother={handleTakeAnother}
+          />
+        ) : null;
+      
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <SnapErrorBoundary>
+      {renderStep()}
+    </SnapErrorBoundary>
+  );
 }
