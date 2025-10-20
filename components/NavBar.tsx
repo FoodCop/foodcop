@@ -67,6 +67,20 @@ const NavBar = () => {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
+                  <Link href="/chat" className={navigationMenuTriggerStyle()}>
+                    Chat
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link href="/friends" className={navigationMenuTriggerStyle()}>
+                    Friends
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
                   <Link href="/plate" className={navigationMenuTriggerStyle()}>
                     Plate
                   </Link>
@@ -91,9 +105,6 @@ const NavBar = () => {
           <div className="hidden items-center gap-4 lg:flex">
             <Link href="/ai">
               <Button variant="outline">Ask AI</Button>
-            </Link>
-            <Link href="/chat">
-              <Button>Chat</Button>
             </Link>
           </div>
           <Sheet>
@@ -133,6 +144,12 @@ const NavBar = () => {
                   <Link href="/snap" className="font-medium">
                     Snap
                   </Link>
+                  <Link href="/chat" className="font-medium">
+                    Chat
+                  </Link>
+                  <Link href="/friends" className="font-medium">
+                    Friends
+                  </Link>
                   <Link href="/plate" className="font-medium">
                     Plate
                   </Link>
@@ -146,9 +163,6 @@ const NavBar = () => {
                 <div className="mt-6 flex flex-col gap-4">
                   <Link href="/ai">
                     <Button variant="outline">Ask AI</Button>
-                  </Link>
-                  <Link href="/chat">
-                    <Button>Chat</Button>
                   </Link>
                 </div>
               </div>

@@ -22,6 +22,9 @@ app/_debug/
 **/*.back
 **/*.old
 
+# Documentation folder
+docs/
+
 # Ignore trace files specifically
 **/.next/trace
 **/.next/trace.*
