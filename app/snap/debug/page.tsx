@@ -93,7 +93,7 @@ export default function SnapPageDebug() {
         <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
           <h3 className="font-semibold text-yellow-800 mb-2">Troubleshooting Tips:</h3>
           <ul className="text-sm text-yellow-700 space-y-1">
-            <li>• Make sure you're accessing the site via HTTPS (required for camera/location)</li>
+            <li>• Make sure you&apos;re accessing the site via HTTPS (required for camera/location)</li>
             <li>• Check browser console for additional error messages</li>
             <li>• Ensure camera and location permissions are enabled</li>
             <li>• Try refreshing the page if issues persist</li>
