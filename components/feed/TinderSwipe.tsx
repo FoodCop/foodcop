@@ -82,7 +82,7 @@ export function TinderSwipe({ profiles, onSwipe, onNoMoreCards }: TinderSwipePro
               location={profile.location}
               distance={profile.distance}
               imageUrl={profile.imageUrl}
-              onSwipe={index === 0 ? handleSwipe : undefined}
+              onLegacySwipe={index === 0 ? handleSwipe : undefined}
               className={index > 0 ? 'pointer-events-none' : ''}
             />
           </motion.div>

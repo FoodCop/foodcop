@@ -144,7 +144,9 @@ export function RestaurantAdapter({ card, isFullView = false, className }: { car
         
         <div className="flex items-center gap-1 mb-2">
           <MapPin className="w-5 h-5 text-white/80" />
-          <span className="text-white text-lg font-['Poppins']">{metadata.distance_km.toFixed(1)} km away</span>
+          <span className="text-white text-lg font-['Poppins']">
+            {metadata.distance_km ? `${metadata.distance_km.toFixed(1)} km away` : 'Distance unavailable'}
+          </span>
         </div>
 
         <p className="text-white/80 text-base font-['Poppins'] mb-1">
