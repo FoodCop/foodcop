@@ -15,6 +15,7 @@ export default function ChatPage() {
   const [showChat, setShowChat] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isTyping, setIsTyping] = useState(false);
 
   const selectedFriend = friends.find((f) => f.id === selectedFriendId);
 
@@ -23,6 +24,7 @@ export default function ChatPage() {
     if (!user) return;
 
     try {
+      setLoading(true);
       const supabase = supabaseBrowser();
       
       // Use the exact same query pattern as the working Friends component
@@ -44,14 +46,25 @@ export default function ChatPage() {
       }
 
       // Also load Master Bots
+      // Use a simpler query without is_active filter to avoid potential RLS issues
       const { data: masterBots, error: botsError } = await supabase
         .from('users')
         .select('id, display_name, username, avatar_url')
-        .eq('is_master_bot', true)
-        .eq('is_active', true);
+        .eq('is_master_bot', true);
+
+      if (botsError) {
+        console.error('Error loading Master Bots:', botsError);
+        console.error('Full Master Bot error details:', JSON.stringify(botsError, null, 2));
+      } else {
+        console.log('Master Bots loaded successfully:', masterBots?.length || 0);
+        if (masterBots && masterBots.length > 0) {
+          console.log('Master Bot data:', masterBots);
+        }
+      }
 
       // Convert friend requests to chat friends list
       const allFriends: Friend[] = [];
+      const friendIds = new Set<string>(); // Track unique friend IDs
 
       // Add real friends from friend_requests
       if (friendRequests && friendRequests.length > 0) {
@@ -61,7 +74,8 @@ export default function ChatPage() {
             ? friendship.requested 
             : friendship.requester;
           
-          if (friend) {
+          if (friend && !friendIds.has(friend.id)) {
+            friendIds.add(friend.id);
             allFriends.push({
               id: friend.id,
               name: friend.display_name,
@@ -78,17 +92,22 @@ export default function ChatPage() {
       // Add Master Bots to the list
       if (masterBots && masterBots.length > 0) {
         masterBots.forEach((bot: any) => {
-          allFriends.push({
-            id: bot.id,
-            name: bot.display_name,
-            avatar: bot.avatar_url || undefined,
-            lastMessage: `Chat with ${bot.display_name}`,
-            timestamp: 'AI Bot',
-            online: true,
-            isMasterBot: true
-          });
+          if (!friendIds.has(bot.id)) {
+            friendIds.add(bot.id);
+            allFriends.push({
+              id: bot.id,
+              name: bot.display_name,
+              avatar: bot.avatar_url || undefined,
+              lastMessage: `Chat with ${bot.display_name}`,
+              timestamp: 'Master Bot',
+              online: true,
+              isMasterBot: true
+            });
+          }
         });
       }
+      
+      // Clear and set new friends to prevent any accumulation
       setFriends(allFriends);
     } catch (error) {
       console.error('Error loading friends:', error);
@@ -219,46 +238,49 @@ export default function ChatPage() {
   // Trigger Master Bot AI response
   const triggerMasterBotResponse = async (botId: string, roomId: string, userMessage: string) => {
     try {
-      // Simple AI response simulation - replace with real AI API call
-      setTimeout(async () => {
-        const responses = [
-          "That's interesting! Tell me more about your food preferences.",
-          "I'd recommend trying a Mediterranean diet for better health.",
-          "Have you considered exploring Asian cuisine? It's full of amazing flavors!",
-          "Food is such a wonderful way to explore different cultures.",
-          "What's your favorite type of cuisine? I love helping people discover new dishes!"
-        ];
-        
-        const aiResponse = responses[Math.floor(Math.random() * responses.length)];
-        
-        const supabase = supabaseBrowser();
-        const { data } = await supabase
-          .from('chat_messages')
-          .insert({
-            user_id: botId,
-            room_id: roomId,
-            content: aiResponse,
-            is_ai_generated: true
-          })
-          .select()
-          .single();
+      // Show typing indicator
+      setIsTyping(true);
 
-        if (data) {
-          const aiMessage: Message = {
-            id: data.id,
-            senderId: data.user_id,
-            text: data.content,
-            timestamp: new Date(data.created_at)
-          };
+      // Call the Master Bot API endpoint for intelligent responses
+      const response = await fetch('/api/chat/masterbot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          botId: botId,
+          userId: user?.id,
+          roomId: roomId,
+        }),
+      });
 
-          setMessages(prev => ({
-            ...prev,
-            [botId]: [...(prev[botId] || []), aiMessage]
-          }));
-        }
-      }, 1000); // 1 second delay for realistic AI response
+      if (!response.ok) {
+        console.error('Master Bot API error:', response.statusText);
+        return;
+      }
+
+      const result = await response.json();
+      
+      if (result.success) {
+        // Add the AI response to the chat immediately
+        const aiMessage: Message = {
+          id: result.messageId,
+          senderId: botId,
+          text: result.response,
+          timestamp: new Date(result.timestamp)
+        };
+
+        setMessages(prev => ({
+          ...prev,
+          [botId]: [...(prev[botId] || []), aiMessage]
+        }));
+      }
     } catch (error) {
       console.error('Error triggering AI response:', error);
+    } finally {
+      // Hide typing indicator
+      setIsTyping(false);
     }
   };
 
@@ -355,6 +377,7 @@ export default function ChatPage() {
             currentUserId={user.id}
             onSendMessage={handleSendMessage}
             onBack={handleBackToFriends}
+            isTyping={isTyping && selectedFriend?.timestamp === 'Master Bot'}
           />
         ) : (
           <div className="h-full flex items-center justify-center text-gray-500">

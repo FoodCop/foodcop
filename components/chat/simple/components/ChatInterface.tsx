@@ -24,9 +24,10 @@ interface ChatInterfaceProps {
   currentUserId: string;
   onSendMessage: (text: string, files?: File[]) => void;
   onBack?: () => void;
+  isTyping?: boolean;
 }
 
-export function ChatInterface({ friend, messages, currentUserId, onSendMessage, onBack }: ChatInterfaceProps) {
+export function ChatInterface({ friend, messages, currentUserId, onSendMessage, onBack, isTyping }: ChatInterfaceProps) {
   const [inputValue, setInputValue] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -135,6 +136,25 @@ export function ChatInterface({ friend, messages, currentUserId, onSendMessage, 
               </div>
             );
           })}
+          
+          {/* Typing indicator for bots */}
+          {isTyping && (
+            <div className="flex justify-start">
+              <div className="max-w-[70%] rounded-lg p-3 bg-gray-100 text-gray-900">
+                <div className="flex items-center space-x-1">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                  <span className="text-sm text-gray-500 ml-2">
+                    {friend.isMasterBot ? `${friend.name} is thinking...` : 'Typing...'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
