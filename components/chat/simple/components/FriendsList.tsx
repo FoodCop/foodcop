@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { ScrollArea } from "./ui/scroll-area";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import React, { useState, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Search, Users, UserPlus } from "lucide-react";
 import Link from "next/link";
 

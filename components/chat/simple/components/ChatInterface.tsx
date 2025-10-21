@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { ScrollArea } from "./ui/scroll-area";
+import React, { useState, useEffect, useRef } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, ArrowLeft, Paperclip, X } from "lucide-react";
 import type { Friend } from "./FriendsList";
 
