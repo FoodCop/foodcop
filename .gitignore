@@ -21,6 +21,8 @@ app/_debug/
 **/*.bak
 **/*.back
 **/*.old
+**/modern_OLD_COMPLEX/
+**/*_OLD_COMPLEX/
 
 # Documentation folder
 docs/
