@@ -40,7 +40,7 @@ export default function AuthSuccessPage() {
             clearInterval(timer);
             // Use setTimeout to move router.push out of render cycle
             setTimeout(() => {
-              router.push('/feed');
+              router.push('/onboarding');
             }, 0);
             return 0;
           }
@@ -96,18 +96,18 @@ export default function AuthSuccessPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-2xl font-semibold text-green-600">Welcome back!</h2>
+        <h2 className="text-2xl font-semibold text-green-600">Authentication Successful!</h2>
         <p className="text-gray-600 mt-2">
           You are now signed in as <strong>{user?.name || user?.email}</strong>
         </p>
         <p className="text-sm text-gray-500 mt-4">
-          Redirecting to your feed in {countdown} seconds...
+          Let&apos;s set up your profile in {countdown} seconds...
         </p>
         <button 
-          onClick={() => router.push('/feed')}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          onClick={() => router.push('/onboarding')}
+          className="mt-4 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium"
         >
-          Continue to Feed
+          Continue to Setup
         </button>
       </div>
     </div>

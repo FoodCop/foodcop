@@ -5,22 +5,29 @@ import { RestaurantSwipeCard } from './RestaurantSwipeCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RestaurantCard, RestaurantSwipeProps } from '@/types/restaurant-feed';
 
-export function RestaurantTinderSwipe({ restaurants, onSwipe, onNoMoreCards }: RestaurantSwipeProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export function RestaurantTinderSwipe({ restaurants, currentIndex, onSwipe, onNoMoreCards }: RestaurantSwipeProps) {
   const [removedCards, setRemovedCards] = useState<Set<string>>(new Set());
 
   const handleSwipe = useCallback((direction: 'left' | 'right', restaurantId: string) => {
+    console.log(`🔄 Swipe detected: ${direction} on restaurant ${restaurantId}`);
+    console.log(`📊 Current index before swipe: ${currentIndex}`);
+    
+    // Mark card as removed for animation
     setRemovedCards(prev => new Set(prev.add(restaurantId)));
-    setCurrentIndex(prev => prev + 1);
+    
+    // Call parent's onSwipe handler (which will update currentIndex)
     onSwipe?.(direction, restaurantId);
     
     // Check if we've gone through all cards
     if (currentIndex >= restaurants.length - 1) {
+      console.log('🏁 No more cards available');
       setTimeout(() => onNoMoreCards?.(), 300);
     }
   }, [currentIndex, restaurants.length, onSwipe, onNoMoreCards]);
 
-  const visibleRestaurants = restaurants.slice(currentIndex, currentIndex + 3);
+  const visibleRestaurants = restaurants.filter(r => !removedCards.has(r.id)).slice(0, 3);
+  
+  console.log(`🎴 Rendering stack - Current index: ${currentIndex}, Visible cards: ${visibleRestaurants.length}, Total: ${restaurants.length}`);
 
   if (visibleRestaurants.length === 0) {
     return (
@@ -72,6 +79,8 @@ export function RestaurantTinderSwipe({ restaurants, onSwipe, onNoMoreCards }: R
               bot_display_name={restaurant.bot_display_name}
               bot_avatar_url={restaurant.bot_avatar_url}
               content={restaurant.content}
+              distance_from_user={restaurant.distance_from_user}
+              relevance_score={restaurant.relevance_score}
               onSwipe={index === 0 ? handleSwipe : undefined}
               className={index > 0 ? 'pointer-events-none' : ''}
             />

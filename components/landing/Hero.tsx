@@ -43,7 +43,7 @@ const Hero = () => {
             <p className="text-white px-5 lg:text-lg">
               Seven food-specialist AIs scan top cities to surface unmissable restaurants and recipes—from hawker legends to omakase gems. Pin what you love.
             </p>
-            <Link href="/auth-debug" className="mx-5">
+            <Link href="/auth/signin" className="mx-5">
               <Button className="h-12 rounded-lg w-full">Get Started Now</Button>
             </Link>
           </div>

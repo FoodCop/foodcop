@@ -21,7 +21,9 @@ export function RestaurantSwipeCard({
   className,
   onSwipe,
   onDragEnd,
-  style
+  style,
+  distance_from_user,
+  relevance_score
 }: RestaurantCardProps) {
   const [isLiked, setIsLiked] = useState<boolean | null>(null);
   const x = useMotionValue(0);
@@ -37,14 +39,20 @@ export function RestaurantSwipeCard({
   const handleDragEnd = (event: any, info: PanInfo) => {
     const swipeThreshold = 100;
     
+    console.log(`👆 Drag ended - Offset: ${info.offset.x}, Velocity: ${info.velocity.x}`);
+    
     if (info.offset.x > swipeThreshold) {
       // Swiped right (save/like)
+      console.log(`➡️ Swipe RIGHT detected for card ${id}`);
       setIsLiked(true);
       onSwipe?.('right', id);
     } else if (info.offset.x < -swipeThreshold) {
       // Swiped left (pass)
+      console.log(`⬅️ Swipe LEFT detected for card ${id}`);
       setIsLiked(false);
       onSwipe?.('left', id);
+    } else {
+      console.log(`↩️ Swipe cancelled (below threshold)`);
     }
     
     onDragEnd?.();
@@ -80,7 +88,8 @@ export function RestaurantSwipeCard({
         ...style
       }}
       drag="x"
-      dragConstraints={{ left: 0, right: 0 }}
+      dragConstraints={{ left: -1000, right: 1000 }}
+      dragElastic={1}
       onDragEnd={handleDragEnd}
       whileTap={{ scale: 1.02 }}
       data-node-id={`restaurant-card-${id}`}
@@ -148,6 +157,24 @@ export function RestaurantSwipeCard({
             {bot_display_name}
           </span>
         </div>
+
+        {/* Distance Badge (top-right) */}
+        {distance_from_user && (
+          <div className="absolute top-6 right-6 flex flex-col items-end gap-2">
+            <div className="bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20">
+              <span className="text-white text-sm font-medium font-['Poppins']">
+                📍 {distance_from_user}
+              </span>
+            </div>
+            {relevance_score && relevance_score > 100 && (
+              <div className="bg-primary/90 backdrop-blur-sm px-3 py-1 rounded-full border border-primary-foreground/20">
+                <span className="text-primary-foreground text-xs font-semibold">
+                  ✨ {Math.round(relevance_score)} match
+                </span>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Restaurant Information */}
         <div className="absolute bottom-0 left-0 right-0 p-6">

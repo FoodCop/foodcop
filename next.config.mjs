@@ -54,5 +54,13 @@ const nextConfig = {
       }
     ]
   },
+  experimental: {
+    // Disable runtime transpilation to avoid script injection issues
+    esmExternals: false,
+  },
+  // Disable dev overlay components that might cause script issues
+  ...(process.env.NODE_ENV === 'development' && {
+    reactStrictMode: false,
+  }),
 };
 export default nextConfig;

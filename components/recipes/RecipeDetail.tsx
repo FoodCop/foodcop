@@ -3,7 +3,7 @@ import { ArrowLeft, Clock, Users, Flame, Star, Share2, Bookmark, Play, ChevronDo
 import type { Recipe, Comment } from '@/components/recipes/types';
 import Image from 'next/image';
 import { RecipeCommunity } from '@/components/recipes/RecipeCommunity';
-import RecipeShareDialog from '../chat/modern/sharing/RecipeShareDialog';
+import RecipeShareDialog from '../sharing/RecipeShareDialog';
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -399,20 +399,18 @@ export function RecipeDetail({ recipe, onBack, onSave, onShare, isSaved = false 
         <RecipeShareDialog
           recipe={{
             id: recipe.id.toString(),
-            title: recipe.title,
+            name: recipe.title,
             description: recipe.summary || '',
-            image_url: recipe.image,
+            image: recipe.image,
             cooking_time: recipe.readyInMinutes || 30,
             difficulty: recipe.difficulty || 'Medium',
-            ingredients: recipe.extendedIngredients?.map(ing => ing.original) || [],
             servings: recipe.servings || 4,
-            calories: recipe.nutrition?.calories,
             category: recipe.dishTypes?.[0] || 'Main Course'
           }}
           isOpen={showShareDialog}
           onClose={() => setShowShareDialog(false)}
-          onShare={async (targets, message) => {
-            console.log('Sharing recipe to:', targets, 'with message:', message);
+          onShare={async (message) => {
+            console.log('Sharing recipe with message:', message);
             setShowShareDialog(false);
           }}
         />

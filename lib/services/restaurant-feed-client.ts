@@ -4,12 +4,82 @@ import { RestaurantCard, FeedFilters, LocationData, DistanceCalculation } from '
 /**
  * Restaurant Feed Service - Client Side
  * Handles fetching and managing restaurant recommendations for the feed (client components)
+ * Updated: October 17, 2025 - Personalized feed with lazy loading
  */
 export class RestaurantFeedClientService {
   
   /**
-   * Get restaurant feed posts from Master Bots (client-side)
-   * Returns cards ready for Tinder-style swiping
+   * Get personalized restaurant feed using smart filtering and lazy loading
+   * NEW: Uses get_personalized_feed() database function
+   */
+  static async getPersonalizedFeed(
+    userId: string,
+    limit: number = 10,
+    offset: number = 0,
+    userLocation?: LocationData,
+    maxDistanceKm: number = 500
+  ): Promise<RestaurantCard[]> {
+    try {
+      const supabase = supabaseBrowser();
+      
+      const { data, error } = await supabase.rpc('get_personalized_feed', {
+        p_user_id: userId,
+        p_limit: limit,
+        p_offset: offset,
+        p_user_lat: userLocation?.lat || null,
+        p_user_lng: userLocation?.lng || null,
+        p_max_distance_km: maxDistanceKm
+      });
+
+      if (error) {
+        console.error('Error fetching personalized feed:', error);
+        throw error;
+      }
+
+      return (data || []).map((post: any) => ({
+        id: post.post_id,
+        restaurant_name: post.restaurant_name,
+        restaurant_location: post.restaurant_location,
+        restaurant_rating: parseFloat(post.restaurant_rating || '0'),
+        restaurant_price_range: post.restaurant_price_range,
+        restaurant_cuisine: post.restaurant_cuisine,
+        image_url: post.image_url || '/placeholder-restaurant.jpg',
+        
+        bot_id: post.master_bot_id,
+        bot_username: post.bot_username,
+        bot_display_name: post.bot_display_name,
+        bot_avatar_url: post.bot_avatar_url,
+        
+        title: post.title,
+        content: post.content,
+        content_type: post.content_type,
+        personality_trait: post.personality_trait,
+        
+        engagement_likes: post.engagement_likes,
+        engagement_comments: post.engagement_comments,
+        engagement_shares: post.engagement_shares,
+        
+        tags: post.tags || [],
+        created_at: post.created_at,
+        
+        coordinates: post.distance_km ? {
+          lat: 0, // We don't expose exact coords in feed for privacy
+          lng: 0
+        } : undefined,
+        distance_from_user: post.distance_km ? `${post.distance_km.toFixed(1)} km` : undefined,
+        place_id: post.restaurant_id,
+        relevance_score: post.relevance_score
+      })) as RestaurantCard[];
+      
+    } catch (error) {
+      console.error('Failed to fetch personalized feed:', error);
+      return [];
+    }
+  }
+
+  /**
+   * LEGACY: Get restaurant feed posts from Master Bots (client-side)
+   * Keep for backward compatibility
    */
   static async getRestaurantFeed(
     limit: number = 30, 
@@ -20,8 +90,9 @@ export class RestaurantFeedClientService {
       const supabase = supabaseBrowser();
       
       const { data, error } = await supabase
-        .from('public_master_bot_posts')
-        .select('*')
+        .from('master_bot_posts')
+        .select('*, users!master_bot_id(username, display_name, avatar_url)')
+        .eq('is_published', true)
         .order('created_at', { ascending: false })
         .limit(limit);
 
@@ -41,9 +112,9 @@ export class RestaurantFeedClientService {
         image_url: post.image_url || '/placeholder-restaurant.jpg',
         
         bot_id: post.master_bot_id,
-        bot_username: post.bot_username,
-        bot_display_name: post.bot_display_name,
-        bot_avatar_url: post.bot_avatar_url,
+        bot_username: post.users?.username,
+        bot_display_name: post.users?.display_name,
+        bot_avatar_url: post.users?.avatar_url,
         
         title: post.title,
         content: post.content,
@@ -57,8 +128,10 @@ export class RestaurantFeedClientService {
         tags: post.tags || [],
         created_at: post.created_at,
         
-        // Future geolocation features
-        coordinates: undefined,
+        coordinates: post.latitude && post.longitude ? {
+          lat: parseFloat(post.latitude),
+          lng: parseFloat(post.longitude)
+        } : undefined,
         distance_from_user: undefined,
         place_id: post.restaurant_id
       })) as RestaurantCard[];
@@ -66,6 +139,42 @@ export class RestaurantFeedClientService {
     } catch (error) {
       console.error('Failed to fetch restaurant feed:', error);
       return [];
+    }
+  }
+
+  /**
+   * Record user swipe action
+   * NEW: Tracks swipe history to prevent showing already-seen cards
+   */
+  static async recordSwipe(
+    userId: string,
+    restaurantCardId: string,
+    direction: 'left' | 'right'
+  ): Promise<boolean> {
+    try {
+      const supabase = supabaseBrowser();
+      
+      const { error } = await supabase
+        .from('user_swipe_history')
+        .insert({
+          user_id: userId,
+          restaurant_card_id: restaurantCardId,
+          swipe_direction: direction
+        });
+
+      if (error) {
+        // Ignore duplicate key errors (user already swiped on this card)
+        if (error.code === '23505') {
+          return true;
+        }
+        console.error('Error recording swipe:', error);
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Failed to record swipe:', error);
+      return false;
     }
   }
 
@@ -82,7 +191,7 @@ export class RestaurantFeedClientService {
           user_id: userId,
           item_id: restaurantCardId,
           item_type: 'restaurant',
-          source: 'master_bot_feed'
+          metadata: { source: 'master_bot_feed' }  // Store source in metadata instead
         });
 
       if (error) {
@@ -104,8 +213,12 @@ export class RestaurantFeedClientService {
     try {
       const supabase = supabaseBrowser();
       
+      // Use the correct function name and parameters
       const { error } = await supabase
-        .rpc('increment_post_likes', { post_id: postId });
+        .rpc('increment_engagement', { 
+          post_id: postId, 
+          engagement_type: 'likes' 
+        });
 
       if (error) {
         console.error('Error liking post:', error);

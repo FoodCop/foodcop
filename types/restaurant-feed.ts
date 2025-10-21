@@ -34,17 +34,21 @@ export interface RestaurantCard {
   tags: string[];
   created_at: string;
   
-  // Future geolocation support
+  // Geolocation support
   coordinates?: {
     lat: number;
     lng: number;
   };
   distance_from_user?: string;
   place_id?: string; // For Google Maps integration
+  
+  // NEW: Personalization score (October 17, 2025)
+  relevance_score?: number;
 }
 
 export interface RestaurantSwipeProps {
   restaurants: RestaurantCard[];
+  currentIndex: number;  // NEW: Parent controls the index
   onSwipe?: (direction: 'left' | 'right', restaurantId: string) => void;
   onNoMoreCards?: () => void;
 }
@@ -64,6 +68,9 @@ export interface RestaurantCardProps {
   onSwipe?: (direction: 'left' | 'right', id: string) => void;
   onDragEnd?: () => void;
   style?: React.CSSProperties;
+  // Optional metadata for personalized feed
+  distance_from_user?: string;
+  relevance_score?: number;
 }
 
 // Action types for swipe interactions

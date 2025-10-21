@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Heart, MapPin, Star, Clock, Share2 } from 'lucide-react';
-import RestaurantShareDialog from '../chat/modern/sharing/RestaurantShareDialog';
+import RestaurantShareDialog from '../sharing/RestaurantShareDialog';
 
 export interface Restaurant {
   id: string;
@@ -369,18 +369,16 @@ export function RestaurantCard({
             name: restaurant.name,
             address: restaurant.address,
             rating: restaurant.rating,
-            price_range: '$'.repeat(restaurant.priceLevel),
-            cuisine_type: restaurant.cuisine.join(', '),
-            photo_url: restaurant.image,
-            phone: restaurant.phone,
-            website: restaurant.website,
-            coordinates: restaurant.coordinates,
-            opening_hours: restaurant.openHours
+            reviewCount: restaurant.reviewCount,
+            cuisine: restaurant.cuisine,
+            priceLevel: restaurant.priceLevel,
+            image: restaurant.image,
+            distance: restaurant.distance
           }}
           isOpen={showShareDialog}
           onClose={() => setShowShareDialog(false)}
-          onShare={async (targets, message) => {
-            console.log('Sharing restaurant to:', targets, 'with message:', message);
+          onShare={async (message) => {
+            console.log('Sharing restaurant with message:', message);
             setShowShareDialog(false);
           }}
         />

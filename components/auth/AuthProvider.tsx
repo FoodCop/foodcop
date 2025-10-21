@@ -145,6 +145,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Prevent hydration mismatch by showing loading state during initial mount
+  if (!mounted) {
+    return (
+      <AuthContext.Provider
+        value={{
+          user: null,
+          loading: true,
+          signIn: handleSignIn,
+          signOut: handleSignOut,
+          refreshUser,
+        }}
+      >
+        <div suppressHydrationWarning>{children}</div>
+      </AuthContext.Provider>
+    );
+  }
+
   return (
     <AuthContext.Provider
       value={{
