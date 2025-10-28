@@ -32,3 +32,5 @@ dist-ssr
 # Documentation and unused services (not for public repo)
 docs/
 main-services/
+
+.vercel

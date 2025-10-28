@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { UserData } from '../../App';
-import { Button } from '../ui/button-simple';
+import { Button } from '../../../ui/button-simple';
 import { MapPin, Loader2 } from 'lucide-react';
 import { config } from '../../../../config/config';
 
