@@ -1,0 +1,31 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "FUZO",
+    "apikey",
+    "Masterbot",
+    "masterbot",
+    "Tinder",
+    "lucide",
+    "framer",
+    "vite",
+    "supabase",
+    "spoonacular",
+    "youtube",
+    "Geary",
+    "Arjun",
+    "Janakiram",
+    "PGRST",
+    "unsaving",
+    "Nominatim",
+    "Sakura",
+    "Tako"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    ".git/**",
+    "dist/**",
+    "build/**"
+  ]
+}
