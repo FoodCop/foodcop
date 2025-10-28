@@ -22,16 +22,23 @@ export default function AuthPage() {
       if (result.success && result.data === true) {
         // User has completed onboarding, redirect to dashboard
         console.log('✅ User has completed onboarding, redirecting to dashboard');
-        window.location.hash = '#dash';
+        // Use requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+          window.location.hash = '#dash';
+        });
       } else {
         // User needs onboarding, redirect to onboarding flow
         console.log('🎯 User needs onboarding, redirecting to onboarding flow');
-        window.location.hash = '#onboarding';
+        requestAnimationFrame(() => {
+          window.location.hash = '#onboarding';
+        });
       }
     } catch (error) {
       console.error('❌ Error checking onboarding status:', error);
       // On error, assume user needs onboarding
-      window.location.hash = '#onboarding';
+      requestAnimationFrame(() => {
+        window.location.hash = '#onboarding';
+      });
     }
   };
 

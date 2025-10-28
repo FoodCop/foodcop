@@ -68,10 +68,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
               setSession(data.session);
               setUser(data.session.user);
               
-              // Clean URL and redirect to return path or default
-              const returnPath = localStorage.getItem('auth-return-path') || '#plate';
-              localStorage.removeItem('auth-return-path');
-              window.history.replaceState(null, '', window.location.pathname + returnPath);
+              // Clean URL but don't redirect - let AuthPage handle the redirection
+              // based on onboarding status
+              const cleanUrl = window.location.pathname + '#auth';
+              window.history.replaceState(null, '', cleanUrl);
               setLoading(false);
               return;
             }
