@@ -227,3 +227,5 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({ data }) => {
     </div>
   );
 };
+
+export default PhotoViewer;

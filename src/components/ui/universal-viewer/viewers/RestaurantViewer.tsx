@@ -263,3 +263,5 @@ export const RestaurantViewer: React.FC<RestaurantViewerProps> = ({ data }) => {
     </div>
   );
 };
+
+export default RestaurantViewer;

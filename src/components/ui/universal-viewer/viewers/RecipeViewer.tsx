@@ -197,3 +197,5 @@ export const RecipeViewer: React.FC<RecipeViewerProps> = ({ data }) => {
     </div>
   );
 };
+
+export default RecipeViewer;

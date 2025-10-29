@@ -35,8 +35,8 @@ export function PhoneFan({
   const centerY = useTransform(scrollYProgress, [0, 0.5, 1], [100, 0, 0]);
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-4xl mx-auto py-8 md:py-12">
-      <div className="relative h-[400px] md:h-[500px] lg:h-[600px] flex items-end justify-center">
+    <div ref={containerRef} className="relative w-full max-w-4xl mx-auto py-8 md:py-12" style={{ position: 'relative' }}>
+      <div className="relative h-[400px] md:h-[500px] lg:h-[600px] flex items-end justify-center" style={{ position: 'relative' }}>
         
         {/* Left Phone - Rotated counterclockwise based on scroll */}
         <motion.div

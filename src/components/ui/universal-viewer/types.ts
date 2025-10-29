@@ -10,6 +10,8 @@ export interface ViewerState {
   data: ViewerData | null;
   items?: ViewerData[] | null; // All items for navigation
   currentIndex: number; // Current item index
+  itemIndex?: number; // Current item index (alternative name)
+  totalItems?: number; // Total items count
 }
 
 // Union type for all viewer data

@@ -6,6 +6,7 @@ export const useUniversalViewer = () => {
     isOpen: false,
     type: null,
     data: null,
+    currentIndex: 0,
     itemIndex: undefined,
     totalItems: undefined
   });
@@ -21,6 +22,7 @@ export const useUniversalViewer = () => {
       isOpen: true,
       type,
       data,
+      currentIndex: itemIndex || 0,
       itemIndex,
       totalItems
     });
@@ -32,6 +34,7 @@ export const useUniversalViewer = () => {
       isOpen: false,
       type: null,
       data: null,
+      currentIndex: 0,
       itemIndex: undefined,
       totalItems: undefined
     });

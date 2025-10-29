@@ -349,3 +349,5 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
     </div>
   );
 };
+
+export default VideoViewer;

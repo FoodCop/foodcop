@@ -4,11 +4,11 @@ import { ViewerControls } from './controls/ViewerControls';
 import { useKeyboardNav } from './hooks/useKeyboardNav';
 import type { UniversalViewerProps } from './types';
 
-// Import viewers (will be created next)
-const RecipeViewer = React.lazy(() => import('./viewers/RecipeViewer').then(m => ({ default: m.RecipeViewer })));
-const RestaurantViewer = React.lazy(() => import('./viewers/RestaurantViewer').then(m => ({ default: m.RestaurantViewer })));
-const PhotoViewer = React.lazy(() => import('./viewers/PhotoViewer').then(m => ({ default: m.PhotoViewer })));
-const VideoViewer = React.lazy(() => import('./viewers/VideoViewer').then(m => ({ default: m.VideoViewer })));
+// Import viewers directly (not lazy loading for now to avoid export issues)
+import { RecipeViewer } from './viewers/RecipeViewer';
+import { RestaurantViewer } from './viewers/RestaurantViewer';
+import { PhotoViewer } from './viewers/PhotoViewer';
+import { VideoViewer } from './viewers/VideoViewer';
 
 export const UniversalViewer: React.FC<UniversalViewerProps> = ({
   state,
