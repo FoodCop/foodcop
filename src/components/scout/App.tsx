@@ -16,7 +16,7 @@ import { getPlaceImages, generateStaticMapFallback, getPlaceDetails } from '../.
 import { savedItemsService } from '../../services';
 import { useAuth } from '../auth/AuthProvider';
 import type { GooglePlace } from '../../types';
-import './fixes/SliderStyles.css';
+import './Scout.styles.css';
 
 // Review type for raw data processing
 interface RawReviewData {
