@@ -1,6 +1,5 @@
-import React from 'react'
 import { LandingPage } from './components/LandingPage'
-import { Toaster } from './components/ui/sonner'
+import { Toaster } from '../ui/sonner'
 
 export default function App() {
   return (
