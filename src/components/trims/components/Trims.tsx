@@ -7,6 +7,7 @@ import { AspectRatio } from '../../ui/aspect-ratio';
 import { Search, Play, Heart, Share2, Bookmark, X, Plus, Send, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '../../ui/button';
 import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } from '../../ui/dialog';
+import { SmartSaveButton } from '../../ui/smart-save-button';
 import { YouTubeService } from '../../../services/youtube';
 import { savedItemsService } from '../../../services';
 import { useAuth } from '../../auth/AuthProvider';
@@ -126,69 +127,7 @@ export function Trims() {
     );
   };
 
-  // Save video to plate function
-  const handleSaveToPlate = async (video: TrimVideo) => {
-    console.log('🍽️ Save Video to Plate triggered');
-    console.log('👤 Current user from useAuth:', user);
-    console.log('🎬 Selected video:', video);
 
-    if (!user) {
-      toast.error('Please sign in to save videos');
-      console.log('❌ No user found in useAuth hook');
-      return;
-    }
-
-    if (!video) {
-      toast.error('No video selected');
-      console.log('❌ No video selected');
-      return;
-    }
-
-    try {
-      console.log('💾 Attempting to save video...');
-      
-      const videoMetadata = {
-        title: video.title,
-        thumbnail: video.thumbnail,
-        duration: video.duration,
-        channelName: video.channelName,
-        views: video.views,
-        videoId: video.videoId,
-        category: video.category,
-        description: `Video by ${video.channelName}`,
-        url: `https://www.youtube.com/watch?v=${video.videoId}`,
-        // Add type identifier for filtering
-        content_type: 'video',
-        source: 'youtube'
-      };
-
-      console.log('📊 Video data to save:', videoMetadata);
-
-      const result = await savedItemsService.saveItem({
-        itemId: video.videoId,
-        itemType: 'other', // Changed from 'video' to 'other' to match DB constraint
-        metadata: videoMetadata
-      });
-
-      console.log('📤 Save result:', result);
-
-      if (result.success) {
-        toast.success(`${video.title} saved to your plate!`);
-        console.log('✅ Video saved successfully');
-      } else {
-        if (result.error === 'Item already saved') {
-          toast.info(`${video.title} is already in your plate`);
-          console.log('ℹ️ Video already saved');
-        } else {
-          toast.error(result.error || 'Failed to save video');
-          console.log('❌ Failed to save:', result.error);
-        }
-      }
-    } catch (error) {
-      console.error('💥 Error saving video:', error);
-      toast.error('An error occurred while saving the video');
-    }
-  };
 
   return (
     <div className="flex flex-col h-screen max-w-2xl mx-auto bg-background">
@@ -274,7 +213,6 @@ export function Trims() {
                     key={video.id} 
                     video={video} 
                     onPlay={() => setSelectedVideo(video)}
-                    onSave={handleSaveToPlate}
                   />
                 ))
               )}
@@ -331,17 +269,11 @@ export function Trims() {
               
               {/* Fixed Action Buttons */}
               <div className="bg-background border-t px-4 py-3 flex gap-3">
-                <Button 
+                <SmartSaveButton
+                  item={selectedVideo}
+                  itemType="video"
                   className="flex-1"
-                  onClick={() => {
-                    if (selectedVideo) {
-                      handleSaveToPlate(selectedVideo);
-                    }
-                  }}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  SAVE TO PLATE
-                </Button>
+                />
                 <Button 
                   variant="outline"
                   className="flex-1"
@@ -362,10 +294,9 @@ export function Trims() {
   );
 }
 
-function VideoCard({ video, onPlay, onSave }: { 
+function VideoCard({ video, onPlay }: { 
   video: TrimVideo; 
   onPlay: () => void;
-  onSave: (video: TrimVideo) => void;
 }) {
   const [liked, setLiked] = useState(false);
   const [saved] = useState(false);
@@ -407,17 +338,19 @@ function VideoCard({ video, onPlay, onSave }: {
           >
             <Heart className={`h-4 w-4 ${liked ? 'fill-red-500 text-red-500' : ''}`} />
           </Button>
-          <Button
-            size="icon"
-            variant="ghost"
+          <SmartSaveButton
+            item={video}
+            itemType="video"
+            size="sm"
+            variant="secondary"
             className="h-8 w-8 rounded-full bg-black/40 hover:bg-black/60 text-white"
-            onClick={(e) => {
-              e.stopPropagation();
-              onSave(video);
+            showDuplicatePreview={false}
+            onSaveSuccess={(savedItem, isDuplicate) => {
+              if (!isDuplicate) {
+                console.log('Video saved from card:', savedItem);
+              }
             }}
-          >
-            <Bookmark className={`h-4 w-4 ${saved ? 'fill-white' : ''}`} />
-          </Button>
+          />
           <Button
             size="icon"
             variant="ghost"

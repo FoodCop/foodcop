@@ -10,6 +10,7 @@ import { ImageWithFallback } from '../ui/image-with-fallback';
 import { toast } from 'sonner';
 import { Toaster } from '../ui/sonner';
 import { Map, Marker, Overlay } from 'pigeon-maps';
+import { SmartSaveButton } from '../ui/smart-save-button';
 import { backendService, formatGooglePlaceResult } from '../../services/backendService';
 import { ErrorBoundary } from '../ui/ErrorBoundary';
 import { getPlaceImages, generateStaticMapFallback, getPlaceDetails } from '../../services/googlePlacesImages';
@@ -596,62 +597,7 @@ export default function App() {
     }
   };
 
-  const handleSaveToPlate = async () => {
-    console.log('🍽️ Save to Plate triggered');
-    console.log('👤 Current user from useAuth:', user);
-    
-    if (!user) {
-      toast.error('Please sign in to save restaurants');
-      console.log('❌ No user found in useAuth hook');
-      return;
-    }
 
-    if (!selectedRestaurant) {
-      toast.error('No restaurant selected');
-      console.log('❌ No restaurant selected');
-      return;
-    }
-
-    try {
-      // Prepare restaurant metadata for saving
-      const restaurantData = {
-        place_id: selectedRestaurant.place_id || selectedRestaurant.id,
-        name: selectedRestaurant.name,
-        vicinity: selectedRestaurant.address,
-        lat: selectedRestaurant.lat,
-        lng: selectedRestaurant.lng,
-        rating: selectedRestaurant.rating,
-        price_level: selectedRestaurant.price_level,
-        types: Array.isArray(selectedRestaurant.cuisine) ? selectedRestaurant.cuisine : [selectedRestaurant.cuisine],
-        photos: selectedRestaurant.photos,
-        phone: selectedRestaurant.phone,
-        website: selectedRestaurant.website,
-        opening_hours: selectedRestaurant.opening_hours
-      };
-
-      console.log('💾 Saving restaurant to plate:', restaurantData);
-
-      const result = await savedItemsService.saveRestaurant(restaurantData);
-
-      console.log('📤 Save result:', result);
-
-      if (result.success) {
-        toast.success(`${selectedRestaurant.name} saved to your plate!`);
-        console.log('✅ Restaurant saved successfully');
-      } else {
-        if (result.error === 'Item already saved') {
-          toast.info(`${selectedRestaurant.name} is already in your plate`);
-          console.log('ℹ️ Restaurant already saved');
-        } else {
-          toast.error(result.error || 'Failed to save restaurant');
-          console.log('❌ Failed to save:', result.error);
-        }
-      }
-    } catch (error) {
-      console.error('💥 Error saving restaurant:', error);
-      toast.error('An error occurred while saving the restaurant');
-    }
-  };
 
   const handleShareWithFriend = () => {
     if (selectedRestaurant) {
@@ -1120,17 +1066,13 @@ export default function App() {
                         </div>
                         
                         <div className="flex gap-3">
-                          <Button
-                            onClick={() => {
-                              handleSaveToPlate();
-                              setShowDetailsModal(false);
-                            }}
+                          <SmartSaveButton
+                            item={selectedRestaurant}
+                            itemType="restaurant"
+                            onSaveSuccess={() => setShowDetailsModal(false)}
                             variant="default"
                             className="flex-1"
-                          >
-                            <Bookmark className="w-4 h-4 mr-2" />
-                            SAVE TO PLATE
-                          </Button>
+                          />
                           <Button
                             onClick={() => {
                               handleShareWithFriend();

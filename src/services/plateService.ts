@@ -8,6 +8,7 @@ import type {
   SavedItemsResponse 
 } from '../types/plate';
 import { AuthService } from './authService';
+import { DeduplicationService } from './deduplicationService';
 
 /**
  * Plate service for save-to-plate functionality
@@ -295,6 +296,130 @@ export class PlateService {
         error: error instanceof Error ? error.message : 'Unknown error',
         data: 0,
         message: 'Failed to get item count'
+      };
+    }
+  }
+
+  /**
+   * Enhanced save with duplicate detection and normalization
+   */
+  static async saveToPlateEnhanced(params: SaveItemParams): Promise<PlateResponse<SavedItem> & {
+    isDuplicate?: boolean;
+    similarItems?: SavedItem[];
+    duplicateCheck?: {
+      exactDuplicate: SavedItem | null;
+      similarItems: SavedItem[];
+      shouldWarn: boolean;
+    };
+  }> {
+    try {
+      // Validate required fields
+      if (!params.itemId || !params.itemType) {
+        throw new Error('itemId and itemType are required');
+      }
+
+      // Normalize the item ID to prevent format-based duplicates
+      const normalizedId = DeduplicationService.normalizeItemId(params.itemType, params.itemId);
+      
+      console.log('🔍 Enhanced save with duplicate detection:', {
+        originalId: params.itemId,
+        normalizedId,
+        itemType: params.itemType
+      });
+
+      // Perform comprehensive duplicate check
+      const duplicateCheck = await DeduplicationService.performDuplicateCheck(
+        params.metadata || { id: normalizedId }, 
+        params.itemType
+      );
+
+      // If exact duplicate exists, return it
+      if (duplicateCheck.exactDuplicate) {
+        console.log('✅ Item already saved, returning existing:', duplicateCheck.exactDuplicate.id);
+        return {
+          success: true,
+          data: duplicateCheck.exactDuplicate,
+          message: `${params.itemType} already saved to plate`,
+          isDuplicate: true,
+          duplicateCheck
+        };
+      }
+
+      // Proceed with save using normalized ID
+      const saveResult = await this.saveToPlate({
+        ...params,
+        itemId: normalizedId
+      });
+
+      // Add duplicate check information to response
+      return {
+        ...saveResult,
+        duplicateCheck
+      };
+
+    } catch (error) {
+      console.error('Error in saveToPlateEnhanced:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        message: 'Failed to save to plate with duplicate detection'
+      };
+    }
+  }
+
+  /**
+   * Check for existing item with duplicate detection
+   */
+  static async checkForDuplicates(
+    itemId: string | number, 
+    itemType: string,
+    metadata?: Record<string, unknown>
+  ): Promise<{
+    exactDuplicate: SavedItem | null;
+    similarItems: SavedItem[];
+    shouldWarn: boolean;
+  }> {
+    try {
+      return await DeduplicationService.performDuplicateCheck(
+        metadata || { id: itemId }, 
+        itemType
+      );
+    } catch (error) {
+      console.error('Error checking for duplicates:', error);
+      return {
+        exactDuplicate: null,
+        similarItems: [],
+        shouldWarn: false
+      };
+    }
+  }
+
+  /**
+   * Get duplicate statistics for current user
+   */
+  static async getDuplicateAnalysis(): Promise<PlateResponse<{
+    totalItems: number;
+    potentialDuplicates: number;
+    duplicateGroups: Array<{
+      items: SavedItem[];
+      similarity: number;
+      type: 'exact' | 'similar';
+    }>;
+  }>> {
+    try {
+      const stats = await DeduplicationService.getDuplicateStats();
+      
+      return {
+        success: true,
+        data: stats,
+        message: `Found ${stats.duplicateGroups.length} potential duplicate groups`
+      };
+    } catch (error) {
+      console.error('Error getting duplicate analysis:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        message: 'Failed to analyze duplicates'
       };
     }
   }
