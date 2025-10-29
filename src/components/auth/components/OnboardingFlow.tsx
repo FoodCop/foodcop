@@ -1,7 +1,68 @@
 import { useState } from 'react';
 import type { UserData } from '../App';
-import { BasicInfoStep } from './onboarding/BasicInfoStep';
-import { LocationStep } from './onboarding/LocationStep-simple';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+
+// Inline BasicInfoStep component
+function BasicInfoStep({ userData, onNext }: {
+  userData: UserData;
+  onDataChange: (data: Partial<UserData>) => void;
+  onNext: (data: Partial<UserData>) => void;
+}) {
+  const [localData, setLocalData] = useState({ name: userData.name || '', phone: userData.phone || '' });
+  
+  const handleNext = () => {
+    onNext(localData);
+  };
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-xl font-semibold">Tell us about yourself</h2>
+      <Input
+        placeholder="Your name"
+        value={localData.name}
+        onChange={(e) => setLocalData({ ...localData, name: e.target.value })}
+      />
+      <Input
+        placeholder="Phone number"
+        value={localData.phone}
+        onChange={(e) => setLocalData({ ...localData, phone: e.target.value })}
+      />
+      <Button onClick={handleNext} className="w-full">Next</Button>
+    </div>
+  );
+}
+
+// Inline LocationStep component  
+function LocationStep({ userData, onNext }: {
+  userData: UserData;
+  onDataChange: (data: Partial<UserData>) => void;
+  onNext: (data: Partial<UserData>) => void;
+}) {
+  const [address, setAddress] = useState(userData.location?.address || '');
+  
+  const handleNext = () => {
+    onNext({ 
+      location: { 
+        lat: 0, 
+        lng: 0, 
+        address 
+      } 
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-xl font-semibold">Where are you located?</h2>
+      <Input
+        placeholder="Enter your address"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+      />
+      <Button onClick={handleNext} className="w-full">Complete</Button>
+    </div>
+  );
+}
 // import { ChevronLeft } from 'lucide-react'; // Removed - not available
 
 interface OnboardingFlowProps {
@@ -82,7 +143,8 @@ export function OnboardingFlow({ userData, onComplete }: OnboardingFlowProps) {
       <div className="max-w-2xl mx-auto px-4 py-8">
         <h2 className="mb-8">{steps[currentStep].title}</h2>
         <CurrentStepComponent
-          data={formData}
+          userData={formData}
+          onDataChange={() => {}}
           onNext={handleStepComplete}
         />
       </div>
