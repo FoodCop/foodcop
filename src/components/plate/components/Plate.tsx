@@ -8,6 +8,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescri
 import { Settings, Lock, LogOut, MapPin, Users, Image, Video, FileText, Tag, Grid3x3 } from 'lucide-react';
 import { ProfileSettings } from './ProfileSettings';
 import { PrivacyPolicy } from './PrivacyPolicy';
+import { UniversalViewer } from '../../ui/universal-viewer';
+import { usePlateViewer } from '../../../hooks/usePlateViewer';
 import { supabase } from '../../../services/supabase';
 import type { AuthUser } from '../../../types/auth';
 import type { User } from '@supabase/supabase-js';
@@ -62,6 +64,9 @@ export function Plate({ userId, currentUser }: PlateProps) {
   const [videos, setVideos] = useState<SavedItem[]>([]);
   const [crew, setCrew] = useState<CrewMember[]>([]);
   const [places, setPlaces] = useState<SavedItem[]>([]);
+
+  // Universal Viewer state
+  const { viewerState, openViewer, closeViewer, navigateViewer } = usePlateViewer();
 
   const fetchUserProfile = useCallback(async () => {
     try {
@@ -568,7 +573,11 @@ export function Plate({ userId, currentUser }: PlateProps) {
                 {photos.map((photo) => {
                   const meta = photo.metadata as PhotoMetadata;
                   return (
-                    <div key={photo.id} className="aspect-square relative group">
+                    <div 
+                      key={photo.id} 
+                      className="aspect-square relative group cursor-pointer"
+                      onClick={() => openViewer(photo, photos, 'photo')}
+                    >
                       <img
                         src={meta.image_url || meta.image}
                         alt={meta.title || 'Food Photo'}
@@ -597,7 +606,11 @@ export function Plate({ userId, currentUser }: PlateProps) {
                 {recipes.map((recipe) => {
                   const meta = recipe.metadata as RecipeMetadata;
                   return (
-                    <Card key={recipe.id}>
+                    <Card 
+                      key={recipe.id} 
+                      className="cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => openViewer(recipe, recipes, 'recipe')}
+                    >
                       <CardContent className="pt-6">
                         <h3 className="font-semibold mb-2">{meta.title}</h3>
                         <p className="text-neutral-600 mb-3 text-sm line-clamp-3">{meta.summary}</p>
@@ -678,7 +691,11 @@ export function Plate({ userId, currentUser }: PlateProps) {
                   const duration = meta['duration'] as number | undefined;
                   const views = meta['views'] as number | undefined;
                   return (
-                    <Card key={video.id}>
+                    <Card 
+                      key={video.id}
+                      className="cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => openViewer(video, videos, 'video')}
+                    >
                       <CardContent className="pt-6">
                         <h3 className="mb-3">{title}</h3>
                         {thumbnail && (
@@ -743,7 +760,11 @@ export function Plate({ userId, currentUser }: PlateProps) {
                   const rating = meta.rating as number | undefined;
                   const priceLevel = meta.price_level as number | undefined;
                   return (
-                    <Card key={place.id}>
+                    <Card 
+                      key={place.id}
+                      className="cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => openViewer(place, places, 'restaurant')}
+                    >
                       <CardContent className="pt-6">
                         <div className="flex items-start gap-3">
                           <MapPin className="w-5 h-5 text-neutral-500 mt-1 shrink-0" />
@@ -772,6 +793,13 @@ export function Plate({ userId, currentUser }: PlateProps) {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Universal Viewer Modal */}
+      <UniversalViewer 
+        state={viewerState}
+        onClose={closeViewer}
+        onNavigate={navigateViewer}
+      />
     </div>
   );
 }
