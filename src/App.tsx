@@ -11,7 +11,7 @@ import BitesApp from './components/bites/App'
 import TrimsApp from './components/trims/App'
 import DashApp from './components/dash/App'
 import SnapApp from './components/snap/App'
-import PlateIndex from './pages/plate/index'
+import PlateApp from './components/plate/App'
 import { AuthProvider, useAuth } from './components/auth/AuthProvider'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
 import { Menu, X, LogOut } from 'lucide-react'
@@ -414,7 +414,7 @@ function App() {
       case 'dash':
         return <DashApp />
       case 'plate':
-        return <PlateIndex />
+        return <PlateApp />
       case 'landing':
       default:
         return <LandingPage onNavigateToSignup={() => setCurrentPage('auth')} />
