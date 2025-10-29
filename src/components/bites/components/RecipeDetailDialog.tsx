@@ -5,7 +5,7 @@ import { ScrollArea } from "../../ui/scroll-area";
 import { Separator } from "../../ui/separator";
 import { Button } from "../../ui/button";
 import type { Recipe } from "./RecipeCard";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "../../ui/image-with-fallback";
 import { savedItemsService } from "../../../services";
 import { useAuth } from "../../auth/AuthProvider";
 import { toast } from "sonner";

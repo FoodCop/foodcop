@@ -2,7 +2,7 @@ import { Clock, Users } from "lucide-react";
 import React from "react";
 import { Card } from "../../ui/card";
 import { Badge } from "../../ui/badge";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "../../ui/image-with-fallback";
 
 export interface Recipe {
   id: number;

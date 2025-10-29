@@ -6,7 +6,7 @@ import { MapPin, Navigation, ExternalLink, X, Info, Clock, Phone, Globe, Star, D
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
 import { Separator } from '../ui/separator';
-import { ImageWithFallback } from './components/figma/ImageWithFallback';
+import { ImageWithFallback } from '../ui/image-with-fallback';
 import { toast } from 'sonner';
 import { Toaster } from '../ui/sonner';
 import { Map, Marker, Overlay } from 'pigeon-maps';

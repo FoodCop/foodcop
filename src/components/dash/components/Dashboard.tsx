@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MapPin, Rss, Compass, Camera, Scissors, UtensilsCrossed, User, MessageCircle } from "lucide-react";
 import { Card } from "../../ui/card";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "../../ui/image-with-fallback";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { Button } from "../../ui/button";
 import { useAuth } from "../../auth/AuthProvider";
