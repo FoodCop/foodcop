@@ -16,6 +16,7 @@ import { getPlaceImages, generateStaticMapFallback, getPlaceDetails } from '../.
 import { savedItemsService } from '../../services';
 import { useAuth } from '../auth/AuthProvider';
 import type { GooglePlace } from '../../types';
+import './fixes/SliderStyles.css';
 
 // Review type for raw data processing
 interface RawReviewData {
@@ -767,8 +768,8 @@ export default function App() {
         </Map>
       </div>
 
-      {/* Floating search control */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 lg:top-6 lg:left-6 lg:translate-x-0 bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-xl border border-gray-200 w-80 max-w-[calc(100vw-2rem)] lg:max-w-sm z-1000">
+      {/* Floating search control - Mobile-first responsive */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-6 sm:left-6 sm:translate-x-0 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 w-[calc(100vw-2rem)] max-w-sm z-1000 p-3 sm:p-4">
           
           {/* Location Header */}
           <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200">
@@ -815,7 +816,7 @@ export default function App() {
                 placeholder="Search cuisine or restaurant..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white border-gray-300 text-sm"
+                className="pl-10 bg-white border-gray-300 text-sm h-10"
               />
             </div>
             
@@ -831,7 +832,7 @@ export default function App() {
                 min={0.5}
                 max={10}
                 step={0.5}
-                className="w-full *:data-[slot=slider-range]:bg-orange-600! *:data-[slot=slider-thumb]:bg-orange-600! *:data-[slot=slider-thumb]:border-orange-600!"
+                className="w-full scout-slider"
               />
             </div>
 
@@ -843,9 +844,9 @@ export default function App() {
           </div>
         </div>
 
-      {/* Floating restaurant info card */}
+      {/* Floating restaurant info card - Mobile-first responsive */}
       {selectedRestaurant && (
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 lg:bottom-20 lg:left-6 lg:translate-x-0 bg-white/35 backdrop-blur-sm p-4 rounded-xl shadow-xl border border-gray-200 w-80 max-w-[calc(100vw-2rem)] z-1000">
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 sm:bottom-6 sm:left-6 sm:translate-x-0 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 w-[calc(100vw-2rem)] max-w-sm z-1000 p-4">
           <div className="flex items-start justify-between mb-3">
             <div className="flex-1 min-w-0">
               <h3 className="truncate">{selectedRestaurant.name}</h3>
@@ -874,40 +875,40 @@ export default function App() {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <Button
-                onClick={handleShowDistance}
-                variant="outline"
-                className="flex-1"
-                size="sm"
-              >
-                <Navigation className="w-4 h-4 mr-2" />
-                {showRoute ? 'Hide Route' : 'Show Route'}
-              </Button>
-              <Button
-                onClick={handleSetRoute}
-                className="flex-1"
-                size="sm"
-              >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Directions
-              </Button>
-              <Button
-                onClick={() => {
-                  setShowDetailsModal(true);
-                  if (selectedRestaurant) {
-                    fetchRestaurantDetails(selectedRestaurant);
-                  }
-                }}
-                variant="outline"
-                size="sm"
-                className="shrink-0"
-              >
-                <Info className="w-4 h-4" />
-              </Button>
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleShowDistance}
+                  variant="outline"
+                  className="flex-1 text-xs"
+                  size="sm"
+                >
+                  <Navigation className="w-4 h-4 mr-1" />
+                  {showRoute ? 'Hide Route' : 'Show Route'}
+                </Button>
+                <Button
+                  onClick={handleSetRoute}
+                  className="flex-1 text-xs"
+                  size="sm"
+                >
+                  <ExternalLink className="w-4 h-4 mr-1" />
+                  Directions
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowDetailsModal(true);
+                    if (selectedRestaurant) {
+                      fetchRestaurantDetails(selectedRestaurant);
+                    }
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0"
+                >
+                  <Info className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
-          </div>
         </div>
       )}
 
@@ -919,15 +920,13 @@ export default function App() {
         }
       }}>
         <DialogContent 
-          className="w-[calc(100vw-32px)]! sm:w-[calc(100vw-32px)]! md:w-[calc(100vw-32px)]! lg:w-[calc(100vw-32px)]! max-w-sm! left-1/2! translate-x-[-50%]! p-0 rounded-2xl"
+          className="w-[calc(100vw-1rem)] max-w-sm mx-auto p-0 rounded-2xl"
           style={{ 
-            zIndex: 9999,
-            position: 'fixed',
-            left: '50%',
-            transform: 'translateX(-50%) translateY(-50%)'
+            maxHeight: '85vh',
+            zIndex: 9999
           }}
         >
-          <ScrollArea className="max-h-[80vh] rounded-2xl">
+          <ScrollArea className="max-h-[85vh] rounded-2xl">
             <div className="p-4 bg-white rounded-2xl overflow-hidden">
               <DialogHeader>
                 <DialogTitle className="pr-6 text-base leading-tight wrap-break-word">{selectedRestaurant?.name}</DialogTitle>

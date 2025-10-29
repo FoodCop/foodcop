@@ -1,0 +1,55 @@
+/* Scout Slider Orange Color Fix */
+/* This addresses the Radix UI Slider orange color visibility issue */
+
+.scout-slider {
+  /* Force orange colors for the scout distance slider */
+  --slider-track-bg: #f3f4f6;
+  --slider-range-bg: #f97316;
+  --slider-thumb-bg: #f97316;
+  --slider-thumb-border: #ffffff;
+}
+
+.scout-slider [data-slot="slider-track"] {
+  background-color: var(--slider-track-bg) !important;
+  height: 6px !important;
+}
+
+.scout-slider [data-slot="slider-range"] {
+  background-color: var(--slider-range-bg) !important;
+  height: 6px !important;
+}
+
+.scout-slider [data-slot="slider-thumb"] {
+  background-color: var(--slider-thumb-bg) !important;
+  border: 2px solid var(--slider-thumb-border) !important;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3) !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.scout-slider [data-slot="slider-thumb"]:hover {
+  box-shadow: 0 2px 12px rgba(249, 115, 22, 0.4) !important;
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+}
+
+.scout-slider [data-slot="slider-thumb"]:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+/* Mobile-specific slider adjustments */
+@media (max-width: 767px) {
+  .scout-slider [data-slot="slider-thumb"] {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .scout-slider [data-slot="slider-track"] {
+    height: 8px !important;
+  }
+  
+  .scout-slider [data-slot="slider-range"] {
+    height: 8px !important;
+  }
+}
