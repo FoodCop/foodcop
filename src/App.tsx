@@ -12,6 +12,7 @@ import TrimsApp from './components/trims/App'
 import DashApp from './components/dash/App'
 import SnapApp from './components/snap/App'
 import PlateApp from './components/plate/App'
+import { ChatWithAuth } from './components/chat'
 import { AuthProvider, useAuth } from './components/auth/AuthProvider'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
 import { Menu, X, LogOut } from 'lucide-react'
@@ -117,6 +118,16 @@ function App() {
             }`}
           >
             📊 Dash
+          </button>
+          <button
+            onClick={() => setCurrentPage('chat')}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 'chat' 
+                ? 'bg-orange-600 text-white' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            💬 Chat
           </button>
           
           {/* Sign Out Button - Desktop */}
@@ -271,6 +282,20 @@ function App() {
               <span className="text-lg">📊</span>
               Dash
             </button>
+            <button
+              onClick={() => {
+                setCurrentPage('chat');
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center gap-1 p-3 rounded-lg text-xs font-medium transition-colors ${
+                currentPage === 'chat' 
+                  ? 'bg-orange-600 text-white' 
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <span className="text-lg">💬</span>
+              Chat
+            </button>
             
             {/* Sign Out Button - Mobile */}
             {user && (
@@ -415,6 +440,8 @@ function App() {
         return <DashApp />
       case 'plate':
         return <PlateApp />
+      case 'chat':
+        return <ChatWithAuth />
       case 'landing':
       default:
         return <LandingPage onNavigateToSignup={() => setCurrentPage('auth')} />

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { TinderSwipe } from './components/feed';
 import { FeedService, type UserLocation, type UserPreferences } from '../../services/feedService';
 import { useAuth } from '../auth/AuthProvider';
@@ -9,23 +9,153 @@ import type { FeedCard } from './data/feed-content';
 export default function App() {
   const { user } = useAuth();
   const { saveToPlate } = useSmartSave();
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
 
-  // Get user location (mock for now - in production would use geolocation API)
+  // Request user's actual location
+  const requestUserLocation = async (): Promise<UserLocation> => {
+    return new Promise((resolve) => {
+      // Try to get stored location first (from Scout component or previous session)
+      const storedLocation = localStorage.getItem('userLocation');
+      if (storedLocation) {
+        try {
+          const parsed = JSON.parse(storedLocation);
+          if (parsed.lat && parsed.lng) {
+            console.log('📍 Using stored user location:', parsed);
+            setUserLocation(parsed);
+            return resolve({ lat: parsed.lat, lng: parsed.lng });
+          }
+        } catch (e) {
+          console.warn('Failed to parse stored location:', e);
+        }
+      }
+
+      // Request geolocation permission
+      if ('geolocation' in navigator) {
+        console.log('📍 Requesting user geolocation...');
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const location = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            console.log('✅ Got user location:', location);
+            
+            // Store for future use
+            localStorage.setItem('userLocation', JSON.stringify(location));
+            setUserLocation(location);
+            setLocationError(null);
+            resolve(location);
+          },
+          (error) => {
+            console.warn('⚠️ Geolocation failed:', error.message);
+            setLocationError(`Location access denied: ${error.message}`);
+            
+            // Fallback to default location
+            const fallback = { lat: 37.7749, lng: -122.4194 };
+            setUserLocation(fallback);
+            resolve(fallback);
+          },
+          {
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maximumAge: 300000 // 5 minutes
+          }
+        );
+      } else {
+        console.warn('⚠️ Geolocation not supported');
+        setLocationError('Geolocation not supported by this browser');
+        
+        // Fallback to default location
+        const fallback = { lat: 37.7749, lng: -122.4194 };
+        setUserLocation(fallback);
+        resolve(fallback);
+      }
+    });
+  };
+
+  // Get current user location (async version)
   const getCurrentUserLocation = (): UserLocation => {
-    // Default to San Francisco coordinates - in production get from geolocation API
-    return { lat: 37.7749, lng: -122.4194 };
+    return userLocation || { lat: 37.7749, lng: -122.4194 };
   };
 
-  // Get user preferences (mock for now - in production get from user profile)
+  // Get user preferences from profile or localStorage with intelligent defaults
   const getUserPreferences = (): UserPreferences => {
-    return {
-      cuisinePreferences: ['Italian', 'Mexican', 'Asian'],
+    // Try to get stored preferences first
+    const storedPrefs = localStorage.getItem('userFeedPreferences');
+    if (storedPrefs) {
+      try {
+        const parsed = JSON.parse(storedPrefs);
+        console.log('🎯 Using stored user preferences:', parsed);
+        return {
+          cuisinePreferences: parsed.cuisinePreferences || [],
+          dietaryRestrictions: parsed.dietaryRestrictions || [],
+          preferredRadius: parsed.preferredRadius || 5000,
+          priceRange: parsed.priceRange || ['$', '$$', '$$$'],
+          contentTypes: parsed.contentTypes || ['restaurant', 'recipe', 'video', 'masterbot']
+        };
+      } catch (e) {
+        console.warn('Failed to parse stored preferences:', e);
+      }
+    }
+
+    // Intelligent defaults based on popular choices
+    const defaultPrefs = {
+      cuisinePreferences: [], // Start with no restrictions to show variety
       dietaryRestrictions: [],
-      preferredRadius: 5000, // 5km
-      priceRange: ['$$', '$$$'],
-      contentTypes: ['restaurant', 'recipe', 'video', 'masterbot']
+      preferredRadius: 5000, // 5km is good for urban areas
+      priceRange: ['$', '$$', '$$$'], // Include all price ranges initially
+      contentTypes: ['restaurant', 'recipe', 'video', 'masterbot'] // All content types
     };
+
+    // Store default preferences for future learning
+    localStorage.setItem('userFeedPreferences', JSON.stringify(defaultPrefs));
+    console.log('🎯 Using default preferences (will learn from swipes):', defaultPrefs);
+    
+    return defaultPrefs;
   };
+
+  // Learn from user swipes to improve preferences
+  const updatePreferencesFromSwipe = (card: FeedCard, action: string) => {
+    if (action === 'like' || action === 'save') {
+      const currentPrefs = getUserPreferences();
+      let updated = false;
+
+      // Learn cuisine preferences from restaurant cards
+      if (card.type === 'restaurant') {
+        const restaurantCard = card as any;
+        const cuisine = restaurantCard.cuisine;
+        
+        if (cuisine && !currentPrefs.cuisinePreferences.includes(cuisine)) {
+          currentPrefs.cuisinePreferences.push(cuisine);
+          updated = true;
+          console.log('📚 Learned cuisine preference:', cuisine);
+        }
+      }
+
+      // Learn content type preferences
+      if (!currentPrefs.contentTypes.includes(card.type)) {
+        currentPrefs.contentTypes.push(card.type);
+        updated = true;
+        console.log('📚 Learned content type preference:', card.type);
+      }
+
+      // Save updated preferences
+      if (updated) {
+        localStorage.setItem('userFeedPreferences', JSON.stringify(currentPrefs));
+        console.log('💾 Updated user preferences:', currentPrefs);
+      }
+    }
+  };
+
+  // Initialize location on mount
+  useEffect(() => {
+    requestUserLocation();
+  }, []);
+
+  // Stable references to prevent hook re-initialization
+  const currentUserLocation = useMemo(() => getCurrentUserLocation(), [userLocation]);
+  const currentUserPreferences = useMemo(() => getUserPreferences(), []);
 
   // Phase 3: Use infinite scroll hook for enhanced feed management
   const {
@@ -37,15 +167,15 @@ export default function App() {
     reset: resetFeed,
     loadMore
   } = useFeedInfiniteScroll({
-    userLocation: getCurrentUserLocation(),
-    userPreferences: getUserPreferences(),
+    userLocation: currentUserLocation,
+    userPreferences: currentUserPreferences,
     userId: user?.id
   }, {
-    prefetchThreshold: 5,
-    initialBatchSize: 15,
-    subsequentBatchSize: 10,
-    maxCardsInMemory: 50,
-    enablePrefetch: true
+    prefetchThreshold: 2,        // Only prefetch when 2 cards left (less aggressive)
+    initialBatchSize: 8,         // Start with fewer cards
+    subsequentBatchSize: 6,      // Load fewer cards at a time
+    maxCardsInMemory: 25,        // Keep fewer cards in memory
+    enablePrefetch: false        // Disable automatic prefetching for now
   });
 
   const handleSwipe = async (direction: 'left' | 'right' | 'up' | 'down', cardId: string) => {
@@ -79,7 +209,14 @@ export default function App() {
       }
     }
     
-    // Handle different swipe directions
+    // Handle different swipe directions and learn preferences
+    const swipeAction = mapDirectionToAction(direction);
+    
+    // Learn from positive interactions
+    if (['like', 'save', 'share'].includes(swipeAction)) {
+      updatePreferencesFromSwipe(card, swipeAction);
+    }
+
     if (direction === 'up') {
       console.log('🔗 SHARE card:', cardId);
       await handleShare(card);
@@ -252,16 +389,15 @@ export default function App() {
   };
 
   const handleNoMoreCards = useCallback(async () => {
-    console.log('🔚 No more cards in current batch - loading more...');
+    console.log('🔚 No more cards in current batch');
     
-    try {
-      await loadMore();
-      console.log('✅ Successfully loaded more cards');
-    } catch (error) {
-      console.error('❌ Failed to load more cards:', error);
-      // Could show error UI here or retry logic
-    }
-  }, [loadMore]);
+    // Don't automatically load more - let user decide
+    // This prevents the "slideshow" effect
+    
+    // Optional: You could show a "Load More" button here instead
+    // For now, just log that we've reached the end
+    console.log('💭 User has seen all current cards - waiting for manual action');
+  }, []);
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
@@ -270,6 +406,30 @@ export default function App() {
         onSwipe={handleSwipe}
         onNoMoreCards={handleNoMoreCards}
       />
+      
+      {/* Manual Load More Button */}
+      {feedCards.length > 0 && !isLoading && (
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-50">
+          <button
+            onClick={() => loadMore()}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg transition-colors duration-200"
+          >
+            🔄 Load More Cards
+          </button>
+        </div>
+      )}
+      
+      {/* Loading indicator */}
+      {isLoading && (
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-white px-4 py-2 rounded-full shadow-lg">
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+              <span className="text-sm text-gray-600">Loading...</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

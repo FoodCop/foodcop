@@ -252,9 +252,18 @@ export const transformMasterbotToFeedCard = (post: MasterbotPost): MasterbotCard
   const avatarUrl = post.avatar_url || 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v1/object/public/master-bot-posts/avatars/jun_zen_minimalist.png';
   const optimizedAvatar = imageOptimizer.optimizeImageByType(avatarUrl, 'avatar');
   
+  // TEMPORARY: Bypass image optimization to debug the issue
+  let finalImageUrl = post.image_url || 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80';
+  
+  // Try image optimization but fallback to original if it fails
   const optimizedImage = post.image_url 
     ? imageOptimizer.optimizeImageByType(post.image_url, 'feedCard')
     : null;
+
+  // Use optimized only if it exists and looks valid, otherwise use original
+  if (optimizedImage?.src && optimizedImage.src !== '' && !optimizedImage.src.includes('undefined')) {
+    finalImageUrl = optimizedImage.src;
+  }
 
   // Debug image URLs with more detail
   console.log('🖼️ Masterbot image optimization DEBUG:', {
@@ -266,7 +275,8 @@ export const transformMasterbotToFeedCard = (post: MasterbotPost): MasterbotCard
     originalImage: post.image_url,
     optimizedImage: optimizedImage?.src,
     imageFallback: optimizedImage?.fallbackSrc,
-    finalImageUrl: optimizedImage?.src || post.image_url || 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80'
+    finalImageUrl: finalImageUrl,
+    imageOptimizationWorked: !!optimizedImage?.src
   });
 
   return {
@@ -276,7 +286,7 @@ export const transformMasterbotToFeedCard = (post: MasterbotPost): MasterbotCard
     username: post.username,
     displayName: post.display_name,
     avatarUrl: optimizedAvatar.src,
-    imageUrl: optimizedImage?.src || post.image_url || 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80',
+    imageUrl: finalImageUrl,
     caption: post.content,
     likes: post.engagement_likes,
     restaurantTag: post.restaurant_name || undefined,
@@ -372,13 +382,25 @@ export const FeedService = {
   },
 
   /**
-   * Phase 2: Filter out already-seen content
+   * Phase 2: Filter out already-seen content (improved with less aggressive filtering)
    */
   filterSeenContent<T extends { id: string }>(items: T[], contentType: string): T[] {
     const startCount = items.length;
     
     const filtered = items.filter(item => {
-      // Check both persistent and session-based seen content
+      // For restaurants, be less aggressive - only filter if seen in current session
+      // This prevents infinite loops while still providing some variety
+      if (contentType === 'restaurant') {
+        const seenInSession = sessionSeenIds.has(item.id);
+        if (seenInSession) {
+          console.log(`🚫 Filtered session-seen ${contentType}:`, item.id);
+          return false;
+        }
+        // Don't add to session tracking here - do it when actually shown/swiped
+        return true;
+      }
+      
+      // For other content types, use full filtering
       const alreadySeen = seenContentIds.has(item.id) || sessionSeenIds.has(item.id);
       
       if (alreadySeen) {
@@ -386,14 +408,12 @@ export const FeedService = {
         return false;
       }
       
-      // Add to session tracking to prevent showing in same session
-      sessionSeenIds.add(item.id);
       return true;
     });
 
     const filteredCount = startCount - filtered.length;
     if (filteredCount > 0) {
-      console.log(`🔍 Anti-repetition: Filtered ${filteredCount} seen ${contentType} items`);
+      console.log(`🔍 Anti-repetition: Filtered ${filteredCount} seen ${contentType} items (${contentType === 'restaurant' ? 'session-only' : 'full'})`);
     }
 
     return filtered;
@@ -413,6 +433,25 @@ export const FeedService = {
   clearSessionSeen(): void {
     sessionSeenIds.clear();
     console.log('🧹 Cleared session seen content tracking');
+  },
+
+  /**
+   * Debug: Clear all seen content (for testing)
+   */
+  clearAllSeenContent(): void {
+    seenContentIds.clear();
+    sessionSeenIds.clear();
+    console.log('🧹 DEBUG: Cleared ALL seen content tracking');
+  },
+
+  /**
+   * Debug: Get seen content stats
+   */
+  getSeenContentStats(): { persistent: number, session: number } {
+    return {
+      persistent: seenContentIds.size,
+      session: sessionSeenIds.size
+    };
   },
 
   /**
@@ -620,19 +659,34 @@ export const FeedService = {
     }
 
     try {
-      // Phase 3: Use intelligent caching for restaurant data
+      // Phase 3: Use intelligent caching for restaurant data with anti-repetition
       const locationKey = generateLocationKey(userLocation.lat, userLocation.lng, DEFAULT_RADIUS);
+      
+      // Include session state in cache key to avoid repetition
+      const sessionSeenCount = sessionSeenIds.size;
+      const cacheOffset = Math.floor(sessionSeenCount / 10); // Change cache key every 10 seen items
       
       const cachedRestaurants = await withCache(
         'restaurant',
-        [locationKey, count, userId || 'anonymous'],
+        [locationKey, count, userId || 'anonymous', cacheOffset],
         async () => {
           // Use existing backendService which handles Google Places API
+          console.log('🔍 Requesting restaurants from backend for location:', userLocation, 'radius:', DEFAULT_RADIUS);
+          
           const result = await backendService.searchNearbyPlaces(
             { lat: userLocation.lat, lng: userLocation.lng },
             DEFAULT_RADIUS,
             'restaurant'
           );
+
+          console.log('🔍 Backend service response:', {
+            success: result.success,
+            error: result.error,
+            dataType: typeof result.data,
+            hasResults: result.data?.results ? 'yes' : 'no',
+            resultCount: result.data?.results?.length || 0,
+            sampleResult: result.data?.results?.[0] || null
+          });
 
           if (!result.success || !result.data) {
             console.error('❌ Restaurant search failed:', result.error);
@@ -707,7 +761,86 @@ export const FeedService = {
       );
       
       // Phase 2: Filter out seen content and apply anti-repetition
-      const filteredRestaurants = this.filterSeenContent(cachedRestaurants, 'restaurant');
+      let filteredRestaurants = this.filterSeenContent(cachedRestaurants, 'restaurant');
+      
+      // If we don't have enough unique restaurants, try expanding the search
+      if (filteredRestaurants.length < count) {
+        console.log(`⚠️ Only ${filteredRestaurants.length} unique restaurants found, expanding search...`);
+        
+        try {
+          // Try multiple strategies for more variety
+          const searchStrategies = [
+            // Strategy 1: Expanded radius
+            { radius: DEFAULT_RADIUS * 2, type: 'restaurant' },
+            // Strategy 2: Different establishment types 
+            { radius: DEFAULT_RADIUS, type: 'food' },
+            { radius: DEFAULT_RADIUS, type: 'meal_takeaway' },
+            { radius: DEFAULT_RADIUS, type: 'cafe' }
+          ];
+          
+          const additionalRestaurants: any[] = [];
+          
+          for (const strategy of searchStrategies) {
+            if (filteredRestaurants.length >= count) break;
+            
+            console.log(`🔍 Trying search strategy: ${strategy.type} at ${strategy.radius}m`);
+            
+            const expandedResult = await backendService.searchNearbyPlaces(
+              { lat: userLocation.lat, lng: userLocation.lng },
+              strategy.radius,
+              strategy.type
+            );
+            
+            if (expandedResult.success && expandedResult.data) {
+              let expandedData = expandedResult.data;
+              
+              // Extract array if needed (same logic as before)
+              if (!Array.isArray(expandedData)) {
+                const possibleArrayPaths = ['results', 'data', 'places', 'restaurants', 'businesses'];
+                for (const path of possibleArrayPaths) {
+                  if (expandedData[path] && Array.isArray(expandedData[path])) {
+                    expandedData = expandedData[path];
+                    break;
+                  }
+                }
+              }
+              
+              if (Array.isArray(expandedData)) {
+                const expandedCards = await Promise.all(
+                  expandedData.map(restaurant => 
+                    transformRestaurantToFeedCard(restaurant, userLocation)
+                  )
+                );
+                
+                // Filter and combine with existing results
+                const newUniqueCards = expandedCards.filter(card => 
+                  !filteredRestaurants.some(existing => existing.id === card.id) &&
+                  !sessionSeenIds.has(card.id)
+                );
+                
+                additionalRestaurants.push(...newUniqueCards);
+                console.log(`✅ Strategy ${strategy.type} added ${newUniqueCards.length} new restaurants`);
+              }
+            }
+          }
+          
+          // Add new restaurants to the filtered results
+          filteredRestaurants = [...filteredRestaurants, ...additionalRestaurants];
+          console.log(`🎯 Total expansion added ${additionalRestaurants.length} unique restaurants`);
+        } catch (expandError) {
+          console.warn('⚠️ Expanded search failed:', expandError);
+        }
+      }
+      
+      console.log('🎯 Final restaurant feed results:', {
+        totalFromAPI: cachedRestaurants.length,
+        afterFiltering: filteredRestaurants.length,
+        requesting: count,
+        finalCount: Math.min(filteredRestaurants.length, count),
+        restaurantNames: filteredRestaurants.slice(0, count).map(r => r.name),
+        restaurantCuisines: filteredRestaurants.slice(0, count).map(r => r.cuisine),
+        restaurantLocations: filteredRestaurants.slice(0, count).map(r => r.location)
+      });
       
       // Return requested count, may be less if many were filtered
       return filteredRestaurants.slice(0, count);

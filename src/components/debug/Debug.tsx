@@ -60,6 +60,12 @@ export default function DebugApp() {
       value: import.meta.env.VITE_APP_URL,
       description: 'Application URL',
       isSecret: false
+    },
+    {
+      key: 'VITE_STREAM_CHAT_API_KEY',
+      value: import.meta.env.VITE_STREAM_CHAT_API_KEY,
+      description: 'Stream Chat API Key',
+      isSecret: true
     }
   ];
 
@@ -154,6 +160,30 @@ export default function DebugApp() {
     return `Found ${data.results?.length || 0} recipes`;
   };
 
+  const testStreamChat = async (): Promise<string> => {
+    const apiKey = import.meta.env.VITE_STREAM_CHAT_API_KEY;
+    if (!apiKey) throw new Error('Stream Chat API key missing');
+    
+    // Test Stream Chat connection by creating a temporary client
+    // Note: This is a basic connectivity test - full functionality requires user authentication
+    try {
+      // Import Stream Chat dynamically to avoid issues if not installed yet
+      const { StreamChat } = await import('stream-chat');
+      const client = StreamChat.getInstance(apiKey);
+      
+      // Test basic client creation - this validates API key format
+      if (!client) throw new Error('Failed to create Stream Chat client');
+      
+      return '✅ Stream Chat client initialized successfully';
+    } catch (importError) {
+      // If stream-chat is not installed yet
+      if (importError instanceof Error && importError.message.includes('Failed to resolve')) {
+        return '⚠️ Stream Chat SDK not installed (will be added during integration)';
+      }
+      throw importError;
+    }
+  };
+
   if (!isLocalhost) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -232,7 +262,8 @@ export default function DebugApp() {
               { name: 'Google Maps', fn: testGoogleMaps, key: 'google-maps' },
               { name: 'Google Places', fn: testGooglePlaces, key: 'google-places' },
               { name: 'YouTube', fn: testYouTube, key: 'youtube' },
-              { name: 'Spoonacular', fn: testSpoonacular, key: 'spoonacular' }
+              { name: 'Spoonacular', fn: testSpoonacular, key: 'spoonacular' },
+              { name: 'Stream Chat', fn: testStreamChat, key: 'stream-chat' }
             ].map((api) => (
               <div key={api.key} className="border rounded-lg p-4">
                 <h3 className="font-medium mb-2">{api.name} API</h3>

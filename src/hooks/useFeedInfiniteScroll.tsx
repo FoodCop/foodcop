@@ -150,6 +150,11 @@ export const useFeedInfiniteScroll = (
           ? updatedCards.slice(-maxCardsInMemory) // Keep last N cards
           : updatedCards;
 
+        // Mark new cards as seen in session to prevent duplicates
+        newCards.forEach(card => {
+          FeedService.markContentAsSeen(card.id);
+        });
+
         return {
           ...prev,
           cards: managedCards,
@@ -252,14 +257,16 @@ export const useFeedInfiniteScroll = (
   }, [maxCardsInMemory]);
 
   /**
-   * Initialize feed on mount
+   * Initialize feed on mount - only run once
    */
   useEffect(() => {
     let mounted = true;
     
     const initializeFeed = async () => {
       try {
-        await loadMore();
+        if (stateRef.current.cards.length === 0 && !stateRef.current.isLoading) {
+          await loadMore();
+        }
       } catch (error) {
         if (mounted) {
           console.error('💥 Failed to initialize feed:', error);
@@ -272,7 +279,7 @@ export const useFeedInfiniteScroll = (
     return () => {
       mounted = false;
     };
-  }, [loadMore]);
+  }, []); // Empty dependency array - only run once on mount
 
   /**
    * Periodic cleanup effect
