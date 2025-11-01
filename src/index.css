@@ -153,3 +153,43 @@
 html {
   font-size: var(--font-size);
 }
+
+/* Mobile helper utilities (added per Mobile Transformation Plan) */
+
+:root {
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-area-top {
+  padding-top: var(--safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.feed-card-mobile {
+  width: 100%;
+  max-width: 420px; /* mobile card max width */
+  margin: 0 auto 16px;
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.feed-card-hero {
+  width: 100%;
+  height: 300px; /* fixed hero height for mobile */
+  object-fit: cover;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

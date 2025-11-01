@@ -15,7 +15,7 @@ import PlateApp from './components/plate/App'
 import { ChatWithAuth } from './components/chat'
 import { AuthProvider, useAuth } from './components/auth/AuthProvider'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
-import { Menu, X, LogOut } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import { Toaster } from './components/ui/sonner'
 import './App.css'
@@ -43,9 +43,16 @@ function App() {
 
     return (
       <>
-        <div className="flex items-center justify-between h-16">
-        {/* Logo */}
-        <div className="text-lg sm:text-xl font-bold text-orange-600">FUZO</div>
+        <div className="flex items-center justify-between h-16 safe-area-top px-4">
+        {/* Logo - Mobile icon only, Desktop with text */}
+        <div className="flex items-center">
+          <img 
+            src="/fuzo-logo-mobile.png" 
+            alt="FUZO" 
+            className="h-8 w-8 md:h-10 md:w-10" 
+          />
+          <span className="hidden md:inline-block ml-2 text-xl font-bold text-orange-600">FUZO</span>
+        </div>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-2">
@@ -156,27 +163,25 @@ function App() {
           )}
         </div>
 
-        {/* Mobile Navigation - Hamburger Menu */}
-        <div className="md:hidden flex items-center gap-2">
-          {/* Mobile Avatar */}
+        {/* Mobile Navigation - Profile Pic Only (no hamburger) */}
+        <div className="md:hidden">
           {user && (
-            <Avatar className="w-8 h-8">
-              <AvatarImage 
-                src={user.user_metadata?.avatar_url} 
-                alt={user.user_metadata?.full_name || user.email || 'User'} 
-              />
-              <AvatarFallback className="bg-blue-600 text-white text-xs font-medium">
-                {(user.user_metadata?.full_name || user.email || 'U').charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="touch-target p-1"
+              aria-label="Open menu"
+            >
+              <Avatar className="w-10 h-10 border-2 border-orange-500">
+                <AvatarImage 
+                  src={user.user_metadata?.avatar_url} 
+                  alt={user.user_metadata?.full_name || user.email || 'User'} 
+                />
+                <AvatarFallback className="bg-orange-600 text-white font-medium">
+                  {(user.user_metadata?.full_name || user.email || 'U').charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </button>
           )}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            aria-label="Toggle mobile menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
       </div>
 

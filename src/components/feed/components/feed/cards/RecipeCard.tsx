@@ -19,11 +19,11 @@ export function RecipeCardContent({ card }: RecipeCardContentProps) {
       <img
         src={card.imageUrl}
         alt={card.title}
-        className="w-full h-full object-cover"
+        className="feed-card-hero"
       />
       
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-black/90" />
       
       {/* Save Category Badge */}
       <div className="absolute top-4 left-4 px-3 py-1.5 bg-orange-500 rounded-full">

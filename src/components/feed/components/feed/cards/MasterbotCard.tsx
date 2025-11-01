@@ -1,5 +1,5 @@
 import type { MasterbotCard } from '../../../data/feed-content';
-import { Bot, Heart, MessageCircle, Share } from 'lucide-react';
+import { Heart, MessageCircle } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '../../../../ui/avatar';
 
 interface MasterbotCardContentProps {
@@ -13,11 +13,11 @@ export function MasterbotCardContent({ card }: MasterbotCardContentProps) {
       <img
         src={card.imageUrl}
         alt={card.displayName}
-        className="w-full h-full object-cover"
+        className="feed-card-hero"
       />
       
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-black/90" />
       
       {/* Save Category Badge */}
       <div className="absolute top-4 left-4 px-3 py-1.5 bg-orange-500 rounded-full">

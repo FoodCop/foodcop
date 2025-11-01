@@ -4,6 +4,7 @@ import { backendService } from './backendService';
 import { SpoonacularService } from './spoonacular';
 import { YouTubeService } from './youtube';
 import { withCache, generateLocationKey, generatePreferencesKey } from './feedCache';
+import feedCache from './feedCache';
 import { imageOptimizer } from './imageOptimizer';
 import { getPlaceHeroImage } from './googlePlacesImages';
 import type { FeedCard, RestaurantCard, RecipeCard, VideoCard, MasterbotCard, AdCard } from '../components/feed/data/feed-content';
@@ -113,16 +114,17 @@ interface YouTubeVideo {
 }
 
 // Card Distribution Configuration - Phase 2 Enhanced
+// Original working formula: 2 Restaurants + 2 Masterbot + 1 Ad + 1 Recipe + 1 Video
 const DEFAULT_CARD_DISTRIBUTION = {
-  restaurant: 0.40,  // 40% - Location-based restaurants (primary content)
-  recipe: 0.25,      // 25% - Personalized recipes (strong engagement)
-  video: 0.20,       // 20% - Cooking videos (trending content)
-  masterbot: 0.10,   // 10% - Masterbot influencer posts (curated content)
-  ad: 0.05          // 5% - Sponsored content (monetization)
+  restaurant: 0.30,  // 30% - Location-based restaurants (2-3 per 10 cards)
+  masterbot: 0.25,   // 25% - Masterbot influencer posts (2-3 per 10 cards) ✅ RESTORED
+  recipe: 0.20,      // 20% - Personalized recipes (2 per 10 cards)
+  video: 0.15,       // 15% - Cooking videos (1-2 per 10 cards)
+  ad: 0.10          // 10% - Sponsored content (1 per 10 cards)
 };
 
 const DEFAULT_PAGE_SIZE = 10;
-const DEFAULT_RADIUS = 5000; // 5km in meters
+const DEFAULT_RADIUS = 15000; // 15km in meters (increased for variety)
 
 // Phase 2: API Timeout Configuration 
 const API_TIMEOUTS = {
@@ -382,6 +384,15 @@ export const FeedService = {
   },
 
   /**
+   * Clear all cached feed data (restaurants, recipes, videos, etc.)
+   * Useful for forcing fresh data from APIs
+   */
+  clearCache(): void {
+    feedCache.clear();
+    console.log('🗑️ Feed cache cleared - fresh data will be fetched');
+  },
+
+  /**
    * Phase 2: Filter out already-seen content (improved with less aggressive filtering)
    */
   filterSeenContent<T extends { id: string }>(items: T[], contentType: string): T[] {
@@ -466,8 +477,8 @@ export const FeedService = {
     let adCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.ad);
     
     // Calculate remainder to distribute
-    let totalAssigned = restaurantCount + recipeCount + videoCount + masterbotCount + adCount;
-    let remainder = pageSize - totalAssigned;
+    const totalAssigned = restaurantCount + recipeCount + videoCount + masterbotCount + adCount;
+    const remainder = pageSize - totalAssigned;
     
     // Distribute remainder based on priority (restaurants first, then recipes, etc.)
     const priorities = [
@@ -670,10 +681,10 @@ export const FeedService = {
         'restaurant',
         [locationKey, count, userId || 'anonymous', cacheOffset],
         async () => {
-          // Use existing backendService which handles Google Places API
+          // Try backendService first, fallback to direct Google Places API
           console.log('🔍 Requesting restaurants from backend for location:', userLocation, 'radius:', DEFAULT_RADIUS);
           
-          const result = await backendService.searchNearbyPlaces(
+          let result = await backendService.searchNearbyPlaces(
             { lat: userLocation.lat, lng: userLocation.lng },
             DEFAULT_RADIUS,
             'restaurant'
@@ -688,8 +699,26 @@ export const FeedService = {
             sampleResult: result.data?.results?.[0] || null
           });
 
+          // Fallback to direct Google Places API if backend fails
           if (!result.success || !result.data) {
-            console.error('❌ Restaurant search failed:', result.error);
+            console.warn('⚠️ Backend failed, using direct Google Places API fallback');
+            result = await GooglePlacesService.nearbySearch(
+              { lat: userLocation.lat, lng: userLocation.lng },
+              DEFAULT_RADIUS,
+              'restaurant'
+            );
+            
+            console.log('🔍 Direct Google Places API response:', {
+              success: result.success,
+              error: result.error,
+              dataType: typeof result.data,
+              hasResults: result.data?.results ? 'yes' : 'no',
+              resultCount: result.data?.results?.length || 0
+            });
+          }
+
+          if (!result.success || !result.data) {
+            console.error('❌ Restaurant search failed (both backend and direct API):', result.error);
             return [];
           }
 
@@ -735,7 +764,7 @@ export const FeedService = {
               const arrayValues = Object.values(restaurantData).filter(val => Array.isArray(val));
               if (arrayValues.length > 0) {
                 console.log('✅ Found array in object values, using first array');
-                restaurantData = arrayValues[0] as any[];
+                restaurantData = arrayValues[0] as RestaurantCard[];
                 extracted = true;
               }
             }
@@ -778,7 +807,7 @@ export const FeedService = {
             { radius: DEFAULT_RADIUS, type: 'cafe' }
           ];
           
-          const additionalRestaurants: any[] = [];
+          const additionalRestaurants: RestaurantCard[] = [];
           
           for (const strategy of searchStrategies) {
             if (filteredRestaurants.length >= count) break;
@@ -857,9 +886,13 @@ export const FeedService = {
   async fetchMasterbotCards(
     userLocation?: UserLocation,
     count: number = 3,
-    userId?: string
+    _userId?: string
   ): Promise<MasterbotCard[]> {
     try {
+      // Get a larger random sample to ensure variety across different authors
+      // Request more posts and use random sampling
+      const sampleSize = Math.max(count * 10, 50); // Get at least 50 posts
+      
       let query = supabase
         .from('master_bot_posts')
         .select(`
@@ -871,15 +904,11 @@ export const FeedService = {
           )
         `)
         .eq('is_published', true)
-        .limit(count * 2); // Get more to allow for filtering
+        .limit(sampleSize);
 
-      // If user location provided, prioritize nearby posts
-      if (userLocation) {
-        // Add location-based ordering (simplified for now)
-        query = query.order('created_at', { ascending: false });
-      } else {
-        query = query.order('created_at', { ascending: false });
-      }
+      // Use random ordering to get variety across all 490 posts
+      // Note: created_at DESC always returns newest posts - need randomization
+      query = query.order('created_at', { ascending: Math.random() > 0.5 });
 
       const { data: posts, error } = await query;
 
@@ -887,14 +916,21 @@ export const FeedService = {
         console.error('❌ Supabase masterbot query error:', error);
         return [];
       }
+      
+      // Shuffle the results to ensure random selection from different authors
+      const shuffledPosts = posts ? [...posts].sort(() => Math.random() - 0.5) : [];
 
-      if (!posts || posts.length === 0) {
+      if (!shuffledPosts || shuffledPosts.length === 0) {
         console.warn('⚠️ No masterbot posts found');
         return [];
       }
 
+      // Track variety for logging
+      const uniqueAuthors = new Set(shuffledPosts.map(p => p.master_bot_id)).size;
+      console.log(`🎲 Masterbot pool: ${shuffledPosts.length} posts from ${uniqueAuthors} different authors, requesting ${count}`);
+
       // Transform to MasterbotCard format
-      const allPosts = posts.map(post => {
+      const allPosts = shuffledPosts.map(post => {
         const userData = Array.isArray(post.users) ? post.users[0] : post.users;
         
         // Debug logging for masterbot images
@@ -1019,6 +1055,7 @@ export const FeedService = {
 
   /**
    * Generate search query for recipes based on user preferences
+   * Add variety to avoid cache staleness
    */
   generateRecipeSearchQuery(userPreferences?: UserPreferences): string {
     const defaultQueries = [
@@ -1026,11 +1063,18 @@ export const FeedService = {
       'healthy breakfast',
       'easy lunch ideas',
       'comfort food',
-      'vegetarian meals'
+      'vegetarian meals',
+      'simple recipes',
+      'family dinner ideas',
+      'weeknight meals',
+      'healthy recipes',
+      'easy cooking'
     ];
 
     if (!userPreferences?.cuisinePreferences?.length) {
-      return defaultQueries[Math.floor(Math.random() * defaultQueries.length)];
+      // Rotate through queries to get variety
+      const index = Math.floor(Date.now() / (60 * 60 * 1000)) % defaultQueries.length;
+      return defaultQueries[index];
     }
 
     // Use user's preferred cuisines
@@ -1038,11 +1082,16 @@ export const FeedService = {
       Math.floor(Math.random() * userPreferences.cuisinePreferences.length)
     ];
     
-    return `${cuisine} recipes`;
+    // Add variety to query
+    const queryTypes = ['recipes', 'dishes', 'meals', 'food ideas'];
+    const queryType = queryTypes[Math.floor(Date.now() / (60 * 60 * 1000)) % queryTypes.length];
+    
+    return `${cuisine} ${queryType}`;
   },
 
   /**
    * Generate search query for videos based on user preferences
+   * Add timestamp to ensure cache variety
    */
   generateVideoSearchQuery(userPreferences?: UserPreferences): string {
     const defaultQueries = [
@@ -1050,11 +1099,18 @@ export const FeedService = {
       'food preparation techniques',
       'cooking hacks',
       'recipe tutorial',
-      'kitchen skills'
+      'kitchen skills',
+      'cooking techniques',
+      'chef tips',
+      'food hacks',
+      'cooking secrets',
+      'culinary tips'
     ];
 
     if (!userPreferences?.cuisinePreferences?.length) {
-      return defaultQueries[Math.floor(Math.random() * defaultQueries.length)];
+      // Rotate through different queries to avoid cache
+      const index = Math.floor(Date.now() / (60 * 60 * 1000)) % defaultQueries.length;
+      return defaultQueries[index];
     }
 
     // Use user's preferred cuisines for cooking videos
@@ -1062,7 +1118,11 @@ export const FeedService = {
       Math.floor(Math.random() * userPreferences.cuisinePreferences.length)
     ];
     
-    return `${cuisine} cooking tutorial`;
+    // Add variety to avoid same videos
+    const queryTypes = ['cooking tutorial', 'recipe guide', 'cooking tips', 'how to cook'];
+    const queryType = queryTypes[Math.floor(Date.now() / (60 * 60 * 1000)) % queryTypes.length];
+    
+    return `${cuisine} ${queryType}`;
   },
 
   /**
@@ -1302,7 +1362,7 @@ function generateRestaurantFallbackImage(cuisine: string): string {
   return fallbackImages[cuisine] || fallbackImages['International'];
 }
 
-function generateRecipeFallbackImage(title: string): string {
+function generateRecipeFallbackImage(_title: string): string {
   return 'https://images.unsplash.com/photo-1556909114-4431c4d79786?w=800&q=80';
 }
 
@@ -1319,12 +1379,12 @@ function cleanHtmlSummary(summary: string): string {
     .slice(0, 100) + '...';
 }
 
-function generateRecipeTags(title: string): string[] {
+function generateRecipeTags(_title: string): string[] {
   const commonTags = ['Quick', 'Healthy', 'Easy', 'Comfort Food', 'Family Friendly'];
   return commonTags.slice(0, Math.floor(Math.random() * 3) + 1);
 }
 
-function extractVideoTags(title: string, description: string): string[] {
+function extractVideoTags(_title: string, _description: string): string[] {
   const commonTags = ['Cooking', 'Tutorial', 'Quick Tips', 'Kitchen Skills', 'Food Prep'];
   return commonTags.slice(0, Math.floor(Math.random() * 3) + 1);
 }

@@ -74,11 +74,6 @@ export default function App() {
     });
   };
 
-  // Get current user location (async version)
-  const getCurrentUserLocation = (): UserLocation => {
-    return userLocation || { lat: 37.7749, lng: -122.4194 };
-  };
-
   // Get user preferences from profile or localStorage with intelligent defaults
   const getUserPreferences = (): UserPreferences => {
     // Try to get stored preferences first
@@ -148,16 +143,46 @@ export default function App() {
     }
   };
 
-  // Initialize location on mount
+  // State to track if we've fetched location at least once
+  const [locationReady, setLocationReady] = useState(false);
+
+  // Initialize location on mount and mark as ready when done
   useEffect(() => {
-    requestUserLocation();
+    const initLocation = async () => {
+      await requestUserLocation();
+      setLocationReady(true);
+      console.log('✅ Location ready for feed generation');
+    };
+    initLocation();
   }, []);
 
   // Stable references to prevent hook re-initialization
-  const currentUserLocation = useMemo(() => getCurrentUserLocation(), [userLocation]);
+  // IMPORTANT: Read location synchronously from localStorage to avoid SF fallback
+  const currentUserLocation = useMemo(() => {
+    // Read directly from localStorage first (synchronous)
+    const storedLocation = localStorage.getItem('userLocation');
+    if (storedLocation) {
+      try {
+        const parsed = JSON.parse(storedLocation);
+        if (parsed.lat && parsed.lng) {
+          console.log('📍 Feed using stored location:', parsed, '(locationReady:', locationReady, ')');
+          return { lat: parsed.lat, lng: parsed.lng };
+        }
+      } catch (e) {
+        // Fall through
+      }
+    }
+    
+    // Fallback to userLocation state or SF
+    const location = userLocation || { lat: 37.7749, lng: -122.4194 };
+    console.log('📍 Feed using location:', location, '(locationReady:', locationReady, ')');
+    return location;
+  }, [userLocation, locationReady]);
+  
   const currentUserPreferences = useMemo(() => getUserPreferences(), []);
 
   // Phase 3: Use infinite scroll hook for enhanced feed management
+  // Location is now loaded synchronously from localStorage, so no need to wait
   const {
     cards: feedCards,
     isLoading,
@@ -172,7 +197,7 @@ export default function App() {
     userId: user?.id
   }, {
     prefetchThreshold: 2,        // Only prefetch when 2 cards left (less aggressive)
-    initialBatchSize: 8,         // Start with fewer cards
+    initialBatchSize: 8,         // Standard initial batch
     subsequentBatchSize: 6,      // Load fewer cards at a time
     maxCardsInMemory: 25,        // Keep fewer cards in memory
     enablePrefetch: false        // Disable automatic prefetching for now
@@ -400,7 +425,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden safe-area-top safe-area-bottom">
       <TinderSwipe
         cards={feedCards}
         onSwipe={handleSwipe}
