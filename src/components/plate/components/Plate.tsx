@@ -538,7 +538,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
                   <Settings className="w-4 h-4 text-neutral-700" />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+              <SheetContent className="w-full sm:max-w-md overflow-y-auto bg-white">
                 <SheetHeader>
                   <SheetTitle>Settings</SheetTitle>
                   <SheetDescription>
@@ -562,7 +562,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
                   <Lock className="w-4 h-4 text-neutral-700" />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+              <SheetContent className="w-full sm:max-w-md overflow-y-auto bg-white">
                 <SheetHeader>
                   <SheetTitle>Privacy Policy</SheetTitle>
                   <SheetDescription>
