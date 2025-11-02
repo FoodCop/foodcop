@@ -63,7 +63,10 @@ function App() {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-2">
           <button
-            onClick={() => setCurrentPage('feed')}
+            onClick={() => {
+              setCurrentPage('feed');
+              window.location.hash = '#feed';
+            }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'feed' 
                 ? 'bg-orange-600 text-white' 
@@ -73,7 +76,10 @@ function App() {
             🍽️ Feed
           </button>
           <button
-            onClick={() => setCurrentPage('scout')}
+            onClick={() => {
+              setCurrentPage('scout');
+              window.location.hash = '#scout';
+            }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'scout' 
                 ? 'bg-orange-600 text-white' 
@@ -83,7 +89,10 @@ function App() {
             🕵️ Scout
           </button>
           <button
-            onClick={() => setCurrentPage('plate')}
+            onClick={() => {
+              setCurrentPage('plate');
+              window.location.hash = '#plate';
+            }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'plate' 
                 ? 'bg-orange-600 text-white' 
@@ -93,7 +102,10 @@ function App() {
             🍽️ Plate
           </button>
           <button
-            onClick={() => setCurrentPage('bites')}
+            onClick={() => {
+              setCurrentPage('bites');
+              window.location.hash = '#bites';
+            }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'bites' 
                 ? 'bg-orange-600 text-white' 
@@ -103,7 +115,10 @@ function App() {
             🍰 Bites
           </button>
           <button
-            onClick={() => setCurrentPage('snap')}
+            onClick={() => {
+              setCurrentPage('snap');
+              window.location.hash = '#snap';
+            }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'snap' 
                 ? 'bg-orange-600 text-white' 
@@ -113,7 +128,10 @@ function App() {
             📸 Snap
           </button>
           <button
-            onClick={() => setCurrentPage('trims')}
+            onClick={() => {
+              setCurrentPage('trims');
+              window.location.hash = '#trims';
+            }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'trims' 
                 ? 'bg-orange-600 text-white' 
@@ -123,7 +141,10 @@ function App() {
             ✂️ Trims
           </button>
           <button
-            onClick={() => setCurrentPage('dash')}
+            onClick={() => {
+              setCurrentPage('dash');
+              window.location.hash = '#dash';
+            }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'dash' 
                 ? 'bg-orange-600 text-white' 
@@ -133,7 +154,10 @@ function App() {
             📊 Dash
           </button>
           <button
-            onClick={() => setCurrentPage('chat')}
+            onClick={() => {
+              setCurrentPage('chat');
+              window.location.hash = '#chat';
+            }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'chat' 
                 ? 'bg-orange-600 text-white' 
