@@ -11,7 +11,16 @@ export function FuzoNavigation({ onNavigateToSignup }: FuzoNavigationProps) {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <div className="shrink-0">
-              <h1 className="text-2xl font-bold text-[#F14C35]">FUZO</h1>
+              <img 
+                src="/logo_mobile.png" 
+                alt="FUZO" 
+                className="h-8 md:hidden" 
+              />
+              <img 
+                src="/logo_desktop.png" 
+                alt="FUZO" 
+                className="hidden md:block h-10" 
+              />
             </div>
           </div>
           <div className="flex items-center space-x-4">
