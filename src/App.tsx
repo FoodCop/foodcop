@@ -460,8 +460,9 @@ function App() {
       const route = hash.includes('?') ? hash.split('?')[0] : hash;
       const expectedPage = route || 'landing';
       
-      // If hash doesn't match current page, update current page
-      if (expectedPage !== currentPage && !window.location.hash.includes('access_token')) {
+      // Only sync if there's a hash in URL and it doesn't match current page
+      // Don't sync if hash is empty (let the app control the page state)
+      if (hash && expectedPage !== currentPage && !window.location.hash.includes('access_token')) {
         console.log('🔄 Page mismatch detected, updating from', currentPage, 'to', expectedPage);
         setCurrentPage(expectedPage);
       }
@@ -501,7 +502,10 @@ function App() {
         return <ChatWithAuth />
       case 'landing':
       default:
-        return <LandingPage onNavigateToSignup={() => setCurrentPage('auth')} />
+        return <LandingPage onNavigateToSignup={() => {
+          setCurrentPage('auth');
+          window.location.hash = '#auth';
+        }} />
     }
   }
 
