@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MapPin, Rss, Compass, Camera, Scissors, UtensilsCrossed, User, MessageCircle } from "lucide-react";
+import { MapPin, Camera } from "lucide-react";
 import { Card } from "../../ui/card";
 import { ImageWithFallback } from "../../ui/image-with-fallback";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
@@ -195,60 +195,6 @@ export function Dashboard() {
             <Camera className="w-5 h-5 mr-2" />
             Snap Your Plate
           </Button>
-        </div>
-
-        {/* Quick Links */}
-        <div className="mb-8">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
-            <button className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors min-h-20 sm:min-h-[100px]">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                <Rss className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-              </div>
-              <span className="text-xs sm:text-sm text-gray-700 font-medium">Feed</span>
-            </button>
-
-            <button className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors min-h-20 sm:min-h-[100px]">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-              </div>
-              <span className="text-xs sm:text-sm text-gray-700 font-medium">Scout</span>
-            </button>
-
-            <button className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors min-h-[80px] sm:min-h-[100px]">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                <Camera className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-              </div>
-              <span className="text-xs sm:text-sm text-gray-700 font-medium">Snap</span>
-            </button>
-
-            <button className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors min-h-[80px] sm:min-h-[100px]">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-              </div>
-              <span className="text-xs sm:text-sm text-gray-700 font-medium">Bites</span>
-            </button>
-
-            <button className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors min-h-[80px] sm:min-h-[100px]">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                <Scissors className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-              </div>
-              <span className="text-xs sm:text-sm text-gray-700 font-medium">Trims</span>
-            </button>
-
-            <button className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors min-h-[80px] sm:min-h-[100px]">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-              </div>
-              <span className="text-xs sm:text-sm text-gray-700 font-medium">Plate</span>
-            </button>
-
-            <button className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors min-h-[80px] sm:min-h-[100px]">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-              </div>
-              <span className="text-xs sm:text-sm text-gray-700 font-medium">Chat</span>
-            </button>
-          </div>
         </div>
 
         {/* My Crew Section */}
