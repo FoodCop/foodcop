@@ -312,32 +312,22 @@ export function Plate({ userId, currentUser }: PlateProps) {
     }
   }, [userId]);
 
+  // Fetch all data on initial load for stats display
   useEffect(() => {
-    // Fetch data for active tab
-    switch (activeTab) {
-      case 'posts':
-        fetchPosts();
-        break;
-      case 'photos':
-        fetchPhotos();
-        break;
-      case 'recipes':
-        fetchRecipes();
-        break;
-      case 'offers':
-        fetchOffers();
-        break;
-      case 'videos':
-        fetchVideos();
-        break;
-      case 'crew':
-        fetchCrew();
-        break;
-      case 'places':
-        fetchPlaces();
-        break;
-    }
-  }, [activeTab, userId, fetchPosts, fetchPhotos, fetchRecipes, fetchOffers, fetchVideos, fetchCrew, fetchPlaces]);
+    const fetchAllData = async () => {
+      await Promise.all([
+        fetchPosts(),
+        fetchPhotos(),
+        fetchRecipes(),
+        fetchOffers(),
+        fetchVideos(),
+        fetchCrew(),
+        fetchPlaces(),
+      ]);
+    };
+    
+    fetchAllData();
+  }, [userId, fetchPosts, fetchPhotos, fetchRecipes, fetchOffers, fetchVideos, fetchCrew, fetchPlaces]);
 
   // Listen for external data updates
   useEffect(() => {
@@ -494,36 +484,38 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full justify-start mb-6 bg-neutral-100">
-            <TabsTrigger value="posts" className="gap-2">
-              <Grid3x3 className="w-4 h-4" />
-              Posts
-            </TabsTrigger>
-            <TabsTrigger value="photos" className="gap-2">
-              <Image className="w-4 h-4" />
-              Photos
-            </TabsTrigger>
-            <TabsTrigger value="recipes" className="gap-2">
-              <FileText className="w-4 h-4" />
-              Recipes
-            </TabsTrigger>
-            <TabsTrigger value="offers" className="gap-2">
-              <Tag className="w-4 h-4" />
-              Offers
-            </TabsTrigger>
-            <TabsTrigger value="videos" className="gap-2">
-              <Video className="w-4 h-4" />
-              Videos
-            </TabsTrigger>
-            <TabsTrigger value="crew" className="gap-2">
-              <Users className="w-4 h-4" />
-              Crew
-            </TabsTrigger>
-            <TabsTrigger value="places" className="gap-2">
-              <MapPin className="w-4 h-4" />
-              Places
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto mb-6 -mx-4 px-4">
+            <TabsList className="inline-flex w-auto min-w-full justify-start bg-neutral-100">
+              <TabsTrigger value="posts" className="gap-1 sm:gap-2 shrink-0">
+                <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">Posts</span>
+              </TabsTrigger>
+              <TabsTrigger value="photos" className="gap-1 sm:gap-2 shrink-0">
+                <Image className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">Photos</span>
+              </TabsTrigger>
+              <TabsTrigger value="recipes" className="gap-1 sm:gap-2 shrink-0">
+                <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">Recipes</span>
+              </TabsTrigger>
+              <TabsTrigger value="offers" className="gap-1 sm:gap-2 shrink-0">
+                <Tag className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">Offers</span>
+              </TabsTrigger>
+              <TabsTrigger value="videos" className="gap-1 sm:gap-2 shrink-0">
+                <Video className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">Videos</span>
+              </TabsTrigger>
+              <TabsTrigger value="crew" className="gap-1 sm:gap-2 shrink-0">
+                <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">Crew</span>
+              </TabsTrigger>
+              <TabsTrigger value="places" className="gap-1 sm:gap-2 shrink-0">
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">Places</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="posts">
             {posts.length === 0 ? (
