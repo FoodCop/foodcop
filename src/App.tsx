@@ -462,14 +462,20 @@ function App() {
       
       // Only sync if there's a hash in URL and it doesn't match current page
       // Don't sync if hash is empty (let the app control the page state)
-      if (hash && expectedPage !== currentPage && !window.location.hash.includes('access_token')) {
+      // Skip check for auth-related pages to avoid interference
+      const skipPages = ['auth', 'onboarding', 'landing'];
+      if (hash && 
+          expectedPage !== currentPage && 
+          !window.location.hash.includes('access_token') &&
+          !skipPages.includes(currentPage) &&
+          !skipPages.includes(expectedPage)) {
         console.log('🔄 Page mismatch detected, updating from', currentPage, 'to', expectedPage);
         setCurrentPage(expectedPage);
       }
     };
     
-    // Check periodically for hash mismatches (fallback for edge cases)
-    const interval = setInterval(checkHashChange, 500);
+    // Check less frequently to avoid interfering with page operations
+    const interval = setInterval(checkHashChange, 2000);
     
     return () => clearInterval(interval);
   }, [currentPage]);
