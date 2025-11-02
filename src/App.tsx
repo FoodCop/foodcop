@@ -46,12 +46,17 @@ function App() {
     return (
       <>
         <div className="flex items-center justify-between h-16 safe-area-top px-4">
-        {/* Logo - Same for both mobile and desktop */}
+        {/* Logo - Mobile icon, Desktop full logo */}
         <div className="flex items-center">
           <img 
             src="/logo_mobile.png" 
             alt="FUZO" 
-            className="h-8 md:h-10" 
+            className="h-8 md:hidden" 
+          />
+          <img 
+            src="/logo_desktop.png" 
+            alt="FUZO" 
+            className="hidden md:block h-10" 
           />
         </div>
         
