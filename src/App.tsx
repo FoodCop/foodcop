@@ -46,14 +46,13 @@ function App() {
     return (
       <>
         <div className="flex items-center justify-between h-16 safe-area-top px-4">
-        {/* Logo - Mobile icon only, Desktop with text */}
+        {/* Logo - Same for both mobile and desktop */}
         <div className="flex items-center">
           <img 
-            src="/fuzo-logo-mobile.png" 
+            src="/logo_mobile.png" 
             alt="FUZO" 
-            className="h-8 w-8 md:h-10 md:w-10" 
+            className="h-8 md:h-10" 
           />
-          <span className="hidden md:inline-block ml-2 text-xl font-bold text-orange-600">FUZO</span>
         </div>
         
         {/* Desktop Navigation */}
