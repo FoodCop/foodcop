@@ -1,13 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Plate } from './components/Plate';
 import { Toaster } from '../ui/sonner';
 import { useAuth } from '../auth/AuthProvider';
-import { LoginButton } from '../auth/LoginButton';
 import { cookieUtils } from '../../utils/cookies';
 
 export default function App() {
   const { user, loading } = useAuth();
-  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     console.log('🔄 Plate: Auth state check:', {
@@ -52,12 +50,6 @@ export default function App() {
             Sign in to save and organize your favorite restaurants and dishes
           </p>
           
-          {authError && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-700 text-sm">{authError}</p>
-            </div>
-          )}
-          
           <div className="space-y-4">
             <button
               onClick={handleSignInClick}
@@ -78,21 +70,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Toaster />
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Your Plate</h1>
-            <p className="text-gray-600 mt-1">
-              Your saved restaurants and favorite dishes
-            </p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <LoginButton />
-          </div>
-        </div>
-        
-        <Plate userId={user.id} currentUser={user} />
-      </div>
+      <Plate userId={user.id} currentUser={user} />
     </div>
   );
 }

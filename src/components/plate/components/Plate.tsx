@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { Card, CardContent } from '../../ui/card';
 import { Separator } from '../../ui/separator';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from '../../ui/sheet';
-import { Settings, Lock, LogOut, MapPin, Users, Image, Video, FileText, Tag, Grid3x3 } from 'lucide-react';
+import { Settings, Lock, MapPin, Users, Image, Video, FileText, Tag, Grid3x3 } from 'lucide-react';
 import { ProfileSettings } from './ProfileSettings';
 import { PrivacyPolicy } from './PrivacyPolicy';
 import { UniversalViewer } from '../../ui/universal-viewer';
@@ -384,21 +384,6 @@ export function Plate({ userId, currentUser }: PlateProps) {
     };
   }, [userId, fetchPosts, fetchPhotos, fetchRecipes, fetchOffers, fetchVideos, fetchCrew, fetchPlaces]);
 
-
-  const handleSignOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('Error signing out:', error);
-      } else {
-        // Redirect or update state as needed
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -474,26 +459,34 @@ export function Plate({ userId, currentUser }: PlateProps) {
                 <PrivacyPolicy />
               </SheetContent>
             </Sheet>
-
-            <Button variant="outline" size="icon" onClick={handleSignOut}>
-              <LogOut className="w-4 h-4 text-neutral-700" />
-            </Button>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="flex gap-8 mb-6">
+        <div className="flex gap-6 mb-6 flex-wrap">
           <div>
-            <span className="mr-1">{posts.length}</span>
+            <span className="mr-1 font-semibold">{posts.length}</span>
             <span className="text-neutral-500">Posts</span>
           </div>
           <div>
-            <span className="mr-1">{crew.length}</span>
-            <span className="text-neutral-500">Crew</span>
+            <span className="mr-1 font-semibold">{photos.length}</span>
+            <span className="text-neutral-500">Photos</span>
           </div>
           <div>
-            <span className="mr-1">{places.length}</span>
+            <span className="mr-1 font-semibold">{recipes.length}</span>
+            <span className="text-neutral-500">Recipes</span>
+          </div>
+          <div>
+            <span className="mr-1 font-semibold">{places.length}</span>
             <span className="text-neutral-500">Places</span>
+          </div>
+          <div>
+            <span className="mr-1 font-semibold">{videos.length}</span>
+            <span className="text-neutral-500">Videos</span>
+          </div>
+          <div>
+            <span className="mr-1 font-semibold">{crew.length}</span>
+            <span className="text-neutral-500">Crew</span>
           </div>
         </div>
 
