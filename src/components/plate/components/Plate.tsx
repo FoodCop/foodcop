@@ -62,6 +62,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
   const [allUsers, setAllUsers] = useState<CrewMember[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [sendingRequest, setSendingRequest] = useState<string | null>(null);
+  const [sentRequests, setSentRequests] = useState<Set<string>>(new Set());
   
   // Tab data states
   const [posts, setPosts] = useState<Post[]>([]);
@@ -399,8 +400,8 @@ export function Plate({ userId, currentUser }: PlateProps) {
       }
 
       console.log('✅ Friend request sent successfully');
-      // Remove the user from available users list
-      setAllUsers(prev => prev.filter(u => u.id !== targetUserId));
+      // Mark request as sent instead of removing the user
+      setSentRequests(prev => new Set([...prev, targetUserId]));
     } catch (error) {
       console.error('Error sending friend request:', error);
       alert('Failed to send friend request. Please try again.');
@@ -925,7 +926,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
       {/* Add Friend Modal */}
       <Dialog open={showAddFriendModal} onOpenChange={setShowAddFriendModal}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white">
           <DialogHeader>
             <DialogTitle>Add Friends</DialogTitle>
             <DialogDescription>
@@ -944,42 +945,52 @@ export function Plate({ userId, currentUser }: PlateProps) {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-3">
-                {allUsers.map((availableUser) => (
-                  <Card key={availableUser.id} className="hover:shadow-md transition-shadow">
-                    <CardContent className="pt-4 pb-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="w-12 h-12">
-                            <AvatarImage src={availableUser.avatar} alt={availableUser.name} />
-                            <AvatarFallback>{availableUser.name?.[0]?.toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium">{availableUser.name}</p>
-                            <p className="text-sm text-neutral-500">@{availableUser.username || 'user'}</p>
+                {allUsers.map((availableUser) => {
+                  const isPending = sentRequests.has(availableUser.id);
+                  return (
+                    <Card key={availableUser.id} className="hover:shadow-md transition-shadow bg-white">
+                      <CardContent className="pt-4 pb-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="w-12 h-12">
+                              <AvatarImage src={availableUser.avatar} alt={availableUser.name} />
+                              <AvatarFallback>{availableUser.name?.[0]?.toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium">{availableUser.name}</p>
+                              <p className="text-sm text-neutral-500">@{availableUser.username || 'user'}</p>
+                            </div>
                           </div>
-                        </div>
-                        <Button
-                          onClick={() => sendFriendRequest(availableUser.id)}
-                          disabled={sendingRequest === availableUser.id}
-                          className="bg-neutral-900 text-white hover:bg-neutral-800"
-                          size="sm"
-                        >
-                          {sendingRequest === availableUser.id ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                              Sending...
-                            </>
+                          {isPending ? (
+                            <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-md text-sm font-medium">
+                              <Check className="w-4 h-4" />
+                              PENDING
+                            </div>
                           ) : (
-                            <>
-                              <UserPlus className="w-4 h-4 mr-2" />
-                              Add Friend
-                            </>
+                            <Button
+                              onClick={() => sendFriendRequest(availableUser.id)}
+                              disabled={sendingRequest === availableUser.id}
+                              className="bg-neutral-900 text-white hover:bg-neutral-800"
+                              size="sm"
+                            >
+                              {sendingRequest === availableUser.id ? (
+                                <>
+                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                                  Sending...
+                                </>
+                              ) : (
+                                <>
+                                  <UserPlus className="w-4 h-4 mr-2" />
+                                  Add Friend
+                                </>
+                              )}
+                            </Button>
                           )}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             )}
           </div>
