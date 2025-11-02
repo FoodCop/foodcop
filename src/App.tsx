@@ -18,7 +18,9 @@ import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
 import { LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import { Toaster } from './components/ui/sonner'
+import { MobileBottomNav } from './components/navigation/MobileBottomNav'
 import './App.css'
+import './styles/mobile.css'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('landing')
@@ -414,12 +416,34 @@ function App() {
       const newHash = window.location.hash.slice(1);
       // Extract just the route part for page setting
       const route = newHash.includes('?') ? newHash.split('?')[0] : newHash;
-      setCurrentPage(route || 'landing');
+      const newPage = route || 'landing';
+      console.log('🔄 Hash changed, navigating to:', newPage);
+      setCurrentPage(newPage);
     };
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+  
+  // Additional effect to handle programmatic hash changes
+  useEffect(() => {
+    const checkHashChange = () => {
+      const hash = window.location.hash.slice(1);
+      const route = hash.includes('?') ? hash.split('?')[0] : hash;
+      const expectedPage = route || 'landing';
+      
+      // If hash doesn't match current page, update current page
+      if (expectedPage !== currentPage && !window.location.hash.includes('access_token')) {
+        console.log('🔄 Page mismatch detected, updating from', currentPage, 'to', expectedPage);
+        setCurrentPage(expectedPage);
+      }
+    };
+    
+    // Check periodically for hash mismatches (fallback for edge cases)
+    const interval = setInterval(checkHashChange, 500);
+    
+    return () => clearInterval(interval);
+  }, [currentPage]);
 
   // Render appropriate component based on current page
   const renderCurrentPage = () => {
@@ -506,18 +530,33 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-gray-50">
-        {/* Navigation Menu - Only show on main app pages, not landing, auth, or onboarding */}
-        {/* Navigation Menu - Only show on main app pages, not landing, auth, or onboarding */}
+      <div className="min-h-screen bg-gray-50 mobile-app-container">
+        {/* Desktop Navigation - Hidden on mobile */}
         {currentPage !== 'landing' && currentPage !== 'auth' && currentPage !== 'onboarding' && (
-          <div className="bg-white border-b sticky top-0 z-50">
+          <div className="bg-white border-b sticky top-0 z-50 hidden md:block">
             <div className="container mx-auto px-4">
               <Navigation />
             </div>
           </div>
         )}
 
-        {renderCurrentPage()}
+        {/* Main Content Area */}
+        <div className="mobile-content-area">
+          {renderCurrentPage()}
+        </div>
+
+        {/* Mobile Bottom Navigation - Only show on main app pages */}
+        {currentPage !== 'landing' && currentPage !== 'auth' && currentPage !== 'onboarding' && (
+          <MobileBottomNav 
+            currentPage={currentPage}
+            onNavigate={(page) => {
+              setCurrentPage(page);
+              window.location.hash = `#${page}`;
+              setMobileMenuOpen(false);
+            }}
+          />
+        )}
+
         <Toaster />
       </div>
     </AuthProvider>

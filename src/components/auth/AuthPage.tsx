@@ -22,23 +22,46 @@ export default function AuthPage() {
       if (result.success && result.data === true) {
         // User has completed onboarding, redirect to dashboard
         console.log('✅ User has completed onboarding, redirecting to dashboard');
-        // Use requestAnimationFrame to ensure DOM is ready
-        requestAnimationFrame(() => {
-          window.location.hash = '#dash';
-        });
+        
+        // Force navigation by replacing hash and triggering hashchange event
+        window.location.hash = '#dash';
+        
+        // Trigger hashchange event manually for immediate effect
+        window.dispatchEvent(new HashChangeEvent('hashchange', {
+          oldURL: window.location.href,
+          newURL: window.location.href.split('#')[0] + '#dash'
+        }));
+        
+        // Fallback: Force reload if still stuck after 500ms
+        setTimeout(() => {
+          if (window.location.hash === '#auth') {
+            console.log('⚠️ Redirect stalled, forcing hash change');
+            window.location.replace(window.location.pathname + '#dash');
+          }
+        }, 500);
       } else {
         // User needs onboarding, redirect to onboarding flow
         console.log('🎯 User needs onboarding, redirecting to onboarding flow');
-        requestAnimationFrame(() => {
-          window.location.hash = '#onboarding';
-        });
+        
+        window.location.hash = '#onboarding';
+        
+        // Trigger hashchange event manually
+        window.dispatchEvent(new HashChangeEvent('hashchange', {
+          oldURL: window.location.href,
+          newURL: window.location.href.split('#')[0] + '#onboarding'
+        }));
       }
     } catch (error) {
       console.error('❌ Error checking onboarding status:', error);
       // On error, assume user needs onboarding
-      requestAnimationFrame(() => {
-        window.location.hash = '#onboarding';
-      });
+      window.location.hash = '#onboarding';
+      window.dispatchEvent(new HashChangeEvent('hashchange', {
+        oldURL: window.location.href,
+        newURL: window.location.href.split('#')[0] + '#onboarding'
+      }));
+    } finally {
+      // Reset checking state after a brief delay to prevent re-checks
+      setTimeout(() => setCheckingOnboarding(false), 1000);
     }
   };
 
