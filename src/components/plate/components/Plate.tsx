@@ -268,19 +268,48 @@ export function Plate({ userId, currentUser }: PlateProps) {
         return;
       }
 
-      // Map to lightweight CrewMember shape used by the UI
-      const mapped = (data as unknown[]).map((row) => {
+      console.log('📦 Friend requests fetched:', data);
+
+      // Extract unique friend user IDs (the other person in each friendship)
+      const friendIds = (data as unknown[]).map((row) => {
         const r = row as Record<string, unknown>;
-        return {
-          id: (r['id'] as string) || '',
-          name: (r['requester_name'] as string) || (r['requested_name'] as string) || (r['requester_id'] as string) || (r['requested_id'] as string),
-          username: (r['requester_username'] as string) || (r['requested_username'] as string) || undefined,
-          avatar: (r['requester_avatar'] as string) || (r['requested_avatar'] as string) || undefined,
-        } as CrewMember;
+        const requesterId = r['requester_id'] as string;
+        const requestedId = r['requested_id'] as string;
+        // Return the ID that's NOT the current user
+        return requesterId === userId ? requestedId : requesterId;
       });
 
-      console.log('✅ Crew fetched:', mapped);
-      setCrew(mapped || []);
+      console.log('👥 Friend IDs to fetch:', friendIds);
+
+      if (friendIds.length === 0) {
+        setCrew([]);
+        return;
+      }
+
+      // Fetch user profiles for all friends
+      const { data: profiles, error: profileError } = await supabase
+        .from('users')
+        .select('id, display_name, username, avatar_url')
+        .in('id', friendIds);
+
+      if (profileError) {
+        console.error('Error fetching friend profiles:', profileError);
+        setCrew([]);
+        return;
+      }
+
+      console.log('✅ Friend profiles fetched:', profiles);
+
+      // Map to CrewMember shape
+      const mapped = (profiles || []).map((profile) => ({
+        id: profile.id,
+        name: profile.display_name || profile.username || profile.id,
+        username: profile.username,
+        avatar: profile.avatar_url,
+      } as CrewMember));
+
+      console.log('✅ Crew members mapped:', mapped);
+      setCrew(mapped);
     } catch (error) {
       console.error('Error fetching crew:', error);
       setCrew([]);
