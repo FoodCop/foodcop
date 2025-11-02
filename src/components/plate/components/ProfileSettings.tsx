@@ -62,11 +62,11 @@ export function ProfileSettings({ userId, user, onUpdate }: ProfileSettingsProps
   };
 
   return (
-    <div className="py-6 space-y-6">
+    <div className="px-6 py-8 space-y-8">
       <div>
-        <h3 className="mb-4">Profile Information</h3>
+        <h3 className="mb-6 text-lg font-semibold">Profile Information</h3>
         
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div>
             <Label htmlFor="name">Name</Label>
             <Input
@@ -143,32 +143,32 @@ export function ProfileSettings({ userId, user, onUpdate }: ProfileSettingsProps
         </div>
       </div>
 
-      <Separator />
+      <Separator className="my-6" />
 
       <div>
-        <h3 className="mb-4">Account Preferences</h3>
-        <div className="space-y-3 text-neutral-600">
-          <div className="flex items-center justify-between py-2">
+        <h3 className="mb-6 text-lg font-semibold">Account Preferences</h3>
+        <div className="space-y-4 text-neutral-600">
+          <div className="flex items-center justify-between py-3">
             <span>Email notifications</span>
             <span className="text-neutral-400">Coming soon</span>
           </div>
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between py-3">
             <span>Push notifications</span>
             <span className="text-neutral-400">Coming soon</span>
           </div>
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between py-3">
             <span>Profile visibility</span>
             <span className="text-neutral-400">Coming soon</span>
           </div>
         </div>
       </div>
 
-      <Separator />
+      <Separator className="my-6" />
 
       <Button 
         onClick={handleSave} 
         disabled={saving}
-        className="w-full"
+        className="w-full py-6 text-base"
       >
         {saving ? 'Saving...' : 'Save Changes'}
       </Button>
