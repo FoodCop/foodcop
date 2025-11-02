@@ -5,7 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { Card, CardContent } from '../../ui/card';
 import { Separator } from '../../ui/separator';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from '../../ui/sheet';
-import { Settings, Lock, MapPin, Users, Image, Video, FileText, Tag, Grid3x3 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../ui/dialog';
+import { Settings, Lock, MapPin, Users, Image, Video, FileText, Tag, Grid3x3, UserPlus, X, Check } from 'lucide-react';
 import { ProfileSettings } from './ProfileSettings';
 import { PrivacyPolicy } from './PrivacyPolicy';
 import { UniversalViewer } from '../../ui/universal-viewer';
@@ -55,6 +56,12 @@ export function Plate({ userId, currentUser }: PlateProps) {
   const [activeTab, setActiveTab] = useState('posts');
   const [showSettings, setShowSettings] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  
+  // Add Friend modal states
+  const [showAddFriendModal, setShowAddFriendModal] = useState(false);
+  const [allUsers, setAllUsers] = useState<CrewMember[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [sendingRequest, setSendingRequest] = useState<string | null>(null);
   
   // Tab data states
   const [posts, setPosts] = useState<Post[]>([]);
@@ -315,6 +322,92 @@ export function Plate({ userId, currentUser }: PlateProps) {
       setCrew([]);
     }
   }, [userId]);
+
+  const fetchAllUsers = useCallback(async () => {
+    try {
+      setLoadingUsers(true);
+      console.log('👥 Fetching all users from Supabase');
+      
+      // Get all users except the current user and existing friends
+      const { data: users, error } = await supabase
+        .from('users')
+        .select('id, display_name, username, avatar_url')
+        .neq('id', userId)
+        .order('display_name', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching all users:', error);
+        setAllUsers([]);
+        return;
+      }
+
+      // Get existing friend IDs to filter them out
+      const friendIds = crew.map(member => member.id);
+
+      // Get pending/sent friend requests
+      const { data: requests } = await supabase
+        .from('friend_requests')
+        .select('requester_id, requested_id')
+        .or(`requester_id.eq.${userId},requested_id.eq.${userId}`);
+
+      const requestedIds = new Set(
+        (requests || []).map((req: Record<string, unknown>) => {
+          const requesterId = req['requester_id'] as string;
+          const requestedId = req['requested_id'] as string;
+          return requesterId === userId ? requestedId : requesterId;
+        })
+      );
+
+      // Filter out current user, friends, and users with pending requests
+      const availableUsers = (users || [])
+        .filter(user => !friendIds.includes(user.id) && !requestedIds.has(user.id))
+        .map(user => ({
+          id: user.id,
+          name: user.display_name || user.username || user.id,
+          username: user.username,
+          avatar: user.avatar_url,
+        } as CrewMember));
+
+      console.log('✅ Available users fetched:', availableUsers);
+      setAllUsers(availableUsers);
+    } catch (error) {
+      console.error('Error fetching all users:', error);
+      setAllUsers([]);
+    } finally {
+      setLoadingUsers(false);
+    }
+  }, [userId, crew]);
+
+  const sendFriendRequest = async (targetUserId: string) => {
+    try {
+      setSendingRequest(targetUserId);
+      console.log('📤 Sending friend request to:', targetUserId);
+
+      const { error } = await supabase
+        .from('friend_requests')
+        .insert({
+          requester_id: userId,
+          requested_id: targetUserId,
+          status: 'pending',
+          created_at: new Date().toISOString(),
+        });
+
+      if (error) {
+        console.error('Error sending friend request:', error);
+        alert('Failed to send friend request. Please try again.');
+        return;
+      }
+
+      console.log('✅ Friend request sent successfully');
+      // Remove the user from available users list
+      setAllUsers(prev => prev.filter(u => u.id !== targetUserId));
+    } catch (error) {
+      console.error('Error sending friend request:', error);
+      alert('Failed to send friend request. Please try again.');
+    } finally {
+      setSendingRequest(null);
+    }
+  };
 
   const fetchPlaces = useCallback(async () => {
     try {
@@ -741,8 +834,23 @@ export function Plate({ userId, currentUser }: PlateProps) {
           </TabsContent>
 
           <TabsContent value="crew">
+            <div className="mb-6">
+              <Button 
+                onClick={() => {
+                  setShowAddFriendModal(true);
+                  fetchAllUsers();
+                }}
+                className="bg-neutral-900 text-white hover:bg-neutral-800"
+              >
+                <UserPlus className="w-4 h-4 mr-2" />
+                Add Friend
+              </Button>
+            </div>
+
             {crew.length === 0 ? (
-              <div className="text-center py-12 text-neutral-500">No crew members yet</div>
+              <div className="text-center py-12 text-neutral-500">
+                No crew members yet. Click "Add Friend" to connect with others!
+              </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {crew.map((member, idx) => (
@@ -814,6 +922,69 @@ export function Plate({ userId, currentUser }: PlateProps) {
         onClose={closeViewer}
         onNavigate={navigateViewer}
       />
+
+      {/* Add Friend Modal */}
+      <Dialog open={showAddFriendModal} onOpenChange={setShowAddFriendModal}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Add Friends</DialogTitle>
+            <DialogDescription>
+              Connect with other FuzoFood users and build your crew!
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="mt-4">
+            {loadingUsers ? (
+              <div className="text-center py-8 text-neutral-500">
+                Loading users...
+              </div>
+            ) : allUsers.length === 0 ? (
+              <div className="text-center py-8 text-neutral-500">
+                No available users to add at the moment.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-3">
+                {allUsers.map((availableUser) => (
+                  <Card key={availableUser.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="pt-4 pb-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-12 h-12">
+                            <AvatarImage src={availableUser.avatar} alt={availableUser.name} />
+                            <AvatarFallback>{availableUser.name?.[0]?.toUpperCase()}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium">{availableUser.name}</p>
+                            <p className="text-sm text-neutral-500">@{availableUser.username || 'user'}</p>
+                          </div>
+                        </div>
+                        <Button
+                          onClick={() => sendFriendRequest(availableUser.id)}
+                          disabled={sendingRequest === availableUser.id}
+                          className="bg-neutral-900 text-white hover:bg-neutral-800"
+                          size="sm"
+                        >
+                          {sendingRequest === availableUser.id ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                              Sending...
+                            </>
+                          ) : (
+                            <>
+                              <UserPlus className="w-4 h-4 mr-2" />
+                              Add Friend
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
