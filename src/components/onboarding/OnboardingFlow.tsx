@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { WelcomeStep } from './WelcomeStep';
 import { ProfileStep } from './ProfileStep';
 import { LocationStep } from './LocationStep';
+import { DietaryStep } from './DietaryStep';
+import { CuisineStep } from './CuisineStep';
+import { PreferencesStep } from './PreferencesStep';
 import { CompletionStep } from './CompletionStep';
 
 interface OnboardingData {
   displayName: string;
   location: string;
+  dietaryRestrictions: string[];
+  cuisinePreferences: string[];
+  spiceTolerance: 'mild' | 'medium' | 'hot' | 'extreme';
+  priceRange: 'budget' | 'moderate' | 'expensive' | 'fine_dining';
 }
 
 interface BaseStepProps {
@@ -26,13 +33,20 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
     displayName: '',
-    location: ''
+    location: '',
+    dietaryRestrictions: [],
+    cuisinePreferences: [],
+    spiceTolerance: 'medium',
+    priceRange: 'moderate'
   });
 
   const steps = [
     { component: WelcomeStep, title: 'Welcome to FUZO!' },
     { component: ProfileStep, title: 'Tell us about yourself' },
     { component: LocationStep, title: 'Where are you located?' },
+    { component: DietaryStep, title: 'Dietary restrictions' },
+    { component: CuisineStep, title: 'Favorite cuisines' },
+    { component: PreferencesStep, title: 'Your preferences' },
     { component: CompletionStep, title: 'All set!' }
   ];
 

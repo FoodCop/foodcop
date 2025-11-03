@@ -489,6 +489,101 @@ export class ProfileService {
   }
 
   /**
+   * Complete user onboarding with full preferences
+   */
+  static async completeOnboardingWithPreferences(data: {
+    displayName: string;
+    location: string;
+    dietaryRestrictions: string[];
+    cuisinePreferences: string[];
+    spiceTolerance: 'mild' | 'medium' | 'hot' | 'extreme';
+    priceRange: 'budget' | 'moderate' | 'expensive' | 'fine_dining';
+  }): Promise<ProfileResponse<UserProfile>> {
+    try {
+      const user = await AuthService.ensureAuthenticated();
+
+      console.log('🎯 Completing onboarding with full preferences for user:', user.id, data);
+
+      // Build preferences object
+      const preferences: UserPreferences = {
+        food_preferences: {
+          dietary_restrictions: data.dietaryRestrictions,
+          preferred_cuisines: data.cuisinePreferences,
+          spice_tolerance: data.spiceTolerance,
+          price_range: data.priceRange,
+        }
+      };
+
+      // First, try to update existing profile
+      const { data: updatedProfile, error: updateError } = await supabase
+        .from('users')
+        .update({
+          display_name: data.displayName,
+          location_city: data.location,
+          dietary_restrictions: data.dietaryRestrictions,
+          cuisine_preferences: data.cuisinePreferences,
+          preferences: preferences,
+          onboarding_completed: true,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
+        .select()
+        .single();
+
+      if (!updateError && updatedProfile) {
+        console.log('✅ Onboarding with preferences completed via update');
+        return {
+          success: true,
+          data: updatedProfile,
+          message: 'Onboarding completed successfully'
+        };
+      }
+
+      // If update failed (likely because no profile exists), create new profile
+      console.log('🔄 Creating new user profile with preferences...');
+      
+      const username = user.email?.split('@')[0] || `user_${user.id.slice(0, 8)}`;
+      
+      const { data: newProfile, error: insertError } = await supabase
+        .from('users')
+        .insert({
+          id: user.id,
+          email: user.email || '',
+          username: username,
+          display_name: data.displayName,
+          location_city: data.location,
+          dietary_restrictions: data.dietaryRestrictions,
+          cuisine_preferences: data.cuisinePreferences,
+          preferences: preferences,
+          onboarding_completed: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('❌ Error creating user profile with preferences:', insertError);
+        throw new Error(`Failed to create profile: ${insertError.message}`);
+      }
+
+      console.log('✅ Onboarding with preferences completed via profile creation');
+      return {
+        success: true,
+        data: newProfile,
+        message: 'Onboarding completed successfully'
+      };
+    } catch (error) {
+      console.error('❌ Error in completeOnboardingWithPreferences:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        message: 'Failed to complete onboarding'
+      };
+    }
+  }
+
+  /**
    * Check if user has completed onboarding
    */
   static async hasCompletedOnboarding(): Promise<ProfileResponse<boolean>> {

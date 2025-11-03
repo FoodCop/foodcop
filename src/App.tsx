@@ -4,7 +4,6 @@ import DebugApp from './components/debug/Debug'
 import AuthPage from './components/auth/AuthPage'
 import { OnboardingFlow } from './components/onboarding/OnboardingFlow'
 import { ProfileService } from './services/profileService'
-import { AuthService } from './services/authService'
 import FeedApp from './components/feed/App'
 import ScoutApp from './components/scout/App'
 import BitesApp from './components/bites/App'
@@ -352,99 +351,51 @@ function App() {
     );
   };
 
-  // Handle onboarding completion
-  const handleOnboardingComplete = async (data: { displayName: string; location: string }) => {
+  // Handle onboarding completion with full preferences
+  const handleOnboardingComplete = async (data: {
+    displayName: string;
+    location: string;
+    dietaryRestrictions: string[];
+    cuisinePreferences: string[];
+    spiceTolerance: 'mild' | 'medium' | 'hot' | 'extreme';
+    priceRange: 'budget' | 'moderate' | 'expensive' | 'fine_dining';
+  }) => {
     try {
-      console.log('🎯 Completing onboarding with data:', data);
+      console.log('🎯 Completing onboarding with full data:', data);
       
-      const result = await ProfileService.completeOnboarding(data);
+      const result = await ProfileService.completeOnboardingWithPreferences(data);
       
       if (result.success) {
-        console.log('✅ Onboarding completed successfully');
+        console.log('✅ Onboarding completed successfully with preferences');
         // Redirect to dashboard
         setCurrentPage('dash');
         window.location.hash = '#dash';
       } else {
         console.error('❌ Onboarding completion failed:', result.error);
-        // Could show an error message to user here
+        toast.error('Failed to complete onboarding. Please try again.');
       }
     } catch (error) {
       console.error('❌ Onboarding completion error:', error);
+      toast.error('An error occurred. Please try again.');
     }
   };
 
-  // Simple routing based on URL hash
+  // Simplified routing based on URL hash
   useEffect(() => {
-    // Check for OAuth callback on landing page
     const hash = window.location.hash.slice(1); // Remove the #
     
-    // Handle different OAuth URL formats
-    let cleanHash = hash;
-    let oauthParams = '';
-    let accessToken = null;
+    // Extract route from hash (handle OAuth params)
+    const route = hash.includes('?') ? hash.split('?')[0] : hash;
+    const page = route || 'landing';
     
-    // Format 1: "auth#access_token=..." (from initial OAuth redirect)
-    if (hash.includes('#')) {
-      const [route, params] = hash.split('#', 2);
-      cleanHash = route;
-      oauthParams = params;
-      const hashParams = new URLSearchParams(params);
-      accessToken = hashParams.get('access_token');
-    }
-    // Format 2: "auth?access_token=..." (after URL rewrite)
-    else if (hash.includes('?')) {
-      const [route, params] = hash.split('?', 2);
-      cleanHash = route;
-      oauthParams = params;
-      const hashParams = new URLSearchParams(params);
-      accessToken = hashParams.get('access_token');
-    }
-    // Format 3: Direct OAuth params "access_token=..."
-    else {
-      const hashParams = new URLSearchParams(hash);
-      accessToken = hashParams.get('access_token');
-      if (accessToken) {
-        cleanHash = '';
-        oauthParams = hash;
-      }
-    }
-    
-    console.log('🔍 Main App: Initial load check:', {
-      originalHash: hash,
-      cleanHash,
-      oauthParams,
-      hasAccessToken: !!accessToken,
-      currentUrl: window.location.href
-    });
-    
-    // If we have OAuth tokens and we're not already on the auth page with proper format
-    if (accessToken && (!cleanHash || cleanHash !== 'auth' || hash.includes('#'))) {
-      console.log('🔀 Main App: OAuth callback detected, ensuring proper auth page...');
-      console.log('📋 OAuth tokens detected:', { accessToken: 'present' });
-      
-      // Only rewrite if not already in correct format
-      if (!hash.startsWith('auth?')) {
-        const properAuthUrl = `#auth?${oauthParams}`;
-        console.log('🔧 Main App: Rewriting URL to:', properAuthUrl);
-        window.history.replaceState(null, '', window.location.pathname + properAuthUrl);
-      }
-      setCurrentPage('auth');
-      return;
-    }
-    
-    // Normal routing logic
-    if (cleanHash && !accessToken) {
-      setCurrentPage(cleanHash);
-    } else if (cleanHash === 'auth' && accessToken) {
-      // Already on auth page with tokens, proceed normally
-      setCurrentPage('auth');
-    }
+    console.log('🔍 Initial load, navigating to:', page);
+    setCurrentPage(page);
 
+    // Listen for hash changes
     const handleHashChange = () => {
       const newHash = window.location.hash.slice(1);
-      // Extract just the route part for page setting
-      const route = newHash.includes('?') ? newHash.split('?')[0] : newHash;
-      const newPage = route || 'landing';
+      const newRoute = newHash.includes('?') ? newHash.split('?')[0] : newHash;
+      const newPage = newRoute || 'landing';
       console.log('🔄 Hash changed, navigating to:', newPage);
       setCurrentPage(newPage);
     };
@@ -452,33 +403,6 @@ function App() {
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
-  
-  // Additional effect to handle programmatic hash changes
-  useEffect(() => {
-    const checkHashChange = () => {
-      const hash = window.location.hash.slice(1);
-      const route = hash.includes('?') ? hash.split('?')[0] : hash;
-      const expectedPage = route || 'landing';
-      
-      // Only sync if there's a hash in URL and it doesn't match current page
-      // Don't sync if hash is empty (let the app control the page state)
-      // Skip check for auth-related pages to avoid interference
-      const skipPages = ['auth', 'onboarding', 'landing'];
-      if (hash && 
-          expectedPage !== currentPage && 
-          !window.location.hash.includes('access_token') &&
-          !skipPages.includes(currentPage) &&
-          !skipPages.includes(expectedPage)) {
-        console.log('🔄 Page mismatch detected, updating from', currentPage, 'to', expectedPage);
-        setCurrentPage(expectedPage);
-      }
-    };
-    
-    // Check less frequently to avoid interfering with page operations
-    const interval = setInterval(checkHashChange, 2000);
-    
-    return () => clearInterval(interval);
-  }, [currentPage]);
 
   // Render appropriate component based on current page
   const renderCurrentPage = () => {
@@ -515,28 +439,11 @@ function App() {
     }
   }
 
-  // Protected onboarding component that checks authentication
+  // Protected onboarding component that uses AuthProvider session
   const OnboardingProtectedFlow = ({ onComplete }: { onComplete: (data: { displayName: string; location: string }) => Promise<void> }) => {
-    const [authChecked, setAuthChecked] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { user, session, loading } = useAuth();
 
-    useEffect(() => {
-      const checkAuth = async () => {
-        try {
-          const authStatus = await AuthService.checkAuthStatus();
-          setIsAuthenticated(authStatus.success && !!authStatus.user);
-        } catch (error) {
-          console.error('❌ Auth check failed:', error);
-          setIsAuthenticated(false);
-        } finally {
-          setAuthChecked(true);
-        }
-      };
-
-      checkAuth();
-    }, []);
-
-    if (!authChecked) {
+    if (loading) {
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
@@ -547,12 +454,10 @@ function App() {
       );
     }
 
-    if (!isAuthenticated) {
+    if (!user || !session) {
       console.log('🚫 Onboarding access denied: User not authenticated, redirecting to auth');
       // Redirect to auth page
-      setTimeout(() => {
-        window.location.hash = '#auth';
-      }, 100);
+      window.location.hash = '#auth';
       
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
