@@ -6,12 +6,13 @@ import { Card, CardContent } from '../../ui/card';
 import { Separator } from '../../ui/separator';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from '../../ui/sheet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../ui/dialog';
-import { Settings, Lock, MapPin, Users, Image, Video, FileText, Tag, Grid3x3, UserPlus, X, Check } from 'lucide-react';
+import { Settings, Lock, MapPin, Users, User as UserIcon, Image, Video, FileText, Tag, Grid3x3, UserPlus, Check, UserCheck, Mail, MailX } from 'lucide-react';
 import { ProfileSettings } from './ProfileSettings';
 import { PrivacyPolicy } from './PrivacyPolicy';
 import { UniversalViewer } from '../../ui/universal-viewer';
 import { usePlateViewer } from '../../../hooks/usePlateViewer';
 import { supabase } from '../../../services/supabase';
+import FriendService, { type FriendData } from '../../../services/friendService';
 import type { AuthUser } from '../../../types/auth';
 import type { User } from '@supabase/supabase-js';
 import type { SavedItem, PhotoMetadata, RecipeMetadata } from '../../../types/plate';
@@ -57,12 +58,15 @@ export function Plate({ userId, currentUser }: PlateProps) {
   const [showSettings, setShowSettings] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   
-  // Add Friend modal states
+  // ✅ NEW: Comprehensive friend management states
   const [showAddFriendModal, setShowAddFriendModal] = useState(false);
-  const [allUsers, setAllUsers] = useState<CrewMember[]>([]);
-  const [loadingUsers, setLoadingUsers] = useState(false);
-  const [sendingRequest, setSendingRequest] = useState<string | null>(null);
-  const [sentRequests, setSentRequests] = useState<Set<string>>(new Set());
+  const [friends, setFriends] = useState<FriendData[]>([]); // Accepted friends
+  const [incomingRequests, setIncomingRequests] = useState<FriendData[]>([]); // Requests I received
+  const [outgoingRequests, setOutgoingRequests] = useState<FriendData[]>([]); // Requests I sent
+  const [searchResults, setSearchResults] = useState<Array<FriendData & { relationshipStatus: 'none' | 'friend' | 'incoming' | 'outgoing' }>>([]); // User search
+  const [loadingFriends, setLoadingFriends] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [actionInProgress, setActionInProgress] = useState<string | null>(null);
   
   // Tab data states
   const [posts, setPosts] = useState<Post[]>([]);
@@ -70,7 +74,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
   const [recipes, setRecipes] = useState<SavedItem[]>([]);
   const [offers, setOffers] = useState<SavedItem[]>([]);
   const [videos, setVideos] = useState<SavedItem[]>([]);
-  const [crew, setCrew] = useState<CrewMember[]>([]);
+  const [crew, setCrew] = useState<CrewMember[]>([]); // Legacy - kept for compatibility
   const [places, setPlaces] = useState<SavedItem[]>([]);
 
   // Universal Viewer state
@@ -258,157 +262,154 @@ export function Plate({ userId, currentUser }: PlateProps) {
     }
   }, [userId]);
 
-  const fetchCrew = useCallback(async () => {
+  // ✅ NEW: Load all friend data using FriendService
+  const loadFriendData = useCallback(async () => {
     try {
-      console.log('👥 Fetching crew (friends) from Supabase for userId:', userId);
+      setLoadingFriends(true);
+      console.log('👥 Loading comprehensive friend data for userId:', userId);
       
-      // Fetch friends - people I'm following and who follow me back
-      const { data, error } = await supabase
-        .from('friend_requests')
-        .select('*')
-        .or(`requester_id.eq.${userId},requested_id.eq.${userId}`)
-        .eq('status', 'accepted')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching crew:', error);
-        setCrew([]);
-        return;
+      const response = await FriendService.fetchAllFriendData(userId);
+      
+      if (!response.success || !response.data) {
+        throw new Error(response.error || 'Failed to load friend data');
       }
 
-      console.log('📦 Friend requests fetched:', data);
-
-      // Extract unique friend user IDs (the other person in each friendship)
-      const friendIds = (data as unknown[]).map((row) => {
-        const r = row as Record<string, unknown>;
-        const requesterId = r['requester_id'] as string;
-        const requestedId = r['requested_id'] as string;
-        // Return the ID that's NOT the current user
-        return requesterId === userId ? requestedId : requesterId;
+      const { friends: friendsList, incomingRequests: incoming, outgoingRequests: outgoing } = response.data;
+      
+      console.log('✅ Friend data loaded:', {
+        friends: friendsList.length,
+        incoming: incoming.length,
+        outgoing: outgoing.length
       });
 
-      console.log('👥 Friend IDs to fetch:', friendIds);
+      setFriends(friendsList);
+      setIncomingRequests(incoming);
+      setOutgoingRequests(outgoing);
 
-      if (friendIds.length === 0) {
-        setCrew([]);
-        return;
-      }
-
-      // Fetch user profiles for all friends
-      const { data: profiles, error: profileError } = await supabase
-        .from('users')
-        .select('id, display_name, username, avatar_url')
-        .in('id', friendIds);
-
-      if (profileError) {
-        console.error('Error fetching friend profiles:', profileError);
-        setCrew([]);
-        return;
-      }
-
-      console.log('✅ Friend profiles fetched:', profiles);
-
-      // Map to CrewMember shape
-      const mapped = (profiles || []).map((profile) => ({
-        id: profile.id,
-        name: profile.display_name || profile.username || profile.id,
-        username: profile.username,
-        avatar: profile.avatar_url,
+      // Also populate legacy crew state for backward compatibility
+      const legacyCrew = friendsList.map(f => ({
+        id: f.userId,
+        name: f.displayName,
+        username: f.username,
+        avatar: f.avatarUrl
       } as CrewMember));
+      setCrew(legacyCrew);
 
-      console.log('✅ Crew members mapped:', mapped);
-      setCrew(mapped);
     } catch (error) {
-      console.error('Error fetching crew:', error);
+      console.error('❌ Error loading friend data:', error);
+      setFriends([]);
+      setIncomingRequests([]);
+      setOutgoingRequests([]);
       setCrew([]);
+    } finally {
+      setLoadingFriends(false);
     }
   }, [userId]);
 
-  const fetchAllUsers = useCallback(async () => {
+  // ✅ NEW: Search users with relationship status annotation
+  const searchUsersWithStatus = useCallback(async (query: string) => {
     try {
-      setLoadingUsers(true);
-      console.log('👥 Fetching all users from Supabase');
+      setLoadingFriends(true);
+      console.log('🔍 Searching users with query:', query);
       
-      // Get all users except the current user and existing friends
-      const { data: users, error } = await supabase
-        .from('users')
-        .select('id, display_name, username, avatar_url')
-        .neq('id', userId)
-        .order('display_name', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching all users:', error);
-        setAllUsers([]);
-        return;
+      const response = await FriendService.searchUsers(userId, query);
+      
+      if (!response.success || !response.data) {
+        throw new Error(response.error || 'Failed to search users');
       }
+      
+      console.log('✅ Search results:', response.data.length, 'users');
+      setSearchResults(response.data);
 
-      // Get existing friend IDs to filter them out
-      const friendIds = crew.map(member => member.id);
-
-      // Get pending/sent friend requests
-      const { data: requests } = await supabase
-        .from('friend_requests')
-        .select('requester_id, requested_id')
-        .or(`requester_id.eq.${userId},requested_id.eq.${userId}`);
-
-      const requestedIds = new Set(
-        (requests || []).map((req: Record<string, unknown>) => {
-          const requesterId = req['requester_id'] as string;
-          const requestedId = req['requested_id'] as string;
-          return requesterId === userId ? requestedId : requesterId;
-        })
-      );
-
-      // Filter out current user, friends, and users with pending requests
-      const availableUsers = (users || [])
-        .filter(user => !friendIds.includes(user.id) && !requestedIds.has(user.id))
-        .map(user => ({
-          id: user.id,
-          name: user.display_name || user.username || user.id,
-          username: user.username,
-          avatar: user.avatar_url,
-        } as CrewMember));
-
-      console.log('✅ Available users fetched:', availableUsers);
-      setAllUsers(availableUsers);
     } catch (error) {
-      console.error('Error fetching all users:', error);
-      setAllUsers([]);
+      console.error('❌ Error searching users:', error);
+      setSearchResults([]);
     } finally {
-      setLoadingUsers(false);
+      setLoadingFriends(false);
     }
-  }, [userId, crew]);
+  }, [userId]);
 
-  const sendFriendRequest = async (targetUserId: string) => {
+  // ✅ NEW: Handle friend request actions
+  const handleSendRequest = async (targetUserId: string) => {
     try {
-      setSendingRequest(targetUserId);
-      console.log('📤 Sending friend request to:', targetUserId);
-
-      const { error } = await supabase
-        .from('friend_requests')
-        .insert({
-          requester_id: userId,
-          requested_id: targetUserId,
-          status: 'pending',
-          created_at: new Date().toISOString(),
-        });
-
-      if (error) {
-        console.error('Error sending friend request:', error);
-        alert('Failed to send friend request. Please try again.');
-        return;
-      }
-
-      console.log('✅ Friend request sent successfully');
-      // Mark request as sent instead of removing the user
-      setSentRequests(prev => new Set([...prev, targetUserId]));
+      setActionInProgress(targetUserId);
+      await FriendService.sendFriendRequest(userId, targetUserId);
+      console.log('✅ Friend request sent to:', targetUserId);
+      
+      // Refresh search results to update relationship status
+      await searchUsersWithStatus(searchQuery);
     } catch (error) {
-      console.error('Error sending friend request:', error);
+      console.error('❌ Error sending friend request:', error);
       alert('Failed to send friend request. Please try again.');
     } finally {
-      setSendingRequest(null);
+      setActionInProgress(null);
     }
   };
+
+  const handleAcceptRequest = async (friendshipId: string) => {
+    try {
+      setActionInProgress(friendshipId);
+      await FriendService.acceptFriendRequest(friendshipId);
+      console.log('✅ Friend request accepted:', friendshipId);
+      
+      // Reload all friend data
+      await loadFriendData();
+    } catch (error) {
+      console.error('❌ Error accepting friend request:', error);
+      alert('Failed to accept friend request. Please try again.');
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
+  const handleDeclineRequest = async (friendshipId: string) => {
+    try {
+      setActionInProgress(friendshipId);
+      await FriendService.declineFriendRequest(friendshipId);
+      console.log('✅ Friend request declined:', friendshipId);
+      
+      // Reload all friend data
+      await loadFriendData();
+    } catch (error) {
+      console.error('❌ Error declining friend request:', error);
+      alert('Failed to decline friend request. Please try again.');
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
+  const handleCancelRequest = async (friendshipId: string) => {
+    try {
+      setActionInProgress(friendshipId);
+      await FriendService.cancelFriendRequest(friendshipId);
+      console.log('✅ Friend request cancelled:', friendshipId);
+      
+      // Reload all friend data
+      await loadFriendData();
+    } catch (error) {
+      console.error('❌ Error cancelling friend request:', error);
+      alert('Failed to cancel friend request. Please try again.');
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
+  // ✅ TODO: Implement remove friend functionality in UI
+  // const handleRemoveFriend = async (friendshipId: string) => {
+  //   try {
+  //     setActionInProgress(friendshipId);
+  //     await FriendService.removeFriend(friendshipId);
+  //     console.log('✅ Friend removed:', friendshipId);
+  //     
+  //     // Reload all friend data
+  //     await loadFriendData();
+  //   } catch (error) {
+  //     console.error('❌ Error removing friend:', error);
+  //     alert('Failed to remove friend. Please try again.');
+  //   } finally {
+  //     setActionInProgress(null);
+  //   }
+  // };
 
   const fetchPlaces = useCallback(async () => {
     try {
@@ -444,13 +445,13 @@ export function Plate({ userId, currentUser }: PlateProps) {
         fetchRecipes(),
         fetchOffers(),
         fetchVideos(),
-        fetchCrew(),
+        loadFriendData(), // ✅ NEW: Using FriendService
         fetchPlaces(),
       ]);
     };
     
     fetchAllData();
-  }, [userId, fetchPosts, fetchPhotos, fetchRecipes, fetchOffers, fetchVideos, fetchCrew, fetchPlaces]);
+  }, [userId, fetchPosts, fetchPhotos, fetchRecipes, fetchOffers, fetchVideos, loadFriendData, fetchPlaces]);
 
   // Listen for external data updates
   useEffect(() => {
@@ -474,8 +475,8 @@ export function Plate({ userId, currentUser }: PlateProps) {
         fetchOffers();
       } else if (type.includes('video')) {
         fetchVideos();
-      } else if (type.includes('crew')) {
-        fetchCrew();
+      } else if (type.includes('crew') || type.includes('friend')) {
+        loadFriendData(); // ✅ NEW: Using FriendService
       } else if (type.includes('place')) {
         fetchPlaces();
       } else if (type === 'batch-saved') {
@@ -485,7 +486,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         fetchRecipes();
         fetchOffers();
         fetchVideos();
-        fetchCrew();
+        loadFriendData(); // ✅ NEW: Using FriendService
         fetchPlaces();
       }
     };
@@ -495,7 +496,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
     return () => {
       window.removeEventListener('plate-data-update', handlePlateUpdate);
     };
-  }, [userId, fetchPosts, fetchPhotos, fetchRecipes, fetchOffers, fetchVideos, fetchCrew, fetchPlaces]);
+  }, [userId, fetchPosts, fetchPhotos, fetchRecipes, fetchOffers, fetchVideos, loadFriendData, fetchPlaces]);
 
   if (loading) {
     return (
@@ -839,7 +840,8 @@ export function Plate({ userId, currentUser }: PlateProps) {
               <Button 
                 onClick={() => {
                   setShowAddFriendModal(true);
-                  fetchAllUsers();
+                  setSearchQuery('');
+                  searchUsersWithStatus(''); // ✅ Load all users
                 }}
                 className="bg-neutral-900 text-white hover:bg-neutral-800"
               >
@@ -847,6 +849,110 @@ export function Plate({ userId, currentUser }: PlateProps) {
                 Add Friend
               </Button>
             </div>
+
+            {/* ✅ NEW: Incoming Friend Requests Section */}
+            {incomingRequests.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Mail className="w-5 h-5" />
+                  Incoming Requests ({incomingRequests.length})
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {incomingRequests.map((request) => (
+                    <Card key={request.friendshipId} className="border-yellow-500 border-2">
+                      <CardContent className="flex flex-col items-center p-4 space-y-2">
+                        <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center text-2xl overflow-hidden">
+                          {request.avatarUrl ? (
+                            <img 
+                              src={request.avatarUrl} 
+                              alt={request.displayName}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <UserIcon className="w-12 h-12 text-white" />
+                          )}
+                        </div>
+                        <h3 className="font-semibold text-neutral-900 text-center">{request.displayName}</h3>
+                        <p className="text-sm text-neutral-500 text-center">@{request.username}</p>
+                        <div className="flex gap-2 w-full">
+                          <Button
+                            size="sm"
+                            onClick={() => handleAcceptRequest(request.friendshipId)}
+                            disabled={actionInProgress === request.friendshipId}
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                          >
+                            {actionInProgress === request.friendshipId ? (
+                              <span className="animate-pulse">...</span>
+                            ) : (
+                              <UserCheck className="w-4 h-4" />
+                            )}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDeclineRequest(request.friendshipId)}
+                            disabled={actionInProgress === request.friendshipId}
+                            className="flex-1"
+                          >
+                            <MailX className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ✅ NEW: Outgoing Friend Requests Section */}
+            {outgoingRequests.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Mail className="w-5 h-5" />
+                  Sent Requests ({outgoingRequests.length})
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {outgoingRequests.map((request) => (
+                    <Card key={request.friendshipId} className="border-blue-500 border-2 opacity-75">
+                      <CardContent className="flex flex-col items-center p-4 space-y-2">
+                        <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full flex items-center justify-center text-2xl overflow-hidden">
+                          {request.avatarUrl ? (
+                            <img 
+                              src={request.avatarUrl} 
+                              alt={request.displayName}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <UserIcon className="w-12 h-12 text-white" />
+                          )}
+                        </div>
+                        <h3 className="font-semibold text-neutral-900 text-center">{request.displayName}</h3>
+                        <p className="text-sm text-neutral-500 text-center">@{request.username}</p>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleCancelRequest(request.friendshipId)}
+                          disabled={actionInProgress === request.friendshipId}
+                          className="w-full"
+                        >
+                          {actionInProgress === request.friendshipId ? (
+                            <span className="animate-pulse">Cancelling...</span>
+                          ) : (
+                            'Cancel Request'
+                          )}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ✅ Accepted Friends Section */}
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Users className="w-5 h-5" />
+              Friends ({friends.length})
+            </h3>
 
             {crew.length === 0 ? (
               <div className="text-center py-12 text-neutral-500">
@@ -924,7 +1030,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         onNavigate={navigateViewer}
       />
 
-      {/* Add Friend Modal */}
+      {/* ✅ NEW: Enhanced Add Friend Modal with Search & Relationship Status */}
       <Dialog open={showAddFriendModal} onOpenChange={setShowAddFriendModal}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white">
           <DialogHeader>
@@ -934,46 +1040,72 @@ export function Plate({ userId, currentUser }: PlateProps) {
             </DialogDescription>
           </DialogHeader>
 
+          {/* Search Input */}
           <div className="mt-4">
-            {loadingUsers ? (
+            <input
+              type="text"
+              placeholder="Search users by name or username..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                searchUsersWithStatus(e.target.value);
+              }}
+              className="w-full px-4 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-900"
+            />
+          </div>
+
+          <div className="mt-4">
+            {loadingFriends ? (
               <div className="text-center py-8 text-neutral-500">
                 Loading users...
               </div>
-            ) : allUsers.length === 0 ? (
+            ) : searchResults.length === 0 ? (
               <div className="text-center py-8 text-neutral-500">
-                No available users to add at the moment.
+                {searchQuery ? 'No users found matching your search.' : 'No available users to add at the moment.'}
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-3">
-                {allUsers.map((availableUser) => {
-                  const isPending = sentRequests.has(availableUser.id);
+                {searchResults.map((user) => {
+                  const { relationshipStatus } = user;
                   return (
-                    <Card key={availableUser.id} className="hover:shadow-md transition-shadow bg-white">
+                    <Card key={user.userId} className="hover:shadow-md transition-shadow bg-white">
                       <CardContent className="pt-4 pb-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <Avatar className="w-12 h-12">
-                              <AvatarImage src={availableUser.avatar} alt={availableUser.name} />
-                              <AvatarFallback>{availableUser.name?.[0]?.toUpperCase()}</AvatarFallback>
+                              <AvatarImage src={user.avatarUrl} alt={user.displayName} />
+                              <AvatarFallback>{user.displayName?.[0]?.toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium">{availableUser.name}</p>
-                              <p className="text-sm text-neutral-500">@{availableUser.username || 'user'}</p>
+                              <p className="font-medium">{user.displayName}</p>
+                              <p className="text-sm text-neutral-500">@{user.username}</p>
                             </div>
                           </div>
-                          {isPending ? (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-md text-sm font-medium">
+
+                          {/* ✅ NEW: Relationship Status Badges & Actions */}
+                          {relationshipStatus === 'friend' ? (
+                            <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-md text-sm font-medium">
                               <Check className="w-4 h-4" />
+                              FRIEND
+                            </div>
+                          ) : relationshipStatus === 'outgoing' ? (
+                            <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-md text-sm font-medium">
+                              <Mail className="w-4 h-4" />
                               PENDING
+                            </div>
+                          ) : relationshipStatus === 'incoming' ? (
+                            <div className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-md text-sm font-medium">
+                              <Mail className="w-4 h-4" />
+                              INVITED YOU
                             </div>
                           ) : (
                             <Button
-                              onClick={() => sendFriendRequest(availableUser.id)}
-                              disabled={sendingRequest === availableUser.id}
+                              onClick={() => handleSendRequest(user.userId)}
+                              disabled={actionInProgress === user.userId}
                               className="bg-neutral-900 text-white hover:bg-neutral-800"
                               size="sm"
                             >
-                              {sendingRequest === availableUser.id ? (
+                              {actionInProgress === user.userId ? (
                                 <>
                                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                                   Sending...
