@@ -17,7 +17,40 @@ export interface Recipe {
   extendedIngredients: {
     id: number;
     original: string;
+    name?: string;
+    amount?: number;
+    unit?: string;
   }[];
+  // Additional fields from Spoonacular detail endpoint
+  sourceUrl?: string;
+  aggregateLikes?: number;
+  healthScore?: number;
+  pricePerServing?: number;
+  analyzedInstructions?: {
+    name: string;
+    steps: {
+      number: number;
+      step: string;
+      ingredients?: { id: number; name: string; image: string }[];
+      equipment?: { id: number; name: string; image: string }[];
+    }[];
+  }[];
+  winePairing?: {
+    pairedWines?: string[];
+    pairingText?: string;
+    productMatches?: {
+      title: string;
+      description: string;
+      price: string;
+      imageUrl: string;
+      link: string;
+    }[];
+  };
+  nutrition?: {
+    nutrients?: { name: string; amount: number; unit: string }[];
+  };
+  preparationMinutes?: number;
+  cookingMinutes?: number;
 }
 
 interface RecipeCardProps {

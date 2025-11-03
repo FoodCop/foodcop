@@ -18,6 +18,29 @@ interface SpoonacularRecipe {
   diets?: string[];
   cuisines?: string[];
   summary?: string;
+  instructions?: string;
+  extendedIngredients?: {
+    id: number;
+    original: string;
+    name?: string;
+    amount?: number;
+    unit?: string;
+  }[];
+  sourceUrl?: string;
+  aggregateLikes?: number;
+  healthScore?: number;
+  pricePerServing?: number;
+  analyzedInstructions?: {
+    name: string;
+    steps: {
+      number: number;
+      step: string;
+      ingredients?: { id: number; name: string; image: string }[];
+      equipment?: { id: number; name: string; image: string }[];
+    }[];
+  }[];
+  preparationMinutes?: number;
+  cookingMinutes?: number;
 }
 
 export default function App() {
@@ -45,7 +68,7 @@ export default function App() {
       const result = await SpoonacularService.searchRecipes(query, 12);
       
       if (result.success && result.data?.results) {
-        // Transform Spoonacular data to our Recipe interface
+        // ✅ Transform Spoonacular data and RETAIN rich fields from API response
         const transformedRecipes: Recipe[] = result.data.results.map((recipe: SpoonacularRecipe) => ({
           id: recipe.id,
           title: recipe.title,
@@ -55,9 +78,25 @@ export default function App() {
           diets: recipe.diets || [],
           cuisines: recipe.cuisines || [],
           summary: recipe.summary || "No description available.",
-          instructions: "", // Will be loaded separately if needed
-          extendedIngredients: [], // Will be loaded separately if needed
+          // ✅ RETAIN instructions and ingredients from search API (addRecipeInformation: true)
+          instructions: recipe.instructions || "",
+          extendedIngredients: recipe.extendedIngredients || [],
+          // ✅ RETAIN additional fields if present
+          sourceUrl: recipe.sourceUrl,
+          aggregateLikes: recipe.aggregateLikes,
+          healthScore: recipe.healthScore,
+          pricePerServing: recipe.pricePerServing,
+          analyzedInstructions: recipe.analyzedInstructions,
+          preparationMinutes: recipe.preparationMinutes,
+          cookingMinutes: recipe.cookingMinutes,
         }));
+        
+        console.log('✅ Loaded recipes with rich data:', transformedRecipes.map(r => ({
+          id: r.id,
+          title: r.title,
+          hasInstructions: !!r.instructions,
+          ingredientCount: r.extendedIngredients?.length || 0
+        })));
         
         setRecipes(transformedRecipes);
       } else {
