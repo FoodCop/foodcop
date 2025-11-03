@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Slider } from '../ui/slider';
 import { Input } from '../ui/input';
-import { MapPin, Navigation, ExternalLink, X, Info, Clock, Phone, Globe, Star, DollarSign, Bookmark, Share2, Search } from 'lucide-react';
+import { MapPin, Navigation, ExternalLink, X, Info, Clock, Phone, Globe, Star, DollarSign, Share2, Search, Car, Footprints, Bus, Bike } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
 import { Separator } from '../ui/separator';
@@ -14,8 +14,8 @@ import { SmartSaveButton } from '../ui/smart-save-button';
 import { backendService, formatGooglePlaceResult } from '../../services/backendService';
 import { ErrorBoundary } from '../ui/ErrorBoundary';
 import { getPlaceImages, generateStaticMapFallback, getPlaceDetails } from '../../services/googlePlacesImages';
-import { savedItemsService } from '../../services';
 import { useAuth } from '../auth/AuthProvider';
+import { GoogleDirectionsService, decodePolyline, type TravelMode, type Route, type RouteStep } from '../../services/googleDirections';
 import type { GooglePlace } from '../../types';
 import './Scout.styles.css';
 
@@ -148,7 +148,7 @@ const CustomMarker = ({
 
 export default function App() {
   // Authentication
-  const { user } = useAuth();
+  useAuth();
   
   const [userLocation, setUserLocation] = useState<[number, number]>([37.7849, -122.4094]);
   const [userAddress, setUserAddress] = useState<string>('Getting location...');
@@ -158,7 +158,14 @@ export default function App() {
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [showRoute, setShowRoute] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showNavigationModal, setShowNavigationModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Directions state
+  const [currentRoute, setCurrentRoute] = useState<Route | null>(null);
+  const [routePolyline, setRoutePolyline] = useState<[number, number][]>([]);
+  const [travelMode, setTravelMode] = useState<TravelMode>('DRIVING');
+  const [loadingRoute, setLoadingRoute] = useState(false);
   
   // Restaurant details state
   const [restaurantDetails, setRestaurantDetails] = useState<{
@@ -584,15 +591,85 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps  
   }, [searchDistance, searchQuery]); // Intentionally limited dependencies to prevent infinite loops
 
+  // Fetch directions from Google Directions API
+  const fetchDirections = async (mode: TravelMode = 'DRIVING') => {
+    if (!selectedRestaurant) return;
+
+    setLoadingRoute(true);
+    try {
+      console.log('🗺️ Fetching directions:', {
+        from: userLocation,
+        to: [selectedRestaurant.lat, selectedRestaurant.lng],
+        mode
+      });
+
+      const result = await GoogleDirectionsService.getDirections(
+        { lat: userLocation[0], lng: userLocation[1] },
+        { lat: selectedRestaurant.lat, lng: selectedRestaurant.lng },
+        mode
+      );
+
+      if (result.status === 'OK' && result.routes.length > 0) {
+        const route = result.routes[0];
+        setCurrentRoute(route);
+        
+        // Decode the polyline for map display
+        const decodedPolyline = decodePolyline(route.overviewPolyline);
+        setRoutePolyline(decodedPolyline);
+        
+        console.log('✅ Route fetched:', {
+          distance: route.legs[0].distance.text,
+          duration: route.legs[0].duration.text,
+          points: decodedPolyline.length
+        });
+
+        toast.success(`Route found: ${route.legs[0].distance.text}, ${route.legs[0].duration.text}`);
+      } else {
+        console.error('❌ No route found:', result.status);
+        toast.error('Could not find a route');
+        
+        // Fallback to simple straight line
+        setRoutePolyline([userLocation, [selectedRestaurant.lat, selectedRestaurant.lng]]);
+      }
+    } catch (error) {
+      console.error('❌ Error fetching directions:', error);
+      toast.error('Failed to fetch directions');
+      
+      // Fallback to simple straight line
+      setRoutePolyline([userLocation, [selectedRestaurant.lat, selectedRestaurant.lng]]);
+    } finally {
+      setLoadingRoute(false);
+    }
+  };
+
   const handleShowDistance = () => {
     if (selectedRestaurant) {
-      setShowRoute(!showRoute);
+      if (showRoute) {
+        // Hide route
+        setShowRoute(false);
+        setRoutePolyline([]);
+        setCurrentRoute(null);
+      } else {
+        // Show route and fetch directions
+        setShowRoute(true);
+        fetchDirections(travelMode);
+      }
     }
   };
 
   const handleSetRoute = () => {
     if (selectedRestaurant) {
-      const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation[0]},${userLocation[1]}&destination=${selectedRestaurant.lat},${selectedRestaurant.lng}`;
+      // Show in-app navigation modal
+      setShowNavigationModal(true);
+      if (!currentRoute) {
+        fetchDirections(travelMode);
+      }
+    }
+  };
+
+  const handleExternalNavigation = () => {
+    if (selectedRestaurant) {
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation[0]},${userLocation[1]}&destination=${selectedRestaurant.lat},${selectedRestaurant.lng}&travelmode=${travelMode.toLowerCase()}`;
       window.open(url, '_blank');
     }
   };
@@ -686,30 +763,40 @@ export default function App() {
               );
             })}
           
-          {/* Route line */}
-          {showRoute && selectedRestaurant && (
-            <Overlay anchor={userLocation} offset={[0, 0]}>
-              <svg 
-                width="100%" 
-                height="100%" 
-                style={{ 
-                  position: 'absolute', 
-                  top: 0, 
-                  left: 0,
-                  pointerEvents: 'none'
-                }}
-              >
-                <line
-                  x1="0"
-                  y1="0"
-                  x2={(selectedRestaurant.lng - userLocation[1]) * 10000}
-                  y2={(selectedRestaurant.lat - userLocation[0]) * 10000}
-                  stroke="#ef4444"
-                  strokeWidth="3"
-                  strokeDasharray="10,10"
-                />
-              </svg>
-            </Overlay>
+          {/* Route polyline */}
+          {showRoute && routePolyline.length > 1 && (
+            <>
+              {routePolyline.slice(0, -1).map((point, index) => {
+                const nextPoint = routePolyline[index + 1];
+                return (
+                  <Overlay key={`route-segment-${index}`} anchor={point} offset={[0, 0]}>
+                    <svg 
+                      width="100%" 
+                      height="100%" 
+                      style={{ 
+                        position: 'absolute', 
+                        top: 0, 
+                        left: 0,
+                        pointerEvents: 'none',
+                        overflow: 'visible'
+                      }}
+                    >
+                      <line
+                        x1="0"
+                        y1="0"
+                        x2={(nextPoint[1] - point[1]) * 10000}
+                        y2={(nextPoint[0] - point[0]) * 10000}
+                        stroke="#3b82f6"
+                        strokeWidth="4"
+                        strokeOpacity="0.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </Overlay>
+                );
+              })}
+            </>
           )}
         </Map>
       </div>
@@ -819,26 +906,35 @@ export default function App() {
               <MapPin className="w-4 h-4" />
               <span>{selectedRestaurant.distance?.toFixed(1)} km</span>
             </div>
+            {currentRoute && (
+              <>
+                <div className="flex items-center gap-1 text-blue-600">
+                  <Clock className="w-4 h-4" />
+                  <span>{currentRoute.legs[0].duration.text}</span>
+                </div>
+              </>
+            )}
           </div>
 
             <div className="space-y-2">
               <div className="flex gap-2">
                 <Button
                   onClick={handleShowDistance}
-                  variant="outline"
+                  variant={showRoute ? "default" : "outline"}
                   className="flex-1 text-xs"
                   size="sm"
+                  disabled={loadingRoute}
                 >
                   <Navigation className="w-4 h-4 mr-1" />
-                  {showRoute ? 'Hide Route' : 'Show Route'}
+                  {loadingRoute ? 'Loading...' : showRoute ? 'Hide Route' : 'Show Route'}
                 </Button>
                 <Button
                   onClick={handleSetRoute}
                   className="flex-1 text-xs"
                   size="sm"
                 >
-                  <ExternalLink className="w-4 h-4 mr-1" />
-                  Directions
+                  <Navigation className="w-4 h-4 mr-1" />
+                  Navigate
                 </Button>
                 <Button
                   onClick={() => {
@@ -1086,6 +1182,188 @@ export default function App() {
                         </div>
                       </div>
                     </>
+                  )}
+                </div>
+              )}
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
+
+      {/* In-App Navigation Modal */}
+      <Dialog open={showNavigationModal} onOpenChange={(open) => {
+        setShowNavigationModal(open);
+        if (!open) {
+          // Keep route visible when closing navigation modal
+        }
+      }}>
+        <DialogContent 
+          className="w-[calc(100vw-1rem)] max-w-2xl mx-auto p-0 rounded-2xl"
+          style={{ 
+            maxHeight: '90vh',
+            zIndex: 9999
+          }}
+        >
+          <ScrollArea className="max-h-[90vh] rounded-2xl">
+            <div className="p-6 bg-white rounded-2xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl">Navigation to {selectedRestaurant?.name}</DialogTitle>
+                <DialogDescription>
+                  {currentRoute ? (
+                    <div className="flex items-center gap-4 mt-2 text-base">
+                      <span className="font-semibold text-blue-600">{currentRoute.legs[0].distance.text}</span>
+                      <span>•</span>
+                      <span className="font-semibold text-green-600">{currentRoute.legs[0].duration.text}</span>
+                      <span>•</span>
+                      <span className="text-gray-600">via {currentRoute.summary || 'best route'}</span>
+                    </div>
+                  ) : (
+                    'Loading route...'
+                  )}
+                </DialogDescription>
+              </DialogHeader>
+
+              {selectedRestaurant && (
+                <div className="mt-6 space-y-4">
+                  {/* Travel Mode Selector */}
+                  <div className="flex gap-2 p-2 bg-gray-100 rounded-lg">
+                    {(['DRIVING', 'WALKING', 'TRANSIT', 'BICYCLING'] as TravelMode[]).map((mode) => {
+                      const icons = {
+                        DRIVING: <Car className="w-5 h-5" />,
+                        WALKING: <Footprints className="w-5 h-5" />,
+                        TRANSIT: <Bus className="w-5 h-5" />,
+                        BICYCLING: <Bike className="w-5 h-5" />
+                      };
+                      
+                      return (
+                        <Button
+                          key={mode}
+                          variant={travelMode === mode ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => {
+                            setTravelMode(mode);
+                            fetchDirections(mode);
+                          }}
+                          className="flex-1"
+                          disabled={loadingRoute}
+                        >
+                          {icons[mode]}
+                          <span className="ml-2 hidden sm:inline">{mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
+                        </Button>
+                      );
+                    })}
+                  </div>
+
+                  {loadingRoute ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                      <span className="ml-3 text-gray-600">Loading directions...</span>
+                    </div>
+                  ) : currentRoute ? (
+                    <>
+                      {/* Route Summary */}
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="font-semibold text-lg">Route Overview</h3>
+                        </div>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Starting point:</span>
+                            <span className="font-medium">{userAddress}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Destination:</span>
+                            <span className="font-medium">{selectedRestaurant.address}</span>
+                          </div>
+                          <Separator />
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Total Distance:</span>
+                            <span className="font-semibold text-blue-600">{currentRoute.legs[0].distance.text}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Estimated Time:</span>
+                            <span className="font-semibold text-green-600">{currentRoute.legs[0].duration.text}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Turn-by-Turn Directions */}
+                      <div className="space-y-3">
+                        <h3 className="font-semibold text-lg">Turn-by-Turn Directions</h3>
+                        <div className="space-y-3">
+                          {currentRoute.legs[0].steps.map((step: RouteStep, index: number) => (
+                            <div 
+                              key={index}
+                              className="flex gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                            >
+                              <div className="shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
+                                {index + 1}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 mb-1">
+                                  {step.instruction}
+                                </p>
+                                <div className="flex gap-3 text-xs text-gray-600">
+                                  <span className="flex items-center gap-1">
+                                    <MapPin className="w-3 h-3" />
+                                    {step.distance.text}
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    {step.duration.text}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Warnings */}
+                      {currentRoute.warnings.length > 0 && (
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                          <h4 className="font-semibold text-yellow-800 mb-2">⚠️ Warnings</h4>
+                          <ul className="list-disc list-inside space-y-1 text-sm text-yellow-700">
+                            {currentRoute.warnings.map((warning, index) => (
+                              <li key={index}>{warning}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 pt-4">
+                        <Button
+                          onClick={() => {
+                            setShowNavigationModal(false);
+                            setShowRoute(true);
+                          }}
+                          variant="outline"
+                          className="flex-1"
+                        >
+                          <MapPin className="w-4 h-4 mr-2" />
+                          Show on Map
+                        </Button>
+                        <Button
+                          onClick={handleExternalNavigation}
+                          className="flex-1"
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Open in Google Maps
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <p>Could not load directions</p>
+                      <Button
+                        onClick={() => fetchDirections(travelMode)}
+                        variant="outline"
+                        className="mt-4"
+                      >
+                        Try Again
+                      </Button>
+                    </div>
                   )}
                 </div>
               )}

@@ -112,6 +112,19 @@ class BackendService {
     return this.makeRequest(`/places/details/${placeId}`);
   }
 
+  // Google Directions - Get route directions
+  async getDirections(params: {
+    origin: string;
+    destination: string;
+    mode: string;
+    alternatives: string;
+  }): Promise<BackendResponse> {
+    return this.makeRequest('/directions', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
   // Geolocation - Get nearby restaurants based on current location
   async getNearbyRestaurantsByLocation(
     latitude: number,

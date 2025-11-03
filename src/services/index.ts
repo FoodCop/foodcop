@@ -7,6 +7,7 @@ export { IdempotencyService } from './idempotencyService';
 export { SupabaseService } from './supabase';
 export { ErrorHandler } from '../utils/errorHandler';
 export { savedItemsService } from './savedItemsService';
+export { GoogleDirectionsService } from './googleDirections';
 
 // Export types
 export type { 

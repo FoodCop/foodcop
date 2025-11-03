@@ -94,23 +94,26 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
   };
 
   return (
-    <div className="flex flex-col h-full bg-white border-r">
-      {/* Header */}
-      <div className="bg-green-600 text-white p-4">
+    <div className="flex flex-col h-full bg-white border-r border-gray-200 shadow-sm">
+      {/* Header - FUZO Orange Theme */}
+      <div className="bg-gradient-to-br from-orange-600 to-orange-500 text-white p-4 safe-area-top">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center ring-2 ring-white/30">
               <span className="text-sm font-semibold">
                 {currentUser?.email?.charAt(0).toUpperCase() || 'U'}
               </span>
             </div>
-            <span className="font-medium">Chats</span>
+            <div>
+              <span className="font-semibold text-base">Chats</span>
+              <p className="text-xs text-white/80">FUZO</p>
+            </div>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1">
             <button 
               onClick={createNewChat}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="p-2 hover:bg-white/20 rounded-full transition-all active:scale-95 touch-target"
               title="New Chat"
             >
               <MessageCircle size={20} />
@@ -118,7 +121,7 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
             {onSignOut && (
               <button 
                 onClick={onSignOut}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="p-2 hover:bg-white/20 rounded-full transition-all active:scale-95 touch-target"
                 title="More Options"
               >
                 <MoreVertical size={20} />
@@ -129,13 +132,14 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
         
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" size={18} />
           <input
             type="text"
             placeholder="Search chats..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-full text-white placeholder-white/70 focus:outline-none focus:bg-white/20"
+            className="w-full pl-10 pr-4 py-2.5 bg-white/15 border border-white/20 rounded-full text-white placeholder-white/70 focus:outline-none focus:bg-white/25 focus:ring-2 focus:ring-white/30 transition-all"
+            style={{ fontSize: '16px' }} // Prevent zoom on iOS
           />
         </div>
       </div>
@@ -144,43 +148,68 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
           <div className="flex items-center justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-3 border-orange-200 border-t-orange-600"></div>
           </div>
         ) : filteredChannels.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
-            <MessageCircle size={48} className="mx-auto mb-4 text-gray-300" />
-            <h3 className="font-medium mb-2">No chats yet</h3>
-            <p className="text-sm">Start a conversation to see it here</p>
+            <MessageCircle size={56} className="mx-auto mb-4 text-orange-200" />
+            <h3 className="font-semibold text-gray-800 mb-2">No chats yet</h3>
+            <p className="text-sm text-gray-600">Start a conversation to see it here</p>
+            <button
+              onClick={createNewChat}
+              className="mt-4 px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm hover:shadow-md active:scale-95 font-medium"
+            >
+              Start New Chat
+            </button>
           </div>
         ) : (
           filteredChannels.map((channel) => {
             const isActive = activeChannel?.id === channel.id;
+            const hasUnread = false; // TODO: Implement unread count
+            
             return (
               <div
                 key={channel.id}
                 onClick={() => onChannelSelect(channel)}
-                className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 transition-colors ${
-                  isActive ? 'bg-green-50 border-l-4 border-l-green-600' : ''
+                className={`flex items-center p-4 hover:bg-orange-50/50 cursor-pointer border-b border-gray-100 transition-all active:bg-orange-100/50 ${
+                  isActive ? 'bg-orange-50 border-l-4 border-l-orange-600 shadow-sm' : 'border-l-4 border-l-transparent'
                 }`}
               >
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                  <span className="text-green-600 font-semibold">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-3 shrink-0 ring-2 transition-all ${
+                  isActive 
+                    ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white ring-orange-300' 
+                    : 'bg-orange-100 text-orange-600 ring-orange-200'
+                }`}>
+                  <span className="font-semibold text-base">
                     {formatChannelName(channel).charAt(0).toUpperCase()}
                   </span>
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium text-gray-900 truncate">
+                  <div className="flex items-center justify-between mb-0.5">
+                    <h3 className={`font-semibold truncate ${
+                      isActive ? 'text-orange-900' : 'text-gray-900'
+                    }`}>
                       {formatChannelName(channel)}
                     </h3>
-                    <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
+                    <span className={`text-xs shrink-0 ml-2 ${
+                      isActive ? 'text-orange-600 font-medium' : 'text-gray-500'
+                    }`}>
                       {formatTime(channel)}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 truncate">
-                    {formatLastMessage(channel)}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className={`text-sm truncate ${
+                      hasUnread ? 'text-gray-900 font-medium' : 'text-gray-600'
+                    }`}>
+                      {formatLastMessage(channel)}
+                    </p>
+                    {hasUnread && (
+                      <span className="ml-2 shrink-0 w-5 h-5 bg-orange-600 text-white text-xs rounded-full flex items-center justify-center font-bold">
+                        3
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             );
