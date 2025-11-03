@@ -168,10 +168,17 @@ export const transformRestaurantToFeedCard = async (
   // Map Google Places types to cuisine categories
   const cuisine = mapPlaceTypesToCuisine(restaurant.types || []);
   
-  // Generate proper Google Places image URL
+  // ✅ FIX: Use photo reference from nearby search instead of fetching details
+  // This eliminates 20+ serial API calls per feed load
   let rawImageUrl: string;
   try {
-    if (restaurant.place_id) {
+    // Check if restaurant has photos in the nearby search result
+    if (restaurant.photos && restaurant.photos.length > 0) {
+      const photoRef = restaurant.photos[0].photo_reference;
+      // Build photo URL directly from photo reference (no API call needed)
+      rawImageUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoRef}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
+    } else if (restaurant.place_id) {
+      // Only fetch details if no photo reference available (rare case)
       const placeImage = await getPlaceHeroImage(restaurant.place_id, { maxWidth: 400, maxHeight: 300 });
       rawImageUrl = placeImage.url || generateRestaurantFallbackImage(cuisine);
     } else {
@@ -267,6 +274,9 @@ export const transformMasterbotToFeedCard = (post: MasterbotPost): MasterbotCard
     finalImageUrl = optimizedImage.src;
   }
 
+  // ✅ FIX: Add null guard for tags to prevent entire batch from being dropped
+  const safeTags = Array.isArray(post.tags) ? post.tags.slice(0, 3) : [];
+
   // Debug image URLs with more detail
   console.log('🖼️ Masterbot image optimization DEBUG:', {
     postId: post.id,
@@ -278,7 +288,8 @@ export const transformMasterbotToFeedCard = (post: MasterbotPost): MasterbotCard
     optimizedImage: optimizedImage?.src,
     imageFallback: optimizedImage?.fallbackSrc,
     finalImageUrl: finalImageUrl,
-    imageOptimizationWorked: !!optimizedImage?.src
+    imageOptimizationWorked: !!optimizedImage?.src,
+    tagsStatus: post.tags ? 'valid' : 'null - using fallback'
   });
 
   return {
@@ -292,7 +303,7 @@ export const transformMasterbotToFeedCard = (post: MasterbotPost): MasterbotCard
     caption: post.content,
     likes: post.engagement_likes,
     restaurantTag: post.restaurant_name || undefined,
-    tags: post.tags.slice(0, 3)
+    tags: safeTags
   };
 };
 
@@ -332,12 +343,15 @@ export const generatePlaceholderAdCard = (): AdCard => {
 // Phase 2: Anti-repetition system state (module-level for persistence)
 const seenContentIds = new Set<string>();
 const sessionSeenIds = new Set<string>();
+let seenContentInitialized = false; // Cache flag to prevent re-queries
+let lastInitializedUserId: string | null = null;
 
 // Main Feed Service
 export const FeedService = {
 
   /**
    * Phase 2: Initialize anti-repetition system from user's swipe history
+   * NOW WITH SESSION CACHING: Only queries once per user session
    */
   async initializeSeenContent(userId?: string): Promise<void> {
     if (!userId) {
@@ -345,8 +359,14 @@ export const FeedService = {
       return;
     }
 
+    // ✅ FIX: Cache check - skip if already initialized for this user
+    if (seenContentInitialized && lastInitializedUserId === userId) {
+      console.log('✨ Seen content already initialized for this session, using cache');
+      return;
+    }
+
     try {
-      console.log('🔍 Loading user swipe history for anti-repetition...');
+      console.log('🔍 Loading user swipe history for anti-repetition (first time)...');
       
       // Query user's swipe history from last 30 days to avoid repetition
       const thirtyDaysAgo = new Date();
@@ -363,6 +383,8 @@ export const FeedService = {
         // If table doesn't exist, just continue with session-only tracking
         if (error.code === 'PGRST116' || error.message.includes('relation') || error.message.includes('does not exist')) {
           console.warn('⚠️ user_swipe_history table not found, using session-only tracking');
+          seenContentInitialized = true;
+          lastInitializedUserId = userId;
           return;
         }
         console.error('❌ Failed to load swipe history:', error);
@@ -377,6 +399,10 @@ export const FeedService = {
       });
 
       console.log(`🚫 Loaded ${seenContentIds.size} previously seen items for filtering`);
+      
+      // ✅ Mark as initialized
+      seenContentInitialized = true;
+      lastInitializedUserId = userId;
 
     } catch (error) {
       console.error('❌ Error initializing seen content:', error);
@@ -889,11 +915,23 @@ export const FeedService = {
     _userId?: string
   ): Promise<MasterbotCard[]> {
     try {
+      // ✅ FIX: Early return if count is 0 or negative
+      if (count <= 0) {
+        console.log('⚠️ Masterbot count is 0 or negative, skipping fetch');
+        return [];
+      }
+
       // Get a larger random sample to ensure variety across different authors
       // Request more posts and use random sampling
       const sampleSize = Math.max(count * 10, 50); // Get at least 50 posts
       
-      let query = supabase
+      // ✅ FIX: Use random offset instead of toggling created_at order
+      // This ensures we get variety from the entire 490-post table
+      const totalPostsEstimate = 490; // Approximate total posts
+      const maxOffset = Math.max(0, totalPostsEstimate - sampleSize);
+      const randomOffset = Math.floor(Math.random() * maxOffset);
+      
+      const query = supabase
         .from('master_bot_posts')
         .select(`
           *,
@@ -904,11 +942,7 @@ export const FeedService = {
           )
         `)
         .eq('is_published', true)
-        .limit(sampleSize);
-
-      // Use random ordering to get variety across all 490 posts
-      // Note: created_at DESC always returns newest posts - need randomization
-      query = query.order('created_at', { ascending: Math.random() > 0.5 });
+        .range(randomOffset, randomOffset + sampleSize - 1);
 
       const { data: posts, error } = await query;
 

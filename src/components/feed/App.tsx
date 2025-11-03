@@ -333,8 +333,11 @@ export default function App() {
   };
 
   const extractContentId = (card: FeedCard): string => {
-    // Extract the actual content ID from the feed card ID
-    return card.id.split('-').slice(1).join('-');
+    // ✅ FIX: Return full card ID instead of stripping prefix
+    // This ensures consistency with filterSeenContent which checks full IDs
+    // Old behavior: "masterbot-123" -> "123" (caused ID mismatch)
+    // New behavior: "masterbot-123" -> "masterbot-123" (matches filtering)
+    return card.id;
   };
 
   const mapDirectionToAction = (direction: string): 'pass' | 'like' | 'share' | 'save' => {
