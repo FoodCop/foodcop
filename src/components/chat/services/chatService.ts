@@ -41,7 +41,7 @@ export class ChatService {
   }
 
   // Connect user to Stream Chat using existing auth session
-  async connectUserToChat(user: User, profile: any) {
+  async connectUserToChat(user: User, profile: Record<string, unknown>) {
     try {
       console.log('🚀 ChatService: Connecting user to Stream Chat:', user.email);
       
@@ -52,8 +52,8 @@ export class ChatService {
       await streamChatClient.connectUser(
         {
           id: user.id,
-          name: profile?.display_name || profile?.first_name || user.email || 'User',
-          image: profile?.avatar_url,
+          name: (profile?.display_name || profile?.first_name || user.email || 'User') as string,
+          image: profile?.avatar_url as string | undefined,
         },
         streamToken
       );
@@ -129,13 +129,26 @@ export class ChatService {
       const currentUser = streamChatClient.user;
       if (!currentUser) throw new Error('User not authenticated with Stream Chat');
 
-      console.log('💬 ChatService: Creating direct message channel');
+      console.log('💬 ChatService: Creating/getting direct message channel with:', targetUserId);
+      
+      // Check if a DM channel already exists
+      const existingChannels = await streamChatClient.queryChannels({
+        type: 'messaging',
+        members: { $eq: [currentUser.id, targetUserId] }
+      });
+
+      if (existingChannels.length > 0) {
+        console.log('✅ ChatService: Found existing DM channel');
+        return existingChannels[0];
+      }
+
+      // Create new DM channel if none exists
       const channel = streamChatClient.channel('messaging', undefined, {
         members: [currentUser.id, targetUserId],
       });
 
       await channel.create();
-      console.log('✅ ChatService: Direct message channel created');
+      console.log('✅ ChatService: New direct message channel created');
       return channel;
     } catch (error) {
       console.error('❌ ChatService: Error creating direct message:', error);

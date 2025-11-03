@@ -1,24 +1,30 @@
 import { useState, useEffect } from 'react';
-import { Channel } from 'stream-chat';
+import { Channel, UserResponse } from 'stream-chat';
 import { ChatService } from '../services/chatService';
-import { Search, MoreVertical, MessageCircle } from 'lucide-react';
+import { FriendService, type FriendData } from '../../../services/friendService';
+import { Search, MoreVertical, MessageCircle, Users, UserPlus } from 'lucide-react';
 
 interface SidebarProps {
   activeChannel: Channel | null;
   onChannelSelect: (channel: Channel) => void;
-  currentUser: any;
+  currentUser: UserResponse | null;
   onSignOut?: () => void;
 }
 
 export default function Sidebar({ activeChannel, onChannelSelect, currentUser, onSignOut }: SidebarProps) {
   const [channels, setChannels] = useState<Channel[]>([]);
+  const [friends, setFriends] = useState<FriendData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [showFriendsList, setShowFriendsList] = useState(false);
+  const [loadingFriends, setLoadingFriends] = useState(false);
   
   const chatService = ChatService.getInstance();
 
   useEffect(() => {
     loadChannels();
+    loadFriends();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadChannels = async () => {
@@ -33,20 +39,44 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
     }
   };
 
+  const loadFriends = async () => {
+    if (!currentUser?.id) return;
+    
+    try {
+      setLoadingFriends(true);
+      console.log('👥 Loading friends for user:', currentUser.id);
+      
+      const result = await FriendService.fetchAllFriendData(currentUser.id);
+      
+      if (result.success && result.data) {
+        setFriends(result.data.friends);
+        console.log('✅ Loaded friends:', result.data.friends.length);
+      } else {
+        console.error('❌ Failed to load friends:', result.error);
+      }
+    } catch (error) {
+      console.error('Error loading friends:', error);
+    } finally {
+      setLoadingFriends(false);
+    }
+  };
+
   const filteredChannels = channels.filter(channel => {
-    const channelName = (channel.data as any)?.name || 
-      Object.values(channel.state.members).find((member: any) => member.user?.id !== currentUser?.id)?.user?.name || 
+    const channelData = channel.data as Record<string, unknown>;
+    const channelName = channelData?.name as string || 
+      Object.values(channel.state.members).find(member => member.user?.id !== currentUser?.id)?.user?.name || 
       'Unknown';
     return channelName.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   const formatChannelName = (channel: Channel) => {
-    if ((channel.data as any)?.name) {
-      return (channel.data as any).name;
+    const channelData = channel.data as Record<string, unknown>;
+    if (channelData?.name) {
+      return channelData.name as string;
     }
     
     // For direct messages, show the other user's name
-    const otherMember = Object.values(channel.state.members).find((member: any) => member.user?.id !== currentUser?.id);
+    const otherMember = Object.values(channel.state.members).find(member => member.user?.id !== currentUser?.id);
     return otherMember?.user?.name || otherMember?.user?.id || 'Unknown';
   };
 
@@ -82,12 +112,18 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
     }
   };
 
-  const createNewChat = async () => {
+  const createNewChat = async (friendUserId?: string) => {
     try {
-      // For demo purposes, create a test channel
-      const channel = await chatService.createDirectMessage('demo-user-123');
-      setChannels(prev => [channel, ...prev]);
-      onChannelSelect(channel);
+      if (friendUserId) {
+        // Create chat with specific friend
+        const channel = await chatService.createDirectMessage(friendUserId);
+        setChannels(prev => [channel, ...prev]);
+        onChannelSelect(channel);
+        setShowFriendsList(false);
+      } else {
+        // Show friends list to choose from
+        setShowFriendsList(true);
+      }
     } catch (error) {
       console.error('Error creating new chat:', error);
     }
@@ -96,12 +132,12 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-200 shadow-sm">
       {/* Header - FUZO Orange Theme */}
-      <div className="bg-gradient-to-br from-orange-600 to-orange-500 text-white p-4 safe-area-top">
+      <div className="bg-linear-to-br from-orange-600 to-orange-500 text-white p-4 safe-area-top">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center ring-2 ring-white/30">
               <span className="text-sm font-semibold">
-                {currentUser?.email?.charAt(0).toUpperCase() || 'U'}
+                {currentUser?.name?.charAt(0).toUpperCase() || currentUser?.id?.charAt(0).toUpperCase() || 'U'}
               </span>
             </div>
             <div>
@@ -112,11 +148,11 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
           
           <div className="flex items-center space-x-1">
             <button 
-              onClick={createNewChat}
+              onClick={() => createNewChat()}
               className="p-2 hover:bg-white/20 rounded-full transition-all active:scale-95 touch-target"
-              title="New Chat"
+              title="New Chat with Friend"
             >
-              <MessageCircle size={20} />
+              <UserPlus size={20} />
             </button>
             {onSignOut && (
               <button 
@@ -144,6 +180,65 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
         </div>
       </div>
 
+      {/* Friends List Modal */}
+      {showFriendsList && (
+        <div className="bg-white border-b border-gray-200 p-4 max-h-96 overflow-y-auto">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Users size={20} className="text-orange-600" />
+              <h3 className="font-semibold text-gray-900">Start Chat with Friend</h3>
+            </div>
+            <button
+              onClick={() => setShowFriendsList(false)}
+              className="p-1 hover:bg-gray-100 rounded text-gray-600"
+            >
+              ✕
+            </button>
+          </div>
+
+          {loadingFriends ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-orange-200 border-t-orange-600"></div>
+            </div>
+          ) : friends.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <Users size={48} className="mx-auto mb-3 text-gray-300" />
+              <p className="text-sm">No friends yet</p>
+              <p className="text-xs mt-1">Add friends to start chatting</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {friends.map((friend) => (
+                <button
+                  key={friend.userId}
+                  onClick={() => createNewChat(friend.userId)}
+                  className="w-full flex items-center gap-3 p-3 hover:bg-orange-50 rounded-lg transition-colors text-left"
+                >
+                  <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center shrink-0">
+                    {friend.avatarUrl ? (
+                      <img
+                        src={friend.avatarUrl}
+                        alt={friend.displayName}
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-orange-600 font-semibold">
+                        {friend.displayName.charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-900 truncate">{friend.displayName}</p>
+                    <p className="text-sm text-gray-500 truncate">@{friend.username}</p>
+                  </div>
+                  <MessageCircle size={18} className="text-orange-600 shrink-0" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Chat List */}
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
@@ -156,8 +251,8 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
             <h3 className="font-semibold text-gray-800 mb-2">No chats yet</h3>
             <p className="text-sm text-gray-600">Start a conversation to see it here</p>
             <button
-              onClick={createNewChat}
-              className="mt-4 px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm hover:shadow-md active:scale-95 font-medium"
+              onClick={() => createNewChat()}
+              className="mt-4 px-6 py-2.5 bg-linear-to-r from-orange-500 to-orange-600 text-white rounded-full hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm hover:shadow-md active:scale-95 font-medium"
             >
               Start New Chat
             </button>
@@ -177,7 +272,7 @@ export default function Sidebar({ activeChannel, onChannelSelect, currentUser, o
               >
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-3 shrink-0 ring-2 transition-all ${
                   isActive 
-                    ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white ring-orange-300' 
+                    ? 'bg-linear-to-br from-orange-500 to-orange-600 text-white ring-orange-300' 
                     : 'bg-orange-100 text-orange-600 ring-orange-200'
                 }`}>
                   <span className="font-semibold text-base">
