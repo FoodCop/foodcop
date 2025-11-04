@@ -1,145 +1,78 @@
 import { useState, useEffect } from "react";
-import { MapPin, Camera } from "lucide-react";
+import { MapPin, Camera, Loader2 } from "lucide-react";
 import { Card } from "../../ui/card";
 import { ImageWithFallback } from "../../ui/image-with-fallback";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { Button } from "../../ui/button";
 import { useAuth } from "../../auth/AuthProvider";
 import { ProfileService } from "../../../services/profileService";
+import DashboardService, { type DashboardData } from "../../../services/dashboardService";
 import type { UserProfile } from "../../../types/profile";
-
-interface RecommendationItem {
-  id: number;
-  name: string;
-  cuisine: string;
-  rating: number;
-  distance: string;
-  image: string;
-}
-
-interface SavedRecipeItem {
-  id: number;
-  name: string;
-  time: string;
-  image: string;
-}
-
-interface CrewMember {
-  id: number;
-  name: string;
-  avatar: string;
-  initials: string;
-}
-
-const recommendations: RecommendationItem[] = [
-  {
-    id: 1,
-    name: "Gourmet Burger House",
-    cuisine: "American",
-    rating: 4.8,
-    distance: "0.5 mi",
-    image: "https://images.unsplash.com/photo-1656439659132-24c68e36b553?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnb3VybWV0JTIwYnVyZ2VyJTIwZm9vZHxlbnwxfHx8fDE3NjEwMjE3OTV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: 2,
-    name: "Pasta Paradise",
-    cuisine: "Italian",
-    rating: 4.9,
-    distance: "0.8 mi",
-    image: "https://images.unsplash.com/photo-1712746784067-e9e1bd86c043?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMGRpc2glMjByZXN0YXVyYW50fGVufDF8fHx8MTc2MDk2NTg4NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: 3,
-    name: "Sakura Sushi Bar",
-    cuisine: "Japanese",
-    rating: 4.7,
-    distance: "1.2 mi",
-    image: "https://images.unsplash.com/photo-1625937751876-4515cd8e78bd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdXNoaSUyMHBsYXR0ZXJ8ZW58MXx8fHwxNzYxMDYzNDA2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: 4,
-    name: "Sweet Delights Bakery",
-    cuisine: "Desserts",
-    rating: 4.9,
-    distance: "0.3 mi",
-    image: "https://images.unsplash.com/photo-1705933774160-24298027a349?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXNzZXJ0JTIwY2FrZXxlbnwxfHx8fDE3NjEwMjEwMDl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: 5,
-    name: "Green Bowl Café",
-    cuisine: "Healthy",
-    rating: 4.6,
-    distance: "0.6 mi",
-    image: "https://images.unsplash.com/photo-1643750182373-b4a55a8c2801?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoZWFsdGh5JTIwc2FsYWQlMjBib3dsfGVufDF8fHx8MTc2MTA0MzAyMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: 6,
-    name: "Naples Pizza Co.",
-    cuisine: "Italian",
-    rating: 4.8,
-    distance: "0.9 mi",
-    image: "https://images.unsplash.com/photo-1544982503-9f984c14501a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMHNsaWNlfGVufDF8fHx8MTc2MTA0MTYwMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-];
-
-const savedRecipes: SavedRecipeItem[] = [
-  {
-    id: 1,
-    name: "Avocado Toast",
-    time: "10 min",
-    image: "https://images.unsplash.com/photo-1676471970358-1cff04452e7b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhdm9jYWRvJTIwdG9hc3QlMjBicmVha2Zhc3R8ZW58MXx8fHwxNzYxMTE4NzU3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: 2,
-    name: "Berry Smoothie Bowl",
-    time: "5 min",
-    image: "https://images.unsplash.com/photo-1627308594190-a057cd4bfac8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbW9vdGhpZSUyMGJvd2x8ZW58MXx8fHwxNzYxMTcxNTE1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: 3,
-    name: "Street Tacos",
-    time: "20 min",
-    image: "https://images.unsplash.com/photo-1529704640551-eef9ba5d774a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0YWNvcyUyMGZvb2R8ZW58MXx8fHwxNzYxMTg3NDc2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: 4,
-    name: "Ramen Bowl",
-    time: "30 min",
-    image: "https://images.unsplash.com/photo-1697652974652-a2336106043b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyYW1lbiUyMGJvd2x8ZW58MXx8fHwxNzYxMTI2MTMyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-];
-
-const crewMembers: CrewMember[] = [
-  { id: 1, name: "Alex Chen", avatar: "", initials: "AC" },
-  { id: 2, name: "Jordan Smith", avatar: "", initials: "JS" },
-  { id: 3, name: "Morgan Lee", avatar: "", initials: "ML" },
-  { id: 4, name: "Casey Brown", avatar: "", initials: "CB" },
-  { id: 5, name: "Riley Davis", avatar: "", initials: "RD" },
-  { id: 6, name: "Taylor Wilson", avatar: "", initials: "TW" },
-];
 
 export function Dashboard() {
   const { user } = useAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardData>({
+    crew: [],
+    savedRecipes: [],
+    restaurantRecommendations: [],
+    masterbotPosts: []
+  });
   const [loading, setLoading] = useState(true);
+  const [loadingSection, setLoadingSection] = useState({
+    crew: true,
+    recipes: true,
+    restaurants: true,
+    masterbot: true
+  });
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchDashboardData = async () => {
       if (!user) return;
       
       try {
-        const result = await ProfileService.getProfile();
-        if (result.success && result.data) {
-          setUserProfile(result.data);
+        // Fetch user profile
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data) {
+          setUserProfile(profileResult.data);
         }
+
+        // Get user location from profile or geolocation
+        let userLocation: { lat: number; lng: number } | undefined;
+        
+        // Try to get from browser geolocation
+        if ('geolocation' in navigator) {
+          try {
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+            });
+            userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+          } catch {
+            console.log('Geolocation not available, using default');
+          }
+        }
+
+        // Fetch all dashboard data
+        const data = await DashboardService.fetchDashboardData(user.id, userLocation);
+        setDashboardData(data);
+        
+        setLoadingSection({
+          crew: false,
+          recipes: false,
+          restaurants: false,
+          masterbot: false
+        });
       } catch (error) {
-        console.error('Error fetching user profile:', error);
+        console.error('Error fetching dashboard data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserProfile();
+    fetchDashboardData();
   }, [user]);
 
   const getGreeting = () => {
@@ -200,77 +133,192 @@ export function Dashboard() {
         {/* My Crew Section */}
         <div className="mb-12">
           <h2 className="mb-6">My Crew</h2>
-          <div className="flex gap-6 overflow-x-auto pb-2">
-            {crewMembers.map((member) => (
-              <button
-                key={member.id}
-                className="flex flex-col items-center gap-2 min-w-fit hover:opacity-70 transition-opacity"
-              >
-                <Avatar className="w-16 h-16 border-2 border-gray-200">
-                  <AvatarImage src={member.avatar} alt={member.name} />
-                  <AvatarFallback className="bg-gray-100">{member.initials}</AvatarFallback>
-                </Avatar>
-                <span className="text-gray-700">{member.name.split(" ")[0]}</span>
-              </button>
-            ))}
-          </div>
+          {loadingSection.crew ? (
+            <div className="flex gap-6 overflow-x-auto pb-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex flex-col items-center gap-2 min-w-fit">
+                  <div className="w-16 h-16 rounded-full bg-gray-200 animate-pulse" />
+                  <div className="w-12 h-3 bg-gray-200 rounded animate-pulse" />
+                </div>
+              ))}
+            </div>
+          ) : dashboardData.crew.length > 0 ? (
+            <div className="flex gap-6 overflow-x-auto pb-2">
+              {dashboardData.crew.map((member) => (
+                <button
+                  key={member.id}
+                  className="flex flex-col items-center gap-2 min-w-fit hover:opacity-70 transition-opacity"
+                >
+                  <Avatar className="w-16 h-16 border-2 border-gray-200">
+                    <AvatarImage src={member.avatar} alt={member.name} />
+                    <AvatarFallback className="bg-gray-100">{member.initials}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-gray-700 text-sm">{member.name.split(" ")[0]}</span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <p className="text-sm">No crew members yet</p>
+              <p className="text-xs mt-1">Add friends to build your crew!</p>
+            </div>
+          )}
         </div>
 
         {/* Saved Recipes Section */}
         <div className="mb-12">
           <h2 className="mb-6">Saved Recipes</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {savedRecipes.map((recipe) => (
-              <Card
-                key={recipe.id}
-                className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-gray-200"
-              >
-                <div className="relative h-32 overflow-hidden">
-                  <ImageWithFallback
-                    src={recipe.image}
-                    alt={recipe.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-3">
-                  <h3 className="mb-1">{recipe.name}</h3>
-                  <p className="text-gray-500">{recipe.time}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
+          {loadingSection.recipes ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <Card key={i} className="overflow-hidden border-gray-200">
+                  <div className="h-32 bg-gray-200 animate-pulse" />
+                  <div className="p-3 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                    <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : dashboardData.savedRecipes.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {dashboardData.savedRecipes.map((recipe) => (
+                <Card
+                  key={recipe.id}
+                  className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-gray-200"
+                >
+                  <div className="relative h-32 overflow-hidden">
+                    <ImageWithFallback
+                      src={recipe.image}
+                      alt={recipe.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-3">
+                    <h3 className="mb-1 text-sm font-medium line-clamp-1">{recipe.name}</h3>
+                    <p className="text-xs text-gray-500">{recipe.time}</p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <p className="text-sm">No saved recipes yet</p>
+              <p className="text-xs mt-1">Save recipes from Bites to see them here!</p>
+            </div>
+          )}
         </div>
 
-        {/* Recommendations Section */}
-        <div>
-          <h2 className="mb-6">Your Recommendations</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recommendations.map((item) => (
-              <Card
-                key={item.id}
-                className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-gray-200"
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <ImageWithFallback
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="mb-1">{item.name}</h3>
-                  <p className="text-gray-600 mb-3">{item.cuisine}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <span className="text-yellow-500">★</span>
-                      <span>{item.rating}</span>
-                    </div>
-                    <span className="text-gray-500">{item.distance}</span>
+        {/* Restaurant Recommendations Section */}
+        <div className="mb-12">
+          <h2 className="mb-6">Restaurant Recommendations</h2>
+          {loadingSection.restaurants ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Card key={i} className="overflow-hidden border-gray-200">
+                  <div className="h-48 bg-gray-200 animate-pulse" />
+                  <div className="p-4 space-y-2">
+                    <div className="h-5 bg-gray-200 rounded animate-pulse" />
+                    <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
+                    <div className="h-4 bg-gray-200 rounded w-1/3 animate-pulse" />
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                </Card>
+              ))}
+            </div>
+          ) : dashboardData.restaurantRecommendations.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {dashboardData.restaurantRecommendations.map((item) => (
+                <Card
+                  key={item.id}
+                  className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-gray-200"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <ImageWithFallback
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="mb-1 font-medium">{item.name}</h3>
+                    <p className="text-sm text-gray-600 mb-3">{item.cuisine}</p>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-1">
+                        <span className="text-yellow-500">★</span>
+                        <span>{item.rating.toFixed(1)}</span>
+                      </div>
+                      <span className="text-gray-500">{item.distance}</span>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <p className="text-sm">No restaurant recommendations</p>
+              <p className="text-xs mt-1">Enable location to see nearby restaurants!</p>
+            </div>
+          )}
+        </div>
+
+        {/* MasterBot Posts Section */}
+        <div>
+          <h2 className="mb-6">Trending Food Posts</h2>
+          {loadingSection.masterbot ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <Card key={i} className="overflow-hidden border-gray-200">
+                  <div className="h-48 bg-gray-200 animate-pulse" />
+                  <div className="p-4 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+                      <div className="h-3 bg-gray-200 rounded w-20 animate-pulse" />
+                    </div>
+                    <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                    <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse" />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : dashboardData.masterbotPosts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {dashboardData.masterbotPosts.map((post) => (
+                <Card
+                  key={post.id}
+                  className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-gray-200"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <ImageWithFallback
+                      src={post.image_url}
+                      alt={post.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={post.masterbot_avatar} alt={post.masterbot_name} />
+                        <AvatarFallback className="text-xs bg-orange-100">
+                          {post.masterbot_name.slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-xs font-medium text-gray-700">{post.masterbot_name}</span>
+                    </div>
+                    <h3 className="text-sm font-medium mb-1 line-clamp-2">{post.title}</h3>
+                    <p className="text-xs text-gray-600 line-clamp-2 mb-2">{post.content}</p>
+                    {post.restaurant_name && (
+                      <p className="text-xs text-gray-500">📍 {post.restaurant_name}</p>
+                    )}
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <p className="text-sm">No trending posts</p>
+              <p className="text-xs mt-1">Check back soon for food inspiration!</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
