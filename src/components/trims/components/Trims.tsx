@@ -135,16 +135,6 @@ export function Trims() {
       <div className="sticky top-0 z-10 bg-background border-b p-4 space-y-4">
         <h1>Trims</h1>
         
-        {/* Debug Auth Status */}
-        <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-          <div className="text-sm font-mono">
-            <div className="text-blue-800 font-medium">🔐 Auth Status:</div>
-            <div className={user ? "text-green-600" : "text-red-600"}>
-              {user ? `✅ Logged in: ${user.email}` : "❌ Not logged in"}
-            </div>
-          </div>
-        </div>
-        
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
