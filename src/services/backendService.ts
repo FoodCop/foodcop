@@ -112,16 +112,44 @@ class BackendService {
     return this.makeRequest(`/places/details/${placeId}`);
   }
 
-  // Google Directions - Get route directions
+  // Google Routes API v2 - Get route directions (modern API)
   async getDirections(params: {
     origin: string;
     destination: string;
     mode: string;
     alternatives: string;
   }): Promise<BackendResponse> {
+    // Convert old Directions API format to Routes API v2 format
+    const [originLat, originLng] = params.origin.split(',').map(Number);
+    const [destLat, destLng] = params.destination.split(',').map(Number);
+    
+    const routesApiRequest = {
+      origin: {
+        location: {
+          latLng: {
+            latitude: originLat,
+            longitude: originLng
+          }
+        }
+      },
+      destination: {
+        location: {
+          latLng: {
+            latitude: destLat,
+            longitude: destLng
+          }
+        }
+      },
+      travelMode: params.mode.toUpperCase(),
+      routingPreference: params.mode.toUpperCase() === 'DRIVE' ? 'TRAFFIC_AWARE' : 'TRAFFIC_UNAWARE',
+      computeAlternativeRoutes: params.alternatives === 'true',
+      languageCode: 'en-US',
+      units: 'METRIC'
+    };
+    
     return this.makeRequest('/directions', {
       method: 'POST',
-      body: JSON.stringify(params),
+      body: JSON.stringify(routesApiRequest),
     });
   }
 

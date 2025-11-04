@@ -763,41 +763,39 @@ export default function App() {
               );
             })}
           
-          {/* Route polyline */}
-          {showRoute && routePolyline.length > 1 && (
-            <>
-              {routePolyline.slice(0, -1).map((point, index) => {
-                const nextPoint = routePolyline[index + 1];
-                return (
-                  <Overlay key={`route-segment-${index}`} anchor={point} offset={[0, 0]}>
-                    <svg 
-                      width="100%" 
-                      height="100%" 
-                      style={{ 
-                        position: 'absolute', 
-                        top: 0, 
-                        left: 0,
+          {/* Route polyline - Use intermediate points for smooth line */}
+          {showRoute && routePolyline.length > 1 && (() => {
+            // Generate many intermediate points for a smooth line
+            const segments = [];
+            for (let i = 0; i < routePolyline.length - 1; i++) {
+              const start = routePolyline[i];
+              const end = routePolyline[i + 1];
+              
+              // Create 10 intermediate points between each pair
+              for (let j = 0; j < 10; j++) {
+                const t = j / 10;
+                const lat = start[0] + (end[0] - start[0]) * t;
+                const lng = start[1] + (end[1] - start[1]) * t;
+                
+                segments.push(
+                  <Overlay key={`route-${i}-${j}`} anchor={[lat, lng]} offset={[0, 0]}>
+                    <div
+                      style={{
+                        width: '8px',
+                        height: '8px',
+                        backgroundColor: '#3b82f6',
+                        borderRadius: '50%',
+                        opacity: 0.7,
                         pointerEvents: 'none',
-                        overflow: 'visible'
+                        transform: 'translate(-50%, -50%)'
                       }}
-                    >
-                      <line
-                        x1="0"
-                        y1="0"
-                        x2={(nextPoint[1] - point[1]) * 10000}
-                        y2={(nextPoint[0] - point[0]) * 10000}
-                        stroke="#3b82f6"
-                        strokeWidth="4"
-                        strokeOpacity="0.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    />
                   </Overlay>
                 );
-              })}
-            </>
-          )}
+              }
+            }
+            return segments;
+          })()}
         </Map>
       </div>
 

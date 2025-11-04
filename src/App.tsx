@@ -17,7 +17,7 @@ import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
 import { LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import { Toaster } from './components/ui/sonner'
-import { MobileBottomNav } from './components/navigation/MobileBottomNav'
+import { MobileRadialNav } from './components/navigation/MobileRadialNav'
 import './App.css'
 import './styles/mobile.css'
 
@@ -488,16 +488,18 @@ function App() {
           {renderCurrentPage()}
         </div>
 
-        {/* Mobile Bottom Navigation - Only show on main app pages */}
+        {/* Mobile Radial Navigation - Only show on main app pages and mobile devices */}
         {currentPage !== 'landing' && currentPage !== 'auth' && currentPage !== 'onboarding' && (
-          <MobileBottomNav 
-            currentPage={currentPage}
-            onNavigate={(page) => {
-              setCurrentPage(page);
-              window.location.hash = `#${page}`;
-              setMobileMenuOpen(false);
-            }}
-          />
+          <div className="md:hidden">
+            <MobileRadialNav 
+              currentPage={currentPage}
+              onNavigate={(page) => {
+                setCurrentPage(page);
+                window.location.hash = `#${page}`;
+                setMobileMenuOpen(false);
+              }}
+            />
+          </div>
         )}
 
         <Toaster />

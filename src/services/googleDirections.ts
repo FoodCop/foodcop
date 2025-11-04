@@ -121,73 +121,42 @@ export async function getDirections(
   }
 
   try {
-    // Use backend service for directions API
-    const { backendService } = await import('./backendService');
+    console.log('🗺️ Requesting directions:', {
+      origin: `${origin.lat},${origin.lng}`,
+      destination: `${destination.lat},${destination.lng}`,
+      mode
+    });
+
+    // Call Google Directions API directly (browser-safe)
+    console.log('🗺️ Calling Google Directions API directly');
     
-    const params = {
+    const params = new URLSearchParams({
       origin: `${origin.lat},${origin.lng}`,
       destination: `${destination.lat},${destination.lng}`,
       mode: mode.toLowerCase(),
-      alternatives: alternatives.toString()
-    };
+      alternatives: alternatives.toString(),
+      key: API_KEY || ''
+    });
 
-    console.log('🗺️ Requesting directions:', params);
+    const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?${params}`;
+    
+    const response = await fetch(directionsUrl);
+    const data = await response.json();
 
-    const response = await backendService.getDirections(params);
-
-    if (!response.success || !response.data) {
-      throw new Error(response.error || 'Directions API error');
+    if (data.status === 'OK' && data.routes && data.routes.length > 0) {
+      console.log('✅ Directions received from Google:', data.routes.length, 'route(s)');
+      return processDirectionsResponse(data);
+    } else {
+      console.warn('⚠️ Google API returned no routes, using estimated route');
+      
+      // Fallback to estimated route
+      const estimatedDistance = calculateStraightLineDistance(origin, destination);
+      const estimatedTime = estimateTravelTime(estimatedDistance, mode);
+      const estimatedRoute = createEstimatedRoute(origin, destination, estimatedDistance, estimatedTime, mode);
+      
+      console.log('✅ Using estimated route:', estimatedRoute.routes.length, 'route(s)');
+      return estimatedRoute;
     }
-
-    const data = response.data;
-
-    if (data.status !== 'OK') {
-      console.error('Directions API error:', data.status, data.error_message);
-      return {
-        routes: [],
-        status: data.status,
-        errorMessage: data.error_message
-      };
-    }
-
-    console.log('✅ Directions received:', data.routes.length, 'route(s)');
-
-    // Transform the response to our format
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const routes: Route[] = data.routes.map((route: Record<string, any>) => ({
-      summary: route.summary || '',
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      legs: route.legs.map((leg: Record<string, any>) => ({
-        distance: leg.distance,
-        duration: leg.duration,
-        startAddress: leg.start_address,
-        endAddress: leg.end_address,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        steps: leg.steps.map((step: Record<string, any>) => ({
-          instruction: step.html_instructions?.replace(/<[^>]*>/g, '') || '',
-          distance: step.distance,
-          duration: step.duration,
-          startLocation: {
-            lat: step.start_location.lat,
-            lng: step.start_location.lng
-          },
-          endLocation: {
-            lat: step.end_location.lat,
-            lng: step.end_location.lng
-          },
-          maneuver: step.maneuver,
-          polyline: step.polyline?.points || ''
-        }))
-      })),
-      overviewPolyline: route.overview_polyline?.points || '',
-      bounds: route.bounds,
-      warnings: route.warnings || []
-    }));
-
-    return {
-      routes,
-      status: data.status
-    };
   } catch (error) {
     console.error('Error fetching directions:', error);
     return {
@@ -196,6 +165,28 @@ export async function getDirections(
       errorMessage: error instanceof Error ? error.message : 'Unknown error'
     };
   }
+}
+
+/**
+ * Calculate straight-line distance between two points (Haversine formula)
+ */
+function calculateStraightLineDistance(
+  point1: { lat: number; lng: number },
+  point2: { lat: number; lng: number }
+): number {
+  const R = 6371; // Earth's radius in km
+  const dLat = ((point2.lat - point1.lat) * Math.PI) / 180;
+  const dLng = ((point2.lng - point1.lng) * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((point1.lat * Math.PI) / 180) *
+      Math.cos((point2.lat * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 }
 
 /**
@@ -221,6 +212,226 @@ export function estimateTravelTime(distanceKm: number, mode: TravelMode): string
     const mins = minutes % 60;
     return mins > 0 ? `${hrs}h ${mins}min` : `${hrs}h`;
   }
+}
+
+/**
+ * Create an estimated route when Directions API is unavailable
+ */
+function createEstimatedRoute(
+  origin: { lat: number; lng: number },
+  destination: { lat: number; lng: number },
+  distanceKm: number,
+  estimatedTime: string,
+  mode: TravelMode
+): DirectionsResponse {
+  const distanceMeters = Math.round(distanceKm * 1000);
+  const durationSeconds = Math.round((distanceKm / (mode === 'WALKING' ? 5 : mode === 'BICYCLING' ? 15 : 40)) * 3600);
+
+  // Create a simple straight-line polyline
+  const points: [number, number][] = [[origin.lat, origin.lng], [destination.lat, destination.lng]];
+  const polyline = encodePolyline(points);
+
+  return {
+    routes: [{
+      summary: 'Estimated route',
+      legs: [{
+        distance: {
+          text: `${distanceKm.toFixed(1)} km`,
+          value: distanceMeters
+        },
+        duration: {
+          text: estimatedTime,
+          value: durationSeconds
+        },
+        startAddress: `${origin.lat.toFixed(6)}, ${origin.lng.toFixed(6)}`,
+        endAddress: `${destination.lat.toFixed(6)}, ${destination.lng.toFixed(6)}`,
+        steps: [{
+          instruction: `Head towards destination (${mode.toLowerCase()})`,
+          distance: {
+            text: `${distanceKm.toFixed(1)} km`,
+            value: distanceMeters
+          },
+          duration: {
+            text: estimatedTime,
+            value: durationSeconds
+          },
+          startLocation: origin,
+          endLocation: destination,
+          polyline: polyline
+        }]
+      }],
+      overviewPolyline: polyline,
+      bounds: {
+        northeast: {
+          lat: Math.max(origin.lat, destination.lat),
+          lng: Math.max(origin.lng, destination.lng)
+        },
+        southwest: {
+          lat: Math.min(origin.lat, destination.lat),
+          lng: Math.min(origin.lng, destination.lng)
+        }
+      },
+      warnings: ['This is an estimated route. Backend /directions endpoint needed for accurate routing.']
+    }],
+    status: 'OK'
+  };
+}
+
+/**
+ * Simple polyline encoding for two points
+ */
+function encodePolyline(points: [number, number][]): string {
+  let encoded = '';
+  let prevLat = 0;
+  let prevLng = 0;
+
+  for (const [lat, lng] of points) {
+    const latE5 = Math.round(lat * 1e5);
+    const lngE5 = Math.round(lng * 1e5);
+    
+    encoded += encodeValue(latE5 - prevLat);
+    encoded += encodeValue(lngE5 - prevLng);
+    
+    prevLat = latE5;
+    prevLng = lngE5;
+  }
+
+  return encoded;
+}
+
+function encodeValue(value: number): string {
+  let encoded = '';
+  value = value < 0 ? ~(value << 1) : value << 1;
+  
+  while (value >= 0x20) {
+    encoded += String.fromCharCode((0x20 | (value & 0x1f)) + 63);
+    value >>= 5;
+  }
+  
+  encoded += String.fromCharCode(value + 63);
+  return encoded;
+}
+
+/**
+ * Process directions response from Google API
+ * Handles both Routes API v2 and legacy Directions API formats
+ */
+function processDirectionsResponse(data: Record<string, unknown>): DirectionsResponse {
+  // Routes API v2 doesn't have a status field in the same way
+  // Check for routes array first
+  const hasRoutes = data.routes && Array.isArray(data.routes) && (data.routes as unknown[]).length > 0;
+  
+  if (!hasRoutes && data.status && data.status !== 'OK') {
+    console.error('Directions API error:', data.status, (data as Record<string, string>).error_message);
+    return {
+      routes: [],
+      status: data.status as string,
+      errorMessage: (data as Record<string, string>).error_message
+    };
+  }
+
+  const apiData = data as { routes: Record<string, unknown>[]; status?: string };
+  console.log('✅ Directions received:', apiData.routes.length, 'route(s)');
+
+  // Transform the response to our format
+  const routes: Route[] = apiData.routes.map((route: Record<string, unknown>) => {
+    const routeData = route as {
+      summary?: string;
+      legs?: unknown[];
+      // Routes API v2 format
+      polyline?: { encodedPolyline?: string };
+      // Old Directions API format
+      overview_polyline?: { points?: string };
+      bounds?: {
+        northeast?: { lat?: number; lng?: number };
+        southwest?: { lat?: number; lng?: number };
+      };
+      copyrights?: string;
+      warnings?: string[];
+    };
+    
+    const legs = (routeData.legs || []) as Record<string, unknown>[];
+    
+    return {
+      summary: routeData.summary || '',
+      legs: legs.map((leg: Record<string, unknown>) => {
+        const legData = leg as {
+          distance?: { text?: string; value?: number };
+          duration?: { text?: string; value?: number };
+          start_address?: string;
+          end_address?: string;
+          steps?: unknown[];
+        };
+        
+        const steps = (legData.steps || []) as Record<string, unknown>[];
+        
+        return {
+          distance: {
+            text: legData.distance?.text || '',
+            value: legData.distance?.value || 0
+          },
+          duration: {
+            text: legData.duration?.text || '',
+            value: legData.duration?.value || 0
+          },
+          startAddress: legData.start_address || '',
+          endAddress: legData.end_address || '',
+          steps: steps.map((step: Record<string, unknown>) => {
+            const stepData = step as {
+              distance?: { text?: string; value?: number };
+              duration?: { text?: string; value?: number };
+              start_location?: { lat?: number; lng?: number };
+              end_location?: { lat?: number; lng?: number };
+              html_instructions?: string;
+              maneuver?: string;
+              travel_mode?: string;
+              polyline?: { points?: string };
+            };
+            
+            return {
+              instruction: stepData.html_instructions || '',
+              distance: {
+                text: stepData.distance?.text || '',
+                value: stepData.distance?.value || 0
+              },
+              duration: {
+                text: stepData.duration?.text || '',
+                value: stepData.duration?.value || 0
+              },
+              startLocation: {
+                lat: stepData.start_location?.lat || 0,
+                lng: stepData.start_location?.lng || 0
+              },
+              endLocation: {
+                lat: stepData.end_location?.lat || 0,
+                lng: stepData.end_location?.lng || 0
+              },
+              maneuver: stepData.maneuver,
+              polyline: stepData.polyline?.points || ''
+            };
+          })
+        };
+      }),
+      // Support both Routes API v2 (polyline.encodedPolyline) and old Directions API (overview_polyline.points)
+      overviewPolyline: routeData.polyline?.encodedPolyline || routeData.overview_polyline?.points || '',
+      bounds: {
+        northeast: {
+          lat: routeData.bounds?.northeast?.lat || 0,
+          lng: routeData.bounds?.northeast?.lng || 0
+        },
+        southwest: {
+          lat: routeData.bounds?.southwest?.lat || 0,
+          lng: routeData.bounds?.southwest?.lng || 0
+        }
+      },
+      warnings: routeData.warnings || []
+    };
+  });
+
+  return {
+    routes,
+    status: apiData.status
+  };
 }
 
 /**
