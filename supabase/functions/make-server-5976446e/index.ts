@@ -112,7 +112,46 @@ serve(async (req) => {
 
       const placesUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&type=${type}&key=${GOOGLE_API_KEY}`
 
-      console.log('🔍 Searching nearby places')
+      console.log('🔍 Searching nearby places:', { latitude, longitude, radius, type })
+      console.log('📍 Google Places URL (without key):', placesUrl.replace(GOOGLE_API_KEY, 'HIDDEN'))
+
+      const response = await fetch(placesUrl)
+      const data = await response.json()
+
+      console.log('📊 Google Places response status:', data.status)
+      console.log('📊 Google Places results count:', data.results?.length || 0)
+      
+      if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
+        console.error('❌ Google Places API error:', data.status, data.error_message)
+      }
+
+      return new Response(
+        JSON.stringify(data),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Google Places Text Search
+    if (path === '/places/textsearch') {
+      const requestBody = await req.json()
+      const { query, location, radius } = requestBody
+
+      const GOOGLE_API_KEY = Deno.env.get('GOOGLE_MAPS_API_KEY')
+      if (!GOOGLE_API_KEY) {
+        throw new Error('GOOGLE_MAPS_API_KEY not configured')
+      }
+
+      let placesUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}`
+      
+      if (location) {
+        placesUrl += `&location=${location.lat},${location.lng}`
+      }
+      
+      if (radius) {
+        placesUrl += `&radius=${radius}`
+      }
+
+      console.log('🔍 Text searching places:', query)
 
       const response = await fetch(placesUrl)
       const data = await response.json()
@@ -151,7 +190,7 @@ serve(async (req) => {
       JSON.stringify({ 
         error: 'Endpoint not found',
         path: path,
-        available_endpoints: ['/health', '/directions', '/places/nearby', '/places/details']
+        available_endpoints: ['/health', '/directions', '/places/nearby', '/places/textsearch', '/places/details']
       }),
       { 
         status: 404,

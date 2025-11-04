@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react'
 import { LandingPage } from './components/home/components/LandingPage'
 import DebugApp from './components/debug/Debug'
 import AuthPage from './components/auth/AuthPage'
-import { OnboardingFlow } from './components/onboarding/OnboardingFlow'
-import { ProfileService } from './services/profileService'
+import OnboardingFlow from './components/onboarding/OnboardingFlow'
 import FeedApp from './components/feed/App'
 import ScoutApp from './components/scout/App'
 import BitesApp from './components/bites/App'
@@ -351,35 +350,6 @@ function App() {
     );
   };
 
-  // Handle onboarding completion with full preferences
-  const handleOnboardingComplete = async (data: {
-    displayName: string;
-    location: string;
-    dietaryRestrictions: string[];
-    cuisinePreferences: string[];
-    spiceTolerance: 'mild' | 'medium' | 'hot' | 'extreme';
-    priceRange: 'budget' | 'moderate' | 'expensive' | 'fine_dining';
-  }) => {
-    try {
-      console.log('🎯 Completing onboarding with full data:', data);
-      
-      const result = await ProfileService.completeOnboardingWithPreferences(data);
-      
-      if (result.success) {
-        console.log('✅ Onboarding completed successfully with preferences');
-        // Redirect to dashboard
-        setCurrentPage('dash');
-        window.location.hash = '#dash';
-      } else {
-        console.error('❌ Onboarding completion failed:', result.error);
-        toast.error('Failed to complete onboarding. Please try again.');
-      }
-    } catch (error) {
-      console.error('❌ Onboarding completion error:', error);
-      toast.error('An error occurred. Please try again.');
-    }
-  };
-
   // Simplified routing based on URL hash
   useEffect(() => {
     const hash = window.location.hash.slice(1); // Remove the #
@@ -413,7 +383,7 @@ function App() {
         return <AuthPage />
       case 'onboarding':
         // Onboarding requires authentication - redirect to auth if not authenticated
-        return <OnboardingProtectedFlow onComplete={handleOnboardingComplete} />
+        return <OnboardingProtectedFlow />
       case 'feed':
         return <FeedApp />
       case 'scout':
@@ -440,7 +410,7 @@ function App() {
   }
 
   // Protected onboarding component that uses AuthProvider session
-  const OnboardingProtectedFlow = ({ onComplete }: { onComplete: (data: { displayName: string; location: string }) => Promise<void> }) => {
+  const OnboardingProtectedFlow = () => {
     const { user, session, loading } = useAuth();
 
     if (loading) {
@@ -468,7 +438,7 @@ function App() {
       );
     }
 
-    return <OnboardingFlow onComplete={onComplete} />;
+    return <OnboardingFlow />;
   };
 
   return (
