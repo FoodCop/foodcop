@@ -166,16 +166,6 @@ export default function App() {
           </p>
         </div>
 
-        {/* Debug Auth Status */}
-        <div className="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200 max-w-md">
-          <div className="text-sm font-mono">
-            <div className="text-blue-800 font-medium">🔐 Auth Status:</div>
-            <div className={user ? "text-green-600" : "text-red-600"}>
-              {user ? `✅ Logged in: ${user.email}` : "❌ Not logged in"}
-            </div>
-          </div>
-        </div>
-
         <div className="mb-8">
           <FilterBar
             searchQuery={searchQuery}
