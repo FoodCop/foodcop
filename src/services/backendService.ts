@@ -88,7 +88,8 @@ class BackendService {
     return this.makeRequest('/places/nearby', {
       method: 'POST',
       body: JSON.stringify({ 
-        location, 
+        latitude: location.lat,
+        longitude: location.lng,
         radius, 
         type 
       }),
