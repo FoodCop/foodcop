@@ -16,12 +16,25 @@ const LocationStep: React.FC = () => {
     setError('');
 
     try {
+      // Check if geolocation is available
+      if (!navigator.geolocation) {
+        throw new Error('Geolocation is not supported by your browser');
+      }
+
       // Get user's coordinates
       const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: true,
-          timeout: 10000,
-        });
+        navigator.geolocation.getCurrentPosition(
+          resolve, 
+          (error) => {
+            console.error('Geolocation error:', error);
+            reject(error);
+          }, 
+          {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0,
+          }
+        );
       });
 
       const { latitude, longitude } = position.coords;
@@ -56,7 +69,12 @@ const LocationStep: React.FC = () => {
       }
     } catch (err) {
       console.error('Location detection error:', err);
-      setError('Location detection failed. Please enter your address manually.');
+      const errorMessage = err instanceof GeolocationPositionError 
+        ? err.code === 1 ? 'Please allow location access in your browser settings'
+        : err.code === 2 ? 'Unable to determine your location. Please check your connection.'
+        : 'Location detection timed out. Please try again.'
+        : 'Location detection failed. Please try again.';
+      setError(errorMessage);
     } finally {
       setIsDetecting(false);
     }
@@ -91,13 +109,10 @@ const LocationStep: React.FC = () => {
             </div>
           </div>
         ) : locationData ? (
-          <iframe
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${locationData.latitude},${locationData.longitude}&zoom=15`}
+          <img
+            src={`https://maps.googleapis.com/maps/api/staticmap?center=${locationData.latitude},${locationData.longitude}&zoom=15&size=640x640&scale=2&markers=color:red%7Clabel:You%7C${locationData.latitude},${locationData.longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`}
+            alt="Your location"
+            className="w-full h-full object-cover"
           />
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
