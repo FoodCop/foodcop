@@ -100,11 +100,15 @@ const LocationStep: React.FC = () => {
               </div>
             ) : locationData ? (
               <div className="absolute inset-0">
-                {/* Google Maps Static Image with marker */}
-                <img
-                  src={`https://maps.googleapis.com/maps/api/staticmap?center=${locationData.latitude},${locationData.longitude}&zoom=14&size=600x400&markers=color:red%7C${locationData.latitude},${locationData.longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`}
-                  alt="Your location on map"
-                  className="w-full h-full object-cover rounded-xl"
+                {/* Google Maps Embed with marker */}
+                <iframe
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${locationData.latitude},${locationData.longitude}&zoom=14`}
+                  className="rounded-xl"
                 />
               </div>
             ) : (

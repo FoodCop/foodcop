@@ -9,7 +9,7 @@ const WelcomeStep: React.FC = () => {
       <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-lg w-full">
         {/* Logo */}
         <div className="mb-8">
-          <h1 className="text-6xl font-bold text-fuzo-primary mb-2">FUZO</h1>
+          <h1 className="text-6xl font-bold mb-2" style={{ color: '#ff6900' }}>FUZO</h1>
           <p className="text-gray-600 text-lg">Your Personalized Food Discovery App</p>
         </div>
 
@@ -27,19 +27,19 @@ const WelcomeStep: React.FC = () => {
         {/* Features */}
         <div className="mb-8 space-y-3 text-left">
           <div className="flex items-start gap-3">
-            <div className="w-6 h-6 rounded-full bg-fuzo-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#ff6900' }}>
               <span className="text-white text-sm">✓</span>
             </div>
             <p className="text-gray-700 text-sm">Personalized restaurant recommendations</p>
           </div>
           <div className="flex items-start gap-3">
-            <div className="w-6 h-6 rounded-full bg-fuzo-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#ff6900' }}>
               <span className="text-white text-sm">✓</span>
             </div>
             <p className="text-gray-700 text-sm">Custom recipe suggestions based on your preferences</p>
           </div>
           <div className="flex items-start gap-3">
-            <div className="w-6 h-6 rounded-full bg-fuzo-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#ff6900' }}>
               <span className="text-white text-sm">✓</span>
             </div>
             <p className="text-gray-700 text-sm">Connect with friends and share food discoveries</p>
@@ -49,7 +49,10 @@ const WelcomeStep: React.FC = () => {
         {/* Get Started Button */}
         <button
           onClick={() => setCurrentStep(1)}
-          className="w-full bg-fuzo-primary hover:bg-fuzo-primary-dark text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+          className="w-full text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+          style={{ backgroundColor: '#ff6900' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e05e00'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ff6900'}
         >
           Get Started
         </button>

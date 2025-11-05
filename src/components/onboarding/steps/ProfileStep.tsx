@@ -91,7 +91,10 @@ const ProfileStep: React.FC = () => {
         <button
           onClick={handleContinue}
           disabled={isSaving || !firstName.trim()}
-          className="w-full bg-fuzo-primary hover:bg-fuzo-primary-dark text-white font-semibold py-4 px-8 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          className="w-full text-white font-semibold py-4 px-8 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          style={{ backgroundColor: (isSaving || !firstName.trim()) ? '#999' : '#ff6900' }}
+          onMouseEnter={(e) => (isSaving || !firstName.trim()) ? null : e.currentTarget.style.backgroundColor = '#e05e00'}
+          onMouseLeave={(e) => (isSaving || !firstName.trim()) ? null : e.currentTarget.style.backgroundColor = '#ff6900'}
         >
           {isSaving ? (
             <>
