@@ -7,7 +7,6 @@ import { LocationData } from '../../../types/onboarding';
 const LocationStep: React.FC = () => {
   const { setCurrentStep, setLocation } = useOnboarding();
   const { user } = useAuth();
-  const [address, setAddress] = useState('');
   const [isDetecting, setIsDetecting] = useState(false);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
   const [error, setError] = useState('');
@@ -52,7 +51,6 @@ const LocationStep: React.FC = () => {
         };
 
         setLocationData(location);
-        setAddress(result.formatted_address);
       } else {
         setError('Could not detect your location. Please enter manually.');
       }
@@ -82,59 +80,52 @@ const LocationStep: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-lg w-full">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Where are you located?</h2>
-          <p className="text-gray-600">We'll use this to find nearby restaurants and food spots</p>
-        </div>
-
-        {/* Map Placeholder */}
-        <div className="mb-6">
-          <div className="w-full h-64 bg-gray-100 rounded-xl flex items-center justify-center relative overflow-hidden">
-            {isDetecting ? (
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 border-4 border-fuzo-primary border-t-transparent rounded-full animate-spin mb-3"></div>
-                <p className="text-gray-600">Detecting your location...</p>
-              </div>
-            ) : locationData ? (
-              <div className="absolute inset-0">
-                {/* Google Maps Embed with marker */}
-                <iframe
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${locationData.latitude},${locationData.longitude}&zoom=14`}
-                  className="rounded-xl"
-                />
-              </div>
-            ) : (
-              <p className="text-gray-500">No location detected</p>
-            )}
+    <div className="fixed inset-0 w-full h-full">
+      {/* Full-screen Map */}
+      <div className="absolute inset-0">
+        {isDetecting ? (
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 border-4 border-t-transparent rounded-full animate-spin mb-4" style={{ borderColor: '#ff6900', borderTopColor: 'transparent' }}></div>
+              <p className="text-gray-600 font-medium">Detecting your location...</p>
+            </div>
           </div>
-        </div>
-
-        {/* Address Display */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Your Location</label>
-          <div className="relative">
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="123 Main St, City, State"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-fuzo-primary focus:border-transparent"
-            />
+        ) : locationData ? (
+          <iframe
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${locationData.latitude},${locationData.longitude}&zoom=15`}
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <p className="text-gray-500">No location detected</p>
           </div>
-          {locationData && (
-            <p className="text-sm text-gray-500 mt-2">
-              {locationData.city}, {locationData.state}, {locationData.country}
-            </p>
-          )}
-        </div>
+        )}
+      </div>
+
+      {/* Bottom Sheet Overlay */}
+      <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl p-6 max-h-[50vh]">
+        {/* Location Details */}
+        {locationData && (
+          <div className="mb-4">
+            <div className="flex items-start gap-3 mb-2">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center mt-1" style={{ backgroundColor: '#ff6900' }}>
+                <span className="text-white text-xs">📍</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-900 text-lg mb-1">
+                  {locationData.city || 'Your Location'}
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  {locationData.address}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Error Message */}
         {error && (
@@ -143,26 +134,17 @@ const LocationStep: React.FC = () => {
           </div>
         )}
 
-        {/* Buttons */}
-        <div className="flex gap-3">
-          <button
-            onClick={detectLocation}
-            disabled={isDetecting}
-            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-3 px-4 rounded-xl transition-colors disabled:opacity-50"
-          >
-            Detect Again
-          </button>
-          <button
-            onClick={handleConfirm}
-            disabled={!locationData}
-            className="flex-1 text-white font-semibold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ backgroundColor: locationData ? '#ff6900' : '#999' }}
-            onMouseEnter={(e) => !locationData ? null : e.currentTarget.style.backgroundColor = '#e05e00'}
-            onMouseLeave={(e) => !locationData ? null : e.currentTarget.style.backgroundColor = '#ff6900'}
-          >
-            Confirm & Continue
-          </button>
-        </div>
+        {/* Confirm Button */}
+        <button
+          onClick={handleConfirm}
+          disabled={!locationData}
+          className="w-full text-white font-semibold py-4 px-6 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-lg"
+          style={{ backgroundColor: locationData ? '#ff6900' : '#999' }}
+          onMouseEnter={(e) => !locationData ? null : e.currentTarget.style.backgroundColor = '#e05e00'}
+          onMouseLeave={(e) => !locationData ? null : e.currentTarget.style.backgroundColor = '#ff6900'}
+        >
+          Confirm & Proceed
+        </button>
       </div>
     </div>
   );
