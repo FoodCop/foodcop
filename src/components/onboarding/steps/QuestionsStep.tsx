@@ -72,9 +72,10 @@ const QuestionsStep: React.FC = () => {
                 onClick={() => handleFollowUpSelect(option)}
                 className={`py-3 px-4 rounded-xl font-medium transition-all ${
                   selectedDiet === option
-                    ? 'bg-fuzo-primary text-white shadow-lg scale-105'
+                    ? 'text-white shadow-lg scale-105'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
+                style={selectedDiet === option ? { backgroundColor: '#ff6900' } : undefined}
               >
                 {option}
               </button>
@@ -83,7 +84,10 @@ const QuestionsStep: React.FC = () => {
           <button
             onClick={handleFollowUpConfirm}
             disabled={!selectedDiet}
-            className="w-full bg-fuzo-primary hover:bg-fuzo-primary-dark text-white font-semibold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full text-white font-semibold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: selectedDiet ? '#ff6900' : '#999' }}
+            onMouseEnter={(e) => !selectedDiet ? null : e.currentTarget.style.backgroundColor = '#e05e00'}
+            onMouseLeave={(e) => !selectedDiet ? null : e.currentTarget.style.backgroundColor = '#ff6900'}
           >
             Confirm
           </button>
@@ -125,13 +129,16 @@ const QuestionsStep: React.FC = () => {
         <div className="flex gap-4 mb-6">
           <button
             onClick={() => handleAnswer(true)}
-            className="flex-1 bg-fuzo-primary hover:bg-fuzo-primary-dark text-white font-semibold py-6 rounded-xl transition-all transform hover:scale-105 shadow-lg text-lg"
+            className="flex-1 text-white font-semibold py-6 rounded-xl transition-all transform hover:scale-105 shadow-lg text-lg"
+            style={{ backgroundColor: '#ff6900' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e05e00'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ff6900'}
           >
             Yes
           </button>
           <button
             onClick={() => handleAnswer(false)}
-            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-6 rounded-xl transition-all transform hover:scale-105 shadow-md text-lg"
+            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-6 rounded-xl transition-all transform hover:scale-105 shadow-md text-lg"
           >
             No
           </button>

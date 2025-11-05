@@ -100,15 +100,11 @@ const LocationStep: React.FC = () => {
               </div>
             ) : locationData ? (
               <div className="absolute inset-0">
-                {/* Google Maps with marker */}
-                <iframe
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${locationData.latitude},${locationData.longitude}&zoom=14`}
-                  className="rounded-xl"
+                {/* Google Maps Static Image with marker */}
+                <img
+                  src={`https://maps.googleapis.com/maps/api/staticmap?center=${locationData.latitude},${locationData.longitude}&zoom=14&size=600x400&markers=color:red%7C${locationData.latitude},${locationData.longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`}
+                  alt="Your location on map"
+                  className="w-full h-full object-cover rounded-xl"
                 />
               </div>
             ) : (
@@ -148,14 +144,17 @@ const LocationStep: React.FC = () => {
           <button
             onClick={detectLocation}
             disabled={isDetecting}
-            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-xl transition-colors disabled:opacity-50"
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-3 px-4 rounded-xl transition-colors disabled:opacity-50"
           >
             Detect Again
           </button>
           <button
             onClick={handleConfirm}
             disabled={!locationData}
-            className="flex-1 bg-fuzo-primary hover:bg-fuzo-primary-dark text-white font-semibold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 text-white font-semibold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: locationData ? '#ff6900' : '#999' }}
+            onMouseEnter={(e) => !locationData ? null : e.currentTarget.style.backgroundColor = '#e05e00'}
+            onMouseLeave={(e) => !locationData ? null : e.currentTarget.style.backgroundColor = '#ff6900'}
           >
             Confirm & Continue
           </button>
