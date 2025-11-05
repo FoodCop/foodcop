@@ -66,8 +66,21 @@ MAPPING RULES:
       })
     });
 
+    if (!openaiResponse.ok) {
+      const errorData = await openaiResponse.json();
+      console.error('OpenAI API error:', errorData);
+      throw new Error(`OpenAI API failed: ${errorData.error?.message || 'Unknown error'}`);
+    }
+
     const openaiData = await openaiResponse.json();
+    
+    if (!openaiData.choices || !openaiData.choices[0] || !openaiData.choices[0].message) {
+      console.error('Invalid OpenAI response:', openaiData);
+      throw new Error('Invalid response from OpenAI');
+    }
+    
     const content = openaiData.choices[0].message.content;
+    console.log('Raw OpenAI response:', content);
     
     // Parse JSON from response
     const preferences = JSON.parse(content);
@@ -80,8 +93,9 @@ MAPPING RULES:
     );
   } catch (error) {
     console.error('Error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: errorMessage }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
