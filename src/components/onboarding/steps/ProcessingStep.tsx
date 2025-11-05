@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useOnboarding } from '../OnboardingContext';
 import { AIPreferenceService } from '../../../services/aiPreferenceService';
 import { OnboardingService } from '../../../services/onboardingService';
@@ -8,7 +7,8 @@ import { useAuth } from '../../auth/AuthProvider';
 const ProcessingStep: React.FC = () => {
   const { state } = useOnboarding();
   const { user } = useAuth();
-  const navigate = useNavigate();
+  // useNavigate removed to avoid adding react-router-dom as a hard dependency for this app's hash-based routing
+  // We'll use hash navigation to integrate with the existing routing in App.tsx
   const [stage, setStage] = useState<'analyzing' | 'prefetching' | 'complete' | 'error'>('analyzing');
   const [statusMessage, setStatusMessage] = useState('Analyzing your preferences...');
 
@@ -38,9 +38,9 @@ const ProcessingStep: React.FC = () => {
         setStage('complete');
         setStatusMessage('All set! Taking you to your dashboard...');
         
-        // Redirect to dashboard after brief delay
+        // Redirect to dashboard after brief delay using hash routing
         setTimeout(() => {
-          navigate('/dashboard');
+          window.location.hash = '#dash';
         }, 1500);
 
       } catch (error) {
@@ -51,7 +51,7 @@ const ProcessingStep: React.FC = () => {
     };
 
     processOnboarding();
-  }, [state.responses, user?.id, navigate]);
+  }, [state.responses, user?.id]);
 
   const getProgressPercentage = () => {
     switch (stage) {
