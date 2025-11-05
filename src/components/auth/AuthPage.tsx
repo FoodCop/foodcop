@@ -54,16 +54,14 @@ export default function AuthPage() {
     // Show loading while checking onboarding status
     if (checkingOnboarding) {
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center">
-            <div className="text-4xl sm:text-5xl md:text-6xl mb-4">🔄</div>
-            <div className="text-blue-600 font-bold text-xl mb-2">
-              Setting up your account...
-            </div>
-            <p className="text-gray-600 mb-6">
-              Just a moment while we prepare your personalized FUZO experience!
-            </p>
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#F14C35] mx-auto"></div>
+        <div className="fixed inset-0 bg-white flex items-center justify-center">
+          <div className="flex flex-col items-center">
+            <img 
+              src="/logo_mobile.png" 
+              alt="FUZO" 
+              className="w-32 h-32 mb-8"
+            />
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-t-transparent" style={{ borderColor: '#ff6900', borderTopColor: 'transparent' }}></div>
           </div>
         </div>
       );
