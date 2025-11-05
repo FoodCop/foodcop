@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Map, Marker } from 'pigeon-maps';
 import { useOnboarding } from '../OnboardingContext';
 import { OnboardingService } from '../../../services/onboardingService';
 import { useAuth } from '../../auth/AuthProvider';
@@ -93,10 +94,6 @@ const LocationStep: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    detectLocation();
-  }, []);
-
   return (
     <div className="fixed inset-0 w-full h-full">
       {/* Full-screen Map */}
@@ -109,22 +106,40 @@ const LocationStep: React.FC = () => {
             </div>
           </div>
         ) : locationData ? (
-          <img
-            src={`https://maps.googleapis.com/maps/api/staticmap?center=${locationData.latitude},${locationData.longitude}&zoom=15&size=640x640&scale=2&markers=color:red%7Clabel:You%7C${locationData.latitude},${locationData.longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`}
-            alt="Your location"
-            className="w-full h-full object-cover"
-          />
+          <Map
+            center={[locationData.latitude, locationData.longitude]}
+            zoom={15}
+            height={window.innerHeight}
+            defaultWidth={window.innerWidth}
+          >
+            <Marker 
+              anchor={[locationData.latitude, locationData.longitude]} 
+              color="#ff6900"
+              width={50}
+            />
+          </Map>
         ) : (
-          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            <p className="text-gray-500">No location detected</p>
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-gray-600 font-medium">Allow location access to continue</p>
+              <button
+                onClick={detectLocation}
+                className="text-white font-semibold py-3 px-8 rounded-xl transition-all shadow-lg"
+                style={{ backgroundColor: '#ff6900' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e05e00'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ff6900'}
+              >
+                Enable Location
+              </button>
+            </div>
           </div>
         )}
       </div>
 
       {/* Bottom Sheet Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl p-6 max-h-[50vh]">
-        {/* Location Details */}
-        {locationData && (
+      {locationData && (
+        <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl p-6">
+          {/* Location Details */}
           <div className="mb-4">
             <div className="flex items-start gap-3 mb-2">
               <div className="w-6 h-6 rounded-full flex items-center justify-center mt-1" style={{ backgroundColor: '#ff6900' }}>
@@ -140,27 +155,26 @@ const LocationStep: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
 
-        {/* Error Message */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-            {error}
-          </div>
-        )}
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+              {error}
+            </div>
+          )}
 
-        {/* Confirm Button */}
-        <button
-          onClick={handleConfirm}
-          disabled={!locationData}
-          className="w-full text-white font-semibold py-4 px-6 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-lg"
-          style={{ backgroundColor: locationData ? '#ff6900' : '#999' }}
-          onMouseEnter={(e) => !locationData ? null : e.currentTarget.style.backgroundColor = '#e05e00'}
-          onMouseLeave={(e) => !locationData ? null : e.currentTarget.style.backgroundColor = '#ff6900'}
-        >
-          Confirm & Proceed
-        </button>
-      </div>
+          {/* Confirm Button */}
+          <button
+            onClick={handleConfirm}
+            className="w-full text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg text-lg"
+            style={{ backgroundColor: '#ff6900' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e05e00'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ff6900'}
+          >
+            Confirm & Proceed
+          </button>
+        </div>
+      )}
     </div>
   );
 };
