@@ -37,7 +37,7 @@ const ProfileStep: React.FC = () => {
         avatarUrl,
       });
 
-      setCurrentStep(3);
+      setCurrentStep(4);
     } catch (err) {
       console.error('Error saving profile:', err);
       setError('Failed to save profile. Please try again.');

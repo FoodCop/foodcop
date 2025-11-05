@@ -1,6 +1,7 @@
 import React from 'react';
 import { OnboardingProvider, useOnboarding } from './OnboardingContext';
 import WelcomeStep from './steps/WelcomeStep';
+import PhoneStep from './steps/PhoneStep';
 import LocationStep from './steps/LocationStep';
 import ProfileStep from './steps/ProfileStep';
 import QuestionsStep from './steps/QuestionsStep';
@@ -14,12 +15,14 @@ const OnboardingFlowContent: React.FC = () => {
       case 0:
         return <WelcomeStep />;
       case 1:
-        return <LocationStep />;
+        return <PhoneStep />;
       case 2:
-        return <ProfileStep />;
+        return <LocationStep />;
       case 3:
-        return <QuestionsStep />;
+        return <ProfileStep />;
       case 4:
+        return <QuestionsStep />;
+      case 5:
         return <ProcessingStep />;
       default:
         return <WelcomeStep />;

@@ -54,7 +54,7 @@ const QuestionsStep: React.FC = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       // All questions answered, move to processing
-      setCurrentStep(4);
+      setCurrentStep(5);
     }
   };
 
