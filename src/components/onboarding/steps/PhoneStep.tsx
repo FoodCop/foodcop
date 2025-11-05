@@ -38,7 +38,7 @@ const PhoneStep: React.FC = () => {
       }
 
       // Move to location step
-      setCurrentStep(1);
+      setCurrentStep(2);
     } catch (err) {
       console.error('Error saving phone number:', err);
       setError('Failed to save phone number. Please try again.');
