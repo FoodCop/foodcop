@@ -263,6 +263,22 @@ export function Trims() {
                   item={selectedVideo}
                   itemType="video"
                   className="flex-1"
+                  onSaveSuccess={(savedItem, isDuplicate) => {
+                    if (isDuplicate) {
+                      toast.info("Video already saved");
+                    } else {
+                      toast.success("Video saved to Plate", {
+                        description: selectedVideo.title,
+                        action: {
+                          label: "View",
+                          onClick: () => window.location.hash = '#plate'
+                        }
+                      });
+                    }
+                  }}
+                  onSaveError={(error) => {
+                    toast.error(`Failed to save video: ${error}`);
+                  }}
                 />
                 <Button 
                   variant="outline"
@@ -289,7 +305,6 @@ function VideoCard({ video, onPlay }: {
   onPlay: () => void;
 }) {
   const [liked, setLiked] = useState(false);
-  const [saved] = useState(false);
 
   return (
     <Card className="overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow" onClick={onPlay}>
@@ -336,9 +351,20 @@ function VideoCard({ video, onPlay }: {
             className="h-8 w-8 rounded-full bg-black/40 hover:bg-black/60 text-white"
             showDuplicatePreview={false}
             onSaveSuccess={(savedItem, isDuplicate) => {
-              if (!isDuplicate) {
-                console.log('Video saved from card:', savedItem);
+              if (isDuplicate) {
+                toast.info("Video already saved");
+              } else {
+                toast.success("Video saved to Plate", {
+                  description: video.title,
+                  action: {
+                    label: "View",
+                    onClick: () => window.location.hash = '#plate'
+                  }
+                });
               }
+            }}
+            onSaveError={(error) => {
+              toast.error(`Failed to save video: ${error}`);
             }}
           />
           <Button

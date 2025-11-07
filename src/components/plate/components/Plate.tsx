@@ -13,6 +13,9 @@ import { UniversalViewer } from '../../ui/universal-viewer';
 import { usePlateViewer } from '../../../hooks/usePlateViewer';
 import { supabase } from '../../../services/supabase';
 import FriendService, { type FriendData } from '../../../services/friendService';
+import { savedItemsService } from '../../../services';
+import { toast } from 'sonner';
+import { useConfirmDialog } from '../../../hooks/useConfirmDialog';
 import type { AuthUser } from '../../../types/auth';
 import type { User } from '@supabase/supabase-js';
 import type { SavedItem, PhotoMetadata, RecipeMetadata } from '../../../types/plate';
@@ -79,6 +82,9 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
   // Universal Viewer state
   const { viewerState, openViewer, closeViewer, navigateViewer } = usePlateViewer();
+
+  // Confirmation dialog for delete operations
+  const { showConfirm, ConfirmDialog } = useConfirmDialog();
 
   const fetchUserProfile = useCallback(async () => {
     try {
@@ -435,6 +441,69 @@ export function Plate({ userId, currentUser }: PlateProps) {
       setPlaces([]);
     }
   }, [userId]);
+
+  // Delete saved item handler with confirmation
+  const handleDeleteItem = useCallback(async (itemId: string, itemType: string) => {
+    try {
+      // Find item name for confirmation dialog
+      let itemName = 'this item';
+      const allItems = [...recipes, ...photos, ...videos, ...places];
+      const item = allItems.find(i => i.id === itemId);
+      
+      if (item) {
+        const meta = item.metadata as Record<string, unknown>;
+        itemName = (meta.title as string) || (meta.name as string) || 'this item';
+      }
+
+      // Show confirmation dialog
+      const confirmed = await showConfirm({
+        title: "Remove from Plate?",
+        description: `Are you sure you want to remove "${itemName}" from your saved items?`,
+        confirmText: "Remove",
+        cancelText: "Cancel",
+        variant: "destructive",
+        icon: "warning"
+      });
+
+      if (!confirmed) {
+        return;
+      }
+
+      // Delete the item
+      const result = await savedItemsService.unsaveItem({
+        itemId: item?.item_id || '',
+        itemType: itemType as 'recipe' | 'video' | 'restaurant' | 'photo'
+      });
+
+      if (result.success) {
+        toast.success("Removed from Plate");
+        
+        // Close viewer
+        closeViewer();
+        
+        // Refresh appropriate data based on item type
+        switch (itemType) {
+          case 'recipe':
+            await fetchRecipes();
+            break;
+          case 'video':
+            await fetchVideos();
+            break;
+          case 'restaurant':
+            await fetchPlaces();
+            break;
+          case 'photo':
+            await fetchPhotos();
+            break;
+        }
+      } else {
+        toast.error("Failed to remove item");
+      }
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      toast.error("An error occurred while removing the item");
+    }
+  }, [recipes, photos, videos, places, showConfirm, closeViewer, fetchRecipes, fetchVideos, fetchPlaces, fetchPhotos]);
 
   // Fetch all data on initial load for stats display
   useEffect(() => {
@@ -1028,7 +1097,11 @@ export function Plate({ userId, currentUser }: PlateProps) {
         state={viewerState}
         onClose={closeViewer}
         onNavigate={navigateViewer}
+        onDelete={handleDeleteItem}
       />
+      
+      {/* Confirmation Dialog */}
+      <ConfirmDialog />
 
       {/* ✅ NEW: Enhanced Add Friend Modal with Search & Relationship Status */}
       <Dialog open={showAddFriendModal} onOpenChange={setShowAddFriendModal}>

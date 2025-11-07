@@ -13,7 +13,8 @@ import { VideoViewer } from './viewers/VideoViewer';
 export const UniversalViewer: React.FC<UniversalViewerProps> = ({
   state,
   onClose,
-  onNavigate
+  onNavigate,
+  onDelete
 }) => {
   // Keyboard navigation (ESC to close, arrows to navigate)
   useKeyboardNav({
@@ -89,6 +90,8 @@ export const UniversalViewer: React.FC<UniversalViewerProps> = ({
           canNavigate={!!onNavigate}
           currentIndex={state.itemIndex}
           totalItems={state.totalItems}
+          onDelete={onDelete && state.data?.savedItemId ? () => onDelete(state.data!.savedItemId!, state.type!) : undefined}
+          itemId={state.data?.savedItemId}
         />
         
         {/* Main content area with scroll */}

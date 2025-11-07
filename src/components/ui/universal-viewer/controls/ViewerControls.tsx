@@ -5,7 +5,7 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Share2,
-  ExternalLink 
+  Trash2 
 } from 'lucide-react';
 import type { ViewerControlsProps } from '../types';
 
@@ -15,7 +15,9 @@ export const ViewerControls: React.FC<ViewerControlsProps> = ({
   onNavigate,
   canNavigate,
   currentIndex,
-  totalItems
+  totalItems,
+  onDelete,
+  itemId
 }) => {
   const handleShare = () => {
     if (navigator.share) {
@@ -61,6 +63,19 @@ export const ViewerControls: React.FC<ViewerControlsProps> = ({
             <ChevronRight className="w-4 h-4" />
           </Button>
         </>
+      )}
+
+      {/* Delete Button */}
+      {onDelete && itemId && (
+        <Button
+          variant="secondary"
+          size="icon"
+          onClick={onDelete}
+          className="bg-red-500/70 text-white hover:bg-red-600/90"
+          title="Remove from Plate"
+        >
+          <Trash2 className="w-4 h-4" />
+        </Button>
       )}
 
       {/* Share Button */}

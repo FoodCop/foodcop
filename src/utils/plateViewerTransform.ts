@@ -15,6 +15,7 @@ export function transformSavedItemToViewerData(item: SavedItem): ViewerData {
     case 'recipe': {
       const meta = item.metadata as RecipeMetadata;
       return {
+        savedItemId: item.id, // Add saved item ID for delete functionality
         recipe: {
           id: item.id,
           title: meta.title || 'Untitled Recipe',
@@ -42,6 +43,7 @@ export function transformSavedItemToViewerData(item: SavedItem): ViewerData {
     case 'restaurant': {
       const meta = item.metadata as any; // Restaurant metadata varies
       return {
+        savedItemId: item.id, // Add saved item ID for delete functionality
         restaurant: {
           id: item.id,
           name: meta.name || meta.title || 'Restaurant',
@@ -70,6 +72,7 @@ export function transformSavedItemToViewerData(item: SavedItem): ViewerData {
     case 'photo': {
       const meta = item.metadata as PhotoMetadata;
       return {
+        savedItemId: item.id, // Add saved item ID for delete functionality
         photo: {
           id: item.id,
           url: meta.image_url || meta.image || '',
@@ -86,6 +89,7 @@ export function transformSavedItemToViewerData(item: SavedItem): ViewerData {
     case 'video': {
       const meta = item.metadata as any; // Video metadata varies
       return {
+        savedItemId: item.id, // Add saved item ID for delete functionality
         video: {
           id: item.id,
           title: meta.title || meta.snippet?.title || 'Video',

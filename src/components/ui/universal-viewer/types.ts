@@ -20,6 +20,7 @@ export interface ViewerData {
   restaurant?: RestaurantViewerData;
   photo?: PhotoViewerData;
   video?: VideoViewerData;
+  savedItemId?: string; // ID of the saved item in the database for delete functionality
 }
 
 // Recipe viewer data structure (from Spoonacular API)
@@ -110,6 +111,7 @@ export interface UniversalViewerProps {
   state: ViewerState;
   onClose: () => void;
   onNavigate?: (direction: 'prev' | 'next') => void;
+  onDelete?: (itemId: string, itemType: string) => void;
 }
 
 export interface RecipeViewerProps {
@@ -136,6 +138,8 @@ export interface ViewerControlsProps {
   canNavigate?: boolean;
   currentIndex?: number;
   totalItems?: number;
+  onDelete?: () => void;
+  itemId?: string;
 }
 
 // Keyboard navigation hook props

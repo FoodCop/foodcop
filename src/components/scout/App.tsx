@@ -1163,7 +1163,23 @@ export default function App() {
                           <SmartSaveButton
                             item={selectedRestaurant}
                             itemType="restaurant"
-                            onSaveSuccess={() => setShowDetailsModal(false)}
+                            onSaveSuccess={(savedItem, isDuplicate) => {
+                              if (isDuplicate) {
+                                toast.info(`${selectedRestaurant.name} is already in your Plate`);
+                              } else {
+                                toast.success(`Saved ${selectedRestaurant.name} to Plate`, {
+                                  description: selectedRestaurant.address,
+                                  action: {
+                                    label: "View",
+                                    onClick: () => window.location.hash = '#plate'
+                                  }
+                                });
+                              }
+                              setShowDetailsModal(false);
+                            }}
+                            onSaveError={(error) => {
+                              toast.error(`Failed to save restaurant: ${error}`);
+                            }}
                             variant="default"
                             className="flex-1"
                           />
