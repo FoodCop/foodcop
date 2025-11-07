@@ -17,6 +17,10 @@ import { LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import { Toaster } from './components/ui/sonner'
 import { MobileRadialNav } from './components/navigation/MobileRadialNav'
+import { ShowcaseHub } from './components/showcase'
+import { ComponentsShowcase } from './components/showcase/ComponentsShowcase'
+import { MobileLayoutsShowcase } from './components/showcase/MobileLayoutsShowcase'
+import { DesktopLayoutsShowcase } from './components/showcase/DesktopLayoutsShowcase'
 import './App.css'
 import './styles/mobile.css'
 
@@ -398,6 +402,14 @@ function App() {
         return <DashApp />
       case 'plate':
         return <PlateApp />
+      case 'showcase':
+        return <ShowcaseHub />
+      case 'showcase/mobile':
+        return <MobileLayoutsShowcase />
+      case 'showcase/desktop':
+        return <DesktopLayoutsShowcase />
+      case 'showcase/components':
+        return <ComponentsShowcase />
       case 'chat':
         return <ChatWithAuth />
       case 'landing':
