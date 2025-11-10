@@ -100,9 +100,7 @@ const CustomMarker = ({
     );
   }
 
-  const size = isSelected ? 36 : 30;
-  const height = isSelected ? 48 : 40;
-  const color = isSelected ? '#ef4444' : '#f59e0b';
+  const size = isSelected ? 60 : 50;
 
   return (
     <div 
@@ -112,7 +110,7 @@ const CustomMarker = ({
       }}
       style={{ 
         width: `${size}px`, 
-        height: `${height}px`, 
+        height: `${size}px`, 
         transform: `translate(-50%, -100%)`,
         position: 'relative',
         cursor: 'pointer',
@@ -120,28 +118,16 @@ const CustomMarker = ({
         pointerEvents: 'auto'
       }}
     >
-      <svg width={size} height={height} viewBox={`0 0 ${size} ${height}`}>
-        <defs>
-          <filter id={`shadow-${isSelected ? 'selected' : 'normal'}`} x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.3"/>
-          </filter>
-        </defs>
-        <g filter={`url(#shadow-${isSelected ? 'selected' : 'normal'})`}>
-          <path 
-            d={isSelected 
-              ? "M18 0C18 0 3 10 3 18c0 8 6 12 15 12s15-4 15-12C33 10 18 0 18 0z"
-              : "M15 0C15 0 3 8 3 15c0 7 5 10 12 10s12-3 12-10C27 8 15 0 15 0z"
-            }
-            fill={color}
-          />
-          <circle 
-            cx={isSelected ? 18 : 15} 
-            cy={isSelected ? 16 : 13} 
-            r={isSelected ? 6 : 5} 
-            fill="white"
-          />
-        </g>
-      </svg>
+      <img 
+        src="/marker.png" 
+        alt="Restaurant marker"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          filter: isSelected ? 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+        }}
+      />
     </div>
   );
 };
@@ -309,69 +295,92 @@ export default function App() {
       
       let restaurants: Restaurant[] = [];
       let usingMockData = false;
+      let currentRadius = radiusKm;
+      const maxRadius = 10; // Maximum search radius in km
+      const radiusIncrement = 1; // Increment by 1km each iteration
       
-      // First, try to use the backend service
-      try {
-        if (query && query.trim()) {
-          // Use text search for specific queries
-          console.log('🔍 Using backend text search for query:', query);
-          const response = await backendService.searchPlacesByText(
-            `${query} restaurant`, 
-            { lat, lng }
-          );
-          
-          if (response.success && response.data?.results) {
-            restaurants = response.data.results.map((place: GooglePlace) => 
-              formatGooglePlaceResult(place, { lat, lng })
-            ).filter((restaurant: Restaurant) => 
-              restaurant.distance !== undefined && restaurant.distance <= radiusKm
-            );
-            console.log(`✅ Backend text search found ${restaurants.length} restaurants`);
-          } else {
-            throw new Error(response.error || 'Backend text search failed');
-          }
-        } else {
-          // Use nearby search for general location-based search
-          console.log('🔍 Using backend nearby search');
-          const radiusMeters = radiusKm * 1000; // Convert to meters for API
-          const response = await backendService.searchNearbyPlaces(
-            { lat, lng }, 
-            radiusMeters, 
-            'restaurant'
-          );
-          
-          if (response.success && response.data?.results) {
-            restaurants = response.data.results.map((place: GooglePlace) => 
-              formatGooglePlaceResult(place, { lat, lng })
-            );
-            console.log(`✅ Backend nearby search found ${restaurants.length} restaurants`);
-          } else {
-            throw new Error(response.error || 'Backend nearby search failed');
-          }
+      // Expanding radius search loop
+      while (restaurants.length === 0 && currentRadius <= maxRadius) {
+        if (currentRadius > radiusKm) {
+          console.log(`🔄 Expanding search radius to ${currentRadius}km...`);
+          toast.loading(`Searching within ${currentRadius}km...`, { id: 'expanding-search' });
         }
-      } catch (backendError) {
-        console.warn('⚠️ Backend service failed, falling back to mock data:', backendError);
-        usingMockData = true;
         
-        // Fallback to enhanced mock data
-        restaurants = mockRestaurants.filter((restaurant) => {
-          const distance = calculateDistance(lat, lng, restaurant.lat, restaurant.lng);
-          const withinRadius = distance <= radiusKm;
-          
-          if (!withinRadius) return false;
-          
+        // First, try to use the backend service
+        try {
           if (query && query.trim()) {
-            const searchTerm = query.toLowerCase();
-            const cuisineText = Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(' ').toLowerCase() : (restaurant.cuisine || '').toLowerCase();
-            return restaurant.name.toLowerCase().includes(searchTerm) || 
-                   cuisineText.includes(searchTerm);
+            // Use text search for specific queries
+            console.log(`🔍 Using backend text search for query: ${query} within ${currentRadius}km`);
+            const response = await backendService.searchPlacesByText(
+              `${query} restaurant`, 
+              { lat, lng }
+            );
+            
+            if (response.success && response.data?.results) {
+              restaurants = response.data.results.map((place: GooglePlace) => 
+                formatGooglePlaceResult(place, { lat, lng })
+              ).filter((restaurant: Restaurant) => 
+                restaurant.distance !== undefined && restaurant.distance <= currentRadius
+              );
+              console.log(`✅ Backend text search found ${restaurants.length} restaurants at ${currentRadius}km`);
+            } else {
+              throw new Error(response.error || 'Backend text search failed');
+            }
+          } else {
+            // Use nearby search for general location-based search
+            console.log(`🔍 Using backend nearby search within ${currentRadius}km`);
+            const radiusMeters = currentRadius * 1000; // Convert to meters for API
+            const response = await backendService.searchNearbyPlaces(
+              { lat, lng }, 
+              radiusMeters, 
+              'restaurant'
+            );
+            
+            if (response.success && response.data?.results) {
+              restaurants = response.data.results.map((place: GooglePlace) => 
+                formatGooglePlaceResult(place, { lat, lng })
+              );
+              console.log(`✅ Backend nearby search found ${restaurants.length} restaurants at ${currentRadius}km`);
+            } else {
+              throw new Error(response.error || 'Backend nearby search failed');
+            }
           }
+        } catch (backendError) {
+          console.warn('⚠️ Backend service failed, falling back to mock data:', backendError);
+          usingMockData = true;
           
-          return true;
-        }).map(restaurant => ({
-          ...restaurant,
-          distance: calculateDistance(lat, lng, restaurant.lat, restaurant.lng)
-        }));
+          // Fallback to enhanced mock data
+          restaurants = mockRestaurants.filter((restaurant) => {
+            const distance = calculateDistance(lat, lng, restaurant.lat, restaurant.lng);
+            const withinRadius = distance <= currentRadius;
+            
+            if (!withinRadius) return false;
+            
+            if (query && query.trim()) {
+              const searchTerm = query.toLowerCase();
+              const cuisineText = Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(' ').toLowerCase() : (restaurant.cuisine || '').toLowerCase();
+              return restaurant.name.toLowerCase().includes(searchTerm) || 
+                     cuisineText.includes(searchTerm);
+            }
+            
+            return true;
+          }).map(restaurant => ({
+            ...restaurant,
+            distance: calculateDistance(lat, lng, restaurant.lat, restaurant.lng)
+          }));
+        }
+        
+        // If no results found and we haven't reached max radius, expand search
+        if (restaurants.length === 0 && currentRadius < maxRadius) {
+          currentRadius += radiusIncrement;
+        } else {
+          break; // Found results or reached max radius
+        }
+      }
+      
+      // Dismiss loading toast if we expanded search
+      if (currentRadius > radiusKm) {
+        toast.dismiss('expanding-search');
       }
 
       // Sort by distance
@@ -389,13 +398,26 @@ export default function App() {
       // User feedback
       if (restaurants.length === 0) {
         if (query) {
-          toast.info(`No restaurants found for "${query}" within ${radiusKm} km`);
+          toast.error(`No restaurants found for "${query}" within ${maxRadius}km`);
         } else {
-          toast.info(`No restaurants found within ${radiusKm} km. Try increasing the search radius.`);
+          toast.error(`No restaurants found within ${maxRadius}km`);
         }
       } else {
         // Success - restaurants found and markers will be visible on map
-        console.log(`✅ Found ${restaurants.length} restaurants ${query ? `matching "${query}"` : 'nearby'}${usingMockData ? ' (sample data)' : ''}`);
+        if (currentRadius > radiusKm) {
+          toast.success(`Found ${restaurants.length} restaurant${restaurants.length > 1 ? 's' : ''} within ${currentRadius.toFixed(1)}km${usingMockData ? ' (sample data)' : ''}`, {
+            description: `Expanded search from ${radiusKm}km to ${currentRadius.toFixed(1)}km`
+          });
+        } else {
+          console.log(`✅ Found ${restaurants.length} restaurants ${query ? `matching "${query}"` : 'nearby'}${usingMockData ? ' (sample data)' : ''}`);
+        }
+        
+        // Auto-select the first restaurant to show in card
+        if (restaurants.length > 0) {
+          const firstRestaurant = restaurants[0];
+          console.log('🎯 Auto-selecting first restaurant:', firstRestaurant.name);
+          setSelectedRestaurant(firstRestaurant);
+        }
       }
         
     } catch (err) {
@@ -639,31 +661,6 @@ export default function App() {
       setRoutePolyline([userLocation, [selectedRestaurant.lat, selectedRestaurant.lng]]);
     } finally {
       setLoadingRoute(false);
-    }
-  };
-
-  const handleShowDistance = () => {
-    if (selectedRestaurant) {
-      if (showRoute) {
-        // Hide route
-        setShowRoute(false);
-        setRoutePolyline([]);
-        setCurrentRoute(null);
-      } else {
-        // Show route and fetch directions
-        setShowRoute(true);
-        fetchDirections(travelMode);
-      }
-    }
-  };
-
-  const handleSetRoute = () => {
-    if (selectedRestaurant) {
-      // Show in-app navigation modal
-      setShowNavigationModal(true);
-      if (!currentRoute) {
-        fetchDirections(travelMode);
-      }
     }
   };
 
@@ -917,22 +914,12 @@ export default function App() {
             <div className="space-y-2">
               <div className="flex gap-2">
                 <Button
-                  onClick={handleShowDistance}
-                  variant={showRoute ? "default" : "outline"}
-                  className="flex-1 text-xs"
-                  size="sm"
-                  disabled={loadingRoute}
-                >
-                  <Navigation className="w-4 h-4 mr-1" />
-                  {loadingRoute ? 'Loading...' : showRoute ? 'Hide Route' : 'Show Route'}
-                </Button>
-                <Button
-                  onClick={handleSetRoute}
+                  onClick={handleExternalNavigation}
                   className="flex-1 text-xs"
                   size="sm"
                 >
                   <Navigation className="w-4 h-4 mr-1" />
-                  Navigate
+                  Directions
                 </Button>
                 <Button
                   onClick={() => {
@@ -1139,7 +1126,7 @@ export default function App() {
                         <div className="flex gap-3">
                           <Button 
                             onClick={() => {
-                              handleSetRoute();
+                              handleExternalNavigation();
                               setShowDetailsModal(false);
                             }}
                             className="flex-1"

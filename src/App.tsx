@@ -17,10 +17,6 @@ import { LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import { Toaster } from './components/ui/sonner'
 import { MobileRadialNav } from './components/navigation/MobileRadialNav'
-import { ShowcaseHub } from './components/showcase'
-import { ComponentsShowcase } from './components/showcase/ComponentsShowcase'
-import { MobileLayoutsShowcase } from './components/showcase/MobileLayoutsShowcase'
-import { DesktopLayoutsShowcase } from './components/showcase/DesktopLayoutsShowcase'
 import './App.css'
 import './styles/mobile.css'
 
@@ -402,14 +398,6 @@ function App() {
         return <DashApp />
       case 'plate':
         return <PlateApp />
-      case 'showcase':
-        return <ShowcaseHub />
-      case 'showcase/mobile':
-        return <MobileLayoutsShowcase />
-      case 'showcase/desktop':
-        return <DesktopLayoutsShowcase />
-      case 'showcase/components':
-        return <ComponentsShowcase />
       case 'chat':
         return <ChatWithAuth />
       case 'landing':
@@ -456,8 +444,10 @@ function App() {
   return (
     <AuthProvider>
       <div className="min-h-screen bg-gray-50 mobile-app-container">
-        {/* Desktop Navigation - Hidden on mobile */}
-        {currentPage !== 'landing' && currentPage !== 'auth' && currentPage !== 'onboarding' && (
+        {/* Desktop Navigation - Only show on authenticated pages */}
+        {currentPage !== 'landing' && 
+         currentPage !== 'auth' && 
+         currentPage !== 'onboarding' && (
           <div className="bg-white border-b sticky top-0 z-50 hidden md:block">
             <div className="container mx-auto px-4">
               <Navigation />
@@ -471,7 +461,9 @@ function App() {
         </div>
 
         {/* Mobile Radial Navigation - Only show on main app pages and mobile devices */}
-        {currentPage !== 'landing' && currentPage !== 'auth' && currentPage !== 'onboarding' && (
+        {currentPage !== 'landing' && 
+         currentPage !== 'auth' && 
+         currentPage !== 'onboarding' && (
           <div className="md:hidden">
             <MobileRadialNav 
               currentPage={currentPage}

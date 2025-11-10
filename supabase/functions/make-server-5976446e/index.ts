@@ -12,14 +12,22 @@
  * 2. Deploy: supabase functions deploy make-server-5976446e
  */
 
+// @ts-expect-error - Deno imports work in Supabase Edge Functions
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+
+// Declare Deno global for TypeScript (Edge Functions environment)
+declare const Deno: {
+  env: {
+    get(key: string): string | undefined;
+  };
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   // Handle CORS preflight request
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -200,10 +208,11 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('❌ Error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     
     return new Response(
       JSON.stringify({ 
-        error: error.message || 'Internal server error',
+        error: errorMessage,
         timestamp: new Date().toISOString()
       }),
       { 

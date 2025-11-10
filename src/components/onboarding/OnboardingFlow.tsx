@@ -15,9 +15,9 @@ const OnboardingFlowContent: React.FC = () => {
       case 0:
         return <WelcomeStep />;
       case 1:
-        return <PhoneStep />;
-      case 2:
         return <LocationStep />;
+      case 2:
+        return <PhoneStep />;
       case 3:
         return <ProfileStep />;
       case 4:

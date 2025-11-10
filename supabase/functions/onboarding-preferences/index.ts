@@ -5,87 +5,117 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-serve(async (req) => {
+interface QuestionResponse {
+  question: string;
+  answer: boolean;
+  followUp?: string;
+}
+
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     const { responses } = await req.json();
-    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+    
+    console.log('=== Onboarding Preferences Extraction ===');
+    console.log('Responses received:', responses?.length || 0);
+    console.log('Response data:', JSON.stringify(responses, null, 2));
 
-    if (!OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY not configured');
-    }
+    // Direct extraction from questionnaire responses
+    const preferences = {
+      dietary_preferences: [] as string[],
+      allergies: [] as string[],
+      cuisine_preferences: [] as string[],
+      cuisine_dislikes: [] as string[],
+      spice_tolerance: 3,
+      health_conscious: false
+    };
 
-    // Build prompt from responses
-    const responseText = responses.map((r: any) => 
-      `Q: ${r.question}\nA: ${r.answer ? 'Yes' : 'No'}${r.followUp ? ` (${r.followUp})` : ''}`
-    ).join('\n\n');
+    // Process each response
+    // Questions: 
+    // q1: "Do you eat meat?" 
+    // q2: "Do you eat seafood?"
+    // q3: "Do you avoid dairy products?"
+    // q4: "Are you allergic to nuts?"
+    // q5: "Do you enjoy spicy food?"
+    // q6: "Do you prefer healthy, low-calorie options?"
+    // q7: "Are you following a specific diet?" (with follow-up)
+    
+    let eatsMeat = false;
+    let eatsSeafood = false;
+    
+    responses.forEach((r: QuestionResponse) => {
+      const question = r.question.toLowerCase();
+      const answer = r.answer;
+      const followUp = r.followUp?.toLowerCase() || '';
 
-    const systemPrompt = `You are a food preference analyzer for FUZO.
-Based on YES/NO responses to food questions, extract dietary preferences.
+      // Q1: Do you eat meat?
+      if (question.includes('eat meat')) {
+        eatsMeat = answer;
+      }
 
-OUTPUT ONLY valid JSON with this structure:
-{
-  "dietary_preferences": ["vegetarian"|"vegan"|"pescetarian"|"ketogenic"|"paleo"|"glutenFree"|"whole30"|"lowFodmap"],
-  "allergies": ["dairy"|"nuts"|"shellfish"|"gluten"|"soy"],
-  "cuisine_preferences": ["italian"|"mexican"|"asian"|"american"|"indian"|"mediterranean"],
-  "cuisine_dislikes": [],
-  "spice_tolerance": 1-5,
-  "health_conscious": true|false
-}
+      // Q2: Do you eat seafood?
+      if (question.includes('eat seafood')) {
+        eatsSeafood = answer;
+      }
 
-MAPPING RULES:
-- No meat + No seafood = vegetarian or vegan
-- No meat + Yes seafood = pescetarian
-- Yes meat + healthy options = paleo or ketogenic
-- Avoid dairy = add "dairy" to allergies
-- Allergic to nuts = add "nuts" to allergies
-- Yes spicy = spice_tolerance: 4-5
-- No spicy = spice_tolerance: 1-2
-- Moderate spicy = spice_tolerance: 3
-- Following specific diet = add to dietary_preferences
-- Prefer healthy = health_conscious: true`;
+      // Q3: Do you avoid dairy? (YES = avoid = allergy/intolerance)
+      if (question.includes('avoid dairy')) {
+        if (answer) {
+          preferences.allergies.push('dairy');
+        }
+      }
 
-    // Call OpenAI
-    const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Based on these responses, extract food preferences:\n\n${responseText}\n\nReturn ONLY JSON.` }
-        ],
-        temperature: 0.3,
-        max_tokens: 500
-      })
+      // Q4: Are you allergic to nuts? (YES = allergic)
+      if (question.includes('allergic to nuts')) {
+        if (answer) {
+          preferences.allergies.push('nuts');
+        }
+      }
+
+      // Q5: Do you enjoy spicy food?
+      if (question.includes('spicy')) {
+        preferences.spice_tolerance = answer ? 4 : 1;
+      }
+
+      // Q6: Do you prefer healthy, low-calorie options?
+      if (question.includes('healthy') || question.includes('low-calorie')) {
+        preferences.health_conscious = answer;
+      }
+
+      // Q7: Are you following a specific diet? (from follow-up)
+      if (question.includes('specific diet') && followUp && followUp !== 'none') {
+        if (followUp.includes('keto')) {
+          preferences.dietary_preferences.push('ketogenic');
+        }
+        if (followUp.includes('paleo')) {
+          preferences.dietary_preferences.push('paleo');
+        }
+        if (followUp.includes('whole30')) {
+          preferences.dietary_preferences.push('whole30');
+        }
+        if (followUp.includes('fodmap')) {
+          preferences.dietary_preferences.push('lowFodmap');
+        }
+      }
     });
 
-    if (!openaiResponse.ok) {
-      const errorData = await openaiResponse.json();
-      console.error('OpenAI API error:', errorData);
-      throw new Error(`OpenAI API failed: ${errorData.error?.message || 'Unknown error'}`);
+    // Determine dietary preference based on meat/seafood answers
+    if (!eatsMeat && !eatsSeafood) {
+      preferences.dietary_preferences.push('vegetarian');
+    } else if (!eatsMeat && eatsSeafood) {
+      preferences.dietary_preferences.push('pescetarian');
     }
+    // If eats both meat and seafood = omnivore (no special dietary preference)
 
-    const openaiData = await openaiResponse.json();
-    
-    if (!openaiData.choices || !openaiData.choices[0] || !openaiData.choices[0].message) {
-      console.error('Invalid OpenAI response:', openaiData);
-      throw new Error('Invalid response from OpenAI');
-    }
-    
-    const content = openaiData.choices[0].message.content;
-    console.log('Raw OpenAI response:', content);
-    
-    // Parse JSON from response
-    const preferences = JSON.parse(content);
+    // Remove duplicates
+    preferences.dietary_preferences = [...new Set(preferences.dietary_preferences)];
+    preferences.allergies = [...new Set(preferences.allergies)];
+    preferences.cuisine_preferences = [...new Set(preferences.cuisine_preferences)];
 
-    console.log('Extracted preferences:', preferences);
+    console.log('Extracted preferences:', JSON.stringify(preferences, null, 2));
 
     return new Response(
       JSON.stringify({ preferences }),

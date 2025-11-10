@@ -9,6 +9,9 @@ export class OnboardingService {
     const { error } = await supabase
       .from('users')
       .update({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        location_address: location.address,
         location_city: location.city,
         location_state: location.state,
         location_country: location.country,

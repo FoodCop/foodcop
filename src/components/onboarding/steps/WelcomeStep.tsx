@@ -5,11 +5,11 @@ const WelcomeStep: React.FC = () => {
   const { setCurrentStep } = useOnboarding();
 
   return (
-    <div className="fixed inset-0 flex flex-col" style={{ backgroundColor: '#ff6900' }}>
+    <div className="fixed inset-0 flex flex-col bg-white">
       {/* Top Logo */}
       <div className="pt-8 px-6 flex justify-center">
         <img 
-          src="/logo_mobile.png" 
+          src="/logo_white.png" 
           alt="FUZO" 
           className="w-20 h-20"
         />
@@ -20,44 +20,26 @@ const WelcomeStep: React.FC = () => {
         {/* Hero Image Placeholder */}
         <div className="mb-8">
           <div className="w-64 h-64 flex items-center justify-center">
-            {/* Placeholder for food illustration - you can replace with actual image */}
-            <div className="text-8xl">🍽️</div>
+            <img 
+              src="/welcome.png" 
+              alt="Welcome to FUZO" 
+              className="w-full h-full object-contain"
+            />
           </div>
         </div>
 
         {/* Main Text */}
-        <h2 className="text-white text-3xl font-bold mb-4 leading-tight">
+        <h2 className="text-gray-500 text-xl mb-4 leading-tight">
           Discover amazing food experiences near you!
         </h2>
       </div>
 
-      {/* Bottom USP Section */}
+      {/* Bottom Button Section */}
       <div className="px-6 pb-8">
-        {/* USP Stats Box */}
-        <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl p-4 mb-6">
-          <div className="flex justify-around text-white">
-            <div className="text-center">
-              <div className="text-2xl font-bold">1000+</div>
-              <div className="text-xs opacity-90">Restaurants</div>
-            </div>
-            <div className="w-px bg-white opacity-30"></div>
-            <div className="text-center">
-              <div className="text-2xl font-bold">500+</div>
-              <div className="text-xs opacity-90">Recipes</div>
-            </div>
-            <div className="w-px bg-white opacity-30"></div>
-            <div className="text-center">
-              <div className="text-2xl font-bold">AI</div>
-              <div className="text-xs opacity-90">Powered</div>
-            </div>
-          </div>
-        </div>
-
         {/* Get Started Button */}
         <button
           onClick={() => setCurrentStep(1)}
-          className="w-full bg-white text-gray-900 font-bold py-4 px-8 rounded-xl transition-all shadow-lg text-lg"
-          style={{ color: '#ff6900' }}
+          className="w-full bg-orange-500 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg text-lg hover:bg-orange-600"
         >
           Get Started
         </button>

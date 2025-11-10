@@ -87,7 +87,7 @@ const LocationStep: React.FC = () => {
     try {
       await OnboardingService.saveLocation(user.id, locationData);
       setLocation(locationData);
-      setCurrentStep(3);
+      setCurrentStep(2); // Go to phone step after location
     } catch (err) {
       console.error('Error saving location:', err);
       setError('Failed to save location. Please try again.');

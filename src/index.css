@@ -94,7 +94,22 @@
     background-color: var(--background);
     color: var(--foreground);
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Urbanist', Arial, sans-serif;
+  }
+
+  /* Headings use Fredoka */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fredoka', Arial, sans-serif;
+  }
+
+  /* Paragraphs use Urbanist */
+  p {
+    font-family: 'Urbanist', Arial, sans-serif;
+  }
+
+  /* Buttons use Cousine (monospace) */
+  button {
+    font-family: 'Cousine', 'Courier New', monospace;
   }
 }
 

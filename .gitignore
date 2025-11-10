@@ -34,3 +34,5 @@ docs/
 main-services/
 
 .vercel
+set-secret-manual.ps1
+set-openai-secret.ps1
