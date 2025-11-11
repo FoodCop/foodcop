@@ -41,6 +41,9 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* Mobile helper utilities (added per Mobile Transformation Plan) */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .dark {
@@ -170,11 +173,6 @@ html {
 }
 
 /* Mobile helper utilities (added per Mobile Transformation Plan) */
-
-:root {
-  --safe-area-inset-top: env(safe-area-inset-top, 0px);
-  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
-}
 
 .safe-area-top {
   padding-top: var(--safe-area-inset-top);

@@ -4,12 +4,11 @@ import { Badge } from '../../ui/badge';
 import { Card } from '../../ui/card';
 import { ScrollArea } from '../../ui/scroll-area';
 import { AspectRatio } from '../../ui/aspect-ratio';
-import { Search, Play, Heart, Share2, Bookmark, X, Plus, Send, Loader2, AlertCircle } from 'lucide-react';
+import { Search, Play, Heart, Share2, X, Send, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '../../ui/button';
 import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } from '../../ui/dialog';
 import { SmartSaveButton } from '../../ui/smart-save-button';
 import { YouTubeService } from '../../../services/youtube';
-import { savedItemsService } from '../../../services';
 import { useAuth } from '../../auth/AuthProvider';
 import { toast } from 'sonner';
 
@@ -45,7 +44,7 @@ interface TrimVideo {
 
 export function Trims() {
   // Authentication
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -107,7 +106,7 @@ export function Trims() {
   // Extract unique categories for filters
   const ALL_CATEGORIES = Array.from(
     new Set(videos.flatMap(video => video.category))
-  ).sort();
+  ).sort((a, b) => a.localeCompare(b));
 
   // Filter videos based on search and categories
   const filteredVideos = useMemo(() => {
@@ -264,17 +263,16 @@ export function Trims() {
                   itemType="video"
                   className="flex-1"
                   onSaveSuccess={(savedItem, isDuplicate) => {
-                    if (isDuplicate) {
-                      toast.info("Video already saved");
-                    } else {
-                      toast.success("Video saved to Plate", {
-                        description: selectedVideo.title,
-                        action: {
-                          label: "View",
-                          onClick: () => window.location.hash = '#plate'
-                        }
-                      });
-                    }
+                    const message = isDuplicate ? "Video already saved" : "Video saved to Plate";
+                    const toastFn = isDuplicate ? toast.info : toast.success;
+                    
+                    toastFn(message, isDuplicate ? undefined : {
+                      description: selectedVideo.title,
+                      action: {
+                        label: "View",
+                        onClick: () => globalThis.location.hash = '#plate'
+                      }
+                    });
                   }}
                   onSaveError={(error) => {
                     toast.error(`Failed to save video: ${error}`);
@@ -300,10 +298,10 @@ export function Trims() {
   );
 }
 
-function VideoCard({ video, onPlay }: { 
+function VideoCard({ video, onPlay }: Readonly<{ 
   video: TrimVideo; 
   onPlay: () => void;
-}) {
+}>) {
   const [liked, setLiked] = useState(false);
 
   return (
@@ -351,17 +349,16 @@ function VideoCard({ video, onPlay }: {
             className="h-8 w-8 rounded-full bg-black/40 hover:bg-black/60 text-white"
             showDuplicatePreview={false}
             onSaveSuccess={(savedItem, isDuplicate) => {
-              if (isDuplicate) {
-                toast.info("Video already saved");
-              } else {
-                toast.success("Video saved to Plate", {
-                  description: video.title,
-                  action: {
-                    label: "View",
-                    onClick: () => window.location.hash = '#plate'
-                  }
-                });
-              }
+              const message = isDuplicate ? "Video already saved" : "Video saved to Plate";
+              const toastFn = isDuplicate ? toast.info : toast.success;
+              
+              toastFn(message, isDuplicate ? undefined : {
+                description: video.title,
+                action: {
+                  label: "View",
+                  onClick: () => globalThis.location.hash = '#plate'
+                }
+              });
             }}
             onSaveError={(error) => {
               toast.error(`Failed to save video: ${error}`);

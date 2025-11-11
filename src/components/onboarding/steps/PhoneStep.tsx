@@ -64,7 +64,7 @@ const PhoneStep: React.FC = () => {
 
   const handlePhoneChange = (value: string) => {
     // Only allow numbers
-    const cleaned = value.replace(/\D/g, '');
+    const cleaned = value.replaceAll(/\D/g, '');
     setPhoneNumber(cleaned);
   };
 
@@ -85,7 +85,7 @@ const PhoneStep: React.FC = () => {
 
         {/* Phone Input */}
         <div className="mb-6">
-          <label className="block text-sm font-semibold mb-2" style={{ color: '#ff6900' }}>
+          <label htmlFor="phone-input" className="block text-sm font-semibold mb-2" style={{ color: '#ff6900' }}>
             Mobile Number
           </label>
           <div className="flex items-center border-2 rounded-xl overflow-hidden" style={{ borderColor: '#ff6900' }}>
@@ -113,6 +113,7 @@ const PhoneStep: React.FC = () => {
 
             {/* Phone Number Input */}
             <input
+              id="phone-input"
               type="tel"
               value={phoneNumber}
               onChange={(e) => handlePhoneChange(e.target.value)}
@@ -149,8 +150,16 @@ const PhoneStep: React.FC = () => {
           disabled={isSaving || phoneNumber.length < 10}
           className="w-full text-white font-bold py-4 px-6 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-lg mb-4"
           style={{ backgroundColor: phoneNumber.length >= 10 ? '#ff6900' : '#999' }}
-          onMouseEnter={(e) => phoneNumber.length >= 10 ? e.currentTarget.style.backgroundColor = '#e05e00' : null}
-          onMouseLeave={(e) => phoneNumber.length >= 10 ? e.currentTarget.style.backgroundColor = '#ff6900' : null}
+          onMouseEnter={(e) => {
+            if (phoneNumber.length >= 10) {
+              e.currentTarget.style.backgroundColor = '#e05e00';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (phoneNumber.length >= 10) {
+              e.currentTarget.style.backgroundColor = '#ff6900';
+            }
+          }}
         >
           {isSaving ? 'Saving...' : 'Continue'}
         </button>

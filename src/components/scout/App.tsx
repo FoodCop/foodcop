@@ -54,11 +54,11 @@ const mockRestaurants: Restaurant[] = [
   { id: "1", name: "The Golden Fork", cuisine: "Italian", rating: 4.5, lat: 37.7849, lng: -122.4094, address: "123 Market St" },
   { id: "2", name: "Sushi Paradise", cuisine: "Japanese", rating: 4.8, lat: 37.7899, lng: -122.4012, address: "456 Mission St" },
   { id: "3", name: "Taco Fiesta", cuisine: "Mexican", rating: 4.3, lat: 37.7779, lng: -122.4177, address: "789 Valencia St" },
-  { id: "4", name: "Le Petit Bistro", cuisine: "French", rating: 4.7, lat: 37.7829, lng: -122.4190, address: "321 Hayes St" },
+  { id: "4", name: "Le Petit Bistro", cuisine: "French", rating: 4.7, lat: 37.7829, lng: -122.419, address: "321 Hayes St" },
   { id: "5", name: "Spice Route", cuisine: "Indian", rating: 4.4, lat: 37.7889, lng: -122.4074, address: "654 Folsom St" },
   { id: "6", name: "Dragon Wok", cuisine: "Chinese", rating: 4.6, lat: 37.7809, lng: -122.4134, address: "987 Geary St" },
-  { id: "7", name: "Mediterranean Delight", cuisine: "Mediterranean", rating: 4.5, lat: 37.7859, lng: -122.4020, address: "147 Howard St" },
-  { id: "8", name: "BBQ Haven", cuisine: "American", rating: 4.2, lat: 37.7799, lng: -122.4050, address: "258 3rd St" },
+  { id: "7", name: "Mediterranean Delight", cuisine: "Mediterranean", rating: 4.5, lat: 37.7859, lng: -122.402, address: "147 Howard St" },
+  { id: "8", name: "BBQ Haven", cuisine: "American", rating: 4.2, lat: 37.7799, lng: -122.405, address: "258 3rd St" },
 ];
 
 // Calculate distance between two points using Haversine formula
@@ -104,9 +104,17 @@ const CustomMarker = ({
 
   return (
     <div 
+      role="button"
+      tabIndex={0}
       onClick={() => {
         console.log('Marker clicked!', onClick);
         onClick?.();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
       }}
       style={{ 
         width: `${size}px`, 
@@ -198,7 +206,7 @@ export default function App() {
       const data = await response.json();
       console.log('🌍 Nominatim response data:', data);
       
-      if (data && data.display_name) {
+      if (data?.display_name) {
         // Extract meaningful parts of the address
         const addressParts = data.display_name.split(',');
         // Take first 2-3 parts for a concise address
@@ -291,7 +299,8 @@ export default function App() {
     setError(null);
     
     try {
-      console.log(`🔍 Searching for restaurants${query ? ` matching "${query}"` : ''} within ${radiusKm}km of ${lat}, ${lng}`);
+      const queryText = query ? ` matching "${query}"` : '';
+      console.log(`🔍 Searching for restaurants${queryText} within ${radiusKm}km of ${lat}, ${lng}`);
       
       let restaurants: Restaurant[] = [];
       let usingMockData = false;
@@ -308,7 +317,7 @@ export default function App() {
         
         // First, try to use the backend service
         try {
-          if (query && query.trim()) {
+          if (query?.trim()) {
             // Use text search for specific queries
             console.log(`🔍 Using backend text search for query: ${query} within ${currentRadius}km`);
             const response = await backendService.searchPlacesByText(
@@ -356,7 +365,7 @@ export default function App() {
             
             if (!withinRadius) return false;
             
-            if (query && query.trim()) {
+            if (query?.trim()) {
               const searchTerm = query.toLowerCase();
               const cuisineText = Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(' ').toLowerCase() : (restaurant.cuisine || '').toLowerCase();
               return restaurant.name.toLowerCase().includes(searchTerm) || 
@@ -405,11 +414,14 @@ export default function App() {
       } else {
         // Success - restaurants found and markers will be visible on map
         if (currentRadius > radiusKm) {
-          toast.success(`Found ${restaurants.length} restaurant${restaurants.length > 1 ? 's' : ''} within ${currentRadius.toFixed(1)}km${usingMockData ? ' (sample data)' : ''}`, {
+          const dataSource = usingMockData ? ' (sample data)' : '';
+          toast.success(`Found ${restaurants.length} restaurant${restaurants.length > 1 ? 's' : ''} within ${currentRadius.toFixed(1)}km${dataSource}`, {
             description: `Expanded search from ${radiusKm}km to ${currentRadius.toFixed(1)}km`
           });
         } else {
-          console.log(`✅ Found ${restaurants.length} restaurants ${query ? `matching "${query}"` : 'nearby'}${usingMockData ? ' (sample data)' : ''}`);
+          const queryInfo = query ? `matching "${query}"` : 'nearby';
+          const dataSource = usingMockData ? ' (sample data)' : '';
+          console.log(`✅ Found ${restaurants.length} restaurants ${queryInfo}${dataSource}`);
         }
         
         // Auto-select the first restaurant to show in card
@@ -548,11 +560,19 @@ export default function App() {
                 }))
               : [],
             
-            hours: rawData.opening_hours ? {
-              weekdayText: rawData.opening_hours.weekday_text || rawData.opening_hours.weekdayText || []
-            } : (rawData.hours ? {
-              weekdayText: rawData.hours.weekday_text || rawData.hours.weekdayText || []
-            } : undefined),
+            hours: (() => {
+              if (rawData.opening_hours) {
+                return {
+                  weekdayText: rawData.opening_hours.weekday_text || rawData.opening_hours.weekdayText || []
+                };
+              }
+              if (rawData.hours) {
+                return {
+                  weekdayText: rawData.hours.weekday_text || rawData.hours.weekdayText || []
+                };
+              }
+              return undefined;
+            })(),
             
             formatted_phone_number: rawData.formatted_phone_number || rawData.phone,
             url: undefined
@@ -682,7 +702,7 @@ export default function App() {
         navigator.share({
           title: selectedRestaurant.name,
           text: shareText,
-          url: window.location.href
+          url: globalThis.location.href
         }).catch(() => {
           navigator.clipboard.writeText(shareText);
           toast.success('Restaurant details copied to clipboard!');
@@ -721,7 +741,7 @@ export default function App() {
                   console.log('🎯 Marker clicked for restaurant:', restaurant.name, restaurant);
                   
                   // Validate restaurant data before setting
-                  if (!restaurant || !restaurant.id) {
+                  if (!restaurant?.id) {
                     console.error('❌ Invalid restaurant data:', restaurant);
                     toast.error('Invalid restaurant data');
                     return;
@@ -902,12 +922,10 @@ export default function App() {
               <span>{selectedRestaurant.distance?.toFixed(1)} km</span>
             </div>
             {currentRoute && (
-              <>
-                <div className="flex items-center gap-1 text-blue-600">
-                  <Clock className="w-4 h-4" />
-                  <span>{currentRoute.legs[0].duration.text}</span>
-                </div>
-              </>
+              <div className="flex items-center gap-1 text-blue-600">
+                <Clock className="w-4 h-4" />
+                <span>{currentRoute.legs[0].duration.text}</span>
+              </div>
             )}
           </div>
 
@@ -985,10 +1003,10 @@ export default function App() {
                           {restaurantDetails.photos.length > 1 && (
                             <div className="grid grid-cols-3 gap-1">
                               {restaurantDetails.photos.slice(1, 4).map((photo: { url: string }, index: number) => (
-                                <div key={index} className="aspect-square overflow-hidden rounded">
+                                <div key={`photo-${photo.url}-${index}`} className="aspect-square overflow-hidden rounded">
                                   <img 
                                     src={photo.url}
-                                    alt={`${selectedRestaurant.name} photo ${index + 2}`}
+                                    alt={selectedRestaurant.name}
                                     className="w-full h-full object-cover"
                                   />
                                 </div>
@@ -1075,7 +1093,7 @@ export default function App() {
                             
                             <div className="space-y-2 text-gray-700">
                               {restaurantDetails.hours.weekdayText.map((hours: string, index: number) => (
-                                <div key={index} className="flex justify-between py-2 px-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                                <div key={`hours-${hours}-${index}`} className="flex justify-between py-2 px-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                                   <span className="capitalize">{hours}</span>
                                 </div>
                               ))}
@@ -1091,7 +1109,7 @@ export default function App() {
                             <h3>Customer Reviews</h3>
                             
                             {restaurantDetails.reviews.slice(0, 3).map((review: { author: string; rating: number; text: string; relativeTimeDescription: string }, index: number) => (
-                              <div key={index} className="border rounded-lg p-4 space-y-2">
+                              <div key={`review-${review.author}-${review.text.substring(0, 20)}-${index}`} className="border rounded-lg p-4 space-y-2">
                                 <div className="flex items-center justify-between">
                                   <span className="font-medium">{review.author}</span>
                                   <span className="text-gray-500">{review.relativeTimeDescription}</span>
@@ -1099,7 +1117,7 @@ export default function App() {
                                 <div className="flex items-center gap-1 text-yellow-600">
                                   {Array.from({ length: 5 }).map((_, i) => (
                                     <Star 
-                                      key={i} 
+                                      key={`star-${review.author}-${i}`} 
                                       className="w-4 h-4"
                                       fill={i < review.rating ? "currentColor" : "none"}
                                     />
@@ -1158,7 +1176,7 @@ export default function App() {
                                   description: selectedRestaurant.address,
                                   action: {
                                     label: "View",
-                                    onClick: () => window.location.hash = '#plate'
+                                    onClick: () => globalThis.location.hash = '#plate'
                                   }
                                 });
                               }
@@ -1260,7 +1278,9 @@ export default function App() {
                       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
                       <span className="ml-3 text-gray-600">Loading directions...</span>
                     </div>
-                  ) : currentRoute ? (
+                  ) : null}
+                  
+                  {!loadingRoute && currentRoute && (
                     <>
                       {/* Route Summary */}
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -1294,7 +1314,7 @@ export default function App() {
                         <div className="space-y-3">
                           {currentRoute.legs[0].steps.map((step: RouteStep, index: number) => (
                             <div 
-                              key={index}
+                              key={`step-${step.distance.text}-${step.duration.text}-${index}`}
                               className="flex gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                             >
                               <div className="shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
@@ -1326,7 +1346,7 @@ export default function App() {
                           <h4 className="font-semibold text-yellow-800 mb-2">⚠️ Warnings</h4>
                           <ul className="list-disc list-inside space-y-1 text-sm text-yellow-700">
                             {currentRoute.warnings.map((warning, index) => (
-                              <li key={index}>{warning}</li>
+                              <li key={`warning-${warning.substring(0, 30)}-${index}`}>{warning}</li>
                             ))}
                           </ul>
                         </div>
@@ -1354,7 +1374,9 @@ export default function App() {
                         </Button>
                       </div>
                     </>
-                  ) : (
+                  )}
+                  
+                  {!loadingRoute && !currentRoute && (
                     <div className="text-center py-8 text-gray-500">
                       <p>Could not load directions</p>
                       <Button

@@ -30,7 +30,7 @@ const OnboardingFlowContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-fuzo-primary via-fuzo-secondary to-fuzo-accent">
+    <div className="min-h-screen bg-linear-to-br from-fuzo-primary via-fuzo-secondary to-fuzo-accent">
       <div className="container mx-auto px-4 py-8">
         {renderStep()}
       </div>

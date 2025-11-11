@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { LandingPage } from './components/home/components/LandingPage'
 import DebugApp from './components/debug/Debug'
 import AuthPage from './components/auth/AuthPage'
@@ -30,13 +30,13 @@ function App() {
 
     const handleSignOut = async () => {
       try {
-        console.log('🚪 Sign out requested from navigation');
+        console.log('ðŸšª Sign out requested from navigation');
         await signOut();
         toast.success('Successfully signed out');
         setCurrentPage('landing'); // Redirect to landing page
-        console.log('✅ Sign out completed');
+        console.log('âœ… Sign out completed');
       } catch (error) {
-        console.error('❌ Sign out failed:', error);
+        console.error('âŒ Sign out failed:', error);
         toast.error('Failed to sign out');
       }
     };
@@ -63,7 +63,7 @@ function App() {
           <button
             onClick={() => {
               setCurrentPage('feed');
-              window.location.hash = '#feed';
+              globalThis.location.hash = '#feed';
             }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'feed' 
@@ -71,12 +71,12 @@ function App() {
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            🍽️ Feed
+            ðŸ½ï¸ Feed
           </button>
           <button
             onClick={() => {
               setCurrentPage('scout');
-              window.location.hash = '#scout';
+              globalThis.location.hash = '#scout';
             }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'scout' 
@@ -84,12 +84,12 @@ function App() {
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            🕵️ Scout
+            ðŸ•µï¸ Scout
           </button>
           <button
             onClick={() => {
               setCurrentPage('plate');
-              window.location.hash = '#plate';
+              globalThis.location.hash = '#plate';
             }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'plate' 
@@ -97,12 +97,12 @@ function App() {
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            🍽️ Plate
+            ðŸ½ï¸ Plate
           </button>
           <button
             onClick={() => {
               setCurrentPage('bites');
-              window.location.hash = '#bites';
+              globalThis.location.hash = '#bites';
             }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'bites' 
@@ -110,12 +110,12 @@ function App() {
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            🍰 Bites
+            ðŸ° Bites
           </button>
           <button
             onClick={() => {
               setCurrentPage('snap');
-              window.location.hash = '#snap';
+              globalThis.location.hash = '#snap';
             }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'snap' 
@@ -123,12 +123,12 @@ function App() {
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            📸 Snap
+            ðŸ“¸ Snap
           </button>
           <button
             onClick={() => {
               setCurrentPage('trims');
-              window.location.hash = '#trims';
+              globalThis.location.hash = '#trims';
             }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'trims' 
@@ -136,12 +136,12 @@ function App() {
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            ✂️ Trims
+            âœ‚ï¸ Trims
           </button>
           <button
             onClick={() => {
               setCurrentPage('dash');
-              window.location.hash = '#dash';
+              globalThis.location.hash = '#dash';
             }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'dash' 
@@ -149,12 +149,12 @@ function App() {
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            📊 Dash
+            ðŸ“Š Dash
           </button>
           <button
             onClick={() => {
               setCurrentPage('chat');
-              window.location.hash = '#chat';
+              globalThis.location.hash = '#chat';
             }}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               currentPage === 'chat' 
@@ -162,7 +162,7 @@ function App() {
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            💬 Chat
+            ðŸ’¬ Chat
           </button>
           
           {/* Sign Out Button - Desktop */}
@@ -228,7 +228,7 @@ function App() {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <span className="text-lg">🍽️</span>
+              <span className="text-lg">ðŸ½ï¸</span>
               Feed
             </button>
             <button
@@ -242,7 +242,7 @@ function App() {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <span className="text-lg">🕵️</span>
+              <span className="text-lg">ðŸ•µï¸</span>
               Scout
             </button>
             <button
@@ -256,7 +256,7 @@ function App() {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <span className="text-lg">🍽️</span>
+              <span className="text-lg">ðŸ½ï¸</span>
               Plate
             </button>
             <button
@@ -270,7 +270,7 @@ function App() {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <span className="text-lg">🍰</span>
+              <span className="text-lg">ðŸ°</span>
               Bites
             </button>
             <button
@@ -284,7 +284,7 @@ function App() {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <span className="text-lg">📸</span>
+              <span className="text-lg">ðŸ“¸</span>
               Snap
             </button>
             <button
@@ -298,7 +298,7 @@ function App() {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <span className="text-lg">✂️</span>
+              <span className="text-lg">âœ‚ï¸</span>
               Trims
             </button>
             <button
@@ -312,7 +312,7 @@ function App() {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <span className="text-lg">📊</span>
+              <span className="text-lg">ðŸ“Š</span>
               Dash
             </button>
             <button
@@ -326,7 +326,7 @@ function App() {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <span className="text-lg">💬</span>
+              <span className="text-lg">ðŸ’¬</span>
               Chat
             </button>
             
@@ -352,21 +352,21 @@ function App() {
 
   // Simplified routing based on URL hash
   useEffect(() => {
-    const hash = window.location.hash.slice(1); // Remove the #
+    const hash = globalThis.location.hash.slice(1); // Remove the #
     
     // Extract route from hash (handle OAuth params)
     const route = hash.includes('?') ? hash.split('?')[0] : hash;
     const page = route || 'landing';
     
-    console.log('🔍 Initial load, navigating to:', page);
+    console.log('ðŸ” Initial load, navigating to:', page);
     setCurrentPage(page);
 
     // Listen for hash changes
     const handleHashChange = () => {
-      const newHash = window.location.hash.slice(1);
+      const newHash = globalThis.location.hash.slice(1);
       const newRoute = newHash.includes('?') ? newHash.split('?')[0] : newHash;
       const newPage = newRoute || 'landing';
-      console.log('🔄 Hash changed, navigating to:', newPage);
+      console.log('ðŸ”„ Hash changed, navigating to:', newPage);
       setCurrentPage(newPage);
     };
 
@@ -404,7 +404,7 @@ function App() {
       default:
         return <LandingPage onNavigateToSignup={() => {
           setCurrentPage('auth');
-          window.location.hash = '#auth';
+          globalThis.location.hash = '#auth';
         }} />
     }
   }
@@ -425,9 +425,9 @@ function App() {
     }
 
     if (!user || !session) {
-      console.log('🚫 Onboarding access denied: User not authenticated, redirecting to auth');
+      console.log('ðŸš« Onboarding access denied: User not authenticated, redirecting to auth');
       // Redirect to auth page
-      window.location.hash = '#auth';
+      globalThis.location.hash = '#auth';
       
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -469,7 +469,7 @@ function App() {
               currentPage={currentPage}
               onNavigate={(page) => {
                 setCurrentPage(page);
-                window.location.hash = `#${page}`;
+                globalThis.location.hash = `#${page}`;
                 setMobileMenuOpen(false);
               }}
             />
@@ -483,3 +483,4 @@ function App() {
 }
 
 export default App
+

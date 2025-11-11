@@ -24,18 +24,18 @@ export const ViewerControls: React.FC<ViewerControlsProps> = ({
       navigator.share({
         title: `FUZO ${type} viewer`,
         text: `Check out this ${type} on FUZO`,
-        url: window.location.href
+        url: globalThis.location.href
       }).catch(console.error);
     } else {
       // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href).catch(console.error);
+      navigator.clipboard.writeText(globalThis.location.href).catch(console.error);
     }
   };
 
   return (
     <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
       {/* Navigation Controls */}
-      {canNavigate && onNavigate && totalItems && totalItems > 1 && (
+      {!!(canNavigate && onNavigate && totalItems && totalItems > 1) && (
         <>
           <Button
             variant="secondary"
@@ -47,7 +47,7 @@ export const ViewerControls: React.FC<ViewerControlsProps> = ({
             <ChevronLeft className="w-4 h-4" />
           </Button>
           
-          {currentIndex !== undefined && totalItems && (
+          {!!(currentIndex !== undefined && totalItems) && (
             <div className="bg-black/50 text-white px-3 py-1 rounded text-sm">
               {currentIndex + 1} / {totalItems}
             </div>
