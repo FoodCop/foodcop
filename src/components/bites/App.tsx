@@ -135,7 +135,12 @@ export default function App() {
   };
 
   const handleRandomize = () => {
-    const shuffled = [...recipes].sort(() => Math.random() - 0.5);
+    // Use crypto.getRandomValues for better randomization
+    const shuffled = [...recipes].sort(() => {
+      const array = new Uint32Array(1);
+      crypto.getRandomValues(array);
+      return (array[0] / 0xFFFFFFFF) - 0.5;
+    });
     setRecipes(shuffled);
   };
 

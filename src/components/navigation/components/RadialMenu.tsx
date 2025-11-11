@@ -9,10 +9,10 @@ interface MenuItem {
 }
 
 interface RadialMenuProps {
-  items: MenuItem[];
-  barrelColor?: string;
-  onNavigate: (route: string) => void;
-  currentRoute: string;
+  readonly items: MenuItem[];
+  readonly barrelColor?: string;
+  readonly onNavigate: (route: string) => void;
+  readonly currentRoute: string;
 }
 
 export function RadialMenu({ 
@@ -132,30 +132,23 @@ export function RadialMenu({
       lastAngleRef.current = angle;
     };
 
-    const handleMouseUp = () => {
+    const handleDragEnd = () => {
       if (isDraggingRef.current) {
         isDraggingRef.current = false;
         snapToNearest(currentRotation);
       }
     };
 
-    const handleTouchEnd = () => {
-      if (isDraggingRef.current) {
-        isDraggingRef.current = false;
-        snapToNearest(currentRotation);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd);
+    globalThis.addEventListener('mousemove', handleMouseMove);
+    globalThis.addEventListener('mouseup', handleDragEnd);
+    globalThis.addEventListener('touchmove', handleTouchMove);
+    globalThis.addEventListener('touchend', handleDragEnd);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
+      globalThis.removeEventListener('mousemove', handleMouseMove);
+      globalThis.removeEventListener('mouseup', handleDragEnd);
+      globalThis.removeEventListener('touchmove', handleTouchMove);
+      globalThis.removeEventListener('touchend', handleDragEnd);
     };
   }, [items.length, currentRotation, snapToNearest]);
 
@@ -226,7 +219,7 @@ export function RadialMenu({
                 
                 return (
                   <motion.div
-                    key={index}
+                    key={`radial-item-${item.route}-${index}`}
                     className="absolute left-1/2 top-1/2"
                     style={{
                       width: itemSize,
@@ -308,7 +301,7 @@ export function RadialMenu({
                     transformOrigin: '50% 50%',
                   }}
                 >
-                  {items.map((_, index) => {
+                  {items.map((item, index) => {
                     const angle = (360 / items.length) * index - 90;
                     const angleInRadians = (angle * Math.PI) / 180;
                     const x = Math.cos(angleInRadians) * radius + radius + itemSize / 2;
@@ -318,7 +311,7 @@ export function RadialMenu({
 
                     return (
                       <line
-                        key={index}
+                        key={`connector-${item.route}-${index}`}
                         x1={centerX}
                         y1={centerY}
                         x2={x}
@@ -360,19 +353,19 @@ export function RadialMenu({
               animate={{ rotate: isOpen ? 90 : 0 }}
               transition={{ duration: 0.3 }}
             >
-              {isOpen ? (
-                currentPageIndex >= 0 && items[currentPageIndex]?.icon ? (
-                  <div className="scale-150">{items[currentPageIndex].icon}</div>
-                ) : (
-                  <X size={32} />
-                )
-              ) : (
-                currentPageIndex >= 0 && items[currentPageIndex]?.icon ? (
-                  <div className="scale-150">{items[currentPageIndex].icon}</div>
-                ) : (
-                  <Menu size={32} />
-                )
-              )}
+              {(() => {
+                if (isOpen) {
+                  if (currentPageIndex >= 0 && items[currentPageIndex]?.icon) {
+                    return <div className="scale-150">{items[currentPageIndex].icon}</div>;
+                  }
+                  return <X size={32} />;
+                }
+                
+                if (currentPageIndex >= 0 && items[currentPageIndex]?.icon) {
+                  return <div className="scale-150">{items[currentPageIndex].icon}</div>;
+                }
+                return <Menu size={32} />;
+              })()}
             </motion.div>
           </div>
 

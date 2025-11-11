@@ -29,20 +29,20 @@ export default function AuthPage() {
         
         if (returnPath && returnPath !== '#auth') {
           console.log('✅ User completed onboarding, redirecting to stored path:', returnPath);
-          window.location.hash = returnPath;
+          globalThis.location.hash = returnPath;
         } else {
           console.log('✅ User completed onboarding, redirecting to dashboard');
-          window.location.hash = '#dash';
+          globalThis.location.hash = '#dash';
         }
       } else {
         // User needs onboarding, redirect to onboarding flow
         console.log('🎯 User needs onboarding, redirecting to onboarding flow');
-        window.location.hash = '#onboarding';
+        globalThis.location.hash = '#onboarding';
       }
     } catch (error) {
       console.error('❌ Error checking onboarding status:', error);
       // On error, assume user needs onboarding
-      window.location.hash = '#onboarding';
+      globalThis.location.hash = '#onboarding';
     } finally {
       setCheckingOnboarding(false);
     }
