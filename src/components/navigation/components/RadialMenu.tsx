@@ -33,6 +33,21 @@ export function RadialMenu({
   // Get current page index from route
   const currentPageIndex = items.findIndex(item => item.route === currentRoute);
 
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      // Store original overflow value
+      const originalOverflow = document.body.style.overflow;
+      // Prevent scrolling
+      document.body.style.overflow = 'hidden';
+      
+      // Restore original overflow when menu closes
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
   const snapToNearest = useCallback((rotation: number) => {
     const anglePerItem = 360 / items.length;
     const normalizedRotation = ((rotation % 360) + 360) % 360;

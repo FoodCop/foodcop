@@ -1,6 +1,7 @@
 import { useAuth } from './AuthProvider';
 import { SupabaseAuth } from './SupabaseAuth';
 import { ProfileService } from '../../services/profileService';
+import { cookieUtils } from '../../utils/cookies';
 import { useEffect, useState, useRef } from 'react';
 
 export default function AuthPage() {
@@ -22,9 +23,17 @@ export default function AuthPage() {
       const result = await ProfileService.hasCompletedOnboarding();
       
       if (result.success && result.data === true) {
-        // User has completed onboarding, redirect to dashboard
-        console.log('✅ User has completed onboarding, redirecting to dashboard');
-        window.location.hash = '#dash';
+        // User has completed onboarding
+        // Check if there's a stored return path from before authentication
+        const returnPath = cookieUtils.getAndClearReturnPath();
+        
+        if (returnPath && returnPath !== '#auth') {
+          console.log('✅ User completed onboarding, redirecting to stored path:', returnPath);
+          window.location.hash = returnPath;
+        } else {
+          console.log('✅ User completed onboarding, redirecting to dashboard');
+          window.location.hash = '#dash';
+        }
       } else {
         // User needs onboarding, redirect to onboarding flow
         console.log('🎯 User needs onboarding, redirecting to onboarding flow');

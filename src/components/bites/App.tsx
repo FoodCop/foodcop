@@ -45,7 +45,7 @@ interface SpoonacularRecipe {
 
 export default function App() {
   // Authentication
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDiets, setSelectedDiets] = useState<string[]>([]);
@@ -223,7 +223,7 @@ export default function App() {
             {recommendedRecipes.length > 0 && (
               <div>
                 <h2 className="mb-6">Recommended for you</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                   {recommendedRecipes.map((recipe) => (
                     <RecipeCard
                       key={recipe.id}
@@ -238,7 +238,7 @@ export default function App() {
             {mightLikeRecipes.length > 0 && (
               <div>
                 <h2 className="mb-6">You might also like</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                   {mightLikeRecipes.map((recipe) => (
                     <RecipeCard
                       key={recipe.id}
