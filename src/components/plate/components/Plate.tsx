@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { Button } from '../../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
@@ -42,7 +42,7 @@ interface PlateProps {
   currentUser?: User;
 }
 
-export function Plate({ userId, currentUser }: PlateProps) {
+export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
   // Convert Supabase User to AuthUser
   const convertToAuthUser = (supabaseUser: User): AuthUser => ({
     id: supabaseUser.id,
@@ -61,7 +61,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
   const [showSettings, setShowSettings] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   
-  // ✅ NEW: Comprehensive friend management states
+  // âœ… NEW: Comprehensive friend management states
   const [showAddFriendModal, setShowAddFriendModal] = useState(false);
   const [friends, setFriends] = useState<FriendData[]>([]); // Accepted friends
   const [incomingRequests, setIncomingRequests] = useState<FriendData[]>([]); // Requests I received
@@ -88,7 +88,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
   const fetchUserProfile = useCallback(async () => {
     try {
-      console.log('🔍 Fetching real user profile from Supabase for userId:', userId);
+      console.log('ðŸ” Fetching real user profile from Supabase for userId:', userId);
       
       const { data, error } = await supabase
         .from('users')
@@ -101,7 +101,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         return;
       }
 
-      console.log('✅ User profile fetched successfully:', data);
+      console.log('âœ… User profile fetched successfully:', data);
       
       // Transform Supabase user data to match AuthUser interface
       const transformedUser = {
@@ -137,7 +137,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
     if (currentUser) {
       setUser(convertToAuthUser(currentUser));
       setLoading(false);
-      console.log('🍽️ Plate initialized with authenticated user:', currentUser.email);
+      console.log('ðŸ½ï¸ Plate initialized with authenticated user:', currentUser.email);
     } else {
       fetchUserProfile();
     }
@@ -145,7 +145,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
   const fetchPosts = useCallback(async () => {
     try {
-      console.log('📝 Fetching posts from Supabase for userId:', userId);
+      console.log('ðŸ“ Fetching posts from Supabase for userId:', userId);
       
       const { data, error } = await supabase
         .from('posts')
@@ -159,7 +159,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         return;
       }
 
-      console.log('✅ Posts fetched:', data);
+      console.log('âœ… Posts fetched:', data);
       setPosts((data as Post[]) || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -169,7 +169,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
   const fetchPhotos = useCallback(async () => {
     try {
-      console.log('📸 Fetching photos from Supabase for userId:', userId);
+      console.log('ðŸ“¸ Fetching photos from Supabase for userId:', userId);
       
       const { data, error } = await supabase
         .from('saved_items')
@@ -184,7 +184,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         return;
       }
 
-      console.log('✅ Photos fetched:', data);
+      console.log('âœ… Photos fetched:', data);
       setPhotos((data as SavedItem[]) || []);
     } catch (error) {
       console.error('Error fetching photos:', error);
@@ -194,7 +194,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
   const fetchRecipes = useCallback(async () => {
     try {
-      console.log('🍳 Fetching recipes from Supabase for userId:', userId);
+      console.log('ðŸ³ Fetching recipes from Supabase for userId:', userId);
       
       const { data, error } = await supabase
         .from('saved_items')
@@ -209,7 +209,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         return;
       }
 
-      console.log('✅ Recipes fetched:', data);
+      console.log('âœ… Recipes fetched:', data);
       setRecipes((data as SavedItem[]) || []);
     } catch (error) {
       console.error('Error fetching recipes:', error);
@@ -219,7 +219,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
   const fetchOffers = useCallback(async () => {
     try {
-      console.log('🏷️ Fetching offers from Supabase for userId:', userId);
+      console.log('ðŸ·ï¸ Fetching offers from Supabase for userId:', userId);
       
       const { data, error } = await supabase
         .from('saved_items')
@@ -234,7 +234,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         return;
       }
 
-      console.log('✅ Offers fetched:', data);
+      console.log('âœ… Offers fetched:', data);
       setOffers((data as SavedItem[]) || []);
     } catch (error) {
       console.error('Error fetching offers:', error);
@@ -244,7 +244,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
   const fetchVideos = useCallback(async () => {
     try {
-      console.log('🎥 Fetching videos from Supabase for userId:', userId);
+      console.log('ðŸŽ¥ Fetching videos from Supabase for userId:', userId);
       
       const { data, error } = await supabase
         .from('saved_items')
@@ -260,7 +260,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         return;
       }
 
-      console.log('✅ Videos fetched:', data);
+      console.log('âœ… Videos fetched:', data);
       setVideos((data as SavedItem[]) || []);
     } catch (error) {
       console.error('Error fetching videos:', error);
@@ -268,11 +268,11 @@ export function Plate({ userId, currentUser }: PlateProps) {
     }
   }, [userId]);
 
-  // ✅ NEW: Load all friend data using FriendService
+  // âœ… NEW: Load all friend data using FriendService
   const loadFriendData = useCallback(async () => {
     try {
       setLoadingFriends(true);
-      console.log('👥 Loading comprehensive friend data for userId:', userId);
+      console.log('ðŸ‘¥ Loading comprehensive friend data for userId:', userId);
       
       const response = await FriendService.fetchAllFriendData(userId);
       
@@ -282,7 +282,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
       const { friends: friendsList, incomingRequests: incoming, outgoingRequests: outgoing } = response.data;
       
-      console.log('✅ Friend data loaded:', {
+      console.log('âœ… Friend data loaded:', {
         friends: friendsList.length,
         incoming: incoming.length,
         outgoing: outgoing.length
@@ -302,7 +302,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
       setCrew(legacyCrew);
 
     } catch (error) {
-      console.error('❌ Error loading friend data:', error);
+      console.error('âŒ Error loading friend data:', error);
       setFriends([]);
       setIncomingRequests([]);
       setOutgoingRequests([]);
@@ -312,11 +312,11 @@ export function Plate({ userId, currentUser }: PlateProps) {
     }
   }, [userId]);
 
-  // ✅ NEW: Search users with relationship status annotation
+  // âœ… NEW: Search users with relationship status annotation
   const searchUsersWithStatus = useCallback(async (query: string) => {
     try {
       setLoadingFriends(true);
-      console.log('🔍 Searching users with query:', query);
+      console.log('ðŸ” Searching users with query:', query);
       
       const response = await FriendService.searchUsers(userId, query);
       
@@ -324,28 +324,28 @@ export function Plate({ userId, currentUser }: PlateProps) {
         throw new Error(response.error || 'Failed to search users');
       }
       
-      console.log('✅ Search results:', response.data.length, 'users');
+      console.log('âœ… Search results:', response.data.length, 'users');
       setSearchResults(response.data);
 
     } catch (error) {
-      console.error('❌ Error searching users:', error);
+      console.error('âŒ Error searching users:', error);
       setSearchResults([]);
     } finally {
       setLoadingFriends(false);
     }
   }, [userId]);
 
-  // ✅ NEW: Handle friend request actions
+  // âœ… NEW: Handle friend request actions
   const handleSendRequest = async (targetUserId: string) => {
     try {
       setActionInProgress(targetUserId);
       await FriendService.sendFriendRequest(userId, targetUserId);
-      console.log('✅ Friend request sent to:', targetUserId);
+      console.log('âœ… Friend request sent to:', targetUserId);
       
       // Refresh search results to update relationship status
       await searchUsersWithStatus(searchQuery);
     } catch (error) {
-      console.error('❌ Error sending friend request:', error);
+      console.error('âŒ Error sending friend request:', error);
       alert('Failed to send friend request. Please try again.');
     } finally {
       setActionInProgress(null);
@@ -356,12 +356,12 @@ export function Plate({ userId, currentUser }: PlateProps) {
     try {
       setActionInProgress(friendshipId);
       await FriendService.acceptFriendRequest(friendshipId);
-      console.log('✅ Friend request accepted:', friendshipId);
+      console.log('âœ… Friend request accepted:', friendshipId);
       
       // Reload all friend data
       await loadFriendData();
     } catch (error) {
-      console.error('❌ Error accepting friend request:', error);
+      console.error('âŒ Error accepting friend request:', error);
       alert('Failed to accept friend request. Please try again.');
     } finally {
       setActionInProgress(null);
@@ -372,12 +372,12 @@ export function Plate({ userId, currentUser }: PlateProps) {
     try {
       setActionInProgress(friendshipId);
       await FriendService.declineFriendRequest(friendshipId);
-      console.log('✅ Friend request declined:', friendshipId);
+      console.log('âœ… Friend request declined:', friendshipId);
       
       // Reload all friend data
       await loadFriendData();
     } catch (error) {
-      console.error('❌ Error declining friend request:', error);
+      console.error('âŒ Error declining friend request:', error);
       alert('Failed to decline friend request. Please try again.');
     } finally {
       setActionInProgress(null);
@@ -388,29 +388,29 @@ export function Plate({ userId, currentUser }: PlateProps) {
     try {
       setActionInProgress(friendshipId);
       await FriendService.cancelFriendRequest(friendshipId);
-      console.log('✅ Friend request cancelled:', friendshipId);
+      console.log('âœ… Friend request cancelled:', friendshipId);
       
       // Reload all friend data
       await loadFriendData();
     } catch (error) {
-      console.error('❌ Error cancelling friend request:', error);
+      console.error('âŒ Error cancelling friend request:', error);
       alert('Failed to cancel friend request. Please try again.');
     } finally {
       setActionInProgress(null);
     }
   };
 
-  // ✅ TODO: Implement remove friend functionality in UI
+  // âœ… TODO: Implement remove friend functionality in UI
   // const handleRemoveFriend = async (friendshipId: string) => {
   //   try {
   //     setActionInProgress(friendshipId);
   //     await FriendService.removeFriend(friendshipId);
-  //     console.log('✅ Friend removed:', friendshipId);
+  //     console.log('âœ… Friend removed:', friendshipId);
   //     
   //     // Reload all friend data
   //     await loadFriendData();
   //   } catch (error) {
-  //     console.error('❌ Error removing friend:', error);
+  //     console.error('âŒ Error removing friend:', error);
   //     alert('Failed to remove friend. Please try again.');
   //   } finally {
   //     setActionInProgress(null);
@@ -419,7 +419,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
 
   const fetchPlaces = useCallback(async () => {
     try {
-      console.log('📍 Fetching places/restaurants from Supabase for userId:', userId);
+      console.log('ðŸ“ Fetching places/restaurants from Supabase for userId:', userId);
       
       const { data, error } = await supabase
         .from('saved_items')
@@ -434,7 +434,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         return;
       }
 
-      console.log('✅ Places fetched:', data);
+      console.log('âœ… Places fetched:', data);
       setPlaces((data as SavedItem[]) || []);
     } catch (error) {
       console.error('Error fetching places:', error);
@@ -514,7 +514,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
         fetchRecipes(),
         fetchOffers(),
         fetchVideos(),
-        loadFriendData(), // ✅ NEW: Using FriendService
+        loadFriendData(), // âœ… NEW: Using FriendService
         fetchPlaces(),
       ]);
     };
@@ -545,7 +545,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
       } else if (type.includes('video')) {
         fetchVideos();
       } else if (type.includes('crew') || type.includes('friend')) {
-        loadFriendData(); // ✅ NEW: Using FriendService
+        loadFriendData(); // âœ… NEW: Using FriendService
       } else if (type.includes('place')) {
         fetchPlaces();
       } else if (type === 'batch-saved') {
@@ -555,15 +555,15 @@ export function Plate({ userId, currentUser }: PlateProps) {
         fetchRecipes();
         fetchOffers();
         fetchVideos();
-        loadFriendData(); // ✅ NEW: Using FriendService
+        loadFriendData(); // âœ… NEW: Using FriendService
         fetchPlaces();
       }
     };
 
-    window.addEventListener('plate-data-update', handlePlateUpdate);
+    globalThis.addEventListener('plate-data-update', handlePlateUpdate);
     
     return () => {
-      window.removeEventListener('plate-data-update', handlePlateUpdate);
+      globalThis.removeEventListener('plate-data-update', handlePlateUpdate);
     };
   }, [userId, fetchPosts, fetchPhotos, fetchRecipes, fetchOffers, fetchVideos, loadFriendData, fetchPlaces]);
 
@@ -716,7 +716,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {posts.map((post, idx) => (
-                  <Card key={idx}>
+                  <Card key={`post-${post.id || post.content.substring(0, 20)}-${idx}`}>
                     <CardContent className="pt-6">
                       <p className="mb-3">{post.content}</p>
                       {post.image && (
@@ -801,13 +801,13 @@ export function Plate({ userId, currentUser }: PlateProps) {
                         )}
                         <div className="flex gap-4 text-neutral-500 text-sm">
                           {meta.readyInMinutes && (
-                            <span>⏱️ {meta.readyInMinutes} min</span>
+                            <span>â±ï¸ {meta.readyInMinutes} min</span>
                           )}
                           {meta.servings && (
-                            <span>🍽️ {meta.servings} servings</span>
+                            <span>ðŸ½ï¸ {meta.servings} servings</span>
                           )}
                           {meta.healthScore && (
-                            <span>💚 {meta.healthScore}</span>
+                            <span>ðŸ’š {meta.healthScore}</span>
                           )}
                         </div>
                         {meta.diets && meta.diets.length > 0 && (
@@ -846,7 +846,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
                             </div>
                           )}
                           {(meta['restaurant'] as string | undefined) && (
-                            <p className="text-neutral-500">📍 {(meta['restaurant'] as string)}</p>
+                            <p className="text-neutral-500">ðŸ“ {(meta['restaurant'] as string)}</p>
                           )}
                         </div>
                       </CardContent>
@@ -892,8 +892,8 @@ export function Plate({ userId, currentUser }: PlateProps) {
                         )}
                         {(duration || views) && (
                           <div className="flex gap-4 text-neutral-500">
-                            {duration && <span>🎬 {duration}</span>}
-                            {views && <span>👁️ {views} views</span>}
+                            {duration && <span>ðŸŽ¬ {duration}</span>}
+                            {views && <span>ðŸ‘ï¸ {views} views</span>}
                           </div>
                         )}
                       </CardContent>
@@ -910,7 +910,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
                 onClick={() => {
                   setShowAddFriendModal(true);
                   setSearchQuery('');
-                  searchUsersWithStatus(''); // ✅ Load all users
+                  searchUsersWithStatus(''); // âœ… Load all users
                 }}
                 className="bg-neutral-900 text-white hover:bg-neutral-800"
               >
@@ -919,7 +919,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
               </Button>
             </div>
 
-            {/* ✅ NEW: Incoming Friend Requests Section */}
+            {/* âœ… NEW: Incoming Friend Requests Section */}
             {incomingRequests.length > 0 && (
               <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
@@ -930,7 +930,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
                   {incomingRequests.map((request) => (
                     <Card key={request.friendshipId} className="border-yellow-500 border-2">
                       <CardContent className="flex flex-col items-center p-4 space-y-2">
-                        <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center text-2xl overflow-hidden">
+                        <div className="w-20 h-20 bg-linear-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center text-2xl overflow-hidden">
                           {request.avatarUrl ? (
                             <img 
                               src={request.avatarUrl} 
@@ -973,7 +973,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
               </div>
             )}
 
-            {/* ✅ NEW: Outgoing Friend Requests Section */}
+            {/* âœ… NEW: Outgoing Friend Requests Section */}
             {outgoingRequests.length > 0 && (
               <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
@@ -984,7 +984,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
                   {outgoingRequests.map((request) => (
                     <Card key={request.friendshipId} className="border-blue-500 border-2 opacity-75">
                       <CardContent className="flex flex-col items-center p-4 space-y-2">
-                        <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full flex items-center justify-center text-2xl overflow-hidden">
+                        <div className="w-20 h-20 bg-linear-to-br from-blue-400 to-cyan-500 rounded-full flex items-center justify-center text-2xl overflow-hidden">
                           {request.avatarUrl ? (
                             <img 
                               src={request.avatarUrl} 
@@ -1017,7 +1017,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
               </div>
             )}
 
-            {/* ✅ Accepted Friends Section */}
+            {/* âœ… Accepted Friends Section */}
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Users className="w-5 h-5" />
               Friends ({friends.length})
@@ -1071,10 +1071,10 @@ export function Plate({ userId, currentUser }: PlateProps) {
                             <p className="text-neutral-600 mb-2">{address}</p>
                             <div className="flex items-center gap-3 flex-wrap">
                               {types && types.length > 0 && (
-                                <span className="text-neutral-500">🍽️ {types[0]}</span>
+                                <span className="text-neutral-500">ðŸ½ï¸ {types[0]}</span>
                               )}
                               {rating && (
-                                <span className="text-neutral-500">⭐ {rating}</span>
+                                <span className="text-neutral-500">â­ {rating}</span>
                               )}
                               {priceLevel !== undefined && (
                                 <span className="text-neutral-500">{`Price: ${priceLevel}`}</span>
@@ -1103,7 +1103,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
       {/* Confirmation Dialog */}
       <ConfirmDialog />
 
-      {/* ✅ NEW: Enhanced Add Friend Modal with Search & Relationship Status */}
+      {/* âœ… NEW: Enhanced Add Friend Modal with Search & Relationship Status */}
       <Dialog open={showAddFriendModal} onOpenChange={setShowAddFriendModal}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white">
           <DialogHeader>
@@ -1155,7 +1155,7 @@ export function Plate({ userId, currentUser }: PlateProps) {
                             </div>
                           </div>
 
-                          {/* ✅ NEW: Relationship Status Badges & Actions */}
+                          {/* âœ… NEW: Relationship Status Badges & Actions */}
                           {relationshipStatus === 'friend' ? (
                             <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-md text-sm font-medium">
                               <Check className="w-4 h-4" />
@@ -1204,3 +1204,4 @@ export function Plate({ userId, currentUser }: PlateProps) {
     </div>
   );
 }
+

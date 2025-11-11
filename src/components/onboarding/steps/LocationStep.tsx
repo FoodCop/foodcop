@@ -28,7 +28,7 @@ const LocationStep: React.FC = () => {
           resolve, 
           (error) => {
             console.error('Geolocation error:', error);
-            reject(error);
+            reject(new Error(`Geolocation error: ${error.message}`));
           }, 
           {
             enableHighAccuracy: true,
@@ -46,14 +46,17 @@ const LocationStep: React.FC = () => {
       );
       const data = await response.json();
 
-      if (data.results && data.results[0]) {
+      if (data.results?.[0]) {
         const result = data.results[0];
         const addressComponents = result.address_components;
 
+        // Define type for address component
+        type AddressComponent = { types: string[]; long_name: string };
+
         // Extract city, state, country
-        const city = addressComponents.find((c: any) => c.types.includes('locality'))?.long_name || '';
-        const state = addressComponents.find((c: any) => c.types.includes('administrative_area_level_1'))?.long_name || '';
-        const country = addressComponents.find((c: any) => c.types.includes('country'))?.long_name || '';
+        const city = addressComponents.find((c: AddressComponent) => c.types.includes('locality'))?.long_name || '';
+        const state = addressComponents.find((c: AddressComponent) => c.types.includes('administrative_area_level_1'))?.long_name || '';
+        const country = addressComponents.find((c: AddressComponent) => c.types.includes('country'))?.long_name || '';
 
         const location: LocationData = {
           latitude,
@@ -70,11 +73,17 @@ const LocationStep: React.FC = () => {
       }
     } catch (err) {
       console.error('Location detection error:', err);
-      const errorMessage = err instanceof GeolocationPositionError 
-        ? err.code === 1 ? 'Please allow location access in your browser settings'
-        : err.code === 2 ? 'Unable to determine your location. Please check your connection.'
-        : 'Location detection timed out. Please try again.'
-        : 'Location detection failed. Please try again.';
+      let errorMessage = 'Location detection failed. Please try again.';
+      
+      if (err instanceof GeolocationPositionError) {
+        if (err.code === 1) {
+          errorMessage = 'Please allow location access in your browser settings';
+        } else if (err.code === 2) {
+          errorMessage = 'Unable to determine your location. Please check your connection.';
+        } else {
+          errorMessage = 'Location detection timed out. Please try again.';
+        }
+      }
       setError(errorMessage);
     } finally {
       setIsDetecting(false);
@@ -98,19 +107,21 @@ const LocationStep: React.FC = () => {
     <div className="fixed inset-0 w-full h-full">
       {/* Full-screen Map */}
       <div className="absolute inset-0">
-        {isDetecting ? (
+        {isDetecting && (
           <div className="w-full h-full bg-gray-100 flex items-center justify-center">
             <div className="flex flex-col items-center">
               <div className="w-16 h-16 border-4 border-t-transparent rounded-full animate-spin mb-4" style={{ borderColor: '#ff6900', borderTopColor: 'transparent' }}></div>
               <p className="text-gray-600 font-medium">Detecting your location...</p>
             </div>
           </div>
-        ) : locationData ? (
+        )}
+        
+        {!isDetecting && locationData && (
           <Map
             center={[locationData.latitude, locationData.longitude]}
             zoom={15}
-            height={window.innerHeight}
-            defaultWidth={window.innerWidth}
+            height={globalThis.innerHeight}
+            defaultWidth={globalThis.innerWidth}
           >
             <Marker 
               anchor={[locationData.latitude, locationData.longitude]} 
@@ -118,7 +129,9 @@ const LocationStep: React.FC = () => {
               width={50}
             />
           </Map>
-        ) : (
+        )}
+        
+        {!isDetecting && !locationData && (
           <div className="w-full h-full bg-gray-100 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
               <p className="text-gray-600 font-medium">Allow location access to continue</p>
