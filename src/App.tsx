@@ -19,6 +19,7 @@ const OnboardingFlow = lazy(() => import('./components/onboarding/OnboardingFlow
 const FeedApp = lazy(() => import('./components/feed/App'))
 const ScoutApp = lazy(() => import('./components/scout/App'))
 const BitesApp = lazy(() => import('./components/bites/App'))
+const BitesNewApp = lazy(() => import('./components/bites/BitesNew'))
 const TrimsApp = lazy(() => import('./components/trims/App'))
 const DashApp = lazy(() => import('./components/dash/App'))
 const DashNewApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
@@ -115,6 +116,19 @@ function App() {
             }`}
           >
             🎬 Bites
+          </button>
+          <button
+            onClick={() => {
+              setCurrentPage('bitesnew');
+              globalThis.location.hash = '#bitesnew';
+            }}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 'bitesnew' 
+                ? 'bg-orange-600 text-white' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            ✨ Bites New
           </button>
           <button
             onClick={() => {
@@ -236,7 +250,7 @@ function App() {
     const handleHashChange = () => {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
-        'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites', 
+        'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites', 'bitesnew',
         'trims', 'snap', 'dash', 'dashnew', 'plate', 'chat', 'discover', 'debug'
       ];
       
@@ -331,6 +345,15 @@ function App() {
           <PageErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <BitesApp />
+            </Suspense>
+          </PageErrorBoundary>
+        </div>
+
+        {/* Bites New (Discover Style) */}
+        <div style={{ display: currentPage === 'bitesnew' ? 'block' : 'none' }}>
+          <PageErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <BitesNewApp />
             </Suspense>
           </PageErrorBoundary>
         </div>
