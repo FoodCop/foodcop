@@ -39,8 +39,7 @@ function PageLoader() {
 }
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('landing')
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState<PageType>('landing')
 
   // Navigation component with auth context access
   const Navigation = () => {
@@ -60,7 +59,6 @@ function App() {
     };
 
     return (
-      <>
         <div className="flex items-center justify-between h-16 safe-area-top px-4">
         {/* Logo - Mobile icon, Desktop full logo */}
         <div className="flex items-center">
@@ -216,7 +214,6 @@ function App() {
           )}
         </div>
       </div>
-      </>
     );
   };
 

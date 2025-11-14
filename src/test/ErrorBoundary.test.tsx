@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
 
@@ -41,19 +41,19 @@ describe('ErrorBoundary', () => {
     console.error = consoleError;
   });
 
-  it('should render custom fallback when provided', () => {
+  it('should call onError callback when error occurs', () => {
     const consoleError = console.error;
     console.error = () => {};
 
-    const customFallback = <div>Custom error message</div>;
+    const onErrorMock = vi.fn();
 
     render(
-      <ErrorBoundary fallback={customFallback}>
+      <ErrorBoundary onError={onErrorMock}>
         <ThrowError />
       </ErrorBoundary>
     );
 
-    expect(screen.getByText('Custom error message')).toBeInTheDocument();
+    expect(onErrorMock).toHaveBeenCalled();
 
     console.error = consoleError;
   });

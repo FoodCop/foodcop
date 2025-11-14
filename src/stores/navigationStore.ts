@@ -39,10 +39,10 @@ export const useNavigationStore = create<NavigationState>((set, get) => ({
     });
 
     // Update URL hash
-    if (typeof window !== 'undefined' && page !== 'landing') {
-      window.location.hash = `#${page}`;
+    if (globalThis.window !== undefined && page !== 'landing') {
+      globalThis.location.hash = `#${page}`;
     } else if (page === 'landing') {
-      window.location.hash = '';
+      globalThis.location.hash = '';
     }
   },
 
@@ -50,20 +50,22 @@ export const useNavigationStore = create<NavigationState>((set, get) => ({
     const history = get().navigationHistory;
     if (history.length > 1) {
       const newHistory = history.slice(0, -1);
-      const previousPage = newHistory[newHistory.length - 1];
+      const previousPage = newHistory.at(-1);
       
-      set({
-        currentPage: previousPage,
-        previousPage: null,
-        navigationHistory: newHistory,
-      });
+      if (previousPage) {
+        set({
+          currentPage: previousPage,
+          previousPage: null,
+          navigationHistory: newHistory,
+        });
 
-      // Update URL
-      if (typeof window !== 'undefined') {
-        window.location.hash = previousPage !== 'landing' ? `#${previousPage}` : '';
+        // Update URL
+        if (globalThis.window !== undefined) {
+          globalThis.location.hash = previousPage === 'landing' ? '' : `#${previousPage}`;
+        }
       }
-    } else if (typeof window !== 'undefined') {
-      window.history.back();
+    } else if (globalThis.window !== undefined) {
+      globalThis.history.back();
     }
   },
 
@@ -80,15 +82,15 @@ export const useNavigationStore = create<NavigationState>((set, get) => ({
 }));
 
 // Sync with URL hash on load
-if (typeof window !== 'undefined') {
-  const initialHash = window.location.hash.slice(1) as PageType;
+if (globalThis.window !== undefined) {
+  const initialHash = globalThis.location.hash.slice(1) as PageType;
   if (initialHash) {
     useNavigationStore.getState().setCurrentPage(initialHash);
   }
 
   // Listen for hash changes
-  window.addEventListener('hashchange', () => {
-    const hash = window.location.hash.slice(1) as PageType;
+  globalThis.addEventListener('hashchange', () => {
+    const hash = globalThis.location.hash.slice(1) as PageType;
     const validPages: PageType[] = [
       'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites',
       'trims', 'snap', 'dash', 'plate', 'chat', 'discover', 'debug'

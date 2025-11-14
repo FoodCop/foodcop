@@ -2,7 +2,6 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
-  fallback?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
@@ -42,17 +41,12 @@ export class ErrorBoundary extends Component<Props, State> {
     }
   }
 
-  private handleReset = () => {
+  private readonly handleReset = () => {
     this.setState({ hasError: false, error: null });
   };
 
   public render() {
     if (this.state.hasError) {
-      // Custom fallback UI if provided
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-
       // Default fallback UI
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -102,7 +96,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 Try Again
               </button>
               <button
-                onClick={() => window.location.href = '/'}
+                onClick={() => globalThis.location.href = '/'}
                 className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
               >
                 Go Home
@@ -137,10 +131,10 @@ export class PageErrorBoundary extends Component<Props, State> {
     this.props.onError?.(error, errorInfo);
   }
 
-  private handleReset = () => {
+  private readonly handleReset = () => {
     this.setState({ hasError: false, error: null });
     // Go back in history or to home
-    window.history.back();
+    globalThis.history.back();
   };
 
   public render() {
@@ -166,7 +160,7 @@ export class PageErrorBoundary extends Component<Props, State> {
                 Go Back
               </button>
               <button
-                onClick={() => window.location.href = '/'}
+                onClick={() => globalThis.location.href = '/'}
                 className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
               >
                 Return Home

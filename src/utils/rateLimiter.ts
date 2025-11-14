@@ -15,12 +15,12 @@ interface RateLimitEntry {
 }
 
 class RateLimiter {
-  private storage: Map<string, RateLimitEntry> = new Map();
-  private cleanupInterval: number | null = null;
+  private readonly storage: Map<string, RateLimitEntry> = new Map();
+  private cleanupInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor() {
     // Cleanup old entries every minute
-    this.cleanupInterval = window.setInterval(() => this.cleanup(), 60000);
+    this.cleanupInterval = globalThis.setInterval(() => this.cleanup(), 60000);
   }
 
   /**
@@ -103,13 +103,15 @@ class RateLimiter {
     const now = Date.now();
     const toDelete: string[] = [];
 
-    this.storage.forEach((entry, key) => {
+    for (const [key, entry] of this.storage) {
       if (now > entry.resetTime) {
         toDelete.push(key);
       }
-    });
+    }
 
-    toDelete.forEach((key) => this.storage.delete(key));
+    for (const key of toDelete) {
+      this.storage.delete(key);
+    }
 
     if (toDelete.length > 0) {
       console.log(`🧹 Rate limiter cleaned up ${toDelete.length} expired entries`);
@@ -121,7 +123,7 @@ class RateLimiter {
    */
   public destroy(): void {
     if (this.cleanupInterval !== null) {
-      window.clearInterval(this.cleanupInterval);
+      globalThis.clearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
     }
     this.clearAll();
@@ -132,8 +134,8 @@ class RateLimiter {
 const globalRateLimiter = new RateLimiter();
 
 // Cleanup on page unload
-if (typeof window !== 'undefined') {
-  window.addEventListener('beforeunload', () => {
+if (globalThis.window !== undefined) {
+  globalThis.addEventListener('beforeunload', () => {
     globalRateLimiter.destroy();
   });
 }

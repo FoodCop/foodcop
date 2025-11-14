@@ -22,19 +22,19 @@ interface OptimizedImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 
  * - Aspect ratio preservation
  * - Error fallback
  */
-export default function OptimizedImage({
-  src,
-  alt,
-  blurDataURL,
-  lowQualitySrc,
-  aspectRatio = '16/9',
-  objectFit = 'cover',
-  priority = false,
-  onLoad,
-  onError,
-  className,
-  ...props
-}: OptimizedImageProps) {
+export default function OptimizedImage(props: Readonly<OptimizedImageProps>) {
+  const {
+    src,
+    alt,
+    blurDataURL,
+    lowQualitySrc,
+    aspectRatio = '16/9',
+    objectFit = 'cover',
+    priority = false,
+    onLoad,
+    onError,
+    className,
+  } = props;
   const [isLoading, setIsLoading] = useState(true);
   const [currentSrc, setCurrentSrc] = useState<string>(lowQualitySrc || blurDataURL || '');
   const [hasError, setHasError] = useState(false);
@@ -128,7 +128,6 @@ export default function OptimizedImage({
           objectFit === 'none' && 'object-none',
           objectFit === 'scale-down' && 'object-scale-down'
         )}
-        {...props}
       />
 
       {/* Loading spinner */}

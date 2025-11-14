@@ -28,7 +28,7 @@ export const useThemeStore = create<ThemeState>()(
         
         // Determine resolved theme
         if (theme === 'system') {
-          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const systemTheme = globalThis.matchMedia('(prefers-color-scheme: dark)').matches
             ? 'dark'
             : 'light';
           set({ resolvedTheme: systemTheme });
@@ -53,8 +53,8 @@ export const useThemeStore = create<ThemeState>()(
 );
 
 // Listen for system theme changes
-if (typeof window !== 'undefined') {
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+if (globalThis.window !== undefined) {
+  globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     const store = useThemeStore.getState();
     if (store.theme === 'system') {
       store.setResolvedTheme(e.matches ? 'dark' : 'light');
