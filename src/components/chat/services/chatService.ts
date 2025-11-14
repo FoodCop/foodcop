@@ -81,45 +81,48 @@ export class ChatService {
   // Generate Stream Chat token via backend (secure for production)
   private async generateStreamToken(userId: string): Promise<string> {
     try {
-      // Check if we're in production mode (env variable)
+      // Always use backend token generation for production security
+      // Only fall back to dev tokens in local development
+      const isDevelopment = import.meta.env.DEV;
       const useProductionAuth = import.meta.env.VITE_USE_PRODUCTION_CHAT_AUTH === 'true';
       
-      if (!useProductionAuth) {
-        // Development mode - use dev tokens (NOT FOR PRODUCTION)
-        console.warn('⚠️ ChatService: Using development mode token generation');
-        console.warn('📝 Set VITE_USE_PRODUCTION_CHAT_AUTH=true in .env for production');
-        return streamChatClient.devToken(userId);
+      // In production or when explicitly configured, use backend tokens
+      if (!isDevelopment || useProductionAuth) {
+        console.log('🔐 ChatService: Generating secure production token via backend');
+        
+        const { data, error } = await supabase.functions.invoke('generate-stream-token', {
+          body: { userId }
+        });
+        
+        if (error) {
+          console.error('❌ Token generation failed:', error);
+          throw new Error(`Token generation failed: ${error.message}`);
+        }
+        
+        if (!data || !data.token) {
+          throw new Error('No token returned from backend');
+        }
+        
+        console.log('✅ ChatService: Production token generated successfully');
+        return data.token;
       }
 
-      // Production mode - generate token via Supabase Edge Function
-      console.log('🔐 ChatService: Generating production token via backend');
-      
-      const { data, error } = await supabase.functions.invoke('generate-stream-token', {
-        body: { userId }
-      });
-      
-      if (error) {
-        console.error('❌ Token generation failed:', error);
-        throw error;
-      }
-      
-      if (!data || !data.token) {
-        throw new Error('No token returned from backend');
-      }
-      
-      console.log('✅ ChatService: Production token generated successfully');
-      return data.token;
+      // Development mode only - use dev tokens (NOT SECURE FOR PRODUCTION)
+      console.warn('⚠️ ChatService: Using development mode token generation');
+      console.warn('📝 This is only safe for local development');
+      console.warn('📝 Production will automatically use secure backend tokens');
+      return streamChatClient.devToken(userId);
       
     } catch (error) {
       console.error('❌ ChatService: Token generation error:', error);
       
-      // Fallback to dev token in development only
-      if (import.meta.env.DEV) {
-        console.warn('🔄 Falling back to development token');
+      // Only fall back to dev token in local development
+      if (import.meta.env.DEV && import.meta.env.VITE_USE_PRODUCTION_CHAT_AUTH !== 'true') {
+        console.warn('🔄 Falling back to development token (local dev only)');
         return streamChatClient.devToken(userId);
       }
       
-      throw new Error('Failed to generate Stream Chat token');
+      throw new Error('Failed to generate Stream Chat token. Please check backend configuration.');
     }
   }
 

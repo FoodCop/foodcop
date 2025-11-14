@@ -16,9 +16,6 @@ export function MasterbotCardContent({ card }: MasterbotCardContentProps) {
         className="feed-card-hero"
       />
       
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-black/90" />
-      
       {/* Save Category Badge */}
       <div className="absolute top-4 left-4 px-3 py-1.5 bg-orange-500 rounded-full">
         <span className="text-white">💬 Saved to {card.saveCategory}</span>

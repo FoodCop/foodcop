@@ -83,7 +83,7 @@ export function SwipeCard({ card, onSwipe, style }: SwipeCardProps) {
       className="absolute w-full h-full cursor-grab active:cursor-grabbing"
       whileTap={{ cursor: 'grabbing' }}
     >
-      <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+      <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-red-900">
         {renderCardContent()}
         
         {/* LIKE Indicator */}

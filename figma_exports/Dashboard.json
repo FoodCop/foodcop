@@ -1,0 +1,403 @@
+{
+  "name": "Dashboard",
+  "role": "CANVAS",
+  "lastModified": "2025-11-12T17:22:08.575Z",
+  "thumbnailUrl": "",
+  "version": "1.0",
+  "document": {
+    "id": "0:0",
+    "name": "Dashboard",
+    "type": "DOCUMENT",
+    "children": [
+      {
+        "id": "0:1",
+        "name": "Page 1",
+        "type": "CANVAS",
+        "children": [
+          {
+            "id": "19:0",
+            "type": "FRAME",
+            "name": "Dashboard - Page",
+            "locked": false,
+            "visible": true,
+            "layoutMode": "VERTICAL",
+            "children": [
+              {
+                "id": "18:0",
+                "type": "FRAME",
+                "name": "min-h-screen",
+                "locked": false,
+                "visible": true,
+                "layoutMode": "NONE",
+                "children": [
+                  {
+                    "id": "17:0",
+                    "type": "FRAME",
+                    "name": "max-w-6xl",
+                    "locked": false,
+                    "visible": true,
+                    "layoutMode": "NONE",
+                    "children": [
+                      {
+                        "id": "5:0",
+                        "type": "FRAME",
+                        "name": "mb-6",
+                        "locked": false,
+                        "visible": true,
+                        "layoutMode": "NONE",
+                        "children": [
+                          {
+                            "id": "1:0",
+                            "type": "TEXT",
+                            "name": "text-2xl",
+                            "characters": ",",
+                            "locked": false,
+                            "visible": true,
+                            "fontSize": 48,
+                            "fontName": {
+                              "family": "Inter",
+                              "style": "Semi Bold"
+                            },
+                            "fontWeight": 700,
+                            "lineHeight": {
+                              "value": 76.80000000000001,
+                              "unit": "PIXELS"
+                            },
+                            "fills": [
+                              {
+                                "type": "SOLID",
+                                "color": {
+                                  "r": 0.13,
+                                  "g": 0.13,
+                                  "b": 0.13
+                                },
+                                "opacity": 1
+                              }
+                            ]
+                          },
+                          {
+                            "id": "4:0",
+                            "type": "FRAME",
+                            "name": "flex",
+                            "locked": false,
+                            "visible": true,
+                            "layoutMode": "HORIZONTAL",
+                            "children": [
+                              {
+                                "id": "2:0",
+                                "type": "FRAME",
+                                "name": "w-4",
+                                "locked": false,
+                                "visible": true,
+                                "layoutMode": "NONE",
+                                "children": [],
+                                "cornerRadius": 0,
+                                "fills": [],
+                                "layoutGrow": 0,
+                                "layoutAlign": "INHERIT"
+                              },
+                              {
+                                "id": "3:0",
+                                "type": "FRAME",
+                                "name": "text-sm",
+                                "locked": false,
+                                "visible": true,
+                                "layoutMode": "NONE",
+                                "children": [],
+                                "cornerRadius": 0,
+                                "fills": []
+                              }
+                            ],
+                            "primaryAxisSizingMode": "AUTO",
+                            "counterAxisSizingMode": "AUTO",
+                            "primaryAxisAlignItems": "MIN",
+                            "counterAxisAlignItems": "CENTER",
+                            "itemSpacing": 8,
+                            "paddingTop": 0,
+                            "paddingRight": 0,
+                            "paddingBottom": 0,
+                            "paddingLeft": 0,
+                            "cornerRadius": 0,
+                            "fills": []
+                          }
+                        ],
+                        "cornerRadius": 0,
+                        "fills": []
+                      },
+                      {
+                        "id": "8:0",
+                        "type": "FRAME",
+                        "name": "mb-6",
+                        "locked": false,
+                        "visible": true,
+                        "layoutMode": "NONE",
+                        "children": [
+                          {
+                            "id": "7:0",
+                            "type": "FRAME",
+                            "name": "w-full",
+                            "locked": false,
+                            "visible": true,
+                            "layoutMode": "HORIZONTAL",
+                            "children": [
+                              {
+                                "id": "6:0",
+                                "type": "FRAME",
+                                "name": "w-5",
+                                "locked": false,
+                                "visible": true,
+                                "layoutMode": "NONE",
+                                "children": [],
+                                "cornerRadius": 0,
+                                "fills": [],
+                                "layoutGrow": 0,
+                                "layoutAlign": "INHERIT"
+                              }
+                            ],
+                            "primaryAxisSizingMode": "AUTO",
+                            "counterAxisSizingMode": "AUTO",
+                            "primaryAxisAlignItems": "CENTER",
+                            "counterAxisAlignItems": "CENTER",
+                            "itemSpacing": 0,
+                            "paddingTop": 16,
+                            "paddingRight": 24,
+                            "paddingBottom": 16,
+                            "paddingLeft": 24,
+                            "cornerRadius": 20,
+                            "fills": [
+                              {
+                                "type": "SOLID",
+                                "color": {
+                                  "r": 0,
+                                  "g": 0,
+                                  "b": 0
+                                },
+                                "opacity": 1
+                              }
+                            ],
+                            "layoutGrow": 1
+                          }
+                        ],
+                        "cornerRadius": 0,
+                        "fills": []
+                      },
+                      {
+                        "id": "10:0",
+                        "type": "FRAME",
+                        "name": "mb-12",
+                        "locked": false,
+                        "visible": true,
+                        "layoutMode": "NONE",
+                        "children": [
+                          {
+                            "id": "9:0",
+                            "type": "TEXT",
+                            "name": "mb-6",
+                            "characters": "My Crew",
+                            "locked": false,
+                            "visible": true,
+                            "fontSize": 36,
+                            "fontName": {
+                              "family": "Inter",
+                              "style": "Regular"
+                            },
+                            "fontWeight": 400,
+                            "lineHeight": {
+                              "value": 57.6,
+                              "unit": "PIXELS"
+                            },
+                            "fills": [
+                              {
+                                "type": "SOLID",
+                                "color": {
+                                  "r": 0.13,
+                                  "g": 0.13,
+                                  "b": 0.13
+                                },
+                                "opacity": 1
+                              }
+                            ]
+                          }
+                        ],
+                        "cornerRadius": 0,
+                        "fills": []
+                      },
+                      {
+                        "id": "12:0",
+                        "type": "FRAME",
+                        "name": "mb-12",
+                        "locked": false,
+                        "visible": true,
+                        "layoutMode": "NONE",
+                        "children": [
+                          {
+                            "id": "11:0",
+                            "type": "TEXT",
+                            "name": "mb-6",
+                            "characters": "Saved Recipes",
+                            "locked": false,
+                            "visible": true,
+                            "fontSize": 36,
+                            "fontName": {
+                              "family": "Inter",
+                              "style": "Regular"
+                            },
+                            "fontWeight": 400,
+                            "lineHeight": {
+                              "value": 57.6,
+                              "unit": "PIXELS"
+                            },
+                            "fills": [
+                              {
+                                "type": "SOLID",
+                                "color": {
+                                  "r": 0.13,
+                                  "g": 0.13,
+                                  "b": 0.13
+                                },
+                                "opacity": 1
+                              }
+                            ]
+                          }
+                        ],
+                        "cornerRadius": 0,
+                        "fills": []
+                      },
+                      {
+                        "id": "14:0",
+                        "type": "FRAME",
+                        "name": "mb-12",
+                        "locked": false,
+                        "visible": true,
+                        "layoutMode": "NONE",
+                        "children": [
+                          {
+                            "id": "13:0",
+                            "type": "TEXT",
+                            "name": "mb-6",
+                            "characters": "Restaurant Recommendations",
+                            "locked": false,
+                            "visible": true,
+                            "fontSize": 36,
+                            "fontName": {
+                              "family": "Inter",
+                              "style": "Regular"
+                            },
+                            "fontWeight": 400,
+                            "lineHeight": {
+                              "value": 57.6,
+                              "unit": "PIXELS"
+                            },
+                            "fills": [
+                              {
+                                "type": "SOLID",
+                                "color": {
+                                  "r": 0.13,
+                                  "g": 0.13,
+                                  "b": 0.13
+                                },
+                                "opacity": 1
+                              }
+                            ]
+                          }
+                        ],
+                        "cornerRadius": 0,
+                        "fills": []
+                      },
+                      {
+                        "id": "16:0",
+                        "type": "FRAME",
+                        "name": "DIV",
+                        "locked": false,
+                        "visible": true,
+                        "layoutMode": "NONE",
+                        "children": [
+                          {
+                            "id": "15:0",
+                            "type": "TEXT",
+                            "name": "mb-6",
+                            "characters": "Trending Food Posts",
+                            "locked": false,
+                            "visible": true,
+                            "fontSize": 36,
+                            "fontName": {
+                              "family": "Inter",
+                              "style": "Regular"
+                            },
+                            "fontWeight": 400,
+                            "lineHeight": {
+                              "value": 57.6,
+                              "unit": "PIXELS"
+                            },
+                            "fills": [
+                              {
+                                "type": "SOLID",
+                                "color": {
+                                  "r": 0.13,
+                                  "g": 0.13,
+                                  "b": 0.13
+                                },
+                                "opacity": 1
+                              }
+                            ]
+                          }
+                        ],
+                        "cornerRadius": 0,
+                        "fills": []
+                      }
+                    ],
+                    "cornerRadius": 0,
+                    "fills": []
+                  }
+                ],
+                "cornerRadius": 0,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1
+                    },
+                    "opacity": 1
+                  }
+                ]
+              }
+            ],
+            "primaryAxisSizingMode": "AUTO",
+            "counterAxisSizingMode": "AUTO",
+            "primaryAxisAlignItems": "MIN",
+            "counterAxisAlignItems": "MIN",
+            "itemSpacing": 0,
+            "paddingTop": 0,
+            "paddingRight": 0,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "fills": [
+              {
+                "type": "SOLID",
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1
+                },
+                "opacity": 1
+              }
+            ]
+          }
+        ],
+        "backgroundColor": {
+          "r": 0.95,
+          "g": 0.95,
+          "b": 0.95,
+          "a": 1
+        },
+        "prototypeStartNodeID": null
+      }
+    ]
+  },
+  "components": {},
+  "componentSets": {},
+  "schemaVersion": 0,
+  "styles": {}
+}
