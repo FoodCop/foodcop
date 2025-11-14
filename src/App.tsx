@@ -21,6 +21,7 @@ const ScoutApp = lazy(() => import('./components/scout/App'))
 const BitesApp = lazy(() => import('./components/bites/App'))
 const TrimsApp = lazy(() => import('./components/trims/App'))
 const DashApp = lazy(() => import('./components/dash/App'))
+const DashNewApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
 const SnapApp = lazy(() => import('./components/snap/App'))
 const PlateApp = lazy(() => import('./components/plate/App'))
 const ChatWithAuth = lazy(() => import('./components/chat').then(module => ({ default: module.ChatWithAuth })))
@@ -169,6 +170,19 @@ function App() {
           </button>
           <button
             onClick={() => {
+              setCurrentPage('dashnew');
+              globalThis.location.hash = '#dashnew';
+            }}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 'dashnew' 
+                ? 'bg-orange-600 text-white' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            ✨ Dashboard New
+          </button>
+          <button
+            onClick={() => {
               setCurrentPage('chat');
               globalThis.location.hash = '#chat';
             }}
@@ -223,7 +237,7 @@ function App() {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
         'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites', 
-        'trims', 'snap', 'dash', 'plate', 'chat', 'discover', 'debug'
+        'trims', 'snap', 'dash', 'dashnew', 'plate', 'chat', 'discover', 'debug'
       ];
       
       if (hash && validPages.includes(hash)) {
@@ -371,6 +385,15 @@ function App() {
           <PageErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <FoodDiscoveryApp />
+            </Suspense>
+          </PageErrorBoundary>
+        </div>
+
+        {/* Dashboard New (Discover Style) */}
+        <div style={{ display: currentPage === 'dashnew' ? 'block' : 'none' }}>
+          <PageErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <DashNewApp />
             </Suspense>
           </PageErrorBoundary>
         </div>
