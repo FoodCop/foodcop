@@ -26,6 +26,7 @@ const DashApp = lazy(() => import('./components/dash/App'))
 const DashNewApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
 const SnapApp = lazy(() => import('./components/snap/App'))
 const PlateApp = lazy(() => import('./components/plate/App'))
+const PlateNewApp = lazy(() => import('./components/plate/PlateNew'))
 const ChatWithAuth = lazy(() => import('./components/chat').then(module => ({ default: module.ChatWithAuth })))
 const FoodDiscoveryApp = lazy(() => import('./components/discover/App'))
 
@@ -181,7 +182,20 @@ function App() {
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            📋 Plate
+            🍽️ Plate
+          </button>
+          <button
+            onClick={() => {
+              setCurrentPage('platenew');
+              globalThis.location.hash = '#platenew';
+            }}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 'platenew' 
+                ? 'bg-orange-600 text-white' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            ✨ Plate New
           </button>
           <button
             onClick={() => {
@@ -265,7 +279,7 @@ function App() {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
         'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites', 'bitesnew',
-        'trims', 'trimsnew', 'snap', 'dash', 'dashnew', 'plate', 'chat', 'discover', 'debug'
+        'trims', 'trimsnew', 'snap', 'dash', 'dashnew', 'plate', 'platenew', 'chat', 'discover', 'debug'
       ];
       
       if (hash && validPages.includes(hash)) {
@@ -413,6 +427,15 @@ function App() {
           <PageErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <PlateApp />
+            </Suspense>
+          </PageErrorBoundary>
+        </div>
+
+        {/* Plate New (Discover Style) */}
+        <div style={{ display: currentPage === 'platenew' ? 'block' : 'none' }}>
+          <PageErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <PlateNewApp />
             </Suspense>
           </PageErrorBoundary>
         </div>
