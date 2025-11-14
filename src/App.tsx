@@ -21,6 +21,7 @@ const ScoutApp = lazy(() => import('./components/scout/App'))
 const BitesApp = lazy(() => import('./components/bites/App'))
 const BitesNewApp = lazy(() => import('./components/bites/BitesNew'))
 const TrimsApp = lazy(() => import('./components/trims/App'))
+const TrimsNewApp = lazy(() => import('./components/trims/TrimsNew'))
 const DashApp = lazy(() => import('./components/dash/App'))
 const DashNewApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
 const SnapApp = lazy(() => import('./components/snap/App'))
@@ -145,6 +146,19 @@ function App() {
           </button>
           <button
             onClick={() => {
+              setCurrentPage('trimsnew');
+              globalThis.location.hash = '#trimsnew';
+            }}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 'trimsnew' 
+                ? 'bg-orange-600 text-white' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            ✨ Trims New
+          </button>
+          <button
+            onClick={() => {
               setCurrentPage('snap');
               globalThis.location.hash = '#snap';
             }}
@@ -251,7 +265,7 @@ function App() {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
         'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites', 'bitesnew',
-        'trims', 'snap', 'dash', 'dashnew', 'plate', 'chat', 'discover', 'debug'
+        'trims', 'trimsnew', 'snap', 'dash', 'dashnew', 'plate', 'chat', 'discover', 'debug'
       ];
       
       if (hash && validPages.includes(hash)) {
@@ -363,6 +377,15 @@ function App() {
           <PageErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <TrimsApp />
+            </Suspense>
+          </PageErrorBoundary>
+        </div>
+
+        {/* Trims New (Discover Style) */}
+        <div style={{ display: currentPage === 'trimsnew' ? 'block' : 'none' }}>
+          <PageErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <TrimsNewApp />
             </Suspense>
           </PageErrorBoundary>
         </div>
