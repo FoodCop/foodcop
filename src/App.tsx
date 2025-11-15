@@ -18,6 +18,7 @@ import AuthPage from './components/auth/AuthPage'
 const OnboardingFlow = lazy(() => import('./components/onboarding/OnboardingFlow'))
 const FeedApp = lazy(() => import('./components/feed/App'))
 const ScoutApp = lazy(() => import('./components/scout/App'))
+const ScoutNewApp = lazy(() => import('./components/scout/ScoutNew'))
 const BitesApp = lazy(() => import('./components/bites/App'))
 const BitesNewApp = lazy(() => import('./components/bites/BitesNew'))
 const TrimsApp = lazy(() => import('./components/trims/App'))
@@ -105,6 +106,19 @@ function App() {
             }`}
           >
             🕵️ Scout
+          </button>
+          <button
+            onClick={() => {
+              setCurrentPage('scoutnew');
+              globalThis.location.hash = '#scoutnew';
+            }}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 'scoutnew' 
+                ? 'bg-orange-600 text-white' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            ✨ Scout New
           </button>
           <button
             onClick={() => {
@@ -278,7 +292,7 @@ function App() {
     const handleHashChange = () => {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
-        'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites', 'bitesnew',
+        'landing', 'auth', 'onboarding', 'feed', 'scout', 'scoutnew', 'bites', 'bitesnew',
         'trims', 'trimsnew', 'snap', 'dash', 'dashnew', 'plate', 'platenew', 'chat', 'discover', 'debug'
       ];
       
@@ -364,6 +378,15 @@ function App() {
           <PageErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <ScoutApp />
+            </Suspense>
+          </PageErrorBoundary>
+        </div>
+
+        {/* Scout New (Discover Style) */}
+        <div style={{ display: currentPage === 'scoutnew' ? 'block' : 'none' }}>
+          <PageErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <ScoutNewApp />
             </Suspense>
           </PageErrorBoundary>
         </div>
