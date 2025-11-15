@@ -9,6 +9,9 @@ import { MobileRadialNav } from './components/navigation/MobileRadialNav'
 import './App.css'
 import './styles/mobile.css'
 
+// Page type definition
+type PageType = 'landing' | 'auth' | 'onboarding' | 'debug' | 'dash' | 'dashnew' | 'bites' | 'bitesnew' | 'trims' | 'trimsnew' | 'scout' | 'scoutnew' | 'plate' | 'platenew' | 'feed' | 'feednew' | 'chat' | 'snap' | 'snapnew' | 'discover'
+
 // Eager load critical components
 import { LandingPage } from './components/home/components/LandingPage'
 import DebugApp from './components/debug/Debug'
@@ -17,7 +20,7 @@ import AuthPage from './components/auth/AuthPage'
 // Lazy load page components for code splitting
 const OnboardingFlow = lazy(() => import('./components/onboarding/OnboardingFlow'))
 const FeedApp = lazy(() => import('./components/feed/App'))
-const FeedNewApp = lazy(() => import('./components/feed/FeedNew'))
+const FeedNewApp = lazy(() => import('./components/feed/FeedNew').then(module => ({ default: module.FeedNew })))
 const ScoutApp = lazy(() => import('./components/scout/App'))
 const ScoutNewApp = lazy(() => import('./components/scout/ScoutNew'))
 const BitesApp = lazy(() => import('./components/bites/App'))
@@ -27,7 +30,7 @@ const TrimsNewApp = lazy(() => import('./components/trims/TrimsNew'))
 const DashApp = lazy(() => import('./components/dash/App'))
 const DashNewApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
 const SnapApp = lazy(() => import('./components/snap/App'))
-const SnapNewApp = lazy(() => import('./components/snap/SnapNew'))
+const SnapNewApp = lazy(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
 const PlateApp = lazy(() => import('./components/plate/App'))
 const PlateNewApp = lazy(() => import('./components/plate/PlateNew'))
 const ChatWithAuth = lazy(() => import('./components/chat').then(module => ({ default: module.ChatWithAuth })))
@@ -47,6 +50,7 @@ function PageLoader() {
 
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('landing')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Navigation component with auth context access
   const Navigation = () => {
