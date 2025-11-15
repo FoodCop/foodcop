@@ -118,50 +118,50 @@ export default function TrimsNew() {
   return (
     <div className="min-h-screen bg-white">
       {/* Mobile Container */}
-      <div className="max-w-[375px] mx-auto bg-white">
+      <div className="max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto bg-white">
         
         {/* Header - Sticky */}
-        <div className="bg-white shadow-sm px-5 py-4 sticky top-0 z-50">
+        <div className="bg-white shadow-sm px-5 md:px-8 lg:px-12 py-4 md:py-5 sticky top-0 z-50">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center shadow-md">
-                <span className="text-white text-xl">✂️</span>
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center shadow-md">
+                <span className="text-white text-xl md:text-2xl">✂️</span>
               </div>
-              <h1 className="text-[#1A1A1A] font-bold text-xl leading-7 font-[Poppins]">Trims</h1>
+              <h1 className="text-[#1A1A1A] font-bold text-xl md:text-2xl lg:text-3xl leading-7 font-[Poppins]">Trims</h1>
             </div>
             {user?.user_metadata?.avatar_url && (
               <img 
                 src={user.user_metadata.avatar_url} 
                 alt="Profile"
-                className="w-10 h-10 rounded-full border-2 border-[#FF6B35]"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-[#FF6B35]"
               />
             )}
           </div>
           
           {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#999999]" />
+          <div className="relative md:max-w-2xl lg:max-w-3xl md:mx-auto">
+            <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-5 h-5 md:w-6 md:h-6 text-[#999999]" />
             <input
               type="text"
               placeholder="Search cooking shorts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 pl-10 pr-12 bg-[#F5F5F5] rounded-xl text-[#1A1A1A] text-base font-[Inter] placeholder:text-[#999999] focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
+              className="w-full h-12 md:h-14 pl-10 md:pl-12 pr-12 md:pr-14 bg-[#F5F5F5] rounded-xl text-[#1A1A1A] text-base md:text-lg font-[Inter] placeholder:text-[#999999] focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
             />
-            <button className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center">
-              <SlidersHorizontal className="w-5 h-5 text-[#666666]" />
+            <button className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+              <SlidersHorizontal className="w-5 h-5 md:w-6 md:h-6 text-[#666666]" />
             </button>
           </div>
         </div>
 
         {/* Category Filters - Horizontal Scroll */}
-        <div className="px-5 py-4 overflow-x-auto hide-scrollbar">
-          <div className="flex gap-2">
+        <div className="px-5 md:px-8 lg:px-12 py-4 md:py-5 overflow-x-auto md:overflow-x-visible hide-scrollbar">
+          <div className="flex md:flex-wrap gap-2 md:gap-3 md:justify-center">
             {VIDEO_CATEGORIES.map((category) => (
               <button
                 key={category.id}
                 onClick={() => handleCategoryClick(category.id)}
-                className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium font-[Inter] transition-all ${
+                className={`flex-shrink-0 px-4 md:px-5 py-2 md:py-2.5 rounded-full text-sm md:text-base font-medium font-[Inter] transition-all ${
                   selectedCategory === category.id
                     ? 'bg-[#FF6B35] text-white shadow-md'
                     : 'bg-[#F5F5F5] text-[#666666] hover:bg-[#E8E8E8]'
@@ -175,23 +175,23 @@ export default function TrimsNew() {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-12 h-12 border-4 border-[#FF6B35] border-t-transparent rounded-full animate-spin mb-3" />
-            <p className="text-[#666666] text-base font-[Inter]">Loading videos... 🎬</p>
+          <div className="flex flex-col items-center justify-center py-20 md:py-24">
+            <div className="w-12 h-12 md:w-16 md:h-16 border-4 md:border-[5px] border-[#FF6B35] border-t-transparent rounded-full animate-spin mb-3" />
+            <p className="text-[#666666] text-base md:text-lg font-[Inter]">Loading videos... 🎬</p>
           </div>
         )}
 
         {/* Error State */}
         {error && !loading && (
-          <div className="flex flex-col items-center justify-center py-20 px-5">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-3">
-              <span className="text-3xl">⚠️</span>
+          <div className="flex flex-col items-center justify-center py-20 md:py-24 px-5 md:px-8">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-red-100 rounded-full flex items-center justify-center mb-3">
+              <span className="text-3xl md:text-4xl">⚠️</span>
             </div>
-            <p className="text-[#1A1A1A] font-semibold text-base mb-1 font-[Poppins]">Failed to load videos</p>
-            <p className="text-[#666666] text-sm mb-4 font-[Inter] text-center">{error}</p>
+            <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-1 font-[Poppins]">Failed to load videos</p>
+            <p className="text-[#666666] text-sm md:text-base mb-4 font-[Inter] text-center">{error}</p>
             <button
               onClick={() => loadVideos("cooking recipes short")}
-              className="px-6 py-3 bg-[#FF6B35] text-white rounded-xl font-semibold text-sm font-[Inter] shadow-md active:scale-95 transition-transform"
+              className="px-6 md:px-8 py-3 md:py-3.5 bg-[#FF6B35] text-white rounded-xl font-semibold text-sm md:text-base font-[Inter] shadow-md active:scale-95 transition-transform"
             >
               Try Again
             </button>
@@ -200,8 +200,8 @@ export default function TrimsNew() {
 
         {/* Video Grid */}
         {!loading && !error && videos.length > 0 && (
-          <div className="px-5 pb-6">
-            <div className="grid grid-cols-2 gap-3">
+          <div className="px-5 md:px-8 lg:px-12 pb-6 md:pb-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
               {videos.map((video) => (
                 <VideoCard 
                   key={video.id} 
@@ -215,12 +215,12 @@ export default function TrimsNew() {
 
         {/* Empty State */}
         {!loading && !error && videos.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 px-5">
-            <div className="w-20 h-20 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
-              <span className="text-4xl">🎥</span>
+          <div className="flex flex-col items-center justify-center py-20 md:py-24 px-5 md:px-8">
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
+              <span className="text-4xl md:text-5xl">🎥</span>
             </div>
-            <p className="text-[#1A1A1A] font-semibold text-base mb-2 font-[Poppins]">No videos found</p>
-            <p className="text-[#666666] text-sm font-[Inter] text-center">
+            <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-2 font-[Poppins]">No videos found</p>
+            <p className="text-[#666666] text-sm md:text-base font-[Inter] text-center">
               Try adjusting your search or category
             </p>
           </div>
@@ -228,14 +228,14 @@ export default function TrimsNew() {
 
         {/* Video Player Modal */}
         {selectedVideo && (
-          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl max-w-[400px] w-full max-h-[90vh] overflow-hidden shadow-2xl">
+          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 md:p-6">
+            <div className="bg-white rounded-2xl max-w-[400px] md:max-w-[600px] lg:max-w-[800px] w-full max-h-[90vh] overflow-hidden shadow-2xl">
               {/* Close Button */}
               <button
                 onClick={() => setSelectedVideo(null)}
-                className="absolute top-4 right-4 z-50 w-10 h-10 bg-black/60 rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                className="absolute top-4 md:top-6 right-4 md:right-6 z-50 w-10 h-10 md:w-12 md:h-12 bg-black/60 rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5 md:w-6 md:h-6" />
               </button>
 
               {/* Video Player */}
@@ -250,21 +250,21 @@ export default function TrimsNew() {
               </div>
 
               {/* Video Info */}
-              <div className="p-5 max-h-[300px] overflow-y-auto">
-                <h2 className="text-[#1A1A1A] font-bold text-base leading-6 mb-2 font-[Poppins]">
+              <div className="p-5 md:p-6 lg:p-8 max-h-[300px] md:max-h-[400px] overflow-y-auto">
+                <h2 className="text-[#1A1A1A] font-bold text-base md:text-lg lg:text-xl leading-6 mb-2 font-[Poppins]">
                   {selectedVideo.title}
                 </h2>
                 <div className="flex items-center justify-between mb-3">
-                  <p className="text-[#666666] text-sm font-[Inter]">{selectedVideo.channelName}</p>
-                  <span className="text-[#999999] text-xs font-[Inter]">{selectedVideo.views} views</span>
+                  <p className="text-[#666666] text-sm md:text-base font-[Inter]">{selectedVideo.channelName}</p>
+                  <span className="text-[#999999] text-xs md:text-sm font-[Inter]">{selectedVideo.views} views</span>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-2 md:gap-3 mt-4">
                   <SmartSaveButton
                     item={selectedVideo}
                     itemType="video"
-                    className="flex-1 h-11 bg-[#FF6B35] text-white rounded-xl font-semibold text-sm font-[Inter] shadow-md hover:bg-[#EA580C] transition-colors"
+                    className="flex-1 h-11 md:h-12 lg:h-14 bg-[#FF6B35] text-white rounded-xl font-semibold text-sm md:text-base font-[Inter] shadow-md hover:bg-[#EA580C] transition-colors"
                     onSaveSuccess={(savedItem, isDuplicate) => {
                       const message = isDuplicate ? "Video already saved" : "Video saved to Plate";
                       const toastFn = isDuplicate ? toast.info : toast.success;
@@ -283,9 +283,9 @@ export default function TrimsNew() {
                   />
                   <button
                     onClick={() => console.log('Share to friend:', selectedVideo.id)}
-                    className="flex-1 h-11 bg-[#F5F5F5] text-[#666666] rounded-xl font-semibold text-sm font-[Inter] flex items-center justify-center gap-2 hover:bg-[#E8E8E8] transition-colors"
+                    className="flex-1 h-11 md:h-12 lg:h-14 bg-[#F5F5F5] text-[#666666] rounded-xl font-semibold text-sm md:text-base font-[Inter] flex items-center justify-center gap-2 hover:bg-[#E8E8E8] transition-colors"
                   >
-                    <Send className="w-4 h-4" />
+                    <Send className="w-4 h-4 md:w-5 md:h-5" />
                     Share
                   </button>
                 </div>
