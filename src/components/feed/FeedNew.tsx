@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Heart, X, Star, MapPin, Clock, Flame, Share2, Bookmark, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { FeedService, type UserLocation, type UserPreferences } from '../../services/feedService';
@@ -25,8 +25,8 @@ export function FeedNew() {
             setUserLocation(parsed);
             return resolve({ lat: parsed.lat, lng: parsed.lng });
           }
-        } catch (e) {
-          // Fall through
+        } catch (_e) {
+          // Invalid JSON, fall through to default
         }
       }
 
@@ -95,31 +95,6 @@ export function FeedNew() {
     requestUserLocation();
   }, []);
 
-  // Add keyboard shortcuts for desktop
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (!currentCard || !hasMoreCards) return;
-      
-      switch(e.key) {
-        case 'ArrowLeft':
-          handleSwipe('left', currentCard.id);
-          break;
-        case 'ArrowRight':
-          handleSwipe('right', currentCard.id);
-          break;
-        case 'ArrowUp':
-          handleSwipe('up', currentCard.id);
-          break;
-        case 'ArrowDown':
-          handleSwipe('down', currentCard.id);
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [currentCard, hasMoreCards]);
-
   const currentUserLocation = useMemo(() => {
     const storedLocation = localStorage.getItem('userLocation');
     if (storedLocation) {
@@ -141,7 +116,7 @@ export function FeedNew() {
   const {
     cards: feedCards,
     isLoading,
-    currentIndex,
+    currentIndex: _currentIndex,
     moveToNextCard,
     loadMore
   } = useFeedInfiniteScroll({
@@ -156,7 +131,7 @@ export function FeedNew() {
     enablePrefetch: false
   });
 
-  const handleSwipe = async (direction: 'left' | 'right' | 'up' | 'down', cardId: string) => {
+  const handleSwipe = useCallback(async (direction: 'left' | 'right' | 'up' | 'down', cardId: string) => {
     const card = feedCards.find(c => c.id === cardId);
     if (!card) return;
 
@@ -174,8 +149,8 @@ export function FeedNew() {
           swipeAction: mapDirectionToAction(direction),
           userId: user.id
         });
-      } catch (error) {
-        console.error('Failed to track swipe:', error);
+      } catch (_error) {
+        console.error('Failed to track swipe:', _error);
       }
     }
 
@@ -194,7 +169,7 @@ export function FeedNew() {
       case 'left':
         break;
     }
-  };
+  }, [feedCards, moveToNextCard, user]);
 
   const handleSaveToPlate = async (card: FeedCard) => {
     if (!user) {
@@ -222,7 +197,8 @@ export function FeedNew() {
           text: shareText,
           url: window.location.href
         });
-      } catch (error) {
+      } catch (_error) {
+        // Share cancelled or not supported
         console.log('Share cancelled');
       }
     } else {
@@ -327,6 +303,31 @@ export function FeedNew() {
   const currentCard = feedCards[currentCardIndex];
   const nextCard = feedCards[currentCardIndex + 1];
   const hasMoreCards = currentCardIndex < feedCards.length;
+
+  // Add keyboard shortcuts for desktop
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (!currentCard || !hasMoreCards) return;
+      
+      switch(e.key) {
+        case 'ArrowLeft':
+          handleSwipe('left', currentCard.id);
+          break;
+        case 'ArrowRight':
+          handleSwipe('right', currentCard.id);
+          break;
+        case 'ArrowUp':
+          handleSwipe('up', currentCard.id);
+          break;
+        case 'ArrowDown':
+          handleSwipe('down', currentCard.id);
+          break;
+      }
+    };
+
+    globalThis.addEventListener('keydown', handleKeyPress);
+    return () => globalThis.removeEventListener('keydown', handleKeyPress);
+  }, [currentCard, hasMoreCards, handleSwipe]);
 
   return (
     <div className="w-full max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto bg-white min-h-screen pb-20 md:pb-0">

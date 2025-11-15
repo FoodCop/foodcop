@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Play, Heart, Share2, X, Send, SlidersHorizontal } from 'lucide-react';
 import { YouTubeService } from '../../services/youtube';
 import { useAuth } from '../auth/AuthProvider';
