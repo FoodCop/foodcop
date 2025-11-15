@@ -265,7 +265,8 @@ function App() {
           >
             ✨ Snap New
           </button>
-          <button
+          {/* Chat temporarily hidden - not complete */}
+          {/* <button
             onClick={() => {
               setCurrentPage('chat');
               globalThis.location.hash = '#chat';
@@ -277,7 +278,7 @@ function App() {
             }`}
           >
             💬 Chat
-          </button>
+          </button> */}
           <button
             onClick={() => {
               setCurrentPage('discover');
@@ -321,7 +322,8 @@ function App() {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
         'landing', 'auth', 'onboarding', 'feed', 'feednew', 'scout', 'scoutnew', 'bites', 'bitesnew',
-        'trims', 'trimsnew', 'snap', 'snapnew', 'dash', 'dashnew', 'plate', 'platenew', 'chat', 'discover', 'debug'
+        'trims', 'trimsnew', 'snap', 'snapnew', 'dash', 'dashnew', 'plate', 'platenew', 'discover', 'debug'
+        // 'chat' - temporarily hidden, not complete
       ];
       
       if (hash && validPages.includes(hash)) {
