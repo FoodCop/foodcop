@@ -245,8 +245,6 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
         
         {/* Desktop Layout: Sidebar + Content */}
         <div className="md:flex md:gap-6 lg:gap-8 md:p-6 lg:p-8">
-        {/* Desktop Layout: Sidebar + Content */}
-        <div className="md:flex md:gap-6 lg:gap-8 md:p-6 lg:p-8">
           
           {/* Profile Sidebar - Desktop Only */}
           <div className="hidden md:block md:w-80 lg:w-96 flex-shrink-0">
