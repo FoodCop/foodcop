@@ -17,6 +17,7 @@ import AuthPage from './components/auth/AuthPage'
 // Lazy load page components for code splitting
 const OnboardingFlow = lazy(() => import('./components/onboarding/OnboardingFlow'))
 const FeedApp = lazy(() => import('./components/feed/App'))
+const FeedNewApp = lazy(() => import('./components/feed/FeedNew'))
 const ScoutApp = lazy(() => import('./components/scout/App'))
 const ScoutNewApp = lazy(() => import('./components/scout/ScoutNew'))
 const BitesApp = lazy(() => import('./components/bites/App'))
@@ -94,6 +95,19 @@ function App() {
             }`}
           >
             🍽️ Feed
+          </button>
+          <button
+            onClick={() => {
+              setCurrentPage('feednew');
+              globalThis.location.hash = '#feednew';
+            }}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 'feednew' 
+                ? 'bg-orange-600 text-white' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            ✨ Feed New
           </button>
           <button
             onClick={() => {
@@ -306,7 +320,7 @@ function App() {
     const handleHashChange = () => {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
-        'landing', 'auth', 'onboarding', 'feed', 'scout', 'scoutnew', 'bites', 'bitesnew',
+        'landing', 'auth', 'onboarding', 'feed', 'feednew', 'scout', 'scoutnew', 'bites', 'bitesnew',
         'trims', 'trimsnew', 'snap', 'snapnew', 'dash', 'dashnew', 'plate', 'platenew', 'chat', 'discover', 'debug'
       ];
       
@@ -509,6 +523,15 @@ function App() {
           <PageErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <SnapNewApp />
+            </Suspense>
+          </PageErrorBoundary>
+        </div>
+
+        {/* Feed New (Discover Style) */}
+        <div style={{ display: currentPage === 'feednew' ? 'block' : 'none' }}>
+          <PageErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <FeedNewApp />
             </Suspense>
           </PageErrorBoundary>
         </div>
