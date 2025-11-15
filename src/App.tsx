@@ -26,6 +26,7 @@ const TrimsNewApp = lazy(() => import('./components/trims/TrimsNew'))
 const DashApp = lazy(() => import('./components/dash/App'))
 const DashNewApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
 const SnapApp = lazy(() => import('./components/snap/App'))
+const SnapNewApp = lazy(() => import('./components/snap/SnapNew'))
 const PlateApp = lazy(() => import('./components/plate/App'))
 const PlateNewApp = lazy(() => import('./components/plate/PlateNew'))
 const ChatWithAuth = lazy(() => import('./components/chat').then(module => ({ default: module.ChatWithAuth })))
@@ -239,6 +240,19 @@ function App() {
           </button>
           <button
             onClick={() => {
+              setCurrentPage('snapnew');
+              globalThis.location.hash = '#snapnew';
+            }}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 'snapnew' 
+                ? 'bg-orange-600 text-white' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            ✨ Snap New
+          </button>
+          <button
+            onClick={() => {
               setCurrentPage('chat');
               globalThis.location.hash = '#chat';
             }}
@@ -293,7 +307,7 @@ function App() {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
         'landing', 'auth', 'onboarding', 'feed', 'scout', 'scoutnew', 'bites', 'bitesnew',
-        'trims', 'trimsnew', 'snap', 'dash', 'dashnew', 'plate', 'platenew', 'chat', 'discover', 'debug'
+        'trims', 'trimsnew', 'snap', 'snapnew', 'dash', 'dashnew', 'plate', 'platenew', 'chat', 'discover', 'debug'
       ];
       
       if (hash && validPages.includes(hash)) {
@@ -486,6 +500,15 @@ function App() {
           <PageErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <DashNewApp />
+            </Suspense>
+          </PageErrorBoundary>
+        </div>
+
+        {/* Snap New (Discover Style) */}
+        <div style={{ display: currentPage === 'snapnew' ? 'block' : 'none' }}>
+          <PageErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <SnapNewApp />
             </Suspense>
           </PageErrorBoundary>
         </div>
