@@ -95,6 +95,31 @@ export function FeedNew() {
     requestUserLocation();
   }, []);
 
+  // Add keyboard shortcuts for desktop
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (!currentCard || !hasMoreCards) return;
+      
+      switch(e.key) {
+        case 'ArrowLeft':
+          handleSwipe('left', currentCard.id);
+          break;
+        case 'ArrowRight':
+          handleSwipe('right', currentCard.id);
+          break;
+        case 'ArrowUp':
+          handleSwipe('up', currentCard.id);
+          break;
+        case 'ArrowDown':
+          handleSwipe('down', currentCard.id);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [currentCard, hasMoreCards]);
+
   const currentUserLocation = useMemo(() => {
     const storedLocation = localStorage.getItem('userLocation');
     if (storedLocation) {
@@ -304,53 +329,81 @@ export function FeedNew() {
   const hasMoreCards = currentCardIndex < feedCards.length;
 
   return (
-    <div className="w-full max-w-[375px] mx-auto bg-white min-h-screen pb-20">
+    <div className="w-full max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto bg-white min-h-screen pb-20 md:pb-0">
       {/* Header */}
-      <div className="sticky top-0 z-50 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] px-5 py-4">
+      <div className="sticky top-0 z-50 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] px-5 md:px-8 lg:px-12 py-4 md:py-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/30 to-white/10 flex items-center justify-center">
-              <span className="text-2xl">🔥</span>
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-white/30 to-white/10 flex items-center justify-center">
+              <span className="text-2xl md:text-3xl">🔥</span>
             </div>
-            <h1 className="text-white font-[Poppins] font-bold text-xl">Feed</h1>
+            <h1 className="text-white font-[Poppins] font-bold text-xl md:text-2xl lg:text-3xl">Feed</h1>
           </div>
           <button
             onClick={() => loadMore()}
-            className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
           >
-            <RefreshCw className="w-4 h-4 text-white" />
+            <RefreshCw className="w-4 h-4 md:w-5 md:h-5 text-white" />
           </button>
         </div>
       </div>
 
       {/* Card Stack */}
-      <div className="relative px-5 py-6" style={{ height: 'calc(100vh - 200px)' }}>
+      <div className="relative px-5 md:px-8 lg:px-12 py-6 md:py-8" style={{ height: 'calc(100vh - 200px)' }}>
         {!hasMoreCards ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-8">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="w-24 h-24 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center mb-6"
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center mb-6"
             >
-              <RefreshCw className="w-12 h-12 text-white" />
+              <RefreshCw className="w-12 h-12 md:w-16 md:h-16 text-white" />
             </motion.div>
-            <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">
+            <h2 className="font-[Poppins] font-bold text-xl md:text-2xl lg:text-3xl text-gray-900 mb-2">
               You're All Caught Up!
             </h2>
-            <p className="text-gray-600 mb-6">Check back later for more recommendations</p>
+            <p className="text-gray-600 text-base md:text-lg mb-6">Check back later for more recommendations</p>
             <button
               onClick={() => {
                 setCurrentCardIndex(0);
                 loadMore();
               }}
-              className="px-6 py-3 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+              className="px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold text-base md:text-lg rounded-xl hover:opacity-90 transition-opacity"
             >
               Start Over
             </button>
           </div>
         ) : (
-          <div className="relative h-full">
+          <div className="relative h-full md:flex md:items-center md:justify-center md:gap-8 lg:gap-12">
             <AnimatePresence>
+              {/* Desktop: Side-by-side layout */}
+              <div className="hidden md:flex items-center gap-8 lg:gap-12 h-full max-w-6xl mx-auto">
+                {/* Current card (left side) */}
+                {currentCard && (
+                  <div className="flex-1" style={{ maxWidth: '500px', height: '100%', zIndex: 2 }}>
+                    <SwipeableCard
+                      card={currentCard}
+                      onSwipe={handleSwipe}
+                    />
+                  </div>
+                )}
+                
+                {/* Next card preview (right side) */}
+                {nextCard && (
+                  <div className="flex-1" style={{ maxWidth: '500px', height: '100%', zIndex: 1 }}>
+                    <motion.div
+                      initial={{ scale: 0.95, opacity: 0.7 }}
+                      animate={{ scale: 0.95, opacity: 0.7 }}
+                      className="w-full h-full"
+                    >
+                      <CardContent card={nextCard} isActive={false} />
+                    </motion.div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Mobile: Stacked layout */}
+              <div className="md:hidden relative h-full">
               {/* Next card (background) */}
               {nextCard && (
                 <div className="absolute inset-0" style={{ zIndex: 1 }}>
@@ -373,6 +426,7 @@ export function FeedNew() {
                   />
                 </div>
               )}
+              </div>
             </AnimatePresence>
           </div>
         )}
@@ -380,32 +434,39 @@ export function FeedNew() {
 
       {/* Action Buttons */}
       {hasMoreCards && currentCard && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-5 py-4 z-40">
-          <div className="max-w-[375px] mx-auto flex items-center justify-center gap-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-5 md:px-8 lg:px-12 py-4 md:py-5 z-40">
+          <div className="max-w-[375px] md:max-w-2xl lg:max-w-4xl mx-auto">
+            {/* Desktop keyboard hint */}
+            <div className="hidden md:block text-center text-sm text-gray-500 mb-3">
+              Use arrow keys: ← Pass • → Like • ↑ Share • ↓ Save
+            </div>
+            
+            <div className="flex items-center justify-center gap-4 md:gap-6">
             <button
               onClick={() => handleSwipe('left', currentCard.id)}
-              className="w-14 h-14 rounded-full bg-white border-2 border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center shadow-md"
+              className="w-14 h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 rounded-full bg-white border-2 border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center shadow-md"
             >
-              <X className="w-7 h-7 text-gray-600" />
+              <X className="w-7 h-7 md:w-8 md:h-8 text-gray-600" />
             </button>
             <button
               onClick={() => handleSwipe('down', currentCard.id)}
-              className="w-12 h-12 rounded-full bg-white border-2 border-blue-400 hover:border-blue-500 transition-colors flex items-center justify-center shadow-md"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white border-2 border-blue-400 hover:border-blue-500 transition-colors flex items-center justify-center shadow-md"
             >
-              <Bookmark className="w-5 h-5 text-blue-500" />
+              <Bookmark className="w-5 h-5 md:w-6 md:h-6 text-blue-500" />
             </button>
             <button
               onClick={() => handleSwipe('right', currentCard.id)}
-              className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#EA580C] hover:opacity-90 transition-opacity flex items-center justify-center shadow-lg"
+              className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#EA580C] hover:opacity-90 transition-opacity flex items-center justify-center shadow-lg"
             >
-              <Heart className="w-8 h-8 text-white fill-white" />
+              <Heart className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white fill-white" />
             </button>
             <button
               onClick={() => handleSwipe('up', currentCard.id)}
-              className="w-12 h-12 rounded-full bg-white border-2 border-purple-400 hover:border-purple-500 transition-colors flex items-center justify-center shadow-md"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white border-2 border-purple-400 hover:border-purple-500 transition-colors flex items-center justify-center shadow-md"
             >
-              <Share2 className="w-5 h-5 text-purple-500" />
+              <Share2 className="w-5 h-5 md:w-6 md:h-6 text-purple-500" />
             </button>
+          </div>
           </div>
         </div>
       )}
@@ -498,37 +559,37 @@ function RestaurantCard({ card }: { card: any }) {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80" />
       </div>
       
-      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="px-3 py-1 bg-[#FF6B35] rounded-full text-xs font-semibold">
+      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+        <div className="flex items-center gap-2 mb-2 md:mb-3">
+          <span className="px-3 py-1 md:px-4 md:py-1.5 bg-[#FF6B35] rounded-full text-xs md:text-sm font-semibold">
             {card.cuisine || 'Restaurant'}
           </span>
           {card.priceRange && (
-            <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-semibold">
+            <span className="px-3 py-1 md:px-4 md:py-1.5 bg-white/20 rounded-full text-xs md:text-sm font-semibold">
               {card.priceRange}
             </span>
           )}
         </div>
         
-        <h2 className="font-[Poppins] font-bold text-2xl mb-2">{card.name}</h2>
+        <h2 className="font-[Poppins] font-bold text-2xl md:text-3xl lg:text-4xl mb-2">{card.name}</h2>
         
-        <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-4 text-sm md:text-base">
           {card.rating && (
             <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <Star className="w-4 h-4 md:w-5 md:h-5 fill-yellow-400 text-yellow-400" />
               <span>{card.rating}</span>
             </div>
           )}
           {card.distance && (
             <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
+              <MapPin className="w-4 h-4 md:w-5 md:h-5" />
               <span>{card.distance}</span>
             </div>
           )}
         </div>
         
         {card.description && (
-          <p className="mt-2 text-sm text-white/90 line-clamp-2">{card.description}</p>
+          <p className="mt-2 text-sm md:text-base text-white/90 line-clamp-2">{card.description}</p>
         )}
       </div>
     </div>
@@ -548,32 +609,32 @@ function RecipeCard({ card }: { card: any }) {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80" />
       </div>
       
-      <div className="absolute top-4 right-4">
-        <span className="px-3 py-1 bg-green-500 rounded-full text-white text-xs font-semibold">
+      <div className="absolute top-4 right-4 md:top-6 md:right-6">
+        <span className="px-3 py-1 md:px-4 md:py-1.5 bg-green-500 rounded-full text-white text-xs md:text-sm font-semibold">
           Recipe
         </span>
       </div>
       
-      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-        <h2 className="font-[Poppins] font-bold text-2xl mb-2">{card.title}</h2>
+      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+        <h2 className="font-[Poppins] font-bold text-2xl md:text-3xl lg:text-4xl mb-2">{card.title}</h2>
         
-        <div className="flex items-center gap-4 text-sm mb-2">
+        <div className="flex items-center gap-4 text-sm md:text-base mb-2">
           {card.prepTime && (
             <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-4 h-4 md:w-5 md:h-5" />
               <span>{card.prepTime}</span>
             </div>
           )}
           {card.difficulty && (
             <div className="flex items-center gap-1">
-              <Flame className="w-4 h-4" />
+              <Flame className="w-4 h-4 md:w-5 md:h-5" />
               <span>{card.difficulty}</span>
             </div>
           )}
         </div>
         
         {card.author && (
-          <p className="text-sm text-white/80">by {card.author}</p>
+          <p className="text-sm md:text-base text-white/80">by {card.author}</p>
         )}
       </div>
     </div>
@@ -593,19 +654,19 @@ function VideoCard({ card }: { card: any }) {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80" />
       </div>
       
-      <div className="absolute top-4 right-4">
-        <span className="px-3 py-1 bg-red-500 rounded-full text-white text-xs font-semibold">
+      <div className="absolute top-4 right-4 md:top-6 md:right-6">
+        <span className="px-3 py-1 md:px-4 md:py-1.5 bg-red-500 rounded-full text-white text-xs md:text-sm font-semibold">
           Video
         </span>
       </div>
       
-      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-        <h2 className="font-[Poppins] font-bold text-2xl mb-2">{card.title}</h2>
+      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+        <h2 className="font-[Poppins] font-bold text-2xl md:text-3xl lg:text-4xl mb-2">{card.title}</h2>
         
-        <div className="flex items-center gap-4 text-sm mb-2">
+        <div className="flex items-center gap-4 text-sm md:text-base mb-2">
           {card.duration && (
             <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-4 h-4 md:w-5 md:h-5" />
               <span>{card.duration}</span>
             </div>
           )}
@@ -615,7 +676,7 @@ function VideoCard({ card }: { card: any }) {
         </div>
         
         {card.creator && (
-          <p className="text-sm text-white/80">by {card.creator}</p>
+          <p className="text-sm md:text-base text-white/80">by {card.creator}</p>
         )}
       </div>
     </div>
