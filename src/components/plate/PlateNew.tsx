@@ -241,10 +241,89 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
   return (
     <div className="min-h-screen bg-white">
       {/* Mobile Container */}
-      <div className="max-w-[375px] mx-auto bg-white">
+      <div className="max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto bg-white">
         
-        {/* Header - Sticky */}
-        <div className="bg-white shadow-sm px-5 py-4 sticky top-0 z-50">
+        {/* Desktop Layout: Sidebar + Content */}
+        <div className="md:flex md:gap-6 lg:gap-8 md:p-6 lg:p-8">
+        {/* Desktop Layout: Sidebar + Content */}
+        <div className="md:flex md:gap-6 lg:gap-8 md:p-6 lg:p-8">
+          
+          {/* Profile Sidebar - Desktop Only */}
+          <div className="hidden md:block md:w-80 lg:w-96 flex-shrink-0">
+            <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8 sticky top-6">
+              {/* Avatar */}
+              <div className="flex flex-col items-center mb-6">
+                <div className="relative mb-4">
+                  <img
+                    src={user.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + user.id}
+                    alt={user.name || 'User'}
+                    className="w-24 h-24 lg:w-28 lg:h-28 rounded-full border-4 border-[#FF6B35]"
+                  />
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-br from-[#FF6B35] to-[#EA580C] rounded-full border-2 border-white flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">✓</span>
+                  </div>
+                </div>
+                
+                <h2 className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7 mb-1 font-[Poppins] text-center">
+                  {user.name || 'Anonymous User'}
+                </h2>
+                <p className="text-[#666666] text-sm lg:text-base mb-3 font-[Inter] text-center">
+                  @{user.username || user.email?.split('@')[0] || 'user'}
+                </p>
+                {user.location_city && user.location_country && (
+                  <div className="flex items-center gap-1 text-[#999999] text-sm font-[Inter]">
+                    <MapPin className="w-4 h-4" />
+                    <span>{user.location_city}, {user.location_country}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Bio */}
+              {user.bio && (
+                <p className="text-[#1A1A1A] text-sm lg:text-base leading-6 mb-6 font-[Inter] text-center">
+                  {user.bio}
+                </p>
+              )}
+
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-4 mb-6 py-4 border-y border-[#E8E8E8]">
+                <div className="text-center">
+                  <p className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7 font-[Poppins]">
+                    {posts.length}
+                  </p>
+                  <p className="text-[#666666] text-xs lg:text-sm font-[Inter]">Posts</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7 font-[Poppins]">
+                    {user.followers_count || 0}
+                  </p>
+                  <p className="text-[#666666] text-xs lg:text-sm font-[Inter]">Followers</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7 font-[Poppins]">
+                    {user.following_count || 0}
+                  </p>
+                  <p className="text-[#666666] text-xs lg:text-sm font-[Inter]">Following</p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                <button className="w-full h-12 bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white rounded-xl font-semibold text-sm lg:text-base font-[Inter] shadow-md hover:shadow-lg transition-shadow">
+                  Edit Profile
+                </button>
+                <button className="w-full h-12 bg-[#F5F5F5] text-[#666666] rounded-xl font-semibold text-sm lg:text-base font-[Inter] hover:bg-[#E8E8E8] transition-colors">
+                  Share Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        
+        {/* Main Content Area */}
+        <div className="flex-1 min-w-0">
+        
+        {/* Header - Sticky - Mobile Only */}
+        <div className="md:hidden bg-white shadow-sm px-5 py-4 sticky top-0 z-50">
           <div className="flex items-center justify-between">
             <h1 className="text-[#1A1A1A] font-bold text-xl leading-7 font-[Poppins]">Profile</h1>
             <button className="w-10 h-10 rounded-xl bg-[#F5F5F5] flex items-center justify-center hover:bg-[#E8E8E8] transition-colors">
@@ -253,8 +332,8 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
           </div>
         </div>
 
-        {/* Profile Header */}
-        <div className="px-5 py-6">
+        {/* Profile Header - Mobile Only */}
+        <div className="md:hidden px-5 py-6">
           <div className="flex items-start gap-4 mb-6">
             {/* Avatar */}
             <div className="relative">
@@ -326,62 +405,62 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
         </div>
 
         {/* Tabs */}
-        <div className="border-t border-[#E8E8E8]">
-          <div className="px-5 overflow-x-auto hide-scrollbar">
-            <div className="flex gap-1 py-2">
+        <div className="border-t md:border-0 border-[#E8E8E8] md:mb-6">
+          <div className="px-5 md:px-0 overflow-x-auto hide-scrollbar">
+            <div className="flex md:flex-wrap gap-1 md:gap-2 py-2 md:py-0">
               <button
                 onClick={() => setActiveTab('saved')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
                   activeTab === 'saved'
                     ? 'bg-[#FF6B35] text-white shadow-md'
-                    : 'bg-white text-[#666666] hover:bg-[#F5F5F5]'
+                    : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
                 }`}
               >
-                <Bookmark className="w-4 h-4" />
+                <Bookmark className="w-4 h-4 md:w-5 md:h-5" />
                 Saved ({totalSaved})
               </button>
               <button
                 onClick={() => setActiveTab('recipes')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
                   activeTab === 'recipes'
                     ? 'bg-[#FF6B35] text-white shadow-md'
-                    : 'bg-white text-[#666666] hover:bg-[#F5F5F5]'
+                    : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
                 }`}
               >
-                <Heart className="w-4 h-4" />
+                <Heart className="w-4 h-4 md:w-5 md:h-5" />
                 Recipes ({recipes.length})
               </button>
               <button
                 onClick={() => setActiveTab('videos')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
                   activeTab === 'videos'
                     ? 'bg-[#FF6B35] text-white shadow-md'
-                    : 'bg-white text-[#666666] hover:bg-[#F5F5F5]'
+                    : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
                 }`}
               >
-                <Clock className="w-4 h-4" />
+                <Clock className="w-4 h-4 md:w-5 md:h-5" />
                 Videos ({videos.length})
               </button>
               <button
                 onClick={() => setActiveTab('places')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
                   activeTab === 'places'
                     ? 'bg-[#FF6B35] text-white shadow-md'
-                    : 'bg-white text-[#666666] hover:bg-[#F5F5F5]'
+                    : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
                 }`}
               >
-                <MapPin className="w-4 h-4" />
+                <MapPin className="w-4 h-4 md:w-5 md:h-5" />
                 Places ({places.length})
               </button>
               <button
                 onClick={() => setActiveTab('photos')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
                   activeTab === 'photos'
                     ? 'bg-[#FF6B35] text-white shadow-md'
-                    : 'bg-white text-[#666666] hover:bg-[#F5F5F5]'
+                    : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
                 }`}
               >
-                <Grid className="w-4 h-4" />
+                <Grid className="w-4 h-4 md:w-5 md:h-5" />
                 Photos ({photos.length})
               </button>
             </div>
@@ -389,22 +468,22 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
         </div>
 
         {/* Tab Content */}
-        <div className="px-5 py-6">
+        <div className="px-5 md:px-0 py-6 md:py-0">
           {/* Saved Tab */}
           {activeTab === 'saved' && (
             <div>
               {totalSaved === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20">
-                  <div className="w-20 h-20 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
-                    <Bookmark className="w-10 h-10 text-[#999999]" />
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
+                    <Bookmark className="w-10 h-10 md:w-12 md:h-12 text-[#999999]" />
                   </div>
-                  <p className="text-[#1A1A1A] font-semibold text-base mb-2 font-[Poppins]">No saved items yet</p>
-                  <p className="text-[#666666] text-sm font-[Inter] text-center">
+                  <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-2 font-[Poppins]">No saved items yet</p>
+                  <p className="text-[#666666] text-sm md:text-base font-[Inter] text-center">
                     Start saving recipes, videos, and places!
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                   {/* Show all saved items */}
                   {[...recipes, ...videos, ...places].slice(0, 10).map((item) => (
                     <div
@@ -433,7 +512,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               {recipes.length === 0 ? (
                 <EmptyState icon="🍳" title="No recipes saved" description="Discover and save recipes you love" />
               ) : (
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                   {recipes.map((recipe) => (
                     <RecipeCard key={recipe.id} recipe={recipe} />
                   ))}
@@ -448,7 +527,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               {videos.length === 0 ? (
                 <EmptyState icon="🎥" title="No videos saved" description="Save cooking videos to watch later" />
               ) : (
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                   {videos.map((video) => (
                     <VideoCard key={video.id} video={video} />
                   ))}
@@ -463,7 +542,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               {places.length === 0 ? (
                 <EmptyState icon="📍" title="No places saved" description="Save restaurants you want to visit" />
               ) : (
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                   {places.map((place) => (
                     <PlaceCard key={place.id} place={place} />
                   ))}
@@ -478,7 +557,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               {photos.length === 0 ? (
                 <EmptyState icon="📸" title="No photos saved" description="Save food photos for inspiration" />
               ) : (
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-3">
                   {photos.map((photo) => {
                     const meta = photo.metadata as { url?: string; caption?: string };
                     return (
@@ -495,8 +574,11 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               )}
             </div>
           )}
-        </div>
-      </div>
+        </div> {/* End Tab Content */}
+        
+        </div> {/* End Main Content Area */}
+        </div> {/* End Desktop Layout */}
+      </div> {/* End Mobile Container */}
 
       <style>{`
         .hide-scrollbar::-webkit-scrollbar {
@@ -514,12 +596,12 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
 // Empty State Component
 function EmptyState({ icon, title, description }: { icon: string; title: string; description: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20">
-      <div className="w-20 h-20 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
-        <span className="text-4xl">{icon}</span>
+    <div className="flex flex-col items-center justify-center py-20 md:py-24">
+      <div className="w-20 h-20 md:w-24 md:h-24 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
+        <span className="text-4xl md:text-5xl">{icon}</span>
       </div>
-      <p className="text-[#1A1A1A] font-semibold text-base mb-2 font-[Poppins]">{title}</p>
-      <p className="text-[#666666] text-sm font-[Inter] text-center">{description}</p>
+      <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-2 font-[Poppins]">{title}</p>
+      <p className="text-[#666666] text-sm md:text-base font-[Inter] text-center">{description}</p>
     </div>
   );
 }
