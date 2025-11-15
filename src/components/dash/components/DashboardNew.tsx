@@ -108,26 +108,26 @@ export function DashboardNew() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col max-w-[375px] mx-auto relative">
+    <div className="min-h-screen bg-white flex flex-col max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto relative">
       {/* Header */}
-      <header className="bg-white shadow-sm px-5 py-4 flex items-center justify-between sticky top-0 z-50">
+      <header className="bg-white shadow-sm px-5 md:px-8 lg:px-12 py-4 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF6B35] to-[#EA580C] shadow-lg flex items-center justify-center">
-            <svg className="w-4 h-4.5 text-white" viewBox="0 0 16 18" fill="currentColor">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-[#FF6B35] to-[#EA580C] shadow-lg flex items-center justify-center">
+            <svg className="w-4 h-4.5 md:w-5 md:h-5.5 text-white" viewBox="0 0 16 18" fill="currentColor">
               <path d="M14.625 0C14.0625 0 10.125 1.125 10.125 6.1875V10.125C10.125 11.366 11.134 12.375 12.375 12.375H13.5V16.875C13.5 17.4973 14.0027 18 14.625 18C15.2473 18 15.75 17.4973 15.75 16.875V12.375V8.4375V1.125C15.75 0.502734 15.2473 0 14.625 0ZM2.25 0.5625C2.25 0.274219 2.03555 0.0351562 1.74727 0.00351563C1.45898 -0.028125 1.20234 0.161719 1.13906 0.439453L0.0738281 5.23125C0.0246094 5.45273 0 5.67773 0 5.90273C0 7.51641 1.23398 8.8418 2.8125 8.98594V16.875C2.8125 17.4973 3.31523 18 3.9375 18C4.55977 18 5.0625 17.4973 5.0625 16.875V8.98594C6.64102 8.8418 7.875 7.51641 7.875 5.90273C7.875 5.67773 7.85039 5.45273 7.80117 5.23125L6.73594 0.439453C6.67266 0.158203 6.40898 -0.028125 6.12422 0.00351563C5.83945 0.0351562 5.625 0.274219 5.625 0.5625V5.28047C5.625 5.47031 5.47031 5.625 5.28047 5.625C5.10117 5.625 4.95352 5.48789 4.93594 5.30859L4.49648 0.513281C4.47188 0.221484 4.2293 0 3.9375 0C3.6457 0 3.40313 0.221484 3.37852 0.513281L2.94258 5.30859C2.925 5.48789 2.77734 5.625 2.59805 5.625C2.4082 5.625 2.25352 5.47031 2.25352 5.28047V0.5625H2.25Z" />
             </svg>
           </div>
           <div>
-            <h1 className="text-[#1A1A1A] font-bold text-lg leading-[18px] font-[Poppins]">FUZO</h1>
-            <p className="text-[#6B7280] text-xs leading-4 font-[Inter]">Your Food Hub</p>
+            <h1 className="text-[#1A1A1A] font-bold text-lg md:text-xl leading-[18px] md:leading-[24px] font-[Poppins]">FUZO</h1>
+            <p className="text-[#6B7280] text-xs md:text-sm leading-4 font-[Inter]">Your Food Hub</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 md:gap-4">
           <button className="relative p-1">
-            <Bell className="w-4.5 h-5 text-[#374151]" />
+            <Bell className="w-4.5 h-5 md:w-5 md:h-5.5 text-[#374151]" />
             <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full opacity-94"></span>
           </button>
-          <Avatar className="w-9 h-9 rounded-full shadow-[0_0_0_0_#FF6B35,0_0_0_0_#FFF]">
+          <Avatar className="w-9 h-9 md:w-10 md:h-10 rounded-full shadow-[0_0_0_0_#FF6B35,0_0_0_0_#FFF]">
             <AvatarImage src={user?.user_metadata?.avatar_url} alt={getUserDisplayName()} />
             <AvatarFallback className="bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white text-sm">
               {getUserDisplayName()[0]?.toUpperCase()}
@@ -139,109 +139,109 @@ export function DashboardNew() {
       {/* Main Content */}
       <main className="flex-1 pb-6">
         {/* Greeting Section */}
-        <section className="px-5 pt-5 pb-4">
-          <h2 className="text-[#1A1A1A] font-bold text-2xl leading-8 mb-1 font-[Poppins]">
+        <section className="px-5 md:px-8 lg:px-12 pt-5 md:pt-8 pb-4 md:pb-6">
+          <h2 className="text-[#1A1A1A] font-bold text-2xl md:text-3xl lg:text-4xl leading-8 md:leading-10 lg:leading-12 mb-1 font-[Poppins]">
             {getGreeting()}, {getUserDisplayName()}
           </h2>
           <div className="flex items-center gap-2 text-[#6B7280]">
-            <MapPin className="w-4 h-4" />
-            <span className="text-sm font-[Inter]">{getUserLocation()}</span>
+            <MapPin className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="text-sm md:text-base font-[Inter]">{getUserLocation()}</span>
           </div>
         </section>
 
         {/* Snap Your Plate CTA */}
-        <section className="px-5 pb-6">
-          <button className="w-full h-14 rounded-2xl bg-gradient-to-br from-[#FF6B35] to-[#EA580C] shadow-[0_8px_10px_0_rgba(0,0,0,0.1),0_20px_25px_0_rgba(0,0,0,0.1)] flex items-center justify-center gap-3 hover:shadow-xl transition-shadow">
-            <Camera className="w-5 h-5 text-white" />
-            <span className="text-white font-bold text-base font-[Poppins]">Snap Your Plate</span>
+        <section className="px-5 md:px-8 lg:px-12 pb-6 md:pb-8">
+          <button className="w-full md:max-w-md h-14 md:h-16 rounded-2xl bg-gradient-to-br from-[#FF6B35] to-[#EA580C] shadow-[0_8px_10px_0_rgba(0,0,0,0.1),0_20px_25px_0_rgba(0,0,0,0.1)] flex items-center justify-center gap-3 hover:shadow-xl transition-shadow">
+            <Camera className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            <span className="text-white font-bold text-base md:text-lg font-[Poppins]">Snap Your Plate</span>
           </button>
         </section>
 
         {/* My Crew - Story Style */}
-        <section className="mb-6">
-          <div className="px-5 flex items-center justify-between mb-3">
-            <h2 className="text-[#1A1A1A] font-bold text-base leading-6 font-[Poppins]">My Crew</h2>
-            <button className="text-[#FF6B35] text-sm font-semibold font-[Inter]">View All</button>
+        <section className="mb-6 md:mb-8">
+          <div className="px-5 md:px-8 lg:px-12 flex items-center justify-between mb-3 md:mb-4">
+            <h2 className="text-[#1A1A1A] font-bold text-base md:text-lg leading-6 font-[Poppins]">My Crew</h2>
+            <button className="text-[#FF6B35] text-sm md:text-base font-semibold font-[Inter]">View All</button>
           </div>
           {loadingSection.crew ? (
-            <div className="flex gap-4 overflow-x-auto pl-5 pb-2 hide-scrollbar">
+            <div className="flex gap-4 md:gap-6 overflow-x-auto pl-5 md:pl-8 lg:pl-12 pb-2 hide-scrollbar">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="flex flex-col items-center gap-2 min-w-[64px]">
-                  <div className="w-16 h-16 rounded-full bg-gray-200 animate-pulse" />
+                <div key={i} className="flex flex-col items-center gap-2 min-w-[64px] md:min-w-[80px]">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gray-200 animate-pulse" />
                   <div className="w-12 h-3 bg-gray-200 rounded animate-pulse" />
                 </div>
               ))}
             </div>
           ) : dashboardData.crew.length > 0 ? (
-            <div className="flex gap-4 overflow-x-auto pl-5 pb-2 hide-scrollbar">
+            <div className="flex gap-4 md:gap-6 overflow-x-auto pl-5 md:pl-8 lg:pl-12 pb-2 hide-scrollbar">
               {dashboardData.crew.map((member) => (
                 <button
                   key={member.id}
-                  className="flex flex-col items-center gap-2 min-w-[64px] hover:opacity-80 transition-opacity"
+                  className="flex flex-col items-center gap-2 min-w-[64px] md:min-w-[80px] hover:opacity-80 transition-opacity"
                 >
-                  <div className="w-16 h-16 rounded-full p-0.5 bg-gradient-to-br from-[#FF6B35] via-[#FF6B35] to-[#F7C59F]">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full p-0.5 bg-gradient-to-br from-[#FF6B35] via-[#FF6B35] to-[#F7C59F]">
                     <div className="w-full h-full rounded-full p-0.5 bg-white">
                       <Avatar className="w-full h-full">
                         <AvatarImage src={member.avatar} alt={member.name} />
-                        <AvatarFallback className="bg-gray-100 text-sm">{member.initials}</AvatarFallback>
+                        <AvatarFallback className="bg-gray-100 text-sm md:text-base">{member.initials}</AvatarFallback>
                       </Avatar>
                     </div>
                   </div>
-                  <span className="text-[#4B5563] text-xs font-medium text-center leading-4 font-[Inter]">
+                  <span className="text-[#4B5563] text-xs md:text-sm font-medium text-center leading-4 font-[Inter]">
                     {member.name.split(" ")[0]}
                   </span>
                 </button>
               ))}
             </div>
           ) : (
-            <div className="px-5 text-center py-6 text-[#9CA3AF]">
-              <p className="text-sm font-[Inter]">No crew members yet</p>
-              <p className="text-xs mt-1 font-[Inter]">Add friends to build your crew!</p>
+            <div className="px-5 md:px-8 lg:px-12 text-center py-6 text-[#9CA3AF]">
+              <p className="text-sm md:text-base font-[Inter]">No crew members yet</p>
+              <p className="text-xs md:text-sm mt-1 font-[Inter]">Add friends to build your crew!</p>
             </div>
           )}
         </section>
 
         {/* Saved Recipes */}
-        <section className="mb-6">
-          <div className="px-5 flex items-center justify-between mb-3">
-            <h2 className="text-[#1A1A1A] font-bold text-base leading-6 font-[Poppins]">Saved Recipes</h2>
-            <button className="text-[#FF6B35] text-sm font-semibold font-[Inter]">See All</button>
+        <section className="mb-6 md:mb-8">
+          <div className="px-5 md:px-8 lg:px-12 flex items-center justify-between mb-3 md:mb-4">
+            <h2 className="text-[#1A1A1A] font-bold text-base md:text-lg leading-6 font-[Poppins]">Saved Recipes</h2>
+            <button className="text-[#FF6B35] text-sm md:text-base font-semibold font-[Inter]">See All</button>
           </div>
           {loadingSection.recipes ? (
-            <div className="px-5 grid grid-cols-2 gap-4">
+            <div className="px-5 md:px-8 lg:px-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="bg-white rounded-2xl shadow-[0_2px_4px_0_rgba(0,0,0,0.1)] overflow-hidden">
-                  <div className="h-32 bg-gray-200 animate-pulse" />
-                  <div className="p-3 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse" />
-                    <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" />
+                  <div className="h-32 md:h-40 bg-gray-200 animate-pulse" />
+                  <div className="p-3 md:p-4 space-y-2">
+                    <div className="h-4 md:h-5 bg-gray-200 rounded animate-pulse" />
+                    <div className="h-3 md:h-4 bg-gray-200 rounded w-2/3 animate-pulse" />
                   </div>
                 </div>
               ))}
             </div>
           ) : dashboardData.savedRecipes.length > 0 ? (
-            <div className="px-5 grid grid-cols-2 gap-4">
+            <div className="px-5 md:px-8 lg:px-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {dashboardData.savedRecipes.map((recipe) => (
                 <div
                   key={recipe.id}
                   className="bg-white rounded-2xl shadow-[0_2px_4px_0_rgba(0,0,0,0.1),0_4px_6px_0_rgba(0,0,0,0.1)] overflow-hidden hover:shadow-xl transition-shadow"
                 >
-                  <div className="relative h-32">
+                  <div className="relative h-32 md:h-40">
                     <img
                       src={recipe.image}
                       alt={recipe.name}
                       className="w-full h-full object-cover"
                     />
-                    <button className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 shadow-md flex items-center justify-center">
-                      <Heart className="w-3.5 h-3.5 text-[#FF6B35]" fill="#FF6B35" />
+                    <button className="absolute top-2 right-2 w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center">
+                      <Heart className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF6B35]" fill="#FF6B35" />
                     </button>
                   </div>
-                  <div className="p-3">
-                    <h3 className="text-[#1A1A1A] font-bold text-sm leading-5 mb-1 font-[Poppins] line-clamp-1">
+                  <div className="p-3 md:p-4">
+                    <h3 className="text-[#1A1A1A] font-bold text-sm md:text-base leading-5 mb-1 font-[Poppins] line-clamp-1">
                       {recipe.name}
                     </h3>
-                    <div className="flex items-center gap-1 text-[#6B7280] text-xs font-[Inter]">
-                      <Clock className="w-3 h-3" />
+                    <div className="flex items-center gap-1 text-[#6B7280] text-xs md:text-sm font-[Inter]">
+                      <Clock className="w-3 h-3 md:w-4 md:h-4" />
                       <span>{recipe.time}</span>
                     </div>
                   </div>
@@ -249,24 +249,24 @@ export function DashboardNew() {
               ))}
             </div>
           ) : (
-            <div className="px-5 text-center py-6 text-[#9CA3AF]">
-              <p className="text-sm font-[Inter]">No saved recipes yet</p>
-              <p className="text-xs mt-1 font-[Inter]">Save recipes from Bites to see them here!</p>
+            <div className="px-5 md:px-8 lg:px-12 text-center py-6 text-[#9CA3AF]">
+              <p className="text-sm md:text-base font-[Inter]">No saved recipes yet</p>
+              <p className="text-xs md:text-sm mt-1 font-[Inter]">Save recipes from Bites to see them here!</p>
             </div>
           )}
         </section>
 
         {/* Restaurant Recommendations */}
-        <section className="mb-6">
-          <div className="px-5 flex items-center justify-between mb-3">
-            <h2 className="text-[#1A1A1A] font-bold text-base leading-6 font-[Poppins]">Nearby Restaurants</h2>
-            <button className="flex items-center gap-1 text-[#FF6B35] text-sm font-semibold font-[Inter]">
+        <section className="mb-6 md:mb-8">
+          <div className="px-5 md:px-8 lg:px-12 flex items-center justify-between mb-3 md:mb-4">
+            <h2 className="text-[#1A1A1A] font-bold text-base md:text-lg leading-6 font-[Poppins]">Nearby Restaurants</h2>
+            <button className="flex items-center gap-1 text-[#FF6B35] text-sm md:text-base font-semibold font-[Inter]">
               <span>Map View</span>
-              <Navigation className="w-3.5 h-3 fill-current" />
+              <Navigation className="w-3.5 h-3 md:w-4 md:h-4 fill-current" />
             </button>
           </div>
           {loadingSection.restaurants ? (
-            <div className="px-5 space-y-4">
+            <div className="px-5 md:px-8 lg:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="bg-white rounded-2xl shadow-[0_2px_4px_0_rgba(0,0,0,0.1)] overflow-hidden">
                   <div className="h-40 bg-gray-200 animate-pulse" />
