@@ -181,150 +181,55 @@ class ImageOptimizationService {
 
   /**
    * Optimize Google Places images
+   * ✅ DISABLED: Google Places images are already optimized by Google's CDN
+   * Re-optimization degrades quality and adds latency
    */
   private optimizeGooglePlacesImage(
     originalUrl: string,
     config: ImageOptimizationConfig
   ): OptimizedImageResult {
-    const { width = 400, height = 300 } = config;
-    
-    let optimizedUrl = originalUrl;
-    
-    // Handle different Google image URL types
-    if (originalUrl.includes('streetviewpixels-pa.googleapis.com')) {
-      // Street View images - update dimensions in existing parameters
-      optimizedUrl = originalUrl.replace(/w=\d+/, `w=${width}`);
-      optimizedUrl = optimizedUrl.replace(/h=\d+/, `h=${height}`);
-    } else if (originalUrl.includes('googleusercontent.com')) {
-      // Google Photos/User Content - modify size parameters
-      if (originalUrl.includes('=w') && originalUrl.includes('-h')) {
-        // Format: =w408-h544-k-no
-        optimizedUrl = originalUrl.replace(/=w\d+-h\d+/, `=w${width}-h${height}`);
-      } else if (!originalUrl.includes('maxwidth') && !originalUrl.includes('maxheight')) {
-        // Add size parameters if not present
-        const separator = originalUrl.includes('?') ? '&' : '?';
-        optimizedUrl = `${originalUrl}${separator}maxwidth=${width}&maxheight=${height}`;
-      }
-    } else if (originalUrl.includes('maps.googleapis.com')) {
-      // Google Maps/Places API images
-      if (!originalUrl.includes('maxwidth') && !originalUrl.includes('maxheight')) {
-        const separator = originalUrl.includes('?') ? '&' : '?';
-        optimizedUrl = `${originalUrl}${separator}maxwidth=${width}&maxheight=${height}`;
-      }
-    }
-
-    console.log('🗺️ Google image optimization:', {
-      original: originalUrl,
-      optimized: optimizedUrl,
-      width,
-      height
-    });
-
+    // Return original URL without modification - Google's CDN already optimizes these
     return {
-      src: optimizedUrl,
+      src: originalUrl,
       fallbackSrc: originalUrl,
       loading: config.lazy ? 'lazy' : 'eager',
-      alt: 'Restaurant image',
-      placeholder: config.placeholder ? this.generatePlaceholder(width, height) : undefined
+      alt: 'Restaurant image'
     };
   }
 
   /**
    * Optimize YouTube thumbnail images
+   * ✅ DISABLED: YouTube thumbnails are already optimized by YouTube's CDN
+   * Re-optimization degrades quality and adds latency
    */
   private optimizeYouTubeImage(
     originalUrl: string,
     config: ImageOptimizationConfig
   ): OptimizedImageResult {
-    const { width = 480, quality = 85 } = config;
-    
-    // YouTube thumbnail quality hierarchy (from best to worst quality available)
-    // maxresdefault.jpg (1280×720) - Not always available
-    // sddefault.jpg (640×480) - Not always available  
-    // hqdefault.jpg (480×360) - Usually available
-    // mqdefault.jpg (320×180) - Always available
-    // default.jpg (120×90) - Always available but low quality
-    
-    let optimizedUrl = originalUrl;
-    let fallbackUrl = originalUrl;
-    
-    // Extract video ID for reliable fallback construction
-    const videoIdMatch = originalUrl.match(/\/vi\/([^\/]+)\//);
-    const videoId = videoIdMatch ? videoIdMatch[1] : null;
-    
-    if (videoId) {
-      // Always use mqdefault as the safest reliable quality (320x180)
-      // This ensures no 404 errors while still providing decent quality
-      optimizedUrl = `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
-      
-      // Set multiple fallback options in decreasing quality
-      fallbackUrl = `https://i.ytimg.com/vi/${videoId}/default.jpg`;
-      
-      // For larger displays, try hqdefault but with proper error handling
-      if (width >= 480) {
-        const hqUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-        // Return hqdefault with mqdefault as fallback
-        return {
-          src: hqUrl,
-          webpSrc: undefined, // YouTube doesn't support WebP thumbnails
-          fallbackSrc: optimizedUrl, // mqdefault as primary fallback
-          loading: config.lazy ? 'lazy' : 'eager',
-          alt: 'Video thumbnail',
-          placeholder: config.placeholder ? this.generatePlaceholder(480, 360) : undefined
-        };
-      }
-    } else {
-      // If we can't extract video ID, be conservative with existing URL
-      if (originalUrl.includes('maxresdefault.jpg') || originalUrl.includes('sddefault.jpg')) {
-        // These high-res versions often don't exist, downgrade to safer hqdefault
-        optimizedUrl = originalUrl.replace(/(maxres|sd)default\.jpg/, 'hqdefault.jpg');
-        fallbackUrl = originalUrl.replace(/(maxres|sd|hq)default\.jpg/, 'mqdefault.jpg');
-      } else if (originalUrl.includes('default.jpg') && !originalUrl.includes('mqdefault.jpg')) {
-        // Upgrade default.jpg to mqdefault.jpg (safe upgrade)
-        optimizedUrl = originalUrl.replace('default.jpg', 'mqdefault.jpg');
-        fallbackUrl = originalUrl; // Keep original as fallback
-      }
-    }
-
+    // Return original URL without modification - YouTube's CDN already optimizes these
     return {
-      src: optimizedUrl,
-      webpSrc: undefined, // YouTube doesn't serve WebP thumbnails
-      fallbackSrc: fallbackUrl,
+      src: originalUrl,
+      fallbackSrc: originalUrl,
       loading: config.lazy ? 'lazy' : 'eager',
-      alt: 'Video thumbnail',
-      placeholder: config.placeholder ? this.generatePlaceholder(320, 180) : undefined
+      alt: 'Video thumbnail'
     };
   }
 
   /**
    * Optimize Spoonacular recipe images
+   * ✅ DISABLED: Spoonacular images are already optimized by their CDN
+   * Re-optimization degrades quality and adds latency
    */
   private optimizeSpoonacularImage(
     originalUrl: string,
     config: ImageOptimizationConfig
   ): OptimizedImageResult {
-    const { width = 400, height = 300 } = config;
-    
-    // Spoonacular supports size parameters
-    let optimizedUrl = originalUrl;
-    
-    // Add size parameters for Spoonacular images
-    if (originalUrl.includes('spoonacular.com')) {
-      // Remove existing size parameters
-      optimizedUrl = originalUrl.replace(/\d+x\d+\./g, '');
-      // Add new size parameters
-      optimizedUrl = optimizedUrl.replace(
-        /(.*\/)(.*\.(jpg|jpeg|png))/i,
-        `$1${width}x${height}.$2`
-      );
-    }
-
+    // Return original URL without modification - Spoonacular's CDN already optimizes these
     return {
-      src: optimizedUrl,
+      src: originalUrl,
       fallbackSrc: originalUrl,
       loading: config.lazy ? 'lazy' : 'eager',
-      alt: 'Recipe image',
-      placeholder: config.placeholder ? this.generatePlaceholder(width, height) : undefined
+      alt: 'Recipe image'
     };
   }
 
