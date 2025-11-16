@@ -4,19 +4,23 @@ import { ProfileService } from '../../services/profileService';
 import { cookieUtils } from '../../utils/cookies';
 import { useEffect, useState, useRef } from 'react';
 
-export default function AuthPage() {
+interface AuthPageProps {
+  readonly isVisible?: boolean;
+}
+
+export default function AuthPage({ isVisible = true }: AuthPageProps) {
   const { user, session, loading } = useAuth();
   const [checkingOnboarding, setCheckingOnboarding] = useState(false);
   const hasCheckedOnboarding = useRef(false);
 
-  // Check onboarding status when user is authenticated (only once)
+  // Check onboarding status when user is authenticated (only once and only if page is visible)
   useEffect(() => {
-    if (user && session && !hasCheckedOnboarding.current) {
+    if (user && session && !hasCheckedOnboarding.current && isVisible) {
       hasCheckedOnboarding.current = true;
       setCheckingOnboarding(true);
       checkOnboardingStatus();
     }
-  }, [user, session]);
+  }, [user, session, isVisible]);
 
   const checkOnboardingStatus = async () => {
     try {

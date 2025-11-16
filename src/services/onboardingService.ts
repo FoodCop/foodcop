@@ -3,19 +3,14 @@ import type { LocationData, ExtractedPreferences } from '../types/onboarding';
 
 export class OnboardingService {
   /**
-   * Save user's location data
+   * Save user's country location (detected from geolocation)
    */
   static async saveLocation(userId: string, location: LocationData) {
     const { error } = await supabase
       .from('users')
       .update({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        location_address: location.address,
-        location_city: location.city,
-        location_state: location.state,
         location_country: location.country,
-        onboarding_step: 2
+        onboarding_step: 1
       })
       .eq('id', userId);
 
@@ -23,38 +18,35 @@ export class OnboardingService {
   }
 
   /**
-   * Save user's basic profile
+   * Save dietary preferences (Step 1) and complete onboarding
    */
-  static async saveProfile(userId: string, profile: { firstName: string; avatarUrl?: string }) {
+  static async saveDietaryPreferences(
+    userId: string,
+    dietaryPreferences: string[]
+  ) {
     const { error } = await supabase
       .from('users')
       .update({
-        first_name: profile.firstName,
-        display_name: profile.firstName,
-        avatar_url: profile.avatarUrl,
-        onboarding_step: 3
-      })
-      .eq('id', userId);
-
-    if (error) throw error;
-  }
-
-  /**
-   * Save extracted preferences from AI
-   */
-  static async savePreferences(userId: string, preferences: ExtractedPreferences) {
-    const { error } = await supabase
-      .from('users')
-      .update({
-        dietary_preferences: preferences.dietary_preferences,
-        allergies: preferences.allergies,
-        cuisine_preferences: preferences.cuisine_preferences,
-        cuisine_dislikes: preferences.cuisine_dislikes,
-        spice_tolerance: preferences.spice_tolerance,
-        health_conscious: preferences.health_conscious,
-        onboarding_step: 5,
+        dietary_preferences: dietaryPreferences,
+        onboarding_step: 2,
         onboarding_completed: true,
         onboarding_completed_at: new Date().toISOString()
+      })
+      .eq('id', userId);
+
+    if (error) throw error;
+  }
+
+  /**
+   * Skip onboarding - mark as completed without preferences
+   */
+  static async skipOnboarding(userId: string) {
+    const { error } = await supabase
+      .from('users')
+      .update({
+        onboarding_completed: true,
+        onboarding_completed_at: new Date().toISOString(),
+        onboarding_step: 2
       })
       .eq('id', userId);
 

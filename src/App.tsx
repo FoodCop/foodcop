@@ -10,10 +10,11 @@ import './App.css'
 import './styles/mobile.css'
 
 // Page type definition
-type PageType = 'landing' | 'auth' | 'onboarding' | 'debug' | 'dash' | 'dashnew' | 'bites' | 'bitesnew' | 'trims' | 'trimsnew' | 'scout' | 'scoutnew' | 'plate' | 'platenew' | 'feed' | 'feednew' | 'chat' | 'snap' | 'snapnew' | 'discover'
+type PageType = 'landing' | 'newlanding' | 'auth' | 'onboarding' | 'debug' | 'dash' | 'dashnew' | 'bites' | 'bitesnew' | 'trims' | 'trimsnew' | 'scout' | 'scoutnew' | 'plate' | 'platenew' | 'feed' | 'feednew' | 'chat' | 'snap' | 'snapnew' | 'discover'
 
 // Eager load critical components
 import { LandingPage } from './components/home/components/LandingPage'
+import { NewLandingPage } from './components/home/NewLandingPage'
 import DebugApp from './components/debug/Debug'
 import AuthPage from './components/auth/AuthPage'
 
@@ -48,9 +49,76 @@ function PageLoader() {
   )
 }
 
+// Helper component for navigation button
+interface NavButtonProps {
+  page: PageType;
+  icon: string;
+  label: string;
+  currentPage: PageType;
+  setCurrentPage: (page: PageType) => void;
+}
+
+const NavButton = ({ page, icon, label, currentPage, setCurrentPage }: NavButtonProps) => (
+  <button
+    onClick={() => {
+      setCurrentPage(page);
+      globalThis.location.hash = `#${page}`;
+    }}
+    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+      currentPage === page 
+        ? 'bg-orange-600 text-white' 
+        : 'text-gray-700 hover:bg-gray-100'
+    }`}
+  >
+    {icon} {label}
+  </button>
+);
+
+// Helper component for dropdown menu item
+interface DropdownMenuItemProps {
+  page: PageType;
+  icon: string;
+  label: string;
+  currentPage: PageType;
+  setCurrentPage: (page: PageType) => void;
+  setNewPagesDropdownOpen: (open: boolean) => void;
+}
+
+const DropdownMenuItem = ({ page, icon, label, currentPage, setCurrentPage, setNewPagesDropdownOpen }: DropdownMenuItemProps) => (
+  <button
+    onClick={() => {
+      setCurrentPage(page);
+      globalThis.location.hash = `#${page}`;
+      setNewPagesDropdownOpen(false);
+    }}
+    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+      currentPage === page
+        ? 'bg-orange-50 text-orange-600'
+        : 'text-gray-700 hover:bg-gray-100'
+    }`}
+  >
+    {icon} {label}
+  </button>
+);
+
+// Helper component to render a page conditionally
+interface PageWrapperProps {
+  page: PageType;
+  children: React.ReactNode;
+  eager?: boolean;
+  currentPage: PageType;
+}
+
+const PageWrapper = ({ page, children, eager = false, currentPage }: PageWrapperProps) => (
+  <div style={{ display: currentPage === page ? 'block' : 'none' }}>
+    <PageErrorBoundary>
+      {eager ? children : <Suspense fallback={<PageLoader />}>{children}</Suspense>}
+    </PageErrorBoundary>
+  </div>
+);
+
 function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('landing')
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState<PageType>('newlanding')
   const [newPagesDropdownOpen, setNewPagesDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -101,117 +169,21 @@ function App() {
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-2">
-          <button
-            onClick={() => {
-              setCurrentPage('feed');
-              globalThis.location.hash = '#feed';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'feed' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            🍽️ Feed
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('scout');
-              globalThis.location.hash = '#scout';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'scout' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            🕵️ Scout
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('bites');
-              globalThis.location.hash = '#bites';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'bites' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            🎬 Bites
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('trims');
-              globalThis.location.hash = '#trims';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'trims' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            ✂️ Trims
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('snap');
-              globalThis.location.hash = '#snap';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'snap' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            📸 Snap
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('plate');
-              globalThis.location.hash = '#plate';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'plate' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            🍽️ Plate
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('dash');
-              globalThis.location.hash = '#dash';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'dash' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            📊 Dashboard
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('discover');
-              globalThis.location.hash = '#discover';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'discover' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            🔍 Discover
-          </button>
+          <NavButton page="feed" icon="🍽️" label="Feed" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="scout" icon="🕵️" label="Scout" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="bites" icon="🎬" label="Bites" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="trims" icon="✂️" label="Trims" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="snap" icon="📸" label="Snap" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="plate" icon="🍽️" label="Plate" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="dash" icon="📊" label="Dashboard" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="discover" icon="🔍" label="Discover" currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
           {/* New Pages Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setNewPagesDropdownOpen(!newPagesDropdownOpen)}
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1 ${
-                ['feednew', 'scoutnew', 'bitesnew', 'trimsnew', 'snapnew', 'platenew', 'dashnew'].includes(currentPage)
+                ['feednew', 'scoutnew', 'bitesnew', 'trimsnew', 'snapnew', 'platenew', 'dashnew', 'newlanding'].includes(currentPage)
                   ? 'bg-orange-600 text-white' 
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
@@ -224,104 +196,14 @@ function App() {
             {newPagesDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                 <div className="py-1">
-                  <button
-                    onClick={() => {
-                      setCurrentPage('feednew');
-                      globalThis.location.hash = '#feednew';
-                      setNewPagesDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                      currentPage === 'feednew'
-                        ? 'bg-orange-50 text-orange-600'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    🍽️ Feed New
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentPage('scoutnew');
-                      globalThis.location.hash = '#scoutnew';
-                      setNewPagesDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                      currentPage === 'scoutnew'
-                        ? 'bg-orange-50 text-orange-600'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    🕵️ Scout New
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentPage('bitesnew');
-                      globalThis.location.hash = '#bitesnew';
-                      setNewPagesDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                      currentPage === 'bitesnew'
-                        ? 'bg-orange-50 text-orange-600'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    🎬 Bites New
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentPage('trimsnew');
-                      globalThis.location.hash = '#trimsnew';
-                      setNewPagesDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                      currentPage === 'trimsnew'
-                        ? 'bg-orange-50 text-orange-600'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    ✂️ Trims New
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentPage('snapnew');
-                      globalThis.location.hash = '#snapnew';
-                      setNewPagesDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                      currentPage === 'snapnew'
-                        ? 'bg-orange-50 text-orange-600'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    📸 Snap New
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentPage('platenew');
-                      globalThis.location.hash = '#platenew';
-                      setNewPagesDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                      currentPage === 'platenew'
-                        ? 'bg-orange-50 text-orange-600'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    🍽️ Plate New
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCurrentPage('dashnew');
-                      globalThis.location.hash = '#dashnew';
-                      setNewPagesDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                      currentPage === 'dashnew'
-                        ? 'bg-orange-50 text-orange-600'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    📊 Dashboard New
-                  </button>
+                  <DropdownMenuItem page="feednew" icon="🍽️" label="Feed New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
+                  <DropdownMenuItem page="scoutnew" icon="🕵️" label="Scout New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
+                  <DropdownMenuItem page="bitesnew" icon="🎬" label="Bites New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
+                  <DropdownMenuItem page="trimsnew" icon="✂️" label="Trims New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
+                  <DropdownMenuItem page="snapnew" icon="📸" label="Snap New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
+                  <DropdownMenuItem page="platenew" icon="🍽️" label="Plate New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
+                  <DropdownMenuItem page="dashnew" icon="📊" label="Dashboard New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
+                  <DropdownMenuItem page="newlanding" icon="🏠" label="New Landing" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
                 </div>
               </div>
             )}
@@ -355,7 +237,7 @@ function App() {
     const handleHashChange = () => {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
-        'landing', 'auth', 'onboarding', 'feed', 'feednew', 'scout', 'scoutnew', 'bites', 'bitesnew',
+        'landing', 'newlanding', 'auth', 'onboarding', 'feed', 'feednew', 'scout', 'scoutnew', 'bites', 'bitesnew',
         'trims', 'trimsnew', 'snap', 'snapnew', 'dash', 'dashnew', 'plate', 'platenew', 'discover', 'debug'
         // 'chat' - temporarily hidden, not complete
       ];
@@ -363,7 +245,7 @@ function App() {
       if (hash && validPages.includes(hash)) {
         setCurrentPage(hash as PageType);
       } else if (!hash) {
-        setCurrentPage('landing');
+        setCurrentPage('newlanding');
       }
     };
 
@@ -397,180 +279,95 @@ function App() {
   const renderAllPages = () => {
     return (
       <>
-        {/* Landing Page */}
-        <div style={{ display: currentPage === 'landing' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <LandingPage onNavigateToSignup={() => {
-              setCurrentPage('auth');
-              globalThis.location.hash = '#auth';
-            }} />
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="landing" eager currentPage={currentPage}>
+          <LandingPage onNavigateToSignup={() => {
+            setCurrentPage('auth');
+            globalThis.location.hash = '#auth';
+          }} />
+        </PageWrapper>
 
-        {/* Auth Page */}
-        <div style={{ display: currentPage === 'auth' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <AuthPage />
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="newlanding" eager currentPage={currentPage}>
+          <NewLandingPage onNavigateToSignup={() => {
+            setCurrentPage('auth');
+            globalThis.location.hash = '#auth';
+          }} />
+        </PageWrapper>
 
-        {/* Debug Page */}
-        <div style={{ display: currentPage === 'debug' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <DebugApp />
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="auth" eager currentPage={currentPage}>
+          <AuthPage isVisible={currentPage === 'auth'} />
+        </PageWrapper>
 
-        {/* Onboarding */}
-        <div style={{ display: currentPage === 'onboarding' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <OnboardingProtectedFlow />
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="debug" eager currentPage={currentPage}>
+          <DebugApp />
+        </PageWrapper>
 
-        {/* Feed App */}
-        <div style={{ display: currentPage === 'feed' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <FeedApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="onboarding" eager currentPage={currentPage}>
+          <OnboardingProtectedFlow />
+        </PageWrapper>
 
-        {/* Scout App */}
-        <div style={{ display: currentPage === 'scout' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <ScoutApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="feed" currentPage={currentPage}>
+          <FeedApp />
+        </PageWrapper>
 
-        {/* Scout New (Discover Style) */}
-        <div style={{ display: currentPage === 'scoutnew' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <ScoutNewApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="scout" currentPage={currentPage}>
+          <ScoutApp />
+        </PageWrapper>
 
-        {/* Bites App */}
-        <div style={{ display: currentPage === 'bites' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <BitesApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="scoutnew" currentPage={currentPage}>
+          <ScoutNewApp />
+        </PageWrapper>
 
-        {/* Bites New (Discover Style) */}
-        <div style={{ display: currentPage === 'bitesnew' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <BitesNewApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="bites" currentPage={currentPage}>
+          <BitesApp />
+        </PageWrapper>
 
-        {/* Trims App */}
-        <div style={{ display: currentPage === 'trims' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <TrimsApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="bitesnew" currentPage={currentPage}>
+          <BitesNewApp />
+        </PageWrapper>
 
-        {/* Trims New (Discover Style) */}
-        <div style={{ display: currentPage === 'trimsnew' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <TrimsNewApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="trims" currentPage={currentPage}>
+          <TrimsApp />
+        </PageWrapper>
 
-        {/* Snap App */}
-        <div style={{ display: currentPage === 'snap' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <SnapApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="trimsnew" currentPage={currentPage}>
+          <TrimsNewApp />
+        </PageWrapper>
 
-        {/* Dashboard App */}
-        <div style={{ display: currentPage === 'dash' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <DashApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="snap" currentPage={currentPage}>
+          <SnapApp />
+        </PageWrapper>
 
-        {/* Plate App */}
-        <div style={{ display: currentPage === 'plate' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <PlateApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="dash" currentPage={currentPage}>
+          <DashApp />
+        </PageWrapper>
 
-        {/* Plate New (Discover Style) */}
-        <div style={{ display: currentPage === 'platenew' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <PlateNewApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="plate" currentPage={currentPage}>
+          <PlateApp />
+        </PageWrapper>
 
-        {/* Chat App */}
-        <div style={{ display: currentPage === 'chat' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <ChatWithAuth />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="platenew" currentPage={currentPage}>
+          <PlateNewApp />
+        </PageWrapper>
 
-        {/* Discover App */}
-        <div style={{ display: currentPage === 'discover' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <FoodDiscoveryApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="chat" currentPage={currentPage}>
+          <ChatWithAuth />
+        </PageWrapper>
 
-        {/* Dashboard New (Discover Style) */}
-        <div style={{ display: currentPage === 'dashnew' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <DashNewApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="discover" currentPage={currentPage}>
+          <FoodDiscoveryApp />
+        </PageWrapper>
 
-        {/* Snap New (Discover Style) */}
-        <div style={{ display: currentPage === 'snapnew' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <SnapNewApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="dashnew" currentPage={currentPage}>
+          <DashNewApp />
+        </PageWrapper>
 
-        {/* Feed New (Discover Style) */}
-        <div style={{ display: currentPage === 'feednew' ? 'block' : 'none' }}>
-          <PageErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <FeedNewApp />
-            </Suspense>
-          </PageErrorBoundary>
-        </div>
+        <PageWrapper page="snapnew" currentPage={currentPage}>
+          <SnapNewApp />
+        </PageWrapper>
+
+        <PageWrapper page="feednew" currentPage={currentPage}>
+          <FeedNewApp />
+        </PageWrapper>
       </>
     );
   };
@@ -605,7 +402,6 @@ function App() {
                 onNavigate={(page) => {
                   setCurrentPage(page as PageType);
                   globalThis.location.hash = `#${page}`;
-                  setMobileMenuOpen(false);
                 }}
               />
             </div>

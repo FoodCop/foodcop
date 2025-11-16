@@ -1,11 +1,7 @@
 import React from 'react';
 import { OnboardingProvider, useOnboarding } from './OnboardingContext';
 import WelcomeStep from './steps/WelcomeStep';
-import PhoneStep from './steps/PhoneStep';
-import LocationStep from './steps/LocationStep';
-import ProfileStep from './steps/ProfileStep';
-import QuestionsStep from './steps/QuestionsStep';
-import ProcessingStep from './steps/ProcessingStep';
+import PreferencesStep from './steps/PreferencesStep';
 
 const OnboardingFlowContent: React.FC = () => {
   const { state } = useOnboarding();
@@ -15,25 +11,15 @@ const OnboardingFlowContent: React.FC = () => {
       case 0:
         return <WelcomeStep />;
       case 1:
-        return <LocationStep />;
-      case 2:
-        return <PhoneStep />;
-      case 3:
-        return <ProfileStep />;
-      case 4:
-        return <QuestionsStep />;
-      case 5:
-        return <ProcessingStep />;
+        return <PreferencesStep />;
       default:
         return <WelcomeStep />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-fuzo-primary via-fuzo-secondary to-fuzo-accent">
-      <div className="container mx-auto px-4 py-8">
-        {renderStep()}
-      </div>
+    <div className="min-h-screen bg-white">
+      {renderStep()}
     </div>
   );
 };

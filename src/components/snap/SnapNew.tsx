@@ -39,7 +39,7 @@ const cuisineTypes = [
 
 export function SnapNew() {
   const { user } = useAuth();
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [showTagging, setShowTagging] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);

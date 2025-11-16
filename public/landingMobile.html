@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src='https://cdn.tailwindcss.com'></script>
+            <script>
+            tailwind.config = {
+                        theme: {
+                            extend: {
+                                colors: {
+                                    border: "var(--border)",
+                                    input: "var(--input)",
+                                    ring: "var(--ring)",
+                                    background: "var(--background)",
+                                    foreground: "var(--foreground)",
+                                    primary: {
+                                        DEFAULT: "var(--primary)",
+                                        foreground: "var(--primary-foreground)",
+                                    },
+                                    secondary: {
+                                        DEFAULT: "var(--secondary)",
+                                        foreground: "var(--secondary-foreground)",
+                                    },
+                                    destructive: {
+                                        DEFAULT: "var(--destructive)",
+                                        foreground: "var(--destructive-foreground)",
+                                    },
+                                    muted: {
+                                        DEFAULT: "var(--muted)",
+                                        foreground: "var(--muted-foreground)",
+                                    },
+                                    accent: {
+                                        DEFAULT: "var(--accent)",
+                                        foreground: "var(--accent-foreground)",
+                                    },
+                                    popover: {
+                                        DEFAULT: "var(--popover)",
+                                        foreground: "var(--popover-foreground)",
+                                    },
+                                    card: {
+                                        DEFAULT: "var(--card)",
+                                        foreground: "var(--card-foreground)",
+                                    },
+                                    sidebar: {
+                                        DEFAULT: "var(--sidebar)",
+                                        foreground: "var(--sidebar-foreground)",
+                                        primary: "var(--sidebar-primary)",
+                                        "primary-foreground": "var(--sidebar-primary-foreground)",
+                                        accent: "var(--sidebar-accent)",
+                                        "accent-foreground": "var(--sidebar-accent-foreground)",
+                                        border: "var(--sidebar-border)",
+                                        ring: "var(--sidebar-ring)",
+                                    },
+                                    chart: {
+                                        1: "var(--chart-1)",
+                                        2: "var(--chart-2)",
+                                        3: "var(--chart-3)",
+                                        4: "var(--chart-4)",
+                                        5: "var(--chart-5)",
+                                    },
+                                },
+                                borderRadius: {
+                                    lg: "var(--radius)",
+                                    md: "calc(var(--radius) - 2px)",
+                                    sm: "calc(var(--radius) - 4px)",
+                                },
+                                fontFamily: {
+                                    sans: ["var(--font-sans)"],
+                                    serif: ["var(--font-serif)"],
+                                    mono: ["var(--font-mono)"],
+                                },
+                                boxShadow: {
+                                    '2xs': 'var(--shadow-2xs)',
+                                    'xs': 'var(--shadow-xs)',
+                                    'sm': 'var(--shadow-sm)',
+                                    'DEFAULT': 'var(--shadow)',
+                                    'md': 'var(--shadow-md)',
+                                    'lg': 'var(--shadow-lg)',
+                                    'xl': 'var(--shadow-xl)',
+                                    '2xl': 'var(--shadow-2xl)',
+                                },
+                            },
+                        }
+                    }
+            </script>
+            
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        :root {
+            --background: #FAFAFA;
+            --foreground: #0f172a;
+            --card: #ffffff;
+            --card-foreground: #0f172a;
+            --primary: #FFD500;
+            --primary-foreground: #8A8A8A;
+            --secondary: #64748b;
+            --secondary-foreground: #ffffff;
+            --muted: #FAFAFA;
+            --muted-foreground: #0f172a;
+            --accent: #f59e0b;
+            --accent-foreground: #ffffff;
+            --destructive: #ef4444;
+            --destructive-foreground: #ffffff;
+            --border: #EEE;
+            --input: #FFFFFF;
+            --ring: #94a3b8;
+            --font-sans: Be Vietnam Pro;
+            --font-serif: Georgia, serif;
+            --font-mono: JetBrains Mono, monospace;
+            --radius: 10px;
+            --shadow: -2px 4px 12px 4px rgba(51,51,51,0.05);
+        }
+        
+        ::-webkit-scrollbar { display: none; }
+        
+        body {
+            font-family: var(--font-sans), sans-serif;
+            background-color: var(--background);
+            color: var(--foreground);
+        }
+        
+        .phone-mockup {
+            background: #1a1a1a;
+            border-radius: 36px;
+            padding: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .phone-screen {
+            border-radius: 28px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+        
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 28px;
+            background: #1a1a1a;
+            border-radius: 0 0 20px 20px;
+            z-index: 10;
+        }
+        
+        .phone-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            z-index: 10;
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .phone-left.visible {
+            transform: rotate(-15deg) translateY(-20px);
+        }
+        
+        .phone-center.visible {
+            transform: translateY(-40px) scale(1.05);
+        }
+        
+        .phone-right.visible {
+            transform: rotate(15deg) translateY(-20px);
+        }
+    </style>
+</head>
+<body>
+    <section id="hero-section" class="relative min-h-[600px] md:min-h-[700px] overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/28dd2a2996-b6ab008e461a7c64a257.png" alt="colorful food spread, vibrant dishes, restaurant table top view, modern food photography" />
+            <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent backdrop-blur-sm"></div>
+        </div>
+        
+        <div class="relative z-10 container mx-auto px-4 py-16 md:py-24">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="flex-1 text-center md:text-left max-w-2xl">
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                        Discover Your Next<br/>
+                        <span class="text-primary">Favorite Food</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
+                        FUZO helps you explore, save, and share amazing food experiences. From cooking tutorials to restaurant discoveries, your culinary journey starts here.
+                    </p>
+                    <button class="bg-primary hover:bg-primary/90 text-foreground font-bold text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        Get Started
+                        <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+                
+                <div class="flex-1 flex justify-center md:justify-end">
+                    <div class="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80">
+                        <img class="w-full h-full object-contain drop-shadow-2xl" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5f869598f7-9490a9b16fada4f9be29.png" alt="cute octopus mascot Tako, friendly cartoon character, yellow and orange colors, happy expression, food theme" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pin-food-section" class="py-16 md:py-24 bg-background">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-foreground mb-4">
+                    Pin Your Favorite Foods
+                </h2>
+                <p class="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Save recipes, bookmark dishes, and create your personal food wishlist. Never lose track of what you want to try next.
+                </p>
+            </div>
+            
+            <div class="flex justify-center items-end gap-4 md:gap-8 perspective-1000">
+                <div class="phone-mockup phone-left animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b29c94c03c-e5f6b533a6273a07766f.png" alt="mobile app interface showing saved recipes bookmarks, recipe cards grid layout, colorful food thumbnails" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-center animate-on-scroll w-[180px] md:w-[260px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/a07c9ce819-56f7b11efe8bc040e8dc.png" alt="mobile app showing favorite dishes collection, food gallery view, gourmet meals display" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-right animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8929b8a34f-dae252b38be91890ec88.png" alt="mobile app food wishlist planning screen, meal planning interface, recipe checklist" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cook-watch-section" class="relative py-16 md:py-24 min-h-[700px] flex items-center">
+        <div class="absolute inset-0 z-0">
+            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/facc971d01-9cb23a35020b35626d9c.png" alt="professional kitchen cooking scene, chef preparing food, cooking utensils, modern kitchen interior" />
+            <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/70"></div>
+        </div>
+        
+        <div class="relative z-10 container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">
+                    Cook & Watch
+                </h2>
+                <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
+                    Learn from step-by-step video recipes and cooking guides. Master new techniques with expert chefs.
+                </p>
+            </div>
+            
+            <div class="flex justify-center items-end gap-4 md:gap-8">
+                <div class="phone-mockup phone-left animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b491a0806d-78b4e21d18c153a5583b.png" alt="mobile app cooking video recipe interface, video player with recipe steps, cooking tutorial screen" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-center animate-on-scroll w-[180px] md:w-[260px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9b01d1d269-59d12dc4a6fad7239acf.png" alt="mobile app food plating techniques, chef hands plating dish, culinary skills demonstration" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-right animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/62723939df-ace2b5909d6eab7e6223.png" alt="mobile app kitchen cooking steps breakdown, recipe instructions list, step by step cooking guide" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="food-storyboard-section" class="relative py-16 md:py-24 min-h-[700px] flex items-center">
+        <div class="absolute inset-0 z-0">
+            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/49f666b4ec-c2c35d1cb68a9ddcd126.png" alt="vibrant colorful food dishes flat lay, food photography overhead shot, multiple colorful plates" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/60 to-black/70"></div>
+        </div>
+        
+        <div class="relative z-10 container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">
+                    Share Your Food Story
+                </h2>
+                <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
+                    Capture and share your culinary adventures. Connect with food lovers and inspire others with your food photography.
+                </p>
+            </div>
+            
+            <div class="flex justify-center items-end gap-4 md:gap-8">
+                <div class="phone-mockup phone-left animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8ee109e002-b145de8ecd4635a3a28f.png" alt="mobile app social media food posts feed, instagram style food photos, social feed interface" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-center animate-on-scroll w-[180px] md:w-[260px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/79566bfc78-3fd7313a3ba50402b362.png" alt="mobile app food photography sharing interface, upload photo screen, food image editor" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-right animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/aa45d73d5b-2ec671853e2e2e692a03.png" alt="mobile app food blogger story view, instagram stories style, food content creator interface" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tako-ai-section" class="py-16 md:py-24 bg-gradient-to-br from-primary/10 to-accent/10">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-foreground mb-4">
+                    Meet Tako, Your AI Food Buddy
+                </h2>
+                <p class="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Chat with Tako for personalized recommendations, cooking tips, dietary advice, and food inspiration anytime.
+                </p>
+            </div>
+            
+            <div class="flex justify-center items-end gap-4 md:gap-8">
+                <div class="phone-mockup phone-left animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fb45c5ba03-723796c838e13be62a63.png" alt="mobile app AI chatbot assistant interface, chat messages with food recommendations, AI helper screen" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-center animate-on-scroll w-[180px] md:w-[260px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ef6785fc4c-679c7f59d993d619524f.png" alt="mobile chat app conversation interface, messaging screen with food questions, chat bubbles" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-right animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/4ab0afc5c2-2b78b10ed05aa223615c.png" alt="cute octopus mascot Tako character, friendly AI assistant, cartoon octopus with chef hat, kawaii style" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="explore-food-section" class="py-16 md:py-24 bg-background">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-foreground mb-4">
+                    Explore Amazing Food
+                </h2>
+                <p class="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Discover new restaurants, explore street food markets, and browse endless menu varieties. Your next food adventure awaits.
+                </p>
+            </div>
+            
+            <div class="flex justify-center items-end gap-4 md:gap-8 mb-12">
+                <div class="phone-mockup phone-left animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/405f37a344-5ff89205213d4e54ce25.png" alt="mobile app restaurant food discovery interface, restaurant listings with food photos, dining app" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-center animate-on-scroll w-[180px] md:w-[260px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/02802edcc8-918167c49e0b9acb9ecb.png" alt="mobile app street food market exploration, food stalls and vendors, street food discovery" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup phone-right animate-on-scroll w-[160px] md:w-[240px]">
+                    <div class="phone-screen aspect-[9/19.5]">
+                        <div class="phone-notch"></div>
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/0d5d169aec-91068201084c2f78be14.png" alt="mobile app food menu browsing interface, restaurant menu with food images, digital menu app" />
+                        <div class="phone-indicator"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button class="bg-primary hover:bg-primary/90 text-foreground font-bold text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                    Start Exploring
+                    <i class="fa-solid fa-utensils ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer" class="bg-foreground text-white py-12 md:py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-primary mb-4">FUZO</h3>
+                    <p class="text-white/70">Your ultimate food discovery companion</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Product</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/70 hover:text-primary transition-colors">Features</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-primary transition-colors">Pricing</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-primary transition-colors">Download</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/70 hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-primary transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-primary transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Follow Us</h4>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-primary rounded-full flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-primary rounded-full flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-primary rounded-full flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-primary rounded-full flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 pt-8 text-center text-white/60">
+                <p>&copy; 2024 FUZO. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('load', function() {
+            const observerOptions = {
+                threshold: 0.2,
+                rootMargin: '0px 0px -100px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

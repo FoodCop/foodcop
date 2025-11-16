@@ -1,24 +1,20 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { OnboardingState, LocationData, ProfileData, QuestionResponse, ExtractedPreferences } from '../../types/onboarding';
+import { OnboardingState, LocationData, FoodPreferencesData } from '../../types/onboarding';
 
 interface OnboardingContextType {
   state: OnboardingState;
   setCurrentStep: (step: number) => void;
   setLocation: (location: LocationData) => void;
-  setProfile: (profile: ProfileData) => void;
-  addResponse: (response: QuestionResponse) => void;
-  setPreferences: (preferences: ExtractedPreferences) => void;
+  setFoodPreferences: (preferences: FoodPreferencesData) => void;
   resetOnboarding: () => void;
 }
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
 const initialState: OnboardingState = {
-  currentStep: 0,
+  currentStep: 0, // 0=Welcome, 1=Location, 2=Food Preferences
   location: null,
-  profile: null,
-  responses: [],
-  preferences: null,
+  foodPreferences: null,
 };
 
 export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -32,19 +28,8 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setState(prev => ({ ...prev, location }));
   }, []);
 
-  const setProfile = useCallback((profile: ProfileData) => {
-    setState(prev => ({ ...prev, profile }));
-  }, []);
-
-  const addResponse = useCallback((response: QuestionResponse) => {
-    setState(prev => ({
-      ...prev,
-      responses: [...prev.responses, response]
-    }));
-  }, []);
-
-  const setPreferences = useCallback((preferences: ExtractedPreferences) => {
-    setState(prev => ({ ...prev, preferences }));
+  const setFoodPreferences = useCallback((preferences: FoodPreferencesData) => {
+    setState(prev => ({ ...prev, foodPreferences: preferences }));
   }, []);
 
   const resetOnboarding = useCallback(() => {
@@ -57,9 +42,7 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         state,
         setCurrentStep,
         setLocation,
-        setProfile,
-        addResponse,
-        setPreferences,
+        setFoodPreferences,
         resetOnboarding,
       }}
     >

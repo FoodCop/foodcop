@@ -43,7 +43,7 @@ const gamificationMessages = [
 
 export function Snap() {
   const { user } = useAuth();  // Add authentication
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [showTagging, setShowTagging] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);
