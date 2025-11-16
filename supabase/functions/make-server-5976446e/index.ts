@@ -180,9 +180,26 @@ serve(async (req: Request) => {
         throw new Error('GOOGLE_MAPS_API_KEY not configured')
       }
 
-      const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${GOOGLE_API_KEY}`
+      // Request all the fields we need for the restaurant detail view
+      const fields = [
+        'name',
+        'formatted_address',
+        'formatted_phone_number',
+        'international_phone_number',
+        'opening_hours',
+        'website',
+        'rating',
+        'reviews',
+        'photos',
+        'price_level',
+        'geometry',
+        'types',
+        'vicinity'
+      ].join(',')
 
-      console.log('📍 Fetching place details')
+      const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=${fields}&key=${GOOGLE_API_KEY}`
+
+      console.log('📍 Fetching place details with photos, reviews, and hours')
 
       const response = await fetch(detailsUrl)
       const data = await response.json()
