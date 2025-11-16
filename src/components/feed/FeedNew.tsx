@@ -390,6 +390,29 @@ export function FeedNew() {
               </div>
             </AnimatePresence>
           </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full text-center px-8">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-linear-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center mb-6"
+            >
+              <RefreshCw className="w-12 h-12 md:w-16 md:h-16 text-white" />
+            </motion.div>
+            <h2 className="font-[Poppins] font-bold text-xl md:text-2xl lg:text-3xl text-gray-900 mb-2">
+              You're All Caught Up!
+            </h2>
+            <p className="text-gray-600 text-base md:text-lg mb-6">Check back later for more recommendations</p>
+            <button
+              onClick={() => {
+                setCurrentCardIndex(0);
+                loadMore();
+              }}
+              className="px-6 md:px-8 py-3 md:py-4 bg-linear-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold text-base md:text-lg rounded-xl hover:opacity-90 transition-opacity"
+            >
+              Start Over
+            </button>
+          </div>
         )}
       </div>
 
