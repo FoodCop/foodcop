@@ -361,7 +361,7 @@ function App() {
       ];
       
       if (hash && validPages.includes(hash)) {
-        setCurrentPage(hash);
+        setCurrentPage(hash as PageType);
       } else if (!hash) {
         setCurrentPage('landing');
       }
@@ -603,7 +603,7 @@ function App() {
               <MobileRadialNav
                 currentPage={currentPage}
                 onNavigate={(page) => {
-                  setCurrentPage(page);
+                  setCurrentPage(page as PageType);
                   globalThis.location.hash = `#${page}`;
                   setMobileMenuOpen(false);
                 }}
