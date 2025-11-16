@@ -13,7 +13,7 @@ import './styles/mobile.css'
 type PageType = 'landing' | 'auth' | 'onboarding' | 'debug' | 'dash' | 'bites' | 'trims' | 'scout' | 'plate' | 'feed' | 'snap' | 'discover'
 
 // Eager load critical components
-import { LandingPage } from './components/home/components/LandingPage'
+import { NewLandingPage } from './components/home/NewLandingPage'
 import DebugApp from './components/debug/Debug'
 import AuthPage from './components/auth/AuthPage'
 
@@ -198,7 +198,7 @@ function App() {
     return (
       <>
         <PageWrapper page="landing" eager currentPage={currentPage}>
-          <LandingPage onNavigateToSignup={() => {
+          <NewLandingPage onNavigateToSignup={() => {
             setCurrentPage('auth');
             globalThis.location.hash = '#auth';
           }} />
