@@ -1,8 +1,8 @@
-import { useState, useEffect, lazy, Suspense, useRef } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { AuthProvider, useAuth } from './components/auth/AuthProvider'
 import { ErrorBoundary, PageErrorBoundary } from './components/common/ErrorBoundary'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
-import { LogOut, ChevronDown } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import { Toaster } from './components/ui/sonner'
 import { MobileRadialNav } from './components/navigation/MobileRadialNav'
@@ -10,31 +10,22 @@ import './App.css'
 import './styles/mobile.css'
 
 // Page type definition
-type PageType = 'landing' | 'newlanding' | 'auth' | 'onboarding' | 'debug' | 'dash' | 'dashnew' | 'bites' | 'bitesnew' | 'trims' | 'trimsnew' | 'scout' | 'scoutnew' | 'plate' | 'platenew' | 'feed' | 'feednew' | 'chat' | 'snap' | 'snapnew' | 'discover'
+type PageType = 'landing' | 'auth' | 'onboarding' | 'debug' | 'dash' | 'bites' | 'trims' | 'scout' | 'plate' | 'feed' | 'snap' | 'discover'
 
 // Eager load critical components
 import { LandingPage } from './components/home/components/LandingPage'
-import { NewLandingPage } from './components/home/NewLandingPage'
 import DebugApp from './components/debug/Debug'
 import AuthPage from './components/auth/AuthPage'
 
 // Lazy load page components for code splitting
 const OnboardingFlow = lazy(() => import('./components/onboarding/OnboardingFlow'))
-const FeedApp = lazy(() => import('./components/feed/App'))
-const FeedNewApp = lazy(() => import('./components/feed/FeedNew').then(module => ({ default: module.FeedNew })))
-const ScoutApp = lazy(() => import('./components/scout/App'))
-const ScoutNewApp = lazy(() => import('./components/scout/ScoutNew'))
-const BitesApp = lazy(() => import('./components/bites/App'))
-const BitesNewApp = lazy(() => import('./components/bites/BitesNew'))
-const TrimsApp = lazy(() => import('./components/trims/App'))
-const TrimsNewApp = lazy(() => import('./components/trims/TrimsNew'))
-const DashApp = lazy(() => import('./components/dash/App'))
-const DashNewApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
-const SnapApp = lazy(() => import('./components/snap/App'))
-const SnapNewApp = lazy(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
-const PlateApp = lazy(() => import('./components/plate/App'))
-const PlateNewApp = lazy(() => import('./components/plate/PlateNew'))
-const ChatWithAuth = lazy(() => import('./components/chat').then(module => ({ default: module.ChatWithAuth })))
+const FeedApp = lazy(() => import('./components/feed/FeedNew').then(module => ({ default: module.FeedNew })))
+const ScoutApp = lazy(() => import('./components/scout/ScoutNew'))
+const BitesApp = lazy(() => import('./components/bites/BitesNew'))
+const TrimsApp = lazy(() => import('./components/trims/TrimsNew'))
+const DashApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
+const SnapApp = lazy(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
+const PlateApp = lazy(() => import('./components/plate/PlateNew'))
 const FoodDiscoveryApp = lazy(() => import('./components/discover/App'))
 
 // Loading component for lazy-loaded routes
@@ -74,33 +65,6 @@ const NavButton = ({ page, icon, label, currentPage, setCurrentPage }: NavButton
   </button>
 );
 
-// Helper component for dropdown menu item
-interface DropdownMenuItemProps {
-  page: PageType;
-  icon: string;
-  label: string;
-  currentPage: PageType;
-  setCurrentPage: (page: PageType) => void;
-  setNewPagesDropdownOpen: (open: boolean) => void;
-}
-
-const DropdownMenuItem = ({ page, icon, label, currentPage, setCurrentPage, setNewPagesDropdownOpen }: DropdownMenuItemProps) => (
-  <button
-    onClick={() => {
-      setCurrentPage(page);
-      globalThis.location.hash = `#${page}`;
-      setNewPagesDropdownOpen(false);
-    }}
-    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-      currentPage === page
-        ? 'bg-orange-50 text-orange-600'
-        : 'text-gray-700 hover:bg-gray-100'
-    }`}
-  >
-    {icon} {label}
-  </button>
-);
-
 // Helper component to render a page conditionally
 interface PageWrapperProps {
   page: PageType;
@@ -118,21 +82,7 @@ const PageWrapper = ({ page, children, eager = false, currentPage }: PageWrapper
 );
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('newlanding')
-  const [newPagesDropdownOpen, setNewPagesDropdownOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setNewPagesDropdownOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  const [currentPage, setCurrentPage] = useState<PageType>('landing')
 
   // Navigation component with auth context access
   const Navigation = () => {
@@ -178,37 +128,6 @@ function App() {
           <NavButton page="dash" icon="📊" label="Dashboard" currentPage={currentPage} setCurrentPage={setCurrentPage} />
           <NavButton page="discover" icon="🔍" label="Discover" currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-          {/* New Pages Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setNewPagesDropdownOpen(!newPagesDropdownOpen)}
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1 ${
-                ['feednew', 'scoutnew', 'bitesnew', 'trimsnew', 'snapnew', 'platenew', 'dashnew', 'newlanding'].includes(currentPage)
-                  ? 'bg-orange-600 text-white' 
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <span>✨ New Pages</span>
-              <ChevronDown className={`h-4 w-4 transition-transform ${newPagesDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {/* Dropdown Menu */}
-            {newPagesDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                <div className="py-1">
-                  <DropdownMenuItem page="feednew" icon="🍽️" label="Feed New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
-                  <DropdownMenuItem page="scoutnew" icon="🕵️" label="Scout New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
-                  <DropdownMenuItem page="bitesnew" icon="🎬" label="Bites New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
-                  <DropdownMenuItem page="trimsnew" icon="✂️" label="Trims New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
-                  <DropdownMenuItem page="snapnew" icon="📸" label="Snap New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
-                  <DropdownMenuItem page="platenew" icon="🍽️" label="Plate New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
-                  <DropdownMenuItem page="dashnew" icon="📊" label="Dashboard New" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
-                  <DropdownMenuItem page="newlanding" icon="🏠" label="New Landing" currentPage={currentPage} setCurrentPage={setCurrentPage} setNewPagesDropdownOpen={setNewPagesDropdownOpen} />
-                </div>
-              </div>
-            )}
-          </div>
-
           {/* User Profile Dropdown */}
           {user && (
             <div className="flex items-center space-x-3 ml-4 pl-4 border-l">
@@ -237,15 +156,14 @@ function App() {
     const handleHashChange = () => {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
-        'landing', 'newlanding', 'auth', 'onboarding', 'feed', 'feednew', 'scout', 'scoutnew', 'bites', 'bitesnew',
-        'trims', 'trimsnew', 'snap', 'snapnew', 'dash', 'dashnew', 'plate', 'platenew', 'discover', 'debug'
-        // 'chat' - temporarily hidden, not complete
+        'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites',
+        'trims', 'snap', 'dash', 'plate', 'discover', 'debug'
       ];
       
       if (hash && validPages.includes(hash)) {
         setCurrentPage(hash as PageType);
       } else if (!hash) {
-        setCurrentPage('newlanding');
+        setCurrentPage('landing');
       }
     };
 
@@ -286,13 +204,6 @@ function App() {
           }} />
         </PageWrapper>
 
-        <PageWrapper page="newlanding" eager currentPage={currentPage}>
-          <NewLandingPage onNavigateToSignup={() => {
-            setCurrentPage('auth');
-            globalThis.location.hash = '#auth';
-          }} />
-        </PageWrapper>
-
         <PageWrapper page="auth" eager currentPage={currentPage}>
           <AuthPage isVisible={currentPage === 'auth'} />
         </PageWrapper>
@@ -313,24 +224,12 @@ function App() {
           <ScoutApp />
         </PageWrapper>
 
-        <PageWrapper page="scoutnew" currentPage={currentPage}>
-          <ScoutNewApp />
-        </PageWrapper>
-
         <PageWrapper page="bites" currentPage={currentPage}>
           <BitesApp />
         </PageWrapper>
 
-        <PageWrapper page="bitesnew" currentPage={currentPage}>
-          <BitesNewApp />
-        </PageWrapper>
-
         <PageWrapper page="trims" currentPage={currentPage}>
           <TrimsApp />
-        </PageWrapper>
-
-        <PageWrapper page="trimsnew" currentPage={currentPage}>
-          <TrimsNewApp />
         </PageWrapper>
 
         <PageWrapper page="snap" currentPage={currentPage}>
@@ -345,28 +244,8 @@ function App() {
           <PlateApp />
         </PageWrapper>
 
-        <PageWrapper page="platenew" currentPage={currentPage}>
-          <PlateNewApp />
-        </PageWrapper>
-
-        <PageWrapper page="chat" currentPage={currentPage}>
-          <ChatWithAuth />
-        </PageWrapper>
-
         <PageWrapper page="discover" currentPage={currentPage}>
           <FoodDiscoveryApp />
-        </PageWrapper>
-
-        <PageWrapper page="dashnew" currentPage={currentPage}>
-          <DashNewApp />
-        </PageWrapper>
-
-        <PageWrapper page="snapnew" currentPage={currentPage}>
-          <SnapNewApp />
-        </PageWrapper>
-
-        <PageWrapper page="feednew" currentPage={currentPage}>
-          <FeedNewApp />
         </PageWrapper>
       </>
     );
