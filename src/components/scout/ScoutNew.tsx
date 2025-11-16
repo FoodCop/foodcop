@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
 import { backendService, formatGooglePlaceResult } from '../../services/backendService';
 import type { GooglePlace } from '../../types';
+import { RestaurantDetailDialog } from './components/RestaurantDetailDialog';
 
 interface Restaurant {
   id: string;
@@ -66,6 +67,8 @@ export default function ScoutNew() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [radiusKm, setRadiusKm] = useState(2);
+  const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Get user location on mount
   useEffect(() => {
@@ -338,7 +341,14 @@ export default function ScoutNew() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
                   {restaurants.map((restaurant) => (
-                    <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+                    <RestaurantCard 
+                      key={restaurant.id} 
+                      restaurant={restaurant}
+                      onClick={() => {
+                        setSelectedRestaurant(restaurant);
+                        setDialogOpen(true);
+                      }}
+                    />
                   ))}
                 </div>
               </div>
@@ -356,11 +366,17 @@ export default function ScoutNew() {
           scrollbar-width: none;
         }
       `}</style>
+
+      <RestaurantDetailDialog
+        restaurant={selectedRestaurant}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   );
 }
 
-function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
+function RestaurantCard({ restaurant, onClick }: { restaurant: Restaurant; onClick?: () => void }) {
   const [liked, setLiked] = useState(false);
 
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$';
@@ -371,7 +387,9 @@ function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
     : '';
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_4px_0_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.15)] transition-shadow">
+    <div 
+      onClick={onClick}
+      className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_4px_0_rgba(0,0,0,0.1)] hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.15)] transition-shadow cursor-pointer">
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1 min-w-0 pr-3">
