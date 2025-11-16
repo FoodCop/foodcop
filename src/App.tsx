@@ -42,25 +42,24 @@ function PageLoader() {
 // Helper component for navigation button
 interface NavButtonProps {
   page: PageType;
-  icon: string;
   label: string;
   currentPage: PageType;
   setCurrentPage: (page: PageType) => void;
 }
 
-const NavButton = ({ page, icon, label, currentPage, setCurrentPage }: NavButtonProps) => (
+const NavButton = ({ page, label, currentPage, setCurrentPage }: NavButtonProps) => (
   <button
     onClick={() => {
       setCurrentPage(page);
       globalThis.location.hash = `#${page}`;
     }}
-    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
       currentPage === page 
         ? 'bg-orange-600 text-white' 
         : 'text-gray-700 hover:bg-gray-100'
     }`}
   >
-    {icon} {label}
+    {label}
   </button>
 );
 
@@ -82,6 +81,17 @@ const PageWrapper = ({ page, children, eager = false, currentPage }: PageWrapper
 
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('landing')
+  const [colorMode, setColorMode] = useState<'white' | 'yellow'>('white')
+
+  // Apply color mode to CSS variable
+  useEffect(() => {
+    const backgroundColor = colorMode === 'yellow' ? '#FFD53B' : '#FAFAFA';
+    document.documentElement.style.setProperty('--background', backgroundColor);
+  }, [colorMode]);
+
+  const toggleColorMode = () => {
+    setColorMode(prev => prev === 'white' ? 'yellow' : 'white');
+  };
 
   // Navigation component with auth context access
   const Navigation = () => {
@@ -102,29 +112,34 @@ function App() {
 
     return (
         <div className="flex items-center justify-between h-16 safe-area-top px-4">
-        {/* Logo - Mobile icon, Desktop full logo */}
+        {/* Logo */}
         <div className="flex items-center">
-          <img 
-            src="/logo_mobile.png" 
-            alt="FUZO" 
-            className="h-8 md:hidden" 
-          />
-          <img 
-            src="/logo_desktop.png" 
-            alt="FUZO" 
-            className="hidden md:block h-10" 
-          />
+          <img src="/logo_mobile.png" alt="FUZO" className="h-10" />
         </div>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-2">
-          <NavButton page="feed" icon="🍽️" label="Feed" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="scout" icon="🕵️" label="Scout" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="bites" icon="🎬" label="Bites" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="trims" icon="✂️" label="Trims" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="snap" icon="📸" label="Snap" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="plate" icon="🍽️" label="Plate" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="dash" icon="📊" label="Dashboard" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="feed" label="Feed" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="scout" label="Scout" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="bites" label="Bites" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="trims" label="Trims" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="snap" label="Snap" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="plate" label="Plate" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton page="dash" label="Dashboard" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+
+          {/* Color Toggle Button */}
+          <button
+            onClick={toggleColorMode}
+            className="px-4 py-2 rounded-full border-2 transition ml-2"
+            style={{ 
+              borderColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
+              backgroundColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
+              color: '#000000'
+            }}
+            title="Toggle Color Mode"
+          >
+            <i className="fa-solid fa-palette"></i>
+          </button>
 
           {/* User Profile Dropdown */}
           {user && (
@@ -137,7 +152,7 @@ function App() {
               </Avatar>
               <button
                 onClick={handleSignOut}
-                className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                className="px-3 py-2 bg-white text-gray-700 font-semibold rounded-full border-2 border-gray-300 hover:bg-gray-50 transition flex items-center space-x-2"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Sign Out</span>
@@ -248,7 +263,7 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <div className="min-h-screen bg-gray-50 mobile-app-container">
+        <div className="min-h-screen bg-background mobile-app-container">
           {/* Desktop Navigation - Only show on authenticated pages */}
           {currentPage !== 'landing' &&
            currentPage !== 'auth' &&

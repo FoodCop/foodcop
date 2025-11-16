@@ -310,7 +310,7 @@ export function SnapNew() {
   // Disclaimer Screen
   if (showDisclaimer) {
     return (
-      <div className="w-full max-w-[375px] mx-auto bg-white min-h-screen">
+      <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen">
         {/* Content */}
         <div className="px-5 py-8">
           <div className="bg-white rounded-2xl shadow-[0_2px_8px_0_rgba(0,0,0,0.1)] p-6 space-y-6">
@@ -431,7 +431,7 @@ export function SnapNew() {
     // Success screen
     if (showSuccess) {
       return (
-        <div className="w-full max-w-[375px] mx-auto bg-white min-h-screen flex items-center justify-center">
+        <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex items-center justify-center">
           <div className="text-center px-8">
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center animate-bounce">
               <Heart className="w-12 h-12 text-white fill-white" />
@@ -447,7 +447,7 @@ export function SnapNew() {
     }
 
     return (
-      <div className="w-full max-w-[375px] mx-auto bg-white min-h-screen">
+      <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen">
         {/* Content */}
         <div className="px-5 py-6 space-y-6">
           {/* Photo Preview */}
@@ -587,7 +587,7 @@ export function SnapNew() {
 
   // Default State
   return (
-    <div className="w-full max-w-[375px] mx-auto bg-white min-h-screen flex items-center justify-center">
+    <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex items-center justify-center">
       <div className="text-center px-8">
         <Camera className="w-24 h-24 text-gray-400 mx-auto mb-6" />
         <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Ready to SNAP?</h2>

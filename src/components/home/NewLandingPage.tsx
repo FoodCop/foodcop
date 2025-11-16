@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './NewLandingPage.css';
+import { PhoneFan } from './components/PhoneFan';
 
 interface NewLandingPageProps {
   onNavigateToSignup?: () => void;
@@ -21,6 +22,8 @@ function StaticPhoneMockup({ image, alt, className = "" }: { image: string; alt:
 }
 
 export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
+  const [colorMode, setColorMode] = useState<'white' | 'yellow'>('white');
+
   const handleGetStarted = () => {
     if (onNavigateToSignup) {
       onNavigateToSignup();
@@ -28,6 +31,19 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       globalThis.location.hash = '#auth';
     }
   };
+
+  const toggleColorMode = () => {
+    setColorMode(prev => prev === 'white' ? 'yellow' : 'white');
+  };
+
+  // Apply color mode to background CSS variable
+  useEffect(() => {
+    const backgroundColor = colorMode === 'yellow' ? '#FFD53B' : '#FAFAFA';
+    const landingPage = document.querySelector('.new-landing-page') as HTMLElement;
+    if (landingPage) {
+      landingPage.style.setProperty('--background', backgroundColor);
+    }
+  }, [colorMode]);
 
   // Animate phone mockups on scroll for desktop
   useEffect(() => {
@@ -65,13 +81,25 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <header className="fixed w-full top-0 bg-white/80 backdrop-blur-md shadow-sm z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <a href="#" className="text-2xl font-bold text-foreground">FUZO</a>
+            <img src="/logo_mobile.png" alt="FUZO" className="h-10" />
           </div>
           <nav className="hidden md:flex space-x-8"></nav>
           <div className="flex items-center space-x-4">
             <button
+              onClick={toggleColorMode}
+              className="px-4 py-2 rounded-full border-2 transition"
+              style={{ 
+                borderColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
+                backgroundColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
+                color: colorMode === 'yellow' ? '#000000' : '#000000'
+              }}
+              title="Toggle Color Mode"
+            >
+              <i className="fa-solid fa-palette"></i>
+            </button>
+            <button
               onClick={handleGetStarted}
-              className="hidden md:block px-6 py-2 bg-primary text-foreground font-semibold rounded-full hover:bg-accent hover:text-accent-foreground transition"
+              className="hidden md:block px-6 py-2 bg-white text-foreground font-semibold rounded-full border-2 border-gray-300 hover:bg-gray-50 transition"
             >
               Get Started
             </button>
@@ -95,29 +123,19 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         <div className="relative z-10 container mx-auto px-4 py-20 min-h-[600px] flex flex-col justify-center">
           <div className="flex flex-col items-center gap-8">
             <div className="text-center max-w-2xl">
-              <h1 className="text-4xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-                Discover Your Next<br/>
-                <span className="text-primary">Favorite Food</span>
+              <h1 className="text-4xl font-bold text-white mb-6 leading-tight drop-shadow-lg text-center">
+                Unearth<br/>
+                <span className="text-white">the undiscovered gastronomy</span>
               </h1>
-              <p className="text-lg text-white mb-8 leading-relaxed drop-shadow-md">
-                FUZO helps you explore, save, and share amazing food experiences. From cooking tutorials to restaurant discoveries, your culinary journey starts here.
-              </p>
+            
               <button
                 onClick={handleGetStarted}
-                className="bg-primary hover:bg-primary/90 text-foreground font-bold text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
-                Get Started
-                <i className="fa-solid fa-arrow-right ml-2"></i>
+                className="bg-white hover:bg-gray-50 text-foreground font-bold text-lg px-10 py-4 rounded-full border-2 border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              > Get Started<i className="fa-solid fa-arrow-right ml-2"></i>
               </button>
             </div>
             
-            <div className="w-48 h-48">
-              <img
-                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5f869598f7-9490a9b16fada4f9be29.png"
-                alt="cute octopus mascot Tako, friendly cartoon character"
-                className="w-full h-full object-contain drop-shadow-2xl"
-              />
-            </div>
+           
           </div>
         </div>
       </section>
@@ -132,17 +150,17 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           />
         </div>
         <div className="container mx-auto px-6 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="text-left">
-              <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight drop-shadow-sm">
+          <div className="flex flex-col items-center text-center">
+            <div className="max-w-4xl">
+              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg text-center">
                 Discover Your Next Favorite Meal
               </h1>
-              <p className="text-xl md:text-2xl text-secondary mb-8 leading-relaxed drop-shadow-sm">
+              <p className="text-xl md:text-2xl text-white mb-8 leading-relaxed drop-shadow-lg text-center">
                 Save recipes, watch cooking tutorials, share food stories, and explore restaurants with your AI food buddy Tako
               </p>
               <button
                 onClick={handleGetStarted}
-                className="px-8 py-4 bg-primary text-foreground font-bold text-lg rounded-full hover:bg-accent hover:text-accent-foreground transition shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="px-8 py-4 bg-white text-foreground font-bold text-lg rounded-full border-2 border-gray-300 hover:bg-gray-50 transition shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 Get Started <i className="fa-solid fa-arrow-right ml-2"></i>
               </button>
@@ -156,52 +174,21 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="py-16 md:py-32 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6 text-center">
               Pin Your Favorite Foods
             </h2>
-            <p className="text-lg md:text-xl lg:text-2xl text-secondary max-w-2xl lg:max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl lg:text-2xl text-secondary max-w-2xl lg:max-w-3xl mx-auto text-center">
               Save recipes, bookmark dishes, and create your personal food wishlist. Never lose track of that amazing recipe again.
             </p>
           </div>
           {/* Mobile: PhoneFan with animations */}
           <div className="block md:hidden">
-            <div className="flex justify-center items-end gap-4 perspective-1000">
-              <div className="phone-mockup phone-left animate-on-scroll w-[160px]">
-                <div className="phone-screen aspect-[9/19.5]">
-                  <div className="phone-notch"></div>
-                  <img
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b29c94c03c-e5f6b533a6273a07766f.png"
-                    alt="mobile app interface showing saved recipes bookmarks"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="phone-indicator"></div>
-                </div>
-              </div>
-              
-              <div className="phone-mockup phone-center animate-on-scroll w-[180px]">
-                <div className="phone-screen aspect-[9/19.5]">
-                  <div className="phone-notch"></div>
-                  <img
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/a07c9ce819-56f7b11efe8bc040e8dc.png"
-                    alt="mobile app showing favorite dishes collection"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="phone-indicator"></div>
-                </div>
-              </div>
-              
-              <div className="phone-mockup phone-right animate-on-scroll w-[160px]">
-                <div className="phone-screen aspect-[9/19.5]">
-                  <div className="phone-notch"></div>
-                  <img
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8929b8a34f-dae252b38be91890ec88.png"
-                    alt="mobile app food wishlist planning screen"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="phone-indicator"></div>
-                </div>
-              </div>
-            </div>
+            <PhoneFan
+              leftImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/b29c94c03c-e5f6b533a6273a07766f.png"
+              centerImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/a07c9ce819-56f7b11efe8bc040e8dc.png"
+              rightImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/8929b8a34f-dae252b38be91890ec88.png"
+              altText="Pin Your Favorite Foods"
+            />
           </div>
           {/* Desktop: Static phone mockups */}
           <div className="hidden md:flex justify-center items-end gap-6 md:gap-12 perspective-1000">
@@ -237,10 +224,10 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         
         <div className="relative z-10 container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
+            <h2 className="text-3xl font-bold text-white mb-4 text-center">
               Cook &amp; Watch
             </h2>
-            <p className="text-lg text-white/90 max-w-2xl mx-auto">
+            <p className="text-lg text-white max-w-2xl mx-auto text-center">
               Learn from step-by-step video recipes and cooking guides. Master new techniques with expert chefs.
             </p>
           </div>
@@ -297,10 +284,10 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center">
               Cook &amp; Watch
             </h2>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto text-center">
               Follow step-by-step video recipes and cooking guides. Learn from professional chefs and master new techniques.
             </p>
           </div>
@@ -328,7 +315,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="flex md:hidden relative py-16 min-h-[700px] items-center">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://storage.googleapis.com/uxpilot-auth.appspot.com/36bee2c30e-1c8d0c5d60f9fb4f25df.png"
+            src="/Hero.png"
             alt="beautiful food photography and plating"
             className="w-full h-full object-cover"
           />
@@ -337,10 +324,10 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         
         <div className="relative z-10 container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
+            <h2 className="text-3xl font-bold text-white mb-4 text-center">
               Food Storyboard
             </h2>
-            <p className="text-lg text-white/90 max-w-2xl mx-auto">
+            <p className="text-lg text-white max-w-2xl mx-auto text-center">
               Share your culinary journey through stunning food photography and stories.
             </p>
           </div>
@@ -389,7 +376,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="hidden md:block relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1a7e78de60-a514ad92db7cb04a0702.png"
+            src="/Hero.png"
             alt="colorful flat lay of various dishes"
             className="w-full h-full object-cover"
           />
@@ -397,10 +384,10 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center">
               Share Your Food Story
             </h2>
-            <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto text-center">
               Capture and share your culinary adventures. Connect with food lovers and inspire others with your food photography.
             </p>
           </div>
@@ -436,43 +423,12 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
             </p>
           </div>
           
-          <div className="flex justify-center items-end gap-4">
-            <div className="phone-mockup phone-left animate-on-scroll w-40">
-              <div className="phone-screen aspect-[9/19.5]">
-                <div className="phone-notch"></div>
-                <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/3f3cac8b08-6dfb12ccc2ecfb4a96b6.png"
-                  alt="Tako AI chatbot assistant"
-                  className="w-full h-full object-cover"
-                />
-                <div className="phone-indicator"></div>
-              </div>
-            </div>
-            
-            <div className="phone-mockup phone-center animate-on-scroll w-[180px]">
-              <div className="phone-screen aspect-[9/19.5]">
-                <div className="phone-notch"></div>
-                <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ab5c9e506c-b8f67b8fddb6e1d48ae6.png"
-                  alt="Tako AI conversation interface"
-                  className="w-full h-full object-cover"
-                />
-                <div className="phone-indicator"></div>
-              </div>
-            </div>
-            
-            <div className="phone-mockup phone-right animate-on-scroll w-40">
-              <div className="phone-screen aspect-[9/19.5]">
-                <div className="phone-notch"></div>
-                <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e4a61a1ae6-0e83c7c78ad8b3dc54b0.png"
-                  alt="Tako mascot character"
-                  className="w-full h-full object-cover"
-                />
-                <div className="phone-indicator"></div>
-              </div>
-            </div>
-          </div>
+          <PhoneFan
+            leftImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/3f3cac8b08-6dfb12ccc2ecfb4a96b6.png"
+            centerImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/ab5c9e506c-b8f67b8fddb6e1d48ae6.png"
+            rightImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/e4a61a1ae6-0e83c7c78ad8b3dc54b0.png"
+            altText="Tako AI Food Buddy"
+          />
         </div>
       </section>
 
@@ -508,7 +464,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       </section>
 
       {/* Explore Food Section - Mobile */}
-      <section className="block md:hidden py-16 bg-white">
+      <section className="block md:hidden py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">
@@ -519,48 +475,17 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
             </p>
           </div>
           
-          <div className="flex justify-center items-end gap-4 mb-12">
-            <div className="phone-mockup phone-left animate-on-scroll w-40">
-              <div className="phone-screen aspect-[9/19.5]">
-                <div className="phone-notch"></div>
-                <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/0b34c69c71-05c8c918f1d56e1c4f09.png"
-                  alt="restaurant discovery interface"
-                  className="w-full h-full object-cover"
-                />
-                <div className="phone-indicator"></div>
-              </div>
-            </div>
-            
-            <div className="phone-mockup phone-center animate-on-scroll w-[180px]">
-              <div className="phone-screen aspect-[9/19.5]">
-                <div className="phone-notch"></div>
-                <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5b5a4b9ee9-e89f5e0ed48fc8cf6a01.png"
-                  alt="street food market exploration"
-                  className="w-full h-full object-cover"
-                />
-                <div className="phone-indicator"></div>
-              </div>
-            </div>
-            
-            <div className="phone-mockup phone-right animate-on-scroll w-40">
-              <div className="phone-screen aspect-[9/19.5]">
-                <div className="phone-notch"></div>
-                <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1d39edaf2c-5b1dc37b9d64ae83ae64.png"
-                  alt="food menu browsing"
-                  className="w-full h-full object-cover"
-                />
-                <div className="phone-indicator"></div>
-              </div>
-            </div>
-          </div>
+          <PhoneFan
+            leftImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/0b34c69c71-05c8c918f1d56e1c4f09.png"
+            centerImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/5b5a4b9ee9-e89f5e0ed48fc8cf6a01.png"
+            rightImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/1d39edaf2c-5b1dc37b9d64ae83ae64.png"
+            altText="Explore Food Everywhere"
+          />
           
           <div className="text-center">
             <button
               onClick={handleGetStarted}
-              className="px-8 py-4 bg-primary text-foreground font-bold text-lg rounded-full hover:bg-accent hover:text-accent-foreground transition shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="px-8 py-4 bg-white text-foreground font-bold text-lg rounded-full border-2 border-gray-300 hover:bg-gray-50 transition shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Start Exploring <i className="fa-solid fa-utensils ml-2"></i>
             </button>
@@ -569,7 +494,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       </section>
 
       {/* Explore Food Section - Desktop */}
-      <section className="hidden md:block py-20 md:py-32 bg-white">
+      <section className="hidden md:block py-20 md:py-32 bg-background">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
@@ -599,7 +524,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           <div className="text-center mt-16">
             <button
               onClick={handleGetStarted}
-              className="px-8 py-4 bg-primary text-foreground font-bold text-lg rounded-full hover:bg-accent hover:text-accent-foreground transition shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="px-8 py-4 bg-white text-foreground font-bold text-lg rounded-full border-2 border-gray-300 hover:bg-gray-50 transition shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Start Exploring <i className="fa-solid fa-utensils ml-2"></i>
             </button>

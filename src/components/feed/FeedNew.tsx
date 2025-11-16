@@ -25,8 +25,9 @@ export function FeedNew() {
             setUserLocation(parsed);
             return resolve({ lat: parsed.lat, lng: parsed.lng });
           }
-        } catch (_e) {
+        } catch (error_) {
           // Invalid JSON, fall through to default
+          console.warn('Failed to parse stored location:', error_);
         }
       }
 
@@ -73,8 +74,8 @@ export function FeedNew() {
           priceRange: parsed.priceRange || ['$', '$$', '$$$'],
           contentTypes: parsed.contentTypes || ['restaurant', 'recipe', 'video', 'masterbot']
         };
-      } catch (e) {
-        // Fall through
+      } catch (error_) {
+        console.warn('Failed to parse feed preferences:', error_);
       }
     }
 
@@ -103,8 +104,8 @@ export function FeedNew() {
         if (parsed.lat && parsed.lng) {
           return { lat: parsed.lat, lng: parsed.lng };
         }
-      } catch (e) {
-        // Fall through
+      } catch (error_) {
+        console.warn('Failed to parse current location:', error_);
       }
     }
     return userLocation || { lat: 37.7749, lng: -122.4194 };
@@ -195,11 +196,11 @@ export function FeedNew() {
         await navigator.share({
           title: cardName,
           text: shareText,
-          url: window.location.href
+          url: globalThis.location.href
         });
-      } catch (_error) {
+      } catch (error_) {
         // Share cancelled or not supported
-        console.log('Share cancelled');
+        console.log('Share cancelled:', error_);
       }
     } else {
       try {
@@ -330,15 +331,71 @@ export function FeedNew() {
   }, [currentCard, hasMoreCards, handleSwipe]);
 
   return (
-    <div className="w-full max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto bg-white min-h-screen pb-20 md:pb-0">
+    <div className="w-full max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto bg-background min-h-screen pb-20 md:pb-0 p-4 md:p-6">
       {/* Card Stack */}
       <div className="relative px-5 md:px-8 lg:px-12 py-6 md:py-8" style={{ height: 'calc(100vh - 200px)' }}>
-        {!hasMoreCards ? (
+        {hasMoreCards ? (
+          <div className="relative h-full md:flex md:items-center md:justify-center md:gap-8 lg:gap-12">
+            <AnimatePresence>
+              {/* Desktop: Side-by-side layout */}
+              <div className="hidden md:flex items-center gap-8 lg:gap-12 h-full max-w-6xl mx-auto">
+                {/* Current card (left side) */}
+                {currentCard && (
+                  <div className="flex-1" style={{ maxWidth: '500px', height: '100%', zIndex: 2 }}>
+                    <SwipeableCard
+                      card={currentCard}
+                      onSwipe={handleSwipe}
+                    />
+                  </div>
+                )}
+                
+                {/* Next card preview (right side) */}
+                {nextCard && (
+                  <div className="flex-1" style={{ maxWidth: '500px', height: '100%', zIndex: 1 }}>
+                    <motion.div
+                      initial={{ scale: 0.95, opacity: 0.7 }}
+                      animate={{ scale: 0.95, opacity: 0.7 }}
+                      className="w-full h-full"
+                    >
+                      <CardContent card={nextCard} isActive={false} />
+                    </motion.div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Mobile: Stacked layout */}
+              <div className="md:hidden relative h-full">
+              {/* Next card (background) */}
+              {nextCard && (
+                <div className="absolute inset-0" style={{ zIndex: 1 }}>
+                  <motion.div
+                    initial={{ scale: 0.95, y: 10 }}
+                    animate={{ scale: 0.95, y: 10 }}
+                    className="w-full h-full"
+                  >
+                    <CardContent card={nextCard} isActive={false} />
+                  </motion.div>
+                </div>
+              )}
+
+              {/* Current card (foreground) */}
+              {currentCard && (
+                <div className="absolute inset-0" style={{ zIndex: 2 }}>
+                  <SwipeableCard
+                    card={currentCard}
+                    onSwipe={handleSwipe}
+                  />
+                </div>
+              )}
+              </div>
+            </AnimatePresence>
+          </div>
+        ) : (
           <div className="flex flex-col items-center justify-center h-full text-center px-8">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center mb-6"
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-linear-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center mb-6"
             >
               <RefreshCw className="w-12 h-12 md:w-16 md:h-16 text-white" />
             </motion.div>
@@ -351,7 +408,7 @@ export function FeedNew() {
                 setCurrentCardIndex(0);
                 loadMore();
               }}
-              className="px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold text-base md:text-lg rounded-xl hover:opacity-90 transition-opacity"
+              className="px-6 md:px-8 py-3 md:py-4 bg-linear-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold text-base md:text-lg rounded-xl hover:opacity-90 transition-opacity"
             >
               Start Over
             </button>

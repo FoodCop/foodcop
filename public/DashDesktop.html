@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Roboto', sans-serif; }
+        .hover-lift:hover { transform: scale(1.02); }
+        .shadow-multi { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1), 0 4px 6px 0 rgba(0,0,0,0.1); }
+        .shadow-multi-hover:hover { box-shadow: 0 4px 8px 0 rgba(0,0,0,0.15), 0 8px 16px 0 rgba(0,0,0,0.15); }
+        .gradient-ring { background: linear-gradient(135deg, #FF6B35 0%, #F7C59F 100%); }
+        .gradient-cta { background: linear-gradient(135deg, #FF6B35 0%, #EA580C 100%); }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-orange': '#FF6B35',
+                        'brand-warm': '#EA580C',
+                        'brand-light': '#F7C59F',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <div id="header" class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-orange to-brand-warm flex items-center justify-center text-white font-bold text-lg">
+                        F
+                    </div>
+                    <span class="text-2xl font-bold text-gray-900">FUZO</span>
+                </div>
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="text-gray-900 font-medium">Home</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Discover</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Recipes</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Restaurants</a>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                    <i class="fa-solid fa-search text-gray-600"></i>
+                </button>
+                <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors relative">
+                    <i class="fa-solid fa-bell text-gray-600"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-brand-orange rounded-full"></span>
+                </button>
+                <div class="w-10 h-10 rounded-full overflow-hidden">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Profile" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content" class="max-w-7xl mx-auto px-6 py-8">
+        <div id="greeting-section" class="mb-8">
+            <div class="bg-white rounded-3xl p-8 shadow-multi border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <i class="fa-solid fa-location-dot text-brand-orange"></i>
+                            <span class="text-sm text-gray-600">San Francisco, CA</span>
+                        </div>
+                        <h1 class="text-4xl font-bold text-gray-900 mb-2">Good Afternoon, Sarah!</h1>
+                        <p class="text-lg text-gray-600">Ready to discover something delicious?</p>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-brand-orange shadow-lg">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Sarah" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="my-crew-section" class="mb-10">
+            <div class="bg-white rounded-3xl p-6 shadow-multi">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">My Crew</h2>
+                    <a href="#" class="text-brand-orange font-medium hover:text-brand-warm transition-colors">View All</a>
+                </div>
+                <div class="flex space-x-4 overflow-x-auto scroll-hide pb-2">
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="p-1 gradient-ring rounded-full mb-2">
+                            <div class="w-16 h-16 rounded-full bg-white p-1">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Mike" class="w-full h-full rounded-full object-cover">
+                            </div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">Mike</span>
+                    </div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="p-1 gradient-ring rounded-full mb-2">
+                            <div class="w-16 h-16 rounded-full bg-white p-1">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="Emma" class="w-full h-full rounded-full object-cover">
+                            </div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">Emma</span>
+                    </div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="p-1 gradient-ring rounded-full mb-2">
+                            <div class="w-16 h-16 rounded-full bg-white p-1">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="Jake" class="w-full h-full rounded-full object-cover">
+                            </div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">Jake</span>
+                    </div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="p-1 gradient-ring rounded-full mb-2">
+                            <div class="w-16 h-16 rounded-full bg-white p-1">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Lily" class="w-full h-full rounded-full object-cover">
+                            </div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">Lily</span>
+                    </div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="p-1 gradient-ring rounded-full mb-2">
+                            <div class="w-16 h-16 rounded-full bg-white p-1">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-9.jpg" alt="Alex" class="w-full h-full rounded-full object-cover">
+                            </div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">Alex</span>
+                    </div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="p-1 gradient-ring rounded-full mb-2">
+                            <div class="w-16 h-16 rounded-full bg-white p-1">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg" alt="Zoe" class="w-full h-full rounded-full object-cover">
+                            </div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">Zoe</span>
+                    </div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="p-1 gradient-ring rounded-full mb-2">
+                            <div class="w-16 h-16 rounded-full bg-white p-1">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="Ryan" class="w-full h-full rounded-full object-cover">
+                            </div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">Ryan</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="saved-recipes-section" class="mb-10">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold text-gray-900">Saved Recipes</h2>
+                <a href="#" class="text-brand-orange font-medium hover:text-brand-warm transition-colors">See All</a>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer">
+                    <div class="h-48 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/663e24132d-79e312dcb4ad2480819f.png" alt="delicious pasta carbonara with parmesan cheese, food photography, overhead view, vibrant colors" />
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-gray-900 mb-2">Creamy Pasta Carbonara</h3>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-gray-600 text-sm">
+                                <i class="fa-regular fa-clock mr-1"></i>
+                                <span>25 min</span>
+                            </div>
+                            <i class="fa-solid fa-heart text-brand-orange text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer">
+                    <div class="h-48 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ccb75a4d91-505404aeb63f11c38aee.png" alt="fresh avocado toast with poached egg, food photography, bright natural lighting" />
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-gray-900 mb-2">Avocado Toast Supreme</h3>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-gray-600 text-sm">
+                                <i class="fa-regular fa-clock mr-1"></i>
+                                <span>10 min</span>
+                            </div>
+                            <i class="fa-solid fa-heart text-brand-orange text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer">
+                    <div class="h-48 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/6cdea3a3ab-1e1fffe5ddff200e598d.png" alt="chocolate lava cake with melting center, dessert photography, dark moody lighting" />
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-gray-900 mb-2">Molten Chocolate Lava</h3>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-gray-600 text-sm">
+                                <i class="fa-regular fa-clock mr-1"></i>
+                                <span>30 min</span>
+                            </div>
+                            <i class="fa-solid fa-heart text-brand-orange text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer">
+                    <div class="h-48 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e09230df56-a5aaa7e48ad58d12a709.png" alt="colorful buddha bowl with quinoa vegetables and tahini, healthy food photography" />
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-gray-900 mb-2">Rainbow Buddha Bowl</h3>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-gray-600 text-sm">
+                                <i class="fa-regular fa-clock mr-1"></i>
+                                <span>20 min</span>
+                            </div>
+                            <i class="fa-solid fa-heart text-brand-orange text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="nearby-restaurants-section" class="mb-10">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold text-gray-900">Nearby Restaurants</h2>
+                <a href="#" class="text-brand-orange font-medium hover:text-brand-warm transition-colors">View Map</a>
+            </div>
+            <div class="space-y-4">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer">
+                    <div class="relative h-56 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8d8afb5d6e-25385753932f19d36f6f.png" alt="modern italian restaurant interior with warm lighting and elegant decor" />
+                        <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1">
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.8</span>
+                        </div>
+                        <button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                            <i class="fa-regular fa-heart text-gray-600"></i>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-xl text-gray-900 mb-1">La Bella Vita</h3>
+                        <p class="text-gray-600 mb-3">Italian • Fine Dining</p>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fa-solid fa-location-dot text-brand-orange mr-2"></i>
+                            <span class="text-sm">0.8 miles away</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer">
+                    <div class="relative h-56 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/7e112c0922-e5c608754eecbebc56b5.png" alt="trendy sushi bar with fresh sashimi display and modern japanese design" />
+                        <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1">
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.9</span>
+                        </div>
+                        <button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                            <i class="fa-regular fa-heart text-gray-600"></i>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-xl text-gray-900 mb-1">Sakura Sushi House</h3>
+                        <p class="text-gray-600 mb-3">Japanese • Sushi Bar</p>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fa-solid fa-location-dot text-brand-orange mr-2"></i>
+                            <span class="text-sm">1.2 miles away</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer">
+                    <div class="relative h-56 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/54031d9396-02208545d5c053abf87c.png" alt="cozy mexican taqueria with colorful decor and authentic street food vibes" />
+                        <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1">
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.6</span>
+                        </div>
+                        <button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                            <i class="fa-regular fa-heart text-gray-600"></i>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-xl text-gray-900 mb-1">Taco Loco</h3>
+                        <p class="text-gray-600 mb-3">Mexican • Casual Dining</p>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fa-solid fa-location-dot text-brand-orange mr-2"></i>
+                            <span class="text-sm">0.5 miles away</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="trending-posts-section" class="mb-10">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold text-gray-900">Trending Food Posts</h2>
+                <a href="#" class="text-brand-orange font-medium hover:text-brand-warm transition-colors">See All</a>
+            </div>
+            <div class="flex space-x-4 overflow-x-auto scroll-hide pb-4">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer flex-shrink-0 w-80">
+                    <div class="h-64 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/22ca4f64f7-2914416e9ad8d89fc5cb.png" alt="gourmet burger with bacon and cheese dripping, professional food photography, dramatic lighting" />
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Creator" class="w-10 h-10 rounded-full object-cover">
+                            <span class="font-medium text-gray-900">Mike Johnson</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2">The Ultimate Bacon Cheeseburger Experience</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">This burger changed my life. The perfect balance of juicy beef, crispy bacon, and melted cheese.</p>
+                        <div class="flex items-center text-brand-orange text-sm">
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            <span>Burger Haven</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer flex-shrink-0 w-80">
+                    <div class="h-64 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/eb90949c9a-9ca94c43d355e4ad87aa.png" alt="artisan ramen bowl with soft boiled egg and pork belly, steam rising, atmospheric lighting" />
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="Creator" class="w-10 h-10 rounded-full object-cover">
+                            <span class="font-medium text-gray-900">Emma Chen</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2">Authentic Tonkotsu Ramen Perfection</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">Rich, creamy broth that took 18 hours to make. Every spoonful is pure comfort.</p>
+                        <div class="flex items-center text-brand-orange text-sm">
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            <span>Ramen House Tokyo</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer flex-shrink-0 w-80">
+                    <div class="h-64 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/91a48cecb2-1dfd2298f77c5be8d5d3.png" alt="colorful acai bowl with fresh berries granola and coconut, bright morning light" />
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Creator" class="w-10 h-10 rounded-full object-cover">
+                            <span class="font-medium text-gray-900">Lily Martinez</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2">Morning Energy Bowl Goals</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">Starting the day right with this beautiful acai bowl packed with superfoods and love.</p>
+                        <div class="flex items-center text-brand-orange text-sm">
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            <span>Sunrise Smoothie Bar</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl overflow-hidden shadow-multi shadow-multi-hover hover-lift transition-all duration-300 cursor-pointer flex-shrink-0 w-80">
+                    <div class="h-64 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/37ebe913b8-1436d8c0e4b5094cd0d1.png" alt="decadent chocolate cake slice with layers, professional dessert photography" />
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="Creator" class="w-10 h-10 rounded-full object-cover">
+                            <span class="font-medium text-gray-900">Jake Williams</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2">Triple Chocolate Layer Cake Heaven</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">When you need something sweet, this is the answer. Pure chocolate bliss in every bite.</p>
+                        <div class="flex items-center text-brand-orange text-sm">
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            <span>Sweet Dreams Bakery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer" class="bg-white border-t border-gray-200 mt-16">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-4">About FUZO</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><a href="#" class="hover:text-brand-orange transition-colors">Our Story</a></li>
+                        <li><a href="#" class="hover:text-brand-orange transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-brand-orange transition-colors">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-4">Community</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><a href="#" class="hover:text-brand-orange transition-colors">Guidelines</a></li>
+                        <li><a href="#" class="hover:text-brand-orange transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-brand-orange transition-colors">Events</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-4">Support</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><a href="#" class="hover:text-brand-orange transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-brand-orange transition-colors">Safety</a></li>
+                        <li><a href="#" class="hover:text-brand-orange transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-4">Follow Us</h3>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-brand-orange hover:text-white transition-colors">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-brand-orange hover:text-white transition-colors">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-brand-orange hover:text-white transition-colors">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 mt-8 pt-8 text-center text-gray-600 text-sm">
+                <p>&copy; 2024 FUZO. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -239,7 +239,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       {/* Mobile Container */}
       <div className="max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto bg-white">
         

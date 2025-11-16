@@ -161,7 +161,7 @@ export default function BitesNew() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto relative">
+    <div className="min-h-screen bg-background flex flex-col max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto relative p-4 md:p-6">
       {/* Main Content */}
       <main className="flex-1 pb-6">
         {/* Search Bar */}
