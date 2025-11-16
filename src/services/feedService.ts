@@ -923,7 +923,8 @@ export const FeedService = {
 
       // Get a larger random sample to ensure variety across different authors
       // Request more posts and use random sampling
-      const sampleSize = Math.max(count * 10, 50); // Get at least 50 posts
+      // ✅ OPTIMIZED: Reduced from 50 to 15 to cut Supabase egress by 70%
+      const sampleSize = Math.max(count * 3, 15); // Get at least 15 posts (reduced from 50)
       
       // ✅ FIX: Use random offset instead of toggling created_at order
       // This ensures we get variety from the entire 490-post table

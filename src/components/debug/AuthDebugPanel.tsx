@@ -43,9 +43,12 @@ export function AuthDebugPanel() {
 
     checkAuth();
     
-    // Refresh every 5 seconds
-    const interval = setInterval(checkAuth, 5000);
-    return () => clearInterval(interval);
+    // ✅ OPTIMIZED: Only refresh on visibility change, not continuous polling
+    // Reduced from 5s polling to prevent excessive Supabase auth checks
+    // Old: ~17,000 auth checks per user per day
+    // New: Only on panel open (manual refresh)
+    // const interval = setInterval(checkAuth, 5000);
+    // return () => clearInterval(interval);
   }, []);
 
   if (!isVisible) {
