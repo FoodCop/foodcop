@@ -131,7 +131,6 @@ export default defineConfig({
           ],
           'map-vendor': ['pigeon-maps'],
           'chart-vendor': ['recharts'],
-          'chat-vendor': ['stream-chat', 'stream-chat-react'],
           // Separate chunks for large features
           'feed': ['./src/components/feed/App.tsx'],
           'scout': ['./src/components/scout/App.tsx'],
