@@ -18,6 +18,18 @@ interface Restaurant {
   place_id?: string;
   price_level?: number;
   photos?: string[];
+  phone?: string;
+  website?: string;
+  opening_hours?: {
+    open_now?: boolean;
+    weekday_text?: string[];
+  };
+  reviews?: {
+    author_name: string;
+    rating: number;
+    text: string;
+    time: string;
+  }[];
 }
 
 // Mock restaurant data for fallback
@@ -69,6 +81,54 @@ export default function ScoutNew() {
   const [radiusKm, setRadiusKm] = useState(2);
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+
+  // Fetch full restaurant details when clicked
+  const fetchRestaurantDetails = async (restaurant: Restaurant) => {
+    if (!restaurant.place_id) {
+      setSelectedRestaurant(restaurant);
+      setDialogOpen(true);
+      return;
+    }
+
+    setLoadingDetails(true);
+    try {
+      const response = await backendService.getPlaceDetails(restaurant.place_id);
+      
+      if (response.success && response.data?.result) {
+        const details = response.data.result;
+        
+        // Merge basic info with detailed info
+        const enrichedRestaurant: Restaurant = {
+          ...restaurant,
+          photos: details.photos ? details.photos.slice(0, 5).map((photo: any) => photo.photo_reference) : restaurant.photos,
+          phone: details.formatted_phone_number || details.international_phone_number,
+          website: details.website,
+          opening_hours: details.opening_hours ? {
+            open_now: details.opening_hours.open_now,
+            weekday_text: details.opening_hours.weekday_text
+          } : undefined,
+          reviews: details.reviews ? details.reviews.slice(0, 3).map((review: any) => ({
+            author_name: review.author_name,
+            rating: review.rating,
+            text: review.text,
+            time: review.relative_time_description
+          })) : undefined
+        };
+        
+        setSelectedRestaurant(enrichedRestaurant);
+      } else {
+        // Fallback to basic info if details fetch fails
+        setSelectedRestaurant(restaurant);
+      }
+    } catch (error) {
+      console.error('Failed to fetch restaurant details:', error);
+      setSelectedRestaurant(restaurant);
+    } finally {
+      setLoadingDetails(false);
+      setDialogOpen(true);
+    }
+  };
 
   // Get user location on mount
   useEffect(() => {
@@ -344,10 +404,7 @@ export default function ScoutNew() {
                     <RestaurantCard 
                       key={restaurant.id} 
                       restaurant={restaurant}
-                      onClick={() => {
-                        setSelectedRestaurant(restaurant);
-                        setDialogOpen(true);
-                      }}
+                      onClick={() => fetchRestaurantDetails(restaurant)}
                     />
                   ))}
                 </div>
