@@ -38,6 +38,8 @@ export default defineConfig({
         screenshots: []
       },
       workbox: {
+        // Increase cache size limit for large bundles
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB
         // Cache strategies for different resource types
         runtimeCaching: [
           {
