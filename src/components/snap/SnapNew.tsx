@@ -311,16 +311,6 @@ export function SnapNew() {
   if (showDisclaimer) {
     return (
       <div className="w-full max-w-[375px] mx-auto bg-white min-h-screen">
-        {/* Header */}
-        <div className="sticky top-0 z-50 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] px-5 py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/30 to-white/10 flex items-center justify-center">
-              <span className="text-2xl">📸</span>
-            </div>
-            <h1 className="text-white font-[Poppins] font-bold text-xl">SNAP</h1>
-          </div>
-        </div>
-
         {/* Content */}
         <div className="px-5 py-8">
           <div className="bg-white rounded-2xl shadow-[0_2px_8px_0_rgba(0,0,0,0.1)] p-6 space-y-6">
@@ -458,19 +448,6 @@ export function SnapNew() {
 
     return (
       <div className="w-full max-w-[375px] mx-auto bg-white min-h-screen">
-        {/* Header */}
-        <div className="sticky top-0 z-50 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] px-5 py-4">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleCancel}
-              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
-            >
-              <ArrowLeft className="w-5 h-5 text-white" />
-            </button>
-            <h1 className="text-white font-[Poppins] font-bold text-lg">Tag Your Photo</h1>
-          </div>
-        </div>
-
         {/* Content */}
         <div className="px-5 py-6 space-y-6">
           {/* Photo Preview */}

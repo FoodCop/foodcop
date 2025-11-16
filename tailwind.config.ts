@@ -4,6 +4,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: ["class"],
-  theme: { extend: {} },
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Roboto', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
   plugins: [],
 };

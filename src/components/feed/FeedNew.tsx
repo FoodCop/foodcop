@@ -331,24 +331,6 @@ export function FeedNew() {
 
   return (
     <div className="w-full max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto bg-white min-h-screen pb-20 md:pb-0">
-      {/* Header */}
-      <div className="sticky top-0 z-50 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] px-5 md:px-8 lg:px-12 py-4 md:py-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-white/30 to-white/10 flex items-center justify-center">
-              <span className="text-2xl md:text-3xl">🔥</span>
-            </div>
-            <h1 className="text-white font-[Poppins] font-bold text-xl md:text-2xl lg:text-3xl">Feed</h1>
-          </div>
-          <button
-            onClick={() => loadMore()}
-            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
-          >
-            <RefreshCw className="w-4 h-4 md:w-5 md:h-5 text-white" />
-          </button>
-        </div>
-      </div>
-
       {/* Card Stack */}
       <div className="relative px-5 md:px-8 lg:px-12 py-6 md:py-8" style={{ height: 'calc(100vh - 200px)' }}>
         {!hasMoreCards ? (

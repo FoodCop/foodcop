@@ -233,7 +233,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
   if (!user) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-[#666666] font-[Inter]">User not found</p>
+        <p className="text-[#666666]">User not found</p>
       </div>
     );
   }
@@ -262,14 +262,14 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
                   </div>
                 </div>
                 
-                <h2 className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7 mb-1 font-[Poppins] text-center">
+                <h2 className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7 mb-1 text-center">
                   {user.name || 'Anonymous User'}
                 </h2>
-                <p className="text-[#666666] text-sm lg:text-base mb-3 font-[Inter] text-center">
+                <p className="text-[#666666] text-sm lg:text-base mb-3 text-center">
                   @{user.username || user.email?.split('@')[0] || 'user'}
                 </p>
                 {user.location_city && user.location_country && (
-                  <div className="flex items-center gap-1 text-[#999999] text-sm font-[Inter]">
+                  <div className="flex items-center gap-1 text-[#999999] text-sm">
                     <MapPin className="w-4 h-4" />
                     <span>{user.location_city}, {user.location_country}</span>
                   </div>
@@ -278,7 +278,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
 
               {/* Bio */}
               {user.bio && (
-                <p className="text-[#1A1A1A] text-sm lg:text-base leading-6 mb-6 font-[Inter] text-center">
+                <p className="text-[#1A1A1A] text-sm lg:text-base leading-6 mb-6 text-center">
                   {user.bio}
                 </p>
               )}
@@ -286,31 +286,31 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               {/* Stats */}
               <div className="grid grid-cols-3 gap-4 mb-6 py-4 border-y border-[#E8E8E8]">
                 <div className="text-center">
-                  <p className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7 font-[Poppins]">
+                  <p className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7">
                     {posts.length}
                   </p>
-                  <p className="text-[#666666] text-xs lg:text-sm font-[Inter]">Posts</p>
+                  <p className="text-[#666666] text-xs lg:text-sm">Posts</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7 font-[Poppins]">
+                  <p className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7">
                     {user.followers_count || 0}
                   </p>
-                  <p className="text-[#666666] text-xs lg:text-sm font-[Inter]">Followers</p>
+                  <p className="text-[#666666] text-xs lg:text-sm">Followers</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7 font-[Poppins]">
+                  <p className="text-[#1A1A1A] font-bold text-xl lg:text-2xl leading-7">
                     {user.following_count || 0}
                   </p>
-                  <p className="text-[#666666] text-xs lg:text-sm font-[Inter]">Following</p>
+                  <p className="text-[#666666] text-xs lg:text-sm">Following</p>
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                <button className="w-full h-12 bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white rounded-xl font-semibold text-sm lg:text-base font-[Inter] shadow-md hover:shadow-lg transition-shadow">
+                <button className="w-full h-12 bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white rounded-xl font-semibold text-sm lg:text-base shadow-md hover:shadow-lg transition-shadow">
                   Edit Profile
                 </button>
-                <button className="w-full h-12 bg-[#F5F5F5] text-[#666666] rounded-xl font-semibold text-sm lg:text-base font-[Inter] hover:bg-[#E8E8E8] transition-colors">
+                <button className="w-full h-12 bg-[#F5F5F5] text-[#666666] rounded-xl font-semibold text-sm lg:text-base hover:bg-[#E8E8E8] transition-colors">
                   Share Profile
                 </button>
               </div>
@@ -323,7 +323,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
         {/* Header - Sticky - Mobile Only */}
         <div className="md:hidden bg-white shadow-sm px-5 py-4 sticky top-0 z-50">
           <div className="flex items-center justify-between">
-            <h1 className="text-[#1A1A1A] font-bold text-xl leading-7 font-[Poppins]">Profile</h1>
+            <h1 className="text-[#1A1A1A] font-bold text-xl leading-7">Profile</h1>
             <button className="w-10 h-10 rounded-xl bg-[#F5F5F5] flex items-center justify-center hover:bg-[#E8E8E8] transition-colors">
               <Settings className="w-5 h-5 text-[#666666]" />
             </button>
@@ -347,14 +347,14 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
 
             {/* User Info */}
             <div className="flex-1">
-              <h2 className="text-[#1A1A1A] font-bold text-lg leading-6 mb-1 font-[Poppins]">
+              <h2 className="text-[#1A1A1A] font-bold text-lg leading-6 mb-1">
                 {user.name || 'Anonymous User'}
               </h2>
-              <p className="text-[#666666] text-sm mb-2 font-[Inter]">
+              <p className="text-[#666666] text-sm mb-2">
                 @{user.username || user.email?.split('@')[0] || 'user'}
               </p>
               {user.location_city && user.location_country && (
-                <div className="flex items-center gap-1 text-[#999999] text-xs font-[Inter]">
+                <div className="flex items-center gap-1 text-[#999999] text-xs">
                   <MapPin className="w-3 h-3" />
                   <span>{user.location_city}, {user.location_country}</span>
                 </div>
@@ -364,7 +364,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
 
           {/* Bio */}
           {user.bio && (
-            <p className="text-[#1A1A1A] text-sm leading-5 mb-6 font-[Inter]">
+            <p className="text-[#1A1A1A] text-sm leading-5 mb-6">
               {user.bio}
             </p>
           )}
@@ -372,31 +372,31 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
-              <p className="text-[#1A1A1A] font-bold text-xl leading-7 font-[Poppins]">
+              <p className="text-[#1A1A1A] font-bold text-xl leading-7">
                 {posts.length}
               </p>
-              <p className="text-[#666666] text-xs font-[Inter]">Posts</p>
+              <p className="text-[#666666] text-xs">Posts</p>
             </div>
             <div className="text-center">
-              <p className="text-[#1A1A1A] font-bold text-xl leading-7 font-[Poppins]">
+              <p className="text-[#1A1A1A] font-bold text-xl leading-7">
                 {user.followers_count || 0}
               </p>
-              <p className="text-[#666666] text-xs font-[Inter]">Followers</p>
+              <p className="text-[#666666] text-xs">Followers</p>
             </div>
             <div className="text-center">
-              <p className="text-[#1A1A1A] font-bold text-xl leading-7 font-[Poppins]">
+              <p className="text-[#1A1A1A] font-bold text-xl leading-7">
                 {user.following_count || 0}
               </p>
-              <p className="text-[#666666] text-xs font-[Inter]">Following</p>
+              <p className="text-[#666666] text-xs">Following</p>
             </div>
           </div>
 
           {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-3 mb-6">
-            <button className="h-11 bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white rounded-xl font-semibold text-sm font-[Inter] shadow-md active:scale-95 transition-transform">
+            <button className="h-11 bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white rounded-xl font-semibold text-sm shadow-md active:scale-95 transition-transform">
               Edit Profile
             </button>
-            <button className="h-11 bg-[#F5F5F5] text-[#666666] rounded-xl font-semibold text-sm font-[Inter] hover:bg-[#E8E8E8] transition-colors">
+            <button className="h-11 bg-[#F5F5F5] text-[#666666] rounded-xl font-semibold text-sm hover:bg-[#E8E8E8] transition-colors">
               Share Profile
             </button>
           </div>
@@ -408,7 +408,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
             <div className="flex md:flex-wrap gap-1 md:gap-2 py-2 md:py-0">
               <button
                 onClick={() => setActiveTab('saved')}
-                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium transition-all whitespace-nowrap ${
                   activeTab === 'saved'
                     ? 'bg-[#FF6B35] text-white shadow-md'
                     : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
@@ -419,7 +419,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               </button>
               <button
                 onClick={() => setActiveTab('recipes')}
-                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium transition-all whitespace-nowrap ${
                   activeTab === 'recipes'
                     ? 'bg-[#FF6B35] text-white shadow-md'
                     : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
@@ -430,7 +430,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               </button>
               <button
                 onClick={() => setActiveTab('videos')}
-                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium transition-all whitespace-nowrap ${
                   activeTab === 'videos'
                     ? 'bg-[#FF6B35] text-white shadow-md'
                     : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
@@ -441,7 +441,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               </button>
               <button
                 onClick={() => setActiveTab('places')}
-                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium transition-all whitespace-nowrap ${
                   activeTab === 'places'
                     ? 'bg-[#FF6B35] text-white shadow-md'
                     : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
@@ -452,7 +452,7 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
               </button>
               <button
                 onClick={() => setActiveTab('photos')}
-                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium font-[Inter] transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm md:text-base font-medium transition-all whitespace-nowrap ${
                   activeTab === 'photos'
                     ? 'bg-[#FF6B35] text-white shadow-md'
                     : 'bg-white md:bg-[#F5F5F5] text-[#666666] hover:bg-[#F5F5F5] md:hover:bg-[#E8E8E8]'
@@ -475,8 +475,8 @@ export default function PlateNew({ userId: propUserId, currentUser }: PlateNewPr
                   <div className="w-20 h-20 md:w-24 md:h-24 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
                     <Bookmark className="w-10 h-10 md:w-12 md:h-12 text-[#999999]" />
                   </div>
-                  <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-2 font-[Poppins]">No saved items yet</p>
-                  <p className="text-[#666666] text-sm md:text-base font-[Inter] text-center">
+                  <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-2">No saved items yet</p>
+                  <p className="text-[#666666] text-sm md:text-base text-center">
                     Start saving recipes, videos, and places!
                   </p>
                 </div>
@@ -598,8 +598,8 @@ function EmptyState({ icon, title, description }: { icon: string; title: string;
       <div className="w-20 h-20 md:w-24 md:h-24 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
         <span className="text-4xl md:text-5xl">{icon}</span>
       </div>
-      <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-2 font-[Poppins]">{title}</p>
-      <p className="text-[#666666] text-sm md:text-base font-[Inter] text-center">{description}</p>
+      <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-2">{title}</p>
+      <p className="text-[#666666] text-sm md:text-base text-center">{description}</p>
     </div>
   );
 }
@@ -625,15 +625,15 @@ function RecipeCard({ recipe }: { recipe: SavedItem }) {
         </div>
       )}
       <div className="p-4">
-        <h3 className="text-[#1A1A1A] font-semibold text-base leading-5 mb-2 line-clamp-2 font-[Poppins]">
+        <h3 className="text-[#1A1A1A] font-semibold text-base leading-5 mb-2 line-clamp-2">
           {meta.title || 'Untitled Recipe'}
         </h3>
         {meta.summary && (
-          <p className="text-[#666666] text-sm leading-5 mb-3 line-clamp-2 font-[Inter]">
+          <p className="text-[#666666] text-sm leading-5 mb-3 line-clamp-2">
             {meta.summary.replace(/<[^>]*>/g, '')}
           </p>
         )}
-        <div className="flex items-center gap-4 text-[#999999] text-xs font-[Inter]">
+        <div className="flex items-center gap-4 text-[#999999] text-xs">
           {meta.readyInMinutes && (
             <span className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
@@ -678,11 +678,11 @@ function VideoCard({ video }: { video: SavedItem }) {
         </div>
       )}
       <div className="p-4">
-        <h3 className="text-[#1A1A1A] font-semibold text-base leading-5 mb-1 line-clamp-2 font-[Poppins]">
+        <h3 className="text-[#1A1A1A] font-semibold text-base leading-5 mb-1 line-clamp-2">
           {meta.title || 'Untitled Video'}
         </h3>
         {meta.channelName && (
-          <p className="text-[#666666] text-sm font-[Inter]">{meta.channelName}</p>
+          <p className="text-[#666666] text-sm">{meta.channelName}</p>
         )}
       </div>
     </div>
@@ -700,18 +700,18 @@ function PlaceCard({ place }: { place: SavedItem }) {
           <MapPin className="w-6 h-6 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-[#1A1A1A] font-semibold text-base leading-5 mb-1 truncate font-[Poppins]">
+          <h3 className="text-[#1A1A1A] font-semibold text-base leading-5 mb-1 truncate">
             {meta.name || 'Untitled Place'}
           </h3>
           {meta.address && (
-            <p className="text-[#666666] text-sm mb-2 line-clamp-2 font-[Inter]">{meta.address}</p>
+            <p className="text-[#666666] text-sm mb-2 line-clamp-2">{meta.address}</p>
           )}
           <div className="flex items-center gap-3">
             {meta.rating && (
-              <span className="text-[#999999] text-xs font-[Inter]">⭐ {meta.rating}</span>
+              <span className="text-[#999999] text-xs">⭐ {meta.rating}</span>
             )}
             {meta.types && meta.types[0] && (
-              <span className="text-[#999999] text-xs font-[Inter]">🍽️ {meta.types[0]}</span>
+              <span className="text-[#999999] text-xs">🍽️ {meta.types[0]}</span>
             )}
           </div>
         </div>

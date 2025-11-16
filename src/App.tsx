@@ -10,7 +10,7 @@ import './App.css'
 import './styles/mobile.css'
 
 // Page type definition
-type PageType = 'landing' | 'auth' | 'onboarding' | 'debug' | 'dash' | 'bites' | 'trims' | 'scout' | 'plate' | 'feed' | 'snap' | 'discover'
+type PageType = 'landing' | 'auth' | 'onboarding' | 'debug' | 'dash' | 'bites' | 'trims' | 'scout' | 'plate' | 'feed' | 'snap'
 
 // Eager load critical components
 import { NewLandingPage } from './components/home/NewLandingPage'
@@ -26,7 +26,6 @@ const TrimsApp = lazy(() => import('./components/trims/TrimsNew'))
 const DashApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
 const SnapApp = lazy(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
 const PlateApp = lazy(() => import('./components/plate/PlateNew'))
-const FoodDiscoveryApp = lazy(() => import('./components/discover/App'))
 
 // Loading component for lazy-loaded routes
 function PageLoader() {
@@ -126,7 +125,6 @@ function App() {
           <NavButton page="snap" icon="📸" label="Snap" currentPage={currentPage} setCurrentPage={setCurrentPage} />
           <NavButton page="plate" icon="🍽️" label="Plate" currentPage={currentPage} setCurrentPage={setCurrentPage} />
           <NavButton page="dash" icon="📊" label="Dashboard" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="discover" icon="🔍" label="Discover" currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
           {/* User Profile Dropdown */}
           {user && (
@@ -157,7 +155,7 @@ function App() {
       const hash = globalThis.location.hash.slice(1);
       const validPages = [
         'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites',
-        'trims', 'snap', 'dash', 'plate', 'discover', 'debug'
+        'trims', 'snap', 'dash', 'plate', 'debug'
       ];
       
       if (hash && validPages.includes(hash)) {
@@ -242,10 +240,6 @@ function App() {
 
         <PageWrapper page="plate" currentPage={currentPage}>
           <PlateApp />
-        </PageWrapper>
-
-        <PageWrapper page="discover" currentPage={currentPage}>
-          <FoodDiscoveryApp />
         </PageWrapper>
       </>
     );

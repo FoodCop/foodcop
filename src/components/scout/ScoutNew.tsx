@@ -258,29 +258,13 @@ export default function ScoutNew() {
       {/* Mobile Container */}
       <div className="max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto bg-white">
         
-        {/* Header - Sticky */}
+        {/* Search & Filter Controls */}
         <div className="bg-white shadow-sm px-5 md:px-8 lg:px-12 py-4 md:py-5 sticky top-0 z-50">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center shadow-md">
-                <span className="text-white text-xl md:text-2xl">🕵️</span>
-              </div>
-              <h1 className="text-[#1A1A1A] font-bold text-xl md:text-2xl lg:text-3xl leading-7 font-[Poppins]">Scout</h1>
-            </div>
-            {user?.user_metadata?.avatar_url && (
-              <img 
-                src={user.user_metadata.avatar_url} 
-                alt="Profile"
-                className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-[#FF6B35]"
-              />
-            )}
-          </div>
-
           {/* Location Bar */}
           <div className="flex items-center gap-2 mb-4">
             <div className="flex-1 flex items-center gap-2 bg-[#F5F5F5] rounded-xl px-3 md:px-4 py-2 md:py-2.5">
               <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#FF6B35]" />
-              <span className="text-[#666666] text-sm md:text-base font-[Inter] truncate">{userAddress}</span>
+              <span className="text-[#666666] text-sm md:text-base truncate">{userAddress}</span>
             </div>
             <button
               onClick={() => {
@@ -310,7 +294,7 @@ export default function ScoutNew() {
               placeholder="Search restaurants..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 md:h-14 pl-10 md:pl-12 pr-12 md:pr-14 bg-[#F5F5F5] rounded-xl text-[#1A1A1A] text-base md:text-lg font-[Inter] placeholder:text-[#999999] focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
+              className="w-full h-12 md:h-14 pl-10 md:pl-12 pr-12 md:pr-14 bg-[#F5F5F5] rounded-xl text-[#1A1A1A] text-base md:text-lg placeholder:text-[#999999] focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
             />
             <button className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
               <SlidersHorizontal className="w-5 h-5 md:w-6 md:h-6 text-[#666666]" />
@@ -320,8 +304,8 @@ export default function ScoutNew() {
           {/* Distance Slider */}
           <div className="mt-3 md:max-w-2xl lg:max-w-3xl md:mx-auto">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-[#666666] text-xs md:text-sm font-[Inter]">Search radius</span>
-              <span className="text-[#FF6B35] text-xs md:text-sm font-semibold font-[Inter]">{radiusKm} km</span>
+              <span className="text-[#666666] text-xs md:text-sm">Search radius</span>
+              <span className="text-[#FF6B35] text-xs md:text-sm font-semibold">{radiusKm} km</span>
             </div>
             <input
               type="range"
@@ -342,7 +326,7 @@ export default function ScoutNew() {
               <button
                 key={category.id}
                 onClick={() => handleCategoryClick(category.id)}
-                className={`flex-shrink-0 px-4 md:px-5 py-2 md:py-2.5 rounded-full text-sm md:text-base font-medium font-[Inter] transition-all ${
+                className={`flex-shrink-0 px-4 md:px-5 py-2 md:py-2.5 rounded-full text-sm md:text-base font-medium transition-all ${
                   selectedCategory === category.id
                     ? 'bg-[#FF6B35] text-white shadow-md'
                     : 'bg-[#F5F5F5] text-[#666666] hover:bg-[#E8E8E8]'
@@ -358,7 +342,7 @@ export default function ScoutNew() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-20 md:py-24">
             <div className="w-12 h-12 md:w-16 md:h-16 border-4 md:border-[5px] border-[#FF6B35] border-t-transparent rounded-full animate-spin mb-3" />
-            <p className="text-[#666666] text-base md:text-lg font-[Inter]">Finding restaurants... 🔍</p>
+            <p className="text-[#666666] text-base md:text-lg">Finding restaurants... 🔍</p>
           </div>
         )}
 
@@ -368,11 +352,11 @@ export default function ScoutNew() {
             <div className="w-16 h-16 md:w-20 md:h-20 bg-red-100 rounded-full flex items-center justify-center mb-3">
               <span className="text-3xl md:text-4xl">⚠️</span>
             </div>
-            <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-1 font-[Poppins]">Failed to load restaurants</p>
-            <p className="text-[#666666] text-sm md:text-base mb-4 font-[Inter] text-center">{error}</p>
+            <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-1">Failed to load restaurants</p>
+            <p className="text-[#666666] text-sm md:text-base mb-4 text-center">{error}</p>
             <button
               onClick={() => fetchRestaurants(userLocation[0], userLocation[1], radiusKm)}
-              className="px-6 md:px-8 py-3 md:py-3.5 bg-[#FF6B35] text-white rounded-xl font-semibold text-sm md:text-base font-[Inter] shadow-md active:scale-95 transition-transform"
+              className="px-6 md:px-8 py-3 md:py-3.5 bg-[#FF6B35] text-white rounded-xl font-semibold text-sm md:text-base shadow-md active:scale-95 transition-transform"
             >
               Try Again
             </button>
@@ -387,15 +371,15 @@ export default function ScoutNew() {
                 <div className="w-20 h-20 md:w-24 md:h-24 bg-[#F5F5F5] rounded-full flex items-center justify-center mb-4">
                   <span className="text-4xl md:text-5xl">🏪</span>
                 </div>
-                <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-2 font-[Poppins]">No restaurants found</p>
-                <p className="text-[#666666] text-sm md:text-base font-[Inter] text-center">
+                <p className="text-[#1A1A1A] font-semibold text-base md:text-lg mb-2">No restaurants found</p>
+                <p className="text-[#666666] text-sm md:text-base text-center">
                   Try adjusting your search or increasing the radius
                 </p>
               </div>
             ) : (
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-[#666666] text-sm md:text-base font-[Inter]">
+                  <p className="text-[#666666] text-sm md:text-base">
                     Found {restaurants.length} restaurant{restaurants.length !== 1 ? 's' : ''}
                   </p>
                 </div>
@@ -450,13 +434,13 @@ function RestaurantCard({ restaurant, onClick }: { restaurant: Restaurant; onCli
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1 min-w-0 pr-3">
-            <h3 className="text-[#1A1A1A] font-semibold text-base leading-5 mb-1 truncate font-[Poppins]">
+            <h3 className="text-[#1A1A1A] font-semibold text-base leading-5 mb-1 truncate">
               {restaurant.name}
             </h3>
-            <p className="text-[#666666] text-sm font-[Inter] mb-2">
+            <p className="text-[#666666] text-sm mb-2">
               {Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(', ') : restaurant.cuisine}
             </p>
-            <p className="text-[#999999] text-xs font-[Inter] truncate">
+            <p className="text-[#999999] text-xs truncate">
               {restaurant.address}
             </p>
           </div>
@@ -474,15 +458,15 @@ function RestaurantCard({ restaurant, onClick }: { restaurant: Restaurant; onCli
         <div className="flex items-center gap-4 mb-3">
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-[#FFB800] fill-[#FFB800]" />
-            <span className="text-[#1A1A1A] text-sm font-semibold font-[Inter]">{restaurant.rating}</span>
+            <span className="text-[#1A1A1A] text-sm font-semibold">{restaurant.rating}</span>
           </div>
-          <span className="text-[#666666] text-sm font-[Inter]">{priceLevel}</span>
+          <span className="text-[#666666] text-sm">{priceLevel}</span>
           {distanceText && (
             <>
               <span className="text-[#999999]">•</span>
               <div className="flex items-center gap-1">
                 <MapPin className="w-3 h-3 text-[#999999]" />
-                <span className="text-[#666666] text-xs font-[Inter]">{distanceText}</span>
+                <span className="text-[#666666] text-xs">{distanceText}</span>
               </div>
             </>
           )}
@@ -494,14 +478,14 @@ function RestaurantCard({ restaurant, onClick }: { restaurant: Restaurant; onCli
               const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${restaurant.lat},${restaurant.lng}`;
               window.open(googleMapsUrl, '_blank');
             }}
-            className="flex-1 h-10 bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white rounded-xl font-semibold text-sm font-[Inter] shadow-md hover:shadow-lg transition-shadow"
+            className="flex-1 h-10 bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-shadow"
           >
             <div className="flex items-center justify-center gap-2">
               <Navigation className="w-4 h-4" />
               <span>Directions</span>
             </div>
           </button>
-          <button className="h-10 px-4 bg-[#F5F5F5] text-[#666666] rounded-xl font-semibold text-sm font-[Inter] hover:bg-[#E8E8E8] transition-colors">
+          <button className="h-10 px-4 bg-[#F5F5F5] text-[#666666] rounded-xl font-semibold text-sm hover:bg-[#E8E8E8] transition-colors">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
               <span>Open</span>

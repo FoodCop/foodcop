@@ -62,6 +62,34 @@
   - Plus: name, address, rating, price_level, geometry, types
 - **Impact**: Google API now returns full details instead of basic info
 
+### 8. Project Housekeeping
+- **Created**: `scripts/` folder for better organization
+- **Moved Scripts**:
+  - `deploy-backend.ps1`
+  - `deploy-directions.ps1`
+  - `deploy-directions.sh`
+  - `set-openai-secret.ps1`
+  - `set-secret-manual.ps1`
+  - `export-sonarqube-issues.ps1`
+- **Result**: Cleaner root directory structure
+
+### 9. Typography Standardization
+- **Updated Google Fonts**: Changed from Fredoka/Urbanist/Cousine to Roboto
+- **Modified Files**:
+  - `index.html` - Updated font import
+  - `tailwind.config.ts` - Set Roboto as default sans-serif
+  - `index.css` - Applied Roboto to all text elements
+  - `NewLandingPage.css` - Changed from Be Vietnam Pro to Roboto
+- **Removed Custom Font Classes**: Stripped `font-[Poppins]` and `font-[Inter]` from 7 component files
+- **Result**: Consistent Roboto font family across entire site
+
+### 10. Navigation Cleanup
+- **Removed**: Discover page from navigation and routing
+- **Removed**: Redundant secondary headers from all pages
+  - Scout, Trims, Bites, Feed, Snap, Dash - all cleaned
+- **Restored**: Scout page search controls (location bar, search input, distance slider)
+- **Result**: Single top navigation bar, cleaner UX, no duplicate headers on desktop
+
 ## Current Status 🔄
 
 ### Working ✅
