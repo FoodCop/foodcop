@@ -130,11 +130,7 @@ export default defineConfig({
             '@radix-ui/react-tooltip'
           ],
           'map-vendor': ['pigeon-maps'],
-          'chart-vendor': ['recharts'],
-          // Separate chunks for large features
-          'feed': ['./src/components/feed/App.tsx'],
-          'scout': ['./src/components/scout/App.tsx'],
-          'chat': ['./src/components/chat/ChatWithAuth.tsx']
+          'chart-vendor': ['recharts']
         }
       }
     },
