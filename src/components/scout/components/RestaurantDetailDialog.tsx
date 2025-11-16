@@ -129,7 +129,6 @@ export function RestaurantDetailDialog({
                   src={restaurant.photos[0]}
                   alt={restaurant.name}
                   className="w-full h-64 object-cover"
-                  fallbackSrc="/placeholder-restaurant.jpg"
                 />
               </div>
             )}

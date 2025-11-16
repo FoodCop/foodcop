@@ -53,7 +53,7 @@ class IntelligentCache {
     entries: 0,
     cleanups: 0
   };
-  private cleanupInterval: NodeJS.Timeout | number | null = null;
+  private cleanupInterval: ReturnType<typeof setInterval> | null = null;
   private config: Required<CacheConfig>;
 
   constructor(config: CacheConfig = {}) {
