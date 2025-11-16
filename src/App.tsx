@@ -1,8 +1,8 @@
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { useState, useEffect, lazy, Suspense, useRef } from 'react'
 import { AuthProvider, useAuth } from './components/auth/AuthProvider'
 import { ErrorBoundary, PageErrorBoundary } from './components/common/ErrorBoundary'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
-import { LogOut } from 'lucide-react'
+import { LogOut, ChevronDown } from 'lucide-react'
 import { toast } from 'sonner'
 import { Toaster } from './components/ui/sonner'
 import { MobileRadialNav } from './components/navigation/MobileRadialNav'
@@ -51,6 +51,20 @@ function PageLoader() {
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('landing')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [newPagesDropdownOpen, setNewPagesDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setNewPagesDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   // Navigation component with auth context access
   const Navigation = () => {
@@ -102,19 +116,6 @@ function App() {
           </button>
           <button
             onClick={() => {
-              setCurrentPage('feednew');
-              globalThis.location.hash = '#feednew';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'feednew' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            ✨ Feed New
-          </button>
-          <button
-            onClick={() => {
               setCurrentPage('scout');
               globalThis.location.hash = '#scout';
             }}
@@ -125,19 +126,6 @@ function App() {
             }`}
           >
             🕵️ Scout
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('scoutnew');
-              globalThis.location.hash = '#scoutnew';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'scoutnew' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            ✨ Scout New
           </button>
           <button
             onClick={() => {
@@ -154,19 +142,6 @@ function App() {
           </button>
           <button
             onClick={() => {
-              setCurrentPage('bitesnew');
-              globalThis.location.hash = '#bitesnew';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'bitesnew' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            ✨ Bites New
-          </button>
-          <button
-            onClick={() => {
               setCurrentPage('trims');
               globalThis.location.hash = '#trims';
             }}
@@ -177,19 +152,6 @@ function App() {
             }`}
           >
             ✂️ Trims
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('trimsnew');
-              globalThis.location.hash = '#trimsnew';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'trimsnew' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            ✨ Trims New
           </button>
           <button
             onClick={() => {
@@ -219,19 +181,6 @@ function App() {
           </button>
           <button
             onClick={() => {
-              setCurrentPage('platenew');
-              globalThis.location.hash = '#platenew';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'platenew' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            ✨ Plate New
-          </button>
-          <button
-            onClick={() => {
               setCurrentPage('dash');
               globalThis.location.hash = '#dash';
             }}
@@ -245,46 +194,6 @@ function App() {
           </button>
           <button
             onClick={() => {
-              setCurrentPage('dashnew');
-              globalThis.location.hash = '#dashnew';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'dashnew' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            ✨ Dashboard New
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage('snapnew');
-              globalThis.location.hash = '#snapnew';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'snapnew' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            ✨ Snap New
-          </button>
-          {/* Chat temporarily hidden - not complete */}
-          {/* <button
-            onClick={() => {
-              setCurrentPage('chat');
-              globalThis.location.hash = '#chat';
-            }}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              currentPage === 'chat' 
-                ? 'bg-orange-600 text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            💬 Chat
-          </button> */}
-          <button
-            onClick={() => {
               setCurrentPage('discover');
               globalThis.location.hash = '#discover';
             }}
@@ -296,6 +205,127 @@ function App() {
           >
             🔍 Discover
           </button>
+
+          {/* New Pages Dropdown */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setNewPagesDropdownOpen(!newPagesDropdownOpen)}
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1 ${
+                ['feednew', 'scoutnew', 'bitesnew', 'trimsnew', 'snapnew', 'platenew', 'dashnew'].includes(currentPage)
+                  ? 'bg-orange-600 text-white' 
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <span>✨ New Pages</span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${newPagesDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Menu */}
+            {newPagesDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      setCurrentPage('feednew');
+                      globalThis.location.hash = '#feednew';
+                      setNewPagesDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      currentPage === 'feednew'
+                        ? 'bg-orange-50 text-orange-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    🍽️ Feed New
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('scoutnew');
+                      globalThis.location.hash = '#scoutnew';
+                      setNewPagesDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      currentPage === 'scoutnew'
+                        ? 'bg-orange-50 text-orange-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    🕵️ Scout New
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('bitesnew');
+                      globalThis.location.hash = '#bitesnew';
+                      setNewPagesDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      currentPage === 'bitesnew'
+                        ? 'bg-orange-50 text-orange-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    🎬 Bites New
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('trimsnew');
+                      globalThis.location.hash = '#trimsnew';
+                      setNewPagesDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      currentPage === 'trimsnew'
+                        ? 'bg-orange-50 text-orange-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    ✂️ Trims New
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('snapnew');
+                      globalThis.location.hash = '#snapnew';
+                      setNewPagesDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      currentPage === 'snapnew'
+                        ? 'bg-orange-50 text-orange-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    📸 Snap New
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('platenew');
+                      globalThis.location.hash = '#platenew';
+                      setNewPagesDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      currentPage === 'platenew'
+                        ? 'bg-orange-50 text-orange-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    🍽️ Plate New
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('dashnew');
+                      globalThis.location.hash = '#dashnew';
+                      setNewPagesDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      currentPage === 'dashnew'
+                        ? 'bg-orange-50 text-orange-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    📊 Dashboard New
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* User Profile Dropdown */}
           {user && (
