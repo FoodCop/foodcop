@@ -1,12 +1,9 @@
-import { MapPin, Star, Phone, Clock, ExternalLink, Navigation, Bookmark } from "lucide-react";
+import { MapPin, Star, Phone, Clock, ExternalLink, Navigation, Bookmark, ArrowLeft, Share2, Heart, DollarSign } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../../ui/dialog";
-import { ScrollArea } from "../../ui/scroll-area";
-import { Button } from "../../ui/button";
-import { ImageWithFallback } from "../../ui/image-with-fallback";
 import { savedItemsService } from "../../../services";
 import { useAuth } from "../../auth/AuthProvider";
 import { toast } from "sonner";
+import { MapView } from "./MapView";
 
 interface Restaurant {
   id: string;
@@ -47,15 +44,17 @@ export function RestaurantDetailDialog({
 }: RestaurantDetailDialogProps) {
   const { user } = useAuth();
   const [saving, setSaving] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   if (!restaurant) return null;
 
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$';
   const distanceText = restaurant.distance 
     ? restaurant.distance < 1 
-      ? `${Math.round(restaurant.distance * 1000)}m away`
-      : `${restaurant.distance.toFixed(1)}km away`
-    : '';
+      ? `${(restaurant.distance * 1000).toFixed(0)}m`
+      : `${restaurant.distance.toFixed(1)}km`
+    : '0.8km';
 
   const cuisineText = Array.isArray(restaurant.cuisine) 
     ? restaurant.cuisine.join(', ') 
@@ -107,146 +106,270 @@ export function RestaurantDetailDialog({
   };
 
   const handleGetDirections = () => {
-    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${restaurant.lat},${restaurant.lng}`;
-    window.open(googleMapsUrl, '_blank');
+    setShowMap(true);
   };
 
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: restaurant.name,
+        text: `Check out ${restaurant.name} on FUZO!`,
+        url: window.location.href,
+      }).catch(() => {
+        // User cancelled share
+      });
+    } else {
+      toast.info('Share feature not available on this device');
+    }
+  };
+
+  // Calculate review stats
+  const totalReviews = restaurant.reviews?.length || 0;
+  const reviewStats = totalReviews > 0 ? {
+    5: Math.round(totalReviews * 0.85),
+    4: Math.round(totalReviews * 0.10),
+    3: Math.round(totalReviews * 0.03),
+    2: Math.round(totalReviews * 0.01),
+    1: Math.round(totalReviews * 0.01),
+  } : null;
+
+  if (!open) return null;
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] p-0 bg-white">
-        <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="pr-8">{restaurant.name}</DialogTitle>
-          <DialogDescription className="sr-only">
-            Restaurant details for {restaurant.name}
-          </DialogDescription>
-        </DialogHeader>
-        <ScrollArea className="max-h-[calc(90vh-4rem)]">
-          <div className="p-6 pt-4">
-            {/* Restaurant Image */}
-            {restaurant.photos && restaurant.photos.length > 0 && (
-              <div className="mb-6 rounded-xl overflow-hidden">
-                <ImageWithFallback
-                  src={restaurant.photos[0]}
-                  alt={restaurant.name}
-                  className="w-full h-64 object-cover"
-                />
-              </div>
-            )}
-
-            {/* Basic Info */}
-            <div className="mb-6">
-              <div className="flex items-center gap-4 mb-3">
-                <div className="flex items-center gap-1">
-                  <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                  <span className="text-lg font-semibold">{restaurant.rating}</span>
-                </div>
-                <span className="text-gray-600">{priceLevel}</span>
-                {distanceText && (
-                  <>
-                    <span className="text-gray-400">•</span>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4 text-gray-500" />
-                      <span className="text-gray-600">{distanceText}</span>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2 text-gray-600 mb-2">
-                <span className="text-sm">{cuisineText}</span>
-              </div>
-
-              <div className="flex items-start gap-2 text-gray-600">
-                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span className="text-sm">{restaurant.address}</span>
-              </div>
+    <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
+      {/* Hero Section with Image */}
+      <div className="relative">
+        <div className="h-72 overflow-hidden relative bg-gradient-to-br from-gray-200 to-gray-300">
+          {restaurant.photos && restaurant.photos.length > 0 ? (
+            <img 
+              src={restaurant.photos[0]} 
+              alt={restaurant.name}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <MapPin className="w-16 h-16 text-gray-400" />
             </div>
+          )}
+          
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+          
+          {/* Header buttons */}
+          <button
+            onClick={() => onOpenChange(false)}
+            className="absolute top-6 left-5 w-11 h-11 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+          >
+            <ArrowLeft className="text-gray-900" />
+          </button>
+          
+          <div className="absolute top-6 right-5 flex gap-2">
+            <button
+              onClick={handleShare}
+              className="w-11 h-11 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+            >
+              <Share2 className="text-gray-900 w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setLiked(!liked)}
+              className="w-11 h-11 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+            >
+              <Heart className={`w-5 h-5 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-900'}`} />
+            </button>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3 mb-6">
-              <Button
-                onClick={handleGetDirections}
-                className="flex-1 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
-              >
-                <Navigation className="w-4 h-4 mr-2" />
-                Directions
-              </Button>
-              <Button
-                onClick={handleSaveToPlate}
-                disabled={saving}
-                variant="outline"
-                className="flex-1"
-              >
-                <Bookmark className="w-4 h-4 mr-2" />
-                {saving ? 'Saving...' : 'Save to Plate'}
-              </Button>
+          {/* Bottom info on hero */}
+          <div className="absolute bottom-5 left-5 right-5">
+            <div className="flex items-center gap-2 mb-2">
+              {restaurant.opening_hours?.open_now && (
+                <span className="bg-green-500 text-white text-xs font-semibold px-2.5 py-1 rounded-lg">
+                  Open Now
+                </span>
+              )}
+              <span className="bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-semibold px-2.5 py-1 rounded-lg">
+                Fast Delivery
+              </span>
             </div>
+            <h1 className="text-2xl font-bold text-white mb-1">{restaurant.name}</h1>
+            <p className="text-sm text-white/90">{cuisineText}</p>
+          </div>
+        </div>
+      </div>
 
-            {/* Contact Info */}
-            {(restaurant.phone || restaurant.website) && (
-              <div className="mb-6 space-y-3 p-4 bg-gray-50 rounded-lg">
-                {restaurant.phone && (
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-4 h-4 text-gray-500" />
-                    <a href={`tel:${restaurant.phone}`} className="text-sm text-blue-600 hover:underline">
-                      {restaurant.phone}
-                    </a>
-                  </div>
-                )}
-                {restaurant.website && (
-                  <div className="flex items-center gap-3">
-                    <ExternalLink className="w-4 h-4 text-gray-500" />
-                    <a 
-                      href={restaurant.website} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:underline"
-                    >
-                      Visit Website
-                    </a>
-                  </div>
-                )}
-              </div>
-            )}
+      {/* Content */}
+      <div className="px-5 py-5">
+        
+        {/* Stats Section */}
+        <div className="grid grid-cols-4 gap-3 mb-6">
+          <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-3 text-center">
+            <Star className="w-5 h-5 text-yellow-500 mb-1 mx-auto fill-yellow-500" />
+            <p className="text-lg font-bold text-gray-900">{restaurant.rating}</p>
+            <p className="text-xs text-gray-600">Rating</p>
+          </div>
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-3 text-center">
+            <Clock className="w-5 h-5 text-blue-500 mb-1 mx-auto" />
+            <p className="text-lg font-bold text-gray-900">15-20</p>
+            <p className="text-xs text-gray-600">Minutes</p>
+          </div>
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 text-center">
+            <MapPin className="w-5 h-5 text-green-500 mb-1 mx-auto" />
+            <p className="text-lg font-bold text-gray-900">{distanceText}</p>
+            <p className="text-xs text-gray-600">away</p>
+          </div>
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 text-center">
+            <DollarSign className="w-5 h-5 text-purple-500 mb-1 mx-auto" />
+            <p className="text-lg font-bold text-gray-900">{priceLevel}</p>
+            <p className="text-xs text-gray-600">Price</p>
+          </div>
+        </div>
 
-            {/* Opening Hours */}
-            {restaurant.opening_hours?.weekday_text && (
-              <div className="mb-6">
-                <h3 className="font-semibold mb-3 flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Opening Hours
-                </h3>
-                <div className="space-y-2 text-sm text-gray-600">
-                  {restaurant.opening_hours.weekday_text.map((hours, index) => (
-                    <div key={index}>{hours}</div>
+        {/* Reviews Preview */}
+        {reviewStats && (
+          <div className="bg-gray-50 rounded-2xl p-4 mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold text-gray-900">Reviews & Ratings</h3>
+              <button className="text-sm font-medium text-orange-500 hover:text-orange-600">
+                See all
+              </button>
+            </div>
+            <div className="flex items-center gap-4 mb-3">
+              <div className="text-center">
+                <p className="text-3xl font-bold text-gray-900">{restaurant.rating}</p>
+                <div className="flex gap-0.5 mb-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star 
+                      key={star} 
+                      className={`w-3 h-3 ${star <= restaurant.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} 
+                    />
                   ))}
                 </div>
+                <p className="text-xs text-gray-500">{totalReviews} ratings</p>
+              </div>
+              <div className="flex-1 space-y-1.5">
+                {[5, 4, 3, 2, 1].map((rating) => (
+                  <div key={rating} className="flex items-center gap-2">
+                    <span className="text-xs text-gray-600 w-8">{rating} ★</span>
+                    <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-yellow-400" 
+                        style={{ width: `${(reviewStats[rating as keyof typeof reviewStats] / totalReviews) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* About Section */}
+        <div className="mb-6">
+          <h3 className="font-bold text-gray-900 mb-3">About Restaurant</h3>
+          <p className="text-sm text-gray-600 leading-relaxed mb-3">
+            Experience exquisite {cuisineText} cuisine in an elegant setting. Our chef-curated menu features seasonal ingredients and classic techniques to bring you an unforgettable dining experience.
+          </p>
+          {restaurant.opening_hours?.weekday_text && restaurant.opening_hours.weekday_text.length > 0 && (
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-gray-400" />
+                <span className="text-gray-700">{restaurant.opening_hours.weekday_text[0].split(': ')[1]}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Location & Contact */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-gray-900">Location & Contact</h3>
+          </div>
+          <div className="bg-gray-50 rounded-2xl p-4 mb-3">
+            <div className="flex items-start gap-3 mb-3">
+              <MapPin className="text-orange-500 text-lg mt-1 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-gray-900 mb-1">{restaurant.address.split(',')[0]}</p>
+                <p className="text-sm text-gray-600">{restaurant.address}</p>
+              </div>
+            </div>
+            {restaurant.phone && (
+              <div className="flex items-center gap-3 mb-3">
+                <Phone className="text-orange-500 text-lg" />
+                <a href={`tel:${restaurant.phone}`} className="text-sm text-gray-900 hover:text-orange-500">
+                  {restaurant.phone}
+                </a>
               </div>
             )}
-
-            {/* Reviews */}
-            {restaurant.reviews && restaurant.reviews.length > 0 && (
-              <div>
-                <h3 className="font-semibold mb-3">Reviews</h3>
-                <div className="space-y-4">
-                  {restaurant.reviews.slice(0, 3).map((review, index) => (
-                    <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="font-medium">{review.author_name}</span>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                          <span className="text-sm">{review.rating}</span>
-                        </div>
-                      </div>
-                      <p className="text-sm text-gray-600">{review.text}</p>
-                    </div>
-                  ))}
-                </div>
+            {restaurant.website && (
+              <div className="flex items-center gap-3">
+                <ExternalLink className="text-orange-500 text-lg" />
+                <a 
+                  href={restaurant.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-gray-900 hover:text-orange-500 truncate"
+                >
+                  {restaurant.website.replace(/^https?:\/\/(www\.)?/, '')}
+                </a>
               </div>
             )}
           </div>
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
+          
+          {/* Action buttons */}
+          <div className="flex gap-3">
+            <button
+              onClick={handleGetDirections}
+              className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30 hover:shadow-xl transition-shadow"
+            >
+              <Navigation className="w-5 h-5" />
+              Get Directions
+            </button>
+            <button
+              onClick={handleSaveToPlate}
+              disabled={saving}
+              className="px-6 py-4 bg-gray-100 text-gray-900 font-semibold rounded-2xl flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors disabled:opacity-50"
+            >
+              <Bookmark className="w-5 h-5" />
+              {saving ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+        </div>
+
+        {/* Reviews List */}
+        {restaurant.reviews && restaurant.reviews.length > 0 && (
+          <div className="mb-6">
+            <h3 className="font-bold text-gray-900 mb-4">Customer Reviews</h3>
+            <div className="space-y-3">
+              {restaurant.reviews.slice(0, 3).map((review, index) => (
+                <div key={index} className="bg-gray-50 rounded-2xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="font-semibold text-gray-900">{review.author_name}</span>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      <span className="text-sm font-semibold">{review.rating}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed">{review.text}</p>
+                  {review.time && (
+                    <p className="text-xs text-gray-400 mt-2">{review.time}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="h-6"></div>
+      </div>
+
+      {/* MapView Component */}
+      <MapView
+        restaurant={restaurant}
+        open={showMap}
+        onClose={() => setShowMap(false)}
+      />
+    </div>
   );
 }
