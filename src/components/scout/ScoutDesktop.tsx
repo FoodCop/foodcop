@@ -1,8 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Star, Clock, Phone, Globe, Calendar, Navigation, Plus, Minus, Heart, Share2 } from 'lucide-react';
+import { Search, MapPin, Star, Clock, Phone, Globe, Calendar, Navigation, Heart, Share2 } from 'lucide-react';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
+import { GoogleMapView } from '../maps/GoogleMapView';
+import type { MapMarker } from '../maps/mapUtils';
+import { backendService, formatGooglePlaceResult } from '../../services/backendService';
+import type { GooglePlace } from '../../types';
+
+// Format distance: meters for < 1km, kilometers for >= 1km
+const formatDistance = (distanceKm: number | undefined): string => {
+  if (!distanceKm) return '0m';
+  if (distanceKm < 1) return `${Math.round(distanceKm * 1000)}m`;
+  return `${distanceKm.toFixed(1)}km`;
+};
 
 interface Restaurant {
   id: string;
@@ -42,123 +53,121 @@ export function ScoutDesktop() {
   const [activeFilter, setActiveFilter] = useState<string>('popular');
   const [activeTab, setActiveTab] = useState<'overview' | 'reviews' | 'photos' | 'menu'>('overview');
   const [showDirections, setShowDirections] = useState(false);
+  const [userLocation, setUserLocation] = useState<[number, number]>([13.1072, 80.0915456]); // Default to Tamil Nadu
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock data for initial load
-  const mockRestaurants: Restaurant[] = [
-    {
-      id: '1',
-      name: 'Bella Italia',
-      address: '123 Main Street, Downtown',
-      lat: 34.0522,
-      lng: -118.2437,
-      rating: 4.7,
-      userRatingsTotal: 342,
-      price_level: 2,
-      cuisine: 'Italian · Pizza',
-      distance: 1.2,
-      deliveryTime: '30 min',
-      image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/8d8afb5d6e-70831253bfe73c698a45.png',
-      opening_hours: { open_now: true },
-      description: 'Authentic Italian cuisine featuring wood-fired pizzas, handmade pasta, and classic Italian dishes. Family-owned restaurant with a warm, inviting atmosphere.',
-      phone: '(555) 123-4567',
-      website: 'https://bellaitalia.com',
-      reviews: [
-        {
-          author_name: 'John Smith',
-          rating: 5,
-          text: 'Amazing pizza! The crust was perfect and the ingredients were fresh. Service was excellent too.',
-          time: '2 days ago'
-        },
-        {
-          author_name: 'Sarah Johnson',
-          rating: 4,
-          text: 'Great atmosphere and delicious food. The pasta carbonara is a must-try!',
-          time: '1 week ago'
-        }
-      ]
-    },
-    {
-      id: '2',
-      name: 'Sakura Sushi',
-      address: '456 Oak Avenue',
-      lat: 34.0532,
-      lng: -118.2447,
-      rating: 4.9,
-      userRatingsTotal: 521,
-      price_level: 3,
-      cuisine: 'Japanese · Sushi',
-      distance: 0.8,
-      deliveryTime: '25 min',
-      image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/190d35c4cc-f6ba82cc89e8919b3c4e.png',
-      opening_hours: { open_now: true }
-    },
-    {
-      id: '3',
-      name: 'El Taco Loco',
-      address: '789 Pine Street',
-      lat: 34.0512,
-      lng: -118.2427,
-      rating: 4.3,
-      userRatingsTotal: 287,
-      price_level: 1,
-      cuisine: 'Mexican · Tacos',
-      distance: 1.5,
-      deliveryTime: '20 min',
-      image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/140a8811f1-88b4466a4f1f9e92d811.png',
-      opening_hours: { open_now: false }
-    },
-    {
-      id: '4',
-      name: 'Le Petit Bistro',
-      address: '321 Elm Boulevard',
-      lat: 34.0542,
-      lng: -118.2457,
-      rating: 4.6,
-      userRatingsTotal: 198,
-      price_level: 4,
-      cuisine: 'French · Fine Dining',
-      distance: 2.1,
-      deliveryTime: '45 min',
-      image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/0c8ad221cf-ec02e5e7754e72eb76e8.png',
-      opening_hours: { open_now: true }
-    },
-    {
-      id: '5',
-      name: 'The Burger Joint',
-      address: '654 Maple Drive',
-      lat: 34.0502,
-      lng: -118.2417,
-      rating: 4.4,
-      userRatingsTotal: 456,
-      price_level: 2,
-      cuisine: 'American · Burgers',
-      distance: 0.6,
-      deliveryTime: '15 min',
-      image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/700f4b139b-7e26430c422269fd1ff0.png',
-      opening_hours: { open_now: true }
-    },
-    {
-      id: '6',
-      name: 'Bangkok Street Food',
-      address: '987 Cedar Lane',
-      lat: 34.0552,
-      lng: -118.2467,
-      rating: 4.8,
-      userRatingsTotal: 389,
-      price_level: 2,
-      cuisine: 'Thai · Asian',
-      distance: 1.8,
-      deliveryTime: '35 min',
-      image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/488d559203-21b03884721723276e0e.png',
-      opening_hours: { open_now: true }
-    }
-  ];
-
+  // Get user location and fetch restaurants on mount
   useEffect(() => {
-    setRestaurants(mockRestaurants);
-    setSelectedRestaurant(mockRestaurants[0]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getUserLocation = () => {
+      console.log('🌍 ScoutDesktop: Getting user location...');
+      
+      if (!navigator.geolocation) {
+        console.warn('⚠️ Geolocation not supported');
+        fetchRestaurants(userLocation[0], userLocation[1], distance);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          console.log('✅ ScoutDesktop: Got location:', position.coords);
+          const newLocation: [number, number] = [position.coords.latitude, position.coords.longitude];
+          setUserLocation(newLocation);
+          fetchRestaurants(position.coords.latitude, position.coords.longitude, distance);
+        },
+        (error) => {
+          console.error('❌ ScoutDesktop geolocation error:', error);
+          toast.error('Unable to get your location. Using default.');
+          fetchRestaurants(userLocation[0], userLocation[1], distance);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+      );
+    };
+
+    getUserLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Fetch restaurants from Google Places API
+  const fetchRestaurants = async (lat: number, lng: number, radiusKm: number, query?: string) => {
+    console.log('🔍 ScoutDesktop: Fetching restaurants', { lat, lng, radiusKm, query });
+    setError(null);
+    setLoading(true);
+
+    try {
+      const radiusMeters = radiusKm * 1000;
+      let results: Restaurant[] = [];
+
+      if (query?.trim()) {
+        const response = await backendService.searchPlacesByText(
+          `${query} restaurant`,
+          { lat, lng }
+        );
+        
+        if (response.success && response.data?.results) {
+          results = response.data.results.map((place: GooglePlace) => 
+            formatGooglePlaceResult(place, { lat, lng })
+          ).filter((restaurant: Restaurant) => 
+            restaurant.distance !== undefined && restaurant.distance <= radiusKm
+          );
+        }
+      } else {
+        const response = await backendService.searchNearbyPlaces(
+          { lat, lng },
+          radiusMeters,
+          'restaurant'
+        );
+        
+        if (response.success && response.data?.results) {
+          results = response.data.results.map((place: GooglePlace) => 
+            formatGooglePlaceResult(place, { lat, lng })
+          );
+          console.log('✅ ScoutDesktop: Got', results.length, 'restaurants');
+        } else {
+          setError(response.error || 'Failed to load restaurants');
+        }
+      }
+
+      results.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+      setRestaurants(results);
+      
+      if (results.length > 0) {
+        setSelectedRestaurant(results[0]);
+      } else {
+        toast.error(`No restaurants found within ${radiusKm}km`);
+      }
+    } catch (error) {
+      console.error('❌ ScoutDesktop: Error fetching restaurants:', error);
+      setError('Failed to load restaurants');
+      setRestaurants([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Refetch when distance changes
+  useEffect(() => {
+    const hasRealLocation = userLocation[0] !== 13.1072 || userLocation[1] !== 80.0915456;
+    if (hasRealLocation || restaurants.length === 0) {
+      const query = searchQuery.trim() || undefined;
+      fetchRestaurants(userLocation[0], userLocation[1], distance, query);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [distance]);
+
+  // Search with debounce
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      const timeoutId = setTimeout(() => {
+        fetchRestaurants(userLocation[0], userLocation[1], distance, searchQuery);
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    } else if (searchQuery === '' && restaurants.length > 0) {
+      // Clear search - refetch all
+      fetchRestaurants(userLocation[0], userLocation[1], distance);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
 
   const handleRestaurantClick = (restaurant: Restaurant) => {
     setSelectedRestaurant(restaurant);
@@ -171,9 +180,10 @@ export function ScoutDesktop() {
   };
 
   const handleStartNavigation = () => {
-    if (selectedRestaurant) {
-      const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${selectedRestaurant.lat},${selectedRestaurant.lng}`;
-      globalThis.open(googleMapsUrl, '_blank');
+    // Already showing directions in the map view
+    // The route is displayed on the map with turn-by-turn details
+    if (selectedRestaurant && showDirections) {
+      console.log('Navigation view active for:', selectedRestaurant.name);
     }
   };
 
@@ -234,7 +244,7 @@ export function ScoutDesktop() {
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">Distance</span>
-              <span className="text-sm font-semibold text-orange-600">{distance} km</span>
+              <span className="text-sm font-semibold text-orange-600">{formatDistance(distance)}</span>
             </div>
             <input
               type="range"
@@ -288,86 +298,121 @@ export function ScoutDesktop() {
 
         {/* Restaurant List */}
         <div className="flex-1 overflow-y-auto">
-          {restaurants.map((restaurant) => (
-            <button
-              key={restaurant.id}
-              onClick={() => handleRestaurantClick(restaurant)}
-              className={`w-full p-4 border-b border-gray-100 hover:bg-orange-50 cursor-pointer transition-colors text-left ${
-                selectedRestaurant?.id === restaurant.id ? 'bg-orange-50' : ''
-              }`}
-            >
-              <div className="flex gap-3">
-                <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-200">
-                  {restaurant.image ? (
-                    <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <MapPin className="text-gray-400" size={32} />
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
-                  <div className="flex items-center gap-1 mb-1">
-                    <div className="flex text-orange-500 text-xs">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={12}
-                          className={i < Math.floor(restaurant.rating) ? 'fill-orange-500' : ''}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm font-medium text-gray-900">{restaurant.rating}</span>
-                    <span className="text-xs text-gray-500">({restaurant.userRatingsTotal})</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
-                    <span>{restaurant.cuisine}</span>
-                    <span className="text-gray-400">·</span>
-                    <span>{restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$'}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-600">{restaurant.distance} km</span>
-                    <span
-                      className={`px-2 py-0.5 text-xs font-medium rounded ${
-                        restaurant.opening_hours?.open_now
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
-                      }`}
-                    >
-                      {restaurant.opening_hours?.open_now ? 'Open' : 'Closed'}
-                    </span>
-                  </div>
-                </div>
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                <p className="text-gray-600">Finding nearby restaurants...</p>
               </div>
-            </button>
-          ))}
+            </div>
+          ) : error ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center px-4">
+                <p className="text-red-600 mb-2">❌ {error}</p>
+                <button
+                  onClick={() => fetchRestaurants(userLocation[0], userLocation[1], distance)}
+                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
+            </div>
+          ) : restaurants.length === 0 ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center px-4">
+                <MapPin className="text-gray-400 mx-auto mb-4" size={48} />
+                <p className="text-gray-600 mb-2">No restaurants found</p>
+                <p className="text-sm text-gray-500">Try increasing the search radius</p>
+              </div>
+            </div>
+          ) : (
+            restaurants.map((restaurant) => (
+              <button
+                key={restaurant.id}
+                onClick={() => handleRestaurantClick(restaurant)}
+                className={`w-full p-4 border-b border-gray-100 hover:bg-orange-50 cursor-pointer transition-colors text-left ${
+                  selectedRestaurant?.id === restaurant.id ? 'bg-orange-50' : ''
+                }`}
+              >
+                <div className="flex gap-3">
+                  <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                    {restaurant.image ? (
+                      <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <MapPin className="text-gray-400" size={32} />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
+                    <div className="flex items-center gap-1 mb-1">
+                      <div className="flex text-orange-500 text-xs">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            size={12}
+                            className={i < Math.floor(restaurant.rating) ? 'fill-orange-500' : ''}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">{restaurant.rating}</span>
+                      <span className="text-xs text-gray-500">({restaurant.userRatingsTotal})</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
+                      <span>{restaurant.cuisine}</span>
+                      <span className="text-gray-400">·</span>
+                      <span>{restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$'}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-600">{formatDistance(restaurant.distance)}</span>
+                      <span
+                        className={`px-2 py-0.5 text-xs font-medium rounded ${
+                          restaurant.opening_hours?.open_now
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'
+                        }`}
+                      >
+                        {restaurant.opening_hours?.open_now ? 'Open' : 'Closed'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </button>
+            ))
+          )}
         </div>
       </aside>
 
       {/* Map Container */}
       <div className="flex-1 relative bg-gray-200">
-        {/* Placeholder Map */}
-        <div className="w-full h-full bg-linear-to-br from-gray-100 to-gray-300 flex items-center justify-center">
-          <div className="text-center text-gray-500">
-            <MapPin size={64} className="mx-auto mb-4 text-gray-400" />
-            <p className="text-lg font-medium">Interactive Map</p>
-            <p className="text-sm">Google Maps integration coming soon</p>
-          </div>
-        </div>
-
-        {/* Map Controls */}
-        <div className="absolute top-4 right-4 flex flex-col gap-2">
-          <button className="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
-            <Plus className="text-gray-700" size={20} />
-          </button>
-          <button className="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
-            <Minus className="text-gray-700" size={20} />
-          </button>
-        </div>
+        <GoogleMapView
+          center={
+            selectedRestaurant
+              ? { lat: selectedRestaurant.lat, lng: selectedRestaurant.lng }
+              : { lat: userLocation[0], lng: userLocation[1] }
+          }
+          zoom={14}
+          userLocation={{ lat: userLocation[0], lng: userLocation[1] }}
+          markers={restaurants.map((restaurant): MapMarker => ({
+            id: restaurant.id,
+            position: { lat: restaurant.lat, lng: restaurant.lng },
+            title: restaurant.name,
+            data: restaurant,
+          }))}
+          selectedMarkerId={selectedRestaurant?.id}
+          onMarkerClick={(markerId) => {
+            const restaurant = restaurants.find(r => r.id === markerId);
+            if (restaurant) {
+              handleRestaurantClick(restaurant);
+            }
+          }}
+          enableClustering={restaurants.length > 20}
+          className="w-full h-full"
+        />
 
         {/* Search This Area Button */}
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
           <button className="px-4 py-2 bg-white rounded-full shadow-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
             Search this area
           </button>
@@ -471,7 +516,7 @@ export function ScoutDesktop() {
                   <div className="text-xs text-gray-600">Delivery</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900 mb-1">{selectedRestaurant.distance}km</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1">{formatDistance(selectedRestaurant.distance)}</div>
                   <div className="text-xs text-gray-600">Distance</div>
                 </div>
                 <div className="text-center">
@@ -688,6 +733,20 @@ export function ScoutDesktop() {
                   >
                     <Navigation size={20} />
                     Start Navigation
+                  </button>
+
+                  {/* Send to Google Maps Button */}
+                  <button
+                    onClick={() => {
+                      if (selectedRestaurant) {
+                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${selectedRestaurant.lat},${selectedRestaurant.lng}`;
+                        window.open(googleMapsUrl, '_blank');
+                      }
+                    }}
+                    className="w-full mt-3 bg-white border-2 border-gray-300 text-gray-900 font-semibold py-4 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MapPin size={20} />
+                    Send to Google Maps
                   </button>
                 </div>
               )}

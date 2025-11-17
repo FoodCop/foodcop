@@ -212,6 +212,12 @@ class BackendService {
 // Singleton instance
 export const backendService = new BackendService();
 
+// Helper function to generate Google Places Photo URL
+export function getGooglePlacesPhotoUrl(photoReference: string, maxWidth: number = 400): string {
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photo_reference=${photoReference}&key=${apiKey}`;
+}
+
 // Helper function to format Google Places results for frontend compatibility
 export function formatGooglePlaceResult(place: any, userLocation?: { lat: number; lng: number }) {
   const location = {
@@ -225,17 +231,19 @@ export function formatGooglePlaceResult(place: any, userLocation?: { lat: number
     distance = calculateDistance(userLocation, location);
   }
 
+  // Convert photo references to full URLs
+  const photos = place.photos ? place.photos.slice(0, 5).map((photo: any) => 
+    getGooglePlacesPhotoUrl(photo.photo_reference, 800)
+  ) : [];
+
   return {
     id: place.place_id || place.id,
     name: place.name || 'Unknown Restaurant',
     address: place.vicinity || place.formatted_address || 'Address not available',
     rating: place.rating || 0,
     price_level: place.price_level || 2,
-    photos: place.photos ? place.photos.slice(0, 3).map((photo: any) => ({
-      photoReference: photo.photo_reference,
-      width: photo.width,
-      height: photo.height,
-    })) : [],
+    image: photos[0] || undefined, // First photo as main image
+    photos: photos, // Array of full image URLs
     cuisine: extractCuisineFromTypes(place.types || []),
     lat: location.lat,
     lng: location.lng,
@@ -244,6 +252,11 @@ export function formatGooglePlaceResult(place: any, userLocation?: { lat: number
     placeId: place.place_id,
     phoneNumber: place.formatted_phone_number,
     website: place.website,
+    userRatingsTotal: place.user_ratings_total || 0,
+    opening_hours: place.opening_hours ? {
+      open_now: place.opening_hours.open_now,
+      weekday_text: place.opening_hours.weekday_text,
+    } : undefined,
   };
 }
 

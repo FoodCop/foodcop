@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Search, MapPin, Navigation, Star, Clock, SlidersHorizontal, Heart } from 'lucide-react';
 import { toast } from 'sonner';
-import { backendService, formatGooglePlaceResult } from '../../services/backendService';
+import { backendService, formatGooglePlaceResult, getGooglePlacesPhotoUrl } from '../../services/backendService';
 import type { GooglePlace } from '../../types';
 import { RestaurantDetailDialog } from './components/RestaurantDetailDialog';
 import { ScoutDesktop } from './ScoutDesktop';
+import { GoogleMapView } from '../maps/GoogleMapView';
+import { MapView } from './components/MapView';
+import type { MapMarker } from '../maps/mapUtils';
 
 // Hook to detect screen size
 function useIsDesktop() {
@@ -22,6 +25,13 @@ function useIsDesktop() {
 
   return isDesktop;
 }
+
+// Format distance: meters for < 1km, kilometers for >= 1km
+const formatDistance = (distanceKm: number | undefined): string => {
+  if (!distanceKm) return '0m';
+  if (distanceKm < 1) return `${Math.round(distanceKm * 1000)}m`;
+  return `${distanceKm.toFixed(1)}km`;
+};
 
 interface Restaurant {
   id: string;
@@ -49,31 +59,6 @@ interface Restaurant {
   }[];
 }
 
-// Mock restaurant data for fallback
-const mockRestaurants: Restaurant[] = [
-  { id: "1", name: "The Golden Fork", cuisine: "Italian", rating: 4.5, lat: 37.7849, lng: -122.4094, address: "123 Market St" },
-  { id: "2", name: "Sushi Paradise", cuisine: "Japanese", rating: 4.8, lat: 37.7899, lng: -122.4012, address: "456 Mission St" },
-  { id: "3", name: "Taco Fiesta", cuisine: "Mexican", rating: 4.3, lat: 37.7779, lng: -122.4177, address: "789 Valencia St" },
-  { id: "4", name: "Le Petit Bistro", cuisine: "French", rating: 4.7, lat: 37.7829, lng: -122.419, address: "321 Hayes St" },
-  { id: "5", name: "Spice Route", cuisine: "Indian", rating: 4.4, lat: 37.7889, lng: -122.4074, address: "654 Folsom St" },
-  { id: "6", name: "Dragon Wok", cuisine: "Chinese", rating: 4.6, lat: 37.7809, lng: -122.4134, address: "987 Geary St" },
-  { id: "7", name: "Mediterranean Delight", cuisine: "Mediterranean", rating: 4.5, lat: 37.7859, lng: -122.402, address: "147 Howard St" },
-  { id: "8", name: "BBQ Haven", cuisine: "American", rating: 4.2, lat: 37.7799, lng: -122.405, address: "258 3rd St" },
-];
-
-// Calculate distance between two points
-const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLng / 2) * Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-};
-
 // Cuisine categories
 const CUISINE_CATEGORIES = [
   { id: 'all', label: 'All 🍽️', query: '' },
@@ -99,8 +84,15 @@ export default function ScoutNew() {
   const [radiusKm, setRadiusKm] = useState(2);
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showMapView, setShowMapView] = useState(false);
+  const [navigationRestaurant, setNavigationRestaurant] = useState<Restaurant | null>(null);
 
   // Fetch full restaurant details when clicked
+  const handleNavigateToRestaurant = (restaurant: Restaurant) => {
+    setNavigationRestaurant(restaurant);
+    setShowMapView(true);
+  };
+
   const fetchRestaurantDetails = async (restaurant: Restaurant) => {
     if (!restaurant.place_id) {
       setSelectedRestaurant(restaurant);
@@ -114,10 +106,17 @@ export default function ScoutNew() {
       if (response.success && response.data?.result) {
         const details = response.data.result;
         
+        // Convert photo references to full URLs
+        const photos = details.photos 
+          ? details.photos.slice(0, 5).map((photo: { photo_reference: string }) => 
+              getGooglePlacesPhotoUrl(photo.photo_reference, 800)
+            )
+          : restaurant.photos;
+        
         // Merge basic info with detailed info
         const enrichedRestaurant: Restaurant = {
           ...restaurant,
-          photos: details.photos ? details.photos.slice(0, 5).map((photo: { photo_reference: string }) => photo.photo_reference) : restaurant.photos,
+          photos,
           phone: details.formatted_phone_number || details.international_phone_number,
           website: details.website,
           opening_hours: details.opening_hours ? {
@@ -147,22 +146,53 @@ export default function ScoutNew() {
 
   // Get user location on mount
   useEffect(() => {
-    if (navigator.geolocation) {
+    const getUserLocation = () => {
+      console.log('🌍 Attempting to get user location...');
+      
+      if (!navigator.geolocation) {
+        console.warn('⚠️ Geolocation not supported by browser');
+        const defaultLocation: [number, number] = [37.7849, -122.4094];
+        setUserLocation(defaultLocation);
+        fetchRestaurants(37.7849, -122.4094, radiusKm);
+        return;
+      }
+
       navigator.geolocation.getCurrentPosition(
         async (position) => {
+          console.log('✅ Got user location:', position.coords);
           const newLocation: [number, number] = [position.coords.latitude, position.coords.longitude];
           setUserLocation(newLocation);
           await reverseGeocode(position.coords.latitude, position.coords.longitude);
           fetchRestaurants(position.coords.latitude, position.coords.longitude, radiusKm);
         },
-        () => {
+        (error) => {
+          console.error('❌ Geolocation error:', error.message, error.code);
+          console.log('📍 Using default location (San Francisco)');
           const defaultLocation: [number, number] = [37.7849, -122.4094];
           setUserLocation(defaultLocation);
           fetchRestaurants(37.7849, -122.4094, radiusKm);
         },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+        { 
+          enableHighAccuracy: true, 
+          timeout: 10000, 
+          maximumAge: 300000 
+        }
       );
+    };
+
+    getUserLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount, NOT when radiusKm changes
+
+  // When radius changes, refetch with current location
+  useEffect(() => {
+    const hasRealLocation = userLocation[0] !== 37.7849 || userLocation[1] !== -122.4094;
+    if (hasRealLocation) {
+      // Only refetch if we have a real location (not the default SF coordinates)
+      const query = selectedCategory === 'all' ? undefined : CUISINE_CATEGORIES.find(c => c.id === selectedCategory)?.query;
+      fetchRestaurants(userLocation[0], userLocation[1], radiusKm, query);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [radiusKm]);
 
   const reverseGeocode = async (lat: number, lng: number) => {
@@ -190,48 +220,44 @@ export default function ScoutNew() {
       let results: Restaurant[] = [];
       const radiusMeters = radius * 1000;
       
-      try {
-        if (query?.trim()) {
-          console.log('Searching by text:', `${query} restaurant`);
-          const response = await backendService.searchPlacesByText(
-            `${query} restaurant`,
-            { lat, lng }
+      if (query?.trim()) {
+        console.log('Searching by text:', `${query} restaurant`);
+        const response = await backendService.searchPlacesByText(
+          `${query} restaurant`,
+          { lat, lng }
+        );
+        
+        console.log('Search response:', response);
+        
+        if (response.success && response.data?.results) {
+          results = response.data.results.map((place: GooglePlace) => 
+            formatGooglePlaceResult(place, { lat, lng })
+          ).filter((restaurant: Restaurant) => 
+            restaurant.distance !== undefined && restaurant.distance <= radius
           );
-          
-          console.log('Search response:', response);
-          
-          if (response.success && response.data?.results) {
-            results = response.data.results.map((place: GooglePlace) => 
-              formatGooglePlaceResult(place, { lat, lng })
-            ).filter((restaurant: Restaurant) => 
-              restaurant.distance !== undefined && restaurant.distance <= radius
-            );
-          }
         } else {
-          console.log('Searching nearby with radius:', radiusMeters);
-          const response = await backendService.searchNearbyPlaces(
-            { lat, lng },
-            radiusMeters,
-            'restaurant'
-          );
-          
-          console.log('Nearby response:', response);
-          
-          if (response.success && response.data?.results) {
-            results = response.data.results.map((place: GooglePlace) => 
-              formatGooglePlaceResult(place, { lat, lng })
-            );
-          }
+          console.error('Text search failed:', response.error);
+          setError(response.error || 'Failed to search restaurants');
         }
-      } catch (backendError) {
-        console.warn('Backend service failed, using mock data:', backendError);
-        results = mockRestaurants.filter((restaurant) => {
-          const distance = calculateDistance(lat, lng, restaurant.lat, restaurant.lng);
-          return distance <= radius;
-        }).map(restaurant => ({
-          ...restaurant,
-          distance: calculateDistance(lat, lng, restaurant.lat, restaurant.lng)
-        }));
+      } else {
+        console.log('Searching nearby with radius:', radiusMeters);
+        const response = await backendService.searchNearbyPlaces(
+          { lat, lng },
+          radiusMeters,
+          'restaurant'
+        );
+        
+        console.log('Nearby response:', response);
+        
+        if (response.success && response.data?.results) {
+          results = response.data.results.map((place: GooglePlace) => 
+            formatGooglePlaceResult(place, { lat, lng })
+          );
+          console.log('✅ Successfully formatted', results.length, 'restaurants from API');
+        } else {
+          console.error('Nearby search failed:', response.error);
+          setError(response.error || 'Failed to load nearby restaurants');
+        }
       }
       
       results.sort((a, b) => (a.distance || 0) - (b.distance || 0));
@@ -240,10 +266,13 @@ export default function ScoutNew() {
       
       if (results.length === 0) {
         toast.error(`No restaurants found within ${radius}km`);
+      } else {
+        console.log('📍 Sample restaurant:', results[0]);
       }
     } catch (error) {
       console.error('Error fetching restaurants:', error);
       setError('Failed to load restaurants');
+      setRestaurants([]);
     } finally {
       setLoading(false);
     }
@@ -326,47 +355,31 @@ export default function ScoutNew() {
 
         {/* Map Section */}
         <section className="px-5 py-4">
-          <div className="relative w-full h-80 rounded-3xl overflow-hidden shadow-lg bg-gray-50">
-            {/* Map placeholder - you can integrate real map here */}
-            <div className="w-full h-full bg-linear-to-br from-blue-50 to-gray-100 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-12 h-12 text-blue-500 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">Map View</p>
-              </div>
-            </div>
+          <div className="relative w-full h-80 rounded-3xl overflow-hidden shadow-lg">
+            <GoogleMapView
+              center={{ lat: userLocation[0], lng: userLocation[1] }}
+              zoom={13}
+              userLocation={{ lat: userLocation[0], lng: userLocation[1] }}
+              markers={restaurants.map((restaurant): MapMarker => ({
+                id: restaurant.id,
+                position: { lat: restaurant.lat, lng: restaurant.lng },
+                title: restaurant.name,
+                data: restaurant,
+              }))}
+              selectedMarkerId={selectedRestaurant?.id}
+              onMarkerClick={(markerId, data) => {
+                const restaurant = data as Restaurant;
+                fetchRestaurantDetails(restaurant);
+              }}
+              className="w-full h-full"
+              height="320px"
+            />
             
             {/* Your Location Badge */}
-            <div className="absolute top-4 left-4 bg-white px-4 py-2 rounded-full shadow-md flex items-center space-x-2">
+            <div className="absolute top-4 left-4 bg-white px-4 py-2 rounded-full shadow-md flex items-center space-x-2 pointer-events-none z-10">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
               <span className="text-xs font-medium text-gray-900">Your Location</span>
             </div>
-            
-            {/* Center marker - You */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <div className="relative">
-                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                  <Navigation className="text-white text-lg" />
-                </div>
-                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-500 rounded-full opacity-50"></div>
-              </div>
-            </div>
-            
-            {/* Restaurant pins - dynamically positioned based on actual restaurants */}
-            {restaurants.slice(0, 4).map((restaurant, idx) => {
-              const positions = [
-                { top: '20%', right: '15%' },
-                { bottom: '30%', left: '10%' },
-                { top: '35%', left: '20%' },
-                { bottom: '20%', right: '20%' }
-              ];
-              return (
-                <div key={restaurant.id} className="absolute" style={positions[idx]}>
-                  <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform cursor-pointer">
-                    <MapPin className="text-white text-sm fill-current" />
-                  </div>
-                </div>
-              );
-            })}
             
             {/* Recenter button */}
             <button 
@@ -382,7 +395,7 @@ export default function ScoutNew() {
                   );
                 }
               }}
-              className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow"
+              className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow z-10"
             >
               <Navigation className="text-gray-700 text-lg" />
             </button>
@@ -434,6 +447,7 @@ export default function ScoutNew() {
                   key={restaurant.id}
                   restaurant={restaurant}
                   onClick={() => fetchRestaurantDetails(restaurant)}
+                  onNavigate={handleNavigateToRestaurant}
                 />
               ))}
             </div>
@@ -447,6 +461,7 @@ export default function ScoutNew() {
             <FeaturedRestaurantCard
               restaurant={restaurants[0]}
               onClick={() => fetchRestaurantDetails(restaurants[0])}
+              onNavigate={handleNavigateToRestaurant}
             />
           </section>
         )}
@@ -521,22 +536,26 @@ export default function ScoutNew() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
       />
+
+      {/* Navigation MapView */}
+      <MapView
+        restaurant={navigationRestaurant}
+        open={showMapView}
+        onClose={() => {
+          setShowMapView(false);
+          setNavigationRestaurant(null);
+        }}
+      />
     </div>
   );
 }
 
 // Carousel Card Component (for horizontal scroll)
-function RestaurantCarouselCard({ restaurant, onClick }: Readonly<{ restaurant: Restaurant; onClick?: () => void }>) {
+function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ restaurant: Restaurant; onClick?: () => void; onNavigate?: (restaurant: Restaurant) => void }>) {
   const [liked, setLiked] = useState(false);
   
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$';
-  
-  const getDistanceText = () => {
-    if (!restaurant.distance) return '0.8km';
-    if (restaurant.distance < 1) return `${(restaurant.distance * 1000).toFixed(0)}m`;
-    return `${restaurant.distance.toFixed(1)}km`;
-  };
-  const distanceText = getDistanceText();
+  const distanceText = formatDistance(restaurant.distance);
 
   return (
     <button
@@ -545,7 +564,19 @@ function RestaurantCarouselCard({ restaurant, onClick }: Readonly<{ restaurant: 
     >
       {/* Image placeholder */}
       <div className="relative h-40 overflow-hidden bg-linear-to-br from-gray-100 to-gray-200">
-        <div className="w-full h-full flex items-center justify-center">
+        {restaurant.photos && restaurant.photos.length > 0 ? (
+          <img 
+            src={restaurant.photos[0]} 
+            alt={restaurant.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to placeholder if image fails to load
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+        ) : null}
+        <div className={`w-full h-full flex items-center justify-center ${restaurant.photos && restaurant.photos.length > 0 ? 'hidden' : ''}`}>
           <MapPin className="w-12 h-12 text-gray-300" />
         </div>
         
@@ -578,15 +609,26 @@ function RestaurantCarouselCard({ restaurant, onClick }: Readonly<{ restaurant: 
               <span className="text-xs text-gray-600">{priceLevel}</span>
             </div>
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setLiked(!liked);
-            }}
-            className="w-9 h-9 bg-gray-50 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-          >
-            <Heart className={`w-4 h-4 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onNavigate) onNavigate(restaurant);
+              }}
+              className="w-9 h-9 bg-orange-50 rounded-full flex items-center justify-center hover:bg-orange-100 transition-colors"
+            >
+              <Navigation className="w-4 h-4 text-orange-600" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setLiked(!liked);
+              }}
+              className="w-9 h-9 bg-gray-50 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+            >
+              <Heart className={`w-4 h-4 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+            </button>
+          </div>
         </div>
       </div>
     </button>
@@ -594,15 +636,9 @@ function RestaurantCarouselCard({ restaurant, onClick }: Readonly<{ restaurant: 
 }
 
 // Featured Restaurant Card Component
-function FeaturedRestaurantCard({ restaurant, onClick }: Readonly<{ restaurant: Restaurant; onClick?: () => void }>) {
+function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ restaurant: Restaurant; onClick?: () => void; onNavigate?: (restaurant: Restaurant) => void }>) {
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$$';
-  
-  const getDistanceText = () => {
-    if (!restaurant.distance) return '0.5km away';
-    if (restaurant.distance < 1) return `${(restaurant.distance * 1000).toFixed(0)}m away`;
-    return `${restaurant.distance.toFixed(1)}km away`;
-  };
-  const distanceText = getDistanceText();
+  const distanceText = `${formatDistance(restaurant.distance)} away`;
   
   const cuisineTypes: string[] = Array.isArray(restaurant.cuisine) ? restaurant.cuisine : [restaurant.cuisine || 'Restaurant'];
   
@@ -613,7 +649,19 @@ function FeaturedRestaurantCard({ restaurant, onClick }: Readonly<{ restaurant: 
     >
       {/* Hero image with gradient overlay */}
       <div className="relative h-56 overflow-hidden bg-linear-to-br from-gray-200 to-gray-300">
-        <div className="w-full h-full flex items-center justify-center">
+        {restaurant.photos && restaurant.photos.length > 0 ? (
+          <img 
+            src={restaurant.photos[0]} 
+            alt={restaurant.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to placeholder if image fails to load
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+        ) : null}
+        <div className={`w-full h-full flex items-center justify-center ${restaurant.photos && restaurant.photos.length > 0 ? 'hidden' : ''}`}>
           <MapPin className="w-16 h-16 text-gray-400" />
         </div>
         
@@ -674,11 +722,17 @@ function FeaturedRestaurantCard({ restaurant, onClick }: Readonly<{ restaurant: 
             <p className="text-sm font-semibold text-gray-900">Reserve</p>
           </div>
           <div className="text-center">
-            <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-2">
-              <Navigation className="text-gray-700 text-lg" />
-            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onNavigate) onNavigate(restaurant);
+              }}
+              className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mx-auto mb-2 hover:bg-orange-100 transition-colors"
+            >
+              <Navigation className="text-orange-600 text-lg" />
+            </button>
             <span className="text-xs text-gray-500">Navigate</span>
-            <p className="text-sm font-semibold text-gray-900">5 mins</p>
+            <p className="text-sm font-semibold text-gray-900">{distanceText}</p>
           </div>
         </div>
         

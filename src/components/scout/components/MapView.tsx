@@ -1,5 +1,7 @@
-import { ArrowLeft, MoreVertical, Clock, Car, PersonStanding, Bike, Phone, Play, Plus, Minus, Crosshair, Route, Circle, MapPin } from "lucide-react";
+import { ArrowLeft, MoreVertical, Clock, Car, PersonStanding, Bike, Phone, Play, Plus, Minus, Crosshair, Route as RouteIcon, Circle, MapPin } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
+import { GoogleMapView } from '../../maps/GoogleMapView';
+import { getDirections, type Route, type TravelMode } from '../../../services/googleDirections';
 
 interface Restaurant {
   id: string;
@@ -22,6 +24,64 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
   const [sheetHeight, setSheetHeight] = useState<'collapsed' | 'half' | 'full'>('half');
   const [startY, setStartY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [routeData, setRouteData] = useState<Route | null>(null);
+  const [loadingRoute, setLoadingRoute] = useState(false);
+
+  // Get user location
+  useEffect(() => {
+    if (open && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          // Default to San Francisco if location unavailable
+          setUserLocation({ lat: 37.7849, lng: -122.4094 });
+        }
+      );
+    }
+  }, [open]);
+
+  // Fetch route when restaurant or mode changes
+  useEffect(() => {
+    if (!restaurant || !userLocation || !open) return;
+
+    const fetchRoute = async () => {
+      setLoadingRoute(true);
+      try {
+        const travelModeMap: Record<string, TravelMode> = {
+          driving: 'DRIVING',
+          walking: 'WALKING',
+          cycling: 'BICYCLING',
+        };
+
+        const response = await getDirections(
+          userLocation,
+          { lat: restaurant.lat, lng: restaurant.lng },
+          travelModeMap[activeMode],
+          false
+        );
+
+        if (response.routes && response.routes.length > 0) {
+          setRouteData(response.routes[0]);
+        } else {
+          setRouteData(null);
+        }
+      } catch (error) {
+        console.error('Failed to fetch route:', error);
+        setRouteData(null);
+      } finally {
+        setLoadingRoute(false);
+      }
+    };
+
+    fetchRoute();
+  }, [restaurant, userLocation, activeMode, open]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const diff = e.clientY - startY;
@@ -125,16 +185,27 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
   };
 
   const travelTimes = {
-    driving: '12 min',
+    driving: routeData?.legs?.[0]?.duration?.text || '12 min',
     walking: '25 min',
     cycling: '15 min',
   };
 
-  const distanceText = restaurant.distance 
-    ? `${restaurant.distance.toFixed(1)} km`
-    : '0.8 km';
+  const formatDistance = (distanceKm: number | undefined): string => {
+    if (!distanceKm) return '0m';
+    if (distanceKm < 1) return `${Math.round(distanceKm * 1000)}m`;
+    return `${distanceKm.toFixed(1)}km`;
+  };
+
+  const distanceText = routeData?.legs?.[0]?.distance?.text || formatDistance(restaurant.distance);
 
   const handleStartNavigation = () => {
+    // Navigation already shown in-app with route display
+    // User can see turn-by-turn directions in the bottom sheet
+    // Optionally, you could add a step-by-step navigation view here
+    console.log('Navigation started for:', restaurant.name);
+  };
+
+  const handleSendToGoogleMaps = () => {
     // Open in Google Maps with directions
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${restaurant.lat},${restaurant.lng}&travelmode=${activeMode === 'cycling' ? 'bicycling' : activeMode}`;
     window.open(googleMapsUrl, '_blank');
@@ -166,96 +237,32 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
         </div>
       </div>
 
-      {/* Map Canvas - Placeholder with SVG route */}
+      {/* Map Canvas - Google Maps with Route */}
       <div className="w-full h-full relative bg-gray-100">
-        <svg className="w-full h-full" viewBox="0 0 400 900" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="street-grid" width="50" height="50" patternUnits="userSpaceOnUse">
-              <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e5e7eb" strokeWidth="0.5"/>
-            </pattern>
-            <linearGradient id="route-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} />
-              <stop offset="100%" style={{ stopColor: '#2563eb', stopOpacity: 1 }} />
-            </linearGradient>
-            <filter id="shadow">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.3"/>
-            </filter>
-          </defs>
-          
-          <rect width="400" height="900" fill="#f9fafb"/>
-          <rect width="400" height="900" fill="url(#street-grid)"/>
-          
-          {/* Roads */}
-          <g id="roads">
-            <path d="M 0 720 L 400 720" stroke="#d1d5db" strokeWidth="20" opacity="0.5"/>
-            <path d="M 0 720 L 400 720" stroke="#ffffff" strokeWidth="16"/>
-            <path d="M 0 720 L 400 720" stroke="#fbbf24" strokeWidth="2" strokeDasharray="10 10"/>
-            
-            <path d="M 60 900 L 60 0" stroke="#d1d5db" strokeWidth="18" opacity="0.5"/>
-            <path d="M 60 900 L 60 0" stroke="#ffffff" strokeWidth="14"/>
-            
-            <path d="M 160 900 L 160 500 Q 160 450 200 420 L 280 370" stroke="#d1d5db" strokeWidth="18" opacity="0.5"/>
-            <path d="M 160 900 L 160 500 Q 160 450 200 420 L 280 370" stroke="#ffffff" strokeWidth="14"/>
-            
-            <path d="M 280 370 L 340 320" stroke="#d1d5db" strokeWidth="18" opacity="0.5"/>
-            <path d="M 280 370 L 340 320" stroke="#ffffff" strokeWidth="14"/>
-          </g>
-          
-          {/* Buildings */}
-          <g id="buildings">
-            <rect x="80" y="650" width="70" height="100" fill="#cbd5e1" rx="3"/>
-            <rect x="85" y="660" width="12" height="12" fill="#94a3b8" rx="1"/>
-            <rect x="100" y="660" width="12" height="12" fill="#94a3b8" rx="1"/>
-            
-            <rect x="180" y="630" width="85" height="120" fill="#cbd5e1" rx="3"/>
-            <rect x="185" y="640" width="14" height="14" fill="#94a3b8" rx="1"/>
-            
-            <rect x="290" y="600" width="90" height="140" fill="#cbd5e1" rx="3"/>
-            <rect x="295" y="610" width="16" height="16" fill="#94a3b8" rx="1"/>
-            
-            <rect x="90" y="450" width="60" height="80" fill="#cbd5e1" rx="3"/>
-            <rect x="180" y="420" width="70" height="110" fill="#cbd5e1" rx="3"/>
-            <rect x="270" y="250" width="80" height="150" fill="#cbd5e1" rx="3"/>
-          </g>
-          
-          {/* Route */}
-          <g id="route">
-            <path d="M 60 720 L 160 720 L 160 500 Q 160 450 200 420 L 280 370 L 340 320" 
-                  fill="none" stroke="#3b82f6" strokeWidth="8" strokeLinecap="round" opacity="0.2"/>
-            
-            <path d="M 60 720 L 160 720 L 160 500 Q 160 450 200 420 L 280 370 L 340 320" 
-                  fill="none" stroke="url(#route-gradient)" strokeWidth="6" strokeLinecap="round">
-              <animate attributeName="stroke-dasharray" values="0 1000; 1000 0" dur="2.5s" fill="freeze"/>
-            </path>
-            
-            <circle cx="60" cy="720" r="0" fill="#3b82f6" opacity="0.3">
-              <animate attributeName="r" values="0; 25; 0" dur="1.5s" repeatCount="indefinite"/>
-            </circle>
-          </g>
-          
-          {/* Location Markers */}
-          <g id="markers">
-            {/* User location */}
-            <circle cx="60" cy="720" r="16" fill="#10b981"/>
-            <circle cx="60" cy="720" r="12" fill="white"/>
-            <circle cx="60" cy="720" r="6" fill="#10b981">
-              <animate attributeName="r" values="6; 8; 6" dur="2s" repeatCount="indefinite"/>
-            </circle>
-            
-            {/* Destination */}
-            <circle cx="340" cy="320" r="24" fill="#ef4444" opacity="0.15">
-              <animate attributeName="r" values="24; 32; 24" dur="2s" repeatCount="indefinite"/>
-            </circle>
-            <path d="M 340 300 C 335 300 330 305 330 310 C 330 318 340 330 340 330 C 340 330 350 318 350 310 C 350 305 345 300 340 300 Z" 
-                  fill="#ef4444" stroke="white" strokeWidth="2.5"/>
-            <circle cx="340" cy="310" r="5" fill="white"/>
-          </g>
-          
-          {/* Waypoints */}
-          <circle cx="160" cy="720" r="5" fill="#3b82f6" opacity="0.6"/>
-          <circle cx="160" cy="500" r="5" fill="#3b82f6" opacity="0.6"/>
-          <circle cx="280" cy="370" r="5" fill="#3b82f6" opacity="0.6"/>
-        </svg>
+        {userLocation && restaurant ? (
+          <GoogleMapView
+            center={userLocation}
+            zoom={14}
+            userLocation={userLocation}
+            markers={[
+              {
+                id: restaurant.id,
+                position: { lat: restaurant.lat, lng: restaurant.lng },
+                title: restaurant.name,
+                data: restaurant,
+              },
+            ]}
+            route={routeData?.overviewPolyline}
+            className="w-full h-full"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-100">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-2"></div>
+              <p className="text-sm text-gray-600">Loading map...</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Map Controls */}
@@ -304,7 +311,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
             <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-900 mb-1">{restaurant.name}</h2>
               <p className="text-sm text-gray-500 flex items-center gap-1.5">
-                <Route className="text-orange-500 w-3 h-3" />
+                <RouteIcon className="text-orange-500 w-3 h-3" />
                 Via Main Street & 5th Avenue
               </p>
             </div>
@@ -422,6 +429,15 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
               </a>
             )}
           </div>
+
+          {/* Send to Google Maps Button */}
+          <button
+            onClick={handleSendToGoogleMaps}
+            className="w-full bg-white border-2 border-gray-300 text-gray-900 font-semibold py-4 rounded-2xl hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 mt-3"
+          >
+            <MapPin className="w-5 h-5" />
+            Send to Google Maps
+          </button>
         </div>
       </div>
     </div>
