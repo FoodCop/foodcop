@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Bookmark, Share2, X, Play, Send } from 'lucide-react';
+import { Search, Bookmark, Share2, Play, ChevronLeft, ChevronRight, X, Send } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
 import { savedItemsService } from '../../services/savedItemsService';
@@ -183,31 +183,39 @@ const MOCK_VIDEOS: TrimVideo[] = [
   }
 ];
 
-export default function TrimsMobile() {
+const VIDEOS_PER_PAGE = 12;
+
+export default function TrimsDesktop() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedVideo, setSelectedVideo] = useState<TrimVideo | null>(null);
-  const [filteredVideos, setFilteredVideos] = useState<TrimVideo[]>(MOCK_VIDEOS);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Filter videos based on search and category
+  const filteredVideos = MOCK_VIDEOS.filter(video => {
+    const matchesCategory = selectedCategory === 'all' || video.category.includes(selectedCategory);
+    const matchesSearch = searchQuery === '' || 
+      video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      video.channelName.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredVideos.length / VIDEOS_PER_PAGE);
+  const startIdx = (currentPage - 1) * VIDEOS_PER_PAGE;
+  const endIdx = startIdx + VIDEOS_PER_PAGE;
+  const paginatedVideos = filteredVideos.slice(startIdx, endIdx);
+
+  // Reset to page 1 when filters change
   useEffect(() => {
-    const filtered = MOCK_VIDEOS.filter(video => {
-      const matchesCategory = selectedCategory === 'all' || video.category.includes(selectedCategory);
-      const matchesSearch = searchQuery === '' || 
-        video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        video.channelName.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-    setFilteredVideos(filtered);
+    setCurrentPage(1);
   }, [searchQuery, selectedCategory]);
 
-  // Search with debounce
+  // Handle search with debounce
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      // Debounced search already handled in the filter effect
+      // Debounced search already handled in the filter
     }, 500);
     
     return () => clearTimeout(timeoutId);
@@ -219,10 +227,18 @@ export default function TrimsMobile() {
 
   const handleVideoClick = (video: TrimVideo) => {
     setSelectedVideo(video);
+    document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
     setSelectedVideo(null);
+    document.body.style.overflow = 'auto';
+  };
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSaveToPlate = async (video: TrimVideo) => {
@@ -255,81 +271,61 @@ export default function TrimsMobile() {
     toast.info('Share feature coming soon!');
   };
 
+  // ESC key listener for modal
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedVideo) {
+        closeModal();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [selectedVideo]);
+
   return (
-    <div className="min-h-screen bg-[#FAFAFA] pb-20">
-      {/* Search Bar */}
-      <div className="sticky top-0 z-30 bg-white shadow-sm px-4 py-3">
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666666]" />
-          <input
-            type="text"
-            placeholder="Search cooking videos..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 pl-11 pr-4 bg-white border border-[#EEE] rounded-xl text-sm text-[#1A1A1A] focus:outline-none focus:border-[#FF6B35]"
-          />
+    <div className="min-h-screen bg-[#FAFAFA]">
+      {/* Sticky Search Bar */}
+      <div className="sticky top-0 z-30 bg-white shadow-sm">
+        <div className="container mx-auto px-4 max-w-[1200px] py-4">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#666666]" />
+            <input
+              type="text"
+              placeholder="Search cooking videos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-14 pl-12 pr-4 bg-white border border-[#EEE] rounded-full text-[#1A1A1A] focus:outline-none focus:border-[#FF6B35]"
+            />
+          </div>
         </div>
       </div>
 
-      {/* Category Filter Bar */}
-      <div className="sticky top-[72px] z-20 bg-white border-b border-[#EEE] px-4 py-3 overflow-x-auto hide-scrollbar">
-        <div className="flex gap-2 w-max">
-          {VIDEO_CATEGORIES.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => handleCategoryClick(category.id)}
-              className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                selectedCategory === category.id
-                  ? 'bg-[#FF6B35] text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {category.label}
-            </button>
-          ))}
+      {/* Sticky Category Filter Bar */}
+      <div className="sticky top-[72px] z-20 bg-white border-b border-[#EEE]">
+        <div className="container mx-auto px-4 max-w-[1400px] py-4">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {VIDEO_CATEGORIES.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => handleCategoryClick(category.id)}
+                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                  selectedCategory === category.id
+                    ? 'bg-[#FF6B35] text-white'
+                    : 'bg-[#F5F5F5] text-[#666666] hover:bg-[#E8E8E8]'
+                }`}
+              >
+                {category.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Loading State */}
-      {loading && (
-        <div className="flex flex-col items-center justify-center py-20">
-          <div className="w-12 h-12 border-4 border-[#FF6B35] border-t-transparent rounded-full animate-spin" />
-          <p className="mt-4 text-[#666666] text-sm">Loading videos...</p>
-        </div>
-      )}
-
-      {/* Error State */}
-      {error && !loading && (
-        <div className="flex flex-col items-center justify-center py-20 px-6">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-            <span className="text-red-500 text-2xl">⚠</span>
-          </div>
-          <h3 className="text-[#1A1A1A] font-bold text-lg mb-2">Failed to load videos</h3>
-          <p className="text-[#666666] text-sm text-center mb-6">{error}</p>
-          <button
-            onClick={() => setError(null)}
-            className="px-6 py-3 bg-[#FF6B35] text-white rounded-xl font-medium"
-          >
-            Try Again
-          </button>
-        </div>
-      )}
-
-      {/* Empty State */}
-      {!loading && !error && filteredVideos.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-20 px-6">
-          <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-            <Play className="w-8 h-8 text-gray-400" />
-          </div>
-          <h3 className="text-[#1A1A1A] font-bold text-lg mb-2">No videos found</h3>
-          <p className="text-[#666666] text-sm text-center">Try adjusting your search or category</p>
-        </div>
-      )}
-
-      {/* Video Grid */}
-      {!loading && !error && filteredVideos.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
-          {filteredVideos.map((video) => (
+      {/* Main Content */}
+      <main className="container mx-auto px-4 max-w-[1400px] pt-8 pb-16">
+        {/* Video Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {paginatedVideos.map((video) => (
             <VideoCard 
               key={video.id} 
               video={video} 
@@ -339,7 +335,75 @@ export default function TrimsMobile() {
             />
           ))}
         </div>
-      )}
+
+        {/* Pagination Section */}
+        {filteredVideos.length > 0 && (
+          <div className="mt-12 pb-12">
+            <div className="text-center text-sm text-[#666666] mb-4">
+              Showing {startIdx + 1}-{Math.min(endIdx, filteredVideos.length)} of {filteredVideos.length} videos
+            </div>
+            <div className="flex justify-center items-center gap-2">
+              {/* Previous Button */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`w-10 h-10 rounded flex items-center justify-center ${
+                  currentPage === 1
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-[#FF6B35] text-white hover:bg-[#ff5722]'
+                }`}
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              {/* Page Numbers */}
+              {Array.from({ length: totalPages }).map((_, idx) => {
+                const page = idx + 1;
+                // Show first page, last page, current page, and pages around current
+                if (
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`w-10 h-10 rounded flex items-center justify-center ${
+                        page === currentPage
+                          ? 'bg-[#FF6B35] text-white font-bold'
+                          : 'bg-white text-[#1A1A1A] border border-[#EEE] hover:bg-gray-100'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                } else if (page === currentPage - 2 || page === currentPage + 2) {
+                  return (
+                    <span key={page} className="text-[#666666]">
+                      ...
+                    </span>
+                  );
+                }
+                return null;
+              })}
+
+              {/* Next Button */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`w-10 h-10 rounded flex items-center justify-center ${
+                  currentPage === totalPages
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-[#FF6B35] text-white hover:bg-[#ff5722]'
+                }`}
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
+      </main>
 
       {/* Video Player Modal */}
       {selectedVideo && (
@@ -350,16 +414,6 @@ export default function TrimsMobile() {
           onShare={handleShare}
         />
       )}
-
-      <style>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </div>
   );
 }
@@ -378,7 +432,7 @@ function VideoCard({
 }) {
   return (
     <div 
-      className="relative cursor-pointer group bg-white rounded-lg overflow-hidden shadow-sm"
+      className="relative cursor-pointer group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all"
       onClick={() => onVideoClick(video)}
     >
       {/* Thumbnail - 9:16 aspect ratio */}
@@ -394,8 +448,8 @@ function VideoCard({
 
         {/* Play Button - Shows on hover */}
         <div className="play-overlay absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-            <Play className="w-6 h-6 text-[#FF6B35] fill-[#FF6B35] ml-1" />
+          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
+            <Play className="w-7 h-7 text-[#FF6B35] fill-[#FF6B35] ml-1" />
           </div>
         </div>
 
@@ -413,7 +467,7 @@ function VideoCard({
               e.stopPropagation();
               onSave(video);
             }}
-            className="w-8 h-8 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+            className="w-10 h-10 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
           >
             <Bookmark className="w-4 h-4 text-white" />
           </button>
@@ -422,7 +476,7 @@ function VideoCard({
               e.stopPropagation();
               onShare();
             }}
-            className="w-8 h-8 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+            className="w-10 h-10 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
           >
             <Share2 className="w-4 h-4 text-white" />
           </button>
@@ -434,14 +488,14 @@ function VideoCard({
         <h3 className="text-[#1A1A1A] font-medium text-sm line-clamp-2 mb-1">
           {video.title}
         </h3>
-        <p className="text-[#666666] text-xs">{video.channelName}</p>
-        <p className="text-[#666666] text-xs">{video.views} views</p>
+        <p className="text-[#666666] text-xs mb-1">{video.channelName}</p>
+        <p className="text-[#999999] text-xs">{video.views} views</p>
       </div>
     </div>
   );
 }
 
-// Video Player Modal Component
+// Video Player Modal Component (imported from mobile but defined here for completeness)
 function VideoPlayerModal({
   video,
   onClose,
@@ -459,19 +513,19 @@ function VideoPlayerModal({
       onClick={onClose}
     >
       <div 
-        className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto relative"
+        className="bg-white rounded-2xl w-full max-w-[800px] max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+          className="absolute top-6 right-6 z-10 w-12 h-12 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
         >
-          <X className="w-5 h-5" />
+          <X className="w-6 h-6" />
         </button>
 
         {/* Video Player */}
-        <div className="relative w-full bg-white" style={{ paddingBottom: '177.78%' }}>
+        <div className="relative w-full bg-white rounded-t-2xl overflow-hidden" style={{ paddingBottom: '177.78%' }}>
           <iframe
             className="absolute top-0 left-0 w-full h-full"
             src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1&color=white&modestbranding=1`}
@@ -482,28 +536,28 @@ function VideoPlayerModal({
         </div>
 
         {/* Video Info */}
-        <div className="p-5">
-          <h2 className="text-[#1A1A1A] font-bold text-lg mb-2">{video.title}</h2>
+        <div className="p-8">
+          <h2 className="text-[#1A1A1A] font-bold text-xl mb-2">{video.title}</h2>
           <div className="flex items-center gap-3 mb-1">
-            <p className="text-[#666666] text-sm">{video.channelName}</p>
+            <p className="text-[#666666] text-base">{video.channelName}</p>
           </div>
-          <p className="text-[#666666] text-xs mb-5">{video.views} views</p>
+          <p className="text-[#666666] text-sm mb-6">{video.views} views</p>
 
           {/* Action Buttons */}
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             <button
               onClick={() => onSave(video)}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#FF6B35] text-white rounded-xl font-medium hover:bg-[#EA580C] transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-[#FF6B35] text-white rounded-xl font-medium hover:bg-[#EA580C] transition-colors"
             >
-              <Bookmark className="w-4 h-4" />
+              <Bookmark className="w-5 h-5" />
               Save to Plate
             </button>
             <button
               onClick={onShare}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-[#1A1A1A] rounded-xl font-medium hover:bg-gray-200 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-100 text-[#1A1A1A] rounded-xl font-medium hover:bg-gray-200 transition-colors"
             >
-              <Send className="w-4 h-4" />
-              Share
+              <Send className="w-5 h-5" />
+              Share with Crew
             </button>
           </div>
         </div>
