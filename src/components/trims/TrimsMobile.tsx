@@ -370,12 +370,12 @@ function VideoCard({
   onVideoClick,
   onSave,
   onShare
-}: { 
+}: Readonly<{ 
   video: TrimVideo; 
   onVideoClick: (video: TrimVideo) => void;
   onSave: (video: TrimVideo) => void;
   onShare: () => void;
-}) {
+}>) {
   return (
     <div 
       className="relative cursor-pointer group bg-white rounded-lg overflow-hidden shadow-sm"

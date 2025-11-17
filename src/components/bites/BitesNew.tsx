@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { Bell, Heart, Clock, Users, Shuffle, Search, SlidersHorizontal, Star } from "lucide-react";
+import { Heart, Clock, Users, Shuffle, Search, SlidersHorizontal, Star } from "lucide-react";
 import type { Recipe } from "./components/RecipeCard";
 import { RecipeDetailDialog } from "./components/RecipeDetailDialog";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SpoonacularService } from "../../services/spoonacular";
 import { useAuth } from "../auth/AuthProvider";
 
@@ -152,13 +151,6 @@ export default function BitesNew() {
 
   const recommendedRecipes = filteredRecipes.slice(0, 3);
   const mightLikeRecipes = filteredRecipes.slice(3);
-
-  const getUserDisplayName = () => {
-    if (user?.user_metadata?.full_name) return user.user_metadata.full_name.split(' ')[0];
-    if (user?.user_metadata?.name) return user.user_metadata.name.split(' ')[0];
-    if (user?.email) return user.email.split('@')[0];
-    return 'there';
-  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto relative p-4 md:p-6">
