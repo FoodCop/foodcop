@@ -12,7 +12,11 @@ interface Message {
   timestamp: Date;
 }
 
-export function AIChatWidget() {
+interface AIChatWidgetProps {
+  readonly position?: 'bottom-right' | 'top-right';
+}
+
+export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidgetProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -45,42 +49,60 @@ export function AIChatWidget() {
     setInputValue('');
     setIsLoading(true);
 
-    // TODO: Replace this mock response with actual OpenAI API call
-    // Example API integration:
-    // const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${YOUR_OPENAI_API_KEY}`
-    //   },
-    //   body: JSON.stringify({
-    //     model: 'gpt-4',
-    //     messages: messages.map(m => ({ role: m.role, content: m.content }))
-    //   })
-    // });
+    try {
+      // Real OpenAI API integration
+      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+      
+      if (!apiKey) {
+        throw new Error('OpenAI API key not configured');
+      }
 
-    // Mock AI response simulation
-    setTimeout(() => {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are TakoAI, a helpful AI assistant integrated into the FuzoFoodCop app. You help users discover restaurants, plan meals, and get food recommendations. Be friendly, concise, and helpful.'
+            },
+            ...messages.map(m => ({ role: m.role, content: m.content })),
+            { role: 'user', content: inputValue }
+          ],
+          temperature: 0.7,
+          max_tokens: 500
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenAI API error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: getMockResponse(inputValue),
+        content: data.choices[0]?.message?.content || 'Sorry, I couldn\'t generate a response.',
         timestamp: new Date(),
       };
+      
       setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('OpenAI API error:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
-  };
-
-  const getMockResponse = (userInput: string): string => {
-    // Simple mock responses - replace with actual OpenAI API
-    const responses = [
-      "That's an interesting question! I'd be happy to help you with that.",
-      "I understand what you're asking. Let me provide some insights on that topic.",
-      "Great question! Based on what you've shared, here's what I think...",
-      "I can definitely assist you with that. Here's my suggestion...",
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -94,8 +116,12 @@ export function AIChatWidget() {
     return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const positionClasses = position === 'top-right' 
+    ? 'fixed top-20 right-6 md:right-6 right-4 left-4 md:left-auto z-50 p-[0px] m-[0px]'
+    : 'fixed bottom-6 right-6 md:right-6 right-4 left-4 md:left-auto z-50 p-[0px] m-[0px]';
+
   return (
-    <div className="fixed bottom-6 right-6 md:right-6 right-4 left-4 md:left-auto z-50 p-[0px] m-[0px]">
+    <div className={positionClasses}>
       {/* Chat Interface */}
       {isOpen && (
         <Card className="mb-4 w-full md:w-[380px] h-[600px] max-h-[calc(100vh-7rem)] flex flex-col shadow-2xl overflow-hidden">

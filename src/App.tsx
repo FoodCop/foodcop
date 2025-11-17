@@ -6,6 +6,7 @@ import { LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import { Toaster } from './components/ui/sonner'
 import { MobileRadialNav } from './components/navigation/MobileRadialNav'
+import { AIChatWidget } from './components/tako/components/AIChatWidget'
 import './App.css'
 import './styles/mobile.css'
 
@@ -82,6 +83,7 @@ const PageWrapper = ({ page, children, eager = false, currentPage }: PageWrapper
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('landing')
   const [colorMode, setColorMode] = useState<'white' | 'yellow'>('white')
+  const [showAIChat, setShowAIChat] = useState(false)
 
   // Apply color mode to CSS variable
   useEffect(() => {
@@ -138,6 +140,20 @@ function App() {
             title="Toggle Color Mode"
           >
             <i className="fa-solid fa-palette"></i>
+          </button>
+
+          {/* AI Chat Button */}
+          <button
+            onClick={() => setShowAIChat(!showAIChat)}
+            className="px-4 py-2 rounded-full border-2 transition ml-2"
+            style={{ 
+              borderColor: showAIChat ? '#3B82F6' : '#E5E7EB',
+              backgroundColor: showAIChat ? '#3B82F6' : '#FFFFFF',
+              color: showAIChat ? '#FFFFFF' : '#000000'
+            }}
+            title="AI Assistant"
+          >
+            <i className="fa-solid fa-robot"></i>
           </button>
 
           {/* User Profile Dropdown */}
@@ -320,9 +336,34 @@ function App() {
               />
             </div>
           )}
+
+          {/* Mobile AI Chat Button - Top right floating button */}
+          {currentPage !== 'landing' &&
+           currentPage !== 'auth' &&
+           currentPage !== 'onboarding' && (
+            <button
+              onClick={() => setShowAIChat(!showAIChat)}
+              className="md:hidden fixed top-4 right-4 z-40 w-12 h-12 rounded-full shadow-lg transition-all"
+              style={{
+                backgroundColor: showAIChat ? '#3B82F6' : '#FFFFFF',
+                border: '2px solid',
+                borderColor: showAIChat ? '#3B82F6' : '#E5E7EB',
+              }}
+            >
+              <i className={`fa-solid fa-robot ${showAIChat ? 'text-white' : 'text-gray-700'}`}></i>
+            </button>
+          )}
           
           {/* Toast Notifications */}
           <Toaster position="top-center" />
+
+          {/* AI Chat Widget - Available on all authenticated pages */}
+          {currentPage !== 'landing' &&
+           currentPage !== 'auth' &&
+           currentPage !== 'onboarding' &&
+           showAIChat && (
+            <AIChatWidget position="top-right" />
+          )}
         </div>
       </AuthProvider>
     </ErrorBoundary>
