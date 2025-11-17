@@ -1,0 +1,896 @@
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme:
+        {
+          extend:
+          {
+            colors:
+            {
+              border: "var(--border)",
+              input: "var(--input)",
+              ring: "var(--ring)",
+              background: "var(--background)",
+              foreground: "var(--foreground)",
+              primary:
+              {
+                DEFAULT: "var(--primary)",
+                foreground: "var(--primary-foreground)",
+              },
+              secondary:
+              {
+                DEFAULT: "var(--secondary)",
+                foreground: "var(--secondary-foreground)",
+              },
+              destructive:
+              {
+                DEFAULT: "var(--destructive)",
+                foreground: "var(--destructive-foreground)",
+              },
+              muted:
+              {
+                DEFAULT: "var(--muted)",
+                foreground: "var(--muted-foreground)",
+              },
+              accent:
+              {
+                DEFAULT: "var(--accent)",
+                foreground: "var(--accent-foreground)",
+              },
+              popover:
+              {
+                DEFAULT: "var(--popover)",
+                foreground: "var(--popover-foreground)",
+              },
+              card:
+              {
+                DEFAULT: "var(--card)",
+                foreground: "var(--card-foreground)",
+              },
+              sidebar:
+              {
+                DEFAULT: "var(--sidebar)",
+                foreground: "var(--sidebar-foreground)",
+                primary: "var(--sidebar-primary)",
+                "primary-foreground": "var(--sidebar-primary-foreground)",
+                accent: "var(--sidebar-accent)",
+                "accent-foreground": "var(--sidebar-accent-foreground)",
+                border: "var(--sidebar-border)",
+                ring: "var(--sidebar-ring)",
+              },
+              chart:
+              {
+                1: "var(--chart-1)",
+                2: "var(--chart-2)",
+                3: "var(--chart-3)",
+                4: "var(--chart-4)",
+                5: "var(--chart-5)",
+              },
+            },
+            borderRadius:
+            {
+              lg: "var(--radius)",
+              md: "calc(var(--radius) - 2px)",
+              sm: "calc(var(--radius) - 4px)",
+            },
+            fontFamily:
+            {
+              sans: ["var(--font-sans)"],
+              serif: ["var(--font-serif)"],
+              mono: ["var(--font-mono)"],
+            },
+            boxShadow:
+            {
+              '2xs': 'var(--shadow-2xs)',
+              'xs': 'var(--shadow-xs)',
+              'sm': 'var(--shadow-sm)',
+              'DEFAULT': 'var(--shadow)',
+              'md': 'var(--shadow-md)',
+              'lg': 'var(--shadow-lg)',
+              'xl': 'var(--shadow-xl)',
+              '2xl': 'var(--shadow-2xl)',
+            },
+          },
+        }
+      }
+    </script>
+
+    <script src="https://cdn.plot.ly/plotly-3.1.1.min.js"></script>
+    <script>
+      window.FontAwesomeConfig = {
+        autoReplaceSvg: 'nest'
+      };
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&amp;family=JetBrains+Mono&amp;display=swap"
+      rel="stylesheet">
+    <style>
+      ::-webkit-scrollbar
+      {
+        display: none;
+      }
+
+      :root
+      {
+        --background: #FAFAFA;
+        --foreground: #0f172a;
+        --card: #ffffff;
+        --card-foreground: #0f172a;
+        --primary: #FFD500;
+        --primary-foreground: #8A8A8A;
+        --secondary: #64748b;
+        --secondary-foreground: #ffffff;
+        --muted: #FAFAFA;
+        --muted-foreground: #0f172a;
+        --accent: #f59e0b;
+        --accent-foreground: #ffffff;
+        --destructive: #ef4444;
+        --destructive-foreground: #ffffff;
+        --border: #EEE;
+        --input: #FFFFFF;
+        --ring: #94a3b8;
+        --font-sans: Be Vietnam Pro;
+        --font-serif: Georgia, serif;
+        --font-mono: JetBrains Mono, monospace;
+        --radius: 10px;
+        --shadow: -2px 4px 12px 4px rgba(51, 51, 51, 0.05);
+      }
+
+      body
+      {
+        font-family: var(--font-sans), sans-serif;
+      }
+
+      .modal-overlay
+      {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        overflow-y: auto;
+      }
+
+      .modal-overlay.active
+      {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+    </style>
+    <style data-grapesjs-styles="true">
+      *
+      {
+        box-sizing: border-box;
+      }
+
+      body
+      {
+        margin: 0;
+      }
+
+      ::-webkit-scrollbar
+      {
+        display: none;
+      }
+
+      :root
+      {
+        --background: #FAFAFA;
+        --foreground: #0f172a;
+        --card: #ffffff;
+        --card-foreground: #0f172a;
+        --primary: #FFD500;
+        --primary-foreground: #8A8A8A;
+        --secondary: #64748b;
+        --secondary-foreground: #ffffff;
+        --muted: #FAFAFA;
+        --muted-foreground: #0f172a;
+        --accent: #f59e0b;
+        --accent-foreground: #ffffff;
+        --destructive: #ef4444;
+        --destructive-foreground: #ffffff;
+        --border: #EEE;
+        --input: #FFFFFF;
+        --ring: #94a3b8;
+        --font-sans: Be Vietnam Pro;
+        --font-serif: Georgia, serif;
+        --font-mono: JetBrains Mono, monospace;
+        --radius: 10px;
+        --shadow: -2px 4px 12px 4px rgba(51, 51, 51, 0.05);
+      }
+
+      body
+      {
+        font-family: var(--font-sans), sans-serif;
+      }
+
+      .modal-overlay
+      {
+        display: none;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-image: initial;
+        background-position-x: initial;
+        background-position-y: initial;
+        background-size: initial;
+        background-repeat: initial;
+        background-attachment: initial;
+        background-origin: initial;
+        background-clip: initial;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        overflow-y: auto;
+      }
+
+      .modal-overlay.active
+      {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 2rem;
+        padding-right: 2rem;
+        padding-bottom: 2rem;
+        padding-left: 2rem;
+      }
+
+      #nutrition-plot
+      {
+        height: 300px;
+      }
+
+      #macros-plot
+      {
+        height: 250px;
+      }
+    </style>
+  </head>
+
+  <body class="bg-background">
+    <header id="header"
+      class="bg-card border-b border-border sticky top-0 z-50">
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-8">
+          <h1 class="text-2xl font-bold text-foreground">Bites</h1>
+          <nav class="hidden md:flex space-x-6"></nav>
+        </div>
+        <div class="flex items-center space-x-4"></div>
+      </div>
+    </header>
+    <section id="hero-section"
+      class="bg-gradient-to-br from-primary/20 to-accent/10 py-16">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-8">
+          <h2 class="text-5xl font-bold text-foreground mb-4">Discover Your Next
+            Favorite Meal</h2>
+          <p class="text-xl text-secondary">Search thousands of recipes tailored
+            to your dietary preferences</p>
+        </div>
+        <div id="search-bar"
+          class="max-w-3xl mx-auto bg-card rounded-xl shadow-lg p-2 flex items-center border border-border">
+          <i class="fa-solid fa-search text-secondary ml-4"></i><input
+            type="text"
+            placeholder="Search recipes, ingredients, or cuisines..."
+            class="flex-1 px-4 py-3 focus:outline-none bg-transparent text-foreground"><button
+            class="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-accent hover:text-accent-foreground transition">
+            Search
+          </button></div>
+      </div>
+    </section>
+    <section id="filter-section"
+      class="bg-card border-b border-border py-6 sticky top-[73px] z-40">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4"><span
+              class="text-foreground font-semibold">Filter by:</span><button
+              class="filter-btn px-4 py-2 rounded-lg border border-border hover:border-primary hover:bg-primary/10 text-foreground font-medium transition"><i
+                class="fa-solid fa-leaf mr-2"></i>Vegetarian
+            </button><button
+              class="filter-btn px-4 py-2 rounded-lg border border-border hover:border-primary hover:bg-primary/10 text-foreground font-medium transition"><i
+                class="fa-solid fa-seedling mr-2"></i>Vegan
+            </button><button
+              class="filter-btn px-4 py-2 rounded-lg border border-border hover:border-primary hover:bg-primary/10 text-foreground font-medium transition"><i
+                class="fa-solid fa-wheat-awn-slash mr-2"></i>Gluten-Free
+            </button><button
+              class="filter-btn px-4 py-2 rounded-lg border border-border hover:border-primary hover:bg-primary/10 text-foreground font-medium transition"><i
+                class="fa-solid fa-cheese mr-2"></i>Keto
+            </button><button
+              class="filter-btn px-4 py-2 rounded-lg border border-border hover:border-primary hover:bg-primary/10 text-foreground font-medium transition"><i
+                class="fa-solid fa-heart-pulse mr-2"></i>Low Carb
+            </button></div><button
+            class="text-accent font-medium hover:text-accent-foreground"><i
+              class="fa-solid fa-sliders mr-2"></i>More Filters
+          </button>
+        </div>
+      </div>
+    </section>
+    <main id="main-content" class="max-w-7xl mx-auto px-6 py-12">
+      <section id="recommended-section" class="mb-16">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-3xl font-bold text-foreground">Recommended For You
+          </h3><button
+            class="text-accent font-medium hover:text-accent-foreground">View
+            All <i class="fa-solid fa-arrow-right ml-2"></i></button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-56 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e9c1e50f59-ecbd48844f481ab3a592.png"
+                alt="colorful mediterranean quinoa bowl with vegetables, chickpeas, feta cheese, fresh herbs, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-5">
+              <div class="flex items-center justify-between mb-2"><span
+                  class="px-3 py-1 bg-primary/20 text-primary-foreground text-xs font-semibold rounded-full">Vegetarian</span>
+                <div class="flex items-center text-secondary text-sm"><i
+                    class="fa-regular fa-clock mr-1"></i>25 min
+                </div>
+              </div>
+              <h4 class="text-xl font-bold text-foreground mb-2">Mediterranean
+                Quinoa Bowl</h4>
+              <p class="text-secondary text-sm mb-4">A healthy and colorful bowl
+                packed with protein, fresh vegetables, and Mediterranean flavors
+              </p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-1 text-accent"><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star-half-stroke"></i><span
+                    class="text-secondary text-sm ml-2">4.8 (234)</span></div>
+                <div class="flex items-center space-x-3"><button
+                    class="text-secondary hover:text-accent transition"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive transition"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-56 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/38a0b77fb5-ecadeec6de8518ed2b5d.png"
+                alt="perfectly grilled salmon fillet with roasted asparagus, lemon wedges, elegant plating, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-5">
+              <div class="flex items-center justify-between mb-2"><span
+                  class="px-3 py-1 bg-accent/20 text-accent text-xs font-semibold rounded-full">Keto</span>
+                <div class="flex items-center text-secondary text-sm"><i
+                    class="fa-regular fa-clock mr-1"></i>20 min
+                </div>
+              </div>
+              <h4 class="text-xl font-bold text-foreground mb-2">Grilled Salmon
+                with Asparagus</h4>
+              <p class="text-secondary text-sm mb-4">Perfectly grilled salmon
+                paired with tender asparagus for a nutritious low-carb meal</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-1 text-accent"><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><span
+                    class="text-secondary text-sm ml-2">5.0 (189)</span></div>
+                <div class="flex items-center space-x-3"><button
+                    class="text-secondary hover:text-accent transition"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive transition"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-56 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d04698ce69-b320c8c421e02d31c22d.png"
+                alt="vibrant thai green curry with vegetables and tofu in coconut milk, fresh basil, authentic asian cuisine, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-5">
+              <div class="flex items-center justify-between mb-2"><span
+                  class="px-3 py-1 bg-primary/20 text-primary-foreground text-xs font-semibold rounded-full">Vegan</span>
+                <div class="flex items-center text-secondary text-sm"><i
+                    class="fa-regular fa-clock mr-1"></i>35 min
+                </div>
+              </div>
+              <h4 class="text-xl font-bold text-foreground mb-2">Thai Green
+                Curry</h4>
+              <p class="text-secondary text-sm mb-4">Aromatic and spicy Thai
+                curry with fresh vegetables in a creamy coconut sauce</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-1 text-accent"><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-regular fa-star"></i><span
+                    class="text-secondary text-sm ml-2">4.6 (312)</span></div>
+                <div class="flex items-center space-x-3"><button
+                    class="text-secondary hover:text-accent transition"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive transition"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-56 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/abb8b7ede2-2536b22100cc8afc1f42.png"
+                alt="fresh chicken caesar salad with grilled chicken breast, romaine lettuce, parmesan cheese, croutons, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-5">
+              <div class="flex items-center justify-between mb-2"><span
+                  class="px-3 py-1 bg-accent/20 text-accent text-xs font-semibold rounded-full">Low
+                  Carb</span>
+                <div class="flex items-center text-secondary text-sm"><i
+                    class="fa-regular fa-clock mr-1"></i>15 min
+                </div>
+              </div>
+              <h4 class="text-xl font-bold text-foreground mb-2">Chicken Caesar
+                Salad</h4>
+              <p class="text-secondary text-sm mb-4">Classic Caesar salad with
+                grilled chicken, crisp romaine, and homemade dressing</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-1 text-accent"><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star-half-stroke"></i><span
+                    class="text-secondary text-sm ml-2">4.7 (267)</span></div>
+                <div class="flex items-center space-x-3"><button
+                    class="text-secondary hover:text-accent transition"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive transition"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-56 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/febd560974-3456e494b23ae071dba8.png"
+                alt="creamy mushroom risotto with parmesan cheese, fresh herbs, elegant restaurant plating, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-5">
+              <div class="flex items-center justify-between mb-2"><span
+                  class="px-3 py-1 bg-primary/20 text-primary-foreground text-xs font-semibold rounded-full">Vegetarian</span>
+                <div class="flex items-center text-secondary text-sm"><i
+                    class="fa-regular fa-clock mr-1"></i>40 min
+                </div>
+              </div>
+              <h4 class="text-xl font-bold text-foreground mb-2">Mushroom
+                Risotto</h4>
+              <p class="text-secondary text-sm mb-4">Creamy Italian risotto with
+                wild mushrooms and parmesan cheese</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-1 text-accent"><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><span
+                    class="text-secondary text-sm ml-2">4.9 (421)</span></div>
+                <div class="flex items-center space-x-3"><button
+                    class="text-secondary hover:text-accent transition"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive transition"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-56 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/af37b84c66-2ed6802d783c865ac7d0.png"
+                alt="colorful berry smoothie bowl topped with fresh fruits, granola, chia seeds, healthy breakfast, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-5">
+              <div class="flex items-center justify-between mb-2"><span
+                  class="px-3 py-1 bg-primary/20 text-primary-foreground text-xs font-semibold rounded-full">Vegan</span>
+                <div class="flex items-center text-secondary text-sm"><i
+                    class="fa-regular fa-clock mr-1"></i>10 min
+                </div>
+              </div>
+              <h4 class="text-xl font-bold text-foreground mb-2">Berry Smoothie
+                Bowl</h4>
+              <p class="text-secondary text-sm mb-4">Refreshing smoothie bowl
+                loaded with antioxidants and topped with fresh berries</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-1 text-accent"><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star-half-stroke"></i><span
+                    class="text-secondary text-sm ml-2">4.8 (356)</span></div>
+                <div class="flex items-center space-x-3"><button
+                    class="text-secondary hover:text-accent transition"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive transition"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="trending-section" class="mb-16">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-3xl font-bold text-foreground">Trending This Week</h3>
+          <button
+            class="text-accent font-medium hover:text-accent-foreground">View
+            All <i class="fa-solid fa-arrow-right ml-2"></i></button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-48 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ea9472e03c-cd7bff3686850c6536cf.png"
+                alt="gourmet avocado toast with poached egg, cherry tomatoes, microgreens, artisan bread, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-4">
+              <h4 class="text-lg font-bold text-foreground mb-2">Avocado Toast
+                Deluxe</h4>
+              <div class="flex items-center justify-between text-sm"><span
+                  class="text-secondary"><i
+                    class="fa-regular fa-clock mr-1"></i>10 min</span>
+                <div class="flex items-center space-x-2"><button
+                    class="text-secondary hover:text-accent"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-48 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/a856ff7616-c3d54af1da3b2efb3b79.png"
+                alt="delicious beef tacos with fresh toppings, cilantro, lime, colorful mexican street food, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-4">
+              <h4 class="text-lg font-bold text-foreground mb-2">Street Style
+                Beef Tacos</h4>
+              <div class="flex items-center justify-between text-sm"><span
+                  class="text-secondary"><i
+                    class="fa-regular fa-clock mr-1"></i>30 min</span>
+                <div class="flex items-center space-x-2"><button
+                    class="text-secondary hover:text-accent"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-48 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/bb7df75aaf-71ccfadc39385b08f4a5.png"
+                alt="fresh poke bowl with raw salmon, avocado, edamame, rice, sesame seeds, hawaiian cuisine, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-4">
+              <h4 class="text-lg font-bold text-foreground mb-2">Hawaiian Poke
+                Bowl</h4>
+              <div class="flex items-center justify-between text-sm"><span
+                  class="text-secondary"><i
+                    class="fa-regular fa-clock mr-1"></i>20 min</span>
+                <div class="flex items-center space-x-2"><button
+                    class="text-secondary hover:text-accent"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recipe-card bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition cursor-pointer">
+            <div class="h-48 overflow-hidden"><img
+                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/37ebe913b8-fc182380580540ae897f.png"
+                alt="decadent chocolate cake slice with layers, ganache frosting, berries, elegant dessert, professional food photography"
+                class="w-full h-full object-cover"></div>
+            <div class="p-4">
+              <h4 class="text-lg font-bold text-foreground mb-2">Chocolate Layer
+                Cake</h4>
+              <div class="flex items-center justify-between text-sm"><span
+                  class="text-secondary"><i
+                    class="fa-regular fa-clock mr-1"></i>60 min</span>
+                <div class="flex items-center space-x-2"><button
+                    class="text-secondary hover:text-accent"><i
+                      class="fa-regular fa-paper-plane"></i></button><button
+                    class="text-secondary hover:text-destructive"><i
+                      class="fa-regular fa-bookmark"></i></button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div id="recipe-modal" class="modal-overlay">
+      <div
+        class="bg-card rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+        <div
+          class="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between z-10">
+          <h3 class="text-2xl font-bold text-foreground">Mediterranean Quinoa
+            Bowl</h3><button
+            class="text-secondary hover:text-foreground text-2xl"><i
+              class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="p-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div id="modal-image-section">
+              <div class="h-80 overflow-hidden rounded-xl mb-6"><img
+                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e9c1e50f59-ecbd48844f481ab3a592.png"
+                  alt="colorful mediterranean quinoa bowl with vegetables, chickpeas, feta cheese, fresh herbs, professional food photography"
+                  class="w-full h-full object-cover"></div>
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-4">
+                  <div class="text-center">
+                    <div class="text-2xl font-bold text-foreground">25</div>
+                    <div class="text-sm text-secondary">Minutes</div>
+                  </div>
+                  <div class="h-12 w-px bg-border"></div>
+                  <div class="text-center">
+                    <div class="text-2xl font-bold text-foreground">4</div>
+                    <div class="text-sm text-secondary">Servings</div>
+                  </div>
+                  <div class="h-12 w-px bg-border"></div>
+                  <div class="text-center">
+                    <div class="text-2xl font-bold text-foreground">385</div>
+                    <div class="text-sm text-secondary">Calories</div>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-3"><button
+                    class="px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition"><i
+                      class="fa-regular fa-paper-plane mr-2"></i>Share
+                  </button><button
+                    class="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition"><i
+                      class="fa-regular fa-bookmark mr-2"></i>Save
+                  </button></div>
+              </div>
+              <div id="nutrition-chart" class="bg-muted rounded-xl p-4 mb-6">
+                <h4 class="text-lg font-bold text-foreground mb-4">Nutritional
+                  Information</h4>
+                <div id="nutrition-plot"></div>
+              </div>
+              <div id="macros-chart" class="bg-muted rounded-xl p-4">
+                <h4 class="text-lg font-bold text-foreground mb-4">
+                  Macronutrients Breakdown</h4>
+                <div id="macros-plot"></div>
+              </div>
+            </div>
+            <div id="modal-details-section">
+              <div class="mb-8">
+                <h4
+                  class="text-xl font-bold text-foreground mb-4 flex items-center">
+                  <i
+                    class="fa-solid fa-list-check text-accent mr-3"></i>Ingredients
+                </h4>
+                <ul class="space-y-3">
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">1 cup quinoa, rinsed</span></li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">2 cups vegetable broth</span></li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">1 can (15 oz) chickpeas,
+                      drained</span></li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">2 cups cherry tomatoes,
+                      halved</span></li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">1 cucumber, diced</span></li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">1/2 red onion, thinly
+                      sliced</span></li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">1 cup crumbled feta cheese</span>
+                  </li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">1/4 cup fresh parsley,
+                      chopped</span></li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">3 tablespoons olive oil</span>
+                  </li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">2 tablespoons lemon juice</span>
+                  </li>
+                  <li class="flex items-start"><i
+                      class="fa-solid fa-circle text-primary text-xs mt-2 mr-3"></i><span
+                      class="text-foreground">Salt and pepper to taste</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4
+                  class="text-xl font-bold text-foreground mb-4 flex items-center">
+                  <i
+                    class="fa-solid fa-fire-burner text-accent mr-3"></i>Instructions
+                </h4>
+                <ol class="space-y-4">
+                  <li class="flex items-start"><span
+                      class="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold mr-4">1</span>
+                    <p class="text-foreground pt-1">In a medium saucepan, bring
+                      the vegetable broth to a boil. Add quinoa, reduce heat to
+                      low, cover, and simmer for 15 minutes until liquid is
+                      absorbed.</p>
+                  </li>
+                  <li class="flex items-start"><span
+                      class="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold mr-4">2</span>
+                    <p class="text-foreground pt-1">Fluff quinoa with a fork and
+                      let it cool for 5 minutes.</p>
+                  </li>
+                  <li class="flex items-start"><span
+                      class="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold mr-4">3</span>
+                    <p class="text-foreground pt-1">In a large bowl, combine
+                      cooled quinoa, chickpeas, cherry tomatoes, cucumber, and
+                      red onion.</p>
+                  </li>
+                  <li class="flex items-start"><span
+                      class="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold mr-4">4</span>
+                    <p class="text-foreground pt-1">In a small bowl, whisk
+                      together olive oil, lemon juice, salt, and pepper to make
+                      the dressing.</p>
+                  </li>
+                  <li class="flex items-start"><span
+                      class="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold mr-4">5</span>
+                    <p class="text-foreground pt-1">Pour dressing over the
+                      quinoa mixture and toss gently to combine.</p>
+                  </li>
+                  <li class="flex items-start"><span
+                      class="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold mr-4">6</span>
+                    <p class="text-foreground pt-1">Top with crumbled feta
+                      cheese and fresh parsley. Serve immediately or refrigerate
+                      for up to 3 days.</p>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer id="footer" class="bg-card border-t border-border mt-16"></footer>
+    <script>
+      function openRecipeModal(recipeName)
+      {
+        document.getElementById('recipe-modal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        window.addEventListener('load', function()
+        {
+          try
+          {
+            var nutritionData = [
+            {
+              type: 'bar',
+              x: ['Protein', 'Carbs', 'Fat', 'Fiber', 'Sugar'],
+              y: [15, 45, 12, 8, 6],
+              marker:
+              {
+                color: ['#FFD500', '#f59e0b', '#64748b', '#0f172a',
+                  '#94a3b8'
+                ]
+              }
+            }];
+
+            var nutritionLayout = {
+              margin:
+              {
+                t: 20,
+                r: 20,
+                b: 40,
+                l: 40
+              },
+              plot_bgcolor: '#FAFAFA',
+              paper_bgcolor: '#FAFAFA',
+              xaxis:
+              {
+                title: ''
+              },
+              yaxis:
+              {
+                title: 'Grams'
+              },
+              showlegend: false
+            };
+
+            var config = {
+              responsive: true,
+              displayModeBar: false,
+              displaylogo: false
+            };
+            Plotly.newPlot('nutrition-plot', nutritionData, nutritionLayout,
+              config);
+
+            var macrosData = [
+            {
+              type: 'pie',
+              labels: ['Protein', 'Carbohydrates', 'Fat'],
+              values: [20, 55, 25],
+              marker:
+              {
+                colors: ['#FFD500', '#f59e0b', '#64748b']
+              },
+              textinfo: 'label+percent',
+              textposition: 'inside'
+            }];
+
+            var macrosLayout = {
+              margin:
+              {
+                t: 20,
+                r: 20,
+                b: 20,
+                l: 20
+              },
+              plot_bgcolor: '#FAFAFA',
+              paper_bgcolor: '#FAFAFA',
+              showlegend: false
+            };
+
+            Plotly.newPlot('macros-plot', macrosData, macrosLayout, config);
+          }
+          catch (e)
+          {
+            console.error('Chart error:', e);
+          }
+        });
+      }
+
+      function closeRecipeModal()
+      {
+        document.getElementById('recipe-modal').classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+
+      function shareRecipe(recipeName)
+      {
+        alert('Sharing: ' + recipeName + '\n\nShare link copied to clipboard!');
+      }
+
+      function saveToPlate(recipeName)
+      {
+        alert('Recipe "' + recipeName + '" saved to your plate!');
+      }
+
+      document.getElementById('recipe-modal').addEventListener('click',
+        function(e)
+        {
+          if (e.target === this)
+          {
+            closeRecipeModal();
+          }
+        });
+    </script>
+  </body>
+
+</html>

@@ -6,6 +6,8 @@ import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
 import type { Recipe } from './components/RecipeCard';
 import { RecipeDetailView } from './components/RecipeDetailView';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
+import BitesDesktop from './BitesDesktop';
 
 interface SpoonacularRecipe {
   id: number;
@@ -71,6 +73,7 @@ const MEAL_TYPES = [
 ];
 
 export default function BitesNewMobile() {
+  const isDesktop = useIsDesktop();
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
@@ -267,6 +270,11 @@ export default function BitesNewMobile() {
       setSelectedCategory(null);
     }
   };
+
+  // Responsive switching: show desktop version on larger screens
+  if (isDesktop) {
+    return <BitesDesktop />;
+  }
 
   // Show recipe detail view
   if (viewMode === 'detail' && selectedRecipe) {
