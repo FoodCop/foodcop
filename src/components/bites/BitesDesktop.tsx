@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   Clock, 
-  Users, 
   Star, 
   Share2, 
   Bookmark,
@@ -13,7 +12,7 @@ import {
 } from 'lucide-react';
 import { SpoonacularService } from '../../services/spoonacular';
 import type { Recipe } from './components/RecipeCard';
-import RecipeModal from './components/RecipeModal';
+import { RecipeModal } from './components/RecipeModal';
 import { toast } from 'sonner';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
@@ -34,16 +33,8 @@ const BitesDesktop: React.FC = () => {
   // Load initial recipes
   useEffect(() => {
     loadRecommendedRecipes();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Load recipes when filter changes
-  useEffect(() => {
-    if (selectedFilter !== 'All') {
-      loadFilteredRecipes();
-    } else {
-      loadRecommendedRecipes();
-    }
-  }, [selectedFilter]);
 
   const loadRecommendedRecipes = async () => {
     setLoading(true);
@@ -93,6 +84,16 @@ const BitesDesktop: React.FC = () => {
       setLoading(false);
     }
   };
+
+  // Load recipes when filter changes
+  useEffect(() => {
+    if (selectedFilter === 'All') {
+      loadRecommendedRecipes();
+    } else {
+      loadFilteredRecipes();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFilter]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -332,9 +333,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
   const rating = recipe.healthScore ? recipe.healthScore / 20 : 0;
 
   return (
-    <div
+    <button
       onClick={onClick}
-      className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all cursor-pointer group"
+      className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all cursor-pointer group text-left w-full"
     >
       {/* Image */}
       <div className="relative h-56 overflow-hidden">
@@ -352,7 +353,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
           </div>
         )}
         {/* Time Badge */}
-        {recipe.readyInMinutes && (
+        {Boolean(recipe.readyInMinutes) && (
           <div className="absolute top-3 right-3">
             <div className="flex items-center gap-1 px-3 py-1 bg-card/90 backdrop-blur-sm rounded-full">
               <Clock className="w-3 h-3 text-foreground" />
@@ -366,14 +367,14 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
       <div className="p-5">
         <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2">{recipe.title}</h3>
         <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-          {recipe.summary?.replace(/<[^>]*>/g, '') || 'Delicious recipe to try'}
+          {recipe.summary?.replaceAll(/<[^>]*>/g, '') || 'Delicious recipe to try'}
         </p>
 
         {/* Rating */}
         <div className="flex items-center gap-1 mb-4">
-          {[...Array(5)].map((_, i) => (
+          {Array.from({ length: 5 }).map((_, i) => (
             <Star
-              key={i}
+              key={`star-${recipe.id}-${i}`}
               className={`w-4 h-4 ${
                 i < Math.round(rating)
                   ? 'fill-primary text-primary'
@@ -404,7 +405,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
           </button>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 

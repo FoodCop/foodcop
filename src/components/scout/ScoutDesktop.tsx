@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Star, DollarSign, Clock, Phone, Globe, Calendar, Navigation, Plus, Minus, Heart, Share2 } from 'lucide-react';
-import { backendService } from '../../services/backendService';
+import { Search, MapPin, Star, Clock, Phone, Globe, Calendar, Navigation, Plus, Minus, Heart, Share2 } from 'lucide-react';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
@@ -38,7 +37,6 @@ export function ScoutDesktop() {
   const { user } = useAuth();
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
-  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [distance, setDistance] = useState(2.5);
   const [activeFilter, setActiveFilter] = useState<string>('popular');
@@ -159,6 +157,7 @@ export function ScoutDesktop() {
   useEffect(() => {
     setRestaurants(mockRestaurants);
     setSelectedRestaurant(mockRestaurants[0]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRestaurantClick = (restaurant: Restaurant) => {
@@ -240,10 +239,10 @@ export function ScoutDesktop() {
             <input
               type="range"
               min="0.5"
-              max="10"
+              max="50"
               step="0.5"
               value={distance}
-              onChange={(e) => setDistance(parseFloat(e.target.value))}
+              onChange={(e) => setDistance(Number.parseFloat(e.target.value))}
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
             />
             <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -539,14 +538,15 @@ export function ScoutDesktop() {
                             {(typeof selectedRestaurant.cuisine === 'string'
                               ? selectedRestaurant.cuisine.split('·').map((c) => c.trim())
                               : selectedRestaurant.cuisine || []
-                            ).map((tag, index) => (
-                              <span key={index} className="px-3 py-1 bg-orange-50 text-orange-700 text-sm rounded-full">
+                            ).map((tag) => (
+                              <span key={tag} className="px-3 py-1 bg-orange-50 text-orange-700 text-sm rounded-full">
                                 {tag}
                               </span>
                             ))}
                           </div>
                         </div>
                       )}
+
 
                       {/* Location & Hours */}
                       <div className="mb-6 pb-6 border-b border-gray-200">

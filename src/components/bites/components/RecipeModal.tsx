@@ -291,4 +291,5 @@ const RecipeModal: React.FC<RecipeModalProps> = ({ recipe, onClose }) => {
   );
 };
 
+export { RecipeModal };
 export default RecipeModal;

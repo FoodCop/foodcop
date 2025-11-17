@@ -5,7 +5,7 @@ import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
 import type { Recipe } from './components/RecipeCard';
-import { RecipeDetailView } from './components/RecipeDetailView';
+import RecipeDetailView from './components/RecipeDetailView';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import BitesDesktop from './BitesDesktop';
 
@@ -90,6 +90,7 @@ export default function BitesNewMobile() {
 
   useEffect(() => {
     loadInitialRecipes();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -99,6 +100,7 @@ export default function BitesNewMobile() {
       }, 500);
       return () => clearTimeout(timeoutId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   const loadInitialRecipes = async () => {
@@ -335,8 +337,8 @@ export default function BitesNewMobile() {
                     <span className="text-sm font-semibold text-[#0f172a]">{((recipe.healthScore || 50) / 20).toFixed(1)}</span>
                   </div>
                 </div>
-                <p className="text-xs text-[#8A8A8A] mb-3 line-clamp-2 text-left">
-                  {recipe.summary?.replace(/<[^>]*>/g, '').slice(0, 100)}...
+                <p className="text-sm text-[#8A8A8A] mb-3 line-clamp-2">
+                  {recipe.summary?.replaceAll(/<[^>]*>/g, '').slice(0, 100)}...
                 </p>
                 <div className="flex items-center gap-4 mb-3">
                   <div className="flex items-center gap-1.5">
@@ -552,7 +554,7 @@ export default function BitesNewMobile() {
                 <button
                   key={recipe.id}
                   onClick={() => handleRecipeClick(recipe)}
-                  className="flex-shrink-0 w-40 bg-white rounded-2xl overflow-hidden border border-[#EEE] shadow-sm"
+                  className="shrink-0 w-40 bg-white rounded-2xl overflow-hidden border border-[#EEE] shadow-sm"
                 >
                   <div className="h-32 overflow-hidden">
                     <img

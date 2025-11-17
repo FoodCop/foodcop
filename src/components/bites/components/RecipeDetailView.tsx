@@ -362,3 +362,5 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
     </div>
   );
 }
+
+export default RecipeDetailView;
