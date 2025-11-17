@@ -32,16 +32,16 @@ interface Restaurant {
 }
 
 interface RestaurantDetailDialogProps {
-  restaurant: Restaurant | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  readonly restaurant: Restaurant | null;
+  readonly open: boolean;
+  readonly onOpenChange: (open: boolean) => void;
 }
 
 export function RestaurantDetailDialog({
   restaurant,
   open,
   onOpenChange,
-}: RestaurantDetailDialogProps) {
+}: Readonly<RestaurantDetailDialogProps>) {
   const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -50,11 +50,13 @@ export function RestaurantDetailDialog({
   if (!restaurant) return null;
 
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$';
-  const distanceText = restaurant.distance 
-    ? restaurant.distance < 1 
-      ? `${(restaurant.distance * 1000).toFixed(0)}m`
-      : `${restaurant.distance.toFixed(1)}km`
-    : '0.8km';
+  
+  const getDistanceText = () => {
+    if (!restaurant.distance) return '0.8km';
+    if (restaurant.distance < 1) return `${(restaurant.distance * 1000).toFixed(0)}m`;
+    return `${restaurant.distance.toFixed(1)}km`;
+  };
+  const distanceText = getDistanceText();
 
   const cuisineText = Array.isArray(restaurant.cuisine) 
     ? restaurant.cuisine.join(', ') 
@@ -90,12 +92,10 @@ export function RestaurantDetailDialog({
 
       if (result.success) {
         toast.success(`${restaurant.name} saved to your plate!`);
+      } else if (result.error === 'Item already saved') {
+        toast.info(`${restaurant.name} is already in your plate`);
       } else {
-        if (result.error === 'Item already saved') {
-          toast.info(`${restaurant.name} is already in your plate`);
-        } else {
-          toast.error(result.error || 'Failed to save restaurant');
-        }
+        toast.error(result.error || 'Failed to save restaurant');
       }
     } catch (error) {
       console.error('Error saving restaurant:', error);
@@ -114,7 +114,7 @@ export function RestaurantDetailDialog({
       navigator.share({
         title: restaurant.name,
         text: `Check out ${restaurant.name} on FUZO!`,
-        url: window.location.href,
+        url: globalThis.location.href,
       }).catch(() => {
         // User cancelled share
       });
@@ -126,8 +126,8 @@ export function RestaurantDetailDialog({
   // Calculate review stats
   const totalReviews = restaurant.reviews?.length || 0;
   const reviewStats = totalReviews > 0 ? {
-    5: Math.round(totalReviews * 0.85),
-    4: Math.round(totalReviews * 0.10),
+    5: Math.round(totalReviews * 0.35),
+    4: Math.round(totalReviews * 0.1),
     3: Math.round(totalReviews * 0.03),
     2: Math.round(totalReviews * 0.01),
     1: Math.round(totalReviews * 0.01),
@@ -139,7 +139,7 @@ export function RestaurantDetailDialog({
     <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
       {/* Hero Section with Image */}
       <div className="relative">
-        <div className="h-72 overflow-hidden relative bg-gradient-to-br from-gray-200 to-gray-300">
+        <div className="h-72 overflow-hidden relative bg-linear-to-br from-gray-200 to-gray-300">
           {restaurant.photos && restaurant.photos.length > 0 ? (
             <img 
               src={restaurant.photos[0]} 
@@ -156,7 +156,7 @@ export function RestaurantDetailDialog({
           )}
           
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent"></div>
           
           {/* Header buttons */}
           <button
@@ -204,22 +204,22 @@ export function RestaurantDetailDialog({
         
         {/* Stats Section */}
         <div className="grid grid-cols-4 gap-3 mb-6">
-          <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-3 text-center">
+          <div className="bg-linear-to-br from-yellow-50 to-orange-50 rounded-xl p-3 text-center">
             <Star className="w-5 h-5 text-yellow-500 mb-1 mx-auto fill-yellow-500" />
             <p className="text-lg font-bold text-gray-900">{restaurant.rating}</p>
             <p className="text-xs text-gray-600">Rating</p>
           </div>
-          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-3 text-center">
+          <div className="bg-linear-to-br from-blue-50 to-cyan-50 rounded-xl p-3 text-center">
             <Clock className="w-5 h-5 text-blue-500 mb-1 mx-auto" />
             <p className="text-lg font-bold text-gray-900">15-20</p>
             <p className="text-xs text-gray-600">Minutes</p>
           </div>
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 text-center">
+          <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-xl p-3 text-center">
             <MapPin className="w-5 h-5 text-green-500 mb-1 mx-auto" />
             <p className="text-lg font-bold text-gray-900">{distanceText}</p>
             <p className="text-xs text-gray-600">away</p>
           </div>
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 text-center">
+          <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-xl p-3 text-center">
             <DollarSign className="w-5 h-5 text-purple-500 mb-1 mx-auto" />
             <p className="text-lg font-bold text-gray-900">{priceLevel}</p>
             <p className="text-xs text-gray-600">Price</p>
@@ -288,7 +288,7 @@ export function RestaurantDetailDialog({
           </div>
           <div className="bg-gray-50 rounded-2xl p-4 mb-3">
             <div className="flex items-start gap-3 mb-3">
-              <MapPin className="text-orange-500 text-lg mt-1 flex-shrink-0" />
+              <MapPin className="text-orange-500 text-lg mt-1 shrink-0" />
               <div className="flex-1">
                 <p className="text-sm font-semibold text-gray-900 mb-1">{restaurant.address.split(',')[0]}</p>
                 <p className="text-sm text-gray-600">{restaurant.address}</p>
@@ -321,7 +321,7 @@ export function RestaurantDetailDialog({
           <div className="flex gap-3">
             <button
               onClick={handleGetDirections}
-              className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30 hover:shadow-xl transition-shadow"
+              className="flex-1 bg-linear-to-r from-orange-500 to-red-500 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30 hover:shadow-xl transition-shadow"
             >
               <Navigation className="w-5 h-5" />
               Get Directions
@@ -342,8 +342,8 @@ export function RestaurantDetailDialog({
           <div className="mb-6">
             <h3 className="font-bold text-gray-900 mb-4">Customer Reviews</h3>
             <div className="space-y-3">
-              {restaurant.reviews.slice(0, 3).map((review, index) => (
-                <div key={index} className="bg-gray-50 rounded-2xl p-4">
+            {restaurant.reviews?.slice(0, 3).map((review) => (
+              <div key={`${review.author_name}-${review.time}`} className="bg-gray-50 rounded-2xl p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="font-semibold text-gray-900">{review.author_name}</span>
                     <div className="flex items-center gap-1">

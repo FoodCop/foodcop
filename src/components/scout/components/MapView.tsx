@@ -12,12 +12,12 @@ interface Restaurant {
 }
 
 interface MapViewProps {
-  restaurant: Restaurant | null;
-  open: boolean;
-  onClose: () => void;
+  readonly restaurant: Restaurant | null;
+  readonly open: boolean;
+  readonly onClose: () => void;
 }
 
-export function MapView({ restaurant, open, onClose }: MapViewProps) {
+export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
   const [activeMode, setActiveMode] = useState<'driving' | 'walking' | 'cycling'>('driving');
   const [sheetHeight, setSheetHeight] = useState<'collapsed' | 'half' | 'full'>('half');
   const [startY, setStartY] = useState(0);
@@ -278,28 +278,24 @@ export function MapView({ restaurant, open, onClose }: MapViewProps) {
         }`}
         style={{
           bottom: 0,
-          height: sheetHeight === 'collapsed' ? '120px' :
-                  sheetHeight === 'half' ? '65%' :
-                  'calc(100% - 5rem)'
+          height: (() => {
+            if (sheetHeight === 'collapsed') return '120px';
+            if (sheetHeight === 'half') return '65%';
+            return 'calc(100% - 5rem)';
+          })()
         }}
       >
         {/* Draggable Handle */}
-        <div 
-          className="w-14 h-1.5 bg-gray-300 rounded-full mx-auto mt-3 mb-4 cursor-grab active:cursor-grabbing"
-          role="button"
-          tabIndex={0}
+        <button
+          type="button"
+          className="w-14 h-1.5 bg-gray-300 rounded-full mx-auto mt-3 mb-4 cursor-grab active:cursor-grabbing border-0"
           onClick={handleHandleClick}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           onMouseDown={handleMouseDown}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              handleHandleClick();
-            }
-          }}
           aria-label="Drag to resize directions panel"
-        ></div>
+        ></button>
         
         {/* Content - Scrollable */}
         <div className="px-5 pb-5 overflow-y-auto" style={{ maxHeight: sheetHeight === 'collapsed' ? '80px' : 'calc(100% - 40px)' }}>
@@ -319,7 +315,7 @@ export function MapView({ restaurant, open, onClose }: MapViewProps) {
           </div>
 
           {/* Active Travel Mode */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 mb-4">
+          <div className="bg-linear-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 mb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
@@ -347,9 +343,7 @@ export function MapView({ restaurant, open, onClose }: MapViewProps) {
                 activeMode === 'walking' ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 hover:bg-gray-100'
               }`}
             >
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                activeMode === 'walking' ? 'bg-green-100' : 'bg-green-100'
-              }`}>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-green-100">
                 <PersonStanding className="text-green-600 w-5 h-5" />
               </div>
               <div className="text-left">
@@ -364,9 +358,7 @@ export function MapView({ restaurant, open, onClose }: MapViewProps) {
                 activeMode === 'cycling' ? 'bg-orange-50 border-2 border-orange-200' : 'bg-gray-50 hover:bg-gray-100'
               }`}
             >
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                activeMode === 'cycling' ? 'bg-orange-100' : 'bg-orange-100'
-              }`}>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-orange-100">
                 <Bike className="text-orange-600 w-5 h-5" />
               </div>
               <div className="text-left">
@@ -415,7 +407,7 @@ export function MapView({ restaurant, open, onClose }: MapViewProps) {
           <div className="flex gap-3">
             <button
               onClick={handleStartNavigation}
-              className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 hover:shadow-xl transition-shadow"
+              className="flex-1 bg-linear-to-r from-blue-500 to-blue-600 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 hover:shadow-xl transition-shadow"
             >
               <Play className="w-5 h-5" />
               Start Navigation

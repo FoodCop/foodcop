@@ -95,14 +95,14 @@ export default function ScoutNew() {
         // Merge basic info with detailed info
         const enrichedRestaurant: Restaurant = {
           ...restaurant,
-          photos: details.photos ? details.photos.slice(0, 5).map((photo: any) => photo.photo_reference) : restaurant.photos,
+          photos: details.photos ? details.photos.slice(0, 5).map((photo: { photo_reference: string }) => photo.photo_reference) : restaurant.photos,
           phone: details.formatted_phone_number || details.international_phone_number,
           website: details.website,
           opening_hours: details.opening_hours ? {
             open_now: details.opening_hours.open_now,
             weekday_text: details.opening_hours.weekday_text
           } : undefined,
-          reviews: details.reviews ? details.reviews.slice(0, 3).map((review: any) => ({
+          reviews: details.reviews ? details.reviews.slice(0, 3).map((review: { author_name: string; rating: number; text: string; time: number; relative_time_description: string }) => ({
             author_name: review.author_name,
             rating: review.rating,
             text: review.text,
@@ -300,7 +300,7 @@ export default function ScoutNew() {
         <section className="px-5 py-4">
           <div className="relative w-full h-80 rounded-3xl overflow-hidden shadow-lg bg-gray-50">
             {/* Map placeholder - you can integrate real map here */}
-            <div className="w-full h-full bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center">
+            <div className="w-full h-full bg-linear-to-br from-blue-50 to-gray-100 flex items-center justify-center">
               <div className="text-center">
                 <MapPin className="w-12 h-12 text-blue-500 mx-auto mb-2" />
                 <p className="text-sm text-gray-500">Map View</p>
@@ -498,23 +498,25 @@ export default function ScoutNew() {
 }
 
 // Carousel Card Component (for horizontal scroll)
-function RestaurantCarouselCard({ restaurant, onClick }: { restaurant: Restaurant; onClick?: () => void }) {
+function RestaurantCarouselCard({ restaurant, onClick }: Readonly<{ restaurant: Restaurant; onClick?: () => void }>) {
   const [liked, setLiked] = useState(false);
   
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$';
-  const distanceText = restaurant.distance 
-    ? restaurant.distance < 1 
-      ? `${(restaurant.distance * 1000).toFixed(0)}m`
-      : `${restaurant.distance.toFixed(1)}km`
-    : '0.8km';
+  
+  const getDistanceText = () => {
+    if (!restaurant.distance) return '0.8km';
+    if (restaurant.distance < 1) return `${(restaurant.distance * 1000).toFixed(0)}m`;
+    return `${restaurant.distance.toFixed(1)}km`;
+  };
+  const distanceText = getDistanceText();
 
   return (
-    <div 
+    <button
       onClick={onClick}
-      className="shrink-0 w-72 bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 cursor-pointer hover:shadow-xl transition-shadow"
+      className="shrink-0 w-72 bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 cursor-pointer hover:shadow-xl transition-shadow text-left"
     >
       {/* Image placeholder */}
-      <div className="relative h-40 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+      <div className="relative h-40 overflow-hidden bg-linear-to-br from-gray-100 to-gray-200">
         <div className="w-full h-full flex items-center justify-center">
           <MapPin className="w-12 h-12 text-gray-300" />
         </div>
@@ -559,31 +561,36 @@ function RestaurantCarouselCard({ restaurant, onClick }: { restaurant: Restauran
           </button>
         </div>
       </div>
-    </div>
+    </button>
   );
 }
 
 // Featured Restaurant Card Component
-function FeaturedRestaurantCard({ restaurant, onClick }: { restaurant: Restaurant; onClick?: () => void }) {
+function FeaturedRestaurantCard({ restaurant, onClick }: Readonly<{ restaurant: Restaurant; onClick?: () => void }>) {
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$$';
-  const distanceText = restaurant.distance 
-    ? restaurant.distance < 1 
-      ? `${(restaurant.distance * 1000).toFixed(0)}m away`
-      : `${restaurant.distance.toFixed(1)}km away`
-      : '0.5km away';
-  const cuisineTypes: string[] = Array.isArray(restaurant.cuisine) ? restaurant.cuisine : [restaurant.cuisine || 'Restaurant'];  return (
-    <div 
+  
+  const getDistanceText = () => {
+    if (!restaurant.distance) return '0.5km away';
+    if (restaurant.distance < 1) return `${(restaurant.distance * 1000).toFixed(0)}m away`;
+    return `${restaurant.distance.toFixed(1)}km away`;
+  };
+  const distanceText = getDistanceText();
+  
+  const cuisineTypes: string[] = Array.isArray(restaurant.cuisine) ? restaurant.cuisine : [restaurant.cuisine || 'Restaurant'];
+  
+  return (
+    <button
       onClick={onClick}
-      className="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 cursor-pointer hover:shadow-xl transition-shadow"
+      className="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 cursor-pointer hover:shadow-xl transition-shadow text-left w-full"
     >
       {/* Hero image with gradient overlay */}
-      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
+      <div className="relative h-56 overflow-hidden bg-linear-to-br from-gray-200 to-gray-300">
         <div className="w-full h-full flex items-center justify-center">
           <MapPin className="w-16 h-16 text-gray-400" />
         </div>
         
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent"></div>
         
         {/* Bottom content */}
         <div className="absolute bottom-4 left-4 right-4">
@@ -658,6 +665,6 @@ function FeaturedRestaurantCard({ restaurant, onClick }: { restaurant: Restauran
           </button>
         </div>
       </div>
-    </div>
+    </button>
   );
 }
