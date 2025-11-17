@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Bookmark, Share2, Play, ChevronLeft, ChevronRight, X, Send } from 'lucide-react';
+import { Search, Bookmark, Share2, Play, ChevronLeft, ChevronRight, X, Send, Star } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
 import { savedItemsService } from '../../services/savedItemsService';
@@ -191,14 +191,32 @@ export default function TrimsDesktop() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedVideo, setSelectedVideo] = useState<TrimVideo | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  
+  // Filter states
+  const [videoLength, setVideoLength] = useState('all');
+  const [ratingFilters, setRatingFilters] = useState<number[]>([]);
 
-  // Filter videos based on search and category
+  // Filter videos based on search, category, length, and rating
   const filteredVideos = MOCK_VIDEOS.filter(video => {
     const matchesCategory = selectedCategory === 'all' || video.category.includes(selectedCategory);
     const matchesSearch = searchQuery === '' || 
       video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       video.channelName.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    
+    // Video length filter
+    let matchesLength = true;
+    if (videoLength !== 'all') {
+      const durationParts = video.duration.split(':');
+      const totalSeconds = parseInt(durationParts[0]) * 60 + parseInt(durationParts[1]);
+      if (videoLength === 'short') matchesLength = totalSeconds < 60;
+      else if (videoLength === 'medium') matchesLength = totalSeconds >= 60 && totalSeconds <= 300;
+      else if (videoLength === 'long') matchesLength = totalSeconds > 300;
+    }
+    
+    // Rating filter (for now, all videos match since we don't have ratings in mock data)
+    const matchesRating = ratingFilters.length === 0; // Will be implemented when we have real rating data
+    
+    return matchesCategory && matchesSearch && matchesLength && matchesRating;
   });
 
   // Pagination calculations
@@ -223,6 +241,23 @@ export default function TrimsDesktop() {
 
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId);
+  };
+  
+  const handleLengthChange = (length: string) => {
+    setVideoLength(length);
+  };
+  
+  const handleRatingToggle = (rating: number) => {
+    setRatingFilters(prev => 
+      prev.includes(rating) 
+        ? prev.filter(r => r !== rating)
+        : [...prev, rating]
+    );
+  };
+  
+  const handleClearFilters = () => {
+    setVideoLength('all');
+    setRatingFilters([]);
   };
 
   const handleVideoClick = (video: TrimVideo) => {
@@ -283,9 +318,130 @@ export default function TrimsDesktop() {
   }, [selectedVideo]);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
-      {/* Sticky Search Bar */}
-      <div className="sticky top-0 z-30 bg-white shadow-sm">
+    <div className="flex min-h-screen bg-[#FAFAFA]">
+      {/* Sidebar Filters */}
+      <aside className="hidden lg:block w-64 bg-white border-r border-[#EEE] sticky top-0 h-screen overflow-y-auto flex-shrink-0">
+        <div className="p-6">
+          <h2 className="text-lg font-bold text-[#1A1A1A] mb-6">Filters</h2>
+          
+          {/* Video Length Filter */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-[#1A1A1A] mb-3">Video Length</h3>
+            <div className="space-y-2">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="length"
+                  value="all"
+                  checked={videoLength === 'all'}
+                  onChange={(e) => handleLengthChange(e.target.value)}
+                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35]"
+                />
+                <span className="ml-2 text-sm text-[#666666]">All</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="length"
+                  value="short"
+                  checked={videoLength === 'short'}
+                  onChange={(e) => handleLengthChange(e.target.value)}
+                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35]"
+                />
+                <span className="ml-2 text-sm text-[#666666]">Under 1 minute</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="length"
+                  value="medium"
+                  checked={videoLength === 'medium'}
+                  onChange={(e) => handleLengthChange(e.target.value)}
+                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35]"
+                />
+                <span className="ml-2 text-sm text-[#666666]">1-5 minutes</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="length"
+                  value="long"
+                  checked={videoLength === 'long'}
+                  onChange={(e) => handleLengthChange(e.target.value)}
+                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35]"
+                />
+                <span className="ml-2 text-sm text-[#666666]">Over 5 minutes</span>
+              </label>
+            </div>
+          </div>
+          
+          <hr className="border-[#EEE] mb-6" />
+          
+          {/* Rating Filter */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-[#1A1A1A] mb-3">Rating</h3>
+            <div className="space-y-2">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={ratingFilters.includes(5)}
+                  onChange={() => handleRatingToggle(5)}
+                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35] rounded"
+                />
+                <span className="ml-2 text-sm text-[#666666] flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3 h-3 fill-[#FFD500] text-[#FFD500]" />
+                  ))}
+                </span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={ratingFilters.includes(4)}
+                  onChange={() => handleRatingToggle(4)}
+                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35] rounded"
+                />
+                <span className="ml-2 text-sm text-[#666666] flex items-center">
+                  {[...Array(4)].map((_, i) => (
+                    <Star key={i} className="w-3 h-3 fill-[#FFD500] text-[#FFD500]" />
+                  ))}
+                  <Star className="w-3 h-3 text-[#FFD500]" />
+                  <span className="ml-1">& up</span>
+                </span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={ratingFilters.includes(3)}
+                  onChange={() => handleRatingToggle(3)}
+                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35] rounded"
+                />
+                <span className="ml-2 text-sm text-[#666666] flex items-center">
+                  {[...Array(3)].map((_, i) => (
+                    <Star key={i} className="w-3 h-3 fill-[#FFD500] text-[#FFD500]" />
+                  ))}
+                  {[...Array(2)].map((_, i) => (
+                    <Star key={`empty-${i}`} className="w-3 h-3 text-[#FFD500]" />
+                  ))}
+                  <span className="ml-1">& up</span>
+                </span>
+              </label>
+            </div>
+          </div>
+          
+          <button
+            onClick={handleClearFilters}
+            className="w-full py-2 px-4 border border-[#EEE] rounded-lg text-sm text-[#666666] hover:bg-[#FAFAFA] transition-colors"
+          >
+            Clear all filters
+          </button>
+        </div>
+      </aside>
+      
+      {/* Main Content Area */}
+      <div className="flex-1">
+        {/* Sticky Search Bar */}
+        <div className="sticky top-0 z-30 bg-white shadow-sm">
         <div className="container mx-auto px-4 max-w-[1200px] py-4">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#666666]" />
@@ -407,18 +563,17 @@ export default function TrimsDesktop() {
 
       {/* Video Player Modal */}
       {selectedVideo && (
-        <VideoPlayerModal
-          video={selectedVideo}
+        <VideoPlayerModal 
+          video={selectedVideo} 
           onClose={closeModal}
           onSave={handleSaveToPlate}
           onShare={handleShare}
         />
       )}
+      </div>
     </div>
   );
-}
-
-// Video Card Component
+}// Video Card Component
 function VideoCard({ 
   video, 
   onVideoClick,
