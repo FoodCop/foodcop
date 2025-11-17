@@ -57,6 +57,8 @@ export default function PlateNew() {
       setLoading(true);
       const result = await savedItemsService.listSavedItems();
       if (result.success && result.data) {
+        console.log('📦 Loaded saved items:', result.data);
+        console.log('📊 Item types:', result.data.map(item => item.item_type));
         setSavedItems(result.data);
       } else {
         throw new Error(result.error || 'Failed to load saved items');
@@ -77,6 +79,11 @@ export default function PlateNew() {
     if (selectedTab === 'places') return item.item_type === 'restaurant';
     return true;
   });
+
+  // Log filtering results
+  console.log(`🔍 Filtering for tab: ${selectedTab}`);
+  console.log(`📋 Total items: ${savedItems.length}, Filtered: ${filteredItems.length}`);
+  console.log(`📍 Restaurant items:`, savedItems.filter(i => i.item_type === 'restaurant').length);
 
   const handleItemClick = (item: SavedItem) => {
     // Handle item click - open detail modal
@@ -167,7 +174,10 @@ export default function PlateNew() {
               <span className="text-xs text-[#666666] mt-1">Points</span>
             </button>
             <div className="w-px h-10 bg-gray-200"></div>
-            <button className="flex flex-col items-center hover:opacity-80 transition-opacity">
+            <button 
+              onClick={() => setSelectedTab('all')}
+              className="flex flex-col items-center hover:opacity-80 transition-opacity"
+            >
               <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">{savedItems.length}</span>
               <span className="text-xs text-[#666666] mt-1">Saved</span>
             </button>
