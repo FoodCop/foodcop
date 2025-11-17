@@ -1,0 +1,574 @@
+supabase.ts:8 🔧 Supabase Config Check: {url: 'https://lgladnskxmbk...', anonKey: 'eyJhbGciOiJIUzI1NiIs...', hasUrl: true, hasAnonKey: true}
+supabase.ts:25 ✅ Supabase client created with session persistence enabled
+main.tsx:24 ✅ All required environment variables are configured
+installHook.js:1 Please ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.
+overrideMethod @ installHook.js:1
+warnOnce @ framer-motion.js?v=e299b05c:195
+measure @ framer-motion.js?v=e299b05c:9554
+measure @ framer-motion.js?v=e299b05c:9561
+measureAll @ framer-motion.js?v=e299b05c:9590
+triggerCallback @ framer-motion.js?v=e299b05c:352
+process @ framer-motion.js?v=e299b05c:385
+processBatch @ framer-motion.js?v=e299b05c:426
+requestAnimationFrame
+wake @ framer-motion.js?v=e299b05c:443
+acc.<computed> @ framer-motion.js?v=e299b05c:450
+mount @ framer-motion.js?v=e299b05c:8112
+defaultParent @ framer-motion.js?v=e299b05c:9080
+ProjectionNode @ framer-motion.js?v=e299b05c:8018
+createProjectionNode @ framer-motion.js?v=e299b05c:5362
+useVisualElement @ framer-motion.js?v=e299b05c:5322
+MotionDOMComponent @ framer-motion.js?v=e299b05c:5406
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooks @ react-dom_client.js?v=e299b05c:5654
+updateForwardRef @ react-dom_client.js?v=e299b05c:7198
+beginWork @ react-dom_client.js?v=e299b05c:8735
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<ForwardRef(motion.div)>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+PhoneFan @ PhoneFan.tsx:42
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<PhoneFan>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+NewLandingPage @ NewLandingPage.tsx:186
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<NewLandingPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+renderAllPages @ App.tsx:241
+App @ App.tsx:307
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+(anonymous) @ main.tsx:32
+PlateNew.tsx:50 🔥 PlateNew LOADED - Version 2.0 - Direct Supabase Query Implementation
+PlateNew.tsx:51 📍 UserId from props: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:52 📍 UserId from auth: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:53 📍 Final userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:114 🔍 Filtering for tab: all
+PlateNew.tsx:115 📋 Total items: 0, Filtered: 0
+PlateNew.tsx:116 📊 Item breakdown: {recipes: 0, videos: 0, restaurants: 0, photos: 0, other: 0}
+installHook.js:1 🔥 PlateNew LOADED - Version 2.0 - Direct Supabase Query Implementation
+installHook.js:1 📍 UserId from props: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 📍 UserId from auth: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 📍 Final userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 🔍 Filtering for tab: all
+installHook.js:1 📋 Total items: 0, Filtered: 0
+installHook.js:1 📊 Item breakdown: {recipes: 0, videos: 0, restaurants: 0, photos: 0, other: 0}
+PlateNew.tsx:73 🔍 PlateNew: Fetching all saved items for userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 🔍 PlateNew: Fetching all saved items for userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+feedCache.ts:67 🧠 IntelligentCache initialized: {maxMemory: '50MB', cleanupInterval: '300s'}
+imageOptimizer.ts:130 🖼️ WebP support detected: true
+PlateNew.tsx:50 🔥 PlateNew LOADED - Version 2.0 - Direct Supabase Query Implementation
+PlateNew.tsx:51 📍 UserId from props: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:52 📍 UserId from auth: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:53 📍 Final userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:114 🔍 Filtering for tab: all
+PlateNew.tsx:115 📋 Total items: 0, Filtered: 0
+PlateNew.tsx:116 📊 Item breakdown: {recipes: 0, videos: 0, restaurants: 0, photos: 0, other: 0}
+installHook.js:1 🔥 PlateNew LOADED - Version 2.0 - Direct Supabase Query Implementation
+installHook.js:1 📍 UserId from props: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 📍 UserId from auth: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 📍 Final userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 🔍 Filtering for tab: all
+installHook.js:1 📋 Total items: 0, Filtered: 0
+installHook.js:1 📊 Item breakdown: {recipes: 0, videos: 0, restaurants: 0, photos: 0, other: 0}
+PlateNew.tsx:50 🔥 PlateNew LOADED - Version 2.0 - Direct Supabase Query Implementation
+PlateNew.tsx:51 📍 UserId from props: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:52 📍 UserId from auth: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:53 📍 Final userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:114 🔍 Filtering for tab: all
+PlateNew.tsx:115 📋 Total items: 0, Filtered: 0
+PlateNew.tsx:116 📊 Item breakdown: {recipes: 0, videos: 0, restaurants: 0, photos: 0, other: 0}
+installHook.js:1 🔥 PlateNew LOADED - Version 2.0 - Direct Supabase Query Implementation
+installHook.js:1 📍 UserId from props: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 📍 UserId from auth: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 📍 Final userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 🔍 Filtering for tab: all
+installHook.js:1 📋 Total items: 0, Filtered: 0
+installHook.js:1 📊 Item breakdown: {recipes: 0, videos: 0, restaurants: 0, photos: 0, other: 0}
+useFeedInfiniteScroll.tsx:88 🔄 Loading initial feed batch: 8 cards
+feedService.ts:547 🍽️ Generating feed with params: {userLocation: {…}, userPreferences: {…}, pageSize: 8, userId: 'fd8f0001-04a4-46bb-83aa-c4585c97f069'}
+feedService.ts:369 🔍 Loading user swipe history for anti-repetition (first time)...
+ScoutNew.tsx:185 fetchRestaurants called: {lat: 37.7849, lng: -122.4094, radius: 2, query: ''}
+ScoutNew.tsx:211 Searching nearby with radius: 2000
+backendService.ts:22 🔗 Backend API Request: /places/nearby
+authService.ts:16 🔍 AuthService: Checking authentication status...
+installHook.js:1 🔄 Loading initial feed batch: 8 cards
+installHook.js:1 🍽️ Generating feed with params: {userLocation: {…}, userPreferences: {…}, pageSize: 8, userId: 'fd8f0001-04a4-46bb-83aa-c4585c97f069'}
+installHook.js:1 🔍 Loading user swipe history for anti-repetition (first time)...
+installHook.js:1 fetchRestaurants called: {lat: 37.7849, lng: -122.4094, radius: 2, query: ''}
+installHook.js:1 Searching nearby with radius: 2000
+installHook.js:1 🔗 Backend API Request: /places/nearby
+installHook.js:1 🔍 AuthService: Checking authentication status...
+ScoutNew.tsx:185 fetchRestaurants called: {lat: 13.1072, lng: 80.0915456, radius: 2, query: ''}
+ScoutNew.tsx:211 Searching nearby with radius: 2000
+backendService.ts:22 🔗 Backend API Request: /places/nearby
+PlateNew.tsx:88 ✅ Saved items fetched: 31
+PlateNew.tsx:89 📊 Item types: (31) ['photo', 'restaurant', 'other', 'restaurant', 'other', 'restaurant', 'restaurant', 'restaurant', 'other', 'restaurant', 'recipe', 'photo', 'photo', 'other', 'recipe', 'restaurant', 'restaurant', 'photo', 'photo', 'restaurant', 'recipe', 'restaurant', 'restaurant', 'restaurant', 'restaurant', 'recipe', 'recipe', 'restaurant', 'restaurant', 'recipe', 'recipe']
+PlateNew.tsx:88 ✅ Saved items fetched: 31
+PlateNew.tsx:89 📊 Item types: (31) ['photo', 'restaurant', 'other', 'restaurant', 'other', 'restaurant', 'restaurant', 'restaurant', 'other', 'restaurant', 'recipe', 'photo', 'photo', 'other', 'recipe', 'restaurant', 'restaurant', 'photo', 'photo', 'restaurant', 'recipe', 'restaurant', 'restaurant', 'restaurant', 'restaurant', 'recipe', 'recipe', 'restaurant', 'restaurant', 'recipe', 'recipe']
+PlateNew.tsx:50 🔥 PlateNew LOADED - Version 2.0 - Direct Supabase Query Implementation
+PlateNew.tsx:51 📍 UserId from props: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:52 📍 UserId from auth: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:53 📍 Final userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+PlateNew.tsx:114 🔍 Filtering for tab: all
+PlateNew.tsx:115 📋 Total items: 31, Filtered: 31
+PlateNew.tsx:116 📊 Item breakdown: {recipes: 7, videos: 0, restaurants: 15, photos: 5, other: 4}
+installHook.js:1 🔥 PlateNew LOADED - Version 2.0 - Direct Supabase Query Implementation
+installHook.js:1 📍 UserId from props: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 📍 UserId from auth: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 📍 Final userId: fd8f0001-04a4-46bb-83aa-c4585c97f069
+installHook.js:1 🔍 Filtering for tab: all
+installHook.js:1 📋 Total items: 31, Filtered: 31
+installHook.js:1 📊 Item breakdown: {recipes: 7, videos: 0, restaurants: 15, photos: 5, other: 4}
+authService.ts:19 🔍 AuthService: getUser result: {user: 'User(juncando@gmail.com)', error: null}
+authService.ts:39 ✅ AuthService: User authenticated successfully: {id: 'fd8f0001-04a4-46bb-83aa-c4585c97f069', email: 'juncando@gmail.com', name: 'Arjun Janakiram'}
+profileService.ts:22 👤 Getting profile for user: fd8f0001-04a4-46bb-83aa-c4585c97f069
+authService.ts:19 🔍 AuthService: getUser result: {user: 'User(juncando@gmail.com)', error: null}
+authService.ts:39 ✅ AuthService: User authenticated successfully: {id: 'fd8f0001-04a4-46bb-83aa-c4585c97f069', email: 'juncando@gmail.com', name: 'Arjun Janakiram'}
+profileService.ts:22 👤 Getting profile for user: fd8f0001-04a4-46bb-83aa-c4585c97f069
+ScoutNew.tsx:177 Location: Sekkadu, Avadi, Poonamallee, Thiruvallur, Tamil Nadu, 600054, India
+ScoutNew.tsx:185 fetchRestaurants called: {lat: 13.1072, lng: 80.0915456, radius: 2, query: undefined}
+ScoutNew.tsx:211 Searching nearby with radius: 2000
+backendService.ts:22 🔗 Backend API Request: /places/nearby
+backendService.ts:62 ✅ Backend API Success: /places/nearby {status: 200, dataSize: 31889}
+ScoutNew.tsx:218 Nearby response: {success: true, data: {…}, status: 200}
+ScoutNew.tsx:238 Setting restaurants: 20
+feedService.ts:401 🚫 Loaded 0 previously seen items for filtering
+feedService.ts:556 📊 Phase 2 weighted distribution: {restaurant: 3, recipe: 2, video: 1, masterbot: 2, ad: 0, …}
+feedService.ts:567 🔄 Starting parallel API orchestration...
+feedService.ts:711 🔍 Requesting restaurants from backend for location: {lat: 13.0449408, lng: 80.19968} radius: 15000
+backendService.ts:22 🔗 Backend API Request: /places/nearby
+feedService.ts:401 🚫 Loaded 0 previously seen items for filtering
+feedService.ts:556 📊 Phase 2 weighted distribution: {restaurant: 3, recipe: 2, video: 1, masterbot: 2, ad: 0, …}
+feedService.ts:567 🔄 Starting parallel API orchestration...
+feedService.ts:711 🔍 Requesting restaurants from backend for location: {lat: 13.0449408, lng: 80.19968} radius: 15000
+backendService.ts:22 🔗 Backend API Request: /places/nearby
+backendService.ts:62 ✅ Backend API Success: /places/nearby {status: 200, dataSize: 31889}
+ScoutNew.tsx:218 Nearby response: {success: true, data: {…}, status: 200}
+ScoutNew.tsx:238 Setting restaurants: 20
+backendService.ts:62 ✅ Backend API Success: /places/nearby {status: 200, dataSize: 28295}
+ScoutNew.tsx:218 Nearby response: {success: true, data: {…}, status: 200}
+ScoutNew.tsx:238 Setting restaurants: 20
+backendService.ts:62 ✅ Backend API Success: /places/nearby {status: 200, dataSize: 28295}
+ScoutNew.tsx:218 Nearby response: {success: true, data: {…}, status: 200}
+ScoutNew.tsx:238 Setting restaurants: 20
+feedCache.ts:139 💾 Cached video: {key: 'video:preferences:{"cuisinePreferences":["Internat...', expiresIn: '3600s', memoryUsage: '1KB'}
+feedService.ts:965 🎲 Masterbot pool: 15 posts from 1 different authors, requesting 2
+feedService.ts:972 🤖 Masterbot post data: {id: '5ded8e44-d3ae-4aba-a428-324efcca9578', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '5ded8e44-d3ae-4aba-a428-324efcca9578', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '84cc60cf-b7ac-4374-9d14-e3949fe63bb9', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '84cc60cf-b7ac-4374-9d14-e3949fe63bb9', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'e6696ca5-143d-4d5f-9932-4036af383078', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'e6696ca5-143d-4d5f-9932-4036af383078', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '67c86d62-efad-4cfe-a72a-c1b6be9799dc', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '67c86d62-efad-4cfe-a72a-c1b6be9799dc', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'f0442e24-654f-4e2b-8b13-713db8adb81e', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'f0442e24-654f-4e2b-8b13-713db8adb81e', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '2ff199ff-7463-4cce-bdc5-608fe80d381c', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '2ff199ff-7463-4cce-bdc5-608fe80d381c', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '4d640227-256c-4e46-831a-d91dfb66e1e3', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '4d640227-256c-4e46-831a-d91dfb66e1e3', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '1f7291c3-65c6-4613-a094-5587aae46e60', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '1f7291c3-65c6-4613-a094-5587aae46e60', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '8b77aa4e-b4fa-44eb-9cea-a62ffbb51e3a', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '8b77aa4e-b4fa-44eb-9cea-a62ffbb51e3a', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'f5bfc3bb-2198-458a-b391-ca747d749b26', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'f5bfc3bb-2198-458a-b391-ca747d749b26', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '205e815e-a93f-418f-972a-690d091259f0', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '205e815e-a93f-418f-972a-690d091259f0', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'bf9e9022-4825-4647-9d41-286e3db1d5ad', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'bf9e9022-4825-4647-9d41-286e3db1d5ad', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'c24cba6d-9cfb-4585-b816-e8b45f1b21cf', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'c24cba6d-9cfb-4585-b816-e8b45f1b21cf', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '275b8e03-ec29-4ae0-8912-453b391f27a8', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '275b8e03-ec29-4ae0-8912-453b391f27a8', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '77667a4e-3a03-49dc-a227-18baf068fda0', image_url: null, avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', username: 'sommelier_seb'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '77667a4e-3a03-49dc-a227-18baf068fda0', username: 'sommelier_seb', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…/master-bot-posts/avatars/sebastian_sommelier.png', …}
+backendService.ts:62 ✅ Backend API Success: /places/nearby {status: 200, dataSize: 33099}
+feedService.ts:719 🔍 Backend service response: {success: true, error: undefined, dataType: 'object', hasResults: 'yes', resultCount: 20, …}
+feedService.ts:751 🔍 Restaurant API Response Structure: {success: true, dataType: 'object', isArray: false, dataKeys: Array(4), firstItem: null, …}
+feedService.ts:764 🔧 Extracting restaurant data from wrapper object...
+feedService.ts:781 ✅ Found restaurant array at path: results
+feedService.ts:807 ✅ Successfully extracted 20 restaurants from API response
+feedCache.ts:139 💾 Cached restaurant: {key: 'restaurant:13.04,80.2,15000:3:fd8f0001-04a4-46bb-8...', expiresIn: '1800s', memoryUsage: '41KB'}
+feedService.ts:890 🎯 Final restaurant feed results: {totalFromAPI: 20, afterFiltering: 20, requesting: 3, finalCount: 3, restaurantNames: Array(3), …}
+ScoutNew.tsx:177 Location: Sekkadu, Avadi, Poonamallee, Thiruvallur, Tamil Nadu, 600054, India
+ScoutNew.tsx:185 fetchRestaurants called: {lat: 13.1072, lng: 80.0915456, radius: 2, query: undefined}
+ScoutNew.tsx:211 Searching nearby with radius: 2000
+backendService.ts:22 🔗 Backend API Request: /places/nearby
+backendService.ts:62 ✅ Backend API Success: /places/nearby {status: 200, dataSize: 33099}
+feedService.ts:719 🔍 Backend service response: {success: true, error: undefined, dataType: 'object', hasResults: 'yes', resultCount: 20, …}
+feedService.ts:751 🔍 Restaurant API Response Structure: {success: true, dataType: 'object', isArray: false, dataKeys: Array(4), firstItem: null, …}
+feedService.ts:764 🔧 Extracting restaurant data from wrapper object...
+feedService.ts:781 ✅ Found restaurant array at path: results
+feedService.ts:807 ✅ Successfully extracted 20 restaurants from API response
+feedCache.ts:139 💾 Cached restaurant: {key: 'restaurant:13.04,80.2,15000:3:fd8f0001-04a4-46bb-8...', expiresIn: '1800s', memoryUsage: '41KB'}
+feedService.ts:890 🎯 Final restaurant feed results: {totalFromAPI: 20, afterFiltering: 20, requesting: 3, finalCount: 3, restaurantNames: Array(3), …}
+feedService.ts:965 🎲 Masterbot pool: 15 posts from 1 different authors, requesting 2
+feedService.ts:972 🤖 Masterbot post data: {id: '86613835-574c-44a3-b749-de7f00d40aa9', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr…ISnb_6Benw4azpWKWC-9EZi9LJaUOScUla=w408-h544-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '86613835-574c-44a3-b749-de7f00d40aa9', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'c88336ca-e3c6-4f08-8122-9726ba4c13b0', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4no…DX19Sue31eyQadRTsz03-3LrUqx9KGODAw=w408-h306-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'c88336ca-e3c6-4f08-8122-9726ba4c13b0', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '2254f242-f3fa-402b-809e-c9464799ab19', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr…ISnb_6Benw4azpWKWC-9EZi9LJaUOScUla=w408-h544-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '2254f242-f3fa-402b-809e-c9464799ab19', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '1a15a200-2a43-420f-9a98-7ec625eb7d19', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr…ISnb_6Benw4azpWKWC-9EZi9LJaUOScUla=w408-h544-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '1a15a200-2a43-420f-9a98-7ec625eb7d19', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'cb432f6d-63d5-400b-9176-222ab003c4ba', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4np…tUhKvjNQWtxZVmveV7_QRHvmYndXKpIvLk=w408-h544-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'cb432f6d-63d5-400b-9176-222ab003c4ba', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '149557c7-dc4b-48c6-9cf2-c0d2c8cbabce', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4no…DX19Sue31eyQadRTsz03-3LrUqx9KGODAw=w408-h306-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '149557c7-dc4b-48c6-9cf2-c0d2c8cbabce', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'bf5fd607-1a1f-46c5-96f9-630796cd5440', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4np…uweSZAwT6lC7GJR-LIWTsWR8_cc_-rhH_w=w426-h240-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'bf5fd607-1a1f-46c5-96f9-630796cd5440', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '9e05ceba-0cf9-4204-b571-cbd38e9c2988', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4no…DX19Sue31eyQadRTsz03-3LrUqx9KGODAw=w408-h306-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '9e05ceba-0cf9-4204-b571-cbd38e9c2988', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '5bbe35de-ca49-49c9-b4b7-f9e78dab380c', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr…ISnb_6Benw4azpWKWC-9EZi9LJaUOScUla=w408-h544-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '5bbe35de-ca49-49c9-b4b7-f9e78dab380c', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '59a5520c-801c-4380-b703-f7fb70525772', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4np…uweSZAwT6lC7GJR-LIWTsWR8_cc_-rhH_w=w426-h240-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '59a5520c-801c-4380-b703-f7fb70525772', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '8c85008d-8420-49a4-87ea-74b81390f42a', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4np…tUhKvjNQWtxZVmveV7_QRHvmYndXKpIvLk=w408-h544-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '8c85008d-8420-49a4-87ea-74b81390f42a', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '699df530-4f84-4c20-b08b-f3695bb98c72', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4no…DX19Sue31eyQadRTsz03-3LrUqx9KGODAw=w408-h306-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '699df530-4f84-4c20-b08b-f3695bb98c72', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'f86087f4-ee58-41c4-96b9-ffc0f516c439', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4np…uweSZAwT6lC7GJR-LIWTsWR8_cc_-rhH_w=w426-h240-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'f86087f4-ee58-41c4-96b9-ffc0f516c439', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: '54e055fd-05a0-474a-a015-415ebde4d03d', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4np…tUhKvjNQWtxZVmveV7_QRHvmYndXKpIvLk=w408-h544-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: '54e055fd-05a0-474a-a015-415ebde4d03d', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedService.ts:972 🤖 Masterbot post data: {id: 'b3994843-e6a2-4448-bc53-cfa2607e8e5b', image_url: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4np…uweSZAwT6lC7GJR-LIWTsWR8_cc_-rhH_w=w426-h240-k-no', avatar_url: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', username: 'nomad_aurelia'}
+feedService.ts:281 🖼️ Masterbot image optimization DEBUG: {postId: 'b3994843-e6a2-4448-bc53-cfa2607e8e5b', username: 'nomad_aurelia', originalAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', optimizedAvatar: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', avatarFallback: 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v…public/master-bot-posts/avatars/aurelia_nomad.png', …}
+feedCache.ts:139 💾 Cached recipe: {key: 'recipe:preferences:{"cuisinePreferences":["Interna...', expiresIn: '86400s', memoryUsage: '41KB'}
+feedService.ts:598 ⚡ Parallel API orchestration completed in 878ms
+feedService.ts:617 ✅ Added 3 restaurant cards
+feedService.ts:628 ✅ Added 2 masterbot cards
+feedService.ts:639 ✅ Added 0 recipe cards
+feedService.ts:650 ✅ Added 1 video cards
+feedService.ts:661 ✅ Added 0 placeholder ad cards
+feedService.ts:664 📊 API Orchestration Results: {targetDistribution: {…}, actualResults: {…}, failedAPIs: 'none', successRate: '100.0%', totalCards: 6, …}
+feedService.ts:1174 🎲 Starting diversity-enforced shuffle for 6 cards
+feedService.ts:1189   📦 restaurant: 3 cards shuffled
+feedService.ts:1189   📦 masterbot: 2 cards shuffled
+feedService.ts:1189   📦 video: 1 cards shuffled
+feedService.ts:1250 🎯 Diversity shuffle completed in 1ms: {totalCards: 6, consecutiveSameType: 0, diversityScore: '100.0%', typeDistribution: {…}}
+feedService.ts:676 🎲 Final feed generated: 6 cards
+useFeedInfiniteScroll.tsx:101 ✅ Loaded 6 new cards
+useFeedInfiniteScroll.tsx:168 📊 Feed state updated: 0 cards in memory
+installHook.js:1 Encountered two children with the same key, ``. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+overrideMethod @ installHook.js:1
+(anonymous) @ react-dom_client.js?v=e299b05c:4925
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+warnOnInvalidKey @ react-dom_client.js?v=e299b05c:4924
+reconcileChildrenArray @ react-dom_client.js?v=e299b05c:4965
+reconcileChildFibersImpl @ react-dom_client.js?v=e299b05c:5171
+(anonymous) @ react-dom_client.js?v=e299b05c:5237
+reconcileChildren @ react-dom_client.js?v=e299b05c:7182
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7488
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<PresenceChild>
+exports.jsx @ chunk-WXT7FLCE.js?v=e299b05c:247
+(anonymous) @ framer-motion.js?v=e299b05c:4516
+AnimatePresence @ framer-motion.js?v=e299b05c:4495
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<AnimatePresence>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+FeedNew @ FeedNew.tsx:339
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+feedCache.ts:139 💾 Cached video: {key: 'video:preferences:{"cuisinePreferences":["Internat...', expiresIn: '3600s', memoryUsage: '41KB'}
+feedService.ts:444 🚫 Filtered seen video: video-qC0bTJa0xOQ
+feedService.ts:453 🔍 Anti-repetition: Filtered 1 seen video items (full)
+feedCache.ts:139 💾 Cached recipe: {key: 'recipe:preferences:{"cuisinePreferences":["Interna...', expiresIn: '86400s', memoryUsage: '41KB'}
+feedService.ts:598 ⚡ Parallel API orchestration completed in 1116ms
+feedService.ts:617 ✅ Added 3 restaurant cards
+feedService.ts:628 ✅ Added 2 masterbot cards
+feedService.ts:639 ✅ Added 0 recipe cards
+feedService.ts:650 ✅ Added 0 video cards
+feedService.ts:661 ✅ Added 0 placeholder ad cards
+feedService.ts:664 📊 API Orchestration Results: {targetDistribution: {…}, actualResults: {…}, failedAPIs: 'none', successRate: '100.0%', totalCards: 5, …}
+feedService.ts:1174 🎲 Starting diversity-enforced shuffle for 5 cards
+feedService.ts:1189   📦 restaurant: 3 cards shuffled
+feedService.ts:1189   📦 masterbot: 2 cards shuffled
+feedService.ts:1250 🎯 Diversity shuffle completed in 0ms: {totalCards: 5, consecutiveSameType: 0, diversityScore: '100.0%', typeDistribution: {…}}
+feedService.ts:676 🎲 Final feed generated: 5 cards
+useFeedInfiniteScroll.tsx:101 ✅ Loaded 5 new cards
+useFeedInfiniteScroll.tsx:168 📊 Feed state updated: 6 cards in memory
+installHook.js:1 Encountered two children with the same key, ``. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+overrideMethod @ installHook.js:1
+(anonymous) @ react-dom_client.js?v=e299b05c:4925
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+warnOnInvalidKey @ react-dom_client.js?v=e299b05c:4924
+reconcileChildrenArray @ react-dom_client.js?v=e299b05c:4949
+reconcileChildFibersImpl @ react-dom_client.js?v=e299b05c:5171
+(anonymous) @ react-dom_client.js?v=e299b05c:5237
+reconcileChildren @ react-dom_client.js?v=e299b05c:7182
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7488
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<PresenceChild>
+exports.jsx @ chunk-WXT7FLCE.js?v=e299b05c:247
+(anonymous) @ framer-motion.js?v=e299b05c:4516
+AnimatePresence @ framer-motion.js?v=e299b05c:4495
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<AnimatePresence>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+FeedNew @ FeedNew.tsx:339
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+installHook.js:1 In HTML, <button> cannot be a descendant of <button>.
+This will cause a hydration error.
+
+  ...
+    <div className="min-h-scre...">
+      <div>
+      <div className="mobile-con...">
+        <PageWrapper>
+        <PageWrapper>
+        <PageWrapper>
+        <PageWrapper>
+        <PageWrapper>
+        <PageWrapper>
+        <PageWrapper page="bites" currentPage="plate">
+          <div style={{display:"none"}}>
+            <PageErrorBoundary>
+              <Suspense fallback={<PageLoader>}>
+                <BitesNewMobile>
+                  <BitesDesktop>
+                    <div className="min-h-scre...">
+                      <div>
+                      <main className="max-w-7xl ...">
+                        <div>
+                        <section className="mb-12">
+                          <div>
+                          <div className="grid grid-...">
+                            <RecipeCard recipe={{id:945221, ...}} onClick={function onClick} onSave={function onSave} ...>
+>                             <button
+>                               onClick={function onClick}
+>                               className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl tra..."
+>                             >
+                                <div>
+                                <div className="p-5">
+                                  <h3>
+                                  <p>
+                                  <div>
+                                  <div className="flex items...">
+>                                   <button
+>                                     onClick={function onShare}
+>                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-muted hove..."
+>                                   >
+                                    ...
+                            ...
+                        ...
+        ...
+      ...
+
+overrideMethod @ installHook.js:1
+validateDOMNesting @ react-dom_client.js?v=e299b05c:2156
+completeWork @ react-dom_client.js?v=e299b05c:9002
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+completeUnitOfWork @ react-dom_client.js?v=e299b05c:12669
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12575
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<button>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+RecipeCard @ BitesDesktop.tsx:355
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<RecipeCard>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+(anonymous) @ BitesDesktop.tsx:233
+BitesDesktop @ BitesDesktop.tsx:232
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+installHook.js:1 <button> cannot contain a nested <button>.
+See this log for the ancestor stack trace.
+overrideMethod @ installHook.js:1
+(anonymous) @ react-dom_client.js?v=e299b05c:2163
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+validateDOMNesting @ react-dom_client.js?v=e299b05c:2162
+completeWork @ react-dom_client.js?v=e299b05c:9002
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+completeUnitOfWork @ react-dom_client.js?v=e299b05c:12669
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12575
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<button>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+RecipeCard @ BitesDesktop.tsx:299
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+<RecipeCard>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=e299b05c:247
+(anonymous) @ BitesDesktop.tsx:233
+BitesDesktop @ BitesDesktop.tsx:232
+react_stack_bottom_frame @ react-dom_client.js?v=e299b05c:18509
+renderWithHooksAgain @ react-dom_client.js?v=e299b05c:5729
+renderWithHooks @ react-dom_client.js?v=e299b05c:5665
+updateFunctionComponent @ react-dom_client.js?v=e299b05c:7475
+beginWork @ react-dom_client.js?v=e299b05c:8525
+runWithFiberInDEV @ react-dom_client.js?v=e299b05c:997
+performUnitOfWork @ react-dom_client.js?v=e299b05c:12561
+workLoopSync @ react-dom_client.js?v=e299b05c:12424
+renderRootSync @ react-dom_client.js?v=e299b05c:12408
+performWorkOnRoot @ react-dom_client.js?v=e299b05c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=e299b05c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=e299b05c:36
+backendService.ts:62 ✅ Backend API Success: /places/nearby {status: 200, dataSize: 28295}
+ScoutNew.tsx:218 Nearby response: {success: true, data: {…}, status: 200}
+ScoutNew.tsx:238 Setting restaurants: 20
+profileService.ts:52 ✅ Profile retrieved successfully
+dashboardService.ts:317 🚀 Fetching complete dashboard data for user: fd8f0001-04a4-46bb-83aa-c4585c97f069
+dashboardService.ts:71 🔍 Fetching crew for user: fd8f0001-04a4-46bb-83aa-c4585c97f069
+dashboardService.ts:136 🔍 Fetching saved recipes for user: fd8f0001-04a4-46bb-83aa-c4585c97f069
+dashboardService.ts:262 🔍 Fetching MasterBot posts, limit: 4
+dashboardService.ts:212 🔍 Fetching restaurant recommendations: {userLocation: {…}, preferences: {…}}
+backendService.ts:22 🔗 Backend API Request: /places/nearby
+dashboardService.ts:123 ✅ Fetched crew: 6
+dashboardService.ts:166 ✅ Fetched saved recipes: 4
+dashboardService.ts:301 ✅ Fetched MasterBot posts: 4
+profileService.ts:52 ✅ Profile retrieved successfully
+backendService.ts:62 ✅ Backend API Success: /places/nearby {status: 200, dataSize: 29037}
+dashboardService.ts:248 ✅ Fetched restaurant recommendations: 2
+dashboardService.ts:332 ✅ Dashboard data fetched successfully
+dashboardService.ts:317 🚀 Fetching complete dashboard data for user: fd8f0001-04a4-46bb-83aa-c4585c97f069
+dashboardService.ts:71 🔍 Fetching crew for user: fd8f0001-04a4-46bb-83aa-c4585c97f069
+dashboardService.ts:136 🔍 Fetching saved recipes for user: fd8f0001-04a4-46bb-83aa-c4585c97f069
+dashboardService.ts:262 🔍 Fetching MasterBot posts, limit: 4
+dashboardService.ts:212 🔍 Fetching restaurant recommendations: {userLocation: {…}, preferences: {…}}
+backendService.ts:22 🔗 Backend API Request: /places/nearby
+dashboardService.ts:166 ✅ Fetched saved recipes: 4
+dashboardService.ts:301 ✅ Fetched MasterBot posts: 4
+backendService.ts:62 ✅ Backend API Success: /places/nearby {status: 200, dataSize: 29037}
+dashboardService.ts:248 ✅ Fetched restaurant recommendations: 2
+dashboardService.ts:123 ✅ Fetched crew: 6
+dashboardService.ts:332 ✅ Dashboard data fetched successfully
+via.placeholder.com/300:1  GET https://via.placeholder.com/300 net::ERR_NAME_NOT_RESOLVED

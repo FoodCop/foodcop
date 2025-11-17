@@ -1,10 +1,38 @@
-import { useState, useEffect } from 'react';
-import { ArrowLeft, MoreVertical, Star, Crown, Trophy, Utensils, Play, MapPin, Image as ImageIcon } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { ArrowLeft, MoreVertical, Star, Crown, Trophy, Utensils, Play, MapPin } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
-import { savedItemsService, type SavedItem } from '../../services/savedItemsService';
+import { type SavedItem } from '../../services/savedItemsService';
+import { supabase } from '../../services/supabase';
 import { toast } from 'sonner';
+import type { User } from '@supabase/supabase-js';
+import { RecipeCard } from '../bites/components/RecipeCard';
+import type { Recipe } from '../bites/components/RecipeCard';
 
-type TabType = 'all' | 'recipes' | 'videos' | 'places';
+type TabType = 'posts' | 'recipes' | 'videos' | 'places';
+
+interface Post {
+  id: string;
+  user_id: string;
+  content: string;
+  image_url?: string;
+  created_at: string;
+}
+
+interface Restaurant {
+  place_id?: string;
+  name: string;
+  rating?: number;
+  price_level?: number;
+  distance?: number;
+  cuisine?: string | string[];
+  photos?: { photo_reference: string }[];
+  image_url?: string;
+}
+
+interface PlateNewProps {
+  userId?: string;
+  currentUser?: User;
+}
 
 // Level configuration
 const LEVELS = [
@@ -32,10 +60,22 @@ function getUserLevel(points: number) {
   };
 }
 
-export default function PlateNew() {
-  const { user } = useAuth();
-  const [selectedTab, setSelectedTab] = useState<TabType>('all');
+export default function PlateNew({ userId: propUserId, currentUser }: PlateNewProps = {}) {
+  const { user: authUser } = useAuth();
+  
+  // Use prop userId if provided, otherwise fall back to auth user
+  const user = currentUser || authUser;
+  const userId = propUserId || user?.id;
+  
+  // 🔥 FORCE RELOAD MARKER - Version 2.0 - Nov 17, 2025 16:45
+  console.log('🔥 PlateNew LOADED - Version 2.0 - Direct Supabase Query Implementation');
+  console.log('📍 UserId from props:', propUserId);
+  console.log('📍 UserId from auth:', authUser?.id);
+  console.log('📍 Final userId:', userId);
+  
+  const [selectedTab, setSelectedTab] = useState<TabType>('posts');
   const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   
   // Mock user data - will be replaced with real data
@@ -43,41 +83,92 @@ export default function PlateNew() {
   const userRewards = 18;
   const userLevel = getUserLevel(userPoints);
 
-  useEffect(() => {
-    loadSavedItems();
-  }, [user]);
-
-  const loadSavedItems = async () => {
-    if (!user) {
+  // ✅ Direct Supabase queries like old Plate implementation  
+  const fetchAllSavedItems = useCallback(async () => {
+    if (!userId) {
+      console.log('❌ PlateNew: No userId available');
       setLoading(false);
       return;
     }
 
     try {
-      setLoading(true);
-      const result = await savedItemsService.listSavedItems();
-      if (result.success && result.data) {
-        console.log('📦 Loaded saved items:', result.data);
-        console.log('📊 Item types:', result.data.map(item => item.item_type));
-        setSavedItems(result.data);
-      } else {
-        throw new Error(result.error || 'Failed to load saved items');
+      console.log('🔍 PlateNew: Fetching all saved items for userId:', userId);
+      
+      const { data, error } = await supabase
+        .from('saved_items')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('❌ Error fetching saved items:', error);
+        setSavedItems([]);
+        toast.error('Failed to load saved items');
+        return;
       }
+
+      console.log('✅ Saved items fetched:', data?.length || 0);
+      console.log('📊 Item types:', data?.map(item => item.item_type) || []);
+      
+      // Debug first restaurant item to see metadata structure
+      const firstRestaurant = data?.find(item => item.item_type === 'restaurant');
+      if (firstRestaurant) {
+        console.log('🍽️ Sample restaurant metadata:', firstRestaurant.metadata);
+      }
+      
+      console.log('🔄 Setting savedItems state with', data?.length || 0, 'items');
+      setSavedItems((data as SavedItem[]) || []);
+      console.log('✅ State update complete - savedItems should now have', data?.length || 0, 'items');
     } catch (error) {
-      console.error('Error loading saved items:', error);
+      console.error('💥 Unexpected error fetching saved items:', error);
+      setSavedItems([]);
       toast.error('Failed to load saved items');
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
+
+  const fetchPosts = useCallback(async () => {
+    if (!userId) {
+      console.log('❌ PlateNew: No userId available for posts');
+      return;
+    }
+
+    try {
+      console.log('🔍 PlateNew: Fetching posts for userId:', userId);
+      
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('❌ Error fetching posts:', error);
+        setPosts([]);
+        return;
+      }
+
+      console.log('✅ Posts fetched:', data?.length || 0);
+      setPosts((data as Post[]) || []);
+    } catch (error) {
+      console.error('💥 Unexpected error fetching posts:', error);
+      setPosts([]);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    fetchAllSavedItems();
+    fetchPosts();
+  }, [fetchAllSavedItems, fetchPosts]);
 
   // Filter items by tab
   const filteredItems = savedItems.filter(item => {
-    if (selectedTab === 'all') return true; // Show all item types including photos
+    if (selectedTab === 'posts') return false; // Posts from posts table, not saved_items
     if (selectedTab === 'recipes') return item.item_type === 'recipe';
     if (selectedTab === 'videos') return item.item_type === 'video';
     if (selectedTab === 'places') return item.item_type === 'restaurant';
-    return false; // Don't show items that don't match any tab
+    return false;
   });
 
   // Log filtering results
@@ -100,6 +191,7 @@ export default function PlateNew() {
   const getUserDisplayName = () => {
     if (user?.user_metadata?.full_name) return user.user_metadata.full_name;
     if (user?.user_metadata?.name) return user.user_metadata.name;
+    if (user?.user_metadata?.display_name) return user.user_metadata.display_name;
     if (user?.email) return user.email.split('@')[0];
     return 'Guest';
   };
@@ -181,7 +273,7 @@ export default function PlateNew() {
             </button>
             <div className="w-px h-10 bg-gray-200"></div>
             <button 
-              onClick={() => setSelectedTab('all')}
+              onClick={() => setSelectedTab('posts')}
               className="flex flex-col items-center hover:opacity-80 transition-opacity"
             >
               <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">{savedItems.length}</span>
@@ -233,14 +325,14 @@ export default function PlateNew() {
         <nav className="bg-white border-b border-gray-200 sticky top-14 z-40 mt-2">
           <div className="flex">
             <button 
-              onClick={() => setSelectedTab('all')}
+              onClick={() => setSelectedTab('posts')}
               className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                selectedTab === 'all' 
+                selectedTab === 'posts' 
                   ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
                   : 'text-[#666666] hover:text-[#1A1A1A]'
               }`}
             >
-              All
+              Posts
             </button>
             <button 
               onClick={() => setSelectedTab('recipes')}
@@ -275,75 +367,285 @@ export default function PlateNew() {
           </div>
         </nav>
 
-        {/* Content Grid */}
-        {loading ? (
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-0.5 mt-0.5">
-            {[...new Array(12)].map((_, i) => (
-              <div key={`skeleton-${i}`} className="aspect-square bg-gray-200 animate-pulse" />
-            ))}
-          </div>
-        ) : filteredItems.length === 0 ? (
+        {/* Content */}
+        {renderContent()}
+      </main>
+    </div>
+  );
+
+  function renderContent() {
+    if (loading) {
+      const skeletons = Array.from({ length: 6 }, (_, i) => ({ id: `skeleton-${i}` }));
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          {skeletons.map((item) => (
+            <div key={item.id} className="h-64 bg-gray-200 animate-pulse rounded-lg" />
+          ))}
+        </div>
+      );
+    }
+
+    // Posts tab - show user's posts
+    if (selectedTab === 'posts') {
+      if (posts.length === 0) {
+        return (
           <div className="flex flex-col items-center justify-center py-20 px-5">
             <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-              {selectedTab === 'all' && <Star className="w-10 h-10 text-gray-400" />}
-              {selectedTab === 'recipes' && <Utensils className="w-10 h-10 text-gray-400" />}
-              {selectedTab === 'videos' && <Play className="w-10 h-10 text-gray-400" />}
-              {selectedTab === 'places' && <MapPin className="w-10 h-10 text-gray-400" />}
+              <Star className="w-10 h-10 text-gray-400" />
             </div>
-            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">
-              {selectedTab === 'all' ? 'No saved items yet' : `No ${selectedTab} saved`}
-            </h3>
+            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">No posts yet</h3>
             <p className="text-[#666666] text-center mb-6">
-              {selectedTab === 'all' 
-                ? 'Start exploring and save recipes, videos, and places you love!'
-                : `Tap the bookmark icon to save ${selectedTab}`}
+              Share your food adventures and connect with friends!
             </p>
             <button 
-              onClick={() => toast.info('Navigate to explore page')}
+              onClick={() => toast.info('Create post coming soon')}
               className="bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
             >
-              Start Exploring
+              Create Post
             </button>
           </div>
-        ) : (
-          <section className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-0.5 mt-0.5">
-            {filteredItems.map((item) => {
-              const metadata = item.metadata as Record<string, unknown>;
-              const thumbnail = (metadata.thumbnail as string) || (metadata.image as string) || 'https://via.placeholder.com/300';
-              const title = (metadata.title as string) || 'Saved Item';
-              const duration = metadata.duration as string | undefined;
-              
-              return (
-                <div 
-                  key={item.id}
-                  onClick={() => handleItemClick(item)}
-                  className="aspect-square relative overflow-hidden bg-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
-                >
-                  <img 
-                    className="w-full h-full object-cover" 
-                    src={thumbnail} 
-                    alt={title}
-                    loading="lazy"
-                  />
-                  {/* Type Badge */}
-                  <div className="absolute top-2 left-2 w-7 h-7 bg-black/50 rounded-full flex items-center justify-center">
-                    {item.item_type === 'recipe' && <Utensils className="w-3 h-3 text-white" />}
-                    {item.item_type === 'video' && <Play className="w-3 h-3 text-white" />}
-                    {item.item_type === 'restaurant' && <MapPin className="w-3 h-3 text-white" />}
-                    {item.item_type === 'photo' && <ImageIcon className="w-3 h-3 text-white" />}
+        );
+      }
+
+      return (
+        <section className="p-4 space-y-4">
+          {posts.map((post) => (
+            <div key={post.id} className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
+              {post.image_url && (
+                <img src={post.image_url} alt="Post" className="w-full h-64 object-cover" />
+              )}
+              <div className="p-4">
+                <p className="text-[#1A1A1A] mb-2">{post.content}</p>
+                <span className="text-sm text-[#666666]">
+                  {new Date(post.created_at).toLocaleDateString()}
+                </span>
+              </div>
+            </div>
+          ))}
+        </section>
+      );
+    }
+
+    // Empty state for other tabs
+    if (filteredItems.length === 0) {
+      return (
+        <div className="flex flex-col items-center justify-center py-20 px-5">
+          <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+            {selectedTab === 'recipes' && <Utensils className="w-10 h-10 text-gray-400" />}
+            {selectedTab === 'videos' && <Play className="w-10 h-10 text-gray-400" />}
+            {selectedTab === 'places' && <MapPin className="w-10 h-10 text-gray-400" />}
+          </div>
+          <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{`No ${selectedTab} saved`}</h3>
+          <p className="text-[#666666] text-center mb-6">
+            {`Tap the bookmark icon to save ${selectedTab}`}
+          </p>
+          <button 
+            onClick={() => toast.info('Navigate to explore page')}
+            className="bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
+          >
+            Start Exploring
+          </button>
+        </div>
+      );
+    }
+
+    // Recipe cards
+    if (selectedTab === 'recipes') {
+      return (
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          {filteredItems.map((item) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const metadata = item.metadata as Record<string, any>;
+            const recipe: Recipe = {
+              id: item.item_id ? Number(item.item_id) : 0,
+              title: (metadata.title as string) || (metadata.name as string) || 'Untitled Recipe',
+              image: (metadata.image as string) || (metadata.image_url as string) || '',
+              readyInMinutes: (metadata.readyInMinutes as number) || (metadata.cookTime as number) || 30,
+              servings: (metadata.servings as number) || 4,
+              diets: (metadata.diets as string[]) || [],
+              cuisines: (metadata.cuisines as string[]) || [],
+              summary: (metadata.summary as string) || '',
+              instructions: (metadata.instructions as string) || '',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              extendedIngredients: (metadata.extendedIngredients as any[]) || []
+            };
+            
+            return (
+              <RecipeCard 
+                key={item.id} 
+                recipe={recipe} 
+                onClick={() => handleItemClick(item)} 
+              />
+            );
+          })}
+        </section>
+      );
+    }
+
+    // Restaurant cards
+    if (selectedTab === 'places') {
+      return (
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          {filteredItems.map((item) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const metadata = item.metadata as Record<string, any>;
+            const restaurant: Restaurant = {
+              place_id: (metadata.place_id as string) || item.item_id,
+              name: (metadata.name as string) || 'Unknown Restaurant',
+              rating: (metadata.rating as number) || 4,
+              price_level: (metadata.price_level as number) || (metadata.priceLevel as number) || 2,
+              distance: metadata.distance as number | undefined,
+              cuisine: (metadata.cuisine as string | string[]) || (metadata.types as string | string[]) || 'Restaurant',
+              photos: (metadata.photos as { photo_reference: string }[]) || undefined,
+              image_url: (metadata.image_url as string) || (metadata.image as string) || (metadata.photo as string) || undefined
+            };
+            
+            return <RestaurantCardComponent key={item.id} restaurant={restaurant} onClick={() => handleItemClick(item)} />;
+          })}
+        </section>
+      );
+    }
+
+    // Video cards - placeholder for now
+    if (selectedTab === 'videos') {
+      return (
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          {filteredItems.map((item) => {
+            const metadata = item.metadata;
+            
+            return (
+              <button 
+                key={item.id}
+                type="button"
+                onClick={() => handleItemClick(item)}
+                className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow text-left w-full"
+              >
+                <div className="relative aspect-video bg-gray-900">
+                  {((metadata.thumbnail_url || metadata.thumbnailUrl || metadata.image) as string | undefined) ? (
+                    <img 
+                      src={(metadata.thumbnail_url || metadata.thumbnailUrl || metadata.image) as string} 
+                      alt={(metadata.title as string) || 'Video'}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Play className="w-16 h-16 text-white/50" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
+                      <Play className="w-8 h-8 text-[#FF6B35] fill-[#FF6B35] ml-1" />
+                    </div>
                   </div>
-                  {/* Duration Badge (for videos) */}
-                  {item.item_type === 'video' && duration && (
-                    <div className="absolute top-2 right-2 bg-black/70 px-2 py-1 rounded text-white text-xs font-medium">
-                      {duration}
+                  {metadata.duration && (
+                    <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-white text-xs">
+                      {metadata.duration as string}
                     </div>
                   )}
                 </div>
-              );
-            })}
-          </section>
+                <div className="p-4">
+                  <h3 className="font-semibold text-[#1A1A1A] mb-1 line-clamp-2">
+                    {(metadata.title as string) || (metadata.name as string) || 'Video'}
+                  </h3>
+                  {metadata.creator && (
+                    <p className="text-sm text-[#666666]">{metadata.creator as string}</p>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </section>
+      );
+    }
+
+    return null;
+  }
+}
+
+// Restaurant Card Component (inline since FeaturedRestaurantCard is complex)
+function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant: Restaurant; onClick?: () => void }>) {
+  const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$$';
+  
+  const getDistanceText = () => {
+    if (!restaurant.distance || typeof restaurant.distance !== 'number') return '0.5km away';
+    if (restaurant.distance < 1) return `${Math.round(restaurant.distance * 1000)}m away`;
+    return `${restaurant.distance.toFixed(1)}km away`;
+  };
+  const distanceText = getDistanceText();
+  
+  const cuisineTypes: string[] = Array.isArray(restaurant.cuisine) ? restaurant.cuisine : [restaurant.cuisine || 'Restaurant'];
+  
+  return (
+    <button
+      onClick={onClick}
+      className="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 cursor-pointer hover:shadow-xl transition-shadow text-left w-full"
+    >
+      {/* Hero image with gradient overlay */}
+      <div className="relative h-56 overflow-hidden bg-linear-to-br from-gray-200 to-gray-300">
+        {restaurant.image_url ? (
+          <img 
+            src={restaurant.image_url} 
+            alt={restaurant.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Hide broken images and show placeholder
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <MapPin className="w-16 h-16 text-gray-400" />
+          </div>
         )}
-      </main>
-    </div>
+        
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent"></div>
+        
+        {/* Bottom content */}
+        <div className="absolute bottom-4 left-4 right-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-1">{restaurant.name}</h3>
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-3 h-3 text-white" />
+                <span className="text-sm text-white">{distanceText}</span>
+              </div>
+            </div>
+            <div className="bg-white px-4 py-2 rounded-full flex items-center space-x-1">
+              <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+              <span className="text-lg font-bold text-gray-900">{restaurant.rating}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Details section */}
+      <div className="p-5">
+        {/* Tags */}
+        <div className="flex items-center space-x-2 mb-4">
+          {cuisineTypes.slice(0, 2).map((type) => (
+            <span key={type} className="px-3 py-1 bg-gray-50 rounded-full text-xs font-medium text-gray-700">
+              {type}
+            </span>
+          ))}
+          <span className="px-3 py-1 bg-gray-50 rounded-full text-xs font-medium text-gray-700">
+            {priceLevel}
+          </span>
+        </div>
+        
+        {/* Description */}
+        <p className="text-sm text-gray-600 mb-5 leading-relaxed line-clamp-2">
+          Experience exquisite cuisine in an elegant setting. Saved from your explorations.
+        </p>
+        
+        {/* Action button */}
+        <div className="flex space-x-3">
+          <button className="flex-1 h-12 bg-gray-900 text-white rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors">
+            <MapPin className="w-4 h-4" />
+            <span>View Details</span>
+          </button>
+        </div>
+      </div>
+    </button>
   );
 }

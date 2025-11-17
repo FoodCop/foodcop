@@ -217,3 +217,67 @@
 **Session End Time**: November 16, 2025, ~8:00 PM
 **Branch**: main (all commits pushed)
 **Dev Server**: Running (restart recommended next session)
+
+---
+
+# November 17, 2025 - Session Update
+
+## Completed Tasks ✅
+
+### PlateNew.tsx Refactoring
+- **Replaced "All" tab with "Posts" tab**
+  - Changed tab types: `'posts' | 'recipes' | 'videos' | 'places'`
+  - Added posts data fetching from `posts` table
+  - Posts query: `SELECT * FROM posts WHERE user_id = '...'`
+
+- **Implemented Card-Based Layout**
+  - **Recipes Tab**: Uses `RecipeCard` component from bites/components
+    - Shows recipe title, image, cook time, servings, diet badges
+  - **Places Tab**: Custom `RestaurantCardComponent` 
+    - Shows restaurant name, rating, distance, cuisine, price level
+  - **Videos Tab**: Custom video card component
+    - Shows thumbnail, play button overlay, duration badge
+  - **Posts Tab**: Custom post cards with image and content
+
+- **Layout Changes**
+  - Changed from dense grid: `grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-0.5`
+  - To spacious card layout: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4`
+  - Added proper empty states for each tab with contextual CTAs
+
+### Bug Fixes
+- **Fixed restaurant distance error**: `restaurant.distance.toFixed is not a function`
+  - Added type check: `typeof restaurant.distance !== 'number'`
+  - Used `Math.round()` instead of `.toFixed(0)` for safety
+
+## Known Issues ⚠️
+
+### Saved Restaurant Images Not Loading
+- **Status**: Images are not displaying in Place cards
+- **Current Implementation**: 
+  - Card checks for `restaurant.image_url` from metadata
+  - Falls back to MapPin icon placeholder
+  - Looks for image in: `metadata.image_url`, `metadata.image`, `metadata.photo`
+- **Likely Cause**: 
+  - Saved restaurant metadata may not include direct image URLs
+  - Google Places photos require special API calls with `photo_reference`
+  - May need to fetch images dynamically using Google Places Photo API
+- **Next Steps**: 
+  - Inspect actual metadata structure in saved_items table
+  - Determine if photos need to be fetched via Google API
+  - May require backend function to generate photo URLs
+
+### Saved Videos Not Loading
+- **Status**: Videos tab shows empty state
+- **Data**: User currently has 0 saved videos in database
+  - 15 restaurants
+  - 7 recipes  
+  - 5 photos
+  - 4 other
+  - 0 videos
+- **Note**: This is correct behavior - no videos saved yet
+- **Future**: Once videos are saved, they should display with video card component
+
+---
+
+**Session Update Time**: November 17, 2025
+**Status**: Plate page refactored with card layouts, known image loading issues to revisit

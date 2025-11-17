@@ -25,7 +25,7 @@ const BitesApp = lazy(() => import('./components/bites/BitesNewMobile'))
 const TrimsApp = lazy(() => import('./components/trims/TrimsNew'))
 const DashApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
 const SnapApp = lazy(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
-const PlateApp = lazy(() => import('./components/plate/PlateNew'))
+const PlateApp: React.ComponentType<{ userId?: string; currentUser?: unknown }> = lazy(() => import('./components/plate/PlateNew'))
 
 // Loading component for lazy-loaded routes
 function PageLoader() {
@@ -123,7 +123,6 @@ function App() {
           <NavButton page="scout" label="Scout" currentPage={currentPage} setCurrentPage={setCurrentPage} />
           <NavButton page="bites" label="Bites" currentPage={currentPage} setCurrentPage={setCurrentPage} />
           <NavButton page="trims" label="Trims" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="snap" label="Snap" currentPage={currentPage} setCurrentPage={setCurrentPage} />
           <NavButton page="plate" label="Plate" currentPage={currentPage} setCurrentPage={setCurrentPage} />
           <NavButton page="dash" label="Dashboard" currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
@@ -206,6 +205,33 @@ function App() {
     );
   };
 
+  // Protected Plate component with userId passed as prop
+  const PlateProtectedApp = () => {
+    const { user, loading } = useAuth();
+    
+    if (loading) {
+      return <PageLoader />;
+    }
+    
+    if (!user) {
+      console.log('🚫 Plate access denied: User not authenticated');
+      return (
+        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-[#1A1A1A] mb-2">Sign In Required</h2>
+            <p className="text-[#666666]">Please sign in to view your Plate</p>
+          </div>
+        </div>
+      );
+    }
+    
+    return (
+      <Suspense fallback={<PageLoader />}>
+        <PlateApp userId={user.id} currentUser={user} />
+      </Suspense>
+    );
+  };
+
   // Render all pages but only show the active one (keeps state between navigations)
   const renderAllPages = () => {
     return (
@@ -254,7 +280,7 @@ function App() {
         </PageWrapper>
 
         <PageWrapper page="plate" currentPage={currentPage}>
-          <PlateApp />
+          <PlateProtectedApp />
         </PageWrapper>
       </>
     );

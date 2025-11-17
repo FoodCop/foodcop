@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Camera, X, Star, ArrowLeft, MapPin, Clock, Heart } from 'lucide-react';
+import { Camera, X, Star, MapPin, Clock, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../auth/AuthProvider';
 import { SavedItemsService } from '../../services/savedItemsService';
@@ -70,7 +70,9 @@ export function SnapNew() {
   useEffect(() => {
     return () => {
       if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+        for (const track of stream.getTracks()) {
+          track.stop();
+        }
       }
     };
   }, [stream]);
@@ -157,7 +159,9 @@ export function SnapNew() {
     const metadata = await getGeolocation();
 
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      for (const track of stream.getTracks()) {
+        track.stop();
+      }
     }
 
     setCapturedPhoto({ imageData, metadata });
@@ -295,7 +299,9 @@ export function SnapNew() {
 
   const handleCancel = () => {
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      for (const track of stream.getTracks()) {
+        track.stop();
+      }
     }
     setShowCamera(false);
     setShowTagging(false);
@@ -386,8 +392,8 @@ export function SnapNew() {
               </div>
               {/* Grid overlay */}
               <div className="absolute inset-0 pointer-events-none grid grid-cols-3 grid-rows-3">
-                {[...Array(9)].map((_, i) => (
-                  <div key={i} className="border border-white/10" />
+                {[...new Array(9)].map((_, i) => (
+                  <div key={`grid-${i}`} className="border border-white/10" />
                 ))}
               </div>
             </div>
@@ -458,7 +464,7 @@ export function SnapNew() {
                 alt="Captured" 
                 className="w-full h-full object-cover"
               />
-              {capturedPhoto.metadata.latitude && capturedPhoto.metadata.longitude && (
+              {Boolean(capturedPhoto.metadata.latitude && capturedPhoto.metadata.longitude) && (
                 <div className="absolute top-3 right-3 flex items-center gap-1 px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
                   <MapPin className="w-3 h-3" />
                   <span>Located</span>
@@ -477,10 +483,11 @@ export function SnapNew() {
           <div className="space-y-5">
             {/* Restaurant Name */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-900">
+              <label htmlFor="restaurant-name" className="text-sm font-semibold text-gray-900">
                 Restaurant Name <span className="text-red-500">*</span>
               </label>
               <input
+                id="restaurant-name"
                 type="text"
                 value={restaurantName}
                 onChange={(e) => setRestaurantName(e.target.value)}
@@ -491,7 +498,7 @@ export function SnapNew() {
 
             {/* Cuisine Type */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-900">
+              <label htmlFor="cuisine-type" className="text-sm font-semibold text-gray-900">
                 Type of Cuisine <span className="text-red-500">*</span>
               </label>
               <div className="flex flex-wrap gap-2">
@@ -514,7 +521,7 @@ export function SnapNew() {
 
             {/* Rating */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-900">Rating (Optional)</label>
+              <label htmlFor="rating" className="text-sm font-semibold text-gray-900">Rating (Optional)</label>
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((value) => (
                   <button
@@ -536,8 +543,9 @@ export function SnapNew() {
 
             {/* Description */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-900">Description (Optional)</label>
+              <label htmlFor="description" className="text-sm font-semibold text-gray-900">Description (Optional)</label>
               <textarea
+                id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Tell us about your experience..."
