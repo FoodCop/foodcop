@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, MoreVertical, Star, Crown, Trophy, Utensils, Play, MapPin } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Star, Crown, Trophy, Utensils, Play, MapPin, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { savedItemsService, type SavedItem } from '../../services/savedItemsService';
 import { toast } from 'sonner';
@@ -73,17 +73,23 @@ export default function PlateNew() {
 
   // Filter items by tab
   const filteredItems = savedItems.filter(item => {
-    if (selectedTab === 'all') return true;
+    if (selectedTab === 'all') return true; // Show all item types including photos
     if (selectedTab === 'recipes') return item.item_type === 'recipe';
     if (selectedTab === 'videos') return item.item_type === 'video';
     if (selectedTab === 'places') return item.item_type === 'restaurant';
-    return true;
+    return false; // Don't show items that don't match any tab
   });
 
   // Log filtering results
   console.log(`🔍 Filtering for tab: ${selectedTab}`);
   console.log(`📋 Total items: ${savedItems.length}, Filtered: ${filteredItems.length}`);
-  console.log(`📍 Restaurant items:`, savedItems.filter(i => i.item_type === 'restaurant').length);
+  console.log(`📊 Item breakdown:`, {
+    recipes: savedItems.filter(i => i.item_type === 'recipe').length,
+    videos: savedItems.filter(i => i.item_type === 'video').length,
+    restaurants: savedItems.filter(i => i.item_type === 'restaurant').length,
+    photos: savedItems.filter(i => i.item_type === 'photo').length,
+    other: savedItems.filter(i => i.item_type === 'other').length
+  });
 
   const handleItemClick = (item: SavedItem) => {
     // Handle item click - open detail modal
@@ -324,6 +330,7 @@ export default function PlateNew() {
                     {item.item_type === 'recipe' && <Utensils className="w-3 h-3 text-white" />}
                     {item.item_type === 'video' && <Play className="w-3 h-3 text-white" />}
                     {item.item_type === 'restaurant' && <MapPin className="w-3 h-3 text-white" />}
+                    {item.item_type === 'photo' && <ImageIcon className="w-3 h-3 text-white" />}
                   </div>
                   {/* Duration Badge (for videos) */}
                   {item.item_type === 'video' && duration && (
