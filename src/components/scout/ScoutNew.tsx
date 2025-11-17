@@ -4,6 +4,24 @@ import { toast } from 'sonner';
 import { backendService, formatGooglePlaceResult } from '../../services/backendService';
 import type { GooglePlace } from '../../types';
 import { RestaurantDetailDialog } from './components/RestaurantDetailDialog';
+import { ScoutDesktop } from './ScoutDesktop';
+
+// Hook to detect screen size
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(globalThis.innerWidth >= 1024);
+    };
+
+    checkDesktop();
+    globalThis.addEventListener('resize', checkDesktop);
+    return () => globalThis.removeEventListener('resize', checkDesktop);
+  }, []);
+
+  return isDesktop;
+}
 
 interface Restaurant {
   id: string;
@@ -68,6 +86,10 @@ const CUISINE_CATEGORIES = [
 ];
 
 export default function ScoutNew() {
+  // Detect desktop screen size
+  const isDesktop = useIsDesktop();
+  
+  // Mobile-specific state
   const [userLocation, setUserLocation] = useState<[number, number]>([37.7849, -122.4094]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -248,6 +270,12 @@ export default function ScoutNew() {
     }
   }, [searchQuery, radiusKm, selectedCategory, userLocation]);
 
+  // Render desktop version for screens >= 1024px
+  if (isDesktop) {
+    return <ScoutDesktop />;
+  }
+
+  // Mobile version below
   return (
     <div className="min-h-screen bg-white">
       {/* Mobile Container - Max width for mobile view */}
