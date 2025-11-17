@@ -21,7 +21,7 @@ import AuthPage from './components/auth/AuthPage'
 const OnboardingFlow = lazy(() => import('./components/onboarding/OnboardingFlow'))
 const FeedApp = lazy(() => import('./components/feed/FeedNew').then(module => ({ default: module.FeedNew })))
 const ScoutApp = lazy(() => import('./components/scout/ScoutNew'))
-const BitesApp = lazy(() => import('./components/bites/BitesNew'))
+const BitesApp = lazy(() => import('./components/bites/BitesNewMobile'))
 const TrimsApp = lazy(() => import('./components/trims/TrimsNew'))
 const DashApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
 const SnapApp = lazy(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))

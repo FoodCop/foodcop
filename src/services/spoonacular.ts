@@ -1,8 +1,18 @@
 import axios from 'axios';
 import config from '../config/config';
 
+interface SearchRecipesParams {
+  query?: string;
+  diet?: string;
+  type?: string;
+  cuisine?: string;
+  maxReadyTime?: number;
+  number?: number;
+  offset?: number;
+}
+
 export const SpoonacularService = {
-  async searchRecipes(query: string, number = 10) {
+  async searchRecipes(params: SearchRecipesParams) {
     try {
       // Check if API key is available
       if (!config.spoonacular.apiKey) {
@@ -15,14 +25,13 @@ export const SpoonacularService = {
 
       const res = await axios.get(`${config.spoonacular.baseUrl}${config.spoonacular.endpoints.recipeSearch}`, {
         params: {
-          query,
-          number,
+          ...params,
+          number: params.number || 12,
           apiKey: config.spoonacular.apiKey,
-          addRecipeInformation: true, // Include detailed recipe information
-          fillIngredients: true, // Include ingredients information
-          addRecipeNutrition: false, // Don't include nutrition to save API credits
-          instructionsRequired: true, // Only return recipes with instructions
-          sort: 'popularity', // Sort by popularity for better results
+          addRecipeInformation: true,
+          fillIngredients: true,
+          instructionsRequired: true,
+          sort: 'popularity',
         },
         timeout: config.api.timeout,
       });
@@ -43,12 +52,13 @@ export const SpoonacularService = {
     }
   },
 
-  async getRecipeInformation(id: number) {
+  async getRecipeInformation(id: number, includeNutrition = true) {
     try {
       const path = config.spoonacular.endpoints.recipeInformation.replace('{id}', String(id));
       const res = await axios.get(`${config.spoonacular.baseUrl}${path}`, {
         params: {
           apiKey: config.spoonacular.apiKey,
+          includeNutrition,
         },
         timeout: config.api.timeout,
       });
@@ -56,6 +66,49 @@ export const SpoonacularService = {
       return { success: true, data: res.data };
     } catch (error) {
       console.error('Spoonacular getRecipeInformation error:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  },
+
+  async getRandomRecipes(number = 10, tags?: string) {
+    try {
+      if (!config.spoonacular.apiKey) {
+        return { success: false, error: 'API key not configured' };
+      }
+
+      const res = await axios.get(`${config.spoonacular.baseUrl}/recipes/random`, {
+        params: {
+          apiKey: config.spoonacular.apiKey,
+          number,
+          tags,
+        },
+        timeout: config.api.timeout,
+      });
+
+      return { success: true, data: res.data };
+    } catch (error) {
+      console.error('Spoonacular getRandomRecipes error:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  },
+
+  async getSimilarRecipes(id: number, number = 4) {
+    try {
+      if (!config.spoonacular.apiKey) {
+        return { success: false, error: 'API key not configured' };
+      }
+
+      const res = await axios.get(`${config.spoonacular.baseUrl}/recipes/${id}/similar`, {
+        params: {
+          apiKey: config.spoonacular.apiKey,
+          number,
+        },
+        timeout: config.api.timeout,
+      });
+
+      return { success: true, data: res.data };
+    } catch (error) {
+      console.error('Spoonacular getSimilarRecipes error:', error);
       return { success: false, error: (error as Error).message };
     }
   },

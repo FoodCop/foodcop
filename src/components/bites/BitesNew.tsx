@@ -68,7 +68,7 @@ export default function BitesNew() {
     setError(null);
     
     try {
-      const result = await SpoonacularService.searchRecipes(query, 12);
+      const result = await SpoonacularService.searchRecipes({ query, number: 12 });
       
       if (result.success && result.data?.results) {
         const transformedRecipes: Recipe[] = result.data.results.map((recipe: SpoonacularRecipe) => ({

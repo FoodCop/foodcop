@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <script src='https://cdn.tailwindcss.com'></script>
+            <script>
+            tailwind.config = {
+                        theme: {
+                            extend: {
+                                colors: {
+                                    border: "var(--border)",
+                                    input: "var(--input)",
+                                    ring: "var(--ring)",
+                                    background: "var(--background)",
+                                    foreground: "var(--foreground)",
+                                    primary: {
+                                        DEFAULT: "var(--primary)",
+                                        foreground: "var(--primary-foreground)",
+                                    },
+                                    secondary: {
+                                        DEFAULT: "var(--secondary)",
+                                        foreground: "var(--secondary-foreground)",
+                                    },
+                                    destructive: {
+                                        DEFAULT: "var(--destructive)",
+                                        foreground: "var(--destructive-foreground)",
+                                    },
+                                    muted: {
+                                        DEFAULT: "var(--muted)",
+                                        foreground: "var(--muted-foreground)",
+                                    },
+                                    accent: {
+                                        DEFAULT: "var(--accent)",
+                                        foreground: "var(--accent-foreground)",
+                                    },
+                                    popover: {
+                                        DEFAULT: "var(--popover)",
+                                        foreground: "var(--popover-foreground)",
+                                    },
+                                    card: {
+                                        DEFAULT: "var(--card)",
+                                        foreground: "var(--card-foreground)",
+                                    },
+                                    sidebar: {
+                                        DEFAULT: "var(--sidebar)",
+                                        foreground: "var(--sidebar-foreground)",
+                                        primary: "var(--sidebar-primary)",
+                                        "primary-foreground": "var(--sidebar-primary-foreground)",
+                                        accent: "var(--sidebar-accent)",
+                                        "accent-foreground": "var(--sidebar-accent-foreground)",
+                                        border: "var(--sidebar-border)",
+                                        ring: "var(--sidebar-ring)",
+                                    },
+                                    chart: {
+                                        1: "var(--chart-1)",
+                                        2: "var(--chart-2)",
+                                        3: "var(--chart-3)",
+                                        4: "var(--chart-4)",
+                                        5: "var(--chart-5)",
+                                    },
+                                },
+                                borderRadius: {
+                                    lg: "var(--radius)",
+                                    md: "calc(var(--radius) - 2px)",
+                                    sm: "calc(var(--radius) - 4px)",
+                                },
+                                fontFamily: {
+                                    sans: ["var(--font-sans)"],
+                                    serif: ["var(--font-serif)"],
+                                    mono: ["var(--font-mono)"],
+                                },
+                                boxShadow: {
+                                    '2xs': 'var(--shadow-2xs)',
+                                    'xs': 'var(--shadow-xs)',
+                                    'sm': 'var(--shadow-sm)',
+                                    'DEFAULT': 'var(--shadow)',
+                                    'md': 'var(--shadow-md)',
+                                    'lg': 'var(--shadow-lg)',
+                                    'xl': 'var(--shadow-xl)',
+                                    '2xl': 'var(--shadow-2xl)',
+                                },
+                            },
+                        }
+                    }
+            </script>
+            
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                },
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                fontFamily: {
+                    sans: ["var(--font-sans)"],
+                    serif: ["var(--font-serif)"],
+                    mono: ["var(--font-mono)"],
+                },
+                boxShadow: {
+                    'DEFAULT': 'var(--shadow)',
+                },
+            },
+        }
+    }
+    </script>
+    <script src="https://cdn.plot.ly/plotly-3.1.1.min.js"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: #FAFAFA;
+            --foreground: #0f172a;
+            --card: #ffffff;
+            --card-foreground: #0f172a;
+            --primary: #FFD500;
+            --primary-foreground: #8A8A8A;
+            --secondary: #64748b;
+            --secondary-foreground: #ffffff;
+            --muted: #FAFAFA;
+            --muted-foreground: #0f172a;
+            --accent: #f59e0b;
+            --accent-foreground: #ffffff;
+            --destructive: #ef4444;
+            --destructive-foreground: #ffffff;
+            --border: #EEE;
+            --input: #FFFFFF;
+            --ring: #94a3b8;
+            --font-sans: Be Vietnam Pro;
+            --font-serif: Georgia, serif;
+            --font-mono: JetBrains Mono, monospace;
+            --radius: 10px;
+            --shadow: -2px 4px 12px 4px rgba(51,51,51,0.05);
+        }
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: var(--font-sans), sans-serif; }
+        .recipe-popup { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 1000; 
+            overflow-y: auto;
+        }
+        .recipe-popup.active { display: flex; }
+    </style>
+</head>
+<body class="bg-background">
+    
+    <header id="header" class="sticky top-0 bg-card border-b border-border z-50">
+        <div class="px-4 py-3 flex items-center justify-between">
+            <button onclick="window.history.back()" class="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                <i class="fa-solid fa-arrow-left text-foreground"></i>
+            </button>
+            <h1 class="text-lg font-bold text-foreground">Search Results</h1>
+            <button class="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                <i class="fa-regular fa-bell text-foreground"></i>
+            </button>
+        </div>
+    </header>
+
+    <main id="main-content" class="pb-20">
+        
+        <section id="search-section" class="px-4 py-4 bg-card border-b border-border">
+            <div class="relative">
+                <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+                <input type="text" value="Chicken recipes" class="w-full pl-12 pr-12 py-3.5 rounded-xl bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                <button onclick="toggleFilter()" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
+                    <i class="fa-solid fa-sliders text-primary-foreground"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="filter-section" class="px-4 py-4 bg-card border-b border-border">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-semibold text-foreground">Dietary Preferences</h3>
+                <button onclick="clearFilters()" class="text-xs font-medium text-accent">Clear All</button>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium">All</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Vegetarian</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Vegan</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Keto</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Gluten-Free</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Paleo</button>
+            </div>
+            <h3 class="text-sm font-semibold text-foreground mb-3">Meal Type</h3>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Breakfast</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Lunch</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Dinner</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Snack</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Dessert</button>
+            </div>
+            <h3 class="text-sm font-semibold text-foreground mb-3">Cooking Time</h3>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Under 15 min</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">15-30 min</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">30-60 min</button>
+                <button onclick="toggleFilterBtn(this)" class="px-4 py-2 rounded-full bg-muted text-foreground text-sm font-medium">Over 60 min</button>
+            </div>
+        </section>
+
+        <section id="results-header" class="px-4 py-4 bg-background">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-muted-foreground">Found <span class="font-semibold text-foreground">24 recipes</span></p>
+                    <p class="text-xs text-muted-foreground mt-0.5">for "Chicken recipes"</p>
+                </div>
+                <button class="flex items-center gap-2 px-3 py-2 rounded-lg bg-card border border-border text-sm font-medium text-foreground">
+                    <i class="fa-solid fa-arrow-down-wide-short text-muted-foreground"></i>
+                    Sort
+                </button>
+            </div>
+        </section>
+
+        <section id="results-list" class="px-4 pb-5">
+            <div class="space-y-3">
+                <div id="result-card-1" class="bg-card rounded-2xl overflow-hidden border border-border shadow-sm" onclick="openRecipe('Grilled Chicken Breast', '25 min', '320 kcal', '4.8')">
+                    <div class="h-44 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9b5b93d3a8-c7e3f2a8d1b9e4f6a5c2.png" alt="grilled chicken breast with herbs and lemon, professional food photography" />
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="text-base font-bold text-foreground flex-1">Grilled Chicken Breast</h3>
+                            <div class="flex items-center gap-1 ml-2">
+                                <i class="fa-solid fa-star text-primary text-xs"></i>
+                                <span class="text-sm font-semibold text-foreground">4.8</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-muted-foreground mb-3 line-clamp-2">Perfectly seasoned and grilled chicken breast with a blend of Mediterranean herbs and spices.</p>
+                        <div class="flex items-center gap-4 mb-3">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-muted-foreground text-sm"></i>
+                                <span class="text-xs text-muted-foreground">25 min</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-fire text-accent text-sm"></i>
+                                <span class="text-xs text-muted-foreground">320 kcal</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-signal text-secondary text-sm"></i>
+                                <span class="text-xs text-muted-foreground">Easy</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Keto</span>
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">High Protein</span>
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Gluten-Free</span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-3 border-t border-border">
+                            <button onclick="event.stopPropagation(); saveRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-bookmark"></i>
+                                Save
+                            </button>
+                            <button onclick="event.stopPropagation(); shareRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-paper-plane"></i>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="result-card-2" class="bg-card rounded-2xl overflow-hidden border border-border shadow-sm" onclick="openRecipe('Chicken Stir Fry', '20 min', '380 kcal', '4.7')">
+                    <div class="h-44 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/3f8d2e1b9a-a4d6c8e9f2b5d7a3c1e8.png" alt="chicken stir fry with colorful vegetables in wok, asian food photography" />
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="text-base font-bold text-foreground flex-1">Chicken Stir Fry</h3>
+                            <div class="flex items-center gap-1 ml-2">
+                                <i class="fa-solid fa-star text-primary text-xs"></i>
+                                <span class="text-sm font-semibold text-foreground">4.7</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-muted-foreground mb-3 line-clamp-2">Quick and healthy stir fry with tender chicken and crisp vegetables in savory sauce.</p>
+                        <div class="flex items-center gap-4 mb-3">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-muted-foreground text-sm"></i>
+                                <span class="text-xs text-muted-foreground">20 min</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-fire text-accent text-sm"></i>
+                                <span class="text-xs text-muted-foreground">380 kcal</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-signal text-secondary text-sm"></i>
+                                <span class="text-xs text-muted-foreground">Easy</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Quick</span>
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Asian</span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-3 border-t border-border">
+                            <button onclick="event.stopPropagation(); saveRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-bookmark"></i>
+                                Save
+                            </button>
+                            <button onclick="event.stopPropagation(); shareRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-paper-plane"></i>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="result-card-3" class="bg-card rounded-2xl overflow-hidden border border-border shadow-sm" onclick="openRecipe('Honey Garlic Chicken', '30 min', '420 kcal', '4.9')">
+                    <div class="h-44 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/7c6a4b8d2e-e9f3a7c5d8b2a4e6c1f9.png" alt="honey garlic chicken with glossy sauce, appetizing food photography" />
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="text-base font-bold text-foreground flex-1">Honey Garlic Chicken</h3>
+                            <div class="flex items-center gap-1 ml-2">
+                                <i class="fa-solid fa-star text-primary text-xs"></i>
+                                <span class="text-sm font-semibold text-foreground">4.9</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-muted-foreground mb-3 line-clamp-2">Sweet and savory chicken glazed with honey garlic sauce. Perfect for dinner.</p>
+                        <div class="flex items-center gap-4 mb-3">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-muted-foreground text-sm"></i>
+                                <span class="text-xs text-muted-foreground">30 min</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-fire text-accent text-sm"></i>
+                                <span class="text-xs text-muted-foreground">420 kcal</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-signal text-secondary text-sm"></i>
+                                <span class="text-xs text-muted-foreground">Medium</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Dinner</span>
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Family</span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-3 border-t border-border">
+                            <button onclick="event.stopPropagation(); saveRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-bookmark"></i>
+                                Save
+                            </button>
+                            <button onclick="event.stopPropagation(); shareRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-paper-plane"></i>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="result-card-4" class="bg-card rounded-2xl overflow-hidden border border-border shadow-sm" onclick="openRecipe('Chicken Caesar Wrap', '15 min', '340 kcal', '4.6')">
+                    <div class="h-44 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/2d5e7c9a1b-f8a4c6d9e2b7a5c3e1f6.png" alt="chicken caesar wrap cut in half showing ingredients, lunch food photography" />
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="text-base font-bold text-foreground flex-1">Chicken Caesar Wrap</h3>
+                            <div class="flex items-center gap-1 ml-2">
+                                <i class="fa-solid fa-star text-primary text-xs"></i>
+                                <span class="text-sm font-semibold text-foreground">4.6</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-muted-foreground mb-3 line-clamp-2">Fresh and crispy wrap filled with grilled chicken, romaine, and Caesar dressing.</p>
+                        <div class="flex items-center gap-4 mb-3">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-muted-foreground text-sm"></i>
+                                <span class="text-xs text-muted-foreground">15 min</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-fire text-accent text-sm"></i>
+                                <span class="text-xs text-muted-foreground">340 kcal</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-signal text-secondary text-sm"></i>
+                                <span class="text-xs text-muted-foreground">Easy</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Quick</span>
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Lunch</span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-3 border-t border-border">
+                            <button onclick="event.stopPropagation(); saveRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-bookmark"></i>
+                                Save
+                            </button>
+                            <button onclick="event.stopPropagation(); shareRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-paper-plane"></i>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="result-card-5" class="bg-card rounded-2xl overflow-hidden border border-border shadow-sm" onclick="openRecipe('Lemon Herb Chicken', '35 min', '360 kcal', '4.8')">
+                    <div class="h-44 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5a8c3e7b2d-d9e6a4f8c2b7d5a3e1c9.png" alt="lemon herb chicken with fresh herbs and lemon slices, rustic food photography" />
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="text-base font-bold text-foreground flex-1">Lemon Herb Chicken</h3>
+                            <div class="flex items-center gap-1 ml-2">
+                                <i class="fa-solid fa-star text-primary text-xs"></i>
+                                <span class="text-sm font-semibold text-foreground">4.8</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-muted-foreground mb-3 line-clamp-2">Juicy chicken marinated in lemon juice and fresh herbs, baked to perfection.</p>
+                        <div class="flex items-center gap-4 mb-3">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-muted-foreground text-sm"></i>
+                                <span class="text-xs text-muted-foreground">35 min</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-fire text-accent text-sm"></i>
+                                <span class="text-xs text-muted-foreground">360 kcal</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-signal text-secondary text-sm"></i>
+                                <span class="text-xs text-muted-foreground">Medium</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Keto</span>
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Paleo</span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-3 border-t border-border">
+                            <button onclick="event.stopPropagation(); saveRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-bookmark"></i>
+                                Save
+                            </button>
+                            <button onclick="event.stopPropagation(); shareRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-paper-plane"></i>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="result-card-6" class="bg-card rounded-2xl overflow-hidden border border-border shadow-sm" onclick="openRecipe('Buffalo Chicken Wings', '40 min', '480 kcal', '4.9')">
+                    <div class="h-44 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8d3c5a7e1b-a6f9c4d8e2b5a7c3e1f8.png" alt="buffalo chicken wings with blue cheese dip, appetizer food photography" />
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="text-base font-bold text-foreground flex-1">Buffalo Chicken Wings</h3>
+                            <div class="flex items-center gap-1 ml-2">
+                                <i class="fa-solid fa-star text-primary text-xs"></i>
+                                <span class="text-sm font-semibold text-foreground">4.9</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-muted-foreground mb-3 line-clamp-2">Crispy chicken wings tossed in spicy buffalo sauce, served with ranch.</p>
+                        <div class="flex items-center gap-4 mb-3">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-muted-foreground text-sm"></i>
+                                <span class="text-xs text-muted-foreground">40 min</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-fire text-accent text-sm"></i>
+                                <span class="text-xs text-muted-foreground">480 kcal</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-signal text-secondary text-sm"></i>
+                                <span class="text-xs text-muted-foreground">Medium</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Snack</span>
+                            <span class="px-2.5 py-1 rounded-full bg-muted text-xs font-medium text-foreground">Party</span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-3 border-t border-border">
+                            <button onclick="event.stopPropagation(); saveRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-bookmark"></i>
+                                Save
+                            </button>
+                            <button onclick="event.stopPropagation(); shareRecipe(event)" class="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-paper-plane"></i>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="w-full mt-5 py-3.5 rounded-xl bg-card border border-border text-foreground text-sm font-medium flex items-center justify-center gap-2">
+                <i class="fa-solid fa-rotate text-muted-foreground"></i>
+                Load More Results
+            </button>
+        </section>
+
+    </main>
+
+    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
+        <div class="flex items-center justify-around py-3">
+            <button class="flex flex-col items-center gap-1">
+                <i class="fa-solid fa-house text-muted-foreground text-xl"></i>
+                <span class="text-xs font-medium text-muted-foreground">Home</span>
+            </button>
+            <button class="flex flex-col items-center gap-1">
+                <i class="fa-solid fa-compass text-primary text-xl"></i>
+                <span class="text-xs font-medium text-primary">Explore</span>
+            </button>
+            <button class="flex flex-col items-center gap-1">
+                <i class="fa-regular fa-bookmark text-muted-foreground text-xl"></i>
+                <span class="text-xs font-medium text-muted-foreground">Saved</span>
+            </button>
+            <button class="flex flex-col items-center gap-1">
+                <i class="fa-regular fa-user text-muted-foreground text-xl"></i>
+                <span class="text-xs font-medium text-muted-foreground">Profile</span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="recipe-popup" class="recipe-popup">
+        <div class="w-full max-w-md mx-auto bg-background min-h-screen">
+            <div class="sticky top-0 bg-card border-b border-border z-10">
+                <div class="px-4 py-3 flex items-center justify-between">
+                    <button onclick="closeRecipe()" class="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-foreground"></i>
+                    </button>
+                    <h2 class="text-lg font-bold text-foreground" id="popup-title">Recipe Details</h2>
+                    <button class="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                        <i class="fa-regular fa-heart text-foreground"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="popup-content" class="pb-6">
+                <div class="h-64 overflow-hidden">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/54e05962d4-2afd8049f1d7b40efe39.png" alt="delicious food photography" />
+                </div>
+
+                <div class="px-4 py-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-foreground mb-2" id="popup-recipe-name">Recipe Name</h1>
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-regular fa-clock text-muted-foreground"></i>
+                                    <span class="text-sm text-muted-foreground" id="popup-time">15 min</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-fire text-accent"></i>
+                                    <span class="text-sm text-muted-foreground" id="popup-calories">250 kcal</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-star text-primary"></i>
+                                    <span class="text-sm font-semibold text-foreground" id="popup-rating">4.8</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-6">
+                        <button class="flex-1 py-3 rounded-xl bg-muted text-foreground text-sm font-medium flex items-center justify-center gap-2">
+                            <i class="fa-regular fa-bookmark"></i>
+                            Save to Plate
+                        </button>
+                        <button class="flex-1 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2">
+                            <i class="fa-regular fa-paper-plane"></i>
+                            Send to Friend
+                        </button>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-foreground mb-3">Ingredients</h3>
+                        <div class="bg-card rounded-2xl border border-border p-4 space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                <span class="text-sm text-foreground">4 chicken breasts (boneless, skinless)</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                <span class="text-sm text-foreground">2 tbsp olive oil</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                <span class="text-sm text-foreground">3 cloves garlic (minced)</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                <span class="text-sm text-foreground">1 tsp paprika</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                <span class="text-sm text-foreground">Salt and black pepper to taste</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                <span class="text-sm text-foreground">Fresh herbs for garnish</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-foreground mb-3">Instructions</h3>
+                        <div class="bg-card rounded-2xl border border-border p-4 space-y-4">
+                            <div class="flex gap-3">
+                                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</div>
+                                <p class="text-sm text-foreground pt-0.5">Season chicken breasts with salt, pepper, and paprika on both sides.</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">2</div>
+                                <p class="text-sm text-foreground pt-0.5">Heat olive oil in a large skillet over medium-high heat.</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">3</div>
+                                <p class="text-sm text-foreground pt-0.5">Add minced garlic and cook for 30 seconds until fragrant.</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">4</div>
+                                <p class="text-sm text-foreground pt-0.5">Place chicken in skillet and cook 6-7 minutes per side until golden.</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">5</div>
+                                <p class="text-sm text-foreground pt-0.5">Let rest for 5 minutes, garnish with herbs and serve immediately.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-foreground mb-3">Nutritional Information</h3>
+                        <div class="bg-card rounded-2xl border border-border p-4">
+                            <div id="nutrition-chart" style="height: 280px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-foreground mb-3">Macronutrients Breakdown</h3>
+                        <div class="bg-card rounded-2xl border border-border p-4">
+                            <div id="macro-chart" style="height: 280px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFilter() {
+            const filterSection = document.getElementById('filter-section');
+            filterSection.classList.toggle('hidden');
+        }
+
+        function toggleFilterBtn(btn) {
+            if (btn.textContent === 'All') {
+                document.querySelectorAll('#filter-section button').forEach(b => {
+                    b.classList.remove('bg-primary', 'text-primary-foreground');
+                    b.classList.add('bg-muted', 'text-foreground');
+                });
+                btn.classList.remove('bg-muted', 'text-foreground');
+                btn.classList.add('bg-primary', 'text-primary-foreground');
+            } else {
+                btn.classList.toggle('bg-primary');
+                btn.classList.toggle('text-primary-foreground');
+                btn.classList.toggle('bg-muted');
+                btn.classList.toggle('text-foreground');
+            }
+        }
+
+        function clearFilters() {
+            document.querySelectorAll('#filter-section button').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-primary-foreground');
+                btn.classList.add('bg-muted', 'text-foreground');
+            });
+            document.querySelector('#filter-section button').classList.remove('bg-muted', 'text-foreground');
+            document.querySelector('#filter-section button').classList.add('bg-primary', 'text-primary-foreground');
+        }
+
+        function saveRecipe(event) {
+            event.stopPropagation();
+            alert('Recipe saved to your plate!');
+        }
+
+        function shareRecipe(event) {
+            event.stopPropagation();
+            alert('Recipe shared with friend!');
+        }
+
+        function openRecipe(name, time, calories, rating) {
+            document.getElementById('popup-recipe-name').textContent = name;
+            document.getElementById('popup-time').textContent = time;
+            document.getElementById('popup-calories').textContent = calories;
+            document.getElementById('popup-rating').textContent = rating;
+            document.getElementById('recipe-popup').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            setTimeout(() => {
+                renderNutritionChart();
+                renderMacroChart();
+            }, 100);
+        }
+
+        function closeRecipe() {
+            document.getElementById('recipe-popup').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.addEventListener('load', function() {
+            try {
+                function renderNutritionChart() {
+                    const data = [{
+                        type: 'bar',
+                        x: ['Protein', 'Carbs', 'Fat', 'Fiber', 'Sugar'],
+                        y: [32, 8, 12, 2, 1],
+                        marker: {
+                            color: ['#FFD500', '#f59e0b', '#64748b', '#10b981', '#ef4444']
+                        }
+                    }];
+
+                    const layout = {
+                        title: { text: 'Nutrients (g)', font: { size: 14 } },
+                        xaxis: { title: '' },
+                        yaxis: { title: 'Grams' },
+                        margin: { t: 40, r: 20, b: 40, l: 50 },
+                        plot_bgcolor: '#FAFAFA',
+                        paper_bgcolor: '#FAFAFA',
+                        showlegend: false
+                    };
+
+                    const config = {
+                        responsive: true,
+                        displayModeBar: false,
+                        displaylogo: false
+                    };
+
+                    Plotly.newPlot('nutrition-chart', data, layout, config);
+                }
+
+                function renderMacroChart() {
+                    const data = [{
+                        type: 'pie',
+                        labels: ['Protein', 'Carbohydrates', 'Fats'],
+                        values: [55, 15, 30],
+                        marker: {
+                            colors: ['#FFD500', '#f59e0b', '#64748b']
+                        },
+                        textinfo: 'label+percent',
+                        textposition: 'inside'
+                    }];
+
+                    const layout = {
+                        title: { text: 'Macros Distribution', font: { size: 14 } },
+                        margin: { t: 40, r: 20, b: 20, l: 20 },
+                        plot_bgcolor: '#FAFAFA',
+                        paper_bgcolor: '#FAFAFA',
+                        showlegend: true,
+                        legend: { orientation: 'h', y: -0.1 }
+                    };
+
+                    const config = {
+                        responsive: true,
+                        displayModeBar: false,
+                        displaylogo: false
+                    };
+
+                    Plotly.newPlot('macro-chart', data, layout, config);
+                }
+
+                window.renderNutritionChart = renderNutritionChart;
+                window.renderMacroChart = renderMacroChart;
+            } catch(e) {
+                console.error('Chart rendering error:', e);
+            }
+        });
+    </script>
+
+</body>
+</html>

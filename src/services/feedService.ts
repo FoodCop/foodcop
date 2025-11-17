@@ -1018,7 +1018,7 @@ export const FeedService = {
         'recipe',
         [preferencesKey, count, userId || 'anonymous'],
         async () => {
-          const result = await SpoonacularService.searchRecipes(searchQuery, count);
+          const result = await SpoonacularService.searchRecipes({ query: searchQuery, number: count });
 
           if (!result.success || !result.data?.results) {
             console.error('❌ Recipe search failed:', result.error);
