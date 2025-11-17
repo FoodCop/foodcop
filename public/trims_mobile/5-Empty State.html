@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trims</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FFD500',
+                        orange: '#FF6B35',
+                        darkText: '#1A1A1A',
+                        mutedText: '#666666'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#FAFAFA]">
+    <div id="trims-page" class="min-h-screen pb-20">
+        <div id="search-header" class="sticky top-0 z-30 bg-white shadow-sm px-4 py-3">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-mutedText text-sm"></i>
+                <input 
+                    type="text" 
+                    id="searchInput"
+                    placeholder="Search cooking videos..." 
+                    class="w-full h-12 pl-11 pr-4 bg-white border border-[#EEE] rounded-xl text-sm text-darkText focus:outline-none focus:border-orange"
+                >
+            </div>
+        </div>
+
+        <div id="category-filter" class="sticky top-[72px] z-20 bg-white border-b border-[#EEE] px-4 py-3 overflow-x-auto">
+            <div class="flex gap-2 w-max">
+                <button class="category-pill active px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-orange text-white" data-category="all">
+                    All
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700" data-category="Quick Bites">
+                    Quick Bites
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700" data-category="Desserts">
+                    Desserts
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700" data-category="Healthy">
+                    Healthy
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700" data-category="Asian">
+                    Asian
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700" data-category="Italian">
+                    Italian
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700" data-category="Mexican">
+                    Mexican
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700" data-category="Breakfast">
+                    Breakfast
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700" data-category="Vegan">
+                    Vegan
+                </button>
+            </div>
+        </div>
+
+        <div id="empty-state" class="flex flex-col items-center justify-center py-32 px-6">
+            <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-5">
+                <i class="fa-solid fa-video text-gray-400 text-3xl"></i>
+            </div>
+            <h3 class="text-darkText font-bold text-xl mb-2">No videos found</h3>
+            <p class="text-mutedText text-sm text-center leading-relaxed">Try adjusting your search or category</p>
+        </div>
+    </div>
+
+    <script>
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        document.querySelectorAll('.category-pill').forEach(pill => {
+            pill.addEventListener('click', function() {
+                document.querySelectorAll('.category-pill').forEach(p => {
+                    p.classList.remove('active', 'bg-orange', 'text-white');
+                    p.classList.add('bg-gray-100', 'text-gray-700');
+                });
+                
+                this.classList.add('active', 'bg-orange', 'text-white');
+                this.classList.remove('bg-gray-100', 'text-gray-700');
+                
+                currentCategory = this.dataset.category;
+            });
+        });
+
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = e.target.value;
+            }, 500);
+        });
+    </script>
+</body>
+</html>

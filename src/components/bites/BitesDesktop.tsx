@@ -5,10 +5,7 @@ import {
   Star, 
   Share2, 
   Bookmark,
-  ChevronDown,
-  User,
-  Bell,
-  Settings
+  ChevronDown
 } from 'lucide-react';
 import { SpoonacularService } from '../../services/spoonacular';
 import type { Recipe } from './components/RecipeCard';
@@ -159,42 +156,8 @@ const BitesDesktop: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 h-[73px] flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <h1 className="text-2xl font-bold text-foreground">RecipeHub</h1>
-            <nav className="hidden md:flex items-center gap-6">
-              <a href="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-                Home
-              </a>
-              <a href="/bites" className="text-sm font-medium text-primary transition-colors">
-                Recipes
-              </a>
-              <a href="/plate" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-                My Plate
-              </a>
-              <a href="/about" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-                About
-              </a>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-              <Bell className="w-5 h-5 text-foreground" />
-            </button>
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-              <Settings className="w-5 h-5 text-foreground" />
-            </button>
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-              <User className="w-5 h-5 text-foreground" />
-            </button>
-          </div>
-        </div>
-      </header>
-
       {/* Filter Bar */}
-      <div className="sticky top-[73px] z-40 bg-card border-b border-border shadow-sm">
+      <div className="sticky top-0 z-40 bg-card border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 flex-wrap">

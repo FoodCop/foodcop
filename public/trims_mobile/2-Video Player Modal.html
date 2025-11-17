@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FFD500',
+                        orange: '#FF6B35',
+                        darkText: '#1A1A1A',
+                        mutedText: '#666666'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-black overflow-hidden">
+    <div id="video-player-screen" class="fixed inset-0 flex flex-col">
+        <div id="video-header" class="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-4 bg-gradient-to-b from-black/80 to-transparent">
+            <button id="backBtn" class="w-10 h-10 flex items-center justify-center text-white">
+                <i class="fa-solid fa-chevron-left text-xl"></i>
+            </button>
+            <button id="moreBtn" class="w-10 h-10 flex items-center justify-center text-white">
+                <i class="fa-solid fa-ellipsis-vertical text-xl"></i>
+            </button>
+        </div>
+
+        <div id="video-container" class="flex-1 relative bg-black flex items-center justify-center">
+            <div class="w-full h-full relative">
+                <iframe 
+                    id="mainVideoPlayer"
+                    class="w-full h-full"
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1&modestbranding=1&rel=0"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
+            </div>
+        </div>
+
+        <div id="video-info-overlay" class="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black via-black/95 to-transparent px-4 pt-12 pb-6">
+            <div id="channel-info" class="flex items-center gap-3 mb-4">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Channel" class="w-10 h-10 rounded-full border-2 border-white/20">
+                <div class="flex-1">
+                    <p id="channelName" class="text-white font-semibold text-sm">QuickBites Kitchen</p>
+                    <p id="subscriberCount" class="text-white/70 text-xs">245K subscribers</p>
+                </div>
+                <button id="subscribeBtn" class="px-5 py-2 bg-white text-darkText rounded-full font-semibold text-sm">
+                    Subscribe
+                </button>
+            </div>
+
+            <div id="video-details" class="mb-5">
+                <h1 id="videoTitle" class="text-white font-bold text-base mb-2 leading-snug">5-Minute Avocado Toast Hack - Perfect Every Time!</h1>
+                <p id="videoStats" class="text-white/70 text-xs">1.2M views • 2 days ago</p>
+            </div>
+
+            <div id="action-buttons" class="flex items-center justify-between gap-2 mb-4">
+                <button id="likeBtn" class="flex-1 flex flex-col items-center gap-1 py-2 px-3 bg-white/10 rounded-xl backdrop-blur-sm">
+                    <i class="fa-solid fa-thumbs-up text-white text-lg"></i>
+                    <span class="text-white text-xs font-medium">24K</span>
+                </button>
+                <button id="dislikeBtn" class="flex-1 flex flex-col items-center gap-1 py-2 px-3 bg-white/10 rounded-xl backdrop-blur-sm">
+                    <i class="fa-solid fa-thumbs-down text-white text-lg"></i>
+                    <span class="text-white text-xs font-medium">Dislike</span>
+                </button>
+                <button id="commentBtn" class="flex-1 flex flex-col items-center gap-1 py-2 px-3 bg-white/10 rounded-xl backdrop-blur-sm">
+                    <i class="fa-solid fa-comment text-white text-lg"></i>
+                    <span class="text-white text-xs font-medium">1.2K</span>
+                </button>
+                <button id="saveBtn" class="flex-1 flex flex-col items-center gap-1 py-2 px-3 bg-white/10 rounded-xl backdrop-blur-sm">
+                    <i class="fa-solid fa-bookmark text-white text-lg"></i>
+                    <span class="text-white text-xs font-medium">Save</span>
+                </button>
+                <button id="shareBtn" class="flex-1 flex flex-col items-center gap-1 py-2 px-3 bg-white/10 rounded-xl backdrop-blur-sm">
+                    <i class="fa-solid fa-paper-plane text-white text-lg"></i>
+                    <span class="text-white text-xs font-medium">Share</span>
+                </button>
+            </div>
+
+            <button id="expandDescBtn" class="w-full flex items-center justify-between py-3 px-4 bg-white/5 rounded-xl backdrop-blur-sm">
+                <span class="text-white text-sm font-medium">View description</span>
+                <i class="fa-solid fa-chevron-down text-white text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="description-sheet" class="hidden fixed inset-0 z-30 bg-black/90">
+        <div class="absolute inset-x-0 bottom-0 bg-[#1A1A1A] rounded-t-3xl max-h-[85vh] overflow-y-auto">
+            <div id="sheet-header" class="sticky top-0 bg-[#1A1A1A] px-4 py-4 border-b border-white/10">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-white font-bold text-lg">Description</h2>
+                    <button id="closeSheetBtn" class="w-8 h-8 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="sheet-content" class="px-4 py-4">
+                <div class="flex items-center gap-3 mb-4 pb-4 border-b border-white/10">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Channel" class="w-12 h-12 rounded-full">
+                    <div class="flex-1">
+                        <p class="text-white font-semibold text-sm">QuickBites Kitchen</p>
+                        <p class="text-white/70 text-xs">245K subscribers</p>
+                    </div>
+                    <button class="px-5 py-2 bg-orange text-white rounded-full font-semibold text-sm">
+                        Subscribe
+                    </button>
+                </div>
+
+                <div class="mb-4">
+                    <p class="text-white/90 text-sm leading-relaxed mb-3">
+                        Learn how to make the perfect avocado toast in just 5 minutes! This simple hack will change your breakfast game forever. 🥑✨
+                    </p>
+                    <p class="text-white/90 text-sm leading-relaxed mb-3">
+                        Ingredients:<br>
+                        • 2 slices sourdough bread<br>
+                        • 1 ripe avocado<br>
+                        • Lemon juice<br>
+                        • Salt & pepper<br>
+                        • Red pepper flakes<br>
+                        • Everything bagel seasoning
+                    </p>
+                    <p class="text-white/90 text-sm leading-relaxed">
+                        Follow for more quick recipes!
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-4 text-white/70 text-xs mb-4">
+                    <span>1.2M views</span>
+                    <span>•</span>
+                    <span>Dec 15, 2024</span>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="px-3 py-1 bg-white/10 text-white text-xs rounded-full">#avocadotoast</span>
+                    <span class="px-3 py-1 bg-white/10 text-white text-xs rounded-full">#quickrecipes</span>
+                    <span class="px-3 py-1 bg-white/10 text-white text-xs rounded-full">#breakfast</span>
+                    <span class="px-3 py-1 bg-white/10 text-white text-xs rounded-full">#cooking</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="comments-sheet" class="hidden fixed inset-0 z-30 bg-black/90">
+        <div class="absolute inset-x-0 bottom-0 bg-[#1A1A1A] rounded-t-3xl max-h-[85vh] overflow-y-auto">
+            <div id="comments-header" class="sticky top-0 bg-[#1A1A1A] px-4 py-4 border-b border-white/10">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-white font-bold text-lg">Comments <span class="text-white/70 text-sm font-normal">1,234</span></h2>
+                    <button id="closeCommentsBtn" class="w-8 h-8 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="comments-content" class="px-4 py-4">
+                <div class="comment-item flex gap-3 mb-5">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-9 h-9 rounded-full flex-shrink-0">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <p class="text-white font-semibold text-sm">Sarah Johnson</p>
+                            <span class="text-white/50 text-xs">2 days ago</span>
+                        </div>
+                        <p class="text-white/90 text-sm mb-2">This is literally the best avocado toast recipe ever! Made it this morning and it was perfect 🥑❤️</p>
+                        <div class="flex items-center gap-4">
+                            <button class="flex items-center gap-1 text-white/70 text-xs">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                                <span>245</span>
+                            </button>
+                            <button class="text-white/70 text-xs">Reply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment-item flex gap-3 mb-5">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="User" class="w-9 h-9 rounded-full flex-shrink-0">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <p class="text-white font-semibold text-sm">Mike Chen</p>
+                            <span class="text-white/50 text-xs">1 day ago</span>
+                        </div>
+                        <p class="text-white/90 text-sm mb-2">Quick question - can I use regular bread instead of sourdough?</p>
+                        <div class="flex items-center gap-4">
+                            <button class="flex items-center gap-1 text-white/70 text-xs">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                                <span>89</span>
+                            </button>
+                            <button class="text-white/70 text-xs">Reply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment-item flex gap-3 mb-5">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="User" class="w-9 h-9 rounded-full flex-shrink-0">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <p class="text-white font-semibold text-sm">Emma Davis</p>
+                            <span class="text-white/50 text-xs">3 hours ago</span>
+                        </div>
+                        <p class="text-white/90 text-sm mb-2">Love your content! Keep the quick recipes coming 🙌</p>
+                        <div class="flex items-center gap-4">
+                            <button class="flex items-center gap-1 text-white/70 text-xs">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                                <span>156</span>
+                            </button>
+                            <button class="text-white/70 text-xs">Reply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment-item flex gap-3 mb-5">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="User" class="w-9 h-9 rounded-full flex-shrink-0">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <p class="text-white font-semibold text-sm">Alex Martinez</p>
+                            <span class="text-white/50 text-xs">5 hours ago</span>
+                        </div>
+                        <p class="text-white/90 text-sm mb-2">The everything bagel seasoning tip is genius! Game changer 🔥</p>
+                        <div class="flex items-center gap-4">
+                            <button class="flex items-center gap-1 text-white/70 text-xs">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                                <span>203</span>
+                            </button>
+                            <button class="text-white/70 text-xs">Reply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sticky bottom-0 bg-[#1A1A1A] px-4 py-3 border-t border-white/10">
+                <div class="flex items-center gap-3">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="You" class="w-8 h-8 rounded-full flex-shrink-0">
+                    <input type="text" placeholder="Add a comment..." class="flex-1 bg-white/10 text-white placeholder-white/50 px-4 py-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-orange">
+                    <button class="text-orange font-semibold text-sm">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="share-sheet" class="hidden fixed inset-0 z-30 bg-black/90">
+        <div class="absolute inset-x-0 bottom-0 bg-[#1A1A1A] rounded-t-3xl">
+            <div id="share-header" class="px-4 py-4 border-b border-white/10">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-white font-bold text-lg">Share</h2>
+                    <button id="closeShareBtn" class="w-8 h-8 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="share-content" class="px-4 py-6">
+                <div class="grid grid-cols-4 gap-6 mb-6">
+                    <button class="share-option flex flex-col items-center gap-2">
+                        <div class="w-14 h-14 bg-orange rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-users text-white text-xl"></i>
+                        </div>
+                        <span class="text-white text-xs text-center">Crew</span>
+                    </button>
+                    <button class="share-option flex flex-col items-center gap-2">
+                        <div class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="fa-brands fa-facebook-f text-white text-xl"></i>
+                        </div>
+                        <span class="text-white text-xs text-center">Facebook</span>
+                    </button>
+                    <button class="share-option flex flex-col items-center gap-2">
+                        <div class="w-14 h-14 bg-blue-400 rounded-full flex items-center justify-center">
+                            <i class="fa-brands fa-twitter text-white text-xl"></i>
+                        </div>
+                        <span class="text-white text-xs text-center">Twitter</span>
+                    </button>
+                    <button class="share-option flex flex-col items-center gap-2">
+                        <div class="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center">
+                            <i class="fa-brands fa-whatsapp text-white text-xl"></i>
+                        </div>
+                        <span class="text-white text-xs text-center">WhatsApp</span>
+                    </button>
+                </div>
+
+                <div class="bg-white/10 rounded-xl p-4 flex items-center gap-3 mb-4">
+                    <input type="text" value="https://fuzofoodcop.com/trims/v1" readonly class="flex-1 bg-transparent text-white text-sm focus:outline-none">
+                    <button id="copyLinkBtn" class="text-orange font-semibold text-sm">Copy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl text-white text-sm font-medium shadow-lg"></div>
+
+    <script>
+        let isAuthenticated = false;
+
+        document.getElementById('backBtn').addEventListener('click', function() {
+            window.history.back();
+        });
+
+        document.getElementById('expandDescBtn').addEventListener('click', function() {
+            document.getElementById('description-sheet').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+
+        document.getElementById('closeSheetBtn').addEventListener('click', function() {
+            document.getElementById('description-sheet').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('commentBtn').addEventListener('click', function() {
+            document.getElementById('comments-sheet').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+
+        document.getElementById('closeCommentsBtn').addEventListener('click', function() {
+            document.getElementById('comments-sheet').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('shareBtn').addEventListener('click', function() {
+            document.getElementById('share-sheet').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+
+        document.getElementById('closeShareBtn').addEventListener('click', function() {
+            document.getElementById('share-sheet').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('copyLinkBtn').addEventListener('click', function() {
+            const input = document.querySelector('#share-sheet input[readonly]');
+            input.select();
+            document.execCommand('copy');
+            showToast('Link copied to clipboard!', 'success');
+        });
+
+        document.getElementById('likeBtn').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-solid')) {
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular');
+                showToast('Like removed', 'info');
+            } else {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
+                showToast('Video liked!', 'success');
+            }
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            if (!isAuthenticated) {
+                showToast('Please sign in to save videos', 'error');
+                return;
+            }
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-solid')) {
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular');
+                showToast('Removed from Plate', 'info');
+            } else {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
+                showToast('Video saved to Plate!', 'success');
+            }
+        });
+
+        document.getElementById('subscribeBtn').addEventListener('click', function() {
+            if (this.textContent === 'Subscribe') {
+                this.textContent = 'Subscribed';
+                this.classList.remove('bg-white', 'text-darkText');
+                this.classList.add('bg-white/20', 'text-white');
+                showToast('Subscribed to QuickBites Kitchen!', 'success');
+            } else {
+                this.textContent = 'Subscribe';
+                this.classList.remove('bg-white/20', 'text-white');
+                this.classList.add('bg-white', 'text-darkText');
+                showToast('Unsubscribed', 'info');
+            }
+        });
+
+        document.querySelectorAll('.share-option').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const platform = this.querySelector('span').textContent;
+                if (platform === 'Crew') {
+                    if (!isAuthenticated) {
+                        showToast('Please sign in to share with crew', 'error');
+                        return;
+                    }
+                }
+                showToast(`Sharing to ${platform}...`, 'info');
+                setTimeout(() => {
+                    document.getElementById('share-sheet').classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }, 1000);
+            });
+        });
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            
+            toast.classList.remove('bg-orange', 'bg-red-500', 'bg-gray-800');
+            if (type === 'success') {
+                toast.classList.add('bg-orange');
+            } else if (type === 'error') {
+                toast.classList.add('bg-red-500');
+            } else {
+                toast.classList.add('bg-gray-800');
+            }
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        document.getElementById('description-sheet').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        document.getElementById('comments-sheet').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        document.getElementById('share-sheet').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>

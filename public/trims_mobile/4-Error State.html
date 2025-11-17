@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Error</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FFD500',
+                        orange: '#FF6B35',
+                        darkText: '#1A1A1A',
+                        mutedText: '#666666'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#FAFAFA]">
+    <div id="error-screen" class="min-h-screen pb-20">
+        <div id="search-header" class="sticky top-0 z-30 bg-white shadow-sm px-4 py-3">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-mutedText text-sm"></i>
+                <input 
+                    type="text" 
+                    id="searchInput"
+                    placeholder="Search cooking videos..." 
+                    class="w-full h-12 pl-11 pr-4 bg-white border border-[#EEE] rounded-xl text-sm text-darkText focus:outline-none focus:border-orange"
+                    disabled
+                >
+            </div>
+        </div>
+
+        <div id="category-filter" class="sticky top-[72px] z-20 bg-white border-b border-[#EEE] px-4 py-3 overflow-x-auto">
+            <div class="flex gap-2 w-max opacity-50 pointer-events-none">
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-orange text-white">
+                    All
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700">
+                    Quick Bites
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700">
+                    Desserts
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700">
+                    Healthy
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700">
+                    Asian
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700">
+                    Italian
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700">
+                    Mexican
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700">
+                    Breakfast
+                </button>
+                <button class="category-pill px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-gray-100 text-gray-700">
+                    Vegan
+                </button>
+            </div>
+        </div>
+
+        <div id="main-error-state" class="flex flex-col items-center justify-center py-16 px-6">
+            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-5">
+                <i class="fa-solid fa-exclamation-triangle text-[#ef4444] text-3xl"></i>
+            </div>
+            
+            <h2 class="text-darkText font-bold text-xl mb-3 text-center">Failed to load videos</h2>
+            
+            <p class="text-mutedText text-sm text-center mb-8 max-w-xs leading-relaxed">
+                We couldn't load the cooking videos. Please check your connection and try again.
+            </p>
+            
+            <button id="tryAgainBtn" class="px-8 py-3.5 bg-orange text-white rounded-xl font-semibold shadow-sm hover:bg-[#FF5722] transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-rotate-right"></i>
+                Try Again
+            </button>
+            
+            <button id="goBackBtn" class="mt-4 px-6 py-2.5 text-mutedText text-sm font-medium">
+                Go Back
+            </button>
+        </div>
+
+        <div id="error-details" class="mx-4 mt-8 bg-white rounded-xl p-5 border border-[#EEE]">
+            <div class="flex items-start gap-3 mb-4">
+                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-circle-info text-mutedText text-lg"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-darkText font-semibold text-sm mb-1">What happened?</h3>
+                    <p class="text-mutedText text-xs leading-relaxed">
+                        The video service is temporarily unavailable. This could be due to network issues or server maintenance.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="pt-4 border-t border-[#EEE]">
+                <h4 class="text-darkText font-semibold text-sm mb-3">Try these steps:</h4>
+                <ul class="space-y-2.5">
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-orange text-xs mt-0.5"></i>
+                        <span class="text-mutedText text-xs leading-relaxed">Check your internet connection</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-orange text-xs mt-0.5"></i>
+                        <span class="text-mutedText text-xs leading-relaxed">Refresh the page or restart the app</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-orange text-xs mt-0.5"></i>
+                        <span class="text-mutedText text-xs leading-relaxed">Clear your browser cache</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-orange text-xs mt-0.5"></i>
+                        <span class="text-mutedText text-xs leading-relaxed">Try again in a few minutes</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="support-section" class="mx-4 mt-4 bg-[#FFF9F0] rounded-xl p-5 border border-[#FFE8CC]">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-orange bg-opacity-10 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-headset text-orange text-lg"></i>
+                </div>
+                <h3 class="text-darkText font-semibold text-sm">Still having issues?</h3>
+            </div>
+            <p class="text-mutedText text-xs mb-4 leading-relaxed">
+                Our support team is here to help. Contact us and we'll get you back to watching cooking videos in no time.
+            </p>
+            <button id="contactSupportBtn" class="w-full px-4 py-3 bg-white text-orange border border-orange rounded-xl font-semibold text-sm hover:bg-orange hover:text-white transition-colors">
+                Contact Support
+            </button>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl text-white text-sm font-medium shadow-lg"></div>
+
+    <script>
+        document.getElementById('tryAgainBtn').addEventListener('click', function() {
+            showToast('Retrying...', 'info');
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        });
+
+        document.getElementById('goBackBtn').addEventListener('click', function() {
+            window.history.back();
+        });
+
+        document.getElementById('contactSupportBtn').addEventListener('click', function() {
+            showToast('Opening support chat...', 'info');
+        });
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            
+            toast.classList.remove('bg-orange', 'bg-red-500', 'bg-gray-800');
+            if (type === 'success') {
+                toast.classList.add('bg-orange');
+            } else if (type === 'error') {
+                toast.classList.add('bg-red-500');
+            } else {
+                toast.classList.add('bg-gray-800');
+            }
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
