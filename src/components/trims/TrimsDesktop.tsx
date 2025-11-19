@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Search, Bookmark, Share2, Play, ChevronLeft, ChevronRight, X, Send, Star } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Search, Bookmark, Play, ChevronLeft, ChevronRight, X, Send, Star } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
 import { savedItemsService } from '../../services/savedItemsService';
+import { YouTubeService } from '../../services/youtube';
 
 // TrimVideo interface for short-form cooking videos
 interface TrimVideo {
@@ -14,6 +15,27 @@ interface TrimVideo {
   duration: string;
   category: string[];
   videoId: string;
+}
+
+// YouTube API response types
+interface YouTubeVideo {
+  id: {
+    videoId: string;
+  };
+  snippet: {
+    title: string;
+    description: string;
+    thumbnails: {
+      medium: {
+        url: string;
+      };
+      high?: {
+        url: string;
+      };
+    };
+    channelTitle: string;
+    publishedAt: string;
+  };
 }
 
 // Predefined video categories
@@ -29,160 +51,6 @@ const VIDEO_CATEGORIES = [
   { id: 'vegan', label: 'Vegan' },
 ];
 
-// Mock data for videos
-const MOCK_VIDEOS: TrimVideo[] = [
-  {
-    id: 'v1',
-    title: '5-Minute Avocado Toast Hack',
-    channelName: 'QuickBites Kitchen',
-    views: '1.2M',
-    duration: '0:45',
-    category: ['Quick Bites', 'Breakfast'],
-    thumbnail: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v2',
-    title: 'Chocolate Lava Cake in 3 Steps',
-    channelName: 'Sweet Moments',
-    views: '890K',
-    duration: '1:23',
-    category: ['Desserts'],
-    thumbnail: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v3',
-    title: 'Buddha Bowl Meal Prep',
-    channelName: 'Healthy Eats',
-    views: '2.1M',
-    duration: '2:15',
-    category: ['Healthy'],
-    thumbnail: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v4',
-    title: 'Perfect Pad Thai Tutorial',
-    channelName: 'Asian Flavors',
-    views: '1.5M',
-    duration: '3:20',
-    category: ['Asian'],
-    thumbnail: 'https://images.unsplash.com/photo-1559314809-0d155014e29e?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v5',
-    title: 'Homemade Pasta from Scratch',
-    channelName: 'Italian Traditions',
-    views: '3.2M',
-    duration: '4:10',
-    category: ['Italian'],
-    thumbnail: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v6',
-    title: 'Street Tacos Like a Pro',
-    channelName: 'Taco Tuesday',
-    views: '670K',
-    duration: '1:55',
-    category: ['Mexican'],
-    thumbnail: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v7',
-    title: 'Fluffy Pancakes Every Time',
-    channelName: 'Breakfast Club',
-    views: '1.8M',
-    duration: '2:30',
-    category: ['Breakfast'],
-    thumbnail: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v8',
-    title: 'Vegan Burger That Tastes Like Beef',
-    channelName: 'Plant Based',
-    views: '920K',
-    duration: '2:45',
-    category: ['Vegan'],
-    thumbnail: 'https://images.unsplash.com/photo-1520072959219-c595dc870360?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v9',
-    title: 'Crispy Air Fryer Wings',
-    channelName: 'QuickBites Kitchen',
-    views: '1.1M',
-    duration: '1:40',
-    category: ['Quick Bites'],
-    thumbnail: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v10',
-    title: 'No-Bake Cheesecake Magic',
-    channelName: 'Sweet Moments',
-    views: '2.4M',
-    duration: '3:05',
-    category: ['Desserts'],
-    thumbnail: 'https://images.unsplash.com/photo-1524351199678-941a58a3df50?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v11',
-    title: 'Green Smoothie Bowl',
-    channelName: 'Healthy Eats',
-    views: '780K',
-    duration: '1:15',
-    category: ['Healthy', 'Breakfast'],
-    thumbnail: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v12',
-    title: 'Authentic Ramen Bowl',
-    channelName: 'Asian Flavors',
-    views: '1.9M',
-    duration: '4:30',
-    category: ['Asian'],
-    thumbnail: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v13',
-    title: 'Margherita Pizza Perfection',
-    channelName: 'Italian Traditions',
-    views: '2.7M',
-    duration: '3:45',
-    category: ['Italian'],
-    thumbnail: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v14',
-    title: 'Breakfast Burrito Meal Prep',
-    channelName: 'Breakfast Club',
-    views: '1.3M',
-    duration: '2:20',
-    category: ['Breakfast', 'Mexican'],
-    thumbnail: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  },
-  {
-    id: 'v15',
-    title: 'Vegan Mac & Cheese',
-    channelName: 'Plant Based',
-    views: '1.6M',
-    duration: '2:50',
-    category: ['Vegan'],
-    thumbnail: 'https://images.unsplash.com/photo-1543826173-3fd3e91bdb5c?w=400&h=711&fit=crop',
-    videoId: 'dQw4w9WgXcQ'
-  }
-];
-
 const VIDEOS_PER_PAGE = 12;
 
 export default function TrimsDesktop() {
@@ -191,13 +59,99 @@ export default function TrimsDesktop() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedVideo, setSelectedVideo] = useState<TrimVideo | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [videos, setVideos] = useState<TrimVideo[]>([]);
+  const [_loading, setLoading] = useState(true);
+  const [_error, setError] = useState<string | null>(null);
   
   // Filter states
   const [videoLength, setVideoLength] = useState('all');
   const [ratingFilters, setRatingFilters] = useState<number[]>([]);
 
+  // Helper function to categorize videos
+  const getCategoryFromTitle = useCallback((title: string): string[] => {
+    const lowerTitle = title.toLowerCase();
+    const categories: string[] = [];
+    
+    if (lowerTitle.includes('quick') || lowerTitle.includes('minute') || lowerTitle.includes('fast')) categories.push('Quick Bites');
+    if (lowerTitle.includes('dessert') || lowerTitle.includes('cake') || lowerTitle.includes('sweet')) categories.push('Desserts');
+    if (lowerTitle.includes('healthy') || lowerTitle.includes('bowl') || lowerTitle.includes('salad')) categories.push('Healthy');
+    if (lowerTitle.includes('asian') || lowerTitle.includes('thai') || lowerTitle.includes('chinese') || lowerTitle.includes('japanese') || lowerTitle.includes('ramen') || lowerTitle.includes('pad thai')) categories.push('Asian');
+    if (lowerTitle.includes('italian') || lowerTitle.includes('pasta') || lowerTitle.includes('pizza')) categories.push('Italian');
+    if (lowerTitle.includes('mexican') || lowerTitle.includes('taco') || lowerTitle.includes('burrito')) categories.push('Mexican');
+    if (lowerTitle.includes('breakfast') || lowerTitle.includes('pancake') || lowerTitle.includes('egg')) categories.push('Breakfast');
+    if (lowerTitle.includes('vegan') || lowerTitle.includes('plant-based')) categories.push('Vegan');
+    
+    return categories.length > 0 ? categories : ['Quick Bites'];
+  }, []);
+
+  // Load videos from YouTube
+  const loadVideos = useCallback(async (query: string) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const result = await YouTubeService.searchVideos(query, 24);
+      
+      if (result.success && result.data?.items) {
+        const transformedVideos: TrimVideo[] = result.data.items.map((video: YouTubeVideo) => ({
+          id: video.id.videoId,
+          title: video.snippet.title,
+          thumbnail: video.snippet.thumbnails.high?.url || video.snippet.thumbnails.medium.url,
+          channelName: video.snippet.channelTitle,
+          views: 'Unknown',
+          duration: '0:60',
+          category: getCategoryFromTitle(video.snippet.title),
+          videoId: video.id.videoId,
+        }));
+        
+        setVideos(transformedVideos);
+      } else {
+        setError(result.error || 'Failed to load videos');
+        toast.error('Failed to load videos from YouTube');
+      }
+    } catch (err) {
+      setError('Network error. Please check your connection.');
+      toast.error('Network error loading videos');
+      console.error('Video loading error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [getCategoryFromTitle]);
+
+  // Load initial videos
+  useEffect(() => {
+    loadVideos('cooking food recipe tutorial');
+  }, [loadVideos]);
+
+  // Load videos when search or category changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchQuery.trim()) {
+        const categoryKeyword = selectedCategory !== 'all' ? ` ${selectedCategory}` : '';
+        loadVideos(`${searchQuery} cooking${categoryKeyword}`);
+      } else if (selectedCategory !== 'all') {
+        // Use more varied search terms for each category
+        const categoryQueries: Record<string, string> = {
+          'Quick Bites': 'quick easy cooking 5 minute',
+          'Desserts': 'dessert baking recipe',
+          'Healthy': 'healthy meal prep cooking',
+          'Asian': 'asian food cooking recipe',
+          'Italian': 'italian cooking pasta pizza',
+          'Mexican': 'mexican food tacos cooking',
+          'Breakfast': 'breakfast recipe morning',
+          'Vegan': 'vegan plant based cooking'
+        };
+        loadVideos(categoryQueries[selectedCategory] || `${selectedCategory} cooking`);
+      } else {
+        loadVideos('cooking food recipe tutorial');
+      }
+    }, 500);
+    
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, selectedCategory, loadVideos]);
+
   // Filter videos based on search, category, length, and rating
-  const filteredVideos = MOCK_VIDEOS.filter(video => {
+  const filteredVideos = videos.filter(video => {
     const matchesCategory = selectedCategory === 'all' || video.category.includes(selectedCategory);
     const matchesSearch = searchQuery === '' || 
       video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -277,13 +231,18 @@ export default function TrimsDesktop() {
   };
 
   const handleSaveToPlate = async (video: TrimVideo) => {
+    console.log('🎬 TrimsDesktop: handleSaveToPlate called', { video, user });
+    
     if (!user) {
+      console.log('❌ TrimsDesktop: No user found, showing error');
       toast.error('Please sign in to save videos');
       return;
     }
 
+    console.log('✅ TrimsDesktop: User authenticated, attempting to save...');
+
     try {
-      await savedItemsService.saveItem({
+      const result = await savedItemsService.saveItem({
         itemId: `trim_${video.id}`,
         itemType: 'video',
         metadata: {
@@ -295,10 +254,18 @@ export default function TrimsDesktop() {
           videoId: video.videoId
         }
       });
-      toast.success('Video saved to Plate!');
+      
+      console.log('📦 TrimsDesktop: Save result:', result);
+      
+      if (result.success) {
+        toast.success('Video saved to Plate!');
+      } else {
+        toast.error(result.error || 'Failed to save video');
+        console.error('❌ TrimsDesktop: Save failed:', result.error);
+      }
     } catch (err) {
       toast.error('Failed to save video');
-      console.error('Error saving video:', err);
+      console.error('❌ TrimsDesktop: Error saving video:', err);
     }
   };
 
@@ -486,8 +453,6 @@ export default function TrimsDesktop() {
               key={video.id} 
               video={video} 
               onVideoClick={handleVideoClick}
-              onSave={handleSaveToPlate}
-              onShare={handleShare}
             />
           ))}
         </div>
@@ -574,16 +539,12 @@ export default function TrimsDesktop() {
     </div>
   );
 }// Video Card Component
-function VideoCard({ 
-  video, 
-  onVideoClick,
-  onSave,
-  onShare
-}: { 
+function VideoCard({
+  video,
+  onVideoClick
+}: {
   video: TrimVideo; 
   onVideoClick: (video: TrimVideo) => void;
-  onSave: (video: TrimVideo) => void;
-  onShare: () => void;
 }) {
   return (
     <div 
@@ -614,37 +575,14 @@ function VideoCard({
             {video.duration}
           </span>
         </div>
-
-        {/* Action Buttons */}
-        <div className="absolute top-2 right-2 flex flex-col gap-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onSave(video);
-            }}
-            className="w-10 h-10 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
-          >
-            <Bookmark className="w-4 h-4 text-white" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onShare();
-            }}
-            className="w-10 h-10 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
-          >
-            <Share2 className="w-4 h-4 text-white" />
-          </button>
-        </div>
       </div>
 
       {/* Video Info */}
       <div className="p-3">
-        <h3 className="text-[#1A1A1A] font-medium text-sm line-clamp-2 mb-1">
+        <h3 className="text-[#1A1A1A] font-semibold text-base line-clamp-2 mb-1.5">
           {video.title}
         </h3>
-        <p className="text-[#666666] text-xs mb-1">{video.channelName}</p>
-        <p className="text-[#999999] text-xs">{video.views} views</p>
+        <p className="text-[#666666] text-sm">{video.channelName}</p>
       </div>
     </div>
   );

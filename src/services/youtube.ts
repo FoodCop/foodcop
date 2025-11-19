@@ -13,6 +13,10 @@ export const YouTubeService = {
         };
       }
 
+      // Vary the order to get different results each time
+      const orders = ['relevance', 'viewCount', 'date'];
+      const randomOrder = orders[Math.floor(Math.random() * orders.length)];
+
       const res = await axios.get(`${config.youtube.baseUrl}${config.youtube.endpoints.search}`, {
         params: {
           q,
@@ -21,7 +25,8 @@ export const YouTubeService = {
           maxResults,
           type: 'video',
           videoDuration: 'short', // Focus on short videos for Trims
-          order: 'relevance', // Sort by relevance
+          order: randomOrder, // Randomize sort order for variety
+          relevanceLanguage: 'en', // English content
         },
         timeout: config.api.timeout,
       });
