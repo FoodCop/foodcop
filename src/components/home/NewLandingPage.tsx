@@ -184,26 +184,26 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           {/* Mobile: PhoneFan with animations */}
           <div className="block md:hidden">
             <PhoneFan
-              leftImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/b29c94c03c-e5f6b533a6273a07766f.png"
-              centerImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/a07c9ce819-56f7b11efe8bc040e8dc.png"
-              rightImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/8929b8a34f-dae252b38be91890ec88.png"
+              leftImage="/images/pin1.jpg"
+              centerImage="/images/pin2.jpg"
+              rightImage="/images/pin3.jpg"
               altText="Pin Your Favorite Foods"
             />
           </div>
           {/* Desktop: Static phone mockups */}
           <div className="hidden md:flex justify-center items-end gap-6 md:gap-12 perspective-1000">
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/b29c94c03c-6885ed7b1a3af969816f.png"
+              image="/images/pin1.jpg"
               alt="mobile app interface showing saved recipes and bookmarks"
               className="phone-left"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/a07c9ce819-c4610ac5015849480fd7.png"
+              image="/images/pin2.jpg"
               alt="mobile app showing favorite dishes collection"
               className="phone-center -mt-8"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/a2e11978ea-34e22e4dabccab15ab8a.png"
+              image="/images/pin3.jpg"
               alt="food wishlist planning screen on mobile app"
               className="phone-right"
             />
@@ -237,7 +237,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
               <div className="phone-screen aspect-[9/19.5]">
                 <div className="phone-notch"></div>
                 <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b491a0806d-78b4e21d18c153a5583b.png"
+                  src="/images/cook1.jpg"
                   alt="cooking video recipe interface"
                   className="w-full h-full object-cover"
                 />
@@ -249,7 +249,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
               <div className="phone-screen aspect-[9/19.5]">
                 <div className="phone-notch"></div>
                 <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9b01d1d269-59d12dc4a6fad7239acf.png"
+                  src="/images/cook2.jpg"
                   alt="food plating techniques demonstration"
                   className="w-full h-full object-cover"
                 />
@@ -261,7 +261,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
               <div className="phone-screen aspect-[9/19.5]">
                 <div className="phone-notch"></div>
                 <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/62723939df-ace2b5909d6eab7e6223.png"
+                  src="/images/cook3.jpg"
                   alt="kitchen cooking steps breakdown"
                   className="w-full h-full object-cover"
                 />
@@ -293,17 +293,17 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           </div>
           <div className="flex justify-center items-end gap-6 md:gap-12">
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/08e220b1ad-ce21b9df34ce333bca78.png"
+              image="/images/cook1.jpg"
               alt="cooking video recipe interface on mobile"
               className="phone-left"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/a2fd5ea02d-cc2dc7411776492d46fc.png"
+              image="/images/cook2.jpg"
               alt="food plating techniques and chef cooking"
               className="phone-center -mt-8"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/06f8855cc7-cfa2213f98ae6b1e4cac.png"
+              image="/images/cook3.jpg"
               alt="kitchen cooking steps breakdown interface"
               className="phone-right"
             />
@@ -337,7 +337,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
               <div className="phone-screen aspect-[9/19.5]">
                 <div className="phone-notch"></div>
                 <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ae77c3ba5c-5edf0d0eeff2a54c62e3.png"
+                  src="/images/share1.jpg"
                   alt="food storyboard interface with gallery"
                   className="w-full h-full object-cover"
                 />
@@ -349,7 +349,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
               <div className="phone-screen aspect-[9/19.5]">
                 <div className="phone-notch"></div>
                 <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9ad0348c65-7dcc61e0d92c6cd6b8aa.png"
+                  src="/images/share2.jpg"
                   alt="food photography story sharing"
                   className="w-full h-full object-cover"
                 />
@@ -361,7 +361,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
               <div className="phone-screen aspect-[9/19.5]">
                 <div className="phone-notch"></div>
                 <img
-                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/a30e3c3b84-e0e3b2cd9c1b6beab4c8.png"
+                  src="/images/share3.jpg"
                   alt="culinary stories and experiences"
                   className="w-full h-full object-cover"
                 />
@@ -393,17 +393,17 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           </div>
           <div className="flex justify-center items-end gap-6 md:gap-12">
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/a42cb53b93-b065643149f3953a5c07.png"
+              image="/images/share1.jpg"
               alt="social media food posts feed"
               className="phone-left"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/4845bbe175-6745d674037173cf4609.png"
+              image="/images/share2.jpg"
               alt="food photography sharing interface"
               className="phone-center -mt-8"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/63224c12dc-a3910f57e53190d17958.png"
+              image="/images/share3.jpg"
               alt="food blogger story view"
               className="phone-right"
             />
@@ -424,9 +424,9 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           </div>
           
           <PhoneFan
-            leftImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/3f3cac8b08-6dfb12ccc2ecfb4a96b6.png"
-            centerImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/ab5c9e506c-b8f67b8fddb6e1d48ae6.png"
-            rightImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/e4a61a1ae6-0e83c7c78ad8b3dc54b0.png"
+            leftImage="/images/tako1.jpg"
+            centerImage="/images/tako2.jpg"
+            rightImage="/images/tako3.jpg"
             altText="Tako AI Food Buddy"
           />
         </div>
@@ -445,17 +445,17 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           </div>
           <div className="flex justify-center items-end gap-6 md:gap-12">
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/36d5e15b6c-4e587573b0cd7884f40e.png"
+              image="/images/tako1.jpg"
               alt="AI chatbot assistant interface for food recommendations"
               className="phone-left"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/39842d8888-cd3c3d9f5b92a900c210.png"
+              image="/images/tako2.jpg"
               alt="mobile chat app conversation with AI"
               className="phone-center -mt-8"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/4ab0afc5c2-7f72bc688fbe8ca76817.png"
+              image="/images/tako3.jpg"
               alt="cute octopus mascot Tako character"
               className="phone-right"
             />
@@ -476,9 +476,9 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           </div>
           
           <PhoneFan
-            leftImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/0b34c69c71-05c8c918f1d56e1c4f09.png"
-            centerImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/5b5a4b9ee9-e89f5e0ed48fc8cf6a01.png"
-            rightImage="https://storage.googleapis.com/uxpilot-auth.appspot.com/1d39edaf2c-5b1dc37b9d64ae83ae64.png"
+            leftImage="/images/explore1.jpg"
+            centerImage="/images/explore2.jpg"
+            rightImage="/images/explore3.jpg"
             altText="Explore Food Everywhere"
           />
           
@@ -506,17 +506,17 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           </div>
           <div className="flex justify-center items-end gap-6 md:gap-12 mb-16">
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/935bebd981-5943bd11bf2312f230c7.png"
+              image="/images/explore1.jpg"
               alt="restaurant food discovery app interface"
               className="phone-left"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/18cc72e49f-efeb0b6ffe846d56814f.png"
+              image="/images/explore2.jpg"
               alt="street food market exploration app"
               className="phone-center -mt-8"
             />
             <StaticPhoneMockup 
-              image="https://storage.googleapis.com/uxpilot-auth.appspot.com/41605a2620-b828532099d484daf252.png"
+              image="/images/explore3.jpg"
               alt="food menu variety browsing interface"
               className="phone-right"
             />
