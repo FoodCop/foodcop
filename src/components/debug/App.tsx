@@ -54,9 +54,9 @@ export default function DebugApp() {
     },
     {
       key: 'VITE_YOUTUBE_API_KEY',
-      value: import.meta.env.VITE_YOUTUBE_API_KEY,
-      isSecret: true,
-      description: 'YouTube Data API key'
+      value: '(Server-side only)',
+      isSecret: false,
+      description: 'YouTube Data API key - Stored in Supabase Edge Function'
     },
     {
       key: 'VITE_OPENAI_API_KEY',
@@ -240,24 +240,26 @@ export default function DebugApp() {
     const startTime = Date.now();
 
     try {
-      const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;
-      
-      if (!apiKey) {
-        throw new Error('YouTube API key missing');
-      }
+      // YouTube API uses server-side proxy via Supabase Edge Function
+      const proxyUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/youtube-proxy`;
 
-      // Test YouTube Search API
+      // Test YouTube Search API via proxy
       const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=cooking+recipes&type=video&maxResults=5&key=${apiKey}`
+        `${proxyUrl}?action=search&q=cooking+recipes&maxResults=5`,
+        {
+          headers: {
+            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+          }
+        }
       );
 
       const responseTime = Date.now() - startTime;
       const data = await response.json();
 
-      if (data.items) {
-        updateTestStatus('youtube-api', 'success', `Found ${data.items.length} videos`, responseTime, data);
+      if (data.success && data.data?.items) {
+        updateTestStatus('youtube-api', 'success', `Found ${data.data.items.length} videos via proxy`, responseTime, data.data);
       } else {
-        throw new Error(`API Error: ${data.error?.message || 'Unknown error'}`);
+        throw new Error(`API Error: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
       const responseTime = Date.now() - startTime;

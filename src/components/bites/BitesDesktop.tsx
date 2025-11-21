@@ -296,12 +296,12 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
   const rating = recipe.healthScore ? recipe.healthScore / 20 : 0;
 
   return (
-    <button
-      onClick={onClick}
-      className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all cursor-pointer group text-left w-full"
-    >
+    <div className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all cursor-pointer group text-left w-full">
       {/* Image */}
-      <div className="relative h-56 overflow-hidden">
+      <div 
+        onClick={onClick}
+        className="relative h-56 overflow-hidden cursor-pointer"
+      >
         <img
           src={recipe.image}
           alt={recipe.title}
@@ -328,26 +328,31 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
 
       {/* Content */}
       <div className="p-5">
-        <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2">{recipe.title}</h3>
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-          {recipe.summary?.replaceAll(/<[^>]*>/g, '') || 'Delicious recipe to try'}
-        </p>
+        <div 
+          onClick={onClick}
+          className="cursor-pointer"
+        >
+          <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2">{recipe.title}</h3>
+          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+            {recipe.summary?.replaceAll(/<[^>]*>/g, '') || 'Delicious recipe to try'}
+          </p>
 
-        {/* Rating */}
-        <div className="flex items-center gap-1 mb-4">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star
-              key={`star-${recipe.id}-${i}`}
-              className={`w-4 h-4 ${
-                i < Math.round(rating)
-                  ? 'fill-primary text-primary'
-                  : 'fill-muted text-muted'
-              }`}
-            />
-          ))}
-          <span className="text-sm text-muted-foreground ml-2">
-            ({rating.toFixed(1)})
-          </span>
+          {/* Rating */}
+          <div className="flex items-center gap-1 mb-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={`star-${recipe.id}-${i}`}
+                className={`w-4 h-4 ${
+                  i < Math.round(rating)
+                    ? 'fill-primary text-primary'
+                    : 'fill-muted text-muted'
+                }`}
+              />
+            ))}
+            <span className="text-sm text-muted-foreground ml-2">
+              ({rating.toFixed(1)})
+            </span>
+          </div>
         </div>
 
         {/* Actions */}
@@ -368,7 +373,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
           </button>
         </div>
       </div>
-    </button>
+    </div>
   );
 };
 

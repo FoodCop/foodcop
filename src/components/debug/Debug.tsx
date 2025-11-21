@@ -39,9 +39,9 @@ export default function DebugApp() {
     },
     {
       key: 'VITE_YOUTUBE_API_KEY',
-      value: import.meta.env.VITE_YOUTUBE_API_KEY,
-      description: 'YouTube API Key (Same as Google Maps)',
-      isSecret: true
+      value: '(Server-side only)',
+      description: 'YouTube API Key - Stored in Supabase Edge Function',
+      isSecret: false
     },
     {
       key: 'VITE_SPOONACULAR_API_KEY',
@@ -135,16 +135,22 @@ export default function DebugApp() {
   };
 
   const testYouTube = async (): Promise<string> => {
-    const key = import.meta.env.VITE_YOUTUBE_API_KEY;
-    if (!key) throw new Error('YouTube API key missing');
+    // YouTube API uses server-side proxy via Supabase Edge Function
+    // No client-side key needed
+    const proxyUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/youtube-proxy`;
     
     const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=cooking&type=video&maxResults=5&key=${key}`
+      `${proxyUrl}?action=search&q=cooking&maxResults=5`,
+      {
+        headers: {
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+        }
+      }
     );
     const data = await response.json();
     
-    if (data.error) throw new Error(data.error.message);
-    return `Found ${data.items?.length || 0} videos`;
+    if (!data.success) throw new Error(data.error || 'YouTube API request failed');
+    return `Found ${data.data?.items?.length || 0} videos via proxy`;
   };
 
   const testSpoonacular = async (): Promise<string> => {

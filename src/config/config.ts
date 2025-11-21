@@ -33,9 +33,10 @@ export const config = {
     },
   },
 
-  // YouTube Data API Configuration
+  // YouTube Data API Configuration (uses Supabase Edge Function proxy)
   youtube: {
-    apiKey: import.meta.env.VITE_YOUTUBE_API_KEY || '',
+    // API key is stored server-side in Supabase Edge Function
+    // No client-side key needed - all requests go through youtube-proxy
     baseUrl: 'https://www.googleapis.com/youtube/v3',
     endpoints: {
       search: '/search',

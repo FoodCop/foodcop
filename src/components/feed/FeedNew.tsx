@@ -336,59 +336,79 @@ export function FeedNew() {
       <div className="relative px-5 md:px-8 lg:px-12 py-6 md:py-8" style={{ height: 'calc(100vh - 200px)' }}>
         {hasMoreCards ? (
           <div className="relative h-full md:flex md:items-center md:justify-center md:gap-8 lg:gap-12">
-            <AnimatePresence>
-              {/* Desktop: Side-by-side layout */}
-              <div className="hidden md:flex items-center gap-8 lg:gap-12 h-full max-w-6xl mx-auto">
+            {/* Desktop: Side-by-side layout */}
+            <div className="hidden md:flex items-center gap-8 lg:gap-12 h-full max-w-6xl mx-auto">
+              <AnimatePresence mode="wait">
                 {/* Current card (left side) */}
                 {currentCard && (
-                  <div className="flex-1" style={{ maxWidth: '500px', height: '100%', zIndex: 2 }}>
+                  <motion.div 
+                    key={`current-${currentCard.id || currentCardIndex}`}
+                    className="flex-1" 
+                    style={{ maxWidth: '500px', height: '100%', zIndex: 2 }}
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                  >
                     <SwipeableCard
                       card={currentCard}
                       onSwipe={handleSwipe}
                     />
-                  </div>
+                  </motion.div>
                 )}
-                
+              </AnimatePresence>
+              
+              <AnimatePresence mode="wait">
                 {/* Next card preview (right side) */}
                 {nextCard && (
-                  <div className="flex-1" style={{ maxWidth: '500px', height: '100%', zIndex: 1 }}>
-                    <motion.div
-                      initial={{ scale: 0.95, opacity: 0.7 }}
-                      animate={{ scale: 0.95, opacity: 0.7 }}
-                      className="w-full h-full"
-                    >
-                      <CardContent card={nextCard} isActive={false} />
-                    </motion.div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Mobile: Stacked layout */}
-              <div className="md:hidden relative h-full">
-              {/* Next card (background) */}
-              {nextCard && (
-                <div className="absolute inset-0" style={{ zIndex: 1 }}>
                   <motion.div
-                    initial={{ scale: 0.95, y: 10 }}
-                    animate={{ scale: 0.95, y: 10 }}
-                    className="w-full h-full"
+                    key={`next-${nextCard.id || currentCardIndex + 1}`}
+                    className="flex-1" 
+                    style={{ maxWidth: '500px', height: '100%', zIndex: 1 }}
+                    initial={{ scale: 0.95, opacity: 0.7 }}
+                    animate={{ scale: 0.95, opacity: 0.7 }}
                   >
                     <CardContent card={nextCard} isActive={false} />
                   </motion.div>
-                </div>
-              )}
+                )}
+              </AnimatePresence>
+            </div>
+            
+            {/* Mobile: Stacked layout */}
+            <div className="md:hidden relative h-full">
+              <AnimatePresence mode="wait">
+                {/* Next card (background) */}
+                {nextCard && (
+                  <motion.div 
+                    key={`mobile-next-${nextCard.id || currentCardIndex + 1}`}
+                    className="absolute inset-0" 
+                    style={{ zIndex: 1 }}
+                    initial={{ scale: 0.95, y: 10 }}
+                    animate={{ scale: 0.95, y: 10 }}
+                  >
+                    <CardContent card={nextCard} isActive={false} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-              {/* Current card (foreground) */}
-              {currentCard && (
-                <div className="absolute inset-0" style={{ zIndex: 2 }}>
-                  <SwipeableCard
-                    card={currentCard}
-                    onSwipe={handleSwipe}
-                  />
-                </div>
-              )}
-              </div>
-            </AnimatePresence>
+              <AnimatePresence mode="wait">
+                {/* Current card (foreground) */}
+                {currentCard && (
+                  <motion.div 
+                    key={`mobile-current-${currentCard.id || currentCardIndex}`}
+                    className="absolute inset-0" 
+                    style={{ zIndex: 2 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <SwipeableCard
+                      card={currentCard}
+                      onSwipe={handleSwipe}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center px-8">
