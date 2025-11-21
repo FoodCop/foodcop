@@ -55,6 +55,10 @@ export interface ProfileUpdateParams {
   avatar_url?: string;
   location_city?: string;
   location_state?: string;
+  location_country?: string;
+  dietary_preferences?: string[];
+  cuisine_preferences?: string[];
+  onboarding_completed?: boolean;
   preferences?: Partial<UserPreferences>;
 }
 

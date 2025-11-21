@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
-import { config } from '../../config/config';
+import { loadGoogleMapsScript } from '../../utils/googleMapsLoader';
 import {
   MapMarker,
   createUserLocationIcon,
@@ -81,26 +81,8 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
   useEffect(() => {
     const initMap = async () => {
       try {
-        const apiKey = config.google.mapsApiKey;
-        if (!apiKey) {
-          throw new Error('Google Maps API key is not configured');
-        }
-
-        // Use the new functional API for @googlemaps/js-api-loader v2.0+
-        // Load the Google Maps script dynamically
-        if (!globalThis.google?.maps) {
-          const script = document.createElement('script');
-          script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&v=weekly`;
-          script.async = true;
-          script.defer = true;
-          
-          await new Promise<void>((resolve, reject) => {
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error('Failed to load Google Maps script'));
-            document.head.appendChild(script);
-          });
-        }
-        
+        // Use centralized script loader to prevent multiple loads
+        await loadGoogleMapsScript();
         setIsLoaded(true);
       } catch (err) {
         console.error('Failed to load Google Maps:', err);

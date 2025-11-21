@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './NewLandingPage.css';
 import { PhoneFan } from './components/PhoneFan';
+import { useAuth } from '../auth/AuthProvider';
 
 interface NewLandingPageProps {
   onNavigateToSignup?: () => void;
@@ -23,12 +24,15 @@ function StaticPhoneMockup({ image, alt, className = "" }: { image: string; alt:
 
 export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
   const [colorMode, setColorMode] = useState<'white' | 'yellow'>('white');
+  const { user } = useAuth();
 
   const handleGetStarted = () => {
     if (onNavigateToSignup) {
       onNavigateToSignup();
     } else {
-      globalThis.location.hash = '#auth';
+      // If user is already authenticated, go directly to plate
+      // Otherwise, go to auth page for sign in
+      globalThis.location.hash = user ? '#plate' : '#auth';
     }
   };
 

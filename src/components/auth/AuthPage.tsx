@@ -1,6 +1,5 @@
 import { useAuth } from './AuthProvider';
 import { SupabaseAuth } from './SupabaseAuth';
-import { ProfileService } from '../../services/profileService';
 import { cookieUtils } from '../../utils/cookies';
 import { useEffect, useState, useRef } from 'react';
 
@@ -10,45 +9,37 @@ interface AuthPageProps {
 
 export default function AuthPage({ isVisible = true }: AuthPageProps) {
   const { user, session, loading } = useAuth();
-  const [checkingOnboarding, setCheckingOnboarding] = useState(false);
-  const hasCheckedOnboarding = useRef(false);
+  const [checkingAuth, setCheckingAuth] = useState(false);
+  const hasCheckedAuth = useRef(false);
 
-  // Check onboarding status when user is authenticated (only once and only if page is visible)
+  // Redirect to #plate after successful authentication
   useEffect(() => {
-    if (user && session && !hasCheckedOnboarding.current && isVisible) {
-      hasCheckedOnboarding.current = true;
-      setCheckingOnboarding(true);
-      checkOnboardingStatus();
+    if (user && session && !hasCheckedAuth.current && isVisible) {
+      hasCheckedAuth.current = true;
+      setCheckingAuth(true);
+      redirectAfterAuth();
     }
   }, [user, session, isVisible]);
 
-  const checkOnboardingStatus = async () => {
+  const redirectAfterAuth = async () => {
     try {
-      const result = await ProfileService.hasCompletedOnboarding();
+      // Check if there's a stored return path from before authentication
+      const returnPath = cookieUtils.getAndClearReturnPath();
       
-      if (result.success && result.data === true) {
-        // User has completed onboarding
-        // Check if there's a stored return path from before authentication
-        const returnPath = cookieUtils.getAndClearReturnPath();
-        
-        if (returnPath && returnPath !== '#auth') {
-          console.log('✅ User completed onboarding, redirecting to stored path:', returnPath);
-          globalThis.location.hash = returnPath;
-        } else {
-          console.log('✅ User completed onboarding, redirecting to dashboard');
-          globalThis.location.hash = '#dash';
-        }
+      if (returnPath && returnPath !== '#auth') {
+        console.log('✅ User authenticated, redirecting to stored path:', returnPath);
+        globalThis.location.hash = returnPath;
       } else {
-        // User needs onboarding, redirect to onboarding flow
-        console.log('🎯 User needs onboarding, redirecting to onboarding flow');
-        globalThis.location.hash = '#onboarding';
+        // Always route to #plate after OAuth - preferences dialog will show if needed
+        console.log('✅ User authenticated, redirecting to Plate');
+        globalThis.location.hash = '#plate';
       }
     } catch (error) {
-      console.error('❌ Error checking onboarding status:', error);
-      // On error, assume user needs onboarding
-      globalThis.location.hash = '#onboarding';
+      console.error('❌ Error during post-auth redirect:', error);
+      // Default to plate on error
+      globalThis.location.hash = '#plate';
     } finally {
-      setCheckingOnboarding(false);
+      setCheckingAuth(false);
     }
   };
 
@@ -64,8 +55,8 @@ export default function AuthPage({ isVisible = true }: AuthPageProps) {
   }
 
   if (user) {
-    // Show loading while checking onboarding status
-    if (checkingOnboarding) {
+    // Show loading while redirecting after auth
+    if (checkingAuth) {
       return (
         <div className="fixed inset-0 bg-white flex items-center justify-center">
           <div className="flex flex-col items-center">

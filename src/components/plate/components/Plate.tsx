@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Settings, Lock, MapPin, Users, User as UserIcon, Image, Video, FileText, Tag, Grid3x3, UserPlus, Check, UserCheck, Mail, MailX } from 'lucide-react';
 import { ProfileSettings } from './ProfileSettings';
 import { PrivacyPolicy } from './PrivacyPolicy';
+import { PreferencesDialog } from './PreferencesDialog';
 import { UniversalViewer } from '../../ui/universal-viewer';
 import { usePlateViewer } from '../../../hooks/usePlateViewer';
 import { supabase } from '../../../services/supabase';
@@ -60,6 +61,11 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
   const [activeTab, setActiveTab] = useState('posts');
   const [showSettings, setShowSettings] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  
+  // Preferences dialog state
+  const [showPreferencesDialog, setShowPreferencesDialog] = useState(false);
+  const [needsLocation, setNeedsLocation] = useState(false);
+  const [needsDietary, setNeedsDietary] = useState(false);
   
   // âœ… NEW: Comprehensive friend management states
   const [showAddFriendModal, setShowAddFriendModal] = useState(false);
@@ -132,15 +138,41 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
   }, [userId]);
 
   useEffect(() => {
-    // Initialize user from props if available, otherwise fetch profile
-    if (currentUser) {
-      setUser(convertToAuthUser(currentUser));
-      setLoading(false);
-      console.log('ðŸ½ï¸ Plate initialized with authenticated user:', currentUser.email);
-    } else {
-      fetchUserProfile();
+    // Always fetch full profile from database to get location/dietary fields
+    // Even if currentUser exists, it only has auth metadata, not DB fields
+    fetchUserProfile();
+  }, [userId, fetchUserProfile]);
+
+  // Check if user needs to set preferences (location or dietary)
+  useEffect(() => {
+    if (!user || loading) return;
+
+    const missingLocation = !user.location_city;
+    const missingDietary = !user.dietary_preferences || user.dietary_preferences.length === 0;
+
+    setNeedsLocation(missingLocation);
+    setNeedsDietary(missingDietary);
+
+    // Show dialog if any preference is missing
+    if (missingLocation || missingDietary) {
+      console.log('User needs preferences:', { missingLocation, missingDietary });
+      setShowPreferencesDialog(true);
     }
-  }, [userId, currentUser, fetchUserProfile]);
+  }, [user, loading]);
+
+  // Handle preferences dialog completion
+  const handlePreferencesComplete = async () => {
+    setShowPreferencesDialog(false);
+    // Refresh user profile to get updated preferences
+    await fetchUserProfile();
+    toast.success('Welcome to FuzoFoodCop!');
+  };
+
+  // Handle preferences dialog skip
+  const handlePreferencesSkip = () => {
+    setShowPreferencesDialog(false);
+    toast.info('You can set preferences anytime in Settings');
+  };
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -1200,7 +1232,20 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Preferences Dialog - Show if location or dietary preferences are missing */}
+      {showPreferencesDialog && (
+        <PreferencesDialog
+          userId={userId}
+          onComplete={handlePreferencesComplete}
+          onSkip={handlePreferencesSkip}
+          showLocationStep={needsLocation}
+          showDietaryStep={needsDietary}
+        />
+      )}
     </div>
   );
 }
+
+
 

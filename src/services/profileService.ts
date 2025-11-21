@@ -87,21 +87,24 @@ export class ProfileService {
         throw new Error('Bio cannot exceed 500 characters');
       }
 
+      // Prepare update data - always include required fields since DB function handles them
       const updateData = {
-        id: user.id,
-        email: user.email || '',
+        username: user.email?.split('@')[0] || `user_${user.id.substring(0, 8)}`,
+        display_name: user.name || user.email?.split('@')[0] || 'User',
         ...updates,
-        updated_at: new Date().toISOString()
       };
 
-      const { data, error } = await supabase
-        .from('users')
-        .upsert(updateData)
-        .select()
-        .single();
+      console.log('💾 Calling database function with data:', updateData);
+
+      // Use database function to bypass RLS issues
+      const { data, error } = await supabase.rpc('upsert_user_profile', {
+        user_id: user.id,
+        user_email: user.email || '',
+        user_data: updateData
+      });
 
       if (error) {
-        console.error('Error updating profile:', error);
+        console.error('❌ Error updating profile:', error, 'Code:', error.code, 'Details:', error.details, 'Message:', error.message);
         
         // Handle specific constraint errors
         if (error.code === '23505' && error.message.includes('username')) {
