@@ -55,9 +55,9 @@ export function TakoBuddySection() {
           <div className="relative">
             <div className="relative z-10">
               <PhoneFan
-                leftImage="https://images.unsplash.com/photo-1757310998437-b2e8a7bd2e97?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBSSUyMGNoYXRib3QlMjBhc3Npc3RhbnR8ZW58MXx8fHwxNzYxNTExNTgwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                centerImage="https://images.unsplash.com/photo-1646766677899-9c1750e28b0f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBjaGF0JTIwYXBwfGVufDF8fHx8MTc2MTUzMzE2OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                rightImage="https://images.unsplash.com/photo-1753778367032-2ee16109a430?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvY3RvcHVzJTIwY3V0ZSUyMGlsbHVzdHJhdGlvbnxlbnwxfHx8fDE3NjE1MzMxNjl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                leftImage="/images/tako1.jpg"
+                centerImage="/images/tako2.jpg"
+                rightImage="/images/tako3.jpg"
                 altText="Tako AI assistant"
               />
             </div>

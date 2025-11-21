@@ -9,9 +9,9 @@ export function PinFoodSection() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="relative" style={{ position: 'relative' }}>
               <PhoneFan
-                leftImage="https://images.unsplash.com/photo-1668644437036-acd445abab3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYXZlZCUyMHJlY2lwZXMlMjBib29rbWFya3xlbnwxfHx8fDE3NjE1MzMxNzF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                centerImage="https://images.unsplash.com/photo-1606226459865-be58c137453e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXZvcml0ZSUyMGRpc2hlcyUyMGNvbGxlY3Rpb258ZW58MXx8fHwxNzYxNTMzMTcxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                rightImage="https://images.unsplash.com/photo-1578960281840-cb36759fb109?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kJTIwd2lzaGxpc3QlMjBwbGFubmluZ3xlbnwxfHx8fDE3NjE1MzMxNzF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                leftImage="/images/pin1.jpg"
+                centerImage="/images/pin2.jpg"
+                rightImage="/images/pin3.jpg"
                 altText="Saved food favorites"
               />
             </div>

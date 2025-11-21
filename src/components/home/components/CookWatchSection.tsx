@@ -6,7 +6,7 @@ export function CookWatchSection() {
     <section 
       className="py-20 relative bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `linear-gradient(rgba(11, 31, 58, 0.7), rgba(11, 31, 58, 0.7)), url('https://images.unsplash.com/photo-1654064755996-80036b6e6984?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHhjb29raW5nJTIwa2l0Y2hlbiUyMHV0ZW5zaWxzJTIwYmFja2dyb3VuZHxlbnwxfHx8fDE3NTY4MzI5NjJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`
+        backgroundImage: `linear-gradient(rgba(11, 31, 58, 0.7), rgba(11, 31, 58, 0.7)), url('/images/cook_bg.jpg?v=2')`
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,9 +27,9 @@ export function CookWatchSection() {
 
               {/* Phone Fan Animation */}
               <PhoneFan
-                leftImage="https://images.unsplash.com/photo-1758522488003-f48d8b40ea82?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb29raW5nJTIwdmlkZW8lMjByZWNpcGV8ZW58MXx8fHwxNzYxNTMxODc1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                centerImage="https://images.unsplash.com/photo-1731007530051-42866cac7e80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kJTIwcGxhdGluZyUyMGNoZWZ8ZW58MXx8fHwxNzYxNTMxODc2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                rightImage="https://images.unsplash.com/photo-1760383710574-73f43fd3370d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxraXRjaGVuJTIwY29va2luZyUyMHN0ZXBzfGVufDF8fHx8MTc2MTUzMTg3Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                leftImage="/images/cook1.jpg"
+                centerImage="/images/cook2.jpg"
+                rightImage="/images/cook3.jpg"
                 altText="FUZO cooking recipes"
               />
             </div>

@@ -21,9 +21,9 @@ export function ExploreFoodSection() {
               </div>
               <div className="relative">
                 <PhoneFan
-                  leftImage="https://images.unsplash.com/photo-1760985174940-8ab7c193aba5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwZm9vZCUyMGRpc2NvdmVyeXxlbnwxfHx8fDE3NjE1MzMxNjl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                  centerImage="https://images.unsplash.com/photo-1524584830732-b69165ddba9a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHJlZXQlMjBmb29kJTIwbWFya2V0fGVufDF8fHx8MTc2MTQ5OTQwOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                  rightImage="https://images.unsplash.com/photo-1553701275-1d6118df60bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kJTIwbWVudSUyMHZhcmlldHl8ZW58MXx8fHwxNzYxNTMzMTY5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                  leftImage="/images/explore1.jpg"
+                  centerImage="/images/explore2.jpg"
+                  rightImage="/images/explore3.jpg"
                   altText="Food exploration"
                 />
               </div>

@@ -8,7 +8,7 @@ export function FoodStoryboardSection() {
     <section 
       className="py-20 relative bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1552166539-2ec8888dd801?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kJTIwZmxhdCUyMGxheSUyMGNvbG9yZnVsJTIwZGlzaGVzfGVufDF8fHx8MTc1NjgzMjk1OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/tako_bg.jpg')`
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,9 +26,9 @@ export function FoodStoryboardSection() {
 
               {/* Phone Fan Animation */}
               <PhoneFan
-                leftImage="https://images.unsplash.com/photo-1548809685-e3831a2aaa5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYSUyMGZvb2R8ZW58MXx8fHwxNzYxNTMzMTY5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                centerImage="https://images.unsplash.com/photo-1708335583165-57aa131a4969?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kJTIwcGhvdG9ncmFwaHklMjBzaGFyZXxlbnwxfHx8fDE3NjE1MzMxNzB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                rightImage="https://images.unsplash.com/photo-1665110180279-ee5372bb96bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kJTIwYmxvZ2dlciUyMHN0b3J5fGVufDF8fHx8MTc2MTUzMzE3MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                leftImage="/images/share1.jpg"
+                centerImage="/images/share2.jpg"
+                rightImage="/images/share3.jpg"
                 altText="Food stories"
               />
             </div>
