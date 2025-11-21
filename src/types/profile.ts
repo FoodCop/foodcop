@@ -16,7 +16,6 @@ export interface UserProfile {
   preferences?: UserPreferences;
   dietary_restrictions?: string[];
   cuisine_preferences?: string[];
-  cuisine_dislikes?: string[];
   onboarding_completed?: boolean;
   created_at?: string;
   updated_at?: string;
@@ -47,8 +46,6 @@ export interface FoodPreferences {
   dietary_restrictions?: string[];
   preferred_cuisines?: string[];
   disliked_cuisines?: string[];
-  spice_tolerance?: 'mild' | 'medium' | 'hot' | 'extreme';
-  price_range?: 'budget' | 'moderate' | 'expensive' | 'fine_dining';
 }
 
 export interface ProfileUpdateParams {

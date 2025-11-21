@@ -28,8 +28,6 @@ serve(async (req: Request) => {
       dietary_preferences: [] as string[],
       allergies: [] as string[],
       cuisine_preferences: [] as string[],
-      cuisine_dislikes: [] as string[],
-      spice_tolerance: 3,
       health_conscious: false
     };
 
@@ -73,11 +71,6 @@ serve(async (req: Request) => {
         if (answer) {
           preferences.allergies.push('nuts');
         }
-      }
-
-      // Q5: Do you enjoy spicy food?
-      if (question.includes('spicy')) {
-        preferences.spice_tolerance = answer ? 4 : 1;
       }
 
       // Q6: Do you prefer healthy, low-calorie options?

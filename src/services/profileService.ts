@@ -230,10 +230,6 @@ export class ProfileService {
         updated_at: new Date().toISOString()
       };
 
-      if (dislikes !== undefined) {
-        updateData.cuisine_dislikes = validDislikes;
-      }
-
       const { data, error } = await supabase
         .from('users')
         .update(updateData)
@@ -508,9 +504,7 @@ export class ProfileService {
       const preferences: UserPreferences = {
         food_preferences: {
           dietary_restrictions: data.dietaryRestrictions,
-          preferred_cuisines: data.cuisinePreferences,
-          spice_tolerance: data.spiceTolerance,
-          price_range: data.priceRange,
+          preferred_cuisines: data.cuisinePreferences
         }
       };
 

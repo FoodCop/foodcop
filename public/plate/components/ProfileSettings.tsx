@@ -24,7 +24,6 @@ export function ProfileSettings({ userId, user, onUpdate }: ProfileSettingsProps
     website: user?.website || '',
     dietary_preferences: user?.dietary_preferences || [],
     allergies: user?.allergies || [],
-    spice_tolerance: user?.spice_tolerance || 3,
     health_conscious: user?.health_conscious || false,
     location_city: user?.location_city || '',
     location_state: user?.location_state || '',
@@ -37,9 +36,7 @@ export function ProfileSettings({ userId, user, onUpdate }: ProfileSettingsProps
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ 
       ...prev, 
-      [field]: field === 'spice_tolerance' ? parseInt(value) : 
-               field === 'health_conscious' ? value === 'true' : 
-               value 
+      [field]: field === 'health_conscious' ? value === 'true' : value 
     }));
   };
 
@@ -203,33 +200,6 @@ export function ProfileSettings({ userId, user, onUpdate }: ProfileSettingsProps
               ) : (
                 <span className="text-neutral-400">No allergies</span>
               )}
-            </div>
-          </div>
-
-          {/* Spice Tolerance */}
-          <div>
-            <Label>Spice Tolerance</Label>
-            <div className="mt-2 flex items-center gap-2">
-              <div className="flex-1">
-                <input
-                  type="range"
-                  min="1"
-                  max="5"
-                  value={formData.spice_tolerance}
-                  onChange={(e) => handleChange('spice_tolerance', e.target.value)}
-                  className="w-full h-2 rounded-lg appearance-none cursor-pointer"
-                  style={{ 
-                    background: `linear-gradient(to right, #ff6900 0%, #ff6900 ${(formData.spice_tolerance - 1) * 25}%, #e5e7eb ${(formData.spice_tolerance - 1) * 25}%, #e5e7eb 100%)`
-                  }}
-                />
-              </div>
-              <span className="text-sm font-medium text-neutral-700 w-8 text-center">
-                {formData.spice_tolerance}
-              </span>
-            </div>
-            <div className="mt-1 flex justify-between text-xs text-neutral-500">
-              <span>Mild</span>
-              <span>Very Spicy</span>
             </div>
           </div>
 

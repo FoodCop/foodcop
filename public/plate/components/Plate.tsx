@@ -119,7 +119,6 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
         following_count: data.following_count,
         dietary_preferences: data.dietary_preferences,
         cuisine_preferences: data.cuisine_preferences,
-        spice_tolerance: data.spice_tolerance,
         created_at: data.created_at,
         updated_at: data.updated_at
       };

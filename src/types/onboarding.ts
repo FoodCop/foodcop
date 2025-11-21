@@ -32,8 +32,6 @@ export interface ExtractedPreferences {
   dietary_preferences: string[];
   allergies: string[];
   cuisine_preferences: string[];
-  cuisine_dislikes: string[];
-  spice_tolerance: number;
   health_conscious: boolean;
 }
 

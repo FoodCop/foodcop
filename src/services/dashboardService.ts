@@ -47,9 +47,6 @@ export interface DashboardMasterBotPost {
 export interface UserPreferences {
   dietary_preferences?: string[];
   cuisine_preferences?: string[];
-  cuisine_dislikes?: string[];
-  price_range_preference?: number;
-  spice_tolerance?: number;
 }
 
 export interface DashboardData {
@@ -178,7 +175,7 @@ export class DashboardService {
     try {
       const { data: user, error } = await supabase
         .from('users')
-        .select('dietary_preferences, cuisine_preferences, cuisine_dislikes, price_range_preference, spice_tolerance')
+        .select('dietary_preferences, cuisine_preferences')
         .eq('id', userId)
         .single();
 
@@ -189,10 +186,7 @@ export class DashboardService {
 
       return {
         dietary_preferences: user?.dietary_preferences || [],
-        cuisine_preferences: user?.cuisine_preferences || [],
-        cuisine_dislikes: user?.cuisine_dislikes || [],
-        price_range_preference: user?.price_range_preference,
-        spice_tolerance: user?.spice_tolerance
+        cuisine_preferences: user?.cuisine_preferences || []
       };
     } catch (error) {
       console.error('❌ Unexpected error fetching preferences:', error);
