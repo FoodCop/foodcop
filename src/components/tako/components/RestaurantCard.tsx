@@ -58,7 +58,8 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
               {restaurant.location}
             </p>
             {restaurant.distance && (
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                <i className="fa-solid fa-person-walking" style={{ fontSize: '10pt' }} aria-label="Distance"></i>
                 {restaurant.distance}
               </p>
             )}

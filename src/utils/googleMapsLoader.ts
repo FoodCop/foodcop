@@ -18,7 +18,7 @@ const errorCallbacks: Array<(error: Error) => void> = [];
  */
 export async function loadGoogleMapsScript(): Promise<void> {
   // If already loaded, return immediately
-  if (isLoaded && globalThis.google?.maps) {
+  if (isLoaded && globalThis.google?.maps?.Map) {
     return;
   }
 
@@ -58,25 +58,40 @@ export async function loadGoogleMapsScript(): Promise<void> {
       );
 
       if (existingScript) {
-        // Script exists, wait for it to load
-        if (globalThis.google?.maps) {
-          isLoaded = true;
-          isLoading = false;
-          resolve();
-          for (const cb of loadPromises) {
-            cb();
+        // Script exists, check if it's fully loaded
+        const checkReady = () => {
+          if (globalThis.google?.maps?.Map) {
+            isLoaded = true;
+            isLoading = false;
+            resolve();
+            for (const cb of loadPromises) {
+              cb();
+            }
+            return true;
           }
+          return false;
+        };
+
+        if (checkReady()) {
           return;
         }
 
         // Wait for existing script to load
         existingScript.addEventListener('load', () => {
-          isLoaded = true;
-          isLoading = false;
-          resolve();
-          for (const cb of loadPromises) {
-            cb();
-          }
+          // Wait for google.maps.Map to be available
+          const waitForMap = () => {
+            if (globalThis.google?.maps?.Map) {
+              isLoaded = true;
+              isLoading = false;
+              resolve();
+              for (const cb of loadPromises) {
+                cb();
+              }
+            } else {
+              setTimeout(waitForMap, 50);
+            }
+          };
+          waitForMap();
         });
 
         existingScript.addEventListener('error', () => {
@@ -99,14 +114,23 @@ export async function loadGoogleMapsScript(): Promise<void> {
       script.defer = true;
 
       script.onload = () => {
-        isLoaded = true;
-        isLoading = false;
-        resolve();
-        for (const cb of loadPromises) {
-          cb();
-        }
-        loadPromises.length = 0;
-        errorCallbacks.length = 0;
+        // Wait for google.maps.Map to be available (it might not be immediately after script load)
+        const checkReady = () => {
+          if (globalThis.google?.maps?.Map) {
+            isLoaded = true;
+            isLoading = false;
+            resolve();
+            for (const cb of loadPromises) {
+              cb();
+            }
+            loadPromises.length = 0;
+            errorCallbacks.length = 0;
+          } else {
+            // Retry after a short delay
+            setTimeout(checkReady, 50);
+          }
+        };
+        checkReady();
       };
 
       script.onerror = () => {
@@ -140,7 +164,7 @@ export async function loadGoogleMapsScript(): Promise<void> {
  * Check if Google Maps is loaded
  */
 export function isGoogleMapsLoaded(): boolean {
-  return isLoaded && Boolean(globalThis.google?.maps);
+  return isLoaded && Boolean(globalThis.google?.maps?.Map);
 }
 
 /**

@@ -6,21 +6,26 @@ const OPENAI_BASE_URL = 'https://api.openai.com/v1';
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response(null, { 
+      status: 204,
+      headers: corsHeaders 
+    });
   }
 
   try {
+    // Check for API key in environment
     if (!OPENAI_API_KEY) {
-      console.error('OpenAI API key not configured');
+      console.error('OpenAI API key not configured in Supabase secrets');
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'OpenAI API key not configured on server' 
+          error: 'OpenAI API key not configured on server. Please set OPENAI_API_KEY in Supabase secrets.' 
         }),
         { 
           status: 500, 
@@ -28,6 +33,9 @@ serve(async (req) => {
         }
       );
     }
+
+    // Note: With verify_jwt: true, Supabase automatically verifies JWT before this code runs
+    // If we reach here, the JWT is valid (or the function allows anon access)
 
     if (req.method !== 'POST') {
       return new Response(

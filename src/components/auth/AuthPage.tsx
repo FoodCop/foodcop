@@ -113,24 +113,21 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center" style={{ fontSize: '10pt' }}>
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
         <div className="text-center mb-8">
-          <div className="text-3xl sm:text-4xl mb-4">🍜</div>
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2">Join the FUZO Community</h2>
-          <p className="text-gray-600">Ready to discover amazing food? Sign in to start your culinary adventure with Tako!</p>
+          <img 
+            src="/logo_mobile.png" 
+            alt="FUZO" 
+            className="h-16 mx-auto mb-4"
+          />
+          <p className="text-gray-600" style={{ fontSize: '10pt' }}>Ready to discover amazing food? Sign in to start your culinary adventure with Tako!</p>
         </div>
         
         <SupabaseAuth />
         
         <div className="mt-6 text-center">
-          <div className="bg-orange-50 rounded-lg p-4 mb-4">
-            <p className="text-sm text-orange-800 font-medium">🎯 What's Next?</p>
-            <p className="text-xs text-orange-700 mt-1">
-              After signing in, you'll set up your food preferences and start discovering personalized content!
-            </p>
-          </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500" style={{ fontSize: '10pt' }}>
             By signing in, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>

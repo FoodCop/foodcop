@@ -97,6 +97,65 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
   useEffect(() => {
     if (!isLoaded || !mapRef.current || mapInstanceRef.current) return;
 
+    // Double-check that google.maps.Map is fully loaded
+    if (!window.google?.maps?.Map) {
+      console.warn('Google Maps API not fully loaded yet, retrying...');
+      // Retry after a short delay
+      const timeoutId = setTimeout(() => {
+        if (window.google?.maps?.Map && mapRef.current && !mapInstanceRef.current) {
+          const mapOptions: google.maps.MapOptions = {
+            center,
+            zoom,
+            mapTypeId,
+            zoomControl: showZoomControls,
+            mapTypeControl: showMapTypeControls,
+            streetViewControl: showStreetViewControls,
+            fullscreenControl: false,
+            styles: [
+              {
+                featureType: 'poi',
+                elementType: 'labels',
+                stylers: [{ visibility: 'off' }],
+              },
+            ],
+          };
+
+          try {
+            mapInstanceRef.current = new google.maps.Map(mapRef.current, mapOptions);
+
+            // Add map click listener
+            if (onMapClick) {
+              mapInstanceRef.current.addListener('click', onMapClick);
+            }
+
+            // Add bounds changed listener
+            if (onBoundsChanged) {
+              mapInstanceRef.current.addListener('bounds_changed', () => {
+                const bounds = mapInstanceRef.current?.getBounds();
+                if (bounds) {
+                  onBoundsChanged(bounds);
+                }
+              });
+            }
+
+            // Initialize info window
+            infoWindowRef.current = new google.maps.InfoWindow();
+          } catch (err) {
+            console.error('Error creating map instance:', err);
+            setError(err instanceof Error ? err.message : 'Failed to create map');
+          }
+        }
+      }, 100);
+      return () => clearTimeout(timeoutId);
+    }
+
+    // Verify google.maps.Map is available before creating map
+    if (!window.google?.maps?.Map) {
+      console.error('Google Maps Map constructor not available');
+      setError('Google Maps API not fully loaded');
+      return;
+    }
+
     const mapOptions: google.maps.MapOptions = {
       center,
       zoom,
@@ -114,25 +173,30 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
       ],
     };
 
-    mapInstanceRef.current = new google.maps.Map(mapRef.current, mapOptions);
+    try {
+      mapInstanceRef.current = new google.maps.Map(mapRef.current, mapOptions);
 
-    // Add map click listener
-    if (onMapClick) {
-      mapInstanceRef.current.addListener('click', onMapClick);
+      // Add map click listener
+      if (onMapClick) {
+        mapInstanceRef.current.addListener('click', onMapClick);
+      }
+
+      // Add bounds changed listener
+      if (onBoundsChanged) {
+        mapInstanceRef.current.addListener('bounds_changed', () => {
+          const bounds = mapInstanceRef.current?.getBounds();
+          if (bounds) {
+            onBoundsChanged(bounds);
+          }
+        });
+      }
+
+      // Initialize info window
+      infoWindowRef.current = new google.maps.InfoWindow();
+    } catch (err) {
+      console.error('Error creating map instance:', err);
+      setError(err instanceof Error ? err.message : 'Failed to create map');
     }
-
-    // Add bounds changed listener
-    if (onBoundsChanged) {
-      mapInstanceRef.current.addListener('bounds_changed', () => {
-        const bounds = mapInstanceRef.current?.getBounds();
-        if (bounds) {
-          onBoundsChanged(bounds);
-        }
-      });
-    }
-
-    // Initialize info window
-    infoWindowRef.current = new google.maps.InfoWindow();
   }, [isLoaded, center, zoom, mapTypeId, showZoomControls, showMapTypeControls, showStreetViewControls, onMapClick, onBoundsChanged]);
 
   // Update map center

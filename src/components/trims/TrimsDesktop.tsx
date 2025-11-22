@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
 import { savedItemsService } from '../../services/savedItemsService';
 import { YouTubeService } from '../../services/youtube';
+import { MinimalHeader } from '../common/MinimalHeader';
 
 // TrimVideo interface for short-form cooking videos
 interface TrimVideo {
@@ -305,11 +306,14 @@ export default function TrimsDesktop() {
 
   return (
     <div 
-      className="flex min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat"
+      className="flex min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat flex-col"
       style={{
         backgroundImage: 'url(/bg.svg)',
+        fontSize: '10pt',
       }}
     >
+      <MinimalHeader showLogo={true} logoPosition="left" />
+      <div className="flex flex-1">
       {/* Sidebar Filters */}
       <aside className="hidden lg:block w-64 bg-white border-r border-[#EEE] sticky top-0 h-screen overflow-y-auto flex-shrink-0">
         <div className="p-6">
@@ -433,7 +437,7 @@ export default function TrimsDesktop() {
       <div className="flex-1">
         {/* Sticky Search Bar */}
         <div className="sticky top-0 z-30 bg-white shadow-sm">
-        <div className="container mx-auto px-4 max-w-[1200px] py-4">
+        <div className="container mx-auto px-4 max-w-7xl py-4">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#666666]" />
             <input
@@ -449,7 +453,7 @@ export default function TrimsDesktop() {
 
       {/* Sticky Category Filter Bar */}
       <div className="sticky top-[72px] z-20 bg-white border-b border-[#EEE]">
-        <div className="container mx-auto px-4 max-w-[1400px] py-4">
+        <div className="container mx-auto px-4 max-w-7xl py-4">
           <div className="flex flex-wrap gap-2 justify-center">
             {VIDEO_CATEGORIES.map((category) => (
               <button
@@ -469,7 +473,7 @@ export default function TrimsDesktop() {
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 max-w-[1400px] pt-8 pb-16">
+      <main className="container mx-auto px-4 max-w-7xl pt-8 pb-16">
         {/* Video Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {paginatedVideos.map((video) => (
@@ -560,9 +564,12 @@ export default function TrimsDesktop() {
         />
       )}
       </div>
+      </div>
     </div>
   );
-}// Video Card Component
+}
+
+// Video Card Component
 function VideoCard({
   video,
   onVideoClick

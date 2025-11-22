@@ -6,7 +6,7 @@ import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { PageLoader } from './components/common/PageLoader'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
 import { LogOut } from 'lucide-react'
-import { toast } from 'sonner'
+import { toastHelpers } from './utils/toastHelpers'
 import { Toaster } from './components/ui/sonner'
 import { MobileRadialNav } from './components/navigation/MobileRadialNav'
 import { AIChatWidget } from './components/tako/components/AIChatWidget'
@@ -22,20 +22,37 @@ import AuthPage from './components/auth/AuthPage'
 // Helper function to wrap lazy imports with error handling and retry logic
 const lazyWithRetry = (componentImport: () => Promise<any>, retries = 3) => {
   return lazy(async () => {
+    let lastError: Error | null = null;
+    
     for (let i = 0; i < retries; i++) {
       try {
-        return await componentImport();
-      } catch (error) {
-        console.warn(`⚠️ Lazy load attempt ${i + 1} failed:`, error);
-        if (i === retries - 1) {
-          // Last attempt failed, throw the error
-          throw error;
+        const module = await componentImport();
+        // Verify the module has a default export
+        if (!module || (!module.default && Object.keys(module).length === 0)) {
+          throw new Error('Module loaded but has no default export or exports');
         }
-        // Wait a bit before retrying
-        await new Promise(resolve => setTimeout(resolve, 100 * (i + 1)));
+        return module;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        console.warn(`⚠️ Lazy load attempt ${i + 1}/${retries} failed:`, lastError.message);
+        
+        if (i === retries - 1) {
+          // Last attempt failed, log detailed error and throw
+          console.error('❌ All lazy load attempts failed:', {
+            error: lastError.message,
+            stack: lastError.stack,
+            attempts: retries
+          });
+          throw lastError;
+        }
+        
+        // Exponential backoff: 100ms, 200ms, 400ms
+        const delay = 100 * Math.pow(2, i);
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
-    throw new Error('Failed to load component after retries');
+    
+    throw lastError || new Error('Failed to load component after retries');
   });
 };
 
@@ -45,7 +62,8 @@ const FeedApp = lazyWithRetry(() => import('./components/feed/FeedNew').then(mod
 const ScoutApp = lazyWithRetry(() => import('./components/scout/ScoutNew'))
 const BitesApp = lazyWithRetry(() => import('./components/bites/BitesNewMobile'))
 const TrimsApp = lazyWithRetry(() => import('./components/trims/TrimsNew'))
-const DashApp = lazyWithRetry(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
+// Dashboard merged into Plate - keeping import for backward compatibility but redirecting to /plate
+const DashApp = lazyWithRetry(() => import('./components/plate/PlateNew'))
 const SnapApp = lazyWithRetry(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
 const PlateApp: React.ComponentType<{ userId?: string; currentUser?: unknown }> = lazyWithRetry(() => import('./components/plate/PlateNew'))
 
@@ -68,9 +86,23 @@ function PageErrorBoundaryWithLocation({ children }: { children: React.ReactNode
 
 // Wrapper component for lazy-loaded routes with individual error boundaries
 function LazyRouteWrapper({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  
   return (
-    <ErrorBoundary>
-      <Suspense fallback={<PageLoader />}>
+    <ErrorBoundary
+      onError={(error, errorInfo) => {
+        console.error('🚨 LazyRouteWrapper: Error loading route:', {
+          path: location.pathname,
+          error: error.message,
+          stack: error.stack,
+          componentStack: errorInfo.componentStack
+        });
+      }}
+    >
+      <Suspense 
+        fallback={<PageLoader />}
+        // Add timeout to prevent infinite loading
+      >
         {children}
       </Suspense>
     </ErrorBoundary>
@@ -124,12 +156,12 @@ function AppLayout() {
       try {
         console.log('🚪 Sign out requested from navigation');
         await signOut();
-        toast.success('Successfully signed out');
+        toastHelpers.success('Successfully signed out');
         navigate('/landing');
         console.log('✅ Sign out completed');
       } catch (error) {
         console.error('❌ Sign out failed:', error);
-        toast.error('Failed to sign out');
+        toastHelpers.error('Failed to sign out');
       }
     };
 
@@ -137,7 +169,7 @@ function AppLayout() {
       <div className="flex items-center justify-between h-16 safe-area-top px-4">
         {/* Logo */}
         <Link to="/feed" className="flex items-center">
-          <img src="/logo_mobile.png" alt="FUZO" className="h-10" />
+          <img src="/logo_mobile.png" alt="FUZO" className="h-8" />
         </Link>
         
         {/* Desktop Navigation */}
@@ -147,7 +179,6 @@ function AppLayout() {
           <NavButton to="/bites" label="Bites" />
           <NavButton to="/trims" label="Trims" />
           <NavButton to="/plate" label="Plate" />
-          <NavButton to="/dash" label="Dashboard" />
 
           {/* Color Toggle Button */}
           <button
@@ -301,9 +332,7 @@ function AppLayout() {
               path="/dash"
               element={
                 <ProtectedRoute>
-                  <LazyRouteWrapper>
-                    <DashApp />
-                  </LazyRouteWrapper>
+                  <Navigate to="/plate" replace />
                 </ProtectedRoute>
               }
             />

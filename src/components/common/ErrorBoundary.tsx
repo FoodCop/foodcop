@@ -117,30 +117,63 @@ export class ErrorBoundary extends Component<Props, State> {
  * Specialized error boundary for page-level errors with route-specific handling
  * Resets automatically when route changes
  */
-export class PageErrorBoundary extends Component<Props & { location?: string }, State> {
-  public state: State = {
+interface PageErrorBoundaryState extends State {
+  retryCount: number;
+}
+
+export class PageErrorBoundary extends Component<Props & { location?: string }, PageErrorBoundaryState> {
+  public state: PageErrorBoundaryState = {
     hasError: false,
     error: null,
+    retryCount: 0,
   };
 
-  public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+  public static getDerivedStateFromError(error: Error): PageErrorBoundaryState {
+    return { hasError: true, error, retryCount: 0 };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('🚨 PageErrorBoundary caught an error:', error);
     console.error('📍 Error Info:', errorInfo);
     console.error('📍 Component Stack:', errorInfo.componentStack);
+    console.error('📍 Error Message:', error.message);
+    console.error('📍 Error Stack:', error.stack);
     this.props.onError?.(error, errorInfo);
     
-    // Auto-retry after a short delay for transient errors
+    // Log error to console for debugging
+    if (import.meta.env.DEV) {
+      console.group('🔍 Error Details');
+      console.error('Error:', error);
+      console.error('Error Info:', errorInfo);
+      console.error('Location:', this.props.location || 'unknown');
+      console.groupEnd();
+    }
+    
+    // Auto-retry with exponential backoff for transient errors
     // This helps with initialization race conditions
-    setTimeout(() => {
-      if (this.state.hasError) {
-        console.log('🔄 PageErrorBoundary: Auto-retrying after error...');
-        this.setState({ hasError: false, error: null });
+    let retryCount = 0;
+    const maxRetries = 3;
+    const retryDelay = (attempt: number) => Math.min(500 * Math.pow(2, attempt), 3000);
+    
+    const attemptRetry = () => {
+      if (retryCount < maxRetries && this.state.hasError) {
+        retryCount++;
+        console.log(`🔄 PageErrorBoundary: Auto-retry attempt ${retryCount}/${maxRetries}...`);
+        setTimeout(() => {
+          if (this.state.hasError) {
+            this.setState({ hasError: false, error: null });
+            // If still in error state after a moment, try again
+            setTimeout(() => {
+              if (this.state.hasError && retryCount < maxRetries) {
+                attemptRetry();
+              }
+            }, 100);
+          }
+        }, retryDelay(retryCount - 1));
       }
-    }, 500);
+    };
+    
+    attemptRetry();
   }
 
   // Reset error state when route changes
@@ -157,7 +190,8 @@ export class PageErrorBoundary extends Component<Props & { location?: string }, 
     // This prevents false errors from initialization race conditions
     if (this.state.hasError) {
       console.log('🔄 PageErrorBoundary: Component mounted, resetting error state immediately');
-      this.setState({ hasError: false, error: null });
+      console.log('📍 Current location:', this.props.location || 'unknown');
+      this.setState({ hasError: false, error: null, retryCount: 0 });
     }
   }
 
@@ -179,7 +213,7 @@ export class PageErrorBoundary extends Component<Props & { location?: string }, 
 
   private readonly handleRetry = () => {
     console.log('🔄 PageErrorBoundary: Retry button clicked');
-    this.setState({ hasError: false, error: null });
+    this.setState({ hasError: false, error: null, retryCount: 0 });
   };
 
   public render() {

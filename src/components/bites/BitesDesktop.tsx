@@ -10,9 +10,10 @@ import {
 import { SpoonacularService } from '../../services/spoonacular';
 import type { Recipe } from './components/RecipeCard';
 import { RecipeModal } from './components/RecipeModal';
-import { toast } from 'sonner';
+import { toastHelpers } from '../../utils/toastHelpers';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
+import { MinimalHeader } from '../common/MinimalHeader';
 
 type FilterType = 'All' | 'Vegetarian' | 'Vegan' | 'Gluten-Free' | 'Keto' | 'Low Carb';
 
@@ -145,7 +146,7 @@ const BitesDesktop: React.FC = () => {
   const handleSaveRecipe = async (recipe: Recipe, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) {
-      toast.error('Please sign in to save recipes');
+      toastHelpers.error('Please sign in to save recipes');
       return;
     }
 
@@ -163,27 +164,29 @@ const BitesDesktop: React.FC = () => {
           diets: recipe.diets
         }
       });
-      toast.success('Recipe saved to Plate!');
+      toastHelpers.saved(recipe.title);
     } catch (err) {
-      toast.error('Failed to save recipe');
+      toastHelpers.error('Failed to save recipe');
       console.error('Error saving recipe:', err);
     }
   };
 
   const handleShareRecipe = (recipe: Recipe, e: React.MouseEvent) => {
     e.stopPropagation();
-    toast.success('Share feature coming soon!');
+    toastHelpers.comingSoon('Share feature');
   };
 
   const filterButtons: FilterType[] = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free', 'Keto', 'Low Carb'];
 
   return (
     <div 
-      className="min-h-screen bg-background bg-cover bg-center bg-no-repeat"
+      className="min-h-screen bg-background bg-cover bg-center bg-no-repeat flex flex-col"
       style={{
         backgroundImage: 'url(/bg.svg)',
+        fontSize: '10pt',
       }}
     >
+      <MinimalHeader showLogo={true} logoPosition="left" />
       {/* Filter Bar */}
       <div className="sticky top-0 z-40 bg-white border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">

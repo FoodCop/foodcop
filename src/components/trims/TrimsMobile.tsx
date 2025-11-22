@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
 import { savedItemsService } from '../../services/savedItemsService';
 import { YouTubeService } from '../../services/youtube';
+import { MinimalHeader } from '../common/MinimalHeader';
 
 // YouTube API response types
 interface YouTubeVideo {
@@ -242,11 +243,13 @@ export default function TrimsMobile() {
 
   return (
     <div 
-      className="min-h-screen bg-[#FAFAFA] pb-20 bg-cover bg-center bg-no-repeat"
+      className="min-h-screen bg-[#FAFAFA] pb-20 bg-cover bg-center bg-no-repeat flex flex-col"
       style={{
         backgroundImage: 'url(/bg.svg)',
+        fontSize: '10pt',
       }}
     >
+      <MinimalHeader showLogo={true} logoPosition="left" />
       {/* Search Bar */}
       <div className="sticky top-0 z-30 bg-white shadow-sm px-4 py-3">
         <div className="relative">

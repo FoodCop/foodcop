@@ -3,11 +3,12 @@ import { Search, SlidersHorizontal, Star, Clock, Flame, Bookmark, Send } from 'l
 import { SpoonacularService } from '../../services/spoonacular';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
-import { toast } from 'sonner';
+import { toastHelpers } from '../../utils/toastHelpers';
 import type { Recipe } from './components/RecipeCard';
 import RecipeDetailView from './components/RecipeDetailView';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import BitesDesktop from './BitesDesktop';
+import { MinimalHeader } from '../common/MinimalHeader';
 
 interface SpoonacularRecipe {
   id: number;
@@ -45,12 +46,12 @@ interface SpoonacularRecipe {
 }
 
 const CATEGORIES = [
-  { id: 'breakfast', label: 'Breakfast', icon: '🥞', type: 'breakfast' },
-  { id: 'lunch', label: 'Lunch', icon: '🍔', type: 'main course' },
-  { id: 'dinner', label: 'Dinner', icon: '🍕', type: 'main course' },
-  { id: 'dessert', label: 'Dessert', icon: '🍰', type: 'dessert' },
-  { id: 'vegan', label: 'Vegan', icon: '🌱', diet: 'vegan' },
-  { id: 'keto', label: 'Keto', icon: '🥑', diet: 'ketogenic' },
+  { id: 'breakfast', label: 'Breakfast', icon: 'fa-solid fa-sun', type: 'breakfast' },
+  { id: 'lunch', label: 'Lunch', icon: 'fa-solid fa-utensils', type: 'main course' },
+  { id: 'dinner', label: 'Dinner', icon: 'fa-solid fa-moon', type: 'main course' },
+  { id: 'dessert', label: 'Dessert', icon: 'fa-solid fa-cake-candles', type: 'dessert' },
+  { id: 'vegan', label: 'Vegan', icon: 'fa-solid fa-leaf', diet: 'vegan' },
+  { id: 'keto', label: 'Keto', icon: 'fa-solid fa-seedling', diet: 'ketogenic' },
   { id: 'glutenFree', label: 'Gluten Free', icon: '🌾', diet: 'gluten free' },
   { id: 'quick', label: 'Quick', icon: '⚡', maxReadyTime: 30 },
 ];
@@ -238,7 +239,7 @@ export default function BitesNewMobile() {
 
   const handleSaveRecipe = async (recipe: Recipe) => {
     if (!user) {
-      toast.error('Please sign in to save recipes');
+      toastHelpers.error('Please sign in to save recipes');
       return;
     }
 
@@ -255,9 +256,9 @@ export default function BitesNewMobile() {
       });
 
       if (result.success) {
-        toast.success(`${recipe.title} saved to your plate!`);
+        toastHelpers.saved(recipe.title);
       } else {
-        toast.error(result.error || 'Failed to save recipe');
+        toastHelpers.error(result.error || 'Failed to save recipe');
       }
     } catch (error) {
       console.error('Save error:', error);
@@ -291,11 +292,13 @@ export default function BitesNewMobile() {
   if ((viewMode === 'search' || viewMode === 'category') && searchResults.length > 0) {
     return (
       <div 
-        className="min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat"
+        className="min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat flex flex-col"
         style={{
           backgroundImage: 'url(/bg.svg)',
+          fontSize: '10pt',
         }}
       >
+        <MinimalHeader showLogo={true} logoPosition="left" />
         <header className="sticky top-0 bg-white border-b border-[#EEE] z-50">
           <div className="px-4 py-3 flex items-center gap-3">
             <button
@@ -398,11 +401,13 @@ export default function BitesNewMobile() {
   // Home view
   return (
     <div 
-      className="min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat"
+      className="min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat flex flex-col"
       style={{
         backgroundImage: 'url(/bg.svg)',
+        fontSize: '10pt',
       }}
     >
+      <MinimalHeader showLogo={true} logoPosition="left" />
       <header className="px-4 pt-6 pb-4 bg-white sticky top-0 z-50">
         <div className="relative">
           <Search className="absolute left-4 top-3 w-4 h-4 text-[#8A8A8A]" />
@@ -470,7 +475,7 @@ export default function BitesNewMobile() {
                 className="flex flex-col items-center gap-2"
               >
                 <div className="w-16 h-16 rounded-2xl bg-white border border-[#EEE] flex items-center justify-center shadow-sm">
-                  <span className="text-2xl">{category.icon}</span>
+                  <i className={category.icon} style={{ fontSize: '20pt' }}></i>
                 </div>
                 <span className="text-xs font-medium text-[#0f172a] text-center">{category.label}</span>
               </button>

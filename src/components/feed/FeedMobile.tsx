@@ -10,6 +10,7 @@ import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { X, Heart, Bookmark, Send, MapPin, Star } from 'lucide-react';
 import { sampleRestaurants } from './data/feed-content';
 import type { RestaurantCard } from './data/feed-content';
+import { MinimalHeader } from '../common/MinimalHeader';
 
 type SwipeDirection = 'left' | 'right' | 'up' | 'down';
 
@@ -342,11 +343,13 @@ export function FeedMobile() {
 
   return (
     <div 
-      className="min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat pb-20"
+      className="min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat pb-20 flex flex-col"
       style={{
         backgroundImage: 'url(/bg.svg)',
+        fontSize: '10pt',
       }}
     >
+      <MinimalHeader showLogo={true} logoPosition="left" />
       <main className="flex-1 flex flex-col items-center justify-center px-5 py-6 relative overflow-hidden min-h-[750px]">
         {/* Card Stack Container with 3D Perspective */}
         <div 

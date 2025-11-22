@@ -3,6 +3,7 @@ import { Camera, X, Star, MapPin, Clock, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../auth/AuthProvider';
 import { SavedItemsService } from '../../services/savedItemsService';
+import { MinimalHeader } from '../common/MinimalHeader';
 
 // Mock mode - set to true to bypass camera and use mock photo
 const MOCK_CAMERA_MODE = false;
@@ -20,21 +21,21 @@ interface CapturedPhoto {
 }
 
 const cuisineTypes = [
-  { emoji: '🍕', label: 'Italian' },
-  { emoji: '🥡', label: 'Chinese' },
-  { emoji: '🍱', label: 'Japanese' },
-  { emoji: '🌮', label: 'Mexican' },
-  { emoji: '🍛', label: 'Indian' },
-  { emoji: '🍜', label: 'Thai' },
-  { emoji: '🥐', label: 'French' },
-  { emoji: '🍔', label: 'American' },
-  { emoji: '🥙', label: 'Mediterranean' },
-  { emoji: '🍲', label: 'Korean' },
-  { emoji: '🥢', label: 'Vietnamese' },
-  { emoji: '🥘', label: 'Spanish' },
-  { emoji: '🫒', label: 'Greek' },
-  { emoji: '🧆', label: 'Middle Eastern' },
-  { emoji: '🍽️', label: 'Other' }
+  { icon: 'fa-solid fa-pizza-slice', label: 'Italian' },
+  { icon: 'fa-solid fa-bowl-food', label: 'Chinese' },
+  { icon: 'fa-solid fa-fish', label: 'Japanese' },
+  { icon: 'fa-solid fa-pepper-hot', label: 'Mexican' },
+  { icon: 'fa-solid fa-pepper-hot', label: 'Indian' },
+  { icon: 'fa-solid fa-bowl-rice', label: 'Thai' },
+  { icon: 'fa-solid fa-baguette', label: 'French' },
+  { icon: 'fa-solid fa-burger', label: 'American' },
+  { icon: 'fa-solid fa-salad', label: 'Mediterranean' },
+  { icon: 'fa-solid fa-bowl-rice', label: 'Korean' },
+  { icon: 'fa-solid fa-bowl-rice', label: 'Vietnamese' },
+  { icon: 'fa-solid fa-pepper-hot', label: 'Spanish' },
+  { icon: 'fa-solid fa-salad', label: 'Greek' },
+  { icon: 'fa-solid fa-pepper-hot', label: 'Middle Eastern' },
+  { icon: 'fa-solid fa-utensils', label: 'Other' }
 ];
 
 export function SnapNew() {
@@ -324,7 +325,7 @@ export function SnapNew() {
               <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center">
                 <Camera className="w-12 h-12 text-white" />
               </div>
-              <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Welcome to SNAP! 📸</h2>
+              <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Welcome to SNAP!</h2>
               <p className="text-gray-600 text-sm">Share your food discoveries</p>
             </div>
 
@@ -512,7 +513,7 @@ export function SnapNew() {
                         : 'bg-[#F5F5F5] text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    <span className="mr-1">{type.emoji}</span>
+                    <i className={type.icon} style={{ fontSize: '10pt' }}></i>
                     {type.label}
                   </button>
                 ))}
@@ -595,7 +596,9 @@ export function SnapNew() {
 
   // Default State
   return (
-    <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex items-center justify-center">
+    <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex flex-col" style={{ fontSize: '10pt' }}>
+      <MinimalHeader showLogo={true} logoPosition="left" />
+      <div className="flex-1 flex items-center justify-center">
       <div className="text-center px-8">
         <Camera className="w-24 h-24 text-gray-400 mx-auto mb-6" />
         <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Ready to SNAP?</h2>
@@ -606,6 +609,7 @@ export function SnapNew() {
         >
           Start Camera
         </button>
+      </div>
       </div>
     </div>
   );

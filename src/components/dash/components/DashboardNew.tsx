@@ -5,6 +5,7 @@ import { useAuth } from "../../auth/AuthProvider";
 import { ProfileService } from "../../../services/profileService";
 import DashboardService, { type DashboardData } from "../../../services/dashboardService";
 import type { UserProfile } from "../../../types/profile";
+import { MinimalHeader } from "../../common/MinimalHeader";
 
 export function DashboardNew() {
   const { user } = useAuth();
@@ -117,27 +118,19 @@ export function DashboardNew() {
       className="min-h-screen bg-[#FAFAFA] flex flex-col max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto relative pb-20 md:pb-0 bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: 'url(/bg.svg)',
+        fontSize: '10pt',
       }}
     >
-      {/* Header Section with Gradient Background - Mobile Only */}
-      <div className="relative overflow-hidden bg-linear-to-br from-[#FF6B35] via-[#EA580C] to-[#F7C59F] px-4 pt-8 pb-6 md:hidden">
-        {/* Background Emoji Pattern */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-4 left-4 text-6xl">🍕</div>
-          <div className="absolute top-12 right-8 text-4xl">🍔</div>
-          <div className="absolute bottom-6 left-12 text-5xl">🍜</div>
-          <div className="absolute bottom-8 right-4 text-3xl">🍰</div>
-        </div>
-        
-        {/* Header Content */}
-        <div className="relative z-10">
-          <h1 className="text-white text-3xl font-bold mb-1">
-            {getGreeting()}, {getUserDisplayName()}!
-          </h1>
-          <div className="flex items-center text-white text-sm opacity-90">
-            <MapPin className="w-4 h-4 mr-2" />
-            <span>{getUserLocation()}</span>
-          </div>
+      <MinimalHeader showLogo={true} logoPosition="left" />
+      
+      {/* Header Content - Minimal */}
+      <div className="px-4 pt-4 md:px-6 md:pt-6">
+        <h1 className="font-bold mb-1" style={{ fontSize: '14pt', lineHeight: '1.2' }}>
+          {getGreeting()}, {getUserDisplayName()}!
+        </h1>
+        <div className="flex items-center opacity-90" style={{ fontSize: '10pt' }}>
+          <MapPin className="w-3 h-3 mr-1" />
+          <span>{getUserLocation()}</span>
         </div>
       </div>
 
@@ -156,12 +149,27 @@ export function DashboardNew() {
               <p className="text-lg text-[#6B7280]">Ready to discover something delicious?</p>
             </div>
             {userProfile?.avatar_url && (
-              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#FF6B35] shadow-lg shrink-0 ml-6">
+              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#FF6B35] shadow-lg shrink-0 ml-6 bg-gray-200">
                 <img
                   src={userProfile.avatar_url}
                   alt={getUserDisplayName()}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    target.style.display = 'none';
+                    const fallback = target.nextElementSibling as HTMLElement;
+                    if (fallback) {
+                      fallback.style.display = 'flex';
+                      const initials = getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                      if (fallback.textContent === '') {
+                        fallback.textContent = initials || 'U';
+                      }
+                    }
+                  }}
                 />
+                <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white font-bold text-xl">
+                  {getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
+                </div>
               </div>
             )}
           </div>

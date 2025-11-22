@@ -53,11 +53,6 @@ export const MobileRadialNav = ({ currentPage, onNavigate }: MobileRadialNavProp
       route: 'chat',
       icon: <MessageCircle size={20} />,
     },
-    {
-      label: 'Dash',
-      route: 'dash',
-      icon: <LayoutDashboard size={20} />,
-    },
   ];
 
   return (

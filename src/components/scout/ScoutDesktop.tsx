@@ -7,6 +7,7 @@ import { GoogleMapView } from '../maps/GoogleMapView';
 import type { MapMarker } from '../maps/mapUtils';
 import { backendService, formatGooglePlaceResult } from '../../services/backendService';
 import type { GooglePlace } from '../../types';
+import { MinimalHeader } from '../common/MinimalHeader';
 
 // Format distance: meters for < 1km, kilometers for >= 1km
 const formatDistance = (distanceKm: number | undefined): string => {
@@ -223,7 +224,9 @@ export function ScoutDesktop() {
   const priceLevel = selectedRestaurant?.price_level ? '$'.repeat(selectedRestaurant.price_level) : '$$';
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50" style={{ fontSize: '10pt' }}>
+      <MinimalHeader showLogo={true} logoPosition="left" />
+      <div className="flex flex-1">
       {/* Left Sidebar */}
       <aside className="w-[380px] bg-white border-r border-gray-200 flex flex-col overflow-hidden">
         {/* Header */}
@@ -243,7 +246,7 @@ export function ScoutDesktop() {
           {/* Distance Slider */}
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Distance</span>
+              <i className="fa-solid fa-person-walking text-gray-700" style={{ fontSize: '10pt' }} aria-label="Distance"></i>
               <span className="text-sm font-semibold text-orange-600">{formatDistance(distance)}</span>
             </div>
             <input
@@ -337,12 +340,20 @@ export function ScoutDesktop() {
                 <div className="flex gap-3">
                   <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-200">
                     {restaurant.image ? (
-                      <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <MapPin className="text-gray-400" size={32} />
-                      </div>
-                    )}
+                      <img 
+                        src={restaurant.image} 
+                        alt={restaurant.name} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
+                          if (placeholder) placeholder.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div className={`w-full h-full flex items-center justify-center ${restaurant.image ? 'hidden' : ''}`}>
+                      <MapPin className="text-gray-400" size={32} />
+                    </div>
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
@@ -430,12 +441,16 @@ export function ScoutDesktop() {
                   src={selectedRestaurant.image}
                   alt={selectedRestaurant.name}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
+                    if (placeholder) placeholder.style.display = 'flex';
+                  }}
                 />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <MapPin className="text-gray-400" size={64} />
-                </div>
-              )}
+              ) : null}
+              <div className={`w-full h-full flex items-center justify-center ${selectedRestaurant.image ? 'hidden' : ''}`}>
+                <MapPin className="text-gray-400" size={64} />
+              </div>
             </div>
 
             <div className="p-6">
@@ -754,6 +769,7 @@ export function ScoutDesktop() {
           </div>
         </aside>
       )}
+      </div>
     </div>
   );
 }

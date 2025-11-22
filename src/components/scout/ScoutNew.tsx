@@ -61,13 +61,13 @@ interface Restaurant {
 
 // Cuisine categories
 const CUISINE_CATEGORIES = [
-  { id: 'all', label: 'All 🍽️', query: '' },
-  { id: 'italian', label: 'Italian 🍝', query: 'italian' },
-  { id: 'japanese', label: 'Japanese 🍣', query: 'japanese sushi' },
-  { id: 'mexican', label: 'Mexican 🌮', query: 'mexican' },
-  { id: 'chinese', label: 'Chinese 🥡', query: 'chinese' },
-  { id: 'indian', label: 'Indian 🍛', query: 'indian' },
-  { id: 'american', label: 'American 🍔', query: 'american burger' },
+  { id: 'all', label: 'All', icon: 'fa-solid fa-utensils', query: '' },
+  { id: 'italian', label: 'Italian', icon: 'fa-solid fa-pizza-slice', query: 'italian' },
+  { id: 'japanese', label: 'Japanese', icon: 'fa-solid fa-fish', query: 'japanese sushi' },
+  { id: 'mexican', label: 'Mexican', icon: 'fa-solid fa-pepper-hot', query: 'mexican' },
+  { id: 'chinese', label: 'Chinese', icon: 'fa-solid fa-bowl-food', query: 'chinese' },
+  { id: 'indian', label: 'Indian', icon: 'fa-solid fa-pepper-hot', query: 'indian' },
+  { id: 'american', label: 'American', icon: 'fa-solid fa-burger', query: 'american burger' },
 ];
 
 export default function ScoutNew() {
@@ -335,7 +335,7 @@ export default function ScoutNew() {
         {/* Distance Control */}
         <section className="px-5 py-4 bg-white">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-gray-700">Distance</span>
+            <i className="fa-solid fa-person-walking text-gray-700" style={{ fontSize: '10pt' }} aria-label="Distance"></i>
             <span className="text-sm font-bold text-gray-900">{radiusKm} km</span>
           </div>
           <input

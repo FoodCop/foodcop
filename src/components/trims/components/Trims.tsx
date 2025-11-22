@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } fr
 import { SmartSaveButton } from '../../ui/smart-save-button';
 import { YouTubeService } from '../../../services/youtube';
 import { useAuth } from '../../auth/AuthProvider';
-import { toast } from 'sonner';
+import { toastHelpers } from '../../../utils/toastHelpers';
 
 // YouTube API response types
 interface YouTubeVideo {
@@ -266,18 +266,16 @@ export function Trims() {
                   className="flex-1"
                   onSaveSuccess={(savedItem, isDuplicate) => {
                     const message = isDuplicate ? "Video already saved" : "Video saved to Plate";
-                    const toastFn = isDuplicate ? toast.info : toast.success;
+                    const toastFn = isDuplicate ? toastHelpers.info : toastHelpers.saved;
                     
-                    toastFn(message, isDuplicate ? undefined : {
-                      description: selectedVideo.title,
-                      action: {
-                        label: "View",
-                        onClick: () => navigate('/plate')
-                      }
-                    });
+              if (isDuplicate) {
+                toastHelpers.info(`${selectedVideo.title} is already in your Plate`);
+              } else {
+                toastHelpers.saved(selectedVideo.title);
+              }
                   }}
                   onSaveError={(error) => {
-                    toast.error(`Failed to save video: ${error}`);
+                    toastHelpers.error(`Failed to save video: ${error}`);
                   }}
                 />
                 <Button 
@@ -355,16 +353,14 @@ function VideoCard({ video, onPlay }: Readonly<{
               const message = isDuplicate ? "Video already saved" : "Video saved to Plate";
               const toastFn = isDuplicate ? toast.info : toast.success;
               
-              toastFn(message, isDuplicate ? undefined : {
-                description: video.title,
-                action: {
-                  label: "View",
-                  onClick: () => navigate('/plate')
-                }
-              });
+              if (isDuplicate) {
+                toastHelpers.info(`${video.title} is already in your Plate`);
+              } else {
+                toastHelpers.saved(video.title);
+              }
             }}
             onSaveError={(error) => {
-              toast.error(`Failed to save video: ${error}`);
+              toastHelpers.error(`Failed to save video: ${error}`);
             }}
           />
           <Button

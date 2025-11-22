@@ -1,7 +1,9 @@
 import { toast } from 'sonner';
+import { gamifiedToast } from '../components/ui/gamified-toast';
 
 /**
- * Enhanced toast helpers with consistent styling and actions
+ * Enhanced toast helpers with gamified styling and bright colors
+ * All notifications only trigger once per unique message within a cooldown period
  */
 
 interface ToastAction {
@@ -9,32 +11,61 @@ interface ToastAction {
   onClick: () => void;
 }
 
+// Track recent toast calls to prevent duplicates
+const recentToasts = new Map<string, number>();
+const TOAST_COOLDOWN = 3000; // 3 seconds
+
+const shouldShowToast = (key: string): boolean => {
+  const now = Date.now();
+  const lastShown = recentToasts.get(key);
+  
+  if (lastShown && (now - lastShown) < TOAST_COOLDOWN) {
+    return false; // Too soon, don't show
+  }
+  
+  recentToasts.set(key, now);
+  
+  // Clean up old entries
+  for (const [k, timestamp] of recentToasts.entries()) {
+    if (now - timestamp > TOAST_COOLDOWN * 2) {
+      recentToasts.delete(k);
+    }
+  }
+  
+  return true;
+};
+
 export const toastHelpers = {
   /**
-   * Show success toast with optional action
+   * Show success toast with star and optional continue button
    */
   success: (message: string, action?: ToastAction) => {
-    return toast.success(message, {
-      description: 'Great! Your action was completed successfully.',
-      action: action ? {
-        label: action.label,
-        onClick: action.onClick,
-      } : undefined,
-      duration: 4000,
+    const key = `success-${message}`;
+    if (!shouldShowToast(key)) return null;
+    
+    return gamifiedToast({
+      message,
+      type: 'success',
+      showStar: true,
+      showContinue: !!action,
+      onContinue: action?.onClick,
+      continueText: action?.label || 'Continue',
     });
   },
 
   /**
-   * Show error toast with optional action
+   * Show error toast
    */
   error: (message: string, action?: ToastAction) => {
-    return toast.error(message, {
-      description: 'Something went wrong. Please try again.',
-      action: action ? {
-        label: action.label,
-        onClick: action.onClick,
-      } : undefined,
-      duration: 5000,
+    const key = `error-${message}`;
+    if (!shouldShowToast(key)) return null;
+    
+    return gamifiedToast({
+      message,
+      type: 'error',
+      showContinue: !!action,
+      onContinue: action?.onClick,
+      continueText: action?.label || 'Continue',
     });
   },
 
@@ -42,9 +73,13 @@ export const toastHelpers = {
    * Show info toast
    */
   info: (message: string, description?: string) => {
-    return toast.info(message, {
-      description,
-      duration: 4000,
+    const fullMessage = description ? `${message}\n${description}` : message;
+    const key = `info-${fullMessage}`;
+    if (!shouldShowToast(key)) return null;
+    
+    return gamifiedToast({
+      message: fullMessage,
+      type: 'info',
     });
   },
 
@@ -52,9 +87,13 @@ export const toastHelpers = {
    * Show warning toast
    */
   warning: (message: string, description?: string) => {
-    return toast.warning(message, {
-      description,
-      duration: 4000,
+    const fullMessage = description ? `${message}\n${description}` : message;
+    const key = `warning-${fullMessage}`;
+    if (!shouldShowToast(key)) return null;
+    
+    return gamifiedToast({
+      message: fullMessage,
+      type: 'warning',
     });
   },
 
@@ -62,43 +101,53 @@ export const toastHelpers = {
    * Show loading toast (returns dismiss function)
    */
   loading: (message: string) => {
-    return toast.loading(message);
+    return toast.loading(message, {
+      position: 'center',
+    });
   },
 
   /**
    * Show navigation hint toast
    */
   navigationHint: (message: string, action?: ToastAction) => {
-    return toast.info(message, {
-      description: 'Tap to explore this feature',
-      action: action ? {
-        label: action.label,
-        onClick: action.onClick,
-      } : undefined,
-      duration: 5000,
-      icon: '💡',
+    const key = `navigationHint-${message}`;
+    if (!shouldShowToast(key)) return null;
+    
+    return gamifiedToast({
+      message,
+      type: 'info',
+      showContinue: !!action,
+      onContinue: action?.onClick,
+      continueText: action?.label || 'Explore',
     });
   },
 
   /**
-   * Show save confirmation toast
+   * Show save confirmation toast with star and continue button
    */
-  saved: (itemName: string, isDuplicate = false) => {
+  saved: (itemName: string, isDuplicate = false, navigateTo?: () => void) => {
     if (isDuplicate) {
-      return toast.info('Already saved', {
-        description: `${itemName} is already in your Plate`,
-        duration: 3000,
+      const key = `saved-duplicate-${itemName}`;
+      if (!shouldShowToast(key)) return null;
+      
+      return gamifiedToast({
+        message: `${itemName} is already in your Plate`,
+        type: 'info',
       });
     }
-    return toast.success('Saved to Plate!', {
-      description: `${itemName} has been added to your collection`,
-      action: {
-        label: 'View Plate',
-        onClick: () => {
-          window.location.href = '/plate';
-        },
-      },
-      duration: 4000,
+    
+    const key = `saved-${itemName}`;
+    if (!shouldShowToast(key)) return null;
+    
+    return gamifiedToast({
+      message: `Your ${itemName} has been saved to Plate`,
+      type: 'success',
+      showStar: true,
+      showContinue: true,
+      onContinue: navigateTo || (() => {
+        window.location.href = '/plate';
+      }),
+      continueText: 'Continue',
     });
   },
 
@@ -106,9 +155,25 @@ export const toastHelpers = {
    * Show feature coming soon toast
    */
   comingSoon: (feature: string) => {
-    return toast.info('Coming Soon', {
-      description: `${feature} will be available in a future update`,
-      duration: 3000,
+    const key = `comingSoon-${feature}`;
+    if (!shouldShowToast(key)) return null;
+    
+    return gamifiedToast({
+      message: `${feature} will be available in a future update`,
+      type: 'info',
+    });
+  },
+
+  /**
+   * Show confirmation dialog pattern: "Save XYZ? Continue. Discard."
+   * Returns a promise that resolves with true if confirmed, false if discarded
+   */
+  confirm: (message: string, itemName?: string): Promise<boolean> => {
+    return new Promise((resolve) => {
+      // This will be handled by the confirmation dialog component
+      // For now, use a simple confirm dialog
+      const confirmed = window.confirm(itemName ? `${message} ${itemName}?` : `${message}?`);
+      resolve(confirmed);
     });
   },
 };
