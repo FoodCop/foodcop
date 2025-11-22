@@ -127,21 +127,44 @@ export async function getDirections(
       mode
     });
 
-    // Call Google Directions API directly (browser-safe)
-    console.log('🗺️ Calling Google Directions API directly');
+    // Use caching and rate limiting
+    const { withGoogleApiCache } = await import('./googleApiCache');
     
-    const params = new URLSearchParams({
-      origin: `${origin.lat},${origin.lng}`,
-      destination: `${destination.lat},${destination.lng}`,
-      mode: mode.toLowerCase(),
-      alternatives: alternatives.toString(),
-      key: API_KEY || ''
-    });
+    const cacheParams = {
+      method: 'directions',
+      originLat: Math.round(origin.lat * 100) / 100,
+      originLng: Math.round(origin.lng * 100) / 100,
+      destLat: Math.round(destination.lat * 100) / 100,
+      destLng: Math.round(destination.lng * 100) / 100,
+      mode,
+      alternatives
+    };
 
-    const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?${params}`;
-    
-    const response = await fetch(directionsUrl);
-    const data = await response.json();
+    const data = await withGoogleApiCache<any>(
+      'directions',
+      cacheParams,
+      async () => {
+        console.log('🗺️ Calling Google Directions API');
+        
+        const params = new URLSearchParams({
+          origin: `${origin.lat},${origin.lng}`,
+          destination: `${destination.lat},${destination.lng}`,
+          mode: mode.toLowerCase(),
+          alternatives: alternatives.toString(),
+          key: API_KEY || ''
+        });
+
+        const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?${params}`;
+        
+        const response = await fetch(directionsUrl);
+        const responseData = await response.json();
+        return responseData;
+      },
+      {
+        useCache: true,
+        cacheDuration: 5 * 60 * 1000 // 5 minutes - directions can change with traffic
+      }
+    );
 
     if (data.status === 'OK' && data.routes && data.routes.length > 0) {
       console.log('✅ Directions received from Google:', data.routes.length, 'route(s)');

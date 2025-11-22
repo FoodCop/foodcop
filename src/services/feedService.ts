@@ -921,21 +921,28 @@ export const FeedService = {
         return [];
       }
 
-      // Get a larger random sample to ensure variety across different authors
-      // Request more posts and use random sampling
-      // ✅ OPTIMIZED: Reduced from 50 to 15 to cut Supabase egress by 70%
-      const sampleSize = Math.max(count * 3, 15); // Get at least 15 posts (reduced from 50)
+      // ✅ OPTIMIZED: Reduced sample size and optimized query to minimize egress
+      // Only fetch essential fields to reduce data transfer
+      const sampleSize = Math.max(count * 2, 10); // Reduced from 15 to 10
       
-      // ✅ FIX: Use random offset instead of toggling created_at order
-      // This ensures we get variety from the entire 490-post table
-      const totalPostsEstimate = 490; // Approximate total posts
+      // ✅ OPTIMIZED: Use random offset for variety
+      const totalPostsEstimate = 490;
       const maxOffset = Math.max(0, totalPostsEstimate - sampleSize);
       const randomOffset = Math.floor(Math.random() * maxOffset);
       
+      // ✅ OPTIMIZED: Only select necessary fields to reduce egress
       const query = supabase
         .from('master_bot_posts')
         .select(`
-          *,
+          id,
+          title,
+          content,
+          image_url,
+          restaurant_name,
+          restaurant_cuisine,
+          tags,
+          engagement_likes,
+          master_bot_id,
           users:master_bot_id (
             display_name,
             username,
@@ -943,7 +950,9 @@ export const FeedService = {
           )
         `)
         .eq('is_published', true)
-        .range(randomOffset, randomOffset + sampleSize - 1);
+        .not('image_url', 'is', null) // Filter out posts without images
+        .range(randomOffset, randomOffset + sampleSize - 1)
+        .limit(sampleSize); // Explicit limit
 
       const { data: posts, error } = await query;
 
