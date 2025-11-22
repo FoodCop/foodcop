@@ -18,15 +18,35 @@ import { NewLandingPage } from './components/home/NewLandingPage'
 import DebugApp from './components/debug/Debug'
 import AuthPage from './components/auth/AuthPage'
 
-// Lazy load page components for code splitting
-const OnboardingFlow = lazy(() => import('./components/onboarding/OnboardingFlow'))
-const FeedApp = lazy(() => import('./components/feed/FeedNew').then(module => ({ default: module.FeedNew })))
-const ScoutApp = lazy(() => import('./components/scout/ScoutNew'))
-const BitesApp = lazy(() => import('./components/bites/BitesNewMobile'))
-const TrimsApp = lazy(() => import('./components/trims/TrimsNew'))
-const DashApp = lazy(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
-const SnapApp = lazy(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
-const PlateApp: React.ComponentType<{ userId?: string; currentUser?: unknown }> = lazy(() => import('./components/plate/PlateNew'))
+// Helper function to wrap lazy imports with error handling and retry logic
+const lazyWithRetry = (componentImport: () => Promise<any>, retries = 3) => {
+  return lazy(async () => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await componentImport();
+      } catch (error) {
+        console.warn(`⚠️ Lazy load attempt ${i + 1} failed:`, error);
+        if (i === retries - 1) {
+          // Last attempt failed, throw the error
+          throw error;
+        }
+        // Wait a bit before retrying
+        await new Promise(resolve => setTimeout(resolve, 100 * (i + 1)));
+      }
+    }
+    throw new Error('Failed to load component after retries');
+  });
+};
+
+// Lazy load page components for code splitting with retry logic
+const OnboardingFlow = lazyWithRetry(() => import('./components/onboarding/OnboardingFlow'))
+const FeedApp = lazyWithRetry(() => import('./components/feed/FeedNew').then(module => ({ default: module.FeedNew })))
+const ScoutApp = lazyWithRetry(() => import('./components/scout/ScoutNew'))
+const BitesApp = lazyWithRetry(() => import('./components/bites/BitesNewMobile'))
+const TrimsApp = lazyWithRetry(() => import('./components/trims/TrimsNew'))
+const DashApp = lazyWithRetry(() => import('./components/dash/components/DashboardNew').then(module => ({ default: module.DashboardNew })))
+const SnapApp = lazyWithRetry(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
+const PlateApp: React.ComponentType<{ userId?: string; currentUser?: unknown }> = lazyWithRetry(() => import('./components/plate/PlateNew'))
 
 // Helper component for navigation button
 interface NavButtonProps {
@@ -42,6 +62,17 @@ function PageErrorBoundaryWithLocation({ children }: { children: React.ReactNode
     <PageErrorBoundary key={location.pathname} location={location.pathname}>
       {children}
     </PageErrorBoundary>
+  );
+}
+
+// Wrapper component for lazy-loaded routes with individual error boundaries
+function LazyRouteWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoader />}>
+        {children}
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
@@ -177,9 +208,9 @@ function AppLayout() {
     }
     
     return (
-      <Suspense fallback={<PageLoader />}>
+      <LazyRouteWrapper>
         <PlateApp userId={user.id} currentUser={user} />
-      </Suspense>
+      </LazyRouteWrapper>
     );
   };
 
@@ -209,9 +240,9 @@ function AppLayout() {
               path="/onboarding"
               element={
                 <ProtectedRoute>
-                  <Suspense fallback={<PageLoader />}>
+                  <LazyRouteWrapper>
                     <OnboardingFlow />
-                  </Suspense>
+                  </LazyRouteWrapper>
                 </ProtectedRoute>
               }
             />
@@ -219,9 +250,9 @@ function AppLayout() {
               path="/feed"
               element={
                 <ProtectedRoute>
-                  <Suspense fallback={<PageLoader />}>
+                  <LazyRouteWrapper>
                     <FeedApp />
-                  </Suspense>
+                  </LazyRouteWrapper>
                 </ProtectedRoute>
               }
             />
@@ -229,9 +260,9 @@ function AppLayout() {
               path="/scout"
               element={
                 <ProtectedRoute>
-                  <Suspense fallback={<PageLoader />}>
+                  <LazyRouteWrapper>
                     <ScoutApp />
-                  </Suspense>
+                  </LazyRouteWrapper>
                 </ProtectedRoute>
               }
             />
@@ -239,9 +270,9 @@ function AppLayout() {
               path="/bites"
               element={
                 <ProtectedRoute>
-                  <Suspense fallback={<PageLoader />}>
+                  <LazyRouteWrapper>
                     <BitesApp />
-                  </Suspense>
+                  </LazyRouteWrapper>
                 </ProtectedRoute>
               }
             />
@@ -249,9 +280,9 @@ function AppLayout() {
               path="/trims"
               element={
                 <ProtectedRoute>
-                  <Suspense fallback={<PageLoader />}>
+                  <LazyRouteWrapper>
                     <TrimsApp />
-                  </Suspense>
+                  </LazyRouteWrapper>
                 </ProtectedRoute>
               }
             />
@@ -259,9 +290,9 @@ function AppLayout() {
               path="/snap"
               element={
                 <ProtectedRoute>
-                  <Suspense fallback={<PageLoader />}>
+                  <LazyRouteWrapper>
                     <SnapApp />
-                  </Suspense>
+                  </LazyRouteWrapper>
                 </ProtectedRoute>
               }
             />
@@ -269,9 +300,9 @@ function AppLayout() {
               path="/dash"
               element={
                 <ProtectedRoute>
-                  <Suspense fallback={<PageLoader />}>
+                  <LazyRouteWrapper>
                     <DashApp />
-                  </Suspense>
+                  </LazyRouteWrapper>
                 </ProtectedRoute>
               }
             />
