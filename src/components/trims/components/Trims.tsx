@@ -305,6 +305,7 @@ function VideoCard({ video, onPlay }: Readonly<{
   onPlay: () => void;
 }>) {
   const [liked, setLiked] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <Card className="overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow" onClick={onPlay}>
