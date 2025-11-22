@@ -130,7 +130,17 @@ export class PageErrorBoundary extends Component<Props & { location?: string }, 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('🚨 PageErrorBoundary caught an error:', error);
     console.error('📍 Error Info:', errorInfo);
+    console.error('📍 Component Stack:', errorInfo.componentStack);
     this.props.onError?.(error, errorInfo);
+    
+    // Auto-retry after a short delay for transient errors
+    // This helps with initialization race conditions
+    setTimeout(() => {
+      if (this.state.hasError) {
+        console.log('🔄 PageErrorBoundary: Auto-retrying after error...');
+        this.setState({ hasError: false, error: null });
+      }
+    }, 500);
   }
 
   // Reset error state when route changes
@@ -143,20 +153,33 @@ export class PageErrorBoundary extends Component<Props & { location?: string }, 
 
   // Also reset on mount if location changed (handles page refresh)
   public componentDidMount() {
-    // Reset any stale error state on mount after a brief delay
+    // Reset any stale error state on mount immediately
     // This prevents false errors from initialization race conditions
     if (this.state.hasError) {
-      setTimeout(() => {
-        console.log('🔄 PageErrorBoundary: Component mounted, resetting error state');
-        this.setState({ hasError: false, error: null });
-      }, 100);
+      console.log('🔄 PageErrorBoundary: Component mounted, resetting error state immediately');
+      this.setState({ hasError: false, error: null });
     }
   }
 
   private readonly handleReset = () => {
+    console.log('🔄 PageErrorBoundary: Manual reset triggered');
     this.setState({ hasError: false, error: null });
-    // Go back in history or to home
-    globalThis.history.back();
+    // Try to go back, but if that fails, just reset the error state
+    try {
+      if (window.history.length > 1) {
+        globalThis.history.back();
+      } else {
+        // If no history, just reset the error state
+        console.log('🔄 PageErrorBoundary: No history to go back, just resetting error state');
+      }
+    } catch (e) {
+      console.warn('⚠️ PageErrorBoundary: Could not go back in history:', e);
+    }
+  };
+
+  private readonly handleRetry = () => {
+    console.log('🔄 PageErrorBoundary: Retry button clicked');
+    this.setState({ hasError: false, error: null });
   };
 
   public render() {
@@ -169,15 +192,33 @@ export class PageErrorBoundary extends Component<Props & { location?: string }, 
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Page Error
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-600 mb-4">
                 This page encountered an error. Let's get you back on track.
               </p>
+              {import.meta.env.DEV && this.state.error && (
+                <details className="text-left bg-red-50 rounded p-3 mb-4 text-sm">
+                  <summary className="cursor-pointer font-medium text-red-800 mb-2">
+                    Error Details (Development)
+                  </summary>
+                  <pre className="text-xs text-red-700 overflow-auto whitespace-pre-wrap">
+                    {this.state.error.toString()}
+                    {'\n\n'}
+                    {this.state.error.stack}
+                  </pre>
+                </details>
+              )}
             </div>
 
             <div className="space-y-2">
               <button
+                onClick={this.handleRetry}
+                className="w-full px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors font-medium"
+              >
+                Retry
+              </button>
+              <button
                 onClick={this.handleReset}
-                className="w-full px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
               >
                 Go Back
               </button>
