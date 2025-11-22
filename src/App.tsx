@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import { Toaster } from './components/ui/sonner'
 import { MobileRadialNav } from './components/navigation/MobileRadialNav'
 import { AIChatWidget } from './components/tako/components/AIChatWidget'
+import { NavigationHints } from './components/common/NavigationHints'
 import './App.css'
 import './styles/mobile.css'
 
@@ -349,8 +350,11 @@ function AppLayout() {
         </button>
       )}
       
+      {/* Navigation Hints - Show helpful tips on each page */}
+      {showNavigation && <NavigationHints />}
+
       {/* Toast Notifications */}
-      <Toaster position="top-center" />
+      <Toaster />
 
       {/* AI Chat Widget - Available on all authenticated pages */}
       {showNavigation && showAIChat && (
