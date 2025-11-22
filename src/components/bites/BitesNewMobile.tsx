@@ -99,9 +99,13 @@ export default function BitesNewMobile() {
         handleSearch();
       }, 500);
       return () => clearTimeout(timeoutId);
+    } else {
+      // Clear search results when search is cleared
+      setSearchResults([]);
+      setViewMode('home');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery]);
+  }, [searchQuery, selectedDiet, selectedMealType]);
 
   const loadInitialRecipes = async () => {
     setLoading(true);
@@ -286,12 +290,17 @@ export default function BitesNewMobile() {
   // Show search results or category results
   if ((viewMode === 'search' || viewMode === 'category') && searchResults.length > 0) {
     return (
-      <div className="min-h-screen bg-[#FAFAFA]">
+      <div 
+        className="min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/bg.svg)',
+        }}
+      >
         <header className="sticky top-0 bg-white border-b border-[#EEE] z-50">
           <div className="px-4 py-3 flex items-center gap-3">
             <button
               onClick={handleBack}
-              className="w-10 h-10 rounded-full bg-[#FAFAFA] flex items-center justify-center"
+              className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -305,7 +314,7 @@ export default function BitesNewMobile() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search recipes..."
-                  className="w-full h-10 pl-10 pr-4 rounded-xl bg-[#FAFAFA] text-sm border-none focus:outline-none focus:ring-2 focus:ring-[#FFD500]/20"
+                  className="w-full h-10 pl-10 pr-4 rounded-xl bg-white text-sm border-none focus:outline-none focus:ring-2 focus:ring-[#FFD500]/20"
                 />
               </div>
             </div>
@@ -353,7 +362,7 @@ export default function BitesNewMobile() {
                 {recipe.diets.length > 0 && (
                   <div className="flex items-center gap-2 mb-3">
                     {recipe.diets.slice(0, 2).map((diet) => (
-                      <span key={diet} className="px-2.5 py-1 rounded-full bg-[#FAFAFA] text-xs font-medium text-[#0f172a]">
+                      <span key={diet} className="px-2.5 py-1 rounded-full bg-white text-xs font-medium text-[#0f172a]">
                         {diet}
                       </span>
                     ))}
@@ -365,7 +374,7 @@ export default function BitesNewMobile() {
                       e.stopPropagation();
                       handleSaveRecipe(recipe);
                     }}
-                    className="flex-1 py-2.5 rounded-xl bg-[#FAFAFA] text-[#0f172a] text-sm font-medium flex items-center justify-center gap-2"
+                    className="flex-1 py-2.5 rounded-xl bg-white text-[#0f172a] text-sm font-medium flex items-center justify-center gap-2"
                   >
                     <Bookmark className="w-4 h-4" />
                     Save
@@ -388,7 +397,12 @@ export default function BitesNewMobile() {
 
   // Home view
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
+    <div 
+      className="min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: 'url(/bg.svg)',
+      }}
+    >
       <header className="px-4 pt-6 pb-4 bg-white sticky top-0 z-50">
         <div className="relative">
           <Search className="absolute left-4 top-3 w-4 h-4 text-[#8A8A8A]" />
@@ -397,7 +411,7 @@ export default function BitesNewMobile() {
             placeholder="Search recipes, ingredients..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 pl-12 pr-14 rounded-2xl bg-[#FAFAFA] text-sm border-none focus:outline-none focus:ring-2 focus:ring-[#FFD500]/20"
+            className="w-full h-12 pl-12 pr-14 rounded-2xl bg-white text-sm border-none focus:outline-none focus:ring-2 focus:ring-[#FFD500]/20"
           />
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -419,7 +433,7 @@ export default function BitesNewMobile() {
                 className={`px-4 py-2 rounded-full text-sm font-medium ${
                   selectedDiet === filter.id
                     ? 'bg-[#FFD500] text-[#8A8A8A]'
-                    : 'bg-[#FAFAFA] text-[#0f172a]'
+                    : 'bg-white text-[#0f172a]'
                 }`}
               >
                 {filter.label}
@@ -435,7 +449,7 @@ export default function BitesNewMobile() {
                 className={`px-4 py-2 rounded-full text-sm font-medium ${
                   selectedMealType === type.id
                     ? 'bg-[#FFD500] text-[#8A8A8A]'
-                    : 'bg-[#FAFAFA] text-[#0f172a]'
+                    : 'bg-white text-[#0f172a]'
                 }`}
               >
                 {type.label}
@@ -511,7 +525,7 @@ export default function BitesNewMobile() {
                     {recipe.diets.length > 0 && (
                       <div className="flex items-center gap-2 mb-3">
                         {recipe.diets.slice(0, 2).map((diet) => (
-                          <span key={diet} className="px-2.5 py-1 rounded-full bg-[#FAFAFA] text-xs font-medium text-[#0f172a]">
+                          <span key={diet} className="px-2.5 py-1 rounded-full bg-white text-xs font-medium text-[#0f172a]">
                             {diet}
                           </span>
                         ))}
@@ -523,7 +537,7 @@ export default function BitesNewMobile() {
                           e.stopPropagation();
                           handleSaveRecipe(recipe);
                         }}
-                        className="flex-1 py-2.5 rounded-xl bg-[#FAFAFA] text-[#0f172a] text-sm font-medium flex items-center justify-center gap-2"
+                        className="flex-1 py-2.5 rounded-xl bg-white text-[#0f172a] text-sm font-medium flex items-center justify-center gap-2"
                       >
                         <Bookmark className="w-4 h-4" />
                         Save

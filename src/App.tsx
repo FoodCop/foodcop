@@ -34,6 +34,12 @@ interface NavButtonProps {
   label: string;
 }
 
+// Wrapper component to pass location to PageErrorBoundary
+function PageErrorBoundaryWithLocation({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  return <PageErrorBoundary location={location.pathname}>{children}</PageErrorBoundary>;
+}
+
 const NavButton = ({ to, label }: NavButtonProps) => {
   const location = useLocation();
   const isActive = location.pathname === to;
@@ -185,7 +191,7 @@ function AppLayout() {
       
       {/* Main Content Area */}
       <div className="mobile-content-area">
-        <PageErrorBoundary>
+        <PageErrorBoundaryWithLocation>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Navigate to="/landing" replace />} />
@@ -276,7 +282,7 @@ function AppLayout() {
             {/* Catch all - redirect to landing */}
             <Route path="*" element={<Navigate to="/landing" replace />} />
           </Routes>
-        </PageErrorBoundary>
+        </PageErrorBoundaryWithLocation>
       </div>
       
       {/* Mobile Radial Navigation - Only show on main app pages */}

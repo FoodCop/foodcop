@@ -126,24 +126,29 @@ export default function TrimsDesktop() {
   // Load videos when search or category changes
   useEffect(() => {
     const timeoutId = setTimeout(() => {
+      // Map category IDs to search queries
+      const categoryQueries: Record<string, string> = {
+        'all': 'cooking food recipe tutorial',
+        'quick': 'quick easy cooking 5 minute',
+        'dessert': 'dessert baking recipe',
+        'healthy': 'healthy meal prep cooking',
+        'asian': 'asian food cooking recipe',
+        'italian': 'italian cooking pasta pizza',
+        'mexican': 'mexican food tacos cooking',
+        'breakfast': 'breakfast recipe morning',
+        'vegan': 'vegan plant based cooking'
+      };
+
       if (searchQuery.trim()) {
-        const categoryKeyword = selectedCategory !== 'all' ? ` ${selectedCategory}` : '';
-        loadVideos(`${searchQuery} cooking${categoryKeyword}`);
+        const categoryQuery = categoryQueries[selectedCategory] || '';
+        const combinedQuery = categoryQuery 
+          ? `${searchQuery} ${categoryQuery} cooking`
+          : `${searchQuery} cooking`;
+        loadVideos(combinedQuery);
       } else if (selectedCategory !== 'all') {
-        // Use more varied search terms for each category
-        const categoryQueries: Record<string, string> = {
-          'Quick Bites': 'quick easy cooking 5 minute',
-          'Desserts': 'dessert baking recipe',
-          'Healthy': 'healthy meal prep cooking',
-          'Asian': 'asian food cooking recipe',
-          'Italian': 'italian cooking pasta pizza',
-          'Mexican': 'mexican food tacos cooking',
-          'Breakfast': 'breakfast recipe morning',
-          'Vegan': 'vegan plant based cooking'
-        };
         loadVideos(categoryQueries[selectedCategory] || `${selectedCategory} cooking`);
       } else {
-        loadVideos('cooking food recipe tutorial');
+        loadVideos(categoryQueries['all']);
       }
     }, 500);
     
@@ -152,7 +157,21 @@ export default function TrimsDesktop() {
 
   // Filter videos based on search, category, length, and rating
   const filteredVideos = videos.filter(video => {
-    const matchesCategory = selectedCategory === 'all' || video.category.includes(selectedCategory);
+    // Map category IDs to category labels for matching
+    const categoryLabelMap: Record<string, string> = {
+      'all': 'all',
+      'quick': 'Quick Bites',
+      'dessert': 'Desserts',
+      'healthy': 'Healthy',
+      'asian': 'Asian',
+      'italian': 'Italian',
+      'mexican': 'Mexican',
+      'breakfast': 'Breakfast',
+      'vegan': 'Vegan',
+    };
+    
+    const categoryLabel = categoryLabelMap[selectedCategory] || selectedCategory;
+    const matchesCategory = selectedCategory === 'all' || video.category.includes(categoryLabel);
     const matchesSearch = searchQuery === '' || 
       video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       video.channelName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -285,7 +304,12 @@ export default function TrimsDesktop() {
   }, [selectedVideo]);
 
   return (
-    <div className="flex min-h-screen bg-[#FAFAFA]">
+    <div 
+      className="flex min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: 'url(/bg.svg)',
+      }}
+    >
       {/* Sidebar Filters */}
       <aside className="hidden lg:block w-64 bg-white border-r border-[#EEE] sticky top-0 h-screen overflow-y-auto flex-shrink-0">
         <div className="p-6">

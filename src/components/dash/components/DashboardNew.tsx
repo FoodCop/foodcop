@@ -98,7 +98,12 @@ export function DashboardNew() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center max-w-[375px] mx-auto">
+      <div 
+        className="min-h-screen bg-background flex items-center justify-center max-w-[375px] mx-auto bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/bg.svg)',
+        }}
+      >
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
           <p className="mt-4 text-[#6B7280] text-sm">Loading your dashboard...</p>
@@ -108,7 +113,12 @@ export function DashboardNew() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto relative pb-20 md:pb-0">
+    <div 
+      className="min-h-screen bg-[#FAFAFA] flex flex-col max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto relative pb-20 md:pb-0 bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: 'url(/bg.svg)',
+      }}
+    >
       {/* Header Section with Gradient Background - Mobile Only */}
       <div className="relative overflow-hidden bg-linear-to-br from-[#FF6B35] via-[#EA580C] to-[#F7C59F] px-4 pt-8 pb-6 md:hidden">
         {/* Background Emoji Pattern */}

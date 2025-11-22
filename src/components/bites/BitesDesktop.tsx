@@ -84,7 +84,10 @@ const BitesDesktop: React.FC = () => {
 
   // Load recipes when filter changes
   useEffect(() => {
-    if (selectedFilter === 'All') {
+    if (searchQuery.trim()) {
+      // If there's a search query, apply filter to search
+      handleSearch(new Event('submit') as any);
+    } else if (selectedFilter === 'All') {
       loadRecommendedRecipes();
     } else {
       loadFilteredRecipes();
@@ -92,15 +95,35 @@ const BitesDesktop: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFilter]);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
+  const handleSearch = async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+    if (!searchQuery.trim()) {
+      // If search is cleared, reload based on filter
+      if (selectedFilter === 'All') {
+        loadRecommendedRecipes();
+      } else {
+        loadFilteredRecipes();
+      }
+      return;
+    }
 
     setLoading(true);
     setError(null);
     try {
+      const dietMap: Record<FilterType, string | undefined> = {
+        'All': undefined,
+        'Vegetarian': 'vegetarian',
+        'Vegan': 'vegan',
+        'Gluten-Free': 'gluten free',
+        'Keto': 'ketogenic',
+        'Low Carb': 'primal'
+      };
+
       const results = await SpoonacularService.searchRecipes({
         query: searchQuery,
+        diet: dietMap[selectedFilter],
         number: 12
       });
       if (results.success && results.data?.results) {
@@ -155,9 +178,14 @@ const BitesDesktop: React.FC = () => {
   const filterButtons: FilterType[] = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free', 'Keto', 'Low Carb'];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div 
+      className="min-h-screen bg-background bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: 'url(/bg.svg)',
+      }}
+    >
       {/* Filter Bar */}
-      <div className="sticky top-0 z-40 bg-card border-b border-border shadow-sm">
+      <div className="sticky top-0 z-40 bg-white border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 flex-wrap">
@@ -168,7 +196,7 @@ const BitesDesktop: React.FC = () => {
                   className={`px-5 py-2 rounded-full border-2 text-sm font-medium transition-all ${
                     selectedFilter === filter
                       ? 'bg-primary border-primary text-primary-foreground'
-                      : 'bg-card border-border text-foreground hover:border-primary'
+                      : 'bg-white border-border text-foreground hover:border-primary'
                   }`}
                 >
                   {filter}
@@ -195,7 +223,7 @@ const BitesDesktop: React.FC = () => {
                 placeholder="Search for recipes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-border bg-card text-foreground focus:outline-none focus:border-primary transition-colors"
+                className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-border bg-white text-foreground focus:outline-none focus:border-primary transition-colors"
               />
             </div>
           </form>
@@ -296,7 +324,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
   const rating = recipe.healthScore ? recipe.healthScore / 20 : 0;
 
   return (
-    <div className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all cursor-pointer group text-left w-full">
+    <div className="bg-white rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all cursor-pointer group text-left w-full">
       {/* Image */}
       <div 
         onClick={onClick}
@@ -318,7 +346,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
         {/* Time Badge */}
         {Boolean(recipe.readyInMinutes) && (
           <div className="absolute top-3 right-3">
-            <div className="flex items-center gap-1 px-3 py-1 bg-card/90 backdrop-blur-sm rounded-full">
+            <div className="flex items-center gap-1 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full">
               <Clock className="w-3 h-3 text-foreground" />
               <span className="text-xs font-medium text-foreground">{recipe.readyInMinutes} min</span>
             </div>

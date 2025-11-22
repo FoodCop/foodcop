@@ -79,14 +79,14 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
         <div className="px-4 py-3 flex items-center justify-between">
           <button
             onClick={onBack}
-            className="w-10 h-10 rounded-full bg-[#FAFAFA] flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
           >
             <ArrowLeft className="w-5 h-5 text-[#0f172a]" />
           </button>
           <h2 className="text-lg font-bold text-[#0f172a]">Recipe Details</h2>
           <button
             onClick={() => setIsFavorite(!isFavorite)}
-            className="w-10 h-10 rounded-full bg-[#FAFAFA] flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
           >
             <Heart
               className={`w-5 h-5 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-[#0f172a]'}`}
@@ -348,7 +348,7 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
         <div className="flex gap-3">
           <button
             onClick={onSave}
-            className="flex-1 py-3 rounded-xl bg-[#FAFAFA] text-[#0f172a] text-sm font-medium flex items-center justify-center gap-2"
+            className="flex-1 py-3 rounded-xl bg-white text-[#0f172a] text-sm font-medium flex items-center justify-center gap-2"
           >
             <Bookmark className="w-4 h-4" />
             Save to Plate

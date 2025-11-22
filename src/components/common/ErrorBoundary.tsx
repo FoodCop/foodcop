@@ -3,6 +3,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 interface Props {
   children: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  location?: string; // Route path to detect route changes
 }
 
 interface State {
@@ -114,8 +115,9 @@ export class ErrorBoundary extends Component<Props, State> {
 /**
  * Page Error Boundary
  * Specialized error boundary for page-level errors with route-specific handling
+ * Resets automatically when route changes
  */
-export class PageErrorBoundary extends Component<Props, State> {
+export class PageErrorBoundary extends Component<Props & { location?: string }, State> {
   public state: State = {
     hasError: false,
     error: null,
@@ -129,6 +131,13 @@ export class PageErrorBoundary extends Component<Props, State> {
     console.error('🚨 PageErrorBoundary caught an error:', error);
     console.error('📍 Error Info:', errorInfo);
     this.props.onError?.(error, errorInfo);
+  }
+
+  // Reset error state when route changes
+  public componentDidUpdate(prevProps: Props & { location?: string }) {
+    if (prevProps.location !== this.props.location && this.state.hasError) {
+      this.setState({ hasError: false, error: null });
+    }
   }
 
   private readonly handleReset = () => {

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desktop Carousel</title>
+    <script src='https://cdn.tailwindcss.com'></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                },
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                fontFamily: {
+                    sans: ["var(--font-sans)"],
+                },
+            },
+        }
+    }
+    </script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: #FAFAFA;
+            --foreground: #0f172a;
+            --card: #ffffff;
+            --card-foreground: #0f172a;
+            --primary: #FFD500;
+            --primary-foreground: #8A8A8A;
+            --secondary: #64748b;
+            --secondary-foreground: #ffffff;
+            --muted: #FAFAFA;
+            --muted-foreground: #0f172a;
+            --accent: #f59e0b;
+            --accent-foreground: #ffffff;
+            --destructive: #ef4444;
+            --destructive-foreground: #ffffff;
+            --border: #EEE;
+            --font-sans: Be Vietnam Pro;
+            --radius: 10px;
+            --shadow: -2px 4px 12px 4px rgba(51,51,51,0.05);
+        }
+        ::-webkit-scrollbar { display: none;}
+        body {
+            font-family: var(--font-sans);
+        }
+        .carousel-card {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .carousel-card.active {
+            transform: scale(1);
+            opacity: 1;
+            z-index: 10;
+            filter: blur(0px);
+        }
+        .carousel-card.side {
+            transform: scale(0.8);
+            opacity: 0.3;
+            z-index: 5;
+            filter: blur(4px);
+        }
+        .carousel-card.hidden {
+            transform: scale(0.6);
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-background">
+
+<div id="carousel-container" class="flex items-center justify-center min-h-screen py-12">
+    <div class="w-full">
+        
+        <!-- Carousel Section -->
+        <div class="relative mb-16">
+            <!-- Cards Container -->
+            <div class="relative h-[600px] flex items-center justify-center overflow-hidden">
+                <div id="cards-wrapper" class="flex items-center justify-center gap-8 w-full px-20">
+                    <!-- Cards will be inserted here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div id="action-buttons" class="flex items-center justify-center gap-8">
+            <button id="nope-btn" class="group flex flex-col items-center justify-center w-20 h-20 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-300 shadow-md">
+                <i class="fa-solid fa-xmark text-3xl text-gray-600 transition-all"></i>
+            </button>
+
+            <button id="like-btn" class="group flex flex-col items-center justify-center w-20 h-20 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-300 shadow-md">
+                <i class="fa-solid fa-heart text-3xl text-gray-600 transition-all"></i>
+            </button>
+
+            <button id="save-btn" class="group flex flex-col items-center justify-center w-20 h-20 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-300 shadow-md">
+                <i class="fa-solid fa-bookmark text-3xl text-gray-600 transition-all"></i>
+            </button>
+
+            <button id="send-btn" class="group flex flex-col items-center justify-center w-20 h-20 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-300 shadow-md">
+                <i class="fa-solid fa-paper-plane text-3xl text-gray-600 transition-all"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+    const cardsData = [
+        {
+            id: 1,
+            image: 'Delicious gourmet burger with melted cheese and crispy bacon, food photography',
+            title: 'Classic Gourmet Burger',
+            location: 'The Burger Joint',
+            price: '$14.99',
+            features: ['Beef Patty', 'Cheddar', 'Bacon']
+        },
+        {
+            id: 2,
+            image: 'Fresh sushi platter with salmon, tuna, and avocado rolls, japanese cuisine',
+            title: 'Premium Sushi Platter',
+            location: 'Sakura Sushi Bar',
+            price: '$28.99',
+            features: ['12 Pieces', 'Fresh Fish', 'Wasabi']
+        },
+        {
+            id: 3,
+            image: 'Authentic italian pizza margherita with fresh basil and mozzarella, wood fired',
+            title: 'Margherita Pizza',
+            location: 'Bella Italia',
+            price: '$16.99',
+            features: ['Wood Fired', 'Fresh Basil', 'Mozzarella']
+        },
+        {
+            id: 4,
+            image: 'Colorful poke bowl with fresh salmon, avocado, and edamame, healthy food',
+            title: 'Salmon Poke Bowl',
+            location: 'Poke Paradise',
+            price: '$18.99',
+            features: ['Fresh Salmon', 'Avocado', 'Brown Rice']
+        },
+        {
+            id: 5,
+            image: 'Creamy pasta carbonara with pancetta and parmesan cheese, italian cuisine',
+            title: 'Pasta Carbonara',
+            location: 'Trattoria Roma',
+            price: '$19.99',
+            features: ['Fresh Pasta', 'Pancetta', 'Parmesan']
+        },
+        {
+            id: 6,
+            image: 'Decadent chocolate lava cake with vanilla ice cream, dessert photography',
+            title: 'Chocolate Lava Cake',
+            location: 'Sweet Delights',
+            price: '$9.99',
+            features: ['Molten Center', 'Ice Cream', 'Chocolate']
+        }
+    ];
+
+    let currentIndex = 0;
+    const cardsWrapper = document.getElementById('cards-wrapper');
+
+    function createCard(data, index) {
+        const card = document.createElement('div');
+        card.className = 'carousel-card flex-shrink-0 w-[420px] h-[580px] bg-card rounded-3xl overflow-hidden shadow-xl';
+        card.dataset.index = index;
+        
+        card.innerHTML = `
+            <div class="relative h-[420px] overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8d785fee47-e22463581bfeb9e71139.png" alt="${data.image}" />
+                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <span class="text-sm font-semibold text-foreground">${data.price}</span>
+                </div>
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-bold text-foreground mb-2">${data.title}</h3>
+                <div class="flex items-center text-muted-foreground mb-4">
+                    <i class="fa-solid fa-location-dot mr-2"></i>
+                    <span class="text-sm">${data.location}</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    ${data.features.map(feature => `
+                        <span class="text-sm text-secondary bg-muted px-3 py-1 rounded-full">${feature}</span>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        
+        return card;
+    }
+
+    function renderCards() {
+        cardsWrapper.innerHTML = '';
+        cardsData.forEach((data, index) => {
+            const card = createCard(data, index);
+            cardsWrapper.appendChild(card);
+        });
+        updateCarousel();
+    }
+
+    function updateCarousel() {
+        const cards = document.querySelectorAll('.carousel-card');
+        const prevIndex = (currentIndex - 1 + cardsData.length) % cardsData.length;
+        const nextIndex = (currentIndex + 1) % cardsData.length;
+        
+        cards.forEach((card, index) => {
+            card.classList.remove('active', 'side', 'hidden');
+            
+            if (index === currentIndex) {
+                card.classList.add('active');
+            } else if (index === prevIndex || index === nextIndex) {
+                card.classList.add('side');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+
+    function nextCard() {
+        currentIndex = (currentIndex + 1) % cardsData.length;
+        updateCarousel();
+    }
+
+    function prevCard() {
+        currentIndex = (currentIndex - 1 + cardsData.length) % cardsData.length;
+        updateCarousel();
+    }
+
+    cardsWrapper.addEventListener('click', function(e) {
+        const card = e.target.closest('.carousel-card');
+        if (card) {
+            const index = parseInt(card.dataset.index);
+            if (index === (currentIndex - 1 + cardsData.length) % cardsData.length) {
+                prevCard();
+            } else if (index === (currentIndex + 1) % cardsData.length) {
+                nextCard();
+            }
+        }
+    });
+    
+    document.getElementById('nope-btn').addEventListener('click', function() {
+        const activeCard = document.querySelector('.carousel-card.active');
+        activeCard.style.transform = 'translateX(-150%) rotate(-30deg)';
+        activeCard.style.opacity = '0';
+        setTimeout(() => {
+            nextCard();
+            activeCard.style.transform = '';
+            activeCard.style.opacity = '';
+        }, 500);
+    });
+
+    document.getElementById('like-btn').addEventListener('click', function() {
+        const activeCard = document.querySelector('.carousel-card.active');
+        activeCard.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            activeCard.style.transform = 'translateY(-100%)';
+            activeCard.style.opacity = '0';
+            setTimeout(() => {
+                nextCard();
+                activeCard.style.transform = '';
+                activeCard.style.opacity = '';
+            }, 400);
+        }, 200);
+    });
+
+    document.getElementById('save-btn').addEventListener('click', function() {
+        const activeCard = document.querySelector('.carousel-card.active');
+        const bookmark = activeCard.querySelector('.fa-bookmark');
+        if (bookmark) {
+            bookmark.classList.add('fa-solid');
+            bookmark.style.color = 'var(--primary)';
+        }
+        setTimeout(nextCard, 600);
+    });
+
+    document.getElementById('send-btn').addEventListener('click', function() {
+        const activeCard = document.querySelector('.carousel-card.active');
+        activeCard.style.transform = 'translateX(150%) rotate(30deg)';
+        activeCard.style.opacity = '0';
+        setTimeout(() => {
+            nextCard();
+            activeCard.style.transform = '';
+            activeCard.style.opacity = '';
+        }, 500);
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') prevCard();
+        if (e.key === 'ArrowRight') nextCard();
+    });
+
+    renderCards();
+});
+</script>
+
+</body>
+</html>
