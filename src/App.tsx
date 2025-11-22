@@ -37,7 +37,12 @@ interface NavButtonProps {
 // Wrapper component to pass location to PageErrorBoundary
 function PageErrorBoundaryWithLocation({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  return <PageErrorBoundary location={location.pathname}>{children}</PageErrorBoundary>;
+  // Use key to force remount on route change, ensuring fresh error state
+  return (
+    <PageErrorBoundary key={location.pathname} location={location.pathname}>
+      {children}
+    </PageErrorBoundary>
+  );
 }
 
 const NavButton = ({ to, label }: NavButtonProps) => {

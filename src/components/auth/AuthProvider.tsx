@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../services/supabase';
 import type { Session, User } from '@supabase/supabase-js';
 
@@ -27,6 +28,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Get initial session and handle OAuth callback
@@ -73,23 +75,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
               console.log('🔍 AuthProvider: Current pathname:', window.location.pathname);
               console.log('🔍 AuthProvider: Current full URL:', window.location.href);
               
-              // Clean URL - remove hash fragments and navigate to /auth
+              // Clean URL - remove hash fragments and navigate to /auth using React Router
               // AuthPage will handle the redirect to the appropriate page
-              // CRITICAL: Use relative path to ensure we stay on current origin
               const currentPath = window.location.pathname;
               const targetPath = '/auth';
               
+              // Clean the hash from URL first
+              window.history.replaceState(null, '', window.location.pathname);
+              
               // Only navigate if we're not already on /auth
               if (currentPath !== targetPath) {
-                // Use relative path to ensure we stay on current origin (localhost or production)
-                window.history.replaceState(null, '', targetPath);
-                // Force a navigation event that React Router will detect
-                window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
-                console.log('✅ AuthProvider: Navigated to', targetPath, 'on origin', window.location.origin);
+                // Use React Router navigate to ensure proper routing
+                // Use setTimeout to ensure React Router is ready
+                setTimeout(() => {
+                  navigate(targetPath, { replace: true });
+                  console.log('✅ AuthProvider: Navigated to', targetPath, 'using React Router');
+                }, 0);
               } else {
-                // Already on /auth, just clean the hash
-                window.history.replaceState(null, '', targetPath);
-                console.log('✅ AuthProvider: Already on /auth, cleaned hash');
+                // Already on /auth, just ensure hash is cleaned
+                console.log('✅ AuthProvider: Already on /auth, hash cleaned');
               }
               setLoading(false);
               return;
@@ -119,7 +123,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     );
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();

@@ -358,7 +358,7 @@ function VideoCard({ video, onPlay }: Readonly<{
                 description: video.title,
                 action: {
                   label: "View",
-                  onClick: () => globalThis.location.hash = '#plate'
+                  onClick: () => navigate('/plate')
                 }
               });
             }}

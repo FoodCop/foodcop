@@ -136,7 +136,20 @@ export class PageErrorBoundary extends Component<Props & { location?: string }, 
   // Reset error state when route changes
   public componentDidUpdate(prevProps: Props & { location?: string }) {
     if (prevProps.location !== this.props.location && this.state.hasError) {
+      console.log('🔄 PageErrorBoundary: Route changed, resetting error state');
       this.setState({ hasError: false, error: null });
+    }
+  }
+
+  // Also reset on mount if location changed (handles page refresh)
+  public componentDidMount() {
+    // Reset any stale error state on mount after a brief delay
+    // This prevents false errors from initialization race conditions
+    if (this.state.hasError) {
+      setTimeout(() => {
+        console.log('🔄 PageErrorBoundary: Component mounted, resetting error state');
+        this.setState({ hasError: false, error: null });
+      }, 100);
     }
   }
 
