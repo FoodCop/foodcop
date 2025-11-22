@@ -350,9 +350,6 @@ function VideoCard({ video, onPlay }: Readonly<{
             className="h-8 w-8 rounded-full bg-black/40 hover:bg-black/60 text-white"
             showDuplicatePreview={false}
             onSaveSuccess={(savedItem, isDuplicate) => {
-              const message = isDuplicate ? "Video already saved" : "Video saved to Plate";
-              const toastFn = isDuplicate ? toast.info : toast.success;
-              
               if (isDuplicate) {
                 toastHelpers.info(`${video.title} is already in your Plate`);
               } else {

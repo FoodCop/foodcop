@@ -685,7 +685,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   >
                     <div className="relative h-48">
                       <img
-                        src={post.image}
+                        src={post.image_url}
                         alt={post.title}
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -707,7 +707,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                         {post.title}
                       </h3>
                       <p className="line-clamp-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
-                        {post.description}
+                        {post.content}
                       </p>
                     </div>
                   </div>

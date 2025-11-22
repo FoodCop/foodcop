@@ -102,7 +102,7 @@ export const toastHelpers = {
    */
   loading: (message: string) => {
     return toast.loading(message, {
-      position: 'center',
+      position: 'top-center',
     });
   },
 

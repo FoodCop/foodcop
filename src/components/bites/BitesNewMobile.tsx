@@ -262,7 +262,7 @@ export default function BitesNewMobile() {
       }
     } catch (error) {
       console.error('Save error:', error);
-      toast.error('Failed to save recipe');
+      toastHelpers.error('Failed to save recipe');
     }
   };
 
