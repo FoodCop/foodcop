@@ -146,9 +146,13 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
   useEffect(() => {
     if (!mapInstanceRef.current || !userLocation) return;
 
-    // Remove old user marker
+    // Remove old user marker safely
     if (userMarkerRef.current) {
-      userMarkerRef.current.setMap(null);
+      try {
+        userMarkerRef.current.setMap(null);
+      } catch (err) {
+        console.warn('Error removing user marker:', err);
+      }
     }
 
     // Create new user marker
@@ -165,8 +169,16 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
   useEffect(() => {
     if (!mapInstanceRef.current) return;
 
-    // Clear old markers
-    markersRef.current.forEach(marker => marker.setMap(null));
+    // Clear old markers safely
+    for (const marker of markersRef.current) {
+      try {
+        if (marker) {
+          marker.setMap(null);
+        }
+      } catch (err) {
+        console.warn('Error removing marker:', err);
+      }
+    }
     markersRef.current = [];
 
     // Clear clusterer
@@ -181,7 +193,7 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
       
       const marker = new google.maps.Marker({
         position: markerData.position,
-        map: mapInstanceRef.current!,
+        map: mapInstanceRef.current,
         icon: markerData.icon || createRestaurantMarkerIcon(isSelected),
         title: markerData.title,
         zIndex: isSelected ? 999 : undefined,
@@ -200,7 +212,7 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
               <strong>${markerData.title}</strong>
             </div>
           `);
-          infoWindowRef.current.open(mapInstanceRef.current!, marker);
+          infoWindowRef.current.open(mapInstanceRef.current, marker);
         }
       });
 
@@ -259,7 +271,9 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
     // Fit bounds to show entire route
     if (path.length > 0) {
       const bounds = new google.maps.LatLngBounds();
-      path.forEach(point => bounds.extend(point));
+      for (const point of path) {
+        bounds.extend(point);
+      }
       mapInstanceRef.current.fitBounds(bounds, 50);
     }
   }, [route]);
@@ -267,7 +281,9 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      markersRef.current.forEach(marker => marker.setMap(null));
+      for (const marker of markersRef.current) {
+        marker.setMap(null);
+      }
       if (userMarkerRef.current) {
         userMarkerRef.current.setMap(null);
       }
@@ -290,6 +306,50 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
       mapInstanceRef.current.setZoom(zoom);
     }
   }, [userLocation, zoom]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      // Clear markers safely
+      try {
+        for (const marker of markersRef.current) {
+          if (marker && mapInstanceRef.current) {
+            marker.setMap(null);
+          }
+        }
+        markersRef.current = [];
+
+        // Clear user marker
+        if (userMarkerRef.current && mapInstanceRef.current) {
+          userMarkerRef.current.setMap(null);
+          userMarkerRef.current = null;
+        }
+
+        // Clear clusterer
+        if (clustererRef.current) {
+          clustererRef.current.clearMarkers();
+          clustererRef.current = null;
+        }
+
+        // Clear info window
+        if (infoWindowRef.current) {
+          infoWindowRef.current.close();
+          infoWindowRef.current = null;
+        }
+
+        // Clear polyline
+        if (polylineRef.current && mapInstanceRef.current) {
+          polylineRef.current.setMap(null);
+          polylineRef.current = null;
+        }
+
+        // Don't destroy the map instance itself - let it be garbage collected
+        mapInstanceRef.current = null;
+      } catch (err) {
+        console.warn('Error during map cleanup:', err);
+      }
+    };
+  }, []);
 
   // Expose recenter method via ref
   useEffect(() => {

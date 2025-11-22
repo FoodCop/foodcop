@@ -2,6 +2,7 @@ import { useAuth } from './AuthProvider';
 import { supabase } from '../../services/supabase';
 import { Button } from '../ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { cookieUtils } from '../../utils/cookies';
 
 export function LoginButton() {
   const { user, loading, signOut } = useAuth();
@@ -10,14 +11,20 @@ export function LoginButton() {
     try {
       console.log('🔑 LoginButton: Starting Google OAuth sign-in...');
       
-      // Store return path for after authentication
-      const currentPath = window.location.hash || '#plate';
-      localStorage.setItem('auth-return-path', currentPath);
+      // Use current origin for redirect (works in both dev and prod)
+      const redirectUrl = `${window.location.origin}/auth`;
+      
+      // Store return path for after authentication (use React Router path)
+      const currentPath = window.location.pathname || '/plate';
+      cookieUtils.setReturnPath(currentPath);
+      
+      console.log('🔑 OAuth redirect URL:', redirectUrl);
+      console.log('🔑 Stored return path:', currentPath);
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin + '/#auth'
+          redirectTo: redirectUrl
         }
       });
       

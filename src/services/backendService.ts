@@ -110,7 +110,10 @@ class BackendService {
 
   // Google Places - Get place details
   async getPlaceDetails(placeId: string): Promise<BackendResponse> {
-    return this.makeRequest(`/places/details/${placeId}`);
+    return this.makeRequest('/places/details', {
+      method: 'POST',
+      body: JSON.stringify({ place_id: placeId }),
+    });
   }
 
   // Google Routes API v2 - Get route directions (modern API)

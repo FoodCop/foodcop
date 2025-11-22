@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useOnboarding } from '../OnboardingContext';
 import { useAuth } from '../../auth/AuthProvider';
 import { OnboardingService } from '../../../services/onboardingService';
@@ -8,6 +9,7 @@ import { toast } from 'sonner';
 const PreferencesStep: React.FC = () => {
   const { setCurrentStep } = useOnboarding();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [detectedCountry, setDetectedCountry] = useState<string>('');
   const [isDetectingLocation, setIsDetectingLocation] = useState(true);
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
@@ -97,7 +99,7 @@ const PreferencesStep: React.FC = () => {
       
       // Redirect to dashboard
       setTimeout(() => {
-        globalThis.location.hash = '#dash';
+        navigate('/dash');
       }, 500);
     } catch (error) {
       console.error('Failed to save preferences:', error);
@@ -117,7 +119,7 @@ const PreferencesStep: React.FC = () => {
       
       // Redirect to dashboard
       setTimeout(() => {
-        globalThis.location.hash = '#dash';
+        navigate('/dash');
       }, 500);
     } catch (error) {
       console.error('Failed to skip onboarding:', error);

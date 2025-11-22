@@ -1,6 +1,9 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, Link } from 'react-router-dom'
 import { AuthProvider, useAuth } from './components/auth/AuthProvider'
 import { ErrorBoundary, PageErrorBoundary } from './components/common/ErrorBoundary'
+import { ProtectedRoute } from './components/common/ProtectedRoute'
+import { PageLoader } from './components/common/PageLoader'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
 import { LogOut } from 'lucide-react'
 import { toast } from 'sonner'
@@ -9,9 +12,6 @@ import { MobileRadialNav } from './components/navigation/MobileRadialNav'
 import { AIChatWidget } from './components/tako/components/AIChatWidget'
 import './App.css'
 import './styles/mobile.css'
-
-// Page type definition
-type PageType = 'landing' | 'auth' | 'onboarding' | 'debug' | 'dash' | 'bites' | 'trims' | 'scout' | 'plate' | 'feed' | 'snap'
 
 // Eager load critical components
 import { NewLandingPage } from './components/home/NewLandingPage'
@@ -28,62 +28,36 @@ const DashApp = lazy(() => import('./components/dash/components/DashboardNew').t
 const SnapApp = lazy(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
 const PlateApp: React.ComponentType<{ userId?: string; currentUser?: unknown }> = lazy(() => import('./components/plate/PlateNew'))
 
-// Loading component for lazy-loaded routes
-function PageLoader() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
-        <p className="mt-4 text-gray-600">Loading...</p>
-      </div>
-    </div>
-  )
-}
-
 // Helper component for navigation button
 interface NavButtonProps {
-  page: PageType;
+  to: string;
   label: string;
-  currentPage: PageType;
-  setCurrentPage: (page: PageType) => void;
 }
 
-const NavButton = ({ page, label, currentPage, setCurrentPage }: NavButtonProps) => (
-  <button
-    onClick={() => {
-      setCurrentPage(page);
-      globalThis.location.hash = `#${page}`;
-    }}
-    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-      currentPage === page 
-        ? 'bg-orange-600 text-white' 
-        : 'text-gray-700 hover:bg-gray-100'
-    }`}
-  >
-    {label}
-  </button>
-);
+const NavButton = ({ to, label }: NavButtonProps) => {
+  const location = useLocation();
+  const isActive = location.pathname === to;
+  
+  return (
+    <Link
+      to={to}
+      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+        isActive
+          ? 'bg-orange-600 text-white' 
+          : 'text-gray-700 hover:bg-gray-100'
+      }`}
+    >
+      {label}
+    </Link>
+  );
+};
 
-// Helper component to render a page conditionally
-interface PageWrapperProps {
-  page: PageType;
-  children: React.ReactNode;
-  eager?: boolean;
-  currentPage: PageType;
-}
-
-const PageWrapper = ({ page, children, eager = false, currentPage }: PageWrapperProps) => (
-  <div style={{ display: currentPage === page ? 'block' : 'none' }}>
-    <PageErrorBoundary>
-      {eager ? children : <Suspense fallback={<PageLoader />}>{children}</Suspense>}
-    </PageErrorBoundary>
-  </div>
-);
-
-function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('landing')
+// Main App Layout Component
+function AppLayout() {
   const [colorMode, setColorMode] = useState<'white' | 'yellow'>('white')
   const [showAIChat, setShowAIChat] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   // Apply color mode to CSS variable
   useEffect(() => {
@@ -95,6 +69,10 @@ function App() {
     setColorMode(prev => prev === 'white' ? 'yellow' : 'white');
   };
 
+  // Check if current route should show navigation
+  const showNavigation = !['/landing', '/auth', '/onboarding'].includes(location.pathname);
+  const currentPage = location.pathname.slice(1) || 'landing';
+
   // Navigation component with auth context access
   const Navigation = () => {
     const { user, signOut } = useAuth();
@@ -104,7 +82,7 @@ function App() {
         console.log('🚪 Sign out requested from navigation');
         await signOut();
         toast.success('Successfully signed out');
-        setCurrentPage('landing');
+        navigate('/landing');
         console.log('✅ Sign out completed');
       } catch (error) {
         console.error('❌ Sign out failed:', error);
@@ -113,20 +91,20 @@ function App() {
     };
 
     return (
-        <div className="flex items-center justify-between h-16 safe-area-top px-4">
+      <div className="flex items-center justify-between h-16 safe-area-top px-4">
         {/* Logo */}
-        <div className="flex items-center">
+        <Link to="/feed" className="flex items-center">
           <img src="/logo_mobile.png" alt="FUZO" className="h-10" />
-        </div>
+        </Link>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-2">
-          <NavButton page="feed" label="Feed" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="scout" label="Scout" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="bites" label="Bites" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="trims" label="Trims" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="plate" label="Plate" currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          <NavButton page="dash" label="Dashboard" currentPage={currentPage} setCurrentPage={setCurrentPage} />
+          <NavButton to="/feed" label="Feed" />
+          <NavButton to="/scout" label="Scout" />
+          <NavButton to="/bites" label="Bites" />
+          <NavButton to="/trims" label="Trims" />
+          <NavButton to="/plate" label="Plate" />
+          <NavButton to="/dash" label="Dashboard" />
 
           {/* Color Toggle Button */}
           <button
@@ -179,66 +157,12 @@ function App() {
     );
   };
 
-  // Hash-based routing (will be replaced with React Router later)
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = globalThis.location.hash.slice(1);
-      const validPages = [
-        'landing', 'auth', 'onboarding', 'feed', 'scout', 'bites',
-        'trims', 'snap', 'dash', 'plate', 'debug'
-      ];
-      
-      if (hash && validPages.includes(hash)) {
-        setCurrentPage(hash as PageType);
-      } else if (!hash) {
-        setCurrentPage('landing');
-      }
-    };
-
-    handleHashChange();
-    globalThis.addEventListener('hashchange', handleHashChange);
-    return () => globalThis.removeEventListener('hashchange', handleHashChange);
-  }, []);
-
-  // Protected onboarding component that uses AuthProvider session
-  const OnboardingProtectedFlow = () => {
-    const { user, session, loading } = useAuth();
-    
-    if (loading) {
-      return <PageLoader />;
-    }
-    
-    if (!user || !session) {
-      console.log('🚫 Onboarding access denied: User not authenticated, redirecting to auth');
-      globalThis.location.hash = '#auth';
-      return <PageLoader />;
-    }
-    
-    return (
-      <Suspense fallback={<PageLoader />}>
-        <OnboardingFlow />
-      </Suspense>
-    );
-  };
-
   // Protected Plate component with userId passed as prop
   const PlateProtectedApp = () => {
-    const { user, loading } = useAuth();
-    
-    if (loading) {
-      return <PageLoader />;
-    }
+    const { user } = useAuth();
     
     if (!user) {
-      console.log('🚫 Plate access denied: User not authenticated');
-      return (
-        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-[#1A1A1A] mb-2">Sign In Required</h2>
-            <p className="text-[#666666]">Please sign in to view your Plate</p>
-          </div>
-        </div>
-      );
+      return null; // ProtectedRoute will handle redirect
     }
     
     return (
@@ -248,124 +172,161 @@ function App() {
     );
   };
 
-  // Render all pages but only show the active one (keeps state between navigations)
-  const renderAllPages = () => {
-    return (
-      <>
-        <PageWrapper page="landing" eager currentPage={currentPage}>
-          <NewLandingPage onNavigateToSignup={() => {
-            setCurrentPage('auth');
-            globalThis.location.hash = '#auth';
-          }} />
-        </PageWrapper>
+  return (
+    <div className="min-h-screen bg-background mobile-app-container">
+      {/* Desktop Navigation - Only show on authenticated pages */}
+      {showNavigation && (
+        <div className="bg-white border-b sticky top-0 z-50 hidden md:block">
+          <div className="container mx-auto px-4">
+            <Navigation />
+          </div>
+        </div>
+      )}
+      
+      {/* Main Content Area */}
+      <div className="mobile-content-area">
+        <PageErrorBoundary>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Navigate to="/landing" replace />} />
+            <Route path="/landing" element={<NewLandingPage onNavigateToSignup={() => navigate('/auth')} />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/debug" element={<DebugApp />} />
 
-        <PageWrapper page="auth" eager currentPage={currentPage}>
-          <AuthPage isVisible={currentPage === 'auth'} />
-        </PageWrapper>
+            {/* Protected Routes */}
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <OnboardingFlow />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/feed"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <FeedApp />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/scout"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <ScoutApp />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/bites"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <BitesApp />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/trims"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <TrimsApp />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/snap"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <SnapApp />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dash"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <DashApp />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/plate"
+              element={
+                <ProtectedRoute>
+                  <PlateProtectedApp />
+                </ProtectedRoute>
+              }
+            />
 
-        <PageWrapper page="debug" eager currentPage={currentPage}>
-          <DebugApp />
-        </PageWrapper>
+            {/* Catch all - redirect to landing */}
+            <Route path="*" element={<Navigate to="/landing" replace />} />
+          </Routes>
+        </PageErrorBoundary>
+      </div>
+      
+      {/* Mobile Radial Navigation - Only show on main app pages */}
+      {showNavigation && (
+        <div className="md:hidden">
+          <MobileRadialNav
+            currentPage={currentPage}
+            onNavigate={(page) => {
+              const path = page.startsWith('/') ? page : `/${page}`;
+              navigate(path);
+            }}
+          />
+        </div>
+      )}
 
-        <PageWrapper page="onboarding" eager currentPage={currentPage}>
-          <OnboardingProtectedFlow />
-        </PageWrapper>
+      {/* Mobile AI Chat Button - Top right floating button */}
+      {showNavigation && (
+        <button
+          onClick={() => setShowAIChat(!showAIChat)}
+          className="md:hidden fixed top-4 right-4 z-40 w-12 h-12 rounded-full shadow-lg transition-all"
+          style={{
+            backgroundColor: showAIChat ? '#3B82F6' : '#FFFFFF',
+            border: '2px solid',
+            borderColor: showAIChat ? '#3B82F6' : '#E5E7EB',
+          }}
+        >
+          <i className={`fa-solid fa-robot ${showAIChat ? 'text-white' : 'text-gray-700'}`}></i>
+        </button>
+      )}
+      
+      {/* Toast Notifications */}
+      <Toaster position="top-center" />
 
-        <PageWrapper page="feed" currentPage={currentPage}>
-          <FeedApp />
-        </PageWrapper>
+      {/* AI Chat Widget - Available on all authenticated pages */}
+      {showNavigation && showAIChat && (
+        <AIChatWidget position="top-right" />
+      )}
+    </div>
+  );
+}
 
-        <PageWrapper page="scout" currentPage={currentPage}>
-          <ScoutApp />
-        </PageWrapper>
-
-        <PageWrapper page="bites" currentPage={currentPage}>
-          <BitesApp />
-        </PageWrapper>
-
-        <PageWrapper page="trims" currentPage={currentPage}>
-          <TrimsApp />
-        </PageWrapper>
-
-        <PageWrapper page="snap" currentPage={currentPage}>
-          <SnapApp />
-        </PageWrapper>
-
-        <PageWrapper page="dash" currentPage={currentPage}>
-          <DashApp />
-        </PageWrapper>
-
-        <PageWrapper page="plate" currentPage={currentPage}>
-          <PlateProtectedApp />
-        </PageWrapper>
-      </>
-    );
-  };
-
+// Root App Component with Router
+function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <div className="min-h-screen bg-background mobile-app-container">
-          {/* Desktop Navigation - Only show on authenticated pages */}
-          {currentPage !== 'landing' &&
-           currentPage !== 'auth' &&
-           currentPage !== 'onboarding' && (
-            <div className="bg-white border-b sticky top-0 z-50 hidden md:block">
-              <div className="container mx-auto px-4">
-                <Navigation />
-              </div>
-            </div>
-          )}
-          
-          {/* Main Content Area */}
-          <div className="mobile-content-area">
-            {renderAllPages()}
-          </div>
-          
-          {/* Mobile Radial Navigation - Only show on main app pages */}
-          {currentPage !== 'landing' &&
-           currentPage !== 'auth' &&
-           currentPage !== 'onboarding' && (
-            <div className="md:hidden">
-              <MobileRadialNav
-                currentPage={currentPage}
-                onNavigate={(page) => {
-                  setCurrentPage(page as PageType);
-                  globalThis.location.hash = `#${page}`;
-                }}
-              />
-            </div>
-          )}
-
-          {/* Mobile AI Chat Button - Top right floating button */}
-          {currentPage !== 'landing' &&
-           currentPage !== 'auth' &&
-           currentPage !== 'onboarding' && (
-            <button
-              onClick={() => setShowAIChat(!showAIChat)}
-              className="md:hidden fixed top-4 right-4 z-40 w-12 h-12 rounded-full shadow-lg transition-all"
-              style={{
-                backgroundColor: showAIChat ? '#3B82F6' : '#FFFFFF',
-                border: '2px solid',
-                borderColor: showAIChat ? '#3B82F6' : '#E5E7EB',
-              }}
-            >
-              <i className={`fa-solid fa-robot ${showAIChat ? 'text-white' : 'text-gray-700'}`}></i>
-            </button>
-          )}
-          
-          {/* Toast Notifications */}
-          <Toaster position="top-center" />
-
-          {/* AI Chat Widget - Available on all authenticated pages */}
-          {currentPage !== 'landing' &&
-           currentPage !== 'auth' &&
-           currentPage !== 'onboarding' &&
-           showAIChat && (
-            <AIChatWidget position="top-right" />
-          )}
-        </div>
-      </AuthProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <AppLayout />
+        </AuthProvider>
+      </BrowserRouter>
     </ErrorBoundary>
   );
 }

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import type { UserData } from '../App';
 import { Button } from '../../ui/button-simple';
 import { cookieUtils } from '../../../utils/cookies';
@@ -8,6 +9,49 @@ interface SuccessScreenProps {
 }
 
 export function SuccessScreen({ userData }: SuccessScreenProps) {
+  const navigate = useNavigate();
+
+  const handleGoToApp = () => {
+    // Get and clear the stored return path from cookie
+    let returnPath = cookieUtils.getAndClearReturnPath();
+    
+    // Clean up return path - remove any full URLs and keep only the path
+    if (returnPath) {
+      try {
+        // If it's a full URL, extract just the pathname
+        if (returnPath.startsWith('http://') || returnPath.startsWith('https://')) {
+          const url = new URL(returnPath);
+          returnPath = url.pathname;
+        }
+        // Remove hash if present
+        if (returnPath.startsWith('#')) {
+          returnPath = returnPath.slice(1);
+        }
+        // Ensure it starts with /
+        if (!returnPath.startsWith('/')) {
+          returnPath = `/${returnPath}`;
+        }
+      } catch (e) {
+        // If URL parsing fails, treat as path
+        console.warn('⚠️ Could not parse return path as URL, treating as path:', returnPath);
+      }
+    }
+    
+    console.log('🍪 SuccessScreen: Cookie return path check:', {
+      returnPath,
+      isValidReturn: returnPath && returnPath !== '/auth' && returnPath !== '#auth',
+    });
+    
+    if (returnPath && returnPath !== '/auth' && returnPath !== '#auth' && returnPath.startsWith('/')) {
+      console.log('✅ SuccessScreen: Redirecting to stored path:', returnPath);
+      navigate(returnPath, { replace: true });
+    } else {
+      // Default to landing page - use React Router navigation
+      console.log('🏠 SuccessScreen: No valid return path, going to landing');
+      navigate('/landing', { replace: true });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="w-full max-w-md text-center">
@@ -47,29 +91,7 @@ export function SuccessScreen({ userData }: SuccessScreenProps) {
 
         <Button 
           className="w-full" 
-          onClick={() => {
-            // Get and clear the stored return path from cookie
-            const returnPath = cookieUtils.getAndClearReturnPath();
-            
-            console.log('🍪 SuccessScreen: Cookie return path check:', {
-              returnPath,
-              isValidReturn: returnPath && returnPath !== '#auth',
-              willRedirectTo: returnPath && returnPath !== '#auth' 
-                ? (returnPath.startsWith('#') ? returnPath.slice(1) : returnPath)
-                : 'landing'
-            });
-            
-            if (returnPath && returnPath !== '#auth') {
-              // Remove # if present and navigate
-              const targetPath = returnPath.startsWith('#') ? returnPath.slice(1) : returnPath;
-              console.log('✅ SuccessScreen: Redirecting to stored path:', targetPath);
-              window.location.hash = targetPath;
-            } else {
-              // Default to landing page
-              console.log('🏠 SuccessScreen: No valid return path, going to landing');
-              window.location.hash = '#landing';
-            }
-          }}
+          onClick={handleGoToApp}
         >
           Go to App
         </Button>

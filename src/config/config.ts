@@ -49,7 +49,10 @@ export const config = {
   app: {
     name: import.meta.env.VITE_APP_NAME || 'FUZO Food Discovery',
     version: import.meta.env.VITE_APP_VERSION || '1.0.0',
-    url: import.meta.env.VITE_APP_URL || 'http://localhost:3000',
+    // Use current origin in development, or VITE_APP_URL if set (for production builds)
+    url: import.meta.env.DEV 
+      ? (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')
+      : (import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')),
   },
 
   // Feature Flags

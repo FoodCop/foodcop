@@ -42,9 +42,30 @@ export const cookieUtils = {
 
   /**
    * Store the return path for after authentication
+   * Only stores the pathname, not full URLs, to ensure it works across environments
    */
   setReturnPath(path: string) {
-    this.set('authReturnPath', path, { expires: 1 }); // 1 day expiration
+    // Extract just the pathname if a full URL is provided
+    let pathToStore = path;
+    try {
+      if (path.startsWith('http://') || path.startsWith('https://')) {
+        const url = new URL(path);
+        pathToStore = url.pathname;
+      } else if (path.startsWith('#')) {
+        // Remove hash prefix
+        pathToStore = path.slice(1);
+      }
+      // Ensure it starts with /
+      if (!pathToStore.startsWith('/')) {
+        pathToStore = `/${pathToStore}`;
+      }
+    } catch (e) {
+      // If parsing fails, use as-is but ensure it starts with /
+      if (!pathToStore.startsWith('/') && !pathToStore.startsWith('#')) {
+        pathToStore = `/${pathToStore}`;
+      }
+    }
+    this.set('authReturnPath', pathToStore, { expires: 1 }); // 1 day expiration
   },
 
   /**

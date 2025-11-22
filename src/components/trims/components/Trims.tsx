@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from '../../ui/input';
 import { Badge } from '../../ui/badge';
 import { Card } from '../../ui/card';
@@ -45,6 +46,7 @@ interface TrimVideo {
 export function Trims() {
   // Authentication
   const { user: _user } = useAuth();
+  const navigate = useNavigate();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -270,7 +272,7 @@ export function Trims() {
                       description: selectedVideo.title,
                       action: {
                         label: "View",
-                        onClick: () => globalThis.location.hash = '#plate'
+                        onClick: () => navigate('/plate')
                       }
                     });
                   }}

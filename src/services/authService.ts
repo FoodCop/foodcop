@@ -146,12 +146,17 @@ export class AuthService {
    */
   static async signInWithGoogle(): Promise<AuthResponse> {
     return ErrorHandler.wrapServiceCall(async () => {
-      console.log('🔑 AuthService: Starting Google OAuth with redirect to:', config.app.url);
+      // Use current origin for redirect (works in both dev and prod)
+      const redirectUrl = typeof window !== 'undefined' 
+        ? `${window.location.origin}/auth`
+        : `${config.app.url}/auth`;
+      
+      console.log('🔑 AuthService: Starting Google OAuth with redirect to:', redirectUrl);
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: config.app.url,
+          redirectTo: redirectUrl,
         },
       });
 

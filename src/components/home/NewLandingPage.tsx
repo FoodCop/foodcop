@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './NewLandingPage.css';
 import { PhoneFan } from './components/PhoneFan';
 import { useAuth } from '../auth/AuthProvider';
@@ -25,6 +26,7 @@ function StaticPhoneMockup({ image, alt, className = "" }: { image: string; alt:
 export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
   const [colorMode, setColorMode] = useState<'white' | 'yellow'>('white');
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleGetStarted = () => {
     if (onNavigateToSignup) {
@@ -32,7 +34,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
     } else {
       // If user is already authenticated, go directly to plate
       // Otherwise, go to auth page for sign in
-      globalThis.location.hash = user ? '#plate' : '#auth';
+      navigate(user ? '/plate' : '/auth');
     }
   };
 
@@ -57,25 +59,31 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      for (const entry of entries) {
         if (entry.isIntersecting) {
           const phones = entry.target.querySelectorAll('.phone-mockup');
-          phones.forEach((phone, index) => {
+          let index = 0;
+          for (const phone of phones) {
             setTimeout(() => {
               phone.classList.add('animate');
             }, index * 150);
-          });
+            index++;
+          }
           observer.unobserve(entry.target);
         }
-      });
+      }
     }, observerOptions);
 
     // Observe all sections with phone mockups
     const sections = document.querySelectorAll('.new-landing-page section');
-    sections.forEach(section => observer.observe(section));
+    for (const section of sections) {
+      observer.observe(section);
+    }
 
     return () => {
-      sections.forEach(section => observer.unobserve(section));
+      for (const section of sections) {
+        observer.unobserve(section);
+      }
     };
   }, []);
 
@@ -95,7 +103,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
               style={{ 
                 borderColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
                 backgroundColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
-                color: colorMode === 'yellow' ? '#000000' : '#000000'
+                color: '#000000'
               }}
               title="Toggle Color Mode"
             >
@@ -216,14 +224,14 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       </section>
 
       {/* Cook Watch Section - Mobile */}
-      <section className="block md:hidden relative py-16 min-h-[700px] flex items-center">
+      <section className="md:hidden relative py-16 min-h-[700px] flex items-center">
         <div className="absolute inset-0 z-0">
           <img
             src="https://storage.googleapis.com/uxpilot-auth.appspot.com/facc971d01-9cb23a35020b35626d9c.png"
             alt="professional kitchen cooking scene, chef preparing food"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/70"></div>
+          <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/60 to-black/70"></div>
         </div>
         
         <div className="relative z-10 container mx-auto px-4">
@@ -323,7 +331,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
             alt="beautiful food photography and plating"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/85 via-pink-900/85 to-orange-900/85"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-purple-900/85 via-pink-900/85 to-orange-900/85"></div>
         </div>
         
         <div className="relative z-10 container mx-auto px-4">
@@ -384,7 +392,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
             alt="colorful flat lay of various dishes"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/85 via-pink-900/85 to-orange-900/85"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-purple-900/85 via-pink-900/85 to-orange-900/85"></div>
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
@@ -416,7 +424,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       </section>
 
       {/* Tako AI Section - Mobile */}
-      <section className="block md:hidden py-16 bg-gradient-to-b from-primary/10 to-accent/10">
+      <section className="block md:hidden py-16 bg-linear-to-b from-primary/10 to-accent/10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">
@@ -437,7 +445,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       </section>
 
       {/* Tako AI Section - Desktop */}
-      <section className="hidden md:block py-20 md:py-32 bg-gradient-to-b from-yellow-50 to-orange-50">
+      <section className="hidden md:block py-20 md:py-32 bg-linear-to-b from-yellow-50 to-orange-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">

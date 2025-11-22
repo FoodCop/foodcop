@@ -1,5 +1,9 @@
 import axios from 'axios';
 import config from '../config/config';
+import { supabase } from './supabase';
+
+// Use Supabase Edge Function proxy for Spoonacular API to keep API key secure
+const SPOONACULAR_PROXY_URL = `${config.supabase.url}/functions/v1/make-server-5976446e`;
 
 interface SearchRecipesParams {
   query?: string;
@@ -14,27 +18,27 @@ interface SearchRecipesParams {
 export const SpoonacularService = {
   async searchRecipes(params: SearchRecipesParams) {
     try {
-      // Check if API key is available
-      if (!config.spoonacular.apiKey) {
-        console.warn('Spoonacular API key not found. Please set VITE_SPOONACULAR_API_KEY in your environment variables.');
-        return { 
-          success: false, 
-          error: 'API key not configured. Please check your environment variables.' 
-        };
-      }
-
-      const res = await axios.get(`${config.spoonacular.baseUrl}${config.spoonacular.endpoints.recipeSearch}`, {
-        params: {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const res = await axios.post(
+        `${SPOONACULAR_PROXY_URL}/spoonacular/recipes/search`,
+        {
           ...params,
           number: params.number || 12,
-          apiKey: config.spoonacular.apiKey,
-          addRecipeInformation: true,
-          fillIngredients: true,
-          instructionsRequired: true,
-          sort: 'popularity',
         },
-        timeout: config.api.timeout,
-      });
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token || config.supabase.anonKey}`,
+          },
+          timeout: config.api.timeout,
+        }
+      );
+
+      // Check for Spoonacular API errors
+      if (res.data.message) {
+        return { success: false, error: res.data.message };
+      }
 
       return { success: true, data: res.data };
     } catch (error) {
@@ -45,6 +49,8 @@ export const SpoonacularService = {
           return { success: false, error: 'Invalid API key. Please check your Spoonacular API key.' };
         } else if (error.response?.status === 402) {
           return { success: false, error: 'API quota exceeded. Please check your Spoonacular plan.' };
+        } else if (error.response?.data?.error) {
+          return { success: false, error: error.response.data.error };
         }
       }
       
@@ -54,61 +60,78 @@ export const SpoonacularService = {
 
   async getRecipeInformation(id: number, includeNutrition = true) {
     try {
-      const path = config.spoonacular.endpoints.recipeInformation.replace('{id}', String(id));
-      const res = await axios.get(`${config.spoonacular.baseUrl}${path}`, {
-        params: {
-          apiKey: config.spoonacular.apiKey,
-          includeNutrition,
-        },
-        timeout: config.api.timeout,
-      });
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const res = await axios.post(
+        `${SPOONACULAR_PROXY_URL}/spoonacular/recipes/${id}`,
+        { includeNutrition },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token || config.supabase.anonKey}`,
+          },
+          timeout: config.api.timeout,
+        }
+      );
 
       return { success: true, data: res.data };
     } catch (error) {
       console.error('Spoonacular getRecipeInformation error:', error);
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        return { success: false, error: error.response.data.error };
+      }
       return { success: false, error: (error as Error).message };
     }
   },
 
   async getRandomRecipes(number = 10, tags?: string) {
     try {
-      if (!config.spoonacular.apiKey) {
-        return { success: false, error: 'API key not configured' };
-      }
-
-      const res = await axios.get(`${config.spoonacular.baseUrl}/recipes/random`, {
-        params: {
-          apiKey: config.spoonacular.apiKey,
-          number,
-          tags,
-        },
-        timeout: config.api.timeout,
-      });
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const res = await axios.post(
+        `${SPOONACULAR_PROXY_URL}/spoonacular/recipes/random`,
+        { number, tags },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token || config.supabase.anonKey}`,
+          },
+          timeout: config.api.timeout,
+        }
+      );
 
       return { success: true, data: res.data };
     } catch (error) {
       console.error('Spoonacular getRandomRecipes error:', error);
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        return { success: false, error: error.response.data.error };
+      }
       return { success: false, error: (error as Error).message };
     }
   },
 
   async getSimilarRecipes(id: number, number = 4) {
     try {
-      if (!config.spoonacular.apiKey) {
-        return { success: false, error: 'API key not configured' };
-      }
-
-      const res = await axios.get(`${config.spoonacular.baseUrl}/recipes/${id}/similar`, {
-        params: {
-          apiKey: config.spoonacular.apiKey,
-          number,
-        },
-        timeout: config.api.timeout,
-      });
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const res = await axios.post(
+        `${SPOONACULAR_PROXY_URL}/spoonacular/recipes/${id}/similar`,
+        { number },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token || config.supabase.anonKey}`,
+          },
+          timeout: config.api.timeout,
+        }
+      );
 
       return { success: true, data: res.data };
     } catch (error) {
       console.error('Spoonacular getSimilarRecipes error:', error);
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        return { success: false, error: error.response.data.error };
+      }
       return { success: false, error: (error as Error).message };
     }
   },

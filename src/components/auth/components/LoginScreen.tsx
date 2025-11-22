@@ -28,14 +28,15 @@ export function LoginScreen({ supabase }: LoginScreenProps) {
     setError(null);
     
     try {
-      const baseUrl = `${window.location.protocol}//${window.location.host}`;
-      const redirectTo = `${baseUrl}/#auth`;
+      // Use current origin for redirect (works in both dev and prod)
+      const redirectTo = `${window.location.origin}/auth`;
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       
       console.log('=== GOOGLE CLOUD CONSOLE SETUP ===');
       console.log('Add THIS redirect URI to Google Cloud Console:');
       console.log(`${supabaseUrl}/auth/v1/callback`);
       console.log('(Do NOT add the local app URL to Google)');
+      console.log('Current redirect URL:', redirectTo);
       console.log('====================================');
       
       const { data, error } = await supabase.auth.signInWithOAuth({

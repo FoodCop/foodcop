@@ -69,17 +69,14 @@ export class GeolocationService {
     let state: string | undefined;
     let country: string | undefined;
 
-    components.forEach((component) => {
+    for (const component of components) {
       const types = component.types;
 
-      // City - try multiple type variations
-      if (types.includes('locality')) {
-        city = component.long_name;
-      } else if (!city && types.includes('sublocality')) {
-        city = component.long_name;
-      } else if (!city && types.includes('postal_town')) {
-        city = component.long_name;
-      } else if (!city && types.includes('administrative_area_level_2')) {
+      // City - try multiple type variations (use first match)
+      if (!city && (types.includes('locality') || 
+                     types.includes('sublocality') || 
+                     types.includes('postal_town') || 
+                     types.includes('administrative_area_level_2'))) {
         city = component.long_name;
       }
 
@@ -92,7 +89,7 @@ export class GeolocationService {
       if (types.includes('country')) {
         country = component.long_name;
       }
-    });
+    }
 
     console.log('📍 Parsed location:', { city, state, country });
 

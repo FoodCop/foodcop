@@ -208,7 +208,7 @@ export function PreferencesDialog({
                 <button
                   onClick={handleRequestLocation}
                   disabled={locationLoading}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-3 px-4 bg-linear-to-r from-orange-500 to-red-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {locationLoading ? (
                     <>
@@ -227,7 +227,7 @@ export function PreferencesDialog({
               {locationData && (
                 <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
                       <Check className="w-5 h-5 text-green-600" />
                     </div>
                     <div className="flex-1">

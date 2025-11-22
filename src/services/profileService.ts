@@ -224,9 +224,10 @@ export class ProfileService {
         typeof p === 'string' && p.trim().length > 0
       );
 
-      const validDislikes = dislikes?.filter(d => 
+      // Validate dislikes (unused but kept for potential future use)
+      dislikes?.filter(d => 
         typeof d === 'string' && d.trim().length > 0
-      ) || [];
+      );
 
       const updateData: Record<string, unknown> = {
         cuisine_preferences: validPreferences,

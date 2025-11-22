@@ -750,10 +750,11 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
                 {photos.map((photo) => {
                   const meta = photo.metadata as PhotoMetadata;
                   return (
-                    <div 
+                    <button 
                       key={photo.id} 
                       className="aspect-square relative group cursor-pointer"
                       onClick={() => openViewer(photo, photos, 'photo')}
+                      aria-label={`View ${meta.title || 'photo'}`}
                     >
                       <img
                         src={meta.image_url || meta.image}
@@ -768,7 +769,7 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -811,8 +812,8 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
                         </div>
                         {meta.diets && meta.diets.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-2">
-                            {meta.diets.slice(0, 3).map((diet: string, idx: number) => (
-                              <span key={idx} className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                            {meta.diets.slice(0, 3).map((diet: string) => (
+                              <span key={diet} className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
                                 {diet}
                               </span>
                             ))}
@@ -1028,8 +1029,8 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {crew.map((member, idx) => (
-                  <Card key={idx}>
+                {crew.map((member) => (
+                  <Card key={member.id}>
                     <CardContent className="pt-6 text-center">
                       <Avatar className="w-16 h-16 mx-auto mb-3">
                         <AvatarImage src={member.avatar} alt={member.name} />
@@ -1127,19 +1128,31 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
           </div>
 
           <div className="mt-4">
-            {loadingFriends ? (
-              <div className="text-center py-8 text-neutral-500">
-                Loading users...
-              </div>
-            ) : searchResults.length === 0 ? (
-              <div className="text-center py-8 text-neutral-500">
-                {searchQuery ? 'No users found matching your search.' : 'No available users to add at the moment.'}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-3">
-                {searchResults.map((user) => {
-                  const { relationshipStatus } = user;
-                  return (
+            {(() => {
+              if (loadingFriends) {
+                return (
+                  <div className="text-center py-8 text-neutral-500">
+                    Loading users...
+                  </div>
+                );
+              }
+              
+              if (searchResults.length === 0) {
+                const emptyMessage = searchQuery 
+                  ? 'No users found matching your search.' 
+                  : 'No available users to add at the moment.';
+                return (
+                  <div className="text-center py-8 text-neutral-500">
+                    {emptyMessage}
+                  </div>
+                );
+              }
+              
+              return (
+                <div className="grid grid-cols-1 gap-3">
+                  {searchResults.map((user) => {
+                    const { relationshipStatus } = user;
+                    return (
                     <Card key={user.userId} className="hover:shadow-md transition-shadow bg-white">
                       <CardContent className="pt-4 pb-4">
                         <div className="flex items-center justify-between">
@@ -1155,26 +1168,39 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
                           </div>
 
                           {/* âœ… NEW: Relationship Status Badges & Actions */}
-                          {relationshipStatus === 'friend' ? (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-md text-sm font-medium">
-                              <Check className="w-4 h-4" />
-                              FRIEND
-                            </div>
-                          ) : relationshipStatus === 'outgoing' ? (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-md text-sm font-medium">
-                              <Mail className="w-4 h-4" />
-                              PENDING
-                            </div>
-                          ) : relationshipStatus === 'incoming' ? (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-md text-sm font-medium">
-                              <Mail className="w-4 h-4" />
-                              INVITED YOU
-                            </div>
-                          ) : (
-                            <Button
-                              onClick={() => handleSendRequest(user.userId)}
-                              disabled={actionInProgress === user.userId}
-                              className="bg-neutral-900 text-white hover:bg-neutral-800"
+                          {(() => {
+                            if (relationshipStatus === 'friend') {
+                              return (
+                                <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-md text-sm font-medium">
+                                  <Check className="w-4 h-4" />
+                                  FRIEND
+                                </div>
+                              );
+                            }
+                            
+                            if (relationshipStatus === 'outgoing') {
+                              return (
+                                <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-md text-sm font-medium">
+                                  <Mail className="w-4 h-4" />
+                                  PENDING
+                                </div>
+                              );
+                            }
+                            
+                            if (relationshipStatus === 'incoming') {
+                              return (
+                                <div className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-md text-sm font-medium">
+                                  <Mail className="w-4 h-4" />
+                                  INVITED YOU
+                                </div>
+                              );
+                            }
+                            
+                            return (
+                              <Button
+                                onClick={() => handleSendRequest(user.userId)}
+                                disabled={actionInProgress === user.userId}
+                                className="bg-neutral-900 text-white hover:bg-neutral-800"
                               size="sm"
                             >
                               {actionInProgress === user.userId ? (
@@ -1189,14 +1215,16 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
                                 </>
                               )}
                             </Button>
-                          )}
+                            );
+                          })()}
                         </div>
                       </CardContent>
                     </Card>
                   );
                 })}
-              </div>
-            )}
+                </div>
+              );
+            })()}
           </div>
         </DialogContent>
       </Dialog>

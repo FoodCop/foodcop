@@ -31,7 +31,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     // Get initial session and handle OAuth callback
     const getSession = async () => {
-      // Check for OAuth tokens in URL
+      // Check for OAuth tokens in URL (Supabase OAuth redirects use hash fragments)
       const hash = window.location.hash.slice(1);
       if (hash.includes('access_token')) {
         console.log('🔑 AuthProvider: OAuth tokens detected in URL, processing...');
@@ -68,10 +68,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
               setSession(data.session);
               setUser(data.session.user);
               
-              // Clean URL but don't redirect - let AuthPage handle the redirection
-              // based on onboarding status
-              const cleanUrl = window.location.pathname + '#auth';
-              window.history.replaceState(null, '', cleanUrl);
+              // IMPORTANT: Log current origin to debug redirect issues
+              console.log('🔍 AuthProvider: Current origin:', window.location.origin);
+              console.log('🔍 AuthProvider: Current pathname:', window.location.pathname);
+              console.log('🔍 AuthProvider: Current full URL:', window.location.href);
+              
+              // Clean URL - remove hash fragments and navigate to /auth
+              // AuthPage will handle the redirect to the appropriate page
+              // CRITICAL: Use relative path to ensure we stay on current origin
+              const currentPath = window.location.pathname;
+              const targetPath = '/auth';
+              
+              // Only navigate if we're not already on /auth
+              if (currentPath !== targetPath) {
+                // Use relative path to ensure we stay on current origin (localhost or production)
+                window.history.replaceState(null, '', targetPath);
+                // Force a navigation event that React Router will detect
+                window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
+                console.log('✅ AuthProvider: Navigated to', targetPath, 'on origin', window.location.origin);
+              } else {
+                // Already on /auth, just clean the hash
+                window.history.replaceState(null, '', targetPath);
+                console.log('✅ AuthProvider: Already on /auth, cleaned hash');
+              }
               setLoading(false);
               return;
             }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useOnboarding } from '../OnboardingContext';
 import { useAuth } from '../../auth/AuthProvider';
 import { OnboardingService } from '../../../services/onboardingService';
@@ -7,6 +8,7 @@ import { toast } from 'sonner';
 const WelcomeStep: React.FC = () => {
   const { setCurrentStep } = useOnboarding();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [showSkipAlert, setShowSkipAlert] = useState(false);
   const [isSkipping, setIsSkipping] = useState(false);
 
@@ -24,7 +26,7 @@ const WelcomeStep: React.FC = () => {
       await OnboardingService.skipOnboarding(user.id);
       toast.success('You can set preferences later in Plate Settings');
       // Redirect to dashboard
-      globalThis.location.hash = '#dash';
+      navigate('/dash');
     } catch (error) {
       console.error('Failed to skip onboarding:', error);
       toast.error('Failed to skip. Please try again.');

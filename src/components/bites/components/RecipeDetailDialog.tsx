@@ -307,7 +307,7 @@ export function RecipeDetailDialog({
                 <div className="space-y-4">
                   {enrichedRecipe.analyzedInstructions[0].steps.map((step) => (
                     <div key={step.number} className="flex gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 bg-gray-900 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                      <div className="shrink-0 w-6 h-6 bg-gray-900 text-white rounded-full flex items-center justify-center text-sm font-medium">
                         {step.number}
                       </div>
                       <p className="text-gray-700 flex-1">{step.step}</p>

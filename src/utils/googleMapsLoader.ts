@@ -19,12 +19,12 @@ const errorCallbacks: Array<(error: Error) => void> = [];
 export async function loadGoogleMapsScript(): Promise<void> {
   // If already loaded, return immediately
   if (isLoaded && globalThis.google?.maps) {
-    return Promise.resolve();
+    return;
   }
 
   // If there was a previous error, reject with that error
   if (loadError) {
-    return Promise.reject(loadError);
+    throw loadError;
   }
 
   // If currently loading, wait for the existing load to complete
@@ -46,7 +46,9 @@ export async function loadGoogleMapsScript(): Promise<void> {
         loadError = error;
         isLoading = false;
         reject(error);
-        errorCallbacks.forEach(cb => cb(error));
+        for (const cb of errorCallbacks) {
+          cb(error);
+        }
         return;
       }
 
@@ -61,7 +63,9 @@ export async function loadGoogleMapsScript(): Promise<void> {
           isLoaded = true;
           isLoading = false;
           resolve();
-          loadPromises.forEach(cb => cb());
+          for (const cb of loadPromises) {
+            cb();
+          }
           return;
         }
 
@@ -70,7 +74,9 @@ export async function loadGoogleMapsScript(): Promise<void> {
           isLoaded = true;
           isLoading = false;
           resolve();
-          loadPromises.forEach(cb => cb());
+          for (const cb of loadPromises) {
+            cb();
+          }
         });
 
         existingScript.addEventListener('error', () => {
@@ -78,7 +84,9 @@ export async function loadGoogleMapsScript(): Promise<void> {
           loadError = error;
           isLoading = false;
           reject(error);
-          errorCallbacks.forEach(cb => cb(error));
+          for (const cb of errorCallbacks) {
+            cb(error);
+          }
         });
 
         return;
@@ -94,7 +102,9 @@ export async function loadGoogleMapsScript(): Promise<void> {
         isLoaded = true;
         isLoading = false;
         resolve();
-        loadPromises.forEach(cb => cb());
+        for (const cb of loadPromises) {
+          cb();
+        }
         loadPromises.length = 0;
         errorCallbacks.length = 0;
       };
@@ -104,7 +114,9 @@ export async function loadGoogleMapsScript(): Promise<void> {
         loadError = error;
         isLoading = false;
         reject(error);
-        errorCallbacks.forEach(cb => cb(error));
+        for (const cb of errorCallbacks) {
+          cb(error);
+        }
         loadPromises.length = 0;
         errorCallbacks.length = 0;
       };
@@ -115,7 +127,9 @@ export async function loadGoogleMapsScript(): Promise<void> {
       loadError = error;
       isLoading = false;
       reject(error);
-      errorCallbacks.forEach(cb => cb(error));
+      for (const cb of errorCallbacks) {
+        cb(error);
+      }
       loadPromises.length = 0;
       errorCallbacks.length = 0;
     }
