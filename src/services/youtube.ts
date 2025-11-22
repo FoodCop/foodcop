@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../config/config';
+import { supabase } from './supabase';
 
 // Use Supabase Edge Function proxy for YouTube API to keep API key secure
 const YOUTUBE_PROXY_URL = `${config.supabase.url}/functions/v1/youtube-proxy`;
@@ -11,6 +12,9 @@ export const YouTubeService = {
       const orders = ['relevance', 'viewCount', 'date'];
       const randomOrder = orders[Math.floor(Math.random() * orders.length)];
 
+      // Get session for authentication (or use anon key as fallback)
+      const { data: { session } } = await supabase.auth.getSession();
+
       const res = await axios.get(YOUTUBE_PROXY_URL, {
         params: {
           action: 'search',
@@ -20,6 +24,7 @@ export const YouTubeService = {
         },
         headers: {
           'apikey': config.supabase.anonKey,
+          'Authorization': `Bearer ${session?.access_token || config.supabase.anonKey}`,
         },
         timeout: config.api.timeout,
       });
@@ -34,6 +39,9 @@ export const YouTubeService = {
       console.error('YouTube searchVideos error:', error);
       
       if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          return { success: false, error: 'Authentication failed. Please refresh the page and try again.' };
+        }
         if (error.response?.status === 403) {
           return { success: false, error: 'YouTube API quota exceeded or invalid API key.' };
         }
@@ -48,6 +56,9 @@ export const YouTubeService = {
 
   async getVideoDetails(videoId: string) {
     try {
+      // Get session for authentication (or use anon key as fallback)
+      const { data: { session } } = await supabase.auth.getSession();
+
       const res = await axios.get(YOUTUBE_PROXY_URL, {
         params: {
           action: 'video-details',
@@ -55,6 +66,7 @@ export const YouTubeService = {
         },
         headers: {
           'apikey': config.supabase.anonKey,
+          'Authorization': `Bearer ${session?.access_token || config.supabase.anonKey}`,
         },
         timeout: config.api.timeout,
       });
