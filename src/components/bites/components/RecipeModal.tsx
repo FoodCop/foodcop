@@ -12,6 +12,7 @@ import {
 import { SpoonacularService } from '../../../services/spoonacular';
 import type { Recipe } from './RecipeCard';
 import { toast } from 'sonner';
+import { toastHelpers } from '../../../utils/toastHelpers';
 import { savedItemsService } from '../../../services/savedItemsService';
 import { useAuth } from '../../auth/AuthProvider';
 
@@ -65,7 +66,7 @@ const RecipeModal: React.FC<RecipeModalProps> = ({ recipe, onClose }) => {
           diets: recipe.diets
         }
       });
-      toast.success('Recipe saved to Plate!');
+      toastHelpers.saved('Recipe');
     } catch (err) {
       toast.error('Failed to save recipe');
       console.error('Error saving recipe:', err);

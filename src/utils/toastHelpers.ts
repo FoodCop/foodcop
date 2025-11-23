@@ -37,7 +37,7 @@ const shouldShowToast = (key: string): boolean => {
 
 export const toastHelpers = {
   /**
-   * Show success toast with star and optional continue button
+   * Show success toast with icon and optional continue button
    */
   success: (message: string, action?: ToastAction) => {
     const key = `success-${message}`;
@@ -46,7 +46,7 @@ export const toastHelpers = {
     return gamifiedToast({
       message,
       type: 'success',
-      showStar: true,
+      title: 'Success',
       showContinue: !!action,
       onContinue: action?.onClick,
       continueText: action?.label || 'Continue',
@@ -63,6 +63,7 @@ export const toastHelpers = {
     return gamifiedToast({
       message,
       type: 'error',
+      title: 'Error',
       showContinue: !!action,
       onContinue: action?.onClick,
       continueText: action?.label || 'Continue',
@@ -80,6 +81,7 @@ export const toastHelpers = {
     return gamifiedToast({
       message: fullMessage,
       type: 'info',
+      title: 'Info',
     });
   },
 
@@ -94,6 +96,7 @@ export const toastHelpers = {
     return gamifiedToast({
       message: fullMessage,
       type: 'warning',
+      title: 'Warning',
     });
   },
 
@@ -116,6 +119,7 @@ export const toastHelpers = {
     return gamifiedToast({
       message,
       type: 'info',
+      title: 'Info',
       showContinue: !!action,
       onContinue: action?.onClick,
       continueText: action?.label || 'Explore',
@@ -123,7 +127,8 @@ export const toastHelpers = {
   },
 
   /**
-   * Show save confirmation toast with star and continue button
+   * Unified save confirmation toast - use this for all saved items (videos, restaurants, recipes, photos, etc.)
+   * Simple format: "SAVED to Plate" with item name and Continue button
    */
   saved: (itemName: string, isDuplicate = false, navigateTo?: () => void) => {
     if (isDuplicate) {
@@ -133,6 +138,7 @@ export const toastHelpers = {
       return gamifiedToast({
         message: `${itemName} is already in your Plate`,
         type: 'info',
+        title: 'Info',
       });
     }
     
@@ -140,13 +146,11 @@ export const toastHelpers = {
     if (!shouldShowToast(key)) return null;
     
     return gamifiedToast({
-      message: `Your ${itemName} has been saved to Plate`,
+      message: `${itemName} saved to Plate`,
       type: 'success',
-      showStar: true,
+      title: 'Success',
       showContinue: true,
-      onContinue: navigateTo || (() => {
-        window.location.href = '/plate';
-      }),
+      onContinue: navigateTo || undefined,
       continueText: 'Continue',
     });
   },
@@ -161,6 +165,7 @@ export const toastHelpers = {
     return gamifiedToast({
       message: `${feature} will be available in a future update`,
       type: 'info',
+      title: 'Info',
     });
   },
 

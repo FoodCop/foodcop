@@ -3,6 +3,7 @@ import { Search, MapPin, Star, Clock, Phone, Globe, Calendar, Navigation, Heart,
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
+import { toastHelpers } from '../../utils/toastHelpers';
 import { GoogleMapView } from '../maps/GoogleMapView';
 import type { MapMarker } from '../maps/mapUtils';
 import { backendService, formatGooglePlaceResult } from '../../services/backendService';
@@ -209,11 +210,11 @@ export function ScoutDesktop() {
       });
 
       if (result.success) {
-        toast.success(`${selectedRestaurant.name} saved to your plate!`);
+        toastHelpers.saved(selectedRestaurant.name);
       } else if (result.error === 'Item already saved') {
-        toast.info(`${selectedRestaurant.name} is already in your plate`);
+        toastHelpers.saved(selectedRestaurant.name, true);
       } else {
-        toast.error(result.error || 'Failed to save restaurant');
+        toastHelpers.error(result.error || 'Failed to save restaurant');
       }
     } catch (error) {
       console.error('Error saving restaurant:', error);

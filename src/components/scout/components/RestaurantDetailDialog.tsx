@@ -3,6 +3,7 @@ import { useState } from "react";
 import { savedItemsService } from "../../../services";
 import { useAuth } from "../../auth/AuthProvider";
 import { toast } from "sonner";
+import { toastHelpers } from "../../../utils/toastHelpers";
 import { MapView } from "./MapView";
 
 interface Restaurant {
@@ -91,11 +92,11 @@ export function RestaurantDetailDialog({
       });
 
       if (result.success) {
-        toast.success(`${restaurant.name} saved to your plate!`);
+        toastHelpers.saved(restaurant.name);
       } else if (result.error === 'Item already saved') {
-        toast.info(`${restaurant.name} is already in your plate`);
+        toastHelpers.saved(restaurant.name, true);
       } else {
-        toast.error(result.error || 'Failed to save restaurant');
+        toastHelpers.error(result.error || 'Failed to save restaurant');
       }
     } catch (error) {
       console.error('Error saving restaurant:', error);

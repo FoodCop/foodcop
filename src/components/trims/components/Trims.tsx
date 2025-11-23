@@ -265,14 +265,7 @@ export function Trims() {
                   itemType="video"
                   className="flex-1"
                   onSaveSuccess={(savedItem, isDuplicate) => {
-                    const message = isDuplicate ? "Video already saved" : "Video saved to Plate";
-                    const toastFn = isDuplicate ? toastHelpers.info : toastHelpers.saved;
-                    
-              if (isDuplicate) {
-                toastHelpers.info(`${selectedVideo.title} is already in your Plate`);
-              } else {
-                toastHelpers.saved(selectedVideo.title);
-              }
+                    toastHelpers.saved(selectedVideo.title, isDuplicate);
                   }}
                   onSaveError={(error) => {
                     toastHelpers.error(`Failed to save video: ${error}`);
@@ -350,11 +343,7 @@ function VideoCard({ video, onPlay }: Readonly<{
             className="h-8 w-8 rounded-full bg-black/40 hover:bg-black/60 text-white"
             showDuplicatePreview={false}
             onSaveSuccess={(savedItem, isDuplicate) => {
-              if (isDuplicate) {
-                toastHelpers.info(`${video.title} is already in your Plate`);
-              } else {
-                toastHelpers.saved(video.title);
-              }
+              toastHelpers.saved(video.title, isDuplicate);
             }}
             onSaveError={(error) => {
               toastHelpers.error(`Failed to save video: ${error}`);

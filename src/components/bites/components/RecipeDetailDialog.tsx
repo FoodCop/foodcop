@@ -10,6 +10,7 @@ import { ImageWithFallback } from "../../ui/image-with-fallback";
 import { savedItemsService } from "../../../services";
 import { useAuth } from "../../auth/AuthProvider";
 import { toast } from "sonner";
+import { toastHelpers } from "../../../utils/toastHelpers";
 import { SpoonacularService } from "../../../services/spoonacular";
 
 interface RecipeDetailDialogProps {
@@ -146,7 +147,7 @@ export function RecipeDetailDialog({
       console.log('📤 Save result:', result);
 
       if (result.success) {
-        toast.success(`${enrichedRecipe.title} saved to your plate!`);
+        toastHelpers.saved(enrichedRecipe.title);
         console.log('✅ Recipe saved successfully');
       } else {
         if (result.error === 'Item already saved') {

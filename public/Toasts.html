@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toast Notifications</title>
+    <script src='https://cdn.tailwindcss.com'></script>
+            <script>
+            tailwind.config = {
+                        theme: {
+                            extend: {
+                                colors: {
+                                    border: "var(--border)",
+                                    input: "var(--input)",
+                                    ring: "var(--ring)",
+                                    background: "var(--background)",
+                                    foreground: "var(--foreground)",
+                                    primary: {
+                                        DEFAULT: "var(--primary)",
+                                        foreground: "var(--primary-foreground)",
+                                    },
+                                    secondary: {
+                                        DEFAULT: "var(--secondary)",
+                                        foreground: "var(--secondary-foreground)",
+                                    },
+                                    destructive: {
+                                        DEFAULT: "var(--destructive)",
+                                        foreground: "var(--destructive-foreground)",
+                                    },
+                                    muted: {
+                                        DEFAULT: "var(--muted)",
+                                        foreground: "var(--muted-foreground)",
+                                    },
+                                    accent: {
+                                        DEFAULT: "var(--accent)",
+                                        foreground: "var(--accent-foreground)",
+                                    },
+                                    popover: {
+                                        DEFAULT: "var(--popover)",
+                                        foreground: "var(--popover-foreground)",
+                                    },
+                                    card: {
+                                        DEFAULT: "var(--card)",
+                                        foreground: "var(--card-foreground)",
+                                    },
+                                    sidebar: {
+                                        DEFAULT: "var(--sidebar)",
+                                        foreground: "var(--sidebar-foreground)",
+                                        primary: "var(--sidebar-primary)",
+                                        "primary-foreground": "var(--sidebar-primary-foreground)",
+                                        accent: "var(--sidebar-accent)",
+                                        "accent-foreground": "var(--sidebar-accent-foreground)",
+                                        border: "var(--sidebar-border)",
+                                        ring: "var(--sidebar-ring)",
+                                    },
+                                    chart: {
+                                        1: "var(--chart-1)",
+                                        2: "var(--chart-2)",
+                                        3: "var(--chart-3)",
+                                        4: "var(--chart-4)",
+                                        5: "var(--chart-5)",
+                                    },
+                                },
+                                borderRadius: {
+                                    lg: "var(--radius)",
+                                    md: "calc(var(--radius) - 2px)",
+                                    sm: "calc(var(--radius) - 4px)",
+                                },
+                                fontFamily: {
+                                    sans: ["var(--font-sans)"],
+                                    serif: ["var(--font-serif)"],
+                                    mono: ["var(--font-mono)"],
+                                },
+                                boxShadow: {
+                                    '2xs': 'var(--shadow-2xs)',
+                                    'xs': 'var(--shadow-xs)',
+                                    'sm': 'var(--shadow-sm)',
+                                    'DEFAULT': 'var(--shadow)',
+                                    'md': 'var(--shadow-md)',
+                                    'lg': 'var(--shadow-lg)',
+                                    'xl': 'var(--shadow-xl)',
+                                    '2xl': 'var(--shadow-2xl)',
+                                },
+                            },
+                        }
+                    }
+            </script>
+            
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: #FAFAFA;
+            --foreground: #0f172a;
+            --card: #ffffff;
+            --card-foreground: #0f172a;
+            --primary: #FFD500;
+            --primary-foreground: #8A8A8A;
+            --secondary: #64748b;
+            --secondary-foreground: #ffffff;
+            --muted: #FAFAFA;
+            --muted-foreground: #0f172a;
+            --accent: #f59e0b;
+            --accent-foreground: #ffffff;
+            --destructive: #ef4444;
+            --destructive-foreground: #ffffff;
+            --border: #EEE;
+            --input: #FFFFFF;
+            --ring: #94a3b8;
+            --font-sans: Be Vietnam Pro;
+            --font-serif: Georgia, serif;
+            --font-mono: JetBrains Mono, monospace;
+            --radius: 10px;
+            --shadow: -2px 4px 12px 4px rgba(51,51,51,0.05);
+        }
+        ::-webkit-scrollbar { display: none;}
+        body {
+            font-family: var(--font-sans);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<div id="main-container" class="min-h-screen p-12">
+    <div class="max-w-6xl mx-auto">
+        <div id="header-section" class="mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-3">Gamified Toast Notifications</h1>
+            <p class="text-lg text-gray-600">Interactive toast notifications with custom icons and continue buttons</p>
+        </div>
+
+        <div id="demo-section" class="mb-16">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Interactive Demo</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <button onclick="showToast('success')" class="px-6 py-4 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-all text-gray-700 font-medium text-lg">
+                    <i class="fa-solid fa-circle-check mr-2 text-[#D97706]"></i>
+                    Show Success Toast
+                </button>
+                <button onclick="showToast('error')" class="px-6 py-4 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-all text-gray-700 font-medium text-lg">
+                    <i class="fa-solid fa-circle-xmark mr-2 text-[#DC2626]"></i>
+                    Show Error Toast
+                </button>
+                <button onclick="showToast('warning')" class="px-6 py-4 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-all text-gray-700 font-medium text-lg">
+                    <i class="fa-solid fa-triangle-exclamation mr-2 text-[#FF6B35]"></i>
+                    Show Warning Toast
+                </button>
+                <button onclick="showToast('info')" class="px-6 py-4 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-all text-gray-700 font-medium text-lg">
+                    <i class="fa-solid fa-circle-info mr-2 text-[#FF6B35]"></i>
+                    Show Info Toast
+                </button>
+            </div>
+        </div>
+
+        <div id="examples-section" class="space-y-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Toast Variations</h2>
+            
+            <div id="success-toast-example" class="bg-white border-2 border-[#B45309] rounded-xl p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-[#D97706] bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-circle-check text-2xl text-[#D97706]"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">Success</h3>
+                            <p class="text-[#808080]">Your changes have been saved successfully!</p>
+                        </div>
+                    </div>
+                    <button class="ml-6 px-6 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-lg font-medium transition-colors">
+                        Continue
+                    </button>
+                </div>
+            </div>
+
+            <div id="error-toast-example" class="bg-white border-2 border-[#B91C1C] rounded-xl p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-[#DC2626] bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-circle-xmark text-2xl text-[#DC2626]"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">Error</h3>
+                            <p class="text-[#808080]">Something went wrong. Please try again.</p>
+                        </div>
+                    </div>
+                    <button class="ml-6 px-6 py-2 bg-[#DC2626] hover:bg-[#B91C1C] text-white rounded-lg font-medium transition-colors">
+                        Continue
+                    </button>
+                </div>
+            </div>
+
+            <div id="warning-toast-example" class="bg-white border-2 border-[#EA580C] rounded-xl p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-[#FF6B35] bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-triangle-exclamation text-2xl text-[#FF6B35]"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">Warning</h3>
+                            <p class="text-[#808080]">This action cannot be undone. Please confirm.</p>
+                        </div>
+                    </div>
+                    <button class="ml-6 px-6 py-2 bg-[#FF6B35] hover:bg-[#EA580C] text-white rounded-lg font-medium transition-colors">
+                        Continue
+                    </button>
+                </div>
+            </div>
+
+            <div id="info-toast-example" class="bg-white border-2 border-[#EA580C] rounded-xl p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-[#FF6B35] bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-circle-info text-2xl text-[#FF6B35]"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">Info</h3>
+                            <p class="text-[#808080]">New features are now available. Check them out!</p>
+                        </div>
+                    </div>
+                    <button class="ml-6 px-6 py-2 bg-[#FF6B35] hover:bg-[#EA580C] text-white rounded-lg font-medium transition-colors">
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="compact-examples-section" class="mt-16">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Compact Variations</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <div id="compact-success" class="bg-white border-2 border-[#B45309] rounded-lg p-4 shadow-md">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-circle-check text-xl text-[#D97706] mr-3"></i>
+                            <p class="text-[#808080] text-sm">Task completed successfully</p>
+                        </div>
+                        <button class="ml-4 px-4 py-1.5 bg-[#D97706] hover:bg-[#B45309] text-white text-sm rounded-md font-medium transition-colors">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+
+                <div id="compact-error" class="bg-white border-2 border-[#B91C1C] rounded-lg p-4 shadow-md">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-circle-xmark text-xl text-[#DC2626] mr-3"></i>
+                            <p class="text-[#808080] text-sm">Connection failed</p>
+                        </div>
+                        <button class="ml-4 px-4 py-1.5 bg-[#DC2626] hover:bg-[#B91C1C] text-white text-sm rounded-md font-medium transition-colors">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+
+                <div id="compact-warning" class="bg-white border-2 border-[#EA580C] rounded-lg p-4 shadow-md">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-triangle-exclamation text-xl text-[#FF6B35] mr-3"></i>
+                            <p class="text-[#808080] text-sm">Storage almost full</p>
+                        </div>
+                        <button class="ml-4 px-4 py-1.5 bg-[#FF6B35] hover:bg-[#EA580C] text-white text-sm rounded-md font-medium transition-colors">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+
+                <div id="compact-info" class="bg-white border-2 border-[#EA580C] rounded-lg p-4 shadow-md">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-circle-info text-xl text-[#FF6B35] mr-3"></i>
+                            <p class="text-[#808080] text-sm">Update available</p>
+                        </div>
+                        <button class="ml-4 px-4 py-1.5 bg-[#FF6B35] hover:bg-[#EA580C] text-white text-sm rounded-md font-medium transition-colors">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" class="fixed bottom-8 right-8 space-y-4 z-50"></div>
+
+<script>
+    const toastConfig = {
+        success: {
+            icon: 'fa-circle-check',
+            color: '#D97706',
+            border: '#B45309',
+            title: 'Success',
+            message: 'Your action was completed successfully!'
+        },
+        error: {
+            icon: 'fa-circle-xmark',
+            color: '#DC2626',
+            border: '#B91C1C',
+            title: 'Error',
+            message: 'Something went wrong. Please try again.'
+        },
+        warning: {
+            icon: 'fa-triangle-exclamation',
+            color: '#FF6B35',
+            border: '#EA580C',
+            title: 'Warning',
+            message: 'Please review your action before proceeding.'
+        },
+        info: {
+            icon: 'fa-circle-info',
+            color: '#FF6B35',
+            border: '#EA580C',
+            title: 'Info',
+            message: 'Here is some information you should know.'
+        }
+    };
+
+    function showToast(type) {
+        const config = toastConfig[type];
+        const container = document.getElementById('toast-container');
+        
+        const toastId = 'toast-' + Date.now();
+        const toast = document.createElement('div');
+        toast.id = toastId;
+        toast.className = 'bg-white rounded-xl p-5 shadow-2xl transform transition-all duration-300 ease-out translate-x-full opacity-0 w-96';
+        toast.style.borderWidth = '2px';
+        toast.style.borderColor = config.border;
+        
+        toast.innerHTML = `
+            <div class="flex items-center justify-between">
+                <div class="flex items-center flex-1">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center mr-4" style="background-color: ${config.color}15;">
+                        <i class="fa-solid ${config.icon} text-2xl" style="color: ${config.color};"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base font-semibold text-gray-800 mb-1">${config.title}</h3>
+                        <p class="text-sm" style="color: #808080;">${config.message}</p>
+                    </div>
+                </div>
+                <button onclick="dismissToast('${toastId}')" class="ml-4 px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105" style="background-color: ${config.color};">
+                    Continue
+                </button>
+            </div>
+        `;
+        
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.remove('translate-x-full', 'opacity-0');
+        }, 10);
+        
+        setTimeout(() => {
+            dismissToast(toastId);
+        }, 5000);
+    }
+
+    function dismissToast(toastId) {
+        const toast = document.getElementById(toastId);
+        if (toast) {
+            toast.classList.add('translate-x-full', 'opacity-0');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }
+    }
+</script>
+
+</body>
+</html>

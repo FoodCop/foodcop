@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Search, Bookmark, X, Play, Send } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
+import { toastHelpers } from '../../utils/toastHelpers';
 import { savedItemsService } from '../../services/savedItemsService';
 import { YouTubeService } from '../../services/youtube';
 import { MinimalHeader } from '../common/MinimalHeader';
@@ -226,7 +227,7 @@ export default function TrimsMobile() {
       console.log('📦 TrimsMobile: Save result:', result);
       
       if (result.success) {
-        toast.success('Video saved to Plate!');
+        toastHelpers.saved('Video');
       } else {
         toast.error(result.error || 'Failed to save video');
         console.error('❌ TrimsMobile: Save failed:', result.error);

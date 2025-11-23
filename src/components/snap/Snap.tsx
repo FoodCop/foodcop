@@ -9,6 +9,7 @@ import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Badge } from '../ui/badge';
 import { toast } from 'sonner';
+import { toastHelpers } from '../../utils/toastHelpers';
 import { useAuth } from '../auth/AuthProvider';
 import { SavedItemsService } from '../../services/savedItemsService';
 import { cn } from '../ui/utils';
@@ -289,7 +290,7 @@ export function Snap() {
         const reward = gamificationMessages[Math.floor(Math.random() * gamificationMessages.length)];
         setGamificationReward(reward);
 
-        toast.success('Photo saved to your Plate! 📸');
+        toastHelpers.saved('Photo');
         
         // Reset after showing reward
         setTimeout(() => {

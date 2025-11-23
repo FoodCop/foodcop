@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Camera, X, Star, MapPin, Clock, Heart } from 'lucide-react';
 import { toast } from 'sonner';
+import { toastHelpers } from '../../utils/toastHelpers';
 import { useAuth } from '../auth/AuthProvider';
 import { SavedItemsService } from '../../services/savedItemsService';
 import { MinimalHeader } from '../common/MinimalHeader';
@@ -272,7 +273,7 @@ export function SnapNew() {
 
       if (result.success) {
         setShowSuccess(true);
-        toast.success('Photo saved to your Plate! 📸');
+        toastHelpers.saved('Photo');
         
         setTimeout(() => {
           resetForm();

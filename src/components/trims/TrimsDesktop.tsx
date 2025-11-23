@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Search, Bookmark, Play, ChevronLeft, ChevronRight, X, Send, Star } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
+import { toastHelpers } from '../../utils/toastHelpers';
 import { savedItemsService } from '../../services/savedItemsService';
 import { YouTubeService } from '../../services/youtube';
 import { MinimalHeader } from '../common/MinimalHeader';
@@ -278,7 +279,7 @@ export default function TrimsDesktop() {
       console.log('📦 TrimsDesktop: Save result:', result);
       
       if (result.success) {
-        toast.success('Video saved to Plate!');
+        toastHelpers.saved('Video');
       } else {
         toast.error(result.error || 'Failed to save video');
         console.error('❌ TrimsDesktop: Save failed:', result.error);
