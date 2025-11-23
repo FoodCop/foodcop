@@ -58,9 +58,14 @@ export function SupabaseAuth({
         Sign in with Google
       </Button>
       
-      <p className="text-xs text-gray-500 text-center mt-4">
-        Secure authentication powered by Google
-      </p>
+      <div className="mt-4 text-center space-y-1">
+        <p className="text-[8pt] text-gray-500">
+          Secure authentication powered by Google
+        </p>
+        <p className="text-[8pt] text-gray-500">
+          By signing in, you agree to our Terms of Service and Privacy Policy
+        </p>
+      </div>
     </div>
   );
 }

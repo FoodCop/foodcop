@@ -222,7 +222,13 @@ export class PageErrorBoundary extends Component<Props & { location?: string }, 
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
           <div className="max-w-md w-full text-center">
             <div className="mb-6">
-              <div className="text-6xl mb-4">😕</div>
+              <div className="mb-4 flex justify-center">
+                <img 
+                  src="/logo_mobile.png" 
+                  alt="FUZO" 
+                  className="h-24 w-24"
+                />
+              </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Page Error
               </h2>

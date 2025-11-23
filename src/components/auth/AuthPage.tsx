@@ -121,16 +121,9 @@ export default function AuthPage() {
             alt="FUZO" 
             className="h-16 mx-auto mb-4"
           />
-          <p className="text-gray-600" style={{ fontSize: '10pt' }}>Ready to discover amazing food? Sign in to start your culinary adventure with Tako!</p>
         </div>
         
         <SupabaseAuth />
-        
-        <div className="mt-6 text-center">
-          <p className="text-xs text-gray-500" style={{ fontSize: '10pt' }}>
-            By signing in, you agree to our Terms of Service and Privacy Policy
-          </p>
-        </div>
       </div>
     </div>
   );
