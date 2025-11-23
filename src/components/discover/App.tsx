@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Search, SlidersHorizontal, Bell, Heart, MapPin, Clock, Bike, Star, Gift, Package, ShoppingBag, Home, User } from 'lucide-react';
+import { SectionHeading } from '../ui/section-heading';
 
 interface FoodStory {
   name: string;
@@ -170,7 +171,7 @@ export default function FoodDiscoveryApp() {
         {/* Food Stories */}
         <section className="mb-6">
           <div className="px-5 flex items-center justify-between mb-3">
-            <h2 className="text-[#1A1A1A] font-bold text-base leading-6 font-[Poppins]">Food Stories</h2>
+            <SectionHeading>Food Stories</SectionHeading>
             <button className="text-[#FF6B35] text-sm font-semibold">View All</button>
           </div>
           <div className="flex gap-4 overflow-x-auto pl-5 pb-2 hide-scrollbar">
@@ -194,7 +195,7 @@ export default function FoodDiscoveryApp() {
         {/* Featured Today */}
         <section className="mb-6">
           <div className="px-5 flex items-center justify-between mb-3">
-            <h2 className="text-[#1A1A1A] font-bold text-base leading-6 font-[Poppins]">Featured Today</h2>
+            <SectionHeading>Featured Today</SectionHeading>
             <button className="text-[#FF6B35] text-sm font-semibold">See All</button>
           </div>
           <div className="px-5">
@@ -234,7 +235,7 @@ export default function FoodDiscoveryApp() {
         {/* Browse by Category */}
         <section className="mb-6">
           <div className="px-5 mb-3">
-            <h2 className="text-[#1A1A1A] font-bold text-base leading-6 font-[Poppins]">Browse by Category</h2>
+            <SectionHeading>Browse by Category</SectionHeading>
           </div>
           <div className="px-5 grid grid-cols-4 gap-3">
             <button className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-[#FFF7ED]">
@@ -270,7 +271,7 @@ export default function FoodDiscoveryApp() {
         {/* Nearby Restaurants */}
         <section className="mb-6">
           <div className="px-5 flex items-center justify-between mb-3">
-            <h2 className="text-[#1A1A1A] font-bold text-base leading-6 font-[Poppins]">Nearby Restaurants</h2>
+            <SectionHeading>Nearby Restaurants</SectionHeading>
             <button className="flex items-center gap-1 text-[#FF6B35] text-sm font-semibold">
               <span>Map View</span>
               <MapPin className="w-3.5 h-3 fill-current" />
@@ -342,7 +343,7 @@ export default function FoodDiscoveryApp() {
         {/* Special Offers */}
         <section className="mb-6">
           <div className="px-5 mb-3">
-            <h2 className="text-[#1A1A1A] font-bold text-base leading-6 font-[Poppins]">Special Offers</h2>
+            <SectionHeading>Special Offers</SectionHeading>
           </div>
           <div className="flex gap-4 overflow-x-auto pl-5 pb-2 hide-scrollbar">
             <div className="relative min-w-[288px] h-[232px] rounded-2xl bg-gradient-to-br from-[#FF6B35] to-[#EA580C] shadow-[0_8px_10px_0_rgba(0,0,0,0.1),0_20px_25px_0_rgba(0,0,0,0.1)] overflow-hidden">

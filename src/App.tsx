@@ -398,12 +398,25 @@ function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
           <AppLayout />
         </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );
+}
+
+// ScrollToTop component to scroll to top on route changes
+// Must be inside BrowserRouter to use useLocation
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
 }
 
 export default App;

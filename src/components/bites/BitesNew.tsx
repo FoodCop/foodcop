@@ -4,6 +4,7 @@ import type { Recipe } from "./components/RecipeCard";
 import { RecipeDetailDialog } from "./components/RecipeDetailDialog";
 import { SpoonacularService } from "../../services/spoonacular";
 import { useAuth } from "../auth/AuthProvider";
+import { SectionHeading } from "../ui/section-heading";
 
 // Spoonacular API response types
 interface SpoonacularRecipe {
@@ -176,7 +177,7 @@ export default function BitesNew() {
         {/* Diet Categories */}
         <section className="mb-6 md:mb-8">
           <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
-            <h2 className="text-[#1A1A1A] font-bold text-base md:text-lg leading-6">Browse by Diet</h2>
+            <SectionHeading>Browse by Diet</SectionHeading>
           </div>
           <div className="flex gap-3 overflow-x-auto md:overflow-x-visible md:flex-wrap pl-5 md:px-8 lg:px-12 pb-2 md:pb-0 hide-scrollbar md:show-scrollbar">
             {dietCategories.map((diet) => (
@@ -251,7 +252,7 @@ export default function BitesNew() {
         {!loading && !error && recommendedRecipes.length > 0 && (
           <section className="mb-6 md:mb-8">
             <div className="px-5 md:px-8 lg:px-12 flex items-center justify-between mb-3 md:mb-4">
-              <h2 className="text-[#1A1A1A] font-bold text-base md:text-lg leading-6">Recommended for You</h2>
+              <SectionHeading>Recommended for You</SectionHeading>
               <button className="text-[#FF6B35] text-sm md:text-base font-semibold">See All</button>
             </div>
             <div className="px-5 md:px-8 lg:px-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
@@ -314,7 +315,7 @@ export default function BitesNew() {
         {!loading && !error && mightLikeRecipes.length > 0 && (
           <section className="mb-6 md:mb-8">
             <div className="px-5 md:px-8 lg:px-12 flex items-center justify-between mb-3 md:mb-4">
-              <h2 className="text-[#1A1A1A] font-bold text-base md:text-lg leading-6">You Might Also Like</h2>
+              <SectionHeading>You Might Also Like</SectionHeading>
               <button className="text-[#FF6B35] text-sm md:text-base font-semibold">See All</button>
             </div>
             <div className="px-5 md:px-8 lg:px-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">

@@ -12,6 +12,7 @@ import { SmartSaveButton } from '../../ui/smart-save-button';
 import { YouTubeService } from '../../../services/youtube';
 import { useAuth } from '../../auth/AuthProvider';
 import { toastHelpers } from '../../../utils/toastHelpers';
+import { CardHeading } from '../../ui/card-heading';
 
 // YouTube API response types
 interface YouTubeVideo {
@@ -364,7 +365,7 @@ function VideoCard({ video, onPlay }: Readonly<{
 
       {/* Video info */}
       <div className="p-3 space-y-1">
-        <h3 className="line-clamp-2">{video.title}</h3>
+        <CardHeading variant="accent" size="md" lineClamp={2}>{video.title}</CardHeading>
         <p className="text-muted-foreground">{video.channelName}</p>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span>{video.views} views</span>

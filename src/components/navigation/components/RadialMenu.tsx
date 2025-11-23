@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Menu } from 'lucide-react';
 
 interface MenuItem {
   label: string;
@@ -26,10 +25,10 @@ export function RadialMenu({
   const lastAngleRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const radius = 100; // Distance from center to items
-  const itemSize = 56;
-  const centerButtonSize = 64;
-  const containerSize = 280;
+  const radius = 110; // Distance from center to items (10% bigger: 100 * 1.10)
+  const itemSize = 62; // 10% bigger: 56 * 1.10 = 61.6
+  const centerButtonSize = 70; // 10% bigger: 64 * 1.10 = 70.4
+  const containerSize = 308; // 10% bigger: 280 * 1.10 = 308
 
   // Get current page index from route
   const currentPageIndex = items.findIndex(item => item.route === currentRoute);
@@ -181,7 +180,7 @@ export function RadialMenu({
   };
 
   return (
-    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+    <div className="fixed left-1/2 transform -translate-x-1/2 z-50" style={{ bottom: '-80px' }}>
       {/* Menu Container */}
       <div 
         className="relative" 
@@ -266,13 +265,17 @@ export function RadialMenu({
           onClick={handleBarrelClick}
         >
           <div
+            className="w-full h-full flex items-center justify-center p-2"
             style={{
               transform: `rotate(${isOpen ? 90 : 0}deg)`,
               transition: 'transform 0.3s ease',
-              color: '#374151',
             }}
           >
-            <Menu size={24} />
+            <img 
+              src="/logo_white.png"
+              alt="FUZO"
+              className="w-full h-full object-contain"
+            />
           </div>
         </button>
       </div>

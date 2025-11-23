@@ -3,6 +3,7 @@ import React from "react";
 import { Card } from "../../ui/card";
 import { Badge } from "../../ui/badge";
 import { ImageWithFallback } from "../../ui/image-with-fallback";
+import { CardHeading } from "../../ui/card-heading";
 
 export interface Recipe {
   id: number;
@@ -72,7 +73,7 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
         />
       </div>
       <div className="p-4">
-        <h3 className="mb-3">{recipe.title}</h3>
+        <CardHeading variant="accent" size="md" lineClamp={2} className="mb-3">{recipe.title}</CardHeading>
         <div className="flex items-center gap-4 text-gray-600 mb-3">
           <div className="flex items-center gap-1.5">
             <Clock className="w-4 h-4" />

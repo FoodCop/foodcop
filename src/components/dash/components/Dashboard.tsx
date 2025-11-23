@@ -8,6 +8,8 @@ import { useAuth } from "../../auth/AuthProvider";
 import { ProfileService } from "../../../services/profileService";
 import DashboardService, { type DashboardData } from "../../../services/dashboardService";
 import type { UserProfile } from "../../../types/profile";
+import { GeolocationService } from "../../../services/geolocationService";
+import { SectionHeading } from "../../ui/section-heading";
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -25,6 +27,31 @@ export function Dashboard() {
     restaurants: true,
     masterbot: true
   });
+  const [currentLocation, setCurrentLocation] = useState<{ city?: string; state?: string } | null>(null);
+
+  // Get location from geolocation if profile doesn't have it
+  useEffect(() => {
+    const fetchGeolocation = async () => {
+      // Only fetch if profile doesn't have location
+      if (userProfile?.location_city) {
+        return;
+      }
+
+      try {
+        const locationData = await GeolocationService.getCurrentLocationData();
+        if (locationData) {
+          setCurrentLocation({
+            city: locationData.city,
+            state: locationData.state
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching geolocation:', error);
+      }
+    };
+
+    fetchGeolocation();
+  }, [userProfile]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -75,13 +102,6 @@ export function Dashboard() {
     fetchDashboardData();
   }, [user]);
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
-  };
-
   const getUserDisplayName = () => {
     if (userProfile?.display_name) return userProfile.display_name;
     if (userProfile?.first_name) return userProfile.first_name;
@@ -92,9 +112,15 @@ export function Dashboard() {
   };
 
   const getUserLocation = () => {
+    // First try profile location
     if (userProfile?.location_city) {
       const state = userProfile.location_state;
       return state ? `${userProfile.location_city}, ${state}` : userProfile.location_city;
+    }
+    // Then try geolocation
+    if (currentLocation?.city) {
+      const state = currentLocation.state;
+      return state ? `${currentLocation.city}, ${state}` : currentLocation.city;
     }
     return 'Location not set';
   };
@@ -115,11 +141,15 @@ export function Dashboard() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="mb-6 pt-6">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-1">{getGreeting()}, {getUserDisplayName()}</h1>
-          <div className="flex items-center gap-2 text-gray-600">
-            <MapPin className="w-4 h-4" />
-            <span className="text-sm sm:text-base">{getUserLocation()}</span>
-          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1">
+            {getUserDisplayName()}
+            {getUserLocation() !== 'Location not set' && (
+              <span className="ml-3 text-lg sm:text-xl font-normal text-gray-600">
+                <MapPin className="w-4 h-4 inline mr-1" />
+                {getUserLocation()}
+              </span>
+            )}
+          </h1>
         </div>
 
         {/* Photo CTA */}
@@ -132,7 +162,7 @@ export function Dashboard() {
 
         {/* My Crew Section */}
         <div className="mb-12">
-          <h2 className="mb-6">My Crew</h2>
+          <SectionHeading className="mb-6">My Crew</SectionHeading>
           {loadingSection.crew ? (
             <div className="flex gap-6 overflow-x-auto pb-2">
               {[1, 2, 3, 4].map((i) => (
@@ -167,7 +197,7 @@ export function Dashboard() {
 
         {/* Saved Recipes Section */}
         <div className="mb-12">
-          <h2 className="mb-6">Saved Recipes</h2>
+          <SectionHeading className="mb-6">Saved Recipes</SectionHeading>
           {loadingSection.recipes ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((i) => (
@@ -211,7 +241,7 @@ export function Dashboard() {
 
         {/* Restaurant Recommendations Section */}
         <div className="mb-12">
-          <h2 className="mb-6">Restaurant Recommendations</h2>
+          <SectionHeading className="mb-6">Restaurant Recommendations</SectionHeading>
           {loadingSection.restaurants ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -263,7 +293,7 @@ export function Dashboard() {
 
         {/* MasterBot Posts Section */}
         <div>
-          <h2 className="mb-6">Trending Food Posts</h2>
+          <SectionHeading className="mb-6">Trending Food Posts</SectionHeading>
           {loadingSection.masterbot ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map((i) => (

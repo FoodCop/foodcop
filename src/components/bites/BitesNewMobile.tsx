@@ -9,6 +9,7 @@ import RecipeDetailView from './components/RecipeDetailView';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import BitesDesktop from './BitesDesktop';
 import { MinimalHeader } from '../common/MinimalHeader';
+import { SectionHeading } from '../ui/section-heading';
 
 interface SpoonacularRecipe {
   id: number;
@@ -466,7 +467,7 @@ export default function BitesNewMobile() {
 
       <main className="px-4 py-5">
         <section className="mb-6">
-          <h2 className="text-lg font-bold text-[#0f172a] mb-4">Categories</h2>
+          <SectionHeading className="mb-4">Categories</SectionHeading>
           <div className="grid grid-cols-4 gap-3">
             {CATEGORIES.map((category) => (
               <button
@@ -492,7 +493,7 @@ export default function BitesNewMobile() {
         {!loading && recommendedRecipes.length > 0 && (
           <section className="mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-[#0f172a]">Recommended For You</h2>
+              <SectionHeading>Recommended For You</SectionHeading>
               <button className="text-sm font-medium text-[#f59e0b]">See All</button>
             </div>
             <div className="space-y-3">
@@ -565,7 +566,7 @@ export default function BitesNewMobile() {
         {!loading && trendingRecipes.length > 0 && (
           <section className="mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-[#0f172a]">Trending Now</h2>
+              <SectionHeading>Trending Now</SectionHeading>
               <button className="text-sm font-medium text-[#f59e0b]">See All</button>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2">

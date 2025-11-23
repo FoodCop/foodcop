@@ -6,6 +6,7 @@ import { toastHelpers } from '../../utils/toastHelpers';
 import { savedItemsService } from '../../services/savedItemsService';
 import { YouTubeService } from '../../services/youtube';
 import { MinimalHeader } from '../common/MinimalHeader';
+import { CardHeading } from '../ui/card-heading';
 
 // YouTube API response types
 interface YouTubeVideo {
@@ -397,9 +398,9 @@ function VideoCard({
 
       {/* Video Info */}
       <div className="p-3">
-        <h3 className="text-[#1A1A1A] font-semibold text-base line-clamp-2 mb-1.5">
+        <CardHeading variant="accent" size="md" weight="semibold" lineClamp={2} className="mb-1.5">
           {video.title}
-        </h3>
+        </CardHeading>
         <p className="text-[#666666] text-sm">{video.channelName}</p>
       </div>
     </div>

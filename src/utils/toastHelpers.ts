@@ -54,7 +54,7 @@ export const toastHelpers = {
   },
 
   /**
-   * Show error toast
+   * Show error toast (centered for visibility)
    */
   error: (message: string, action?: ToastAction) => {
     const key = `error-${message}`;
@@ -67,6 +67,7 @@ export const toastHelpers = {
       showContinue: !!action,
       onContinue: action?.onClick,
       continueText: action?.label || 'Continue',
+      position: 'center', // Critical errors appear in center
     });
   },
 
@@ -86,7 +87,7 @@ export const toastHelpers = {
   },
 
   /**
-   * Show warning toast
+   * Show warning toast (centered for visibility)
    */
   warning: (message: string, description?: string) => {
     const fullMessage = description ? `${message}\n${description}` : message;
@@ -97,6 +98,7 @@ export const toastHelpers = {
       message: fullMessage,
       type: 'warning',
       title: 'Warning',
+      position: 'center', // Warnings appear in center
     });
   },
 
@@ -110,7 +112,7 @@ export const toastHelpers = {
   },
 
   /**
-   * Show navigation hint toast - unified format matching saved toasts
+   * Show navigation hint toast - unified format matching saved toasts (centered for visibility)
    */
   navigationHint: (message: string, action?: ToastAction, title?: string) => {
     const key = `navigationHint-${message}`;
@@ -123,6 +125,7 @@ export const toastHelpers = {
       showContinue: !!action,
       onContinue: action?.onClick,
       continueText: action?.label || 'Continue',
+      position: 'center', // Navigation hints appear in center for first-time guidance
     });
   },
 

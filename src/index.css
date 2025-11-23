@@ -97,31 +97,52 @@
     background-color: var(--background);
     color: var(--foreground);
     margin: 0;
-    font-family: 'Roboto', system-ui, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
   }
 
-  /* All text elements use Roboto */
-  h1, h2, h3, h4, h5, h6, p, button {
-    font-family: 'Roboto', system-ui, sans-serif;
+  /* Headings use Georgia */
+  h1, h2, h3 {
+    font-family: 'Georgia', serif;
+  }
+
+  /* H1 uses deep red color */
+  h1 {
+    color: #8B0000; /* Deep red for page headings */
+  }
+
+  /* H2 uses dark grey color */
+  h2 {
+    color: #1A1A1A;
+  }
+
+  /* Paragraphs use SF Pro and dark grey color */
+  p {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+    color: #1A1A1A;
   }
 }
 
 @layer base {
   :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
     h1 {
-      font-size: var(--text-2xl);
+      font-family: 'Georgia', serif;
+      font-size: var(--text-xl); /* Reduced from text-2xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
+      color: #8B0000; /* Deep red for page headings */
     }
 
     h2 {
-      font-size: var(--text-xl);
+      font-family: 'Georgia', serif;
+      font-size: var(--text-lg); /* Reduced from text-xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
+      color: #1A1A1A;
     }
 
     h3 {
-      font-size: var(--text-lg);
+      font-family: 'Georgia', serif;
+      font-size: var(--text-base); /* Reduced from text-lg */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
     }
@@ -133,9 +154,11 @@
     }
 
     p {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
       font-size: var(--text-base);
       font-weight: var(--font-weight-normal);
       line-height: 1.5;
+      color: #1A1A1A;
     }
 
     label {
@@ -195,4 +218,59 @@ html {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Center Toast Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes toastCenterIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8) !important;
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-toast-center-in {
+  animation: toastCenterIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Override Sonner's default animations for center toasts */
+[data-sonner-toast] [data-toast-center="true"] {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  animation: toastCenterIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Override Sonner's slide-in animation for center toast containers */
+[data-sonner-toast] [data-toast-center="true"] .toast-center-container {
+  animation: toastCenterIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Prevent Sonner from applying its default transform animations */
+[data-sonner-toast] [data-toast-center="true"] {
+  animation: none !important;
+}
+
+[data-sonner-toast] [data-toast-center="true"] * {
+  animation: none !important;
 }

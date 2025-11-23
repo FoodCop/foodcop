@@ -14,6 +14,8 @@ import { toastHelpers } from '../../utils/toastHelpers';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
 import { MinimalHeader } from '../common/MinimalHeader';
+import { CardHeading } from '../ui/card-heading';
+import { SectionHeading } from '../ui/section-heading';
 
 type FilterType = 'All' | 'Vegetarian' | 'Vegan' | 'Gluten-Free' | 'Keto' | 'Low Carb';
 
@@ -256,7 +258,7 @@ const BitesDesktop: React.FC = () => {
         {!loading && !error && recommendedRecipes.length > 0 && selectedFilter === 'All' && (
           <section className="mb-12">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-foreground">Recommended For You</h2>
+              <SectionHeading>Recommended For You</SectionHeading>
               <button className="text-primary font-medium hover:underline">View All</button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -276,9 +278,9 @@ const BitesDesktop: React.FC = () => {
         {/* All Recipes Grid */}
         {!loading && !error && recipes.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold text-foreground mb-6">
+            <SectionHeading className="mb-6">
               {selectedFilter === 'All' ? 'All Recipes' : `${selectedFilter} Recipes`}
-            </h2>
+            </SectionHeading>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recipes.map((recipe) => (
                 <RecipeCard
@@ -363,7 +365,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
           onClick={onClick}
           className="cursor-pointer"
         >
-          <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2">{recipe.title}</h3>
+          <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-2">{recipe.title}</CardHeading>
           <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
             {recipe.summary?.replaceAll(/<[^>]*>/g, '') || 'Delicious recipe to try'}
           </p>

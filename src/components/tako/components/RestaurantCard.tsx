@@ -7,6 +7,7 @@ import { Button } from '../../ui/button';
 import { MapPin, Utensils, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { RestaurantCardData } from '../../../services/takoAIService';
+import { CardHeading } from '../../ui/card-heading';
 
 interface RestaurantCardProps {
   restaurant: RestaurantCardData;
@@ -46,9 +47,9 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
       {/* Content */}
       <div className="p-4 space-y-3">
         {/* Name */}
-        <h3 className="text-lg font-bold text-gray-900 line-clamp-1">
+        <CardHeading variant="accent" size="md" lineClamp={1}>
           {restaurant.name}
-        </h3>
+        </CardHeading>
 
         {/* Location */}
         <div className="flex items-start gap-2">

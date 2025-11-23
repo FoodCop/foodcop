@@ -6,6 +6,8 @@ import { toastHelpers } from '../../utils/toastHelpers';
 import { savedItemsService } from '../../services/savedItemsService';
 import { YouTubeService } from '../../services/youtube';
 import { MinimalHeader } from '../common/MinimalHeader';
+import { CardHeading } from '../ui/card-heading';
+import { SectionHeading } from '../ui/section-heading';
 
 // TrimVideo interface for short-form cooking videos
 interface TrimVideo {
@@ -318,7 +320,7 @@ export default function TrimsDesktop() {
       {/* Sidebar Filters */}
       <aside className="hidden lg:block w-64 bg-white border-r border-[#EEE] sticky top-0 h-screen overflow-y-auto flex-shrink-0">
         <div className="p-6">
-          <h2 className="text-lg font-bold text-[#1A1A1A] mb-6">Filters</h2>
+          <SectionHeading className="mb-6">Filters</SectionHeading>
           
           {/* Video Length Filter */}
           <div className="mb-6">
@@ -611,9 +613,9 @@ function VideoCard({
 
       {/* Video Info */}
       <div className="p-3">
-        <h3 className="text-[#1A1A1A] font-semibold text-base line-clamp-2 mb-1.5">
+        <CardHeading variant="accent" size="md" weight="semibold" lineClamp={2} className="mb-1.5">
           {video.title}
-        </h3>
+        </CardHeading>
         <p className="text-[#666666] text-sm">{video.channelName}</p>
       </div>
     </div>

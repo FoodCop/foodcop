@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Heart, Clock, Navigation } from 'lucide-react';
+import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Heart, Clock, Navigation, Settings } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { type SavedItem } from '../../services/savedItemsService';
 import { supabase } from '../../services/supabase';
@@ -12,6 +12,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { ProfileService } from '../../services/profileService';
 import DashboardService, { type DashboardData } from '../../services/dashboardService';
 import type { UserProfile } from '../../types/profile';
+import { GeolocationService } from '../../services/geolocationService';
+import { CardHeading } from '../ui/card-heading';
+import { SectionHeading } from '../ui/section-heading';
 
 type TabType = 'dashboard' | 'posts' | 'recipes' | 'videos' | 'places';
 
@@ -89,12 +92,37 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
     restaurants: true,
     masterbot: true
   });
+  const [currentLocation, setCurrentLocation] = useState<{ city?: string; state?: string } | null>(null);
   
   // Mock user data - will be replaced with real data
   const userPoints = 2450;
   const userRewards = 18;
   const userLevel = getUserLevel(userPoints);
   
+  // Get location from geolocation if profile doesn't have it
+  useEffect(() => {
+    const fetchGeolocation = async () => {
+      // Only fetch if profile doesn't have location
+      if (userProfile?.location_city) {
+        return;
+      }
+
+      try {
+        const locationData = await GeolocationService.getCurrentLocationData();
+        if (locationData) {
+          setCurrentLocation({
+            city: locationData.city,
+            state: locationData.state
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching geolocation:', error);
+      }
+    };
+
+    fetchGeolocation();
+  }, [userProfile]);
+
   // Fetch dashboard data
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -143,17 +171,16 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
     fetchDashboardData();
   }, [user]);
   
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
-  };
-  
   const getUserLocation = () => {
+    // First try profile location
     if (userProfile?.location_city) {
       const state = userProfile.location_state;
       return state ? `${userProfile.location_city}, ${state}` : userProfile.location_city;
+    }
+    // Then try geolocation
+    if (currentLocation?.city) {
+      const state = currentLocation.state;
+      return state ? `${currentLocation.city}, ${state}` : currentLocation.city;
     }
     return 'Location not set';
   };
@@ -261,7 +288,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-2" style={{ color: '#EA580C' }}>Sign In Required</h2>
+          <h1 className="text-xl font-bold mb-2 text-[#8B0000]">Sign In Required</h1>
           <p style={{ color: '#808080' }}>Please sign in to view your Plate</p>
         </div>
       </div>
@@ -308,14 +335,14 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             {/* Profile Info */}
             <div className="flex-1 w-full md:w-auto">
               <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-xl md:text-2xl font-bold" style={{ color: '#EA580C' }}>{getUserDisplayName()}</h2>
+                <h1 className="text-xl font-bold text-[#8B0000]">{getUserDisplayName()}</h1>
                 <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
                   <Crown className="w-3 h-3 text-white fill-white" />
                 </div>
               </div>
               <p className="text-sm md:text-base mb-3 max-w-md" style={{ color: '#808080' }}>{getUserBio()}</p>
-              <button className="text-sm font-medium text-[#FF6B35] border border-[#FF6B35] rounded-lg px-4 py-1.5 hover:bg-[#FF6B35] hover:text-white transition-colors">
-                Edit Profile
+              <button className="w-10 h-10 flex items-center justify-center text-[#FF6B35] border border-[#FF6B35] rounded-lg hover:bg-[#FF6B35] hover:text-white transition-colors">
+                <Settings className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -341,12 +368,6 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             </button>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-3 mt-4">
-            <button className="flex-1 border border-gray-300 text-[#1A1A1A] font-medium py-3 rounded-xl hover:bg-gray-50 transition-colors">
-              Share Profile
-            </button>
-          </div>
 
           {/* Level Progress */}
           <section className="bg-white px-5 py-4 mt-2">
@@ -483,19 +504,21 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
         <div className="flex-1 pb-6">
           {/* Greeting Section */}
           <section className="bg-white px-5 py-6 mb-4">
-            <h1 className="font-bold mb-1" style={{ fontSize: '14pt', lineHeight: '1.2', color: '#EA580C' }}>
-              {getGreeting()}, {getUserDisplayName()}!
+            <h1 className="text-xl font-bold mb-1 text-[#8B0000]">
+              {getUserDisplayName()}
+              {getUserLocation() !== 'Location not set' && (
+                <span className="ml-2 text-sm font-normal opacity-70">
+                  <MapPin className="w-3 h-3 inline mr-1" />
+                  {getUserLocation()}
+                </span>
+              )}
             </h1>
-            <div className="flex items-center opacity-90" style={{ fontSize: '10pt' }}>
-              <MapPin className="w-3 h-3 mr-1" />
-              <span>{getUserLocation()}</span>
-            </div>
           </section>
 
           {/* My Crew */}
           <section className="mb-6">
             <div className="px-5 flex items-center justify-between mb-4">
-              <h2 className="font-bold" style={{ fontSize: '16pt', color: '#EA580C' }}>My Crew</h2>
+              <SectionHeading>My Crew</SectionHeading>
               <button className="text-[#FF6B35] text-sm font-medium">View All</button>
             </div>
             <div className="px-5">
@@ -541,7 +564,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           {/* Saved Recipes */}
           <section className="mb-6">
             <div className="px-5 flex items-center justify-between mb-4">
-              <h2 className="font-bold" style={{ fontSize: '16pt', color: '#EA580C' }}>Saved Recipes</h2>
+              <SectionHeading>Saved Recipes</SectionHeading>
               <button className="text-[#FF6B35] text-sm font-medium">See All</button>
             </div>
             {loadingSection.recipes ? (
@@ -577,9 +600,9 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                       </button>
                     </div>
                     <div className="p-3">
-                      <h3 className="font-bold mb-1 line-clamp-2 leading-tight" style={{ fontSize: '18pt', color: '#EA580C' }}>
+                      <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1 leading-tight">
                         {recipe.name}
-                      </h3>
+                      </CardHeading>
                       <div className="flex items-center gap-1.5" style={{ color: '#6B7280', fontSize: '10pt' }}>
                         <Clock className="w-3.5 h-3.5" />
                         <span>{recipe.time}</span>
@@ -599,7 +622,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           {/* Restaurant Recommendations */}
           <section className="mb-6">
             <div className="px-5 flex items-center justify-between mb-4">
-              <h2 className="font-bold" style={{ fontSize: '16pt', color: '#EA580C' }}>Nearby Restaurants</h2>
+              <SectionHeading>Nearby Restaurants</SectionHeading>
               <button className="flex items-center gap-1.5 text-[#FF6B35] text-sm font-medium">
                 <span>Map View</span>
                 <Navigation className="w-4 h-4 fill-current" />
@@ -642,9 +665,9 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                       </button>
                     </div>
                     <div className="p-4">
-                      <h3 className="font-bold mb-1 line-clamp-1" style={{ fontSize: '18pt', color: '#EA580C' }}>
+                      <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
                         {restaurant.name}
-                      </h3>
+                      </CardHeading>
                       <p className="mb-3" style={{ color: '#6B7280', fontSize: '10pt' }}>{restaurant.cuisine}</p>
                       <div className="flex items-center gap-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
                         <Navigation className="w-4 h-4 text-[#FF6B35]" />
@@ -665,7 +688,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           {/* Trending Food Posts */}
           <section className="mb-6">
             <div className="px-5 flex items-center justify-between mb-4">
-              <h2 className="font-bold" style={{ fontSize: '16pt', color: '#EA580C' }}>Trending Posts</h2>
+              <SectionHeading>Trending Posts</SectionHeading>
               <button className="text-[#FF6B35] text-sm font-medium">See All</button>
             </div>
             {loadingSection.masterbot ? (
@@ -703,9 +726,9 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                           {post.masterbot_name}
                         </span>
                       </div>
-                      <h3 className="font-bold mb-1 line-clamp-2" style={{ fontSize: '18pt', color: '#EA580C' }}>
+                      <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1">
                         {post.title}
-                      </h3>
+                      </CardHeading>
                       <p className="line-clamp-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
                         {post.content}
                       </p>
@@ -882,9 +905,9 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   )}
                 </div>
                 <div className="p-4">
-                  <h3 className="font-semibold mb-1 line-clamp-2" style={{ fontSize: '18pt', color: '#EA580C' }}>
+                  <CardHeading variant="accent" size="lg" weight="semibold" lineClamp={2} className="mb-1">
                     {(metadata.title as string) || (metadata.name as string) || 'Video'}
-                  </h3>
+                  </CardHeading>
                   {metadata.creator && (
                     <p className="text-sm" style={{ color: '#808080' }}>{metadata.creator as string}</p>
                   )}
@@ -932,9 +955,9 @@ function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant:
         )}
       </div>
       <div className="p-4">
-        <h3 className="font-bold mb-1 line-clamp-1" style={{ fontSize: '18pt', color: '#EA580C' }}>
+        <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
           {restaurant.name}
-        </h3>
+        </CardHeading>
         {restaurant.cuisine && (
           <p className="text-sm mb-2" style={{ color: '#808080' }}>
             {Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(', ') : restaurant.cuisine}

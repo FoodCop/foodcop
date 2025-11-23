@@ -1,4 +1,6 @@
 import { toast } from 'sonner';
+import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface GamifiedToastOptions {
   message: string;
@@ -7,6 +9,7 @@ interface GamifiedToastOptions {
   showContinue?: boolean;
   onContinue?: () => void;
   continueText?: string;
+  position?: 'center' | 'top-center' | 'bottom-center';
 }
 
 // Track active toasts to prevent duplicates
@@ -53,9 +56,18 @@ const colorMap = {
 };
 
 export const gamifiedToast = (options: GamifiedToastOptions) => {
-  const { message, type, title, showContinue = false, onContinue, continueText = 'Continue' } = options;
+  const { 
+    message, 
+    type, 
+    title, 
+    showContinue = false, 
+    onContinue, 
+    continueText = 'Continue',
+    position = 'top-center'
+  } = options;
   const colors = colorMap[type];
   const displayTitle = title || colors.defaultTitle;
+  const isCenter = position === 'center';
 
   // Create a unique key for this toast based on message and type
   const toastKey = `${type}-${message}`;
@@ -78,24 +90,114 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
     }
   }
 
-  return toast.custom((t) => (
-    <div
-      className="bg-white rounded-xl shadow-lg p-6 w-96 pointer-events-auto border-2"
-      style={{
-        borderColor: colors.border,
-        fontSize: '12pt',
-      }}
-    >
+  return toast.custom((t) => {
+    // For center toasts, use portal to render outside Sonner's container
+    if (isCenter) {
+      const CenterToast = () => {
+        useEffect(() => {
+          return () => {
+            // Cleanup handled by Sonner
+          };
+        }, []);
+        
+        return createPortal(
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]"
+              onClick={() => toast.dismiss(t)}
+              style={{
+                animation: 'fadeIn 0.2s ease-out',
+              }}
+            />
+            
+            {/* Toast Container */}
+            <div
+              className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-md w-[90%] z-[9999] bg-white rounded-xl shadow-lg p-6 pointer-events-auto border-2"
+              style={{
+                borderColor: '#EEE',
+                fontSize: '12pt',
+                animation: 'toastCenterIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center flex-1">
+                  {/* Logo - no background, as-is */}
+                  <div 
+                    className="w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 p-2"
+                  >
+                    <img 
+                      src="/logo_white.png"
+                      alt="FUZO"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  
+                  {/* Title and Message - grey text on white background */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-semibold text-gray-800 mb-1">
+                      {displayTitle}
+                    </h3>
+                    <p className="text-sm" style={{ color: '#808080' }}>
+                      {message}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Action Button - Continue or Close */}
+                {showContinue ? (
+                  <button
+                    onClick={() => {
+                      onContinue?.();
+                      toast.dismiss(t);
+                    }}
+                    className="ml-4 px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105 flex-shrink-0"
+                    style={{
+                      backgroundColor: colors.bg,
+                    }}
+                  >
+                    {continueText}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => toast.dismiss(t)}
+                    className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label="Close"
+                  >
+                    <i className="fa-solid fa-xmark text-lg" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </>,
+          document.body
+        );
+      };
+      
+      return <CenterToast />;
+    }
+    
+    // Regular toast (non-center) - rendered normally by Sonner
+    return (
+      <div className="relative">
+        {/* Toast Container */}
+        <div
+          className="bg-white rounded-xl shadow-lg p-6 pointer-events-auto border-2 w-96"
+          style={{
+            borderColor: '#EEE',
+            fontSize: '12pt',
+          }}
+        >
       <div className="flex items-center justify-between">
         <div className="flex items-center flex-1">
-          {/* Icon with circular background - only colored element */}
+          {/* Logo - no background, as-is */}
           <div 
-            className="w-12 h-12 rounded-full flex items-center justify-center mr-4 flex-shrink-0"
-            style={{ backgroundColor: hexToRgba(colors.bg, 0.10) }}
+            className="w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 p-2"
           >
-            <i 
-              className={`fa-solid ${colors.icon} text-2xl`}
-              style={{ color: colors.bg }}
+            <img 
+              src="/logo_white.png"
+              alt="FUZO"
+              className="w-full h-full object-contain"
             />
           </div>
           
@@ -133,10 +235,13 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
             <i className="fa-solid fa-xmark text-lg" />
           </button>
         )}
+        </div>
       </div>
     </div>
-  ), {
+    );
+  }, {
     duration: showContinue ? Infinity : 4000,
+    position: isCenter ? undefined : position, // Let Sonner handle non-center positions
   });
 };
 

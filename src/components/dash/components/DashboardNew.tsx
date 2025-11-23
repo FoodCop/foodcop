@@ -6,6 +6,8 @@ import { ProfileService } from "../../../services/profileService";
 import DashboardService, { type DashboardData } from "../../../services/dashboardService";
 import type { UserProfile } from "../../../types/profile";
 import { MinimalHeader } from "../../common/MinimalHeader";
+import { GeolocationService } from "../../../services/geolocationService";
+import { SectionHeading } from "../../ui/section-heading";
 
 export function DashboardNew() {
   const { user } = useAuth();
@@ -23,6 +25,31 @@ export function DashboardNew() {
     restaurants: true,
     masterbot: true
   });
+  const [currentLocation, setCurrentLocation] = useState<{ city?: string; state?: string } | null>(null);
+
+  // Get location from geolocation if profile doesn't have it
+  useEffect(() => {
+    const fetchGeolocation = async () => {
+      // Only fetch if profile doesn't have location
+      if (userProfile?.location_city) {
+        return;
+      }
+
+      try {
+        const locationData = await GeolocationService.getCurrentLocationData();
+        if (locationData) {
+          setCurrentLocation({
+            city: locationData.city,
+            state: locationData.state
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching geolocation:', error);
+      }
+    };
+
+    fetchGeolocation();
+  }, [userProfile]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -73,13 +100,6 @@ export function DashboardNew() {
     fetchDashboardData();
   }, [user]);
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
-  };
-
   const getUserDisplayName = () => {
     if (userProfile?.display_name) return userProfile.display_name;
     if (userProfile?.first_name) return userProfile.first_name;
@@ -90,9 +110,15 @@ export function DashboardNew() {
   };
 
   const getUserLocation = () => {
+    // First try profile location
     if (userProfile?.location_city) {
       const state = userProfile.location_state;
       return state ? `${userProfile.location_city}, ${state}` : userProfile.location_city;
+    }
+    // Then try geolocation
+    if (currentLocation?.city) {
+      const state = currentLocation.state;
+      return state ? `${currentLocation.city}, ${state}` : currentLocation.city;
     }
     return 'Location not set';
   };
@@ -126,12 +152,14 @@ export function DashboardNew() {
       {/* Header Content - Minimal */}
       <div className="px-4 pt-4 md:px-6 md:pt-6">
         <h1 className="font-bold mb-1" style={{ fontSize: '14pt', lineHeight: '1.2' }}>
-          {getGreeting()}, {getUserDisplayName()}!
+          {getUserDisplayName()}
+          {getUserLocation() !== 'Location not set' && (
+            <span className="ml-2 text-sm font-normal opacity-70">
+              <MapPin className="w-3 h-3 inline mr-1" />
+              {getUserLocation()}
+            </span>
+          )}
         </h1>
-        <div className="flex items-center opacity-90" style={{ fontSize: '10pt' }}>
-          <MapPin className="w-3 h-3 mr-1" />
-          <span>{getUserLocation()}</span>
-        </div>
       </div>
 
       {/* Desktop Header - White Card with Profile */}
@@ -139,12 +167,14 @@ export function DashboardNew() {
         <div className="bg-white rounded-3xl p-8 shadow-[0_2px_4px_0_rgba(0,0,0,0.1),0_4px_6px_0_rgba(0,0,0,0.1)] border border-gray-100">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-3">
-                <MapPin className="w-4 h-4 text-[#FF6B35]" />
-                <span className="text-sm text-[#6B7280]">{getUserLocation()}</span>
-              </div>
               <h1 className="text-4xl font-bold text-[#1A1A1A] mb-2">
-                {getGreeting()}, {getUserDisplayName()}!
+                {getUserDisplayName()}
+                {getUserLocation() !== 'Location not set' && (
+                  <span className="ml-3 text-xl font-normal text-[#6B7280]">
+                    <MapPin className="w-5 h-5 inline mr-1" />
+                    {getUserLocation()}
+                  </span>
+                )}
               </h1>
               <p className="text-lg text-[#6B7280]">Ready to discover something delicious?</p>
             </div>
@@ -190,7 +220,7 @@ export function DashboardNew() {
         <section className="mb-6 md:mb-10">
           {/* Mobile Header */}
           <div className="px-4 md:hidden flex items-center justify-between mb-4">
-            <h2 className="text-[#1A1A1A] font-bold text-xl">My Crew</h2>
+            <SectionHeading>My Crew</SectionHeading>
             <button className="text-[#FF6B35] text-sm font-medium">View All</button>
           </div>
           
@@ -238,7 +268,7 @@ export function DashboardNew() {
           <div className="hidden md:block px-6">
             <div className="bg-white rounded-3xl p-6 shadow-[0_2px_4px_0_rgba(0,0,0,0.1),0_4px_6px_0_rgba(0,0,0,0.1)]">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-[#1A1A1A]">My Crew</h2>
+                <SectionHeading>My Crew</SectionHeading>
                 <button className="text-[#FF6B35] font-medium hover:text-[#EA580C] transition-colors">View All</button>
               </div>
               {loadingSection.crew ? (
@@ -284,7 +314,7 @@ export function DashboardNew() {
         {/* Saved Recipes */}
         <section className="mb-6 md:mb-8">
           <div className="px-4 md:px-6 flex items-center justify-between mb-4">
-            <h2 className="text-[#1A1A1A] font-bold text-xl md:text-3xl">Saved Recipes</h2>
+            <SectionHeading>Saved Recipes</SectionHeading>
             <button className="text-[#FF6B35] text-sm md:text-base font-medium md:font-semibold">See All</button>
           </div>
           {loadingSection.recipes ? (
@@ -339,7 +369,7 @@ export function DashboardNew() {
         {/* Restaurant Recommendations */}
         <section className="mb-6 md:mb-8">
           <div className="px-4 md:px-6 flex items-center justify-between mb-4">
-            <h2 className="text-[#1A1A1A] font-bold text-xl md:text-3xl">Nearby Restaurants</h2>
+            <SectionHeading>Nearby Restaurants</SectionHeading>
             <button className="flex items-center gap-1.5 text-[#FF6B35] text-sm md:text-base font-medium md:font-semibold">
               <span>Map View</span>
               <Navigation className="w-4 h-4 fill-current" />
@@ -403,7 +433,7 @@ export function DashboardNew() {
         {/* Trending Food Posts */}
         <section className="mb-6">
           <div className="px-4 md:px-6 flex items-center justify-between mb-4">
-            <h2 className="text-[#1A1A1A] font-bold text-xl md:text-3xl">Trending Posts</h2>
+            <SectionHeading>Trending Posts</SectionHeading>
             <button className="text-[#FF6B35] text-sm md:text-base font-medium md:font-semibold">See All</button>
           </div>
           {loadingSection.masterbot ? (

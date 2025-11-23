@@ -8,6 +8,7 @@ import { ScoutDesktop } from './ScoutDesktop';
 import { GoogleMapView } from '../maps/GoogleMapView';
 import { MapView } from './components/MapView';
 import type { MapMarker } from '../maps/mapUtils';
+import { SectionHeading } from '../ui/section-heading';
 
 // Hook to detect screen size
 function useIsDesktop() {
@@ -437,7 +438,7 @@ export default function ScoutNew() {
         {!loading && !error && restaurants.length > 0 && (
           <section className="py-6">
             <div className="px-5 mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-900">Nearby Restaurants</h2>
+              <SectionHeading>Nearby Restaurants</SectionHeading>
               <button className="text-sm font-medium text-gray-500 hover:text-gray-700">View All</button>
             </div>
             
@@ -457,7 +458,7 @@ export default function ScoutNew() {
         {/* Featured Restaurant */}
         {!loading && !error && restaurants.length > 0 && (
           <section className="px-5 py-6 bg-gray-50">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Featured Restaurant</h2>
+            <SectionHeading className="mb-4">Featured Restaurant</SectionHeading>
             <FeaturedRestaurantCard
               restaurant={restaurants[0]}
               onClick={() => fetchRestaurantDetails(restaurants[0])}
@@ -468,7 +469,7 @@ export default function ScoutNew() {
 
         {/* Quick Filters */}
         <section className="px-5 py-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Filters</h2>
+          <SectionHeading className="mb-4">Quick Filters</SectionHeading>
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => handleCategoryClick('all')}
