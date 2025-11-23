@@ -110,19 +110,19 @@ export const toastHelpers = {
   },
 
   /**
-   * Show navigation hint toast
+   * Show navigation hint toast - unified format matching saved toasts
    */
-  navigationHint: (message: string, action?: ToastAction) => {
+  navigationHint: (message: string, action?: ToastAction, title?: string) => {
     const key = `navigationHint-${message}`;
     if (!shouldShowToast(key)) return null;
     
     return gamifiedToast({
       message,
       type: 'info',
-      title: 'Info',
+      title: title || 'Info',
       showContinue: !!action,
       onContinue: action?.onClick,
-      continueText: action?.label || 'Explore',
+      continueText: action?.label || 'Continue',
     });
   },
 
