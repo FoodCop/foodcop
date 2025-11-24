@@ -17,7 +17,7 @@ import { GeolocationService } from '../../services/geolocationService';
 import { CardHeading } from '../ui/card-heading';
 import { SectionHeading } from '../ui/section-heading';
 import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
-import { transformSavedItemToUnified, hydrateSavedRecipeToUnified } from '../../utils/unifiedContentTransformers';
+import { transformSavedItemToUnified, hydrateSavedRecipeToUnified, hydrateSavedVideoToUnified } from '../../utils/unifiedContentTransformers';
 import { savedItemsService } from '../../services/savedItemsService';
 
 type TabType = 'dashboard' | 'posts' | 'recipes' | 'videos' | 'places';
@@ -297,6 +297,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
         const unified =
           item.item_type === 'recipe'
             ? await hydrateSavedRecipeToUnified(item)
+            : item.item_type === 'video'
+            ? await hydrateSavedVideoToUnified(item)
             : transformSavedItemToUnified(item);
 
         openViewer(unified);
@@ -1112,7 +1114,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               >
                 <Trash className="w-4 h-4 text-red-500" />
               </button>
-              <RestaurantCardComponent restaurant={restaurant} onClick={() => void handleItemClick(item)} showFavoriteButton={false} />
+              <RestaurantCardComponent restaurant={restaurant} onClick={() => void handleItemClick(item)} />
             </div>
           );
           })}

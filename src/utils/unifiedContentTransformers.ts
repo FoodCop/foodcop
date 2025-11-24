@@ -7,6 +7,7 @@ import type {
 } from '../components/ui/universal-viewer/types';
 import type { SavedItem, PhotoMetadata, RecipeMetadata } from '../types/plate';
 import SpoonacularService from '../services/spoonacular';
+import YouTubeService from '../services/youtube';
 
 // TrimVideo type from Trims component
 interface TrimVideo {
@@ -214,28 +215,8 @@ export function transformVideoToUnified(data: VideoViewerData, savedItemId?: str
  * Transform TrimVideo to UnifiedContentData
  */
 export function transformTrimVideoToUnified(video: TrimVideo, savedItemId?: string): UnifiedContentData {
-  // Parse duration (format: "M:SS" or "MM:SS")
-  const parseDuration = (durationStr: string): number => {
-    const parts = durationStr.split(':');
-    if (parts.length === 2) {
-      return parseInt(parts[0]) * 60 + parseInt(parts[1]);
-    }
-    return 0;
-  };
-
-  // Parse views (format: "1.2M views" or "123K views" or "123 views")
-  const parseViews = (viewsStr: string): number => {
-    if (viewsStr === 'Unknown') return 0;
-    const match = viewsStr.match(/([\d.]+)([MK])?/);
-    if (match) {
-      const num = parseFloat(match[1]);
-      const suffix = match[2];
-      if (suffix === 'M') return Math.round(num * 1000000);
-      if (suffix === 'K') return Math.round(num * 1000);
-      return Math.round(num);
-    }
-    return 0;
-  };
+  const durationSeconds = parseDurationToSeconds(video.duration);
+  const viewCount = parseViewCountString(video.views);
 
   return {
     type: 'video',
@@ -247,9 +228,9 @@ export function transformTrimVideoToUnified(video: TrimVideo, savedItemId?: stri
       image: video.thumbnail,
     },
     metadata: {
-      duration: parseDuration(video.duration),
+      duration: durationSeconds,
       channelName: video.channelName,
-      viewCount: parseViews(video.views),
+      viewCount,
       tags: video.category,
       thumbnail: video.thumbnail,
     },
@@ -264,24 +245,34 @@ export function transformTrimVideoToUnified(video: TrimVideo, savedItemId?: stri
 export function transformSavedItemToUnified(item: SavedItem): UnifiedContentData {
   switch (item.item_type) {
     case 'recipe': {
-      const meta = item.metadata as RecipeMetadata;
+      const meta = item.metadata as RecipeMetadata | Record<string, unknown>;
+      const title = asString(meta.title) || 'Untitled Recipe';
+      const summary = asString(meta.summary) || '';
+      const image = asString(meta.image) || asString((meta as Record<string, unknown>).image_url) || '';
+      const sourceUrl = asString(meta.sourceUrl);
+      const diets = Array.isArray(meta.diets)
+        ? meta.diets.filter((diet): diet is string => typeof diet === 'string')
+        : [];
+      const readyInMinutes = asNumber(meta.readyInMinutes);
+      const servings = asNumber(meta.servings);
+      const healthScore = asNumber(meta.healthScore);
       return {
         type: 'recipe',
         id: item.id,
-        title: meta.title || 'Untitled Recipe',
-        description: meta.summary || '',
+        title,
+        description: summary,
         media: {
-          image: meta.image,
+          image,
         },
         metadata: {
           ingredients: [], // Not stored in metadata
           instructions: [], // Not stored in metadata
           nutrition: undefined,
-          readyInMinutes: meta.readyInMinutes,
-          servings: meta.servings,
-          diets: meta.diets || [],
-          healthScore: meta.healthScore,
-          sourceUrl: meta.sourceUrl,
+          readyInMinutes,
+          servings,
+          diets,
+          healthScore,
+          sourceUrl,
           spoonacularId: parseInt(item.item_id) || 0,
         },
         savedItemId: item.id,
@@ -336,67 +327,74 @@ export function transformSavedItemToUnified(item: SavedItem): UnifiedContentData
     }
 
     case 'photo': {
-      const meta = item.metadata as PhotoMetadata;
+      const meta = item.metadata as PhotoMetadata | Record<string, unknown>;
+      const title = asString(meta.title) || 'Photo';
+      const description = asString(meta.description);
+      const image = asString(meta.image_url) || asString(meta.image) || '';
+      const visitDate = asString(meta.visit_date);
+      const restaurantName = asString(meta.restaurant_name);
+      const rating = asNumber(meta.rating);
+      const tags = Array.isArray(meta.tags)
+        ? meta.tags.filter((tag): tag is string => typeof tag === 'string')
+        : [];
       return {
         type: 'photo',
         id: item.id,
-        title: meta.title || 'Photo',
-        description: meta.description,
+        title,
+        description,
         media: {
-          image: meta.image_url || meta.image || '',
+          image,
         },
         metadata: {
-          visitDate: meta.visit_date,
-          restaurantName: meta.restaurant_name,
-          rating: meta.rating,
-          tags: meta.tags || [],
+          visitDate,
+          restaurantName,
+          rating,
+          tags,
         },
         savedItemId: item.id,
       };
     }
 
-      case 'video': {
-      const meta = item.metadata as any;
-      
-      // Extract YouTube ID
-      const extractYouTubeId = (url: string): string | undefined => {
-        if (!url) return undefined;
-        const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
-        return match ? match[1] : undefined;
-      };
-      
-      const youtubeId = meta.videoId || 
-        (meta.id?.videoId) ||
-        (meta.youtubeUrl ? extractYouTubeId(meta.youtubeUrl) : undefined) ||
-        (meta.url ? extractYouTubeId(meta.url) : undefined);
+    case 'video': {
+      const meta = (item.metadata || {}) as Record<string, unknown>;
+      const youtubeId = extractSavedVideoId(meta, item.item_id);
+      const duration = normalizeDurationValue(meta.duration);
+      const snippetMeta = meta.snippet as Record<string, unknown> | undefined;
+      const statsMeta = meta.statistics as Record<string, unknown> | undefined;
 
-      // Parse duration
-      let duration: number | undefined;
-      if (typeof meta.duration === 'string') {
-        duration = parseDurationToSeconds(meta.duration);
-      } else if (typeof meta.duration === 'number') {
-        duration = meta.duration;
-      }
+      const safeDescription = asString(meta.description) || asString(snippetMeta?.description) || '';
+      const safeTitle = asString(meta.title) || asString(snippetMeta?.title) || 'Video';
+      const thumbnail =
+        asString(meta.thumbnail) ||
+        asString(meta.image) ||
+        (snippetMeta?.thumbnails as Record<string, any> | undefined)?.high?.url ||
+        '';
+      const tags = normalizeTags((meta.tags as unknown) ?? (meta.category as unknown));
+      const viewCount = asNumber(meta.viewCount) ?? asNumber(statsMeta?.viewCount) ?? asNumber(meta.views);
+      const channelName = asString(meta.channelName) || asString(snippetMeta?.channelTitle);
+      const channelAvatar = asString(meta.channelAvatar);
+      const subscriberCount = asNumber(meta.subscriberCount) ?? asNumber(statsMeta?.subscriberCount);
+      const uploadDate = asString(meta.uploadDate) || asString(snippetMeta?.publishedAt);
 
       return {
         type: 'video',
         id: item.id,
-        title: meta.title || meta.snippet?.title || 'Video',
-        description: meta.description || meta.snippet?.description || '',
+        title: safeTitle,
+        description: safeDescription,
         media: {
-          video: meta.url || (youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : undefined),
+          video: typeof meta.url === 'string' ? meta.url : youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : undefined,
           youtubeId,
-          image: meta.thumbnail || meta.snippet?.thumbnails?.high?.url,
+          image: thumbnail,
         },
         metadata: {
           duration,
-          channelName: meta.channelName || meta.snippet?.channelTitle,
-          channelAvatar: meta.channelAvatar,
-          viewCount: meta.viewCount || meta.statistics?.viewCount || (typeof meta.views === 'number' ? meta.views : undefined),
-          subscriberCount: meta.subscriberCount,
-          uploadDate: meta.uploadDate || meta.snippet?.publishedAt,
-          tags: meta.tags || meta.category || [],
-          thumbnail: meta.thumbnail || meta.snippet?.thumbnails?.high?.url,
+          channelName,
+          channelAvatar,
+          viewCount,
+          subscriberCount,
+          uploadDate,
+          tags,
+          thumbnail,
         },
         savedItemId: item.id,
       };
@@ -513,6 +511,84 @@ export async function hydrateSavedRecipeToUnified(item: SavedItem): Promise<Unif
 }
 
 /**
+ * Hydrate a saved video with YouTube data so it renders like Trims
+ */
+export async function hydrateSavedVideoToUnified(item: SavedItem): Promise<UnifiedContentData> {
+  if (item.item_type !== 'video') {
+    return transformSavedItemToUnified(item);
+  }
+
+  const meta = (item.metadata || {}) as Record<string, unknown>;
+  const videoId = extractSavedVideoId(meta, item.item_id);
+  let trimVideo: TrimVideo | null = null;
+
+  if (videoId) {
+    try {
+      const result = await YouTubeService.getVideoDetails(videoId);
+      const details = result.success ? result.data?.items?.[0] : undefined;
+
+      if (details) {
+        const snippet = details.snippet ?? {};
+        const statistics = details.statistics ?? {};
+        const contentDetails = details.contentDetails ?? {};
+        const snippetTags = normalizeTags(snippet.tags);
+        const fallbackTags = normalizeTags(meta.category ?? meta.tags);
+        const resolvedTags = snippetTags.length
+          ? snippetTags
+          : fallbackTags.length
+          ? fallbackTags
+          : ['Quick Bites'];
+
+        trimVideo = {
+          id: videoId,
+          title: snippet.title || (meta.title as string) || 'Video',
+          thumbnail:
+            snippet.thumbnails?.high?.url ||
+            snippet.thumbnails?.medium?.url ||
+            (meta.thumbnail as string) ||
+            (meta.image as string) ||
+            '',
+          channelName: snippet.channelTitle || (meta.channelName as string) || 'Unknown Creator',
+          views: formatViewCount(statistics.viewCount ?? meta.viewCount ?? meta.views),
+          duration: normalizeDurationDisplay(contentDetails.duration ?? meta.duration),
+          category: resolvedTags,
+          videoId,
+        };
+      }
+    } catch (error) {
+      console.error('Failed to hydrate video details for saved item', error);
+    }
+  }
+
+  if (!trimVideo) {
+    const fallbackTags = normalizeTags(meta.category ?? meta.tags);
+
+    trimVideo = {
+      id: videoId || item.id,
+      title:
+        asString(meta.title) ||
+        asString((meta.snippet as Record<string, unknown> | undefined)?.title) ||
+        'Video',
+      thumbnail:
+        asString(meta.thumbnail) ||
+        asString(meta.image) ||
+        ((meta.snippet as Record<string, unknown> | undefined)?.thumbnails as Record<string, any> | undefined)?.high?.url ||
+        '',
+      channelName:
+        asString(meta.channelName) ||
+        asString((meta.snippet as Record<string, unknown> | undefined)?.channelTitle) ||
+        'Unknown Creator',
+      views: typeof meta.views === 'string' ? meta.views : formatViewCount(meta.viewCount),
+      duration: normalizeDurationDisplay(meta.duration),
+      category: fallbackTags.length ? fallbackTags : ['Quick Bites'],
+      videoId: videoId || extractSavedVideoId(meta),
+    };
+  }
+
+  return transformTrimVideoToUnified(trimVideo, item.id);
+}
+
+/**
  * Transform any raw data to UnifiedContentData
  * Auto-detects type and transforms accordingly
  */
@@ -579,5 +655,238 @@ function extractYouTubeId(url: string): string | undefined {
   }
 
   return undefined;
+}
+
+function extractSavedVideoId(meta: Record<string, unknown>, fallbackId?: string): string | undefined {
+  if (typeof meta.videoId === 'string' && meta.videoId.trim()) {
+    return meta.videoId;
+  }
+
+  const nestedId = (meta.id as Record<string, unknown> | undefined)?.videoId;
+  if (typeof nestedId === 'string' && nestedId.trim()) {
+    return nestedId;
+  }
+
+  const urlCandidate =
+    (typeof meta.youtubeUrl === 'string' && meta.youtubeUrl) ||
+    (typeof meta.url === 'string' && meta.url);
+  if (urlCandidate) {
+    const extracted = extractYouTubeId(urlCandidate);
+    if (extracted) {
+      return extracted;
+    }
+  }
+
+  if (typeof fallbackId === 'string' && fallbackId.trim()) {
+    if (fallbackId.startsWith('trim_')) {
+      const trimmed = fallbackId.replace('trim_', '');
+      if (trimmed) {
+        return trimmed;
+      }
+    }
+    const match = fallbackId.match(/([\w-]{8,})/);
+    if (match?.[1]) {
+      return match[1];
+    }
+  }
+
+  return undefined;
+}
+
+function normalizeDurationValue(duration: unknown): number | undefined {
+  if (typeof duration === 'number') {
+    return Number.isFinite(duration) ? duration : undefined;
+  }
+
+  if (typeof duration === 'string') {
+    const seconds = parseDurationToSeconds(duration);
+    return seconds > 0 ? seconds : undefined;
+  }
+
+  return undefined;
+}
+
+function normalizeDurationDisplay(duration: unknown): string {
+  const seconds = parseDurationToSeconds(duration as string | number | undefined);
+  if (seconds <= 0) {
+    return '0:00';
+  }
+  return formatSecondsToTimestamp(seconds);
+}
+
+function parseDurationToSeconds(duration: string | number | undefined): number {
+  if (typeof duration === 'number') {
+    return Number.isFinite(duration) ? duration : 0;
+  }
+
+  if (!duration || typeof duration !== 'string') {
+    return 0;
+  }
+
+  if (duration.startsWith('PT')) {
+    const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if (!match) return 0;
+    const hours = parseInt(match[1] || '0', 10);
+    const minutes = parseInt(match[2] || '0', 10);
+    const seconds = parseInt(match[3] || '0', 10);
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+
+  if (duration.includes(':')) {
+    const parts = duration.split(':').map((part) => parseInt(part, 10));
+    if (parts.some((part) => Number.isNaN(part))) {
+      return 0;
+    }
+    let total = 0;
+    for (const part of parts) {
+      total = total * 60 + part;
+    }
+    return total;
+  }
+
+  const numeric = parseFloat(duration);
+  return Number.isNaN(numeric) ? 0 : numeric;
+}
+
+function formatSecondsToTimestamp(totalSeconds: number): string {
+  const safeSeconds = Math.max(0, Math.floor(totalSeconds));
+  const hours = Math.floor(safeSeconds / 3600);
+  const minutes = Math.floor((safeSeconds % 3600) / 60);
+  const seconds = safeSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function parseViewCountString(value: string): number {
+  if (!value || value === 'Unknown') return 0;
+  const cleaned = value.replace(/views?/i, '').trim();
+  const match = cleaned.match(/([\d.]+)([MK])?/i);
+  if (!match) {
+    const numeric = parseFloat(cleaned);
+    return Number.isNaN(numeric) ? 0 : Math.round(numeric);
+  }
+
+  const quantity = parseFloat(match[1]);
+  if (Number.isNaN(quantity)) return 0;
+  const suffix = match[2]?.toUpperCase();
+  if (suffix === 'M') return Math.round(quantity * 1_000_000);
+  if (suffix === 'K') return Math.round(quantity * 1_000);
+  return Math.round(quantity);
+}
+
+function formatViewCount(value?: unknown): string {
+  if (value === null || value === undefined) {
+    return 'Unknown';
+  }
+
+  if (typeof value === 'number') {
+    return formatNumericCount(value);
+  }
+
+  if (typeof value === 'string') {
+    const cleaned = value.replace(/views?/i, '').replace(/,/g, '').trim();
+    const numeric = parseFloat(cleaned);
+    if (!Number.isNaN(numeric)) {
+      return formatNumericCount(numeric);
+    }
+    return value;
+  }
+
+  return 'Unknown';
+}
+
+function formatNumericCount(count: number): string {
+  if (!Number.isFinite(count) || count < 0) {
+    return 'Unknown';
+  }
+
+  if (count >= 1_000_000) {
+    return `${trimTrailingZeros((count / 1_000_000).toFixed(1))}M views`;
+  }
+
+  if (count >= 1_000) {
+    return `${trimTrailingZeros((count / 1_000).toFixed(1))}K views`;
+  }
+
+  return `${Math.round(count)} views`;
+}
+
+function trimTrailingZeros(value: string): string {
+  return value.replace(/\.0$/, '');
+}
+
+function normalizeTags(input: unknown): string[] {
+  if (!input) {
+    return [];
+  }
+
+  const tokens: string[] = [];
+
+  const addFromValue = (value: unknown) => {
+    if (!value) return;
+    if (Array.isArray(value)) {
+      value.forEach(addFromValue);
+      return;
+    }
+    if (typeof value === 'string') {
+      tokens.push(...splitTagString(value));
+      return;
+    }
+  };
+
+  addFromValue(input);
+
+  const seen = new Set<string>();
+  const normalized: string[] = [];
+
+  for (const token of tokens) {
+    const trimmed = token.trim();
+    if (!trimmed) continue;
+    const key = trimmed.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    normalized.push(trimmed);
+  }
+
+  return normalized;
+}
+
+function splitTagString(value: string): string[] {
+  if (!value) return [];
+
+  const sections = value.split(/[\n,\/]+/);
+  const results: string[] = [];
+
+  for (const section of sections) {
+    const trimmedSection = section.trim();
+    if (!trimmedSection) continue;
+
+    if (trimmedSection.includes('#')) {
+      const parts = trimmedSection.split(/\s+/);
+      for (const part of parts) {
+        const cleaned = part.replace(/^#+/, '').replace(/[^\w-]+$/g, '').trim();
+        if (cleaned) {
+          results.push(cleaned.replace(/[-_]/g, ' ').trim());
+        }
+      }
+      continue;
+    }
+
+    results.push(trimmedSection);
+  }
+
+  return results;
+}
+
+function asString(value: unknown): string | undefined {
+  return typeof value === 'string' ? value : undefined;
+}
+
+function asNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
 }
 
