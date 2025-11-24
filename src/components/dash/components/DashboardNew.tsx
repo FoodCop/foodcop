@@ -8,6 +8,8 @@ import type { UserProfile } from "../../../types/profile";
 import { MinimalHeader } from "../../common/MinimalHeader";
 import { GeolocationService } from "../../../services/geolocationService";
 import { SectionHeading } from "../../ui/section-heading";
+import { PreferencesHintModal } from "../../common/PreferencesHintModal";
+import { PreferencesChips } from "../../common/PreferencesChips";
 
 export function DashboardNew() {
   const { user } = useAuth();
@@ -26,6 +28,28 @@ export function DashboardNew() {
     masterbot: true
   });
   const [currentLocation, setCurrentLocation] = useState<{ city?: string; state?: string } | null>(null);
+  const [showPreferencesHint, setShowPreferencesHint] = useState(false);
+
+  // Check if preferences hint should be shown
+  useEffect(() => {
+    const checkPreferencesHint = async () => {
+      if (!user) return;
+      
+      try {
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data) {
+          // Show hint if preferences_hint_shown is false or undefined
+          if (!profileResult.data.preferences_hint_shown) {
+            setShowPreferencesHint(true);
+          }
+        }
+      } catch (error) {
+        console.error('Error checking preferences hint:', error);
+      }
+    };
+
+    checkPreferencesHint();
+  }, [user]);
 
   // Get location from geolocation if profile doesn't have it
   useEffect(() => {
@@ -139,6 +163,41 @@ export function DashboardNew() {
     );
   }
 
+  const handlePreferencesUpdated = () => {
+    // Reload dashboard data when preferences are updated
+    if (user) {
+      const fetchDashboardData = async () => {
+        try {
+          const profileResult = await ProfileService.getProfile();
+          if (profileResult.success && profileResult.data) {
+            setUserProfile(profileResult.data);
+          }
+
+          let userLocation: { lat: number; lng: number } | undefined;
+          if ('geolocation' in navigator) {
+            try {
+              const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+              });
+              userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              };
+            } catch {
+              console.log('Geolocation not available');
+            }
+          }
+
+          const data = await DashboardService.fetchDashboardData(user.id, userLocation);
+          setDashboardData(data);
+        } catch (error) {
+          console.error('Error refreshing dashboard data:', error);
+        }
+      };
+      fetchDashboardData();
+    }
+  };
+
   return (
     <div 
       className="min-h-screen bg-[#FAFAFA] flex flex-col max-w-[375px] md:max-w-full lg:max-w-7xl mx-auto relative pb-20 md:pb-0 bg-cover bg-center bg-no-repeat"
@@ -147,6 +206,15 @@ export function DashboardNew() {
         fontSize: '10pt',
       }}
     >
+      {showPreferencesHint && (
+        <PreferencesHintModal
+          onClose={() => setShowPreferencesHint(false)}
+          onPreferencesSet={() => {
+            setShowPreferencesHint(false);
+            handlePreferencesUpdated();
+          }}
+        />
+      )}
       <MinimalHeader showLogo={true} logoPosition="left" />
       
       {/* Header Content - Minimal */}
@@ -160,6 +228,12 @@ export function DashboardNew() {
             </span>
           )}
         </h1>
+        <div className="mt-2">
+          <PreferencesChips 
+            userProfile={userProfile} 
+            onPreferencesUpdated={handlePreferencesUpdated}
+          />
+        </div>
       </div>
 
       {/* Desktop Header - White Card with Profile */}
@@ -176,7 +250,11 @@ export function DashboardNew() {
                   </span>
                 )}
               </h1>
-              <p className="text-lg text-[#6B7280]">Ready to discover something delicious?</p>
+              <p className="text-lg text-[#6B7280] mb-3">Ready to discover something delicious?</p>
+              <PreferencesChips 
+                userProfile={userProfile} 
+                onPreferencesUpdated={handlePreferencesUpdated}
+              />
             </div>
             {userProfile?.avatar_url && (
               <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#FF6B35] shadow-lg shrink-0 ml-6 bg-gray-200">

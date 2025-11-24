@@ -15,7 +15,9 @@ export interface UserProfile {
   location_country?: string;
   preferences?: UserPreferences;
   dietary_restrictions?: string[];
+  dietary_preferences?: string[];
   cuisine_preferences?: string[];
+  preferences_hint_shown?: boolean;
   onboarding_completed?: boolean;
   created_at?: string;
   updated_at?: string;
@@ -58,6 +60,7 @@ export interface ProfileUpdateParams {
   location_country?: string;
   dietary_preferences?: string[];
   cuisine_preferences?: string[];
+  preferences_hint_shown?: boolean;
   onboarding_completed?: boolean;
   preferences?: Partial<UserPreferences>;
 }

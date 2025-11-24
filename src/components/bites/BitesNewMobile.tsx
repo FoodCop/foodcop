@@ -115,21 +115,63 @@ export default function BitesNewMobile() {
     setError(null);
 
     try {
-      // Load recommended recipes
-      const recommendedResult = await SpoonacularService.searchRecipes({
+      // Fetch user preferences
+      let userPreferences: string[] = [];
+      if (user) {
+        const { ProfileService } = await import('../../services/profileService');
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data?.dietary_preferences) {
+          userPreferences = profileResult.data.dietary_preferences;
+        }
+      }
+
+      // Map preferences to Spoonacular diet parameter
+      const { getSpoonacularDietParam } = await import('../../utils/preferenceMapper');
+      const dietParam = getSpoonacularDietParam(userPreferences);
+
+      // Build search params
+      const searchParams: Parameters<typeof SpoonacularService.searchRecipes>[0] = {
         query: 'popular',
         number: 6,
-      });
+      };
 
-      // Load trending recipes
-      const trendingResult = await SpoonacularService.getRandomRecipes(6, 'popular');
+      // Add diet filter if user has preferences
+      if (dietParam) {
+        searchParams.diet = dietParam;
+      }
+
+      // Load recommended recipes
+      const recommendedResult = await SpoonacularService.searchRecipes(searchParams);
+
+      // Load trending recipes (also apply preferences)
+      const trendingParams: Parameters<typeof SpoonacularService.getRandomRecipes>[1] = dietParam || undefined;
+      const trendingResult = await SpoonacularService.getRandomRecipes(6, trendingParams);
+
+      // Check shuffle state once and import utilities
+      const { shuffleArray, hasRecipesBeenShuffled, markRecipesAsShuffled } = await import('../../utils/preferenceMapper');
+      const shouldShuffle = !hasRecipesBeenShuffled();
 
       if (recommendedResult.success && recommendedResult.data?.results) {
-        setRecommendedRecipes(transformRecipes(recommendedResult.data.results));
+        let recipes = transformRecipes(recommendedResult.data.results);
+        
+        // Shuffle on first load only
+        if (shouldShuffle) {
+          recipes = shuffleArray(recipes);
+          markRecipesAsShuffled();
+        }
+        
+        setRecommendedRecipes(recipes);
       }
 
       if (trendingResult.success && trendingResult.data?.recipes) {
-        setTrendingRecipes(transformRecipes(trendingResult.data.recipes));
+        let recipes = transformRecipes(trendingResult.data.recipes);
+        
+        // Shuffle trending recipes too on first load (if not already shuffled)
+        if (shouldShuffle) {
+          recipes = shuffleArray(recipes);
+        }
+        
+        setTrendingRecipes(recipes);
       }
     } catch (err) {
       console.error('Failed to load recipes:', err);
@@ -147,13 +189,30 @@ export default function BitesNewMobile() {
     setViewMode('search');
 
     try {
+      // Fetch user preferences
+      let userPreferences: string[] = [];
+      if (user) {
+        const { ProfileService } = await import('../../services/profileService');
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data?.dietary_preferences) {
+          userPreferences = profileResult.data.dietary_preferences;
+        }
+      }
+
+      // Map preferences to Spoonacular diet parameter
+      const { getSpoonacularDietParam } = await import('../../utils/preferenceMapper');
+      const userDietParam = getSpoonacularDietParam(userPreferences);
+
       const params: Parameters<typeof SpoonacularService.searchRecipes>[0] = {
         query: searchQuery,
         number: 12,
       };
 
+      // Use user preferences if no manual diet filter is selected, otherwise use manual filter
       if (selectedDiet !== 'all') {
         params.diet = selectedDiet;
+      } else if (userDietParam) {
+        params.diet = userDietParam;
       }
 
       if (selectedMealType) {

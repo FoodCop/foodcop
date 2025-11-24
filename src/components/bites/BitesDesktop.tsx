@@ -40,13 +40,45 @@ const BitesDesktop: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const results = await SpoonacularService.searchRecipes({
+      // Fetch user preferences
+      let userPreferences: string[] = [];
+      if (user) {
+        const { ProfileService } = await import('../../services/profileService');
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data?.dietary_preferences) {
+          userPreferences = profileResult.data.dietary_preferences;
+        }
+      }
+
+      // Map preferences to Spoonacular diet parameter
+      const { getSpoonacularDietParam } = await import('../../utils/preferenceMapper');
+      const dietParam = getSpoonacularDietParam(userPreferences);
+
+      // Build search params
+      const searchParams: Parameters<typeof SpoonacularService.searchRecipes>[0] = {
         query: 'popular',
         number: 12
-      });
+      };
+
+      // Add diet filter if user has preferences
+      if (dietParam) {
+        searchParams.diet = dietParam;
+      }
+
+      const results = await SpoonacularService.searchRecipes(searchParams);
+      
       if (results.success && results.data?.results) {
-        setRecommendedRecipes(results.data.results.slice(0, 6));
-        setRecipes(results.data.results);
+        let allRecipes = results.data.results;
+        
+        // Shuffle on first load only
+        const { shuffleArray, hasRecipesBeenShuffled, markRecipesAsShuffled } = await import('../../utils/preferenceMapper');
+        if (!hasRecipesBeenShuffled()) {
+          allRecipes = shuffleArray(allRecipes);
+          markRecipesAsShuffled();
+        }
+        
+        setRecommendedRecipes(allRecipes.slice(0, 6));
+        setRecipes(allRecipes);
       }
     } catch (err) {
       setError('Failed to load recipes');

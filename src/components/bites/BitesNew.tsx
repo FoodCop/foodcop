@@ -5,6 +5,7 @@ import { RecipeDetailDialog } from "./components/RecipeDetailDialog";
 import { SpoonacularService } from "../../services/spoonacular";
 import { useAuth } from "../auth/AuthProvider";
 import { SectionHeading } from "../ui/section-heading";
+import { ProfileService } from "../../services/profileService";
 
 // Spoonacular API response types
 interface SpoonacularRecipe {
@@ -68,7 +69,31 @@ export default function BitesNew() {
     setError(null);
     
     try {
-      const result = await SpoonacularService.searchRecipes({ query, number: 12 });
+      // Fetch user preferences
+      let userPreferences: string[] = [];
+      if (user) {
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data?.dietary_preferences) {
+          userPreferences = profileResult.data.dietary_preferences;
+        }
+      }
+
+      // Map preferences to Spoonacular diet parameter
+      const { getSpoonacularDietParam } = await import('../../utils/preferenceMapper');
+      const dietParam = getSpoonacularDietParam(userPreferences);
+
+      // Build search params
+      const searchParams: Parameters<typeof SpoonacularService.searchRecipes>[0] = {
+        query,
+        number: 12
+      };
+
+      // Add diet filter if user has preferences
+      if (dietParam) {
+        searchParams.diet = dietParam;
+      }
+
+      const result = await SpoonacularService.searchRecipes(searchParams);
       
       if (result.success && result.data?.results) {
         const transformedRecipes: Recipe[] = result.data.results.map((recipe: SpoonacularRecipe) => ({
@@ -91,7 +116,16 @@ export default function BitesNew() {
           cookingMinutes: recipe.cookingMinutes,
         }));
         
-        setRecipes(transformedRecipes);
+        // Shuffle on first load only
+        const { shuffleArray, hasRecipesBeenShuffled, markRecipesAsShuffled } = await import('../../utils/preferenceMapper');
+        let finalRecipes = transformedRecipes;
+        
+        if (!hasRecipesBeenShuffled()) {
+          finalRecipes = shuffleArray(transformedRecipes);
+          markRecipesAsShuffled();
+        }
+        
+        setRecipes(finalRecipes);
       } else {
         setError(result.error || "Failed to load recipes");
       }
@@ -125,12 +159,9 @@ export default function BitesNew() {
     setDialogOpen(true);
   };
 
-  const handleRandomize = () => {
-    const shuffled = [...recipes].sort(() => {
-      const array = new Uint32Array(1);
-      crypto.getRandomValues(array);
-      return (array[0] / 0xFFFFFFFF) - 0.5;
-    });
+  const handleRandomize = async () => {
+    const { shuffleArray } = await import('../../utils/preferenceMapper');
+    const shuffled = shuffleArray([...recipes]);
     setRecipes(shuffled);
   };
 

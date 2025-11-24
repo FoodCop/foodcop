@@ -19,6 +19,8 @@ import { SectionHeading } from '../ui/section-heading';
 import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
 import { transformSavedItemToUnified, hydrateSavedRecipeToUnified, hydrateSavedVideoToUnified } from '../../utils/unifiedContentTransformers';
 import { savedItemsService } from '../../services/savedItemsService';
+import { PreferencesHintModal } from '../common/PreferencesHintModal';
+import { PreferencesChips } from '../common/PreferencesChips';
 
 type TabType = 'dashboard' | 'posts' | 'recipes' | 'videos' | 'places';
 
@@ -98,11 +100,33 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
     masterbot: true
   });
   const [currentLocation, setCurrentLocation] = useState<{ city?: string; state?: string } | null>(null);
+  const [showPreferencesHint, setShowPreferencesHint] = useState(false);
   
   // Mock user data - will be replaced with real data
   const userPoints = 2450;
   const userRewards = 18;
   const userLevel = getUserLevel(userPoints);
+  
+  // Check if preferences hint should be shown
+  useEffect(() => {
+    const checkPreferencesHint = async () => {
+      if (!user) return;
+      
+      try {
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data) {
+          // Show hint if preferences_hint_shown is false or undefined
+          if (!profileResult.data.preferences_hint_shown) {
+            setShowPreferencesHint(true);
+          }
+        }
+      } catch (error) {
+        console.error('Error checking preferences hint:', error);
+      }
+    };
+
+    checkPreferencesHint();
+  }, [user]);
   
   // Get location from geolocation if profile doesn't have it
   useEffect(() => {
@@ -356,8 +380,49 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
     { type: 'like', user: 'Anna Martinez', action: 'liked your post', time: '2 days ago', thumbnail: '' },
   ];
 
+  const handlePreferencesUpdated = async () => {
+    // Reload profile and dashboard data when preferences are updated
+    if (user) {
+      try {
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data) {
+          setUserProfile(profileResult.data);
+        }
+
+        let userLocation: { lat: number; lng: number } | undefined;
+        if ('geolocation' in navigator) {
+          try {
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+            });
+            userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+          } catch {
+            console.log('Geolocation not available');
+          }
+        }
+
+        const data = await DashboardService.fetchDashboardData(user.id, userLocation);
+        setDashboardData(data);
+      } catch (error) {
+        console.error('Error refreshing data:', error);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col" style={{ backgroundImage: 'url(/bg.svg)', backgroundRepeat: 'repeat' }}>
+      {showPreferencesHint && (
+        <PreferencesHintModal
+          onClose={() => setShowPreferencesHint(false)}
+          onPreferencesSet={() => {
+            setShowPreferencesHint(false);
+            handlePreferencesUpdated();
+          }}
+        />
+      )}
       <MinimalHeader />
       
       <div className="flex flex-1 pt-14">
@@ -496,6 +561,12 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                   </div>
                 </div>
                 <p className="mb-4" style={{ color: '#808080' }}>{getUserBio()}</p>
+                <div className="mb-3">
+                  <PreferencesChips 
+                    userProfile={userProfile} 
+                    onPreferencesUpdated={handlePreferencesUpdated}
+                  />
+                </div>
                 <div className="flex gap-3">
                   <button className="w-10 h-10 flex items-center justify-center text-[#FF6B35] border border-[#FF6B35] rounded-lg hover:bg-[#FF6B35] hover:text-white transition-colors">
                     <Settings className="w-5 h-5" />

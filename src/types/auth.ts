@@ -17,6 +17,7 @@ export interface AuthUser {
   following_count?: number;
   dietary_preferences?: string[];
   cuisine_preferences?: string[];
+  preferences_hint_shown?: boolean;
   updated_at?: string;
 }
 

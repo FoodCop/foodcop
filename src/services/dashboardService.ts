@@ -217,8 +217,7 @@ export class DashboardService {
         return [];
       }
 
-      const restaurants: DashboardRestaurant[] = response.data.results
-        .slice(0, 6) // Limit to 6 for dashboard
+      let restaurants: DashboardRestaurant[] = response.data.results
         .map((place: any) => ({
           id: place.place_id,
           name: place.name,
@@ -238,6 +237,25 @@ export class DashboardService {
           lng: place.geometry.location.lng
         }))
         .filter((r: DashboardRestaurant) => r.rating >= 4.0); // Only show highly rated
+
+      // Filter by cuisine preferences if available
+      if (preferences.cuisine_preferences && preferences.cuisine_preferences.length > 0) {
+        const preferredCuisines = preferences.cuisine_preferences.map(c => c.toLowerCase());
+        restaurants = restaurants.filter(r => {
+          const restaurantCuisine = r.cuisine.toLowerCase();
+          return preferredCuisines.some(pref => restaurantCuisine.includes(pref));
+        });
+      }
+
+      // Shuffle restaurants on first load
+      const { shuffleArray, hasRecipesBeenShuffled, markRecipesAsShuffled } = await import('../utils/preferenceMapper');
+      if (!hasRecipesBeenShuffled()) {
+        restaurants = shuffleArray(restaurants);
+        markRecipesAsShuffled();
+      }
+
+      // Limit to 6 for dashboard after filtering and shuffling
+      restaurants = restaurants.slice(0, 6);
 
       console.log('✅ Fetched restaurant recommendations:', restaurants.length);
       return restaurants;
@@ -279,7 +297,7 @@ export class DashboardService {
         return [];
       }
 
-      const masterbotPosts: DashboardMasterBotPost[] = (posts || []).map((post: any) => ({
+      let masterbotPosts: DashboardMasterBotPost[] = (posts || []).map((post: any) => ({
         id: post.id,
         masterbot_name: post.masterbot?.display_name || 'Food Bot',
         masterbot_avatar: post.masterbot?.avatar_url || '',
@@ -291,6 +309,13 @@ export class DashboardService {
         tags: post.tags || [],
         engagement_likes: post.engagement_likes || 0
       }));
+
+      // Shuffle masterbot posts on first load
+      const { shuffleArray, hasRecipesBeenShuffled, markRecipesAsShuffled } = await import('../utils/preferenceMapper');
+      if (!hasRecipesBeenShuffled()) {
+        masterbotPosts = shuffleArray(masterbotPosts);
+        markRecipesAsShuffled();
+      }
 
       console.log('✅ Fetched MasterBot posts:', masterbotPosts.length);
       return masterbotPosts;
