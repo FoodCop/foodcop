@@ -1,14 +1,106 @@
 // Universal Viewer TypeScript Interfaces
 // Based on analysis of Plate page saved items structure
 
-export type ViewerType = 'recipe' | 'restaurant' | 'photo' | 'video' | 'map';
+export type ViewerType = 'recipe' | 'restaurant' | 'photo' | 'video' | 'map' | 'post';
+
+// Unified Content Data Structure - Single structure for all media types
+export interface UnifiedContentData {
+  type: ViewerType;
+  id: string;
+  title: string;
+  description?: string;
+  
+  // Media (varies by type)
+  media: {
+    // For recipes/photos: image URL
+    image?: string;
+    // For videos: video URL or YouTube ID
+    video?: string;
+    youtubeId?: string;
+    // For restaurants: photos array
+    photos?: Array<{ url: string; reference?: string }>;
+    // For posts: content/images
+    content?: string;
+    images?: string[];
+  };
+  
+  // Metadata (type-specific)
+  metadata: {
+    // Recipe metadata
+    ingredients?: Array<{name: string; amount: string; unit?: string}>;
+    instructions?: string[];
+    nutrition?: {
+      calories?: number;
+      protein?: string;
+      carbs?: string;
+      fat?: string;
+    };
+    readyInMinutes?: number;
+    servings?: number;
+    diets?: string[];
+    healthScore?: number;
+    sourceUrl?: string;
+    spoonacularId?: number;
+    
+    // Restaurant metadata
+    location?: {lat: number; lng: number};
+    address?: string;
+    rating?: number;
+    priceLevel?: number;
+    openingHours?: {
+      open_now?: boolean;
+      weekday_text?: string[];
+    };
+    phoneNumber?: string;
+    website?: string;
+    googleMapsUrl?: string;
+    types?: string[];
+    googlePlaceId?: string;
+    
+    // Video metadata
+    duration?: number;
+    channelName?: string;
+    channelAvatar?: string;
+    viewCount?: number;
+    subscriberCount?: number;
+    uploadDate?: string;
+    thumbnail?: string;
+    
+    // Photo metadata
+    visitDate?: string;
+    restaurantName?: string;
+    
+    // Post metadata
+    author?: string;
+    authorAvatar?: string;
+    likes?: number;
+    comments?: number;
+    createdAt?: string;
+    
+    // Common metadata
+    tags?: string[];
+    [key: string]: any; // Allow additional fields
+  };
+  
+  // Actions
+  actions?: {
+    save?: () => void;
+    share?: () => void;
+    like?: () => void;
+    delete?: () => void;
+  };
+  
+  // Saved item ID for delete functionality
+  savedItemId?: string;
+}
 
 // Main viewer state interface
+// Supports both old ViewerData format and new UnifiedContentData format
 export interface ViewerState {
   isOpen: boolean;
   type: ViewerType | null;
-  data: ViewerData | null;
-  items?: ViewerData[] | null; // All items for navigation
+  data: ViewerData | UnifiedContentData | null;
+  items?: (ViewerData | UnifiedContentData)[] | null; // All items for navigation
   currentIndex: number; // Current item index
   itemIndex?: number; // Current item index (alternative name)
   totalItems?: number; // Total items count

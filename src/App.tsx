@@ -11,6 +11,8 @@ import { Toaster } from './components/ui/sonner'
 import { MobileRadialNav } from './components/navigation/MobileRadialNav'
 import { AIChatWidget } from './components/tako/components/AIChatWidget'
 import { NavigationHints } from './components/common/NavigationHints'
+import { UniversalViewerProvider, useUniversalViewer } from './contexts/UniversalViewerContext'
+import { UniversalViewer } from './components/ui/universal-viewer/UniversalViewer'
 import './App.css'
 import './styles/mobile.css'
 
@@ -133,6 +135,7 @@ function AppLayout() {
   const [showAIChat, setShowAIChat] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+  const { viewerState, closeViewer, navigateViewer, deleteHandler } = useUniversalViewer()
 
   // Apply color mode to CSS variable
   useEffect(() => {
@@ -389,6 +392,14 @@ function AppLayout() {
       {showNavigation && showAIChat && (
         <AIChatWidget position="top-right" />
       )}
+
+      {/* Universal Viewer - Available app-wide */}
+      <UniversalViewer
+        state={viewerState}
+        onClose={closeViewer}
+        onNavigate={navigateViewer}
+        onDelete={deleteHandler ? (itemId: string, itemType: string) => deleteHandler(itemId, itemType) : undefined}
+      />
     </div>
   );
 }
@@ -400,7 +411,9 @@ function App() {
       <BrowserRouter>
         <ScrollToTop />
         <AuthProvider>
-          <AppLayout />
+          <UniversalViewerProvider>
+            <AppLayout />
+          </UniversalViewerProvider>
         </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>

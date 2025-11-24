@@ -7,6 +7,8 @@ import { savedItemsService } from '../../services/savedItemsService';
 import { YouTubeService } from '../../services/youtube';
 import { MinimalHeader } from '../common/MinimalHeader';
 import { CardHeading } from '../ui/card-heading';
+import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
+import { transformTrimVideoToUnified } from '../../utils/unifiedContentTransformers';
 
 // YouTube API response types
 interface YouTubeVideo {
@@ -58,7 +60,7 @@ export default function TrimsMobile() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedVideo, setSelectedVideo] = useState<TrimVideo | null>(null);
+  const { openViewer } = useUniversalViewer();
   const [videos, setVideos] = useState<TrimVideo[]>([]);
   const [filteredVideos, setFilteredVideos] = useState<TrimVideo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -193,11 +195,8 @@ export default function TrimsMobile() {
   };
 
   const handleVideoClick = (video: TrimVideo) => {
-    setSelectedVideo(video);
-  };
-
-  const closeModal = () => {
-    setSelectedVideo(null);
+    const unified = transformTrimVideoToUnified(video);
+    openViewer(unified);
   };
 
   const handleSaveToPlate = async (video: TrimVideo) => {
@@ -334,16 +333,6 @@ export default function TrimsMobile() {
         </div>
       )}
 
-      {/* Video Player Modal */}
-      {selectedVideo && (
-        <VideoPlayerModal
-          video={selectedVideo}
-          onClose={closeModal}
-          onSave={handleSaveToPlate}
-          onShare={handleShare}
-        />
-      )}
-
       <style>{`
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
@@ -407,73 +396,3 @@ function VideoCard({
   );
 }
 
-// Video Player Modal Component
-function VideoPlayerModal({
-  video,
-  onClose,
-  onSave,
-  onShare
-}: {
-  video: TrimVideo;
-  onClose: () => void;
-  onSave: (video: TrimVideo) => void;
-  onShare: () => void;
-}) {
-  return (
-    <div 
-      className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <div 
-        className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto relative"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {/* Video Player */}
-        <div className="relative w-full bg-white" style={{ paddingBottom: '177.78%' }}>
-          <iframe
-            className="absolute top-0 left-0 w-full h-full"
-            src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1&color=white&modestbranding=1`}
-            title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-
-        {/* Video Info */}
-        <div className="p-5">
-          <h2 className="text-[#1A1A1A] font-bold text-lg mb-2">{video.title}</h2>
-          <div className="flex items-center gap-3 mb-1">
-            <p className="text-[#666666] text-sm">{video.channelName}</p>
-          </div>
-          <p className="text-[#666666] text-xs mb-5">{video.views} views</p>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            <button
-              onClick={() => onSave(video)}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#FF6B35] text-white rounded-xl font-medium hover:bg-[#EA580C] transition-colors"
-            >
-              <Bookmark className="w-4 h-4" />
-              Save to Plate
-            </button>
-            <button
-              onClick={onShare}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-[#1A1A1A] rounded-xl font-medium hover:bg-gray-200 transition-colors"
-            >
-              <Send className="w-4 h-4" />
-              Share
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}

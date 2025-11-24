@@ -5,11 +5,12 @@ import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
 import { toastHelpers } from '../../utils/toastHelpers';
 import type { Recipe } from './components/RecipeCard';
-import RecipeDetailView from './components/RecipeDetailView';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import BitesDesktop from './BitesDesktop';
 import { MinimalHeader } from '../common/MinimalHeader';
 import { SectionHeading } from '../ui/section-heading';
+import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
+import { transformBitesRecipeToUnified } from '../../utils/unifiedContentTransformers';
 
 interface SpoonacularRecipe {
   id: number;
@@ -77,6 +78,7 @@ const MEAL_TYPES = [
 export default function BitesNewMobile() {
   const isDesktop = useIsDesktop();
   const { user } = useAuth();
+  const { openViewer } = useUniversalViewer();
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedDiet, setSelectedDiet] = useState('all');
@@ -85,10 +87,9 @@ export default function BitesNewMobile() {
   const [recommendedRecipes, setRecommendedRecipes] = useState<Recipe[]>([]);
   const [trendingRecipes, setTrendingRecipes] = useState<Recipe[]>([]);
   const [searchResults, setSearchResults] = useState<Recipe[]>([]);
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'home' | 'search' | 'detail' | 'category'>('home');
+  const [viewMode, setViewMode] = useState<'home' | 'search' | 'category'>('home');
 
   useEffect(() => {
     loadInitialRecipes();
@@ -225,17 +226,19 @@ export default function BitesNewMobile() {
   };
 
   const handleRecipeClick = async (recipe: Recipe) => {
-    // Load full details
-    const result = await SpoonacularService.getRecipeInformation(recipe.id, true);
+    // Load full details if needed
+    let fullRecipe = recipe;
     
-    if (result.success && result.data) {
-      const fullRecipe = transformRecipes([result.data])[0];
-      setSelectedRecipe(fullRecipe);
-      setViewMode('detail');
-    } else {
-      setSelectedRecipe(recipe);
-      setViewMode('detail');
+    if (!recipe.instructions || !recipe.extendedIngredients || recipe.extendedIngredients.length === 0) {
+      const result = await SpoonacularService.getRecipeInformation(recipe.id, true);
+      if (result.success && result.data) {
+        fullRecipe = transformRecipes([result.data])[0];
+      }
     }
+    
+    // Transform and open in Universal Viewer
+    const unified = transformBitesRecipeToUnified(fullRecipe);
+    openViewer(unified);
   };
 
   const handleSaveRecipe = async (recipe: Recipe) => {
@@ -268,10 +271,7 @@ export default function BitesNewMobile() {
   };
 
   const handleBack = () => {
-    if (viewMode === 'detail') {
-      setViewMode(searchResults.length > 0 ? 'search' : 'home');
-      setSelectedRecipe(null);
-    } else if (viewMode === 'search' || viewMode === 'category') {
+    if (viewMode === 'search' || viewMode === 'category') {
       setViewMode('home');
       setSearchQuery('');
       setSearchResults([]);
@@ -284,10 +284,6 @@ export default function BitesNewMobile() {
     return <BitesDesktop />;
   }
 
-  // Show recipe detail view
-  if (viewMode === 'detail' && selectedRecipe) {
-    return <RecipeDetailView recipe={selectedRecipe} onBack={handleBack} onSave={() => handleSaveRecipe(selectedRecipe)} />;
-  }
 
   // Show search results or category results
   if ((viewMode === 'search' || viewMode === 'category') && searchResults.length > 0) {

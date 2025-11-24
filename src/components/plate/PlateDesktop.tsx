@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Heart, Clock, Navigation, Home, Search, MessageCircle, Bookmark, Settings, Rss, Scissors, Pizza } from 'lucide-react';
+import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Heart, Clock, Navigation, Home, Search, MessageCircle, Bookmark, Settings, Rss, Scissors, Pizza, Trash } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
 import { type SavedItem } from '../../services/savedItemsService';
@@ -16,6 +16,9 @@ import type { UserProfile } from '../../types/profile';
 import { GeolocationService } from '../../services/geolocationService';
 import { CardHeading } from '../ui/card-heading';
 import { SectionHeading } from '../ui/section-heading';
+import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
+import { transformSavedItemToUnified, hydrateSavedRecipeToUnified } from '../../utils/unifiedContentTransformers';
+import { savedItemsService } from '../../services/savedItemsService';
 
 type TabType = 'dashboard' | 'posts' | 'recipes' | 'videos' | 'places';
 
@@ -258,10 +261,52 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
     return false;
   });
 
-  const handleItemClick = (item: SavedItem) => {
-    console.log('Item clicked:', item);
-    toast.info('Item detail coming soon!');
-  };
+  const { openViewer } = useUniversalViewer();
+  
+  const handleDeleteSavedItem = useCallback(
+    async (item: SavedItem) => {
+      try {
+        const meta = item.metadata as Record<string, unknown>;
+        const itemName = (meta.title as string) || (meta.name as string) || 'this item';
+
+        const confirmed = window.confirm(`Delete "${itemName}" from your Plate?`);
+        if (!confirmed) return;
+
+        const result = await savedItemsService.unsaveItem({
+          itemId: item.item_id || item.id,
+          itemType: item.item_type as 'recipe' | 'video' | 'restaurant' | 'photo'
+        });
+
+        if (result.success) {
+          toast.success('Removed from Plate');
+          fetchAllSavedItems();
+        } else {
+          toast.error('Failed to remove item');
+        }
+      } catch (error) {
+        console.error('Error deleting item:', error);
+        toast.error('An error occurred while removing the item');
+      }
+    },
+    [fetchAllSavedItems]
+  );
+
+  const handleItemClick = useCallback(
+    async (item: SavedItem) => {
+      try {
+        const unified =
+          item.item_type === 'recipe'
+            ? await hydrateSavedRecipeToUnified(item)
+            : transformSavedItemToUnified(item);
+
+        openViewer(unified);
+      } catch (error) {
+        console.error('Error opening viewer:', error);
+        toast.error('Failed to open item details');
+      }
+    },
+    [openViewer]
+  );
 
   const getUserDisplayName = () => {
     if (user?.user_metadata?.full_name) return user.user_metadata.full_name;
@@ -1012,13 +1057,25 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               extendedIngredients: (metadata.extendedIngredients as any[]) || []
             };
             
-            return (
+          return (
+            <div key={item.id} className="relative">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteSavedItem(item);
+                }}
+                className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
+                aria-label="Delete saved recipe"
+              >
+                <Trash className="w-4 h-4 text-red-500" />
+              </button>
               <RecipeCard 
-                key={item.id} 
                 recipe={recipe} 
-                onClick={() => handleItemClick(item)} 
+                onClick={() => void handleItemClick(item)} 
               />
-            );
+            </div>
+          );
           })}
         </section>
       );
@@ -1042,7 +1099,22 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               image_url: metadata.image_url as string
             };
             
-            return <RestaurantCardComponent key={item.id} restaurant={restaurant} onClick={() => handleItemClick(item)} />;
+          return (
+            <div key={item.id} className="relative">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteSavedItem(item);
+                }}
+                className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
+                aria-label="Delete saved place"
+              >
+                <Trash className="w-4 h-4 text-red-500" />
+              </button>
+              <RestaurantCardComponent restaurant={restaurant} onClick={() => void handleItemClick(item)} showFavoriteButton={false} />
+            </div>
+          );
           })}
         </section>
       );
@@ -1059,9 +1131,20 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <button 
                 key={item.id}
                 type="button"
-                onClick={() => handleItemClick(item)}
-                className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow text-left w-full"
+                onClick={() => void handleItemClick(item)}
+                className="relative bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow text-left w-full"
               >
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteSavedItem(item);
+                  }}
+                  className="absolute top-3 right-3 z-20 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
+                  aria-label="Delete saved video"
+                >
+                  <Trash className="w-4 h-4 text-red-500" />
+                </button>
                 <div className="relative aspect-video bg-gray-900">
                   {((metadata.thumbnail_url || metadata.thumbnailUrl || metadata.image) as string | undefined) ? (
                     <img 

@@ -8,6 +8,8 @@ import { YouTubeService } from '../../services/youtube';
 import { MinimalHeader } from '../common/MinimalHeader';
 import { CardHeading } from '../ui/card-heading';
 import { SectionHeading } from '../ui/section-heading';
+import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
+import { transformTrimVideoToUnified } from '../../utils/unifiedContentTransformers';
 
 // TrimVideo interface for short-form cooking videos
 interface TrimVideo {
@@ -61,7 +63,7 @@ export default function TrimsDesktop() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedVideo, setSelectedVideo] = useState<TrimVideo | null>(null);
+  const { openViewer } = useUniversalViewer();
   const [currentPage, setCurrentPage] = useState(1);
   const [videos, setVideos] = useState<TrimVideo[]>([]);
   const [_loading, setLoading] = useState(true);
@@ -238,13 +240,8 @@ export default function TrimsDesktop() {
   };
 
   const handleVideoClick = (video: TrimVideo) => {
-    setSelectedVideo(video);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeModal = () => {
-    setSelectedVideo(null);
-    document.body.style.overflow = 'auto';
+    const unified = transformTrimVideoToUnified(video);
+    openViewer(unified);
   };
 
   const handlePageChange = (page: number) => {
@@ -295,17 +292,6 @@ export default function TrimsDesktop() {
   const handleShare = () => {
     toast.info('Share feature coming soon!');
   };
-
-  // ESC key listener for modal
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && selectedVideo) {
-        closeModal();
-      }
-    };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [selectedVideo]);
 
   return (
     <div 
@@ -557,15 +543,6 @@ export default function TrimsDesktop() {
         )}
       </main>
 
-      {/* Video Player Modal */}
-      {selectedVideo && (
-        <VideoPlayerModal 
-          video={selectedVideo} 
-          onClose={closeModal}
-          onSave={handleSaveToPlate}
-          onShare={handleShare}
-        />
-      )}
       </div>
       </div>
     </div>
@@ -622,73 +599,3 @@ function VideoCard({
   );
 }
 
-// Video Player Modal Component (imported from mobile but defined here for completeness)
-function VideoPlayerModal({
-  video,
-  onClose,
-  onSave,
-  onShare
-}: {
-  video: TrimVideo;
-  onClose: () => void;
-  onSave: (video: TrimVideo) => void;
-  onShare: () => void;
-}) {
-  return (
-    <div 
-      className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <div 
-        className="bg-white rounded-2xl w-full max-w-[800px] max-h-[90vh] overflow-y-auto relative"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-6 right-6 z-10 w-12 h-12 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
-        >
-          <X className="w-6 h-6" />
-        </button>
-
-        {/* Video Player */}
-        <div className="relative w-full bg-white rounded-t-2xl overflow-hidden" style={{ paddingBottom: '177.78%' }}>
-          <iframe
-            className="absolute top-0 left-0 w-full h-full"
-            src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1&color=white&modestbranding=1`}
-            title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-
-        {/* Video Info */}
-        <div className="p-8">
-          <h2 className="text-[#1A1A1A] font-bold text-xl mb-2">{video.title}</h2>
-          <div className="flex items-center gap-3 mb-1">
-            <p className="text-[#666666] text-base">{video.channelName}</p>
-          </div>
-          <p className="text-[#666666] text-sm mb-6">{video.views} views</p>
-
-          {/* Action Buttons */}
-          <div className="flex gap-4">
-            <button
-              onClick={() => onSave(video)}
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-[#FF6B35] text-white rounded-xl font-medium hover:bg-[#EA580C] transition-colors"
-            >
-              <Bookmark className="w-5 h-5" />
-              Save to Plate
-            </button>
-            <button
-              onClick={onShare}
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-100 text-[#1A1A1A] rounded-xl font-medium hover:bg-gray-200 transition-colors"
-            >
-              <Send className="w-5 h-5" />
-              Share with Crew
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}

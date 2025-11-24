@@ -9,26 +9,26 @@ import {
 } from 'lucide-react';
 import { SpoonacularService } from '../../services/spoonacular';
 import type { Recipe } from './components/RecipeCard';
-import { RecipeModal } from './components/RecipeModal';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
 import { MinimalHeader } from '../common/MinimalHeader';
 import { CardHeading } from '../ui/card-heading';
 import { SectionHeading } from '../ui/section-heading';
+import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
+import { transformBitesRecipeToUnified } from '../../utils/unifiedContentTransformers';
 
 type FilterType = 'All' | 'Vegetarian' | 'Vegan' | 'Gluten-Free' | 'Keto' | 'Low Carb';
 
 const BitesDesktop: React.FC = () => {
   const { user } = useAuth();
+  const { openViewer } = useUniversalViewer();
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recommendedRecipes, setRecommendedRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
 
   // Load initial recipes
   useEffect(() => {
@@ -140,9 +140,25 @@ const BitesDesktop: React.FC = () => {
     }
   };
 
-  const handleRecipeClick = (recipe: Recipe) => {
-    setSelectedRecipe(recipe);
-    setModalOpen(true);
+  const handleRecipeClick = async (recipe: Recipe) => {
+    // Load full recipe details if needed
+    let fullRecipe = recipe;
+    
+    // Check if we need to load full details
+    if (!recipe.instructions || !recipe.extendedIngredients || recipe.extendedIngredients.length === 0) {
+      try {
+        const result = await SpoonacularService.getRecipeInformation(recipe.id, true);
+        if (result.success && result.data) {
+          fullRecipe = result.data;
+        }
+      } catch (err) {
+        console.error('Error loading recipe details:', err);
+      }
+    }
+    
+    // Transform and open in Universal Viewer
+    const unified = transformBitesRecipeToUnified(fullRecipe);
+    openViewer(unified);
   };
 
   const handleSaveRecipe = async (recipe: Recipe, e: React.MouseEvent) => {
@@ -303,16 +319,6 @@ const BitesDesktop: React.FC = () => {
         )}
       </main>
 
-      {/* Recipe Modal */}
-      {modalOpen && selectedRecipe && (
-        <RecipeModal
-          recipe={selectedRecipe}
-          onClose={() => {
-            setModalOpen(false);
-            setSelectedRecipe(null);
-          }}
-        />
-      )}
     </div>
   );
 };

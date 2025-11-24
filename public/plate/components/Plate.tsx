@@ -9,8 +9,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Settings, Lock, MapPin, Users, User as UserIcon, Image, Video, FileText, Tag, Grid3x3, UserPlus, Check, UserCheck, Mail, MailX } from 'lucide-react';
 import { ProfileSettings } from './ProfileSettings';
 import { PrivacyPolicy } from './PrivacyPolicy';
-import { UniversalViewer } from '../../ui/universal-viewer';
-import { usePlateViewer } from '../../../hooks/usePlateViewer';
+import { useUniversalViewer } from '../../../contexts/UniversalViewerContext';
+import { transformSavedItemToUnified, transformSavedItemsToUnified, getUnifiedItemIndex } from '../../../utils/unifiedContentTransformers';
 import { supabase } from '../../../services/supabase';
 import FriendService, { type FriendData } from '../../../services/friendService';
 import { savedItemsService } from '../../../services';
@@ -80,8 +80,14 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
   const [crew, setCrew] = useState<CrewMember[]>([]); // Legacy - kept for compatibility
   const [places, setPlaces] = useState<SavedItem[]>([]);
 
-  // Universal Viewer state
-  const { viewerState, openViewer, closeViewer, navigateViewer } = usePlateViewer();
+  // Universal Viewer state - using global hook
+  const { openViewer, closeViewer, setDeleteHandler } = useUniversalViewer();
+  
+  // Set delete handler when component mounts
+  useEffect(() => {
+    setDeleteHandler(handleDeleteItem);
+    return () => setDeleteHandler(null);
+  }, [setDeleteHandler, handleDeleteItem]);
 
   // Confirmation dialog for delete operations
   const { showConfirm, ConfirmDialog } = useConfirmDialog();
@@ -468,9 +474,9 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
         return;
       }
 
-      // Delete the item
+      // Delete the item - itemId is the saved item ID from the database
       const result = await savedItemsService.unsaveItem({
-        itemId: item?.item_id || '',
+        itemId: item?.item_id || itemId, // Use item_id from SavedItem or fallback to itemId
         itemType: itemType as 'recipe' | 'video' | 'restaurant' | 'photo'
       });
 
@@ -753,7 +759,12 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
                     <button 
                       key={photo.id} 
                       className="aspect-square relative group cursor-pointer"
-                      onClick={() => openViewer(photo, photos, 'photo')}
+                      onClick={() => {
+                        const unified = transformSavedItemToUnified(photo);
+                        const allUnified = transformSavedItemsToUnified(photos);
+                        const index = getUnifiedItemIndex(allUnified, unified.id);
+                        openViewer(unified, allUnified, index);
+                      }}
                       aria-label={`View ${meta.title || 'photo'}`}
                     >
                       <img
@@ -787,7 +798,12 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
                     <Card 
                       key={recipe.id} 
                       className="cursor-pointer hover:shadow-lg transition-shadow"
-                      onClick={() => openViewer(recipe, recipes, 'recipe')}
+                      onClick={() => {
+                        const unified = transformSavedItemToUnified(recipe);
+                        const allUnified = transformSavedItemsToUnified(recipes);
+                        const index = getUnifiedItemIndex(allUnified, unified.id);
+                        openViewer(unified, allUnified, index);
+                      }}
                     >
                       <CardContent className="pt-6">
                         <h3 className="font-semibold mb-2">{meta.title}</h3>
@@ -872,7 +888,12 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
                     <Card 
                       key={video.id}
                       className="cursor-pointer hover:shadow-lg transition-shadow"
-                      onClick={() => openViewer(video, videos, 'video')}
+                      onClick={() => {
+                        const unified = transformSavedItemToUnified(video);
+                        const allUnified = transformSavedItemsToUnified(videos);
+                        const index = getUnifiedItemIndex(allUnified, unified.id);
+                        openViewer(unified, allUnified, index);
+                      }}
                     >
                       <CardContent className="pt-6">
                         <h3 className="mb-3">{title}</h3>
@@ -1092,13 +1113,7 @@ export function Plate({ userId, currentUser }: Readonly<PlateProps>) {
         </Tabs>
       </div>
 
-      {/* Universal Viewer Modal */}
-      <UniversalViewer 
-        state={viewerState}
-        onClose={closeViewer}
-        onNavigate={navigateViewer}
-        onDelete={handleDeleteItem}
-      />
+      {/* Universal Viewer is rendered globally at app root - no need to render here */}
       
       {/* Confirmation Dialog */}
       <ConfirmDialog />

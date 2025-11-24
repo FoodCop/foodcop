@@ -12,11 +12,15 @@ export { VideoViewer } from './viewers/VideoViewer';
 export { useUniversalViewer } from './hooks/useUniversalViewer';
 export { useKeyboardNav } from './hooks/useKeyboardNav';
 
+// Unified Content Renderer
+export { UnifiedContentRenderer } from './UnifiedContentRenderer';
+
 // Types
 export type {
   ViewerType,
   ViewerState,
   ViewerData,
+  UnifiedContentData,
   UniversalViewerProps,
   RecipeViewerData,
   RestaurantViewerData,

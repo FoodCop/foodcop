@@ -13,6 +13,8 @@ import { YouTubeService } from '../../../services/youtube';
 import { useAuth } from '../../auth/AuthProvider';
 import { toastHelpers } from '../../../utils/toastHelpers';
 import { CardHeading } from '../../ui/card-heading';
+import { useUniversalViewer } from '../../../contexts/UniversalViewerContext';
+import { transformTrimVideoToUnified } from '../../../utils/unifiedContentTransformers';
 
 // YouTube API response types
 interface YouTubeVideo {
@@ -48,10 +50,10 @@ export function Trims() {
   // Authentication
   const { user: _user } = useAuth();
   const navigate = useNavigate();
+  const { openViewer } = useUniversalViewer();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedVideo, setSelectedVideo] = useState<TrimVideo | null>(null);
   const [videos, setVideos] = useState<TrimVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -204,7 +206,10 @@ export function Trims() {
                   <VideoCard 
                     key={video.id} 
                     video={video} 
-                    onPlay={() => setSelectedVideo(video)}
+                    onPlay={() => {
+                      const unified = transformTrimVideoToUnified(video);
+                      openViewer(unified);
+                    }}
                   />
                 ))
               )}
@@ -213,81 +218,6 @@ export function Trims() {
         </div>
       </ScrollArea>
 
-      {/* Video Player Dialog */}
-      <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
-        <DialogContent className="max-w-sm md:max-w-lg max-h-[90vh] p-0 gap-0 bg-white overflow-hidden">
-          <DialogTitle className="sr-only">
-            {selectedVideo?.title || 'Video Player'}
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            {selectedVideo?.channelName || 'Playing video'}
-          </DialogDescription>
-          
-          <DialogClose className="absolute right-2 top-2 z-50 rounded-full bg-black/60 p-2 text-white hover:bg-black/80 transition-colors">
-            <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-          </DialogClose>
-          
-          {selectedVideo && (
-            <div className="w-full flex flex-col max-h-[90vh]">
-              {/* Video Container */}
-              <div className="bg-black">
-                <AspectRatio ratio={16 / 9} className="bg-black">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&rel=0`}
-                    title={selectedVideo.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                  />
-                </AspectRatio>
-              </div>
-              
-              {/* Video Info - Scrollable content area */}
-              <div className="bg-background px-4 py-3 flex-1 overflow-y-auto">
-                <h2 className="mb-1 line-clamp-2 font-semibold">{selectedVideo.title}</h2>
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-muted-foreground text-sm">{selectedVideo.channelName}</p>
-                  <span className="text-sm text-muted-foreground">{selectedVideo.views} views</span>
-                </div>
-                <div className="flex gap-2 flex-wrap mb-4">
-                  {selectedVideo.category.map(cat => (
-                    <Badge key={cat} variant="secondary" className="text-xs">
-                      {cat}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Fixed Action Buttons */}
-              <div className="bg-background border-t px-4 py-3 flex gap-3">
-                <SmartSaveButton
-                  item={selectedVideo}
-                  itemType="video"
-                  className="flex-1"
-                  onSaveSuccess={(savedItem, isDuplicate) => {
-                    toastHelpers.saved(selectedVideo.title, isDuplicate);
-                  }}
-                  onSaveError={(error) => {
-                    toastHelpers.error(`Failed to save video: ${error}`);
-                  }}
-                />
-                <Button 
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => {
-                    // Will be connected to share functionality
-                    console.log('Share to friend:', selectedVideo.id);
-                  }}
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  SHARE TO FRIEND
-                </Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
