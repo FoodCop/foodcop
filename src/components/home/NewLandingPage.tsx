@@ -111,9 +111,9 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
             </button>
             <button
               onClick={handleGetStarted}
-              className="hidden md:block px-6 py-2 bg-white text-foreground font-semibold rounded-full border-2 border-gray-300 hover:bg-gray-50 transition"
+              className="hidden md:block px-6 py-2 font-semibold rounded-full transition"
             >
-              Get Started
+              START
             </button>
             <button className="md:hidden focus:outline-none">
               <i className="fa-solid fa-bars text-foreground text-xl"></i>
@@ -134,16 +134,12 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         
         <div className="relative z-10 container mx-auto px-4 py-20 min-h-[600px] flex flex-col justify-center">
           <div className="flex flex-col items-center gap-8">
-            <div className="text-center max-w-2xl">
-              <h1 className="text-4xl font-bold text-white mb-6 leading-tight drop-shadow-lg text-center">
-                Unearth<br/>
-                <span className="text-white">the undiscovered gastronomy</span>
-              </h1>
+            <div className="text-center max-w-2xl">       
             
               <button
                 onClick={handleGetStarted}
-                className="bg-white hover:bg-gray-50 text-foreground font-bold text-lg px-10 py-4 rounded-full border-2 border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              > Get Started<i className="fa-solid fa-arrow-right ml-2"></i>
+                className="font-bold text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              > START<i className="fa-solid fa-arrow-right ml-2"></i>
               </button>
             </div>
             
@@ -164,17 +160,16 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         <div className="container mx-auto px-6 relative z-10">
           <div className="flex flex-col items-center text-center">
             <div className="max-w-4xl">
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg text-center">
-                Discover Your Next Favorite Meal
-              </h1>
-              <p className="text-xl md:text-2xl text-white mb-8 leading-relaxed drop-shadow-lg text-center">
-                Save recipes, watch cooking tutorials, share food stories, and explore restaurants with your AI food buddy Tako
-              </p>
+              <img 
+                src="/logo_white.png" 
+                alt="FUZO" 
+                className="mx-auto mb-8 h-32 md:h-40 lg:h-48 drop-shadow-lg" 
+              />
               <button
                 onClick={handleGetStarted}
-                className="px-8 py-4 bg-white text-foreground font-bold text-lg rounded-full border-2 border-gray-300 hover:bg-gray-50 transition shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                Get Started <i className="fa-solid fa-arrow-right ml-2"></i>
+                START <i className="fa-solid fa-arrow-right ml-2"></i>
               </button>
             </div>
             <div className="hidden md:flex justify-center items-center"></div>
@@ -186,11 +181,11 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="py-16 md:py-32 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6 text-center">
-              Pin Your Favorite Foods
-            </h2>
-            <p className="text-lg md:text-xl lg:text-2xl text-secondary max-w-2xl lg:max-w-3xl mx-auto text-center">
-              Save recipes, bookmark dishes, and create your personal food wishlist. Never lose track of that amazing recipe again.
+            <h2 className="heading-pin-food font-bold text-foreground mb-4 md:mb-6 text-center">
+            Save Everything You Love
+            </h2>            
+            <p className="body-text-mobile body-text-desktop text-secondary max-w-2xl lg:max-w-3xl mx-auto text-center mb-4">
+              Recipes, restaurant dishes, home-cooked ideas.Create your personal food library and never lose that amazing dish again.
             </p>
           </div>
           {/* Mobile: PhoneFan with animations */}
@@ -227,7 +222,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="md:hidden relative py-16 min-h-[700px] flex items-center">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://storage.googleapis.com/uxpilot-auth.appspot.com/facc971d01-9cb23a35020b35626d9c.png"
+            src="/images/cook_bg.jpg"
             alt="professional kitchen cooking scene, chef preparing food"
             className="w-full h-full object-cover"
           />
@@ -236,11 +231,11 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         
         <div className="relative z-10 container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4 text-center">
-              Cook &amp; Watch
-            </h2>
-            <p className="text-lg text-white max-w-2xl mx-auto text-center">
-              Learn from step-by-step video recipes and cooking guides. Master new techniques with expert chefs.
+            <h2 className="heading-cook-watch-mobile font-bold text-white mb-4 text-center">
+            Cook With Confidence
+            </h2>           
+            <p className="body-text-mobile text-white max-w-2xl mx-auto text-center mb-4">
+              Follow step-by-step video recipes and cook along with chefs and creators.            
             </p>
           </div>
           
@@ -249,7 +244,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
               <div className="phone-screen aspect-[9/19.5]">
                 <div className="phone-notch"></div>
                 <img
-                  src="/images/cook1.jpg"
+                  src="/images/cook_1.jpg"
                   alt="cooking video recipe interface"
                   className="w-full h-full object-cover"
                 />
@@ -288,7 +283,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="hidden md:block relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8590841fbf-3850affa462e7161230c.png"
+            src="/images/cook_bg.jpg"
             alt="professional kitchen with cooking utensils"
             className="w-full h-full object-cover"
           />
@@ -296,11 +291,12 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center">
-              Cook &amp; Watch
+            <h2 className="heading-cook-watch-desktop font-bold text-white mb-6 text-center">
+            Cook With Confidence
             </h2>
-            <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto text-center">
-              Follow step-by-step video recipes and cooking guides. Learn from professional chefs and master new techniques.
+          
+            <p className="body-text-mobile body-text-desktop text-white max-w-3xl mx-auto text-center mb-4">
+              Follow step-by-step video recipes and cook along with chefs and creators. Clear instructions, delicious results - every single time.
             </p>
           </div>
           <div className="flex justify-center items-end gap-6 md:gap-12">
@@ -327,7 +323,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="flex md:hidden relative py-16 min-h-[700px] items-center">
         <div className="absolute inset-0 z-0">
           <img
-            src="/Hero.png"
+            src="/images/share_bg.jpg"
             alt="beautiful food photography and plating"
             className="w-full h-full object-cover"
           />
@@ -336,11 +332,14 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         
         <div className="relative z-10 container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4 text-center">
-              Food Storyboard
-            </h2>
-            <p className="text-lg text-white max-w-2xl mx-auto text-center">
-              Share your culinary journey through stunning food photography and stories.
+            <h2 className="heading-food-storyboard-mobile font-bold text-white mb-4 text-center">
+            Your Food, Your Style
+            </h2>        
+            <p className="body-text-mobile text-white max-w-2xl mx-auto text-center mb-4">
+              Turn meals into memories.
+            </p>
+            <p className="body-text-mobile text-white max-w-2xl mx-auto text-center">
+              Share recipes, photos, and food moments with friends or your foodie community, beautifully and effortlessly.
             </p>
           </div>
           
@@ -388,7 +387,7 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="hidden md:block relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="/Hero.png"
+            src="/images/share_bg.jpg"
             alt="colorful flat lay of various dishes"
             className="w-full h-full object-cover"
           />
@@ -396,11 +395,11 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center">
-              Share Your Food Story
-            </h2>
-            <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto text-center">
-              Capture and share your culinary adventures. Connect with food lovers and inspire others with your food photography.
+            <h2 className="heading-food-storyboard-desktop font-bold text-white mb-6 text-center">
+            Your Food, Your Style
+            </h2>           
+            <p className="body-text-mobile body-text-desktop text-white max-w-3xl mx-auto text-center mb-4">
+              Turn meals into memories. Share recipes, photos, and food moments with friends or your foodie community, beautifully and effortlessly.
             </p>
           </div>
           <div className="flex justify-center items-end gap-6 md:gap-12">
@@ -427,11 +426,17 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="block md:hidden py-16 bg-linear-to-b from-primary/10 to-accent/10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Meet Tako, Your AI Food Buddy
-            </h2>
-            <p className="text-lg text-secondary max-w-2xl mx-auto">
-              Chat with Tako for personalized food recommendations, cooking tips, and dietary advice.
+            <h2 className="heading-tako-mobile font-bold text-foreground mb-4">
+              Meet Tako : Your AI Food Buddy
+            </h2>           
+            <p className="body-text-mobile text-secondary max-w-2xl mx-auto mb-4">
+              Ask for recipes, substitutes, meal ideas, or diet-friendly suggestions.
+            </p>
+            <p className="body-text-mobile text-secondary max-w-2xl mx-auto mb-4">
+              Tako learns your taste and gives you spot-on recommendations every time.
+            </p>
+            <p className="body-text-mobile text-secondary/80 italic max-w-2xl mx-auto">
+              "Tako, what can I cook with chicken, garlic, and tomatoes?"
             </p>
           </div>
           
@@ -448,11 +453,20 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="hidden md:block py-20 md:py-32 bg-linear-to-b from-yellow-50 to-orange-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-              Meet Tako, Your AI Food Buddy
+            <h2 className="heading-tako-desktop font-bold text-foreground mb-6">
+              Meet Tako: Your AI Food Buddy
             </h2>
-            <p className="text-xl md:text-2xl text-secondary max-w-3xl mx-auto">
-              Chat with Tako for personalized food recommendations, cooking tips, dietary advice, and culinary inspiration anytime.
+            <h3 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-4 text-center">
+              Your Smartest Kitchen Companion
+            </h3>
+            <p className="body-text-mobile body-text-desktop text-secondary max-w-3xl mx-auto mb-4">
+              Ask for recipes, substitutes, meal ideas, or diet-friendly suggestions.
+            </p>
+            <p className="body-text-mobile body-text-desktop text-secondary max-w-3xl mx-auto mb-4">
+              Tako learns your taste and gives you spot-on recommendations every time.
+            </p>
+            <p className="body-text-mobile body-text-desktop text-secondary/80 italic max-w-3xl mx-auto">
+              "Tako, what can I cook with chicken, garlic, and tomatoes?"
             </p>
           </div>
           <div className="flex justify-center items-end gap-6 md:gap-12">
@@ -479,11 +493,17 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="block md:hidden py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+            <h2 className="heading-explore-mobile font-bold text-foreground mb-4">
               Explore Food Everywhere
             </h2>
-            <p className="text-lg text-secondary max-w-2xl mx-auto">
-              Discover new restaurants, explore street food markets, and browse diverse menus.
+            <h3 className="text-2xl font-semibold text-foreground mb-3 text-center">
+              Discover Great Food Around You
+            </h3>
+            <p className="body-text-mobile text-secondary max-w-2xl mx-auto">
+              Find trending dishes, nearby restaurants, hidden gems, and local favorites.
+            </p>
+            <p className="body-text-mobile text-secondary max-w-2xl mx-auto">
+              Plan your next meal with real photos, honest ratings, and smart recommendations.
             </p>
           </div>
           
@@ -497,9 +517,9 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           <div className="text-center">
             <button
               onClick={handleGetStarted}
-              className="px-8 py-4 bg-white text-foreground font-bold text-lg rounded-full border-2 border-gray-300 hover:bg-gray-50 transition shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              Start Exploring <i className="fa-solid fa-utensils ml-2"></i>
+              EXPLORE <i className="fa-solid fa-utensils ml-2"></i>
             </button>
           </div>
         </div>
@@ -509,11 +529,17 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
       <section className="hidden md:block py-20 md:py-32 bg-background">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+            <h2 className="heading-explore-desktop font-bold text-foreground mb-6">
               Explore Food Everywhere
             </h2>
-            <p className="text-xl md:text-2xl text-secondary max-w-3xl mx-auto">
-              Discover new restaurants, explore street food markets, and browse diverse menus. Your next culinary adventure awaits.
+            <h3 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-4 text-center">
+              Discover Great Food Around You
+            </h3>
+            <p className="body-text-mobile body-text-desktop text-secondary max-w-3xl mx-auto mb-4">
+              Find trending dishes, nearby restaurants, hidden gems, and local favorites.
+            </p>
+            <p className="body-text-mobile body-text-desktop text-secondary max-w-3xl mx-auto">
+              Plan your next meal with real photos, honest ratings, and smart recommendations.
             </p>
           </div>
           <div className="flex justify-center items-end gap-6 md:gap-12 mb-16">
@@ -536,9 +562,9 @@ export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
           <div className="text-center mt-16">
             <button
               onClick={handleGetStarted}
-              className="px-8 py-4 bg-white text-foreground font-bold text-lg rounded-full border-2 border-gray-300 hover:bg-gray-50 transition shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              Start Exploring <i className="fa-solid fa-utensils ml-2"></i>
+              EXPLORE <i className="fa-solid fa-utensils ml-2"></i>
             </button>
           </div>
         </div>

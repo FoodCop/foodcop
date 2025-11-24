@@ -154,6 +154,7 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                     className="ml-4 px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105 flex-shrink-0"
                     style={{
                       backgroundColor: colors.bg,
+                      fontFamily: "'Courier Prime', monospace",
                     }}
                   >
                     {continueText}

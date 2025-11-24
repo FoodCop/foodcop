@@ -17,7 +17,6 @@ export function SectionHeading({
   as: Component = 'h2',
 }: SectionHeadingProps) {
   const classes = [
-    'font-serif',           // Georgia
     'font-bold',            // Bold (700)
     'text-lg',              // 18px base
     'text-[#1A1A1A]',       // Dark grey
@@ -26,6 +25,13 @@ export function SectionHeading({
     .filter(Boolean)
     .join(' ');
 
-  return <Component className={classes}>{children}</Component>;
+  return (
+    <Component 
+      className={classes}
+      style={{ fontFamily: "'Noto Serif Display', serif" }}
+    >
+      {children}
+    </Component>
+  );
 }
 

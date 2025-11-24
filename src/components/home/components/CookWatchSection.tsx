@@ -1,3 +1,4 @@
+import React from 'react';
 import { FuzoCard } from './FuzoCard';
 import { PhoneFan } from './PhoneFan';
 
@@ -6,7 +7,7 @@ export function CookWatchSection() {
     <section 
       className="py-20 relative bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `linear-gradient(rgba(11, 31, 58, 0.7), rgba(11, 31, 58, 0.7)), url('/images/cook_bg.jpg?v=2')`
+        backgroundImage: `url('/images/cook_bg.jpg')`
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

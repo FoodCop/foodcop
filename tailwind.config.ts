@@ -8,8 +8,8 @@ export default {
     extend: {
       fontFamily: {
         sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro', 'SF Pro Text', 'SF Pro Display', 'system-ui', 'sans-serif'],
-        serif: ['Georgia', 'serif'],
-        heading: ['Georgia', 'serif'],
+        serif: ['Noto Serif Display', 'serif'],
+        heading: ['Noto Serif Display', 'serif'],
       },
       colors: {
         background: 'var(--background)',
@@ -26,9 +26,9 @@ export default {
       },
       fontSize: {
         // Card heading font sizes
-        'card-heading-sm': ['1rem', { lineHeight: '1.5', fontWeight: '700' }],
-        'card-heading-md': ['1.125rem', { lineHeight: '1.5', fontWeight: '700' }],
-        'card-heading-lg': ['1.25rem', { lineHeight: '1.5', fontWeight: '700' }],
+        'card-heading-sm': ['1.125rem', { lineHeight: '1.5', fontWeight: '700' }], // 18px
+        'card-heading-md': ['1.25rem', { lineHeight: '1.5', fontWeight: '700' }], // 20px
+        'card-heading-lg': ['2rem', { lineHeight: '1.5', fontWeight: '700' }], // 32px
       },
     },
   },

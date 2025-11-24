@@ -97,12 +97,12 @@
     background-color: var(--background);
     color: var(--foreground);
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+    font-family: 'IBM Plex Serif', serif;
   }
 
-  /* Headings use Georgia */
+  /* Headings use Noto Serif Display */
   h1, h2, h3 {
-    font-family: 'Georgia', serif;
+    font-family: 'Noto Serif Display', serif;
   }
 
   /* H1 uses deep red color */
@@ -115,9 +115,9 @@
     color: #1A1A1A;
   }
 
-  /* Paragraphs use SF Pro and dark grey color */
+  /* Paragraphs use IBM Plex Serif and dark grey color */
   p {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+    font-family: 'IBM Plex Serif', serif;
     color: #1A1A1A;
   }
 }
@@ -125,7 +125,7 @@
 @layer base {
   :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
     h1 {
-      font-family: 'Georgia', serif;
+      font-family: 'Noto Serif Display', serif;
       font-size: var(--text-xl); /* Reduced from text-2xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
@@ -133,15 +133,15 @@
     }
 
     h2 {
-      font-family: 'Georgia', serif;
+      font-family: 'Noto Serif Display', serif;
       font-size: var(--text-lg); /* Reduced from text-xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
       color: #1A1A1A;
     }
 
-    h3 {
-      font-family: 'Georgia', serif;
+    h3:not([class*="text-card-heading"]):not([style*="font-family"]) {
+      font-family: 'Noto Serif Display', serif;
       font-size: var(--text-base); /* Reduced from text-lg */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
@@ -154,7 +154,7 @@
     }
 
     p {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+      font-family: 'IBM Plex Serif', serif;
       font-size: var(--text-base);
       font-weight: var(--font-weight-normal);
       line-height: 1.5;
@@ -168,6 +168,7 @@
     }
 
     button {
+      font-family: 'Courier Prime', monospace;
       font-size: var(--text-base);
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
@@ -183,6 +184,30 @@
 
 html {
   font-size: var(--font-size);
+}
+
+/* Global button font - Courier Prime for all buttons, toasts, and notifications */
+button,
+[role="button"],
+[data-sonner-toast] button,
+.toast button,
+.notification button {
+  font-family: 'Courier Prime', monospace !important;
+}
+
+/* Ensure CardHeading and SectionHeading components override global h2/h3 styles */
+h2[style*="font-family"],
+h3[style*="font-family"],
+h4[style*="font-family"] {
+  font-family: 'Noto Serif Display', serif !important;
+}
+
+/* Ensure card-heading font sizes override global h3 font-size - Tailwind classes handle the sizing */
+h3.text-card-heading-sm,
+h3.text-card-heading-md,
+h3.text-card-heading-lg,
+h2.text-lg {
+  font-size: unset !important;
 }
 
 /* Mobile helper utilities (added per Mobile Transformation Plan) */

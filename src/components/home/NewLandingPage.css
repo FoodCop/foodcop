@@ -20,7 +20,7 @@
   --ring: #94a3b8;
   --radius: 10px;
   --shadow: -2px 4px 12px 4px rgba(51, 51, 51, 0.05);
-  font-family: 'Roboto', system-ui, sans-serif;
+  font-family: 'IBM Plex Serif', serif;
   background-color: var(--background);
   color: var(--foreground);
   scroll-behavior: smooth;
@@ -143,4 +143,196 @@
 .new-landing-page .phone-right {
   transform: translateY(40px) rotate(15deg);
   opacity: 0;
+}
+
+/* Heading Styles - Large Font Sizes */
+.new-landing-page .heading-hero-mobile {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 4rem; /* 64px */
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.new-landing-page .heading-hero-desktop {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 6rem; /* 96px */
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+@media (min-width: 768px) {
+  .new-landing-page .heading-hero-desktop {
+    font-size: 8rem; /* 128px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .new-landing-page .heading-hero-desktop {
+    font-size: 9rem; /* 144px */
+  }
+}
+
+.new-landing-page .heading-pin-food {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 3.5rem; /* 56px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .new-landing-page .heading-pin-food {
+    font-size: 5.5rem; /* 88px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .new-landing-page .heading-pin-food {
+    font-size: 6.5rem; /* 104px */
+  }
+}
+
+.new-landing-page .heading-cook-watch-mobile {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 3.5rem; /* 56px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.new-landing-page .heading-cook-watch-desktop {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 5rem; /* 80px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .new-landing-page .heading-cook-watch-desktop {
+    font-size: 7rem; /* 112px */
+  }
+}
+
+.new-landing-page .heading-food-storyboard-mobile {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 3.5rem; /* 56px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.new-landing-page .heading-food-storyboard-desktop {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 5rem; /* 80px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .new-landing-page .heading-food-storyboard-desktop {
+    font-size: 7rem; /* 112px */
+  }
+}
+
+.new-landing-page .heading-tako-mobile {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 3.5rem; /* 56px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.new-landing-page .heading-tako-desktop {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 5rem; /* 80px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .new-landing-page .heading-tako-desktop {
+    font-size: 7rem; /* 112px */
+  }
+}
+
+.new-landing-page .heading-explore-mobile {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 3.5rem; /* 56px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.new-landing-page .heading-explore-desktop {
+  font-family: 'Noto Serif Display', serif;
+  font-size: 5rem; /* 80px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .new-landing-page .heading-explore-desktop {
+    font-size: 7rem; /* 112px */
+  }
+}
+
+/* Paragraph/Body Text Styles - Larger for Desktop */
+.new-landing-page p {
+  font-family: 'IBM Plex Serif', serif;
+}
+
+.new-landing-page .body-text-mobile {
+  font-family: 'IBM Plex Serif', serif;
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.6;
+}
+
+.new-landing-page .body-text-desktop {
+  font-family: 'IBM Plex Serif', serif;
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.7;
+}
+
+@media (min-width: 768px) {
+  .new-landing-page .body-text-desktop {
+    font-size: 1.5rem; /* 24px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .new-landing-page .body-text-desktop {
+    font-size: 1.75rem; /* 28px */
+  }
+}
+
+/* Button Styles - Orange with White Text, Courier Prime Font */
+.new-landing-page button {
+  font-family: 'Courier Prime', monospace;
+  background-color: #F14C35;
+  color: #ffffff;
+  border: none;
+}
+
+.new-landing-page button:hover {
+  background-color: #d93d28;
+  color: #ffffff;
+}
+
+/* Exception for icon-only buttons (color mode toggle, mobile menu) */
+.new-landing-page button[title="Toggle Color Mode"] {
+  background-color: transparent !important;
+  color: inherit !important;
+  border: 2px solid !important;
+}
+
+.new-landing-page button[title="Toggle Color Mode"]:hover {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Mobile menu button exception */
+.new-landing-page header button:last-child {
+  background-color: transparent !important;
+  color: inherit !important;
+  border: none !important;
+}
+
+.new-landing-page header button:last-child:hover {
+  background-color: transparent !important;
+  color: inherit !important;
 }

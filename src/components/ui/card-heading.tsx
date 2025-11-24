@@ -31,9 +31,15 @@ export function CardHeading({
   };
 
   const sizeClasses = {
-    sm: 'text-sm',      // 14px (reduced from 18px)
-    md: 'text-base',    // 16px (reduced from 20px)
-    lg: 'text-lg',      // 18px (reduced from 24px)
+    sm: 'text-card-heading-sm',      // 18px
+    md: 'text-card-heading-md',       // 20px
+    lg: 'text-card-heading-lg',       // 32px
+  };
+
+  const fontSizeMap = {
+    sm: '1.125rem',  // 18px
+    md: '1.25rem',   // 20px
+    lg: '2rem',      // 32px
   };
 
   const weightClasses = {
@@ -49,7 +55,6 @@ export function CardHeading({
   };
 
   const classes = [
-    'font-serif', // Use Georgia for all headings
     variantClasses[variant],
     sizeClasses[size],
     weightClasses[weight],
@@ -59,6 +64,16 @@ export function CardHeading({
     .filter(Boolean)
     .join(' ');
 
-  return <Component className={classes}>{children}</Component>;
+  return (
+    <Component 
+      className={classes}
+      style={{ 
+        fontFamily: "'Noto Serif Display', serif",
+        fontSize: fontSizeMap[size]
+      }}
+    >
+      {children}
+    </Component>
+  );
 }
 
