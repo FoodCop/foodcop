@@ -7,7 +7,6 @@ import { toast } from 'sonner';
 import type { User } from '@supabase/supabase-js';
 import { RecipeCard } from '../bites/components/RecipeCard';
 import type { Recipe } from '../bites/components/RecipeCard';
-import { MinimalHeader } from '../common/MinimalHeader';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { ProfileService } from '../../services/profileService';
 import DashboardService, { type DashboardData } from '../../services/dashboardService';
@@ -408,7 +407,6 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           }}
         />
       )}
-      <MinimalHeader />
       <main className="max-w-full mx-auto">
         {/* Profile Header */}
         <section className="bg-white px-5 py-6 border-b border-gray-200">
@@ -634,9 +632,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
 
           {/* My Crew */}
           <section className="mb-6">
-            <div className="px-5 flex items-center justify-between mb-4">
+            <div className="px-5 mb-4">
               <SectionHeading>My Crew</SectionHeading>
-              <button className="text-[#FF6B35] text-sm font-medium">View All</button>
             </div>
             <div className="px-5">
               <div className="bg-white rounded-2xl p-4 shadow-sm">
@@ -680,9 +677,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
 
           {/* Saved Recipes */}
           <section className="mb-6">
-            <div className="px-5 flex items-center justify-between mb-4">
+            <div className="px-5 mb-4">
               <SectionHeading>Saved Recipes</SectionHeading>
-              <button className="text-[#FF6B35] text-sm font-medium">See All</button>
             </div>
             {loadingSection.recipes ? (
               <div className="px-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -712,9 +708,6 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                           e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Recipe';
                         }}
                       />
-                      <button className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform">
-                        <Heart className="w-4 h-4 text-[#FF6B35]" fill="#FF6B35" />
-                      </button>
                     </div>
                     <div className="p-3">
                       <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1 leading-tight">
@@ -777,9 +770,6 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                         <Star className="w-3.5 h-3.5 fill-white" />
                         <span className="text-xs font-bold">{restaurant.rating.toFixed(1)}</span>
                       </div>
-                      <button className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform">
-                        <Heart className="w-4 h-4" style={{ color: '#6B7280' }} />
-                      </button>
                     </div>
                     <div className="p-4">
                       <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
@@ -804,9 +794,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
 
           {/* Trending Food Posts */}
           <section className="mb-6">
-            <div className="px-5 flex items-center justify-between mb-4">
+            <div className="px-5 mb-4">
               <SectionHeading>Trending Posts</SectionHeading>
-              <button className="text-[#FF6B35] text-sm font-medium">See All</button>
             </div>
             {loadingSection.masterbot ? (
               <div className="px-5 space-y-3">

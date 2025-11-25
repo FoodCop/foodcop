@@ -15,6 +15,9 @@ import { useAuth } from '../auth/AuthProvider';
 import { MinimalHeader } from '../common/MinimalHeader';
 import { CardHeading } from '../ui/card-heading';
 import { SectionHeading } from '../ui/section-heading';
+import { PreferencesFilterDrawer } from '../common/PreferencesFilterDrawer';
+import { ProfileService } from '../../services/profileService';
+import type { UserProfile } from '../../types/profile';
 import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
 import { transformBitesRecipeToUnified } from '../../utils/unifiedContentTransformers';
 
@@ -29,10 +32,22 @@ const BitesDesktop: React.FC = () => {
   const [recommendedRecipes, setRecommendedRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showFilterDrawer, setShowFilterDrawer] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   // Load initial recipes
   useEffect(() => {
     loadRecommendedRecipes();
+    // Load user profile for preferences
+    const loadProfile = async () => {
+      if (user) {
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data) {
+          setUserProfile(profileResult.data);
+        }
+      }
+    };
+    loadProfile();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -237,6 +252,24 @@ const BitesDesktop: React.FC = () => {
       }}
     >
       <MinimalHeader showLogo={true} logoPosition="left" />
+      
+      {/* Active Preferences Display */}
+      {userProfile?.dietary_preferences && userProfile.dietary_preferences.length > 0 && (
+        <div className="sticky top-0 z-30 bg-orange-50 border-b border-orange-200 px-6 py-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-semibold text-orange-700">Active Filters:</span>
+            {userProfile.dietary_preferences.map((pref) => (
+              <span
+                key={pref}
+                className="inline-flex items-center px-2.5 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium"
+              >
+                {pref.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Filter Bar */}
       <div className="sticky top-0 z-40 bg-white border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -305,9 +338,8 @@ const BitesDesktop: React.FC = () => {
         {/* Recommended Section */}
         {!loading && !error && recommendedRecipes.length > 0 && selectedFilter === 'All' && (
           <section className="mb-12">
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6">
               <SectionHeading>Recommended For You</SectionHeading>
-              <button className="text-primary font-medium hover:underline">View All</button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recommendedRecipes.map((recipe) => (
@@ -351,6 +383,22 @@ const BitesDesktop: React.FC = () => {
         )}
       </main>
 
+      {/* Preferences Filter Drawer */}
+      <PreferencesFilterDrawer
+        isOpen={showFilterDrawer}
+        onClose={() => setShowFilterDrawer(false)}
+        userProfile={userProfile}
+        onPreferencesUpdated={async () => {
+          // Reload profile and recipes
+          if (user) {
+            const profileResult = await ProfileService.getProfile();
+            if (profileResult.success && profileResult.data) {
+              setUserProfile(profileResult.data);
+            }
+            loadRecommendedRecipes();
+          }
+        }}
+      />
     </div>
   );
 };

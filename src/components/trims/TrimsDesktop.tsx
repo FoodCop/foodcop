@@ -5,10 +5,9 @@ import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { savedItemsService } from '../../services/savedItemsService';
 import { YouTubeService } from '../../services/youtube';
-import { MinimalHeader } from '../common/MinimalHeader';
 import { CardHeading } from '../ui/card-heading';
-import { SectionHeading } from '../ui/section-heading';
 import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
+import { SidebarPanel, SidebarSection } from '../common/SidebarPanel';
 import { transformTrimVideoToUnified } from '../../utils/unifiedContentTransformers';
 
 // TrimVideo interface for short-form cooking videos
@@ -72,6 +71,9 @@ export default function TrimsDesktop() {
   // Filter states
   const [videoLength, setVideoLength] = useState('all');
   const [ratingFilters, setRatingFilters] = useState<number[]>([]);
+  
+  // Derived: check if any filters are active
+  const hasActiveFilters = videoLength !== 'all' || ratingFilters.length > 0;
 
   // Helper function to categorize videos
   const getCategoryFromTitle = useCallback((title: string): string[] => {
@@ -301,16 +303,27 @@ export default function TrimsDesktop() {
         fontSize: '10pt',
       }}
     >
-      <MinimalHeader showLogo={true} logoPosition="left" />
       <div className="flex flex-1">
-      {/* Sidebar Filters */}
-      <aside className="hidden lg:block w-64 bg-white border-r border-[#EEE] sticky top-0 h-screen overflow-y-auto flex-shrink-0">
-        <div className="p-6">
-          <SectionHeading className="mb-6">Filters</SectionHeading>
-          
-          {/* Video Length Filter */}
-          <div className="mb-6">
-            <h3 className="text-sm font-semibold text-[#1A1A1A] mb-3">Video Length</h3>
+        <SidebarPanel
+          className="hidden lg:flex"
+          fullHeight
+          eyebrow="Customize"
+          title="Filters"
+          action={
+            hasActiveFilters ? (
+              <button
+                onClick={handleClearFilters}
+                className="text-sm font-semibold text-orange-500 hover:text-orange-600"
+              >
+                Clear All
+              </button>
+            ) : undefined
+          }
+        >
+          <SidebarSection
+            title="Video Length"
+            description="Choose the ideal runtime for your next cooking clip."
+          >
             <div className="space-y-2">
               <label className="flex items-center cursor-pointer">
                 <input
@@ -319,9 +332,9 @@ export default function TrimsDesktop() {
                   value="all"
                   checked={videoLength === 'all'}
                   onChange={(e) => handleLengthChange(e.target.value)}
-                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35]"
+                  className="w-4 h-4 text-orange-500 focus:ring-orange-500"
                 />
-                <span className="ml-2 text-sm text-[#666666]">All</span>
+                <span className="ml-2 text-sm text-gray-600">All</span>
               </label>
               <label className="flex items-center cursor-pointer">
                 <input
@@ -330,9 +343,9 @@ export default function TrimsDesktop() {
                   value="short"
                   checked={videoLength === 'short'}
                   onChange={(e) => handleLengthChange(e.target.value)}
-                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35]"
+                  className="w-4 h-4 text-orange-500 focus:ring-orange-500"
                 />
-                <span className="ml-2 text-sm text-[#666666]">Under 1 minute</span>
+                <span className="ml-2 text-sm text-gray-600">Under 1 minute</span>
               </label>
               <label className="flex items-center cursor-pointer">
                 <input
@@ -341,9 +354,9 @@ export default function TrimsDesktop() {
                   value="medium"
                   checked={videoLength === 'medium'}
                   onChange={(e) => handleLengthChange(e.target.value)}
-                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35]"
+                  className="w-4 h-4 text-orange-500 focus:ring-orange-500"
                 />
-                <span className="ml-2 text-sm text-[#666666]">1-5 minutes</span>
+                <span className="ml-2 text-sm text-gray-600">1-5 minutes</span>
               </label>
               <label className="flex items-center cursor-pointer">
                 <input
@@ -352,29 +365,28 @@ export default function TrimsDesktop() {
                   value="long"
                   checked={videoLength === 'long'}
                   onChange={(e) => handleLengthChange(e.target.value)}
-                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35]"
+                  className="w-4 h-4 text-orange-500 focus:ring-orange-500"
                 />
-                <span className="ml-2 text-sm text-[#666666]">Over 5 minutes</span>
+                <span className="ml-2 text-sm text-gray-600">Over 5 minutes</span>
               </label>
             </div>
-          </div>
-          
-          <hr className="border-[#EEE] mb-6" />
-          
-          {/* Rating Filter */}
-          <div className="mb-6">
-            <h3 className="text-sm font-semibold text-[#1A1A1A] mb-3">Rating</h3>
+          </SidebarSection>
+
+          <SidebarSection
+            title="Rating"
+            description="Highlight the most-loved creators."
+          >
             <div className="space-y-2">
               <label className="flex items-center cursor-pointer">
                 <input
                   type="checkbox"
                   checked={ratingFilters.includes(5)}
                   onChange={() => handleRatingToggle(5)}
-                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35] rounded"
+                  className="w-4 h-4 text-orange-500 focus:ring-orange-500 rounded"
                 />
-                <span className="ml-2 text-sm text-[#666666] flex items-center">
+                <span className="ml-2 text-sm text-gray-600 flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 fill-[#FFD500] text-[#FFD500]" />
+                    <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                   ))}
                 </span>
               </label>
@@ -383,13 +395,13 @@ export default function TrimsDesktop() {
                   type="checkbox"
                   checked={ratingFilters.includes(4)}
                   onChange={() => handleRatingToggle(4)}
-                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35] rounded"
+                  className="w-4 h-4 text-orange-500 focus:ring-orange-500 rounded"
                 />
-                <span className="ml-2 text-sm text-[#666666] flex items-center">
+                <span className="ml-2 text-sm text-gray-600 flex items-center">
                   {[...Array(4)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 fill-[#FFD500] text-[#FFD500]" />
+                    <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                   ))}
-                  <Star className="w-3 h-3 text-[#FFD500]" />
+                  <Star className="w-3 h-3 text-yellow-400" />
                   <span className="ml-1">& up</span>
                 </span>
               </label>
@@ -398,68 +410,57 @@ export default function TrimsDesktop() {
                   type="checkbox"
                   checked={ratingFilters.includes(3)}
                   onChange={() => handleRatingToggle(3)}
-                  className="w-4 h-4 text-[#FF6B35] focus:ring-[#FF6B35] rounded"
+                  className="w-4 h-4 text-orange-500 focus:ring-orange-500 rounded"
                 />
-                <span className="ml-2 text-sm text-[#666666] flex items-center">
+                <span className="ml-2 text-sm text-gray-600 flex items-center">
                   {[...Array(3)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 fill-[#FFD500] text-[#FFD500]" />
+                    <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                   ))}
                   {[...Array(2)].map((_, i) => (
-                    <Star key={`empty-${i}`} className="w-3 h-3 text-[#FFD500]" />
+                    <Star key={`empty-${i}`} className="w-3 h-3 text-yellow-400" />
                   ))}
                   <span className="ml-1">& up</span>
                 </span>
               </label>
             </div>
-          </div>
-          
-          <button
-            onClick={handleClearFilters}
-            className="w-full py-2 px-4 border border-[#EEE] rounded-lg text-sm text-[#666666] hover:bg-[#FAFAFA] transition-colors"
-          >
-            Clear all filters
-          </button>
-        </div>
-      </aside>
+          </SidebarSection>
+
+          <SidebarSection title="Categories">
+            <div className="space-y-2">
+              {VIDEO_CATEGORIES.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => handleCategoryClick(category.id)}
+                  className={`w-full px-3 py-2 rounded-lg text-sm text-left transition-colors ${
+                    selectedCategory === category.id
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
+          </SidebarSection>
+        </SidebarPanel>
       
       {/* Main Content Area */}
       <div className="flex-1">
         {/* Sticky Search Bar */}
         <div className="sticky top-0 z-30 bg-white shadow-sm">
-        <div className="container mx-auto px-4 max-w-7xl py-4">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#666666]" />
-            <input
-              type="text"
-              placeholder="Search cooking videos..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 bg-white border border-[#EEE] rounded-full text-[#1A1A1A] focus:outline-none focus:border-[#FF6B35]"
-            />
+          <div className="container mx-auto px-4 max-w-7xl py-4">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search cooking videos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-12 pl-12 pr-4 bg-white border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-orange-500"
+              />
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Sticky Category Filter Bar */}
-      <div className="sticky top-[72px] z-20 bg-white border-b border-[#EEE]">
-        <div className="container mx-auto px-4 max-w-7xl py-4">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {VIDEO_CATEGORIES.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => handleCategoryClick(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                  selectedCategory === category.id
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'bg-[#F5F5F5] text-[#666666] hover:bg-[#E8E8E8]'
-                }`}
-              >
-                {category.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 max-w-7xl pt-8 pb-16">

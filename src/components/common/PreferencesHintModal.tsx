@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Settings } from 'lucide-react';
 import { toast } from 'sonner';
 import { ProfileService } from '../../services/profileService';
@@ -8,12 +8,26 @@ import { DIETARY_OPTIONS } from '../../types/onboarding';
 interface PreferencesHintModalProps {
   onClose: () => void;
   onPreferencesSet: () => void;
+  initialPreferences?: string[];
+  isEditMode?: boolean;
 }
 
-export function PreferencesHintModal({ onClose, onPreferencesSet }: PreferencesHintModalProps) {
+export function PreferencesHintModal({ 
+  onClose, 
+  onPreferencesSet,
+  initialPreferences = [],
+  isEditMode = false
+}: PreferencesHintModalProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [selectedDietary, setSelectedDietary] = useState<string[]>([]);
+  const [selectedDietary, setSelectedDietary] = useState<string[]>(initialPreferences);
+
+  // Update selected preferences when initialPreferences change
+  useEffect(() => {
+    if (initialPreferences.length > 0) {
+      setSelectedDietary(initialPreferences);
+    }
+  }, [initialPreferences]);
 
   // Toggle dietary preference selection
   const toggleDietary = (option: string) => {
@@ -180,25 +194,27 @@ export function PreferencesHintModal({ onClose, onPreferencesSet }: PreferencesH
               disabled={loading}
               className="w-full py-3 px-4 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Saving...' : 'Save Preferences'}
+              {loading ? 'Saving...' : isEditMode ? 'Update Preferences' : 'Save Preferences'}
             </button>
             
-            <div className="flex gap-3">
-              <button
-                onClick={handleSkip}
-                disabled={loading}
-                className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                Skip for Now
-              </button>
-              <button
-                onClick={handleDontShowAgain}
-                disabled={loading}
-                className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                Don't Show Again
-              </button>
-            </div>
+            {!isEditMode && (
+              <div className="flex gap-3">
+                <button
+                  onClick={handleSkip}
+                  disabled={loading}
+                  className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
+                >
+                  Skip for Now
+                </button>
+                <button
+                  onClick={handleDontShowAgain}
+                  disabled={loading}
+                  className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
+                >
+                  Don't Show Again
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

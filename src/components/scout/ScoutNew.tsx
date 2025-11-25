@@ -437,9 +437,8 @@ export default function ScoutNew() {
         {/* Nearby Restaurants Carousel */}
         {!loading && !error && restaurants.length > 0 && (
           <section className="py-6">
-            <div className="px-5 mb-4 flex items-center justify-between">
+            <div className="px-5 mb-4">
               <SectionHeading>Nearby Restaurants</SectionHeading>
-              <button className="text-sm font-medium text-gray-500 hover:text-gray-700">View All</button>
             </div>
             
             <div className="flex overflow-x-auto space-x-4 px-5 pb-2 hide-scrollbar">

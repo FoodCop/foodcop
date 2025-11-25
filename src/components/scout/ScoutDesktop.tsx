@@ -8,7 +8,6 @@ import { GoogleMapView } from '../maps/GoogleMapView';
 import type { MapMarker } from '../maps/mapUtils';
 import { backendService, formatGooglePlaceResult } from '../../services/backendService';
 import type { GooglePlace } from '../../types';
-import { MinimalHeader } from '../common/MinimalHeader';
 
 // Format distance: meters for < 1km, kilometers for >= 1km
 const formatDistance = (distanceKm: number | undefined): string => {
@@ -226,7 +225,6 @@ export function ScoutDesktop() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50" style={{ fontSize: '10pt' }}>
-      <MinimalHeader showLogo={true} logoPosition="left" />
       <div className="flex flex-1">
       {/* Left Sidebar */}
       <aside className="w-[380px] bg-white border-r border-gray-200 flex flex-col overflow-hidden">
@@ -472,17 +470,6 @@ export function ScoutDesktop() {
                     <span className="text-lg font-semibold text-gray-900">{selectedRestaurant.rating}</span>
                     <span className="text-gray-600">({selectedRestaurant.userRatingsTotal} reviews)</span>
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleSaveToPlate}
-                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-                  >
-                    <Heart size={20} className="text-gray-700" />
-                  </button>
-                  <button className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
-                    <Share2 size={20} className="text-gray-700" />
-                  </button>
                 </div>
               </div>
 

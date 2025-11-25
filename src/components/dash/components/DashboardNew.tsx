@@ -297,9 +297,8 @@ export function DashboardNew() {
         {/* My Crew - Story Style */}
         <section className="mb-6 md:mb-10">
           {/* Mobile Header */}
-          <div className="px-4 md:hidden flex items-center justify-between mb-4">
+          <div className="px-4 md:hidden mb-4">
             <SectionHeading>My Crew</SectionHeading>
-            <button className="text-[#FF6B35] text-sm font-medium">View All</button>
           </div>
           
           {/* Mobile Design - White Card */}
@@ -345,9 +344,8 @@ export function DashboardNew() {
           {/* Desktop Design - White Card Container */}
           <div className="hidden md:block px-6">
             <div className="bg-white rounded-3xl p-6 shadow-[0_2px_4px_0_rgba(0,0,0,0.1),0_4px_6px_0_rgba(0,0,0,0.1)]">
-              <div className="flex items-center justify-between mb-6">
+              <div className="mb-6">
                 <SectionHeading>My Crew</SectionHeading>
-                <button className="text-[#FF6B35] font-medium hover:text-[#EA580C] transition-colors">View All</button>
               </div>
               {loadingSection.crew ? (
                 <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar">
@@ -391,9 +389,8 @@ export function DashboardNew() {
 
         {/* Saved Recipes */}
         <section className="mb-6 md:mb-8">
-          <div className="px-4 md:px-6 flex items-center justify-between mb-4">
+          <div className="px-4 md:px-6 mb-4">
             <SectionHeading>Saved Recipes</SectionHeading>
-            <button className="text-[#FF6B35] text-sm md:text-base font-medium md:font-semibold">See All</button>
           </div>
           {loadingSection.recipes ? (
             <div className="px-4 md:px-8 lg:px-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
@@ -510,9 +507,8 @@ export function DashboardNew() {
 
         {/* Trending Food Posts */}
         <section className="mb-6">
-          <div className="px-4 md:px-6 flex items-center justify-between mb-4">
+          <div className="px-4 md:px-6 mb-4">
             <SectionHeading>Trending Posts</SectionHeading>
-            <button className="text-[#FF6B35] text-sm md:text-base font-medium md:font-semibold">See All</button>
           </div>
           {loadingSection.masterbot ? (
             <div className="flex gap-3 overflow-x-auto pl-4 pb-2 hide-scrollbar">

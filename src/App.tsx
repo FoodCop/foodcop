@@ -62,7 +62,7 @@ const lazyWithRetry = (componentImport: () => Promise<any>, retries = 3) => {
 const OnboardingFlow = lazyWithRetry(() => import('./components/onboarding/OnboardingFlow'))
 const FeedApp = lazyWithRetry(() => import('./components/feed/FeedNew').then(module => ({ default: module.FeedNew })))
 const ScoutApp = lazyWithRetry(() => import('./components/scout/ScoutNew'))
-const BitesApp = lazyWithRetry(() => import('./components/bites/BitesNewMobile'))
+const BitesApp = lazyWithRetry(() => import('./components/bites/BitesNew'))
 const TrimsApp = lazyWithRetry(() => import('./components/trims/TrimsNew'))
 // Dashboard merged into Plate - keeping import for backward compatibility but redirecting to /plate
 const DashApp = lazyWithRetry(() => import('./components/plate/PlateNew'))

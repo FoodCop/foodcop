@@ -68,6 +68,8 @@ export function PreferencesChips({ userProfile, onPreferencesUpdated, className 
         <PreferencesHintModal
           onClose={() => setShowModal(false)}
           onPreferencesSet={handlePreferencesUpdated}
+          initialPreferences={preferences}
+          isEditMode={true}
         />
       )}
     </>

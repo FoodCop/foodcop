@@ -11,6 +11,9 @@ import { MinimalHeader } from '../common/MinimalHeader';
 import { SectionHeading } from '../ui/section-heading';
 import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
 import { transformBitesRecipeToUnified } from '../../utils/unifiedContentTransformers';
+import { PreferencesFilterDrawer } from '../common/PreferencesFilterDrawer';
+import { ProfileService } from '../../services/profileService';
+import type { UserProfile } from '../../types/profile';
 
 interface SpoonacularRecipe {
   id: number;
@@ -90,9 +93,20 @@ export default function BitesNewMobile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'home' | 'search' | 'category'>('home');
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     loadInitialRecipes();
+    // Load user profile for preferences
+    const loadProfile = async () => {
+      if (user) {
+        const profileResult = await ProfileService.getProfile();
+        if (profileResult.success && profileResult.data) {
+          setUserProfile(profileResult.data);
+        }
+      }
+    };
+    loadProfile();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -483,42 +497,39 @@ export default function BitesNewMobile() {
         </div>
       </header>
 
-      {showFilters && (
-        <section className="px-4 py-4 bg-white border-b border-[#EEE]">
-          <h3 className="text-sm font-semibold text-[#0f172a] mb-3">Dietary Preferences</h3>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {DIETARY_FILTERS.map((filter) => (
-              <button
-                key={filter.id}
-                onClick={() => setSelectedDiet(filter.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium ${
-                  selectedDiet === filter.id
-                    ? 'bg-[#FFD500] text-[#8A8A8A]'
-                    : 'bg-white text-[#0f172a]'
-                }`}
+      {/* Active Preferences Display */}
+      {userProfile?.dietary_preferences && userProfile.dietary_preferences.length > 0 && (
+        <div className="px-4 py-2 bg-orange-50 border-b border-orange-100">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-medium text-orange-700">Active Filters:</span>
+            {userProfile.dietary_preferences.map((pref) => (
+              <span
+                key={pref}
+                className="inline-flex items-center px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium"
               >
-                {filter.label}
-              </button>
+                {pref.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+              </span>
             ))}
           </div>
-          <h3 className="text-sm font-semibold text-[#0f172a] mb-3">Meal Type</h3>
-          <div className="flex flex-wrap gap-2">
-            {MEAL_TYPES.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => setSelectedMealType(type.id === selectedMealType ? null : type.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium ${
-                  selectedMealType === type.id
-                    ? 'bg-[#FFD500] text-[#8A8A8A]'
-                    : 'bg-white text-[#0f172a]'
-                }`}
-              >
-                {type.label}
-              </button>
-            ))}
-          </div>
-        </section>
+        </div>
       )}
+
+      {/* Preferences Filter Drawer */}
+      <PreferencesFilterDrawer
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        userProfile={userProfile}
+        onPreferencesUpdated={async () => {
+          // Reload profile and recipes
+          if (user) {
+            const profileResult = await ProfileService.getProfile();
+            if (profileResult.success && profileResult.data) {
+              setUserProfile(profileResult.data);
+            }
+            loadInitialRecipes();
+          }
+        }}
+      />
 
       <main className="px-4 py-5">
         <section className="mb-6">
@@ -547,9 +558,8 @@ export default function BitesNewMobile() {
 
         {!loading && recommendedRecipes.length > 0 && (
           <section className="mb-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4">
               <SectionHeading>Recommended For You</SectionHeading>
-              <button className="text-sm font-medium text-[#f59e0b]">See All</button>
             </div>
             <div className="space-y-3">
               {recommendedRecipes.map((recipe) => (
@@ -620,9 +630,8 @@ export default function BitesNewMobile() {
 
         {!loading && trendingRecipes.length > 0 && (
           <section className="mb-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4">
               <SectionHeading>Trending Now</SectionHeading>
-              <button className="text-sm font-medium text-[#f59e0b]">See All</button>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2">
               {trendingRecipes.map((recipe) => (

@@ -10,7 +10,6 @@ import { motion } from 'framer-motion';
 import { X, Heart, Bookmark, Send, MapPin } from 'lucide-react';
 import { sampleRestaurants } from './data/feed-content';
 import type { RestaurantCard } from './data/feed-content';
-import { MinimalHeader } from '../common/MinimalHeader';
 
 type CardState = 'active' | 'side' | 'hidden';
 type ExitAnimation = 'nope' | 'like' | 'send' | null;
@@ -296,7 +295,6 @@ export function FeedDesktop() {
         fontSize: '10pt',
       }}
     >
-      <MinimalHeader showLogo={true} logoPosition="left" />
       <div className="flex-1 flex items-center justify-center py-12">
       <div className="w-full">
         {/* Carousel Section */}

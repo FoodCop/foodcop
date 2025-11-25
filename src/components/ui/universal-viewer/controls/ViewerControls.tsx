@@ -78,16 +78,6 @@ export const ViewerControls: React.FC<ViewerControlsProps> = ({
         </Button>
       )}
 
-      {/* Share Button */}
-      <Button
-        variant="secondary"
-        size="icon"
-        onClick={handleShare}
-        className="bg-black/50 text-white hover:bg-black/70"
-      >
-        <Share2 className="w-4 h-4" />
-      </Button>
-
       {/* Close Button */}
       <Button
         variant="secondary"

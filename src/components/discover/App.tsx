@@ -170,9 +170,8 @@ export default function FoodDiscoveryApp() {
 
         {/* Food Stories */}
         <section className="mb-6">
-          <div className="px-5 flex items-center justify-between mb-3">
+          <div className="px-5 mb-3">
             <SectionHeading>Food Stories</SectionHeading>
-            <button className="text-[#FF6B35] text-sm font-semibold">View All</button>
           </div>
           <div className="flex gap-4 overflow-x-auto pl-5 pb-2 hide-scrollbar">
             {foodStories.map((story, index) => (
@@ -194,9 +193,8 @@ export default function FoodDiscoveryApp() {
 
         {/* Featured Today */}
         <section className="mb-6">
-          <div className="px-5 flex items-center justify-between mb-3">
+          <div className="px-5 mb-3">
             <SectionHeading>Featured Today</SectionHeading>
-            <button className="text-[#FF6B35] text-sm font-semibold">See All</button>
           </div>
           <div className="px-5">
             <div className="relative w-full h-48 rounded-3xl overflow-hidden shadow-[0_8px_10px_0_rgba(0,0,0,0.1),0_20px_25px_0_rgba(0,0,0,0.1)]">

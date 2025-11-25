@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 import type { User } from '@supabase/supabase-js';
 import { RecipeCard } from '../bites/components/RecipeCard';
 import type { Recipe } from '../bites/components/RecipeCard';
-import { MinimalHeader } from '../common/MinimalHeader';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { ProfileService } from '../../services/profileService';
 import DashboardService, { type DashboardData } from '../../services/dashboardService';
@@ -22,7 +21,7 @@ import { savedItemsService } from '../../services/savedItemsService';
 import { PreferencesHintModal } from '../common/PreferencesHintModal';
 import { PreferencesChips } from '../common/PreferencesChips';
 
-type TabType = 'dashboard' | 'posts' | 'recipes' | 'videos' | 'places';
+type TabType = 'places' | 'recipes' | 'videos' | 'crew' | 'posts';
 
 interface Post {
   id: string;
@@ -82,7 +81,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
   const user = currentUser || authUser;
   const userId = propUserId || user?.id;
   
-  const [selectedTab, setSelectedTab] = useState<TabType>('dashboard');
+  const [selectedTab, setSelectedTab] = useState<TabType>('places');
   const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -423,9 +422,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
           }}
         />
       )}
-      <MinimalHeader />
       
-      <div className="flex flex-1 pt-14">
+      <div className="flex flex-1">
         {/* Left Sidebar - Navigation */}
         <aside className="w-64 bg-white border-r border-gray-200 sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto flex-shrink-0">
           <div className="p-6">
@@ -629,32 +627,16 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  setSelectedTab('dashboard');
+                  setSelectedTab('places');
                 }}
                 className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                  selectedTab === 'dashboard' 
+                  selectedTab === 'places' 
                     ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
                     : 'hover:text-[#1A1A1A]'
                 }`}
-                style={selectedTab !== 'dashboard' ? { color: '#808080' } : {}}
+                style={selectedTab !== 'places' ? { color: '#808080' } : {}}
               >
-                Dashboard
-              </button>
-              <button 
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedTab('posts');
-                }}
-                className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                  selectedTab === 'posts' 
-                    ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                    : 'hover:text-[#1A1A1A]'
-                }`}
-                style={selectedTab !== 'posts' ? { color: '#808080' } : {}}
-              >
-                Posts
+                Places
               </button>
               <button 
                 type="button"
@@ -693,16 +675,32 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  setSelectedTab('places');
+                  setSelectedTab('crew');
                 }}
                 className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                  selectedTab === 'places' 
+                  selectedTab === 'crew' 
                     ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
                     : 'hover:text-[#1A1A1A]'
                 }`}
-                style={selectedTab !== 'places' ? { color: '#808080' } : {}}
+                style={selectedTab !== 'crew' ? { color: '#808080' } : {}}
               >
-                Places
+                Crew
+              </button>
+              <button 
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSelectedTab('posts');
+                }}
+                className={`flex-1 py-4 text-sm font-medium transition-colors ${
+                  selectedTab === 'posts' 
+                    ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
+                    : 'hover:text-[#1A1A1A]'
+                }`}
+                style={selectedTab !== 'posts' ? { color: '#808080' } : {}}
+              >
+                Posts
               </button>
             </div>
           </nav>
@@ -712,77 +710,6 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
           </div>
         </main>
 
-        {/* Right Sidebar */}
-        <aside className="w-80 bg-white border-l border-gray-200 sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto flex-shrink-0">
-          <div className="p-6 space-y-8">
-            {/* Suggested for you */}
-            <div>
-              <h3 className="font-bold mb-4" style={{ fontSize: '14pt', color: '#EA580C' }}>Suggested for you</h3>
-              <div className="space-y-4">
-                {suggestedUsers.map((suggested) => (
-                  <div key={suggested.id} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="w-10 h-10">
-                        <AvatarImage src={suggested.avatar} alt={suggested.name} />
-                        <AvatarFallback className="bg-gray-100 text-xs">
-                          {suggested.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium text-sm" style={{ color: '#808080' }}>{suggested.name}</p>
-                        <p className="text-xs" style={{ color: '#808080' }}>
-                          Followed by {suggested.followedBy[0]} + {suggested.followedBy.length - 1} others
-                        </p>
-                      </div>
-                    </div>
-                    <button className="text-sm font-medium text-[#FF6B35] hover:text-[#EA580C] transition-colors">
-                      Follow
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <button className="text-sm text-[#FF6B35] mt-4 hover:text-[#EA580C] transition-colors">
-                See All Suggestions
-              </button>
-            </div>
-
-            {/* Trending Topics */}
-            <div>
-              <h3 className="font-bold mb-4" style={{ fontSize: '14pt', color: '#EA580C' }}>Trending Topics</h3>
-              <div className="space-y-3">
-                {trendingTopics.map((topic, idx) => (
-                  <div key={idx} className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                    <p className="text-xs mb-1" style={{ color: '#808080' }}>Trending in {topic.category}</p>
-                    <p className="font-semibold text-sm" style={{ color: '#808080' }}>{topic.hashtag}</p>
-                    <p className="text-xs mt-1" style={{ color: '#808080' }}>{topic.posts} posts</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Recent Activity */}
-            <div>
-              <h3 className="font-bold mb-4" style={{ fontSize: '14pt', color: '#EA580C' }}>Recent Activity</h3>
-              <div className="space-y-4">
-                {recentActivity.map((activity, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    {activity.thumbnail && (
-                      <div className="w-10 h-10 rounded overflow-hidden bg-gray-200 flex-shrink-0">
-                        <img src={activity.thumbnail} alt="" className="w-full h-full object-cover" />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm" style={{ color: '#808080' }}>
-                        <span className="font-medium">{activity.user}</span> {activity.action}
-                      </p>
-                      <p className="text-xs mt-1" style={{ color: '#808080' }}>{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </aside>
       </div>
     </div>
   );
@@ -799,28 +726,14 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
       );
     }
 
-    // Dashboard tab
-    if (selectedTab === 'dashboard') {
+    // Crew tab
+    if (selectedTab === 'crew') {
       return (
         <div className="space-y-6">
-          {/* Greeting Section */}
-          <section className="bg-white rounded-xl shadow-sm px-6 py-4">
-            <h1 className="text-xl font-bold mb-1 text-[#8B0000]">
-              {getUserDisplayName()}
-              {getUserLocation() !== 'Location not set' && (
-                <span className="ml-2 text-sm font-normal opacity-70">
-                  <MapPin className="w-3 h-3 inline mr-1" />
-                  {getUserLocation()}
-                </span>
-              )}
-            </h1>
-          </section>
-
           {/* My Crew */}
           <section>
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4">
               <SectionHeading>My Crew</SectionHeading>
-              <button className="text-[#FF6B35] text-sm font-medium">View All</button>
             </div>
             <div className="bg-white rounded-xl shadow-sm p-4">
               {loadingSection.crew ? (
@@ -862,9 +775,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
 
           {/* Saved Recipes */}
           <section>
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4">
               <SectionHeading>Saved Recipes</SectionHeading>
-              <button className="text-[#FF6B35] text-sm font-medium">See All</button>
             </div>
             {loadingSection.recipes ? (
               <div className="grid grid-cols-4 gap-3">
@@ -894,9 +806,6 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                           e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Recipe';
                         }}
                       />
-                      <button className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform">
-                        <Heart className="w-4 h-4 text-[#FF6B35]" fill="#FF6B35" />
-                      </button>
                     </div>
                     <div className="p-3">
                       <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1 leading-tight">
@@ -920,12 +829,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
 
           {/* Restaurant Recommendations */}
           <section>
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4">
               <SectionHeading>Nearby Restaurants</SectionHeading>
-              <button className="flex items-center gap-1.5 text-[#FF6B35] text-sm font-medium">
-                <span>Map View</span>
-                <Navigation className="w-4 h-4 fill-current" />
-              </button>
             </div>
             {loadingSection.restaurants ? (
               <div className="grid grid-cols-3 gap-6">
@@ -959,9 +864,6 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                         <Star className="w-3.5 h-3.5 fill-white" />
                         <span className="text-xs font-bold">{restaurant.rating.toFixed(1)}</span>
                       </div>
-                      <button className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform">
-                        <Heart className="w-4 h-4" style={{ color: '#6B7280' }} />
-                      </button>
                     </div>
                     <div className="p-4">
                       <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
@@ -980,64 +882,6 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
                 <p className="text-sm">No restaurant recommendations</p>
                 <p className="text-xs mt-1">Enable location to see nearby restaurants!</p>
-              </div>
-            )}
-          </section>
-
-          {/* Trending Food Posts */}
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <SectionHeading>Trending Posts</SectionHeading>
-              <button className="text-[#FF6B35] text-sm font-medium">See All</button>
-            </div>
-            {loadingSection.masterbot ? (
-              <div className="space-y-3">
-                {[1, 2].map((i) => (
-                  <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div className="h-48 bg-gray-200 animate-pulse" />
-                  </div>
-                ))}
-              </div>
-            ) : dashboardData.masterbotPosts.length > 0 ? (
-              <div className="space-y-3">
-                {dashboardData.masterbotPosts.map((post) => (
-                  <div
-                    key={post.id}
-                    className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all"
-                  >
-                    <div className="relative h-48">
-                      <img
-                        src={post.image_url}
-                        alt={post.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/800x600?text=Post';
-                        }}
-                      />
-                    </div>
-                    <div className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Avatar className="w-8 h-8">
-                          <AvatarImage src={post.masterbot_avatar} alt={post.masterbot_name} />
-                          <AvatarFallback className="bg-gray-100 text-xs">{post.masterbot_name[0]}</AvatarFallback>
-                        </Avatar>
-                        <span className="font-medium" style={{ fontSize: '10pt', color: '#6B7280' }}>
-                          {post.masterbot_name}
-                        </span>
-                      </div>
-                      <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1">
-                        {post.title}
-                      </CardHeading>
-                      <p className="line-clamp-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
-                        {post.content}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
-                <p className="text-sm">No trending posts</p>
               </div>
             )}
           </section>
@@ -1169,7 +1013,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               distance: metadata.distance as number,
               cuisine: metadata.cuisine as string | string[],
               photos: metadata.photos as { photo_reference: string }[],
-              image_url: metadata.image_url as string
+              image_url: (metadata.image_url || metadata.image) as string
             };
             
           return (
@@ -1263,9 +1107,15 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
 // Restaurant Card Component
 function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant: Restaurant; onClick?: () => void }>) {
   const getImageUrl = () => {
+    // Check various image field names used in metadata
     if (restaurant.image_url) return restaurant.image_url;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((restaurant as any).image) return (restaurant as any).image;
     if (restaurant.photos && restaurant.photos.length > 0) {
-      return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${restaurant.photos[0].photo_reference}&key=${import.meta.env.VITE_GOOGLE_PLACES_API_KEY}`;
+      const photoRef = typeof restaurant.photos[0] === 'string' 
+        ? restaurant.photos[0] 
+        : restaurant.photos[0].photo_reference;
+      return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoRef}&key=${import.meta.env.VITE_GOOGLE_PLACES_API_KEY}`;
     }
     return 'https://via.placeholder.com/400x300?text=Restaurant';
   };
