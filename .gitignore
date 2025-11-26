@@ -33,6 +33,7 @@ dist-ssr
 docs/
 main-services/
 public/References/
+unused/
 
 .vercel
 set-secret-manual.ps1

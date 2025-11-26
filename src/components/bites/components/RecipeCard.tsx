@@ -1,4 +1,4 @@
-import { Clock, Users } from "lucide-react";
+import { Clock } from "lucide-react";
 import React from "react";
 import { Card } from "../../ui/card";
 import { Badge } from "../../ui/badge";
@@ -78,10 +78,6 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
           <div className="flex items-center gap-1.5">
             <Clock className="w-4 h-4" />
             <span className="text-sm">{recipe.readyInMinutes} min</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Users className="w-4 h-4" />
-            <span className="text-sm">{recipe.servings} servings</span>
           </div>
         </div>
         {recipe.diets.length > 0 && (

@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import {
   X,
   Clock,
-  Users,
   ChefHat,
   Send,
   Bookmark,
-  Heart,
+  Star,
   Check
 } from 'lucide-react';
 import { SpoonacularService } from '../../../services/spoonacular';
@@ -142,20 +141,13 @@ const RecipeModal: React.FC<RecipeModalProps> = ({ recipe, onClose }) => {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="bg-white rounded-xl p-4 text-center border border-[#EEE]">
                   <Clock className="w-6 h-6 text-[#FFD500] mx-auto mb-2" />
                   <p className="text-2xl font-bold text-[#0f172a]">
                     {recipe.readyInMinutes || 30}
                   </p>
                   <p className="text-sm text-[#8A8A8A]">Minutes</p>
-                </div>
-                <div className="bg-white rounded-xl p-4 text-center border border-[#EEE]">
-                  <Users className="w-6 h-6 text-[#FFD500] mx-auto mb-2" />
-                  <p className="text-2xl font-bold text-[#0f172a]">
-                    {fullRecipe?.servings || 4}
-                  </p>
-                  <p className="text-sm text-[#8A8A8A]">Servings</p>
                 </div>
                 <div className="bg-white rounded-xl p-4 text-center border border-[#EEE]">
                   <p className="text-2xl font-bold text-[#0f172a] mb-2">🔥</p>
@@ -165,7 +157,7 @@ const RecipeModal: React.FC<RecipeModalProps> = ({ recipe, onClose }) => {
                   <p className="text-sm text-[#8A8A8A]">Calories</p>
                 </div>
                 <div className="bg-white rounded-xl p-4 text-center border border-[#EEE]">
-                  <Heart className="w-6 h-6 text-[#FFD500] mx-auto mb-2" />
+                  <Star className="w-6 h-6 text-[#FFD500] mx-auto mb-2" />
                   <p className="text-2xl font-bold text-[#0f172a]">
                     {recipe.healthScore ? (recipe.healthScore / 20).toFixed(1) : '4.0'}
                   </p>

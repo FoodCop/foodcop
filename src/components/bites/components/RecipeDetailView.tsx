@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Heart, Clock, Users, Star, Bookmark, ChefHat } from 'lucide-react';
+import { ArrowLeft, Clock, Star, Bookmark, ChefHat } from 'lucide-react';
 import type { Recipe } from './RecipeCard';
 import { SpoonacularService } from '../../../services/spoonacular';
 
@@ -11,7 +11,6 @@ interface RecipeDetailViewProps {
 
 export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDetailViewProps>) {
   const [activeTab, setActiveTab] = useState<'overview' | 'ingredients' | 'instructions' | 'nutrition'>('overview');
-  const [isFavorite, setIsFavorite] = useState(false);
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const [fullRecipe, setFullRecipe] = useState<Recipe>(recipe);
   const [nutritionData, setNutritionData] = useState<{ name: string; amount: number; unit: string }[]>([]);
@@ -84,14 +83,7 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
             <ArrowLeft className="w-5 h-5 text-[#0f172a]" />
           </button>
           <h2 className="text-lg font-bold text-[#0f172a]">Recipe Details</h2>
-          <button
-            onClick={() => setIsFavorite(!isFavorite)}
-            className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
-          >
-            <Heart
-              className={`w-5 h-5 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-[#0f172a]'}`}
-            />
-          </button>
+          <div className="w-10 h-10" /> {/* Spacer for layout balance */}
         </div>
       </header>
 
@@ -116,20 +108,13 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
           <p className="text-sm text-[#8A8A8A] mb-4">
             {fullRecipe.summary?.replace(/<[^>]*>/g, '').slice(0, 150)}...
           </p>
-          <div className="grid grid-cols-4 gap-3 mb-4">
+          <div className="grid grid-cols-3 gap-3 mb-4">
             <div className="text-center">
               <div className="w-12 h-12 rounded-full bg-[#FFD500]/10 flex items-center justify-center mx-auto mb-1">
                 <Clock className="w-5 h-5 text-[#f59e0b]" />
               </div>
               <p className="text-xs text-[#8A8A8A]">Time</p>
               <p className="text-sm font-bold text-[#0f172a]">{fullRecipe.readyInMinutes} min</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-[#FFD500]/10 flex items-center justify-center mx-auto mb-1">
-                <Users className="w-5 h-5 text-[#f59e0b]" />
-              </div>
-              <p className="text-xs text-[#8A8A8A]">Servings</p>
-              <p className="text-sm font-bold text-[#0f172a]">{fullRecipe.servings}</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 rounded-full bg-[#FFD500]/10 flex items-center justify-center mx-auto mb-1">

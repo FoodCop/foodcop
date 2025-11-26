@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Heart, Clock, Users, Shuffle, Search, SlidersHorizontal, Star } from "lucide-react";
+import { Clock, Shuffle, Search, SlidersHorizontal, Star } from "lucide-react";
 import type { Recipe } from "./components/RecipeCard";
 import { RecipeDetailDialog } from "./components/RecipeDetailDialog";
 import { SpoonacularService } from "../../services/spoonacular";
 import { useAuth } from "../auth/AuthProvider";
 import { SectionHeading } from "../ui/section-heading";
+import { CardHeading } from "../ui/card-heading";
 import { ProfileService } from "../../services/profileService";
 import { PreferencesFilterDrawer } from "../common/PreferencesFilterDrawer";
 import type { UserProfile } from "../../types/profile";
@@ -61,7 +62,6 @@ export default function BitesNew() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [favorites, setFavorites] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
@@ -246,12 +246,6 @@ export default function BitesNew() {
     const { shuffleArray } = await import('../../utils/preferenceMapper');
     const shuffled = shuffleArray([...recipes]);
     setRecipes(shuffled);
-  };
-
-  const toggleFavorite = (id: number) => {
-    setFavorites(prev =>
-      prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]
-    );
   };
 
   const filteredRecipes = recipes.filter((recipe) => {
@@ -455,34 +449,15 @@ export default function BitesNew() {
                           <span className="text-xs md:text-sm font-bold">Healthy</span>
                         </div>
                       )}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite(recipe.id);
-                        }}
-                        className="absolute top-2 md:top-3 right-2 md:right-3 w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center"
-                      >
-                        <Heart
-                          className={`w-3.5 h-3.5 md:w-4 md:h-4 ${
-                            favorites.includes(recipe.id)
-                              ? "text-[#FF6B35] fill-[#FF6B35]"
-                              : "text-[#374151]"
-                          }`}
-                        />
-                      </button>
                     </div>
                     <div className="p-3 md:p-4">
-                      <h3 className="text-[#1A1A1A] font-bold text-sm md:text-base leading-5 md:leading-6 mb-2 line-clamp-2">
+                      <CardHeading variant="accent" size="sm" lineClamp={2} className="mb-2">
                         {recipe.title}
-                      </h3>
-                      <div className="flex items-center justify-between text-[#6B7280] text-xs md:text-sm">
+                      </CardHeading>
+                      <div className="flex items-center text-[#6B7280] text-xs md:text-sm">
                         <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3 md:w-4 md:h-4" />
                           <span>{recipe.readyInMinutes} min</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="w-3 h-3 md:w-4 md:h-4" />
-                          <span>{recipe.servings}</span>
                         </div>
                       </div>
                     </div>
@@ -517,34 +492,15 @@ export default function BitesNew() {
                           <span className="text-xs md:text-sm font-bold">Healthy</span>
                         </div>
                       )}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite(recipe.id);
-                        }}
-                        className="absolute top-2 md:top-3 right-2 md:right-3 w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/90 shadow-md flex items-center justify-center"
-                      >
-                        <Heart
-                          className={`w-3.5 h-3.5 md:w-4 md:h-4 ${
-                            favorites.includes(recipe.id)
-                              ? "text-[#FF6B35] fill-[#FF6B35]"
-                              : "text-[#374151]"
-                          }`}
-                        />
-                      </button>
                     </div>
                     <div className="p-3 md:p-4">
-                      <h3 className="text-[#1A1A1A] font-bold text-sm md:text-base leading-5 mb-2 line-clamp-2">
+                      <CardHeading variant="accent" size="sm" lineClamp={2} className="mb-2">
                         {recipe.title}
-                      </h3>
-                      <div className="flex items-center justify-between text-[#6B7280] text-xs md:text-sm">
+                      </CardHeading>
+                      <div className="flex items-center text-[#6B7280] text-xs md:text-sm">
                         <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3 md:w-4 md:h-4" />
                           <span>{recipe.readyInMinutes} min</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="w-3 h-3 md:w-4 md:h-4" />
-                          <span>{recipe.servings}</span>
                         </div>
                       </div>
                     </div>

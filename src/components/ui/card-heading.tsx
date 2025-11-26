@@ -42,6 +42,12 @@ export function CardHeading({
     lg: '2rem',      // 32px
   };
 
+  const lineHeightMap = {
+    sm: '1.5',       // 27px for 18px font
+    md: '1.4',       // 28px for 20px font
+    lg: '1.25',      // 40px for 32px font
+  };
+
   const weightClasses = {
     normal: 'font-normal',
     semibold: 'font-semibold',
@@ -69,7 +75,8 @@ export function CardHeading({
       className={classes}
       style={{ 
         fontFamily: "'Noto Serif Display', serif",
-        fontSize: fontSizeMap[size]
+        fontSize: fontSizeMap[size],
+        lineHeight: lineHeightMap[size]
       }}
     >
       {children}
