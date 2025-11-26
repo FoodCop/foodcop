@@ -10,6 +10,7 @@ import {
   MessageCircle, 
   LayoutDashboard 
 } from 'lucide-react';
+import { useChatStore } from '../../stores/chatStore';
 
 interface MobileRadialNavProps {
   currentPage: string;
@@ -17,6 +18,18 @@ interface MobileRadialNavProps {
 }
 
 export const MobileRadialNav = ({ currentPage, onNavigate }: MobileRadialNavProps) => {
+  const { toggleChat } = useChatStore();
+  
+  const handleNavigate = (route: string) => {
+    console.log('🔵 RadialNav handleNavigate:', route);
+    if (route === 'takoai') {
+      console.log('🔵 Opening TakoAI chat');
+      toggleChat();
+      return; // Don't navigate
+    }
+    onNavigate(route);
+  };
+
   const menuItems = [
     {
       label: 'Feed',
@@ -49,8 +62,8 @@ export const MobileRadialNav = ({ currentPage, onNavigate }: MobileRadialNavProp
       icon: <Utensils size={20} />,
     },
     {
-      label: 'Chat',
-      route: 'chat',
+      label: 'TakoAI',
+      route: 'takoai',
       icon: <MessageCircle size={20} />,
     },
   ];
@@ -58,7 +71,7 @@ export const MobileRadialNav = ({ currentPage, onNavigate }: MobileRadialNavProp
   return (
     <RadialMenu 
       items={menuItems}
-      onNavigate={onNavigate}
+      onNavigate={handleNavigate}
       currentRoute={currentPage}
       barrelColor="#FF6B35"
     />

@@ -18,6 +18,47 @@ serve(async (req) => {
     });
   }
 
+  // Health check endpoint - GET request to test API key
+  if (req.method === 'GET') {
+    const url = new URL(req.url);
+    if (url.pathname.endsWith('/health') || url.searchParams.get('health') === 'true') {
+      const hasKey = !!OPENAI_API_KEY;
+      const keyPreview = hasKey ? `${OPENAI_API_KEY.substring(0, 7)}...${OPENAI_API_KEY.substring(OPENAI_API_KEY.length - 4)}` : 'NOT SET';
+      
+      // Test the key with a minimal API call
+      let keyValid = false;
+      let testError = null;
+      if (hasKey) {
+        try {
+          const testResponse = await fetch(`${OPENAI_BASE_URL}/models`, {
+            headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}` }
+          });
+          keyValid = testResponse.ok;
+          if (!testResponse.ok) {
+            const errData = await testResponse.json().catch(() => ({}));
+            testError = errData.error?.message || testResponse.statusText;
+          }
+        } catch (e) {
+          testError = e instanceof Error ? e.message : 'Unknown error';
+        }
+      }
+      
+      return new Response(
+        JSON.stringify({ 
+          success: true,
+          health: {
+            keyConfigured: hasKey,
+            keyPreview,
+            keyValid,
+            testError,
+            model: 'gpt-4o-mini'
+          }
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+  }
+
   try {
     // Check for API key in environment
     if (!OPENAI_API_KEY) {

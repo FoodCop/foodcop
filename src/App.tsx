@@ -390,7 +390,7 @@ function AppLayout() {
 
       {/* AI Chat Widget - Available on all authenticated pages */}
       {showNavigation && showAIChat && (
-        <AIChatWidget position="top-right" />
+        <AIChatWidget position="bottom-right" />
       )}
 
       {/* Universal Viewer - Available app-wide */}

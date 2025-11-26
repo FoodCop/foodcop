@@ -261,59 +261,45 @@ export class TakoAIService {
     }
 
     if (useProxy && config.supabase.url) {
-      // Use Supabase Edge Function proxy via functions.invoke (handles auth automatically)
-      // Note: This requires verify_jwt: false or a logged-in user
-      try {
-        const { data, error } = await supabase.functions.invoke('openai-proxy', {
-          body: requestBody,
-        });
-
-        if (error) {
-          // If 401, the function requires authentication
-          if (error.message?.includes('401') || error.message?.includes('Unauthorized')) {
-            throw new Error('Please sign in to use TakoAI. The OpenAI proxy requires authentication.');
-          }
-          throw new Error(`OpenAI API error: ${error.message || 'Unknown error'}`);
-        }
-
-        if (!data || !data.success) {
-          throw new Error(data?.error || 'OpenAI API error');
-        }
-
-        return data.data;
-      } catch (err) {
-        // Fallback: try direct fetch with anon key if functions.invoke fails
-        if (err instanceof Error && err.message.includes('sign in')) {
-          throw err; // Re-throw auth errors
-        }
-        
-        // Try direct fetch as fallback
-        const { data: { session } } = await supabase.auth.getSession();
-        const response = await fetch(`${config.supabase.url}/functions/v1/openai-proxy`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': config.supabase.anonKey,
-            'Authorization': `Bearer ${session?.access_token || config.supabase.anonKey}`,
-          },
-          body: JSON.stringify(requestBody),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          if (response.status === 401) {
-            throw new Error('Please sign in to use TakoAI. The OpenAI proxy requires authentication.');
-          }
-          throw new Error(`OpenAI API error: ${response.statusText} - ${errorData.error || ''}`);
-        }
-
-        const data = await response.json();
-        if (!data.success) {
-          throw new Error(data.error || 'OpenAI API error');
-        }
-
-        return data.data;
+      // Get the current session token
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      console.log('🔐 TakoAI Session check:', { 
+        hasSession: !!session, 
+        hasToken: !!session?.access_token,
+        tokenPreview: session?.access_token ? `${session.access_token.substring(0, 20)}...` : 'none',
+        sessionError 
+      });
+      
+      if (!session?.access_token) {
+        throw new Error('Please sign in to use TakoAI.');
       }
+
+      // Use direct fetch with explicit auth token
+      const response = await fetch(`${config.supabase.url}/functions/v1/openai-proxy`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': config.supabase.anonKey,
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          throw new Error('Please sign in to use TakoAI. Session may have expired.');
+        }
+        throw new Error(`OpenAI API error: ${response.statusText} - ${errorData.error || ''}`);
+      }
+
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || 'OpenAI API error');
+      }
+
+      return data.data;
     } else {
       // Direct API call (for local development)
       if (!apiKey) {

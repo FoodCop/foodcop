@@ -8,12 +8,13 @@ import { Button } from '../../ui/button';
 import { Card } from '../../ui/card';
 import { Input } from '../../ui/input';
 import { ScrollArea } from '../../ui/scroll-area';
-import { MessageCircle, X, Send, Sparkles } from 'lucide-react';
+import { X, Send, Sparkles } from 'lucide-react';
 import { TakoAIService, type RestaurantCardData } from '../../../services/takoAIService';
 import { RestaurantCard } from './RestaurantCard';
 import { useYesNoDialog } from '../../../hooks/useYesNoDialog';
 import { useAuth } from '../../auth/AuthProvider';
 import { DashboardService } from '../../../services/dashboardService';
+import { useChatStore } from '../../../stores/chatStore';
 
 interface Message {
   id: string;
@@ -30,7 +31,7 @@ interface AIChatWidgetProps {
 export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidgetProps>) {
   const { user } = useAuth();
   const { showYesNo, YesNoDialog } = useYesNoDialog();
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, closeChat } = useChatStore();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -170,7 +171,7 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
       <div className={positionClasses}>
         {/* Chat Interface */}
         {isOpen && (
-          <Card className="mb-4 w-full md:w-[380px] h-[600px] max-h-[calc(100vh-7rem)] flex flex-col shadow-2xl overflow-hidden">
+          <Card className="mb-4 w-full md:w-[380px] h-[600px] max-h-[calc(100vh-7rem)] flex flex-col shadow-2xl overflow-hidden bg-white">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b bg-white flex-shrink-0 mx-[12px] my-[0px]">
               <div className="flex items-center gap-2 text-gray-900">
@@ -180,7 +181,7 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsOpen(false)}
+                onClick={closeChat}
                 className="text-gray-600 hover:bg-gray-100"
               >
                 <X className="w-5 h-5" />
@@ -261,18 +262,19 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
           </Card>
         )}
 
-        {/* Floating Button */}
-        <Button
-          onClick={() => setIsOpen(!isOpen)}
-          size="icon"
-          className="w-14 h-14 rounded-full shadow-lg bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-200 ml-auto"
-        >
-          {isOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <MessageCircle className="w-6 h-6" />
-          )}
-        </Button>
+        {/* Floating Button - fallback trigger */}
+        {!isOpen && (
+          <Button
+            onClick={() => {
+              console.log('🔵 TakoAI button clicked');
+              useChatStore.getState().openChat();
+            }}
+            size="icon"
+            className="w-14 h-14 rounded-full shadow-lg bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-200 ml-auto"
+          >
+            <Sparkles className="w-6 h-6" />
+          </Button>
+        )}
       </div>
     </>
   );
