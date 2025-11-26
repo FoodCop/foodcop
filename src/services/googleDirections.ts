@@ -102,7 +102,8 @@ export function decodePolyline(encoded: string): [number, number][] {
 }
 
 /**
- * Get directions between two points via backend (avoids CORS)
+ * Get directions between two points using Google Maps JavaScript API DirectionsService
+ * This avoids CORS issues as it uses the client-side API
  */
 export async function getDirections(
   origin: { lat: number; lng: number },
@@ -111,40 +112,47 @@ export async function getDirections(
   alternatives = false
 ): Promise<DirectionsResponse> {
   try {
-    console.log('🗺️ Requesting directions via backend:', {
+    console.log('🗺️ Requesting directions via Google Maps JS API:', {
       origin: `${origin.lat},${origin.lng}`,
       destination: `${destination.lat},${destination.lng}`,
       mode
     });
 
-    // Use backend service to avoid CORS issues
-    const { backendService } = await import('./backendService');
+    // Wait for Google Maps to be loaded
+    if (!window.google?.maps?.DirectionsService) {
+      console.warn('⚠️ Google Maps not loaded, using estimated route');
+      const estimatedDistance = calculateStraightLineDistance(origin, destination);
+      const estimatedTime = estimateTravelTime(estimatedDistance, mode);
+      return createEstimatedRoute(origin, destination, estimatedDistance, estimatedTime, mode);
+    }
+
+    const directionsService = new google.maps.DirectionsService();
     
-    const response = await backendService.getDirections({
-      origin: `${origin.lat},${origin.lng}`,
-      destination: `${destination.lat},${destination.lng}`,
-      mode: mode,
-      alternatives: alternatives.toString()
+    // Map our TravelMode to Google's TravelMode
+    const googleTravelMode: google.maps.TravelMode = {
+      'DRIVING': google.maps.TravelMode.DRIVING,
+      'WALKING': google.maps.TravelMode.WALKING,
+      'BICYCLING': google.maps.TravelMode.BICYCLING,
+      'TRANSIT': google.maps.TravelMode.TRANSIT,
+    }[mode] || google.maps.TravelMode.DRIVING;
+
+    const result = await directionsService.route({
+      origin: new google.maps.LatLng(origin.lat, origin.lng),
+      destination: new google.maps.LatLng(destination.lat, destination.lng),
+      travelMode: googleTravelMode,
+      provideRouteAlternatives: alternatives,
     });
 
-    if (response.success && response.data) {
-      // Handle Routes API v2 response format
-      const data = response.data;
-      
-      if (data.routes && data.routes.length > 0) {
-        console.log('✅ Directions received from backend:', data.routes.length, 'route(s)');
-        return processRoutesApiResponse(data);
-      }
+    if (result.routes && result.routes.length > 0) {
+      console.log('✅ Directions received from Google Maps JS API:', result.routes.length, 'route(s)');
+      return processGoogleMapsJsResponse(result);
     }
     
-    // Fallback to estimated route if backend fails
-    console.warn('⚠️ Backend returned no routes, using estimated route');
+    // Fallback to estimated route
+    console.warn('⚠️ No routes returned, using estimated route');
     const estimatedDistance = calculateStraightLineDistance(origin, destination);
     const estimatedTime = estimateTravelTime(estimatedDistance, mode);
-    const estimatedRoute = createEstimatedRoute(origin, destination, estimatedDistance, estimatedTime, mode);
-    
-    console.log('✅ Using estimated route:', estimatedRoute.routes.length, 'route(s)');
-    return estimatedRoute;
+    return createEstimatedRoute(origin, destination, estimatedDistance, estimatedTime, mode);
   } catch (error) {
     console.error('Error fetching directions:', error);
     
@@ -156,114 +164,59 @@ export async function getDirections(
 }
 
 /**
- * Process Routes API v2 response format
+ * Process Google Maps JavaScript API DirectionsResult
  */
-function processRoutesApiResponse(data: Record<string, unknown>): DirectionsResponse {
-  const apiData = data as { routes: Record<string, unknown>[] };
-  
-  const routes: Route[] = apiData.routes.map((route: Record<string, unknown>) => {
-    const routeData = route as {
-      distanceMeters?: number;
-      duration?: string;
-      polyline?: { encodedPolyline?: string };
-      legs?: unknown[];
-      description?: string;
-      warnings?: string[];
-      viewport?: {
-        low?: { latitude?: number; longitude?: number };
-        high?: { latitude?: number; longitude?: number };
-      };
-    };
-    
-    const legs = (routeData.legs || []) as Record<string, unknown>[];
-    const durationSeconds = routeData.duration ? parseInt(routeData.duration.replace('s', '')) : 0;
-    const distanceMeters = routeData.distanceMeters || 0;
+function processGoogleMapsJsResponse(result: google.maps.DirectionsResult): DirectionsResponse {
+  const routes: Route[] = result.routes.map((route) => {
+    const leg = route.legs[0]; // Primary leg
     
     return {
-      summary: routeData.description || '',
-      legs: legs.length > 0 ? legs.map((leg: Record<string, unknown>) => {
-        const legData = leg as {
-          distanceMeters?: number;
-          duration?: string;
-          startLocation?: { latLng?: { latitude?: number; longitude?: number } };
-          endLocation?: { latLng?: { latitude?: number; longitude?: number } };
-          steps?: unknown[];
-        };
-        
-        const legDuration = legData.duration ? parseInt(legData.duration.replace('s', '')) : 0;
-        const steps = (legData.steps || []) as Record<string, unknown>[];
-        
-        return {
-          distance: {
-            text: `${((legData.distanceMeters || 0) / 1000).toFixed(1)} km`,
-            value: legData.distanceMeters || 0
-          },
-          duration: {
-            text: formatDuration(legDuration),
-            value: legDuration
-          },
-          startAddress: '',
-          endAddress: '',
-          steps: steps.map((step: Record<string, unknown>) => {
-            const stepData = step as {
-              distanceMeters?: number;
-              staticDuration?: string;
-              startLocation?: { latLng?: { latitude?: number; longitude?: number } };
-              endLocation?: { latLng?: { latitude?: number; longitude?: number } };
-              navigationInstruction?: { instructions?: string; maneuver?: string };
-              polyline?: { encodedPolyline?: string };
-            };
-            
-            const stepDuration = stepData.staticDuration ? parseInt(stepData.staticDuration.replace('s', '')) : 0;
-            
-            return {
-              instruction: stepData.navigationInstruction?.instructions || '',
-              distance: {
-                text: `${((stepData.distanceMeters || 0) / 1000).toFixed(1)} km`,
-                value: stepData.distanceMeters || 0
-              },
-              duration: {
-                text: formatDuration(stepDuration),
-                value: stepDuration
-              },
-              startLocation: {
-                lat: stepData.startLocation?.latLng?.latitude || 0,
-                lng: stepData.startLocation?.latLng?.longitude || 0
-              },
-              endLocation: {
-                lat: stepData.endLocation?.latLng?.latitude || 0,
-                lng: stepData.endLocation?.latLng?.longitude || 0
-              },
-              maneuver: stepData.navigationInstruction?.maneuver,
-              polyline: stepData.polyline?.encodedPolyline || ''
-            };
-          })
-        };
-      }) : [{
+      summary: route.summary || '',
+      legs: route.legs.map((leg) => ({
         distance: {
-          text: `${(distanceMeters / 1000).toFixed(1)} km`,
-          value: distanceMeters
+          text: leg.distance?.text || '',
+          value: leg.distance?.value || 0
         },
         duration: {
-          text: formatDuration(durationSeconds),
-          value: durationSeconds
+          text: leg.duration?.text || '',
+          value: leg.duration?.value || 0
         },
-        startAddress: '',
-        endAddress: '',
-        steps: []
-      }],
-      overviewPolyline: routeData.polyline?.encodedPolyline || '',
+        startAddress: leg.start_address || '',
+        endAddress: leg.end_address || '',
+        steps: leg.steps.map((step) => ({
+          instruction: step.instructions || '',
+          distance: {
+            text: step.distance?.text || '',
+            value: step.distance?.value || 0
+          },
+          duration: {
+            text: step.duration?.text || '',
+            value: step.duration?.value || 0
+          },
+          startLocation: {
+            lat: step.start_location?.lat() || 0,
+            lng: step.start_location?.lng() || 0
+          },
+          endLocation: {
+            lat: step.end_location?.lat() || 0,
+            lng: step.end_location?.lng() || 0
+          },
+          maneuver: step.maneuver,
+          polyline: step.polyline?.points || ''
+        }))
+      })),
+      overviewPolyline: route.overview_polyline?.points || '',
       bounds: {
         northeast: {
-          lat: routeData.viewport?.high?.latitude || 0,
-          lng: routeData.viewport?.high?.longitude || 0
+          lat: route.bounds?.getNorthEast()?.lat() || 0,
+          lng: route.bounds?.getNorthEast()?.lng() || 0
         },
         southwest: {
-          lat: routeData.viewport?.low?.latitude || 0,
-          lng: routeData.viewport?.low?.longitude || 0
+          lat: route.bounds?.getSouthWest()?.lat() || 0,
+          lng: route.bounds?.getSouthWest()?.lng() || 0
         }
       },
-      warnings: routeData.warnings || []
+      warnings: route.warnings || []
     };
   });
 
@@ -271,16 +224,6 @@ function processRoutesApiResponse(data: Record<string, unknown>): DirectionsResp
     routes,
     status: 'OK'
   };
-}
-
-function formatDuration(seconds: number): string {
-  const minutes = Math.round(seconds / 60);
-  if (minutes < 60) {
-    return `${minutes} min`;
-  }
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return mins > 0 ? `${hours}h ${mins}min` : `${hours}h`;
 }
 
 /**
