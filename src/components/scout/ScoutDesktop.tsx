@@ -516,6 +516,20 @@ export function ScoutDesktop() {
             Search this area
           </button>
         </div>
+        
+        {/* Recenter on User Location Button */}
+        <button
+          onClick={() => {
+            // Dispatch custom event to recenter map
+            window.dispatchEvent(new CustomEvent('recenter-map', { 
+              detail: { lat: userLocation[0], lng: userLocation[1] } 
+            }));
+          }}
+          className="absolute bottom-4 right-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+          title="Center on your location"
+        >
+          <Navigation size={20} className="text-blue-600" />
+        </button>
       </div>
 
       {/* Right Panel */}

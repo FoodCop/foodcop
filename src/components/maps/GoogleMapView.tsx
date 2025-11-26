@@ -293,9 +293,10 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
       });
     }
 
-    // Fit bounds to show all markers
+    // Fit bounds to show all markers - always include user location
     if (markers.length > 0 && !route) {
       const allMarkers = [...markers];
+      // Always include user location in bounds
       if (userLocation) {
         allMarkers.push({
           id: 'user',
@@ -304,6 +305,9 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
         });
       }
       fitMapBounds(mapInstanceRef.current, allMarkers);
+    } else if (userLocation && markers.length === 0 && !route) {
+      // If no markers, center on user
+      mapInstanceRef.current.panTo(userLocation);
     }
   }, [markers, selectedMarkerId, onMarkerClick, enableClustering, userLocation, route]);
 
@@ -370,6 +374,21 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
       mapInstanceRef.current.setZoom(zoom);
     }
   }, [userLocation, zoom]);
+
+  // Listen for recenter events
+  useEffect(() => {
+    const handleRecenter = (event: CustomEvent<{ lat: number; lng: number }>) => {
+      if (mapInstanceRef.current && event.detail) {
+        mapInstanceRef.current.panTo({ lat: event.detail.lat, lng: event.detail.lng });
+        mapInstanceRef.current.setZoom(14);
+      }
+    };
+
+    window.addEventListener('recenter-map', handleRecenter as EventListener);
+    return () => {
+      window.removeEventListener('recenter-map', handleRecenter as EventListener);
+    };
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
