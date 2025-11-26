@@ -168,7 +168,15 @@ export async function getDirections(
  */
 function processGoogleMapsJsResponse(result: google.maps.DirectionsResult): DirectionsResponse {
   const routes: Route[] = result.routes.map((route) => {
-    const leg = route.legs[0]; // Primary leg
+    // Get the encoded polyline - try multiple property paths
+    const overviewPolyline = 
+      (route as any).overview_polyline?.points || 
+      (route as any).overview_polyline ||
+      (route as any).overviewPolyline?.points ||
+      (route as any).overviewPolyline ||
+      '';
+    
+    console.log('🛣️ Route polyline extracted:', overviewPolyline ? `${overviewPolyline.substring(0, 50)}...` : 'EMPTY');
     
     return {
       summary: route.summary || '',
@@ -202,10 +210,10 @@ function processGoogleMapsJsResponse(result: google.maps.DirectionsResult): Dire
             lng: step.end_location?.lng() || 0
           },
           maneuver: step.maneuver,
-          polyline: step.polyline?.points || ''
+          polyline: (step as any).polyline?.points || (step as any).polyline || ''
         }))
       })),
-      overviewPolyline: route.overview_polyline?.points || '',
+      overviewPolyline: overviewPolyline,
       bounds: {
         northeast: {
           lat: route.bounds?.getNorthEast()?.lat() || 0,
