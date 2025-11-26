@@ -1,9 +1,8 @@
 /**
  * Google Directions API Service
  * Provides routing and navigation features for the Scout map
+ * Routes requests through backend to avoid CORS issues
  */
-
-const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 export type TravelMode = 'DRIVING' | 'WALKING' | 'TRANSIT' | 'BICYCLING';
 
@@ -103,7 +102,7 @@ export function decodePolyline(encoded: string): [number, number][] {
 }
 
 /**
- * Get directions between two points
+ * Get directions between two points via backend (avoids CORS)
  */
 export async function getDirections(
   origin: { lat: number; lng: number },
@@ -111,83 +110,177 @@ export async function getDirections(
   mode: TravelMode = 'DRIVING',
   alternatives = false
 ): Promise<DirectionsResponse> {
-  if (!API_KEY) {
-    console.warn('Google Maps API key not configured');
-    return {
-      routes: [],
-      status: 'REQUEST_DENIED',
-      errorMessage: 'API key not configured'
-    };
-  }
-
   try {
-    console.log('🗺️ Requesting directions:', {
+    console.log('🗺️ Requesting directions via backend:', {
       origin: `${origin.lat},${origin.lng}`,
       destination: `${destination.lat},${destination.lng}`,
       mode
     });
 
-    // Use caching and rate limiting
-    const { withGoogleApiCache } = await import('./googleApiCache');
+    // Use backend service to avoid CORS issues
+    const { backendService } = await import('./backendService');
     
-    const cacheParams = {
-      method: 'directions',
-      originLat: Math.round(origin.lat * 100) / 100,
-      originLng: Math.round(origin.lng * 100) / 100,
-      destLat: Math.round(destination.lat * 100) / 100,
-      destLng: Math.round(destination.lng * 100) / 100,
-      mode,
-      alternatives
-    };
+    const response = await backendService.getDirections({
+      origin: `${origin.lat},${origin.lng}`,
+      destination: `${destination.lat},${destination.lng}`,
+      mode: mode,
+      alternatives: alternatives.toString()
+    });
 
-    const data = await withGoogleApiCache<any>(
-      'directions',
-      cacheParams,
-      async () => {
-        console.log('🗺️ Calling Google Directions API');
-        
-        const params = new URLSearchParams({
-          origin: `${origin.lat},${origin.lng}`,
-          destination: `${destination.lat},${destination.lng}`,
-          mode: mode.toLowerCase(),
-          alternatives: alternatives.toString(),
-          key: API_KEY || ''
-        });
-
-        const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?${params}`;
-        
-        const response = await fetch(directionsUrl);
-        const responseData = await response.json();
-        return responseData;
-      },
-      {
-        useCache: true,
-        cacheDuration: 5 * 60 * 1000 // 5 minutes - directions can change with traffic
+    if (response.success && response.data) {
+      // Handle Routes API v2 response format
+      const data = response.data;
+      
+      if (data.routes && data.routes.length > 0) {
+        console.log('✅ Directions received from backend:', data.routes.length, 'route(s)');
+        return processRoutesApiResponse(data);
       }
-    );
-
-    if (data.status === 'OK' && data.routes && data.routes.length > 0) {
-      console.log('✅ Directions received from Google:', data.routes.length, 'route(s)');
-      return processDirectionsResponse(data);
-    } else {
-      console.warn('⚠️ Google API returned no routes, using estimated route');
-      
-      // Fallback to estimated route
-      const estimatedDistance = calculateStraightLineDistance(origin, destination);
-      const estimatedTime = estimateTravelTime(estimatedDistance, mode);
-      const estimatedRoute = createEstimatedRoute(origin, destination, estimatedDistance, estimatedTime, mode);
-      
-      console.log('✅ Using estimated route:', estimatedRoute.routes.length, 'route(s)');
-      return estimatedRoute;
     }
+    
+    // Fallback to estimated route if backend fails
+    console.warn('⚠️ Backend returned no routes, using estimated route');
+    const estimatedDistance = calculateStraightLineDistance(origin, destination);
+    const estimatedTime = estimateTravelTime(estimatedDistance, mode);
+    const estimatedRoute = createEstimatedRoute(origin, destination, estimatedDistance, estimatedTime, mode);
+    
+    console.log('✅ Using estimated route:', estimatedRoute.routes.length, 'route(s)');
+    return estimatedRoute;
   } catch (error) {
     console.error('Error fetching directions:', error);
-    return {
-      routes: [],
-      status: 'UNKNOWN_ERROR',
-      errorMessage: error instanceof Error ? error.message : 'Unknown error'
-    };
+    
+    // Fallback to estimated route on error
+    const estimatedDistance = calculateStraightLineDistance(origin, destination);
+    const estimatedTime = estimateTravelTime(estimatedDistance, mode);
+    return createEstimatedRoute(origin, destination, estimatedDistance, estimatedTime, mode);
   }
+}
+
+/**
+ * Process Routes API v2 response format
+ */
+function processRoutesApiResponse(data: Record<string, unknown>): DirectionsResponse {
+  const apiData = data as { routes: Record<string, unknown>[] };
+  
+  const routes: Route[] = apiData.routes.map((route: Record<string, unknown>) => {
+    const routeData = route as {
+      distanceMeters?: number;
+      duration?: string;
+      polyline?: { encodedPolyline?: string };
+      legs?: unknown[];
+      description?: string;
+      warnings?: string[];
+      viewport?: {
+        low?: { latitude?: number; longitude?: number };
+        high?: { latitude?: number; longitude?: number };
+      };
+    };
+    
+    const legs = (routeData.legs || []) as Record<string, unknown>[];
+    const durationSeconds = routeData.duration ? parseInt(routeData.duration.replace('s', '')) : 0;
+    const distanceMeters = routeData.distanceMeters || 0;
+    
+    return {
+      summary: routeData.description || '',
+      legs: legs.length > 0 ? legs.map((leg: Record<string, unknown>) => {
+        const legData = leg as {
+          distanceMeters?: number;
+          duration?: string;
+          startLocation?: { latLng?: { latitude?: number; longitude?: number } };
+          endLocation?: { latLng?: { latitude?: number; longitude?: number } };
+          steps?: unknown[];
+        };
+        
+        const legDuration = legData.duration ? parseInt(legData.duration.replace('s', '')) : 0;
+        const steps = (legData.steps || []) as Record<string, unknown>[];
+        
+        return {
+          distance: {
+            text: `${((legData.distanceMeters || 0) / 1000).toFixed(1)} km`,
+            value: legData.distanceMeters || 0
+          },
+          duration: {
+            text: formatDuration(legDuration),
+            value: legDuration
+          },
+          startAddress: '',
+          endAddress: '',
+          steps: steps.map((step: Record<string, unknown>) => {
+            const stepData = step as {
+              distanceMeters?: number;
+              staticDuration?: string;
+              startLocation?: { latLng?: { latitude?: number; longitude?: number } };
+              endLocation?: { latLng?: { latitude?: number; longitude?: number } };
+              navigationInstruction?: { instructions?: string; maneuver?: string };
+              polyline?: { encodedPolyline?: string };
+            };
+            
+            const stepDuration = stepData.staticDuration ? parseInt(stepData.staticDuration.replace('s', '')) : 0;
+            
+            return {
+              instruction: stepData.navigationInstruction?.instructions || '',
+              distance: {
+                text: `${((stepData.distanceMeters || 0) / 1000).toFixed(1)} km`,
+                value: stepData.distanceMeters || 0
+              },
+              duration: {
+                text: formatDuration(stepDuration),
+                value: stepDuration
+              },
+              startLocation: {
+                lat: stepData.startLocation?.latLng?.latitude || 0,
+                lng: stepData.startLocation?.latLng?.longitude || 0
+              },
+              endLocation: {
+                lat: stepData.endLocation?.latLng?.latitude || 0,
+                lng: stepData.endLocation?.latLng?.longitude || 0
+              },
+              maneuver: stepData.navigationInstruction?.maneuver,
+              polyline: stepData.polyline?.encodedPolyline || ''
+            };
+          })
+        };
+      }) : [{
+        distance: {
+          text: `${(distanceMeters / 1000).toFixed(1)} km`,
+          value: distanceMeters
+        },
+        duration: {
+          text: formatDuration(durationSeconds),
+          value: durationSeconds
+        },
+        startAddress: '',
+        endAddress: '',
+        steps: []
+      }],
+      overviewPolyline: routeData.polyline?.encodedPolyline || '',
+      bounds: {
+        northeast: {
+          lat: routeData.viewport?.high?.latitude || 0,
+          lng: routeData.viewport?.high?.longitude || 0
+        },
+        southwest: {
+          lat: routeData.viewport?.low?.latitude || 0,
+          lng: routeData.viewport?.low?.longitude || 0
+        }
+      },
+      warnings: routeData.warnings || []
+    };
+  });
+
+  return {
+    routes,
+    status: 'OK'
+  };
+}
+
+function formatDuration(seconds: number): string {
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes} min`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return mins > 0 ? `${hours}h ${mins}min` : `${hours}h`;
 }
 
 /**

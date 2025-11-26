@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Star, Clock, Phone, Globe, Calendar, Navigation, Heart, Share2 } from 'lucide-react';
+import { Search, MapPin, Star, Clock, Phone, Globe, Navigation, Heart } from 'lucide-react';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { GoogleMapView } from '../maps/GoogleMapView';
 import type { MapMarker } from '../maps/mapUtils';
-import { backendService, formatGooglePlaceResult } from '../../services/backendService';
+import { backendService, formatGooglePlaceResult, getGooglePlacesPhotoUrl } from '../../services/backendService';
+import { getDirections, type TravelMode, type Route } from '../../services/googleDirections';
 import type { GooglePlace } from '../../types';
 
 // Format distance: meters for < 1km, kilometers for >= 1km
@@ -57,6 +58,10 @@ export function ScoutDesktop() {
   const [userLocation, setUserLocation] = useState<[number, number]>([13.1072, 80.0915456]); // Default to Tamil Nadu
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [routePolyline, setRoutePolyline] = useState<string | null>(null);
+  const [routeInfo, setRouteInfo] = useState<Route | null>(null);
+  const [selectedTravelMode, setSelectedTravelMode] = useState<TravelMode>('DRIVING');
+  const [loadingRoute, setLoadingRoute] = useState(false);
 
   // Get user location and fetch restaurants on mount
   useEffect(() => {
@@ -170,21 +175,93 @@ export function ScoutDesktop() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
-  const handleRestaurantClick = (restaurant: Restaurant) => {
+  const handleRestaurantClick = async (restaurant: Restaurant) => {
     setSelectedRestaurant(restaurant);
     setShowDirections(false);
     setActiveTab('overview');
+    
+    // Fetch detailed info including reviews and photos
+    if (restaurant.id) {
+      try {
+        const response = await backendService.getPlaceDetails(restaurant.id);
+        if (response.success && response.data?.result) {
+          const details = response.data.result;
+          
+          // Convert photo references to full URLs
+          const photos = details.photos 
+            ? details.photos.slice(0, 8).map((photo: { photo_reference: string }) => 
+                getGooglePlacesPhotoUrl(photo.photo_reference, 800)
+              )
+            : restaurant.photos;
+          
+          // Merge with detailed info
+          setSelectedRestaurant({
+            ...restaurant,
+            photos,
+            phone: details.formatted_phone_number || details.international_phone_number,
+            website: details.website,
+            opening_hours: details.opening_hours ? {
+              open_now: details.opening_hours.open_now,
+              weekday_text: details.opening_hours.weekday_text
+            } : restaurant.opening_hours,
+            reviews: details.reviews ? details.reviews.map((review: { author_name: string; rating: number; text: string; relative_time_description: string }) => ({
+              author_name: review.author_name,
+              rating: review.rating,
+              text: review.text,
+              time: review.relative_time_description
+            })) : undefined
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch restaurant details:', error);
+      }
+    }
   };
 
-  const handleGetDirections = () => {
+  const handleGetDirections = async () => {
     setShowDirections(true);
+    if (!selectedRestaurant) return;
+    
+    setLoadingRoute(true);
+    try {
+      const response = await getDirections(
+        { lat: userLocation[0], lng: userLocation[1] },
+        { lat: selectedRestaurant.lat, lng: selectedRestaurant.lng },
+        selectedTravelMode
+      );
+      
+      if (response.routes && response.routes.length > 0) {
+        setRoutePolyline(response.routes[0].overviewPolyline);
+        setRouteInfo(response.routes[0]);
+      }
+    } catch (error) {
+      console.error('Failed to get directions:', error);
+      toast.error('Failed to get directions');
+    } finally {
+      setLoadingRoute(false);
+    }
   };
-
-  const handleStartNavigation = () => {
-    // Already showing directions in the map view
-    // The route is displayed on the map with turn-by-turn details
-    if (selectedRestaurant && showDirections) {
-      console.log('Navigation view active for:', selectedRestaurant.name);
+  
+  const handleTravelModeChange = async (mode: TravelMode) => {
+    setSelectedTravelMode(mode);
+    if (!selectedRestaurant || !showDirections) return;
+    
+    setLoadingRoute(true);
+    try {
+      const response = await getDirections(
+        { lat: userLocation[0], lng: userLocation[1] },
+        { lat: selectedRestaurant.lat, lng: selectedRestaurant.lng },
+        mode
+      );
+      
+      if (response.routes && response.routes.length > 0) {
+        setRoutePolyline(response.routes[0].overviewPolyline);
+        setRouteInfo(response.routes[0]);
+      }
+    } catch (error) {
+      console.error('Failed to get directions:', error);
+    } finally {
+      setLoadingRoute(false);
     }
   };
 
@@ -418,6 +495,7 @@ export function ScoutDesktop() {
             }
           }}
           enableClustering={restaurants.length > 20}
+          route={showDirections && routePolyline ? routePolyline : undefined}
           className="w-full h-full"
         />
 
@@ -502,9 +580,12 @@ export function ScoutDesktop() {
                     Website
                   </a>
                 )}
-                <button className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                  <Calendar size={18} />
-                  Book
+                <button
+                  onClick={handleSaveToPlate}
+                  className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <Heart size={18} />
+                  Save to Plate
                 </button>
               </div>
 
@@ -659,15 +740,61 @@ export function ScoutDesktop() {
 
                   {/* Reviews Tab */}
                   {activeTab === 'reviews' && (
-                    <div className="text-center text-gray-500 py-8">
-                      <p>Reviews content coming soon</p>
+                    <div>
+                      {selectedRestaurant.reviews && selectedRestaurant.reviews.length > 0 ? (
+                        <div className="space-y-4">
+                          {selectedRestaurant.reviews.map((review, index) => (
+                            <div key={index} className="pb-4 border-b border-gray-100">
+                              <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                  <span className="text-sm font-medium text-gray-600">
+                                    {review.author_name.charAt(0)}
+                                  </span>
+                                </div>
+                                <div className="flex-1">
+                                  <div className="font-semibold text-gray-900">{review.author_name}</div>
+                                  <div className="flex items-center gap-1">
+                                    <div className="flex text-orange-500 text-xs">
+                                      {[...Array(5)].map((_, i) => (
+                                        <Star key={i} size={12} className={i < review.rating ? 'fill-orange-500' : ''} />
+                                      ))}
+                                    </div>
+                                    <span className="text-xs text-gray-500">{review.time}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <p className="text-gray-700 text-sm">{review.text}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center text-gray-500 py-8">
+                          <p>No reviews available</p>
+                        </div>
+                      )}
                     </div>
                   )}
 
                   {/* Photos Tab */}
                   {activeTab === 'photos' && (
-                    <div className="text-center text-gray-500 py-8">
-                      <p>Photos gallery coming soon</p>
+                    <div>
+                      {selectedRestaurant.photos && selectedRestaurant.photos.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-2">
+                          {selectedRestaurant.photos.map((photo, index) => (
+                            <div key={index} className="aspect-square rounded-lg overflow-hidden bg-gray-200">
+                              <img
+                                src={photo}
+                                alt={`${selectedRestaurant.name} photo ${index + 1}`}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform cursor-pointer"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center text-gray-500 py-8">
+                          <p>No photos available</p>
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -684,7 +811,11 @@ export function ScoutDesktop() {
               {showDirections && (
                 <div>
                   <button
-                    onClick={() => setShowDirections(false)}
+                    onClick={() => {
+                      setShowDirections(false);
+                      setRoutePolyline(null);
+                      setRouteInfo(null);
+                    }}
                     className="text-orange-500 text-sm font-medium mb-4 hover:text-orange-600"
                   >
                     ← Back to overview
@@ -694,21 +825,51 @@ export function ScoutDesktop() {
 
                   {/* Travel Modes */}
                   <div className="grid grid-cols-3 gap-3 mb-6">
-                    <div className="p-3 border-2 border-orange-500 bg-orange-50 rounded-lg text-center">
+                    <button
+                      onClick={() => handleTravelModeChange('DRIVING')}
+                      className={`p-3 border-2 rounded-lg text-center transition-colors ${
+                        selectedTravelMode === 'DRIVING'
+                          ? 'border-orange-500 bg-orange-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
                       <div className="text-2xl mb-1">🚗</div>
-                      <div className="text-sm font-semibold text-gray-900">12 min</div>
+                      <div className="text-sm font-semibold text-gray-900">
+                        {loadingRoute && selectedTravelMode === 'DRIVING' ? '...' : 
+                          routeInfo && selectedTravelMode === 'DRIVING' ? routeInfo.legs[0]?.duration.text : '--'}
+                      </div>
                       <div className="text-xs text-gray-600">Driving</div>
-                    </div>
-                    <div className="p-3 border-2 border-gray-200 rounded-lg text-center hover:border-gray-300 cursor-pointer transition-colors">
+                    </button>
+                    <button
+                      onClick={() => handleTravelModeChange('WALKING')}
+                      className={`p-3 border-2 rounded-lg text-center transition-colors ${
+                        selectedTravelMode === 'WALKING'
+                          ? 'border-orange-500 bg-orange-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
                       <div className="text-2xl mb-1">🚶</div>
-                      <div className="text-sm font-semibold text-gray-900">25 min</div>
+                      <div className="text-sm font-semibold text-gray-900">
+                        {loadingRoute && selectedTravelMode === 'WALKING' ? '...' : 
+                          routeInfo && selectedTravelMode === 'WALKING' ? routeInfo.legs[0]?.duration.text : '--'}
+                      </div>
                       <div className="text-xs text-gray-600">Walking</div>
-                    </div>
-                    <div className="p-3 border-2 border-gray-200 rounded-lg text-center hover:border-gray-300 cursor-pointer transition-colors">
+                    </button>
+                    <button
+                      onClick={() => handleTravelModeChange('BICYCLING')}
+                      className={`p-3 border-2 rounded-lg text-center transition-colors ${
+                        selectedTravelMode === 'BICYCLING'
+                          ? 'border-orange-500 bg-orange-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
                       <div className="text-2xl mb-1">🚴</div>
-                      <div className="text-sm font-semibold text-gray-900">15 min</div>
+                      <div className="text-sm font-semibold text-gray-900">
+                        {loadingRoute && selectedTravelMode === 'BICYCLING' ? '...' : 
+                          routeInfo && selectedTravelMode === 'BICYCLING' ? routeInfo.legs[0]?.duration.text : '--'}
+                      </div>
                       <div className="text-xs text-gray-600">Cycling</div>
-                    </div>
+                    </button>
                   </div>
 
                   {/* Route Info */}
@@ -717,7 +878,9 @@ export function ScoutDesktop() {
                       <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                       <div>
                         <div className="text-sm font-medium text-gray-900">Your location</div>
-                        <div className="text-xs text-gray-600">Downtown, Los Angeles</div>
+                        <div className="text-xs text-gray-600">
+                          {routeInfo?.legs[0]?.startAddress || 'Current position'}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -727,29 +890,52 @@ export function ScoutDesktop() {
                         <div className="text-xs text-gray-600">{selectedRestaurant.address}</div>
                       </div>
                     </div>
+                    {routeInfo && (
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Distance:</span>
+                          <span className="font-semibold">{routeInfo.legs[0]?.distance.text}</span>
+                        </div>
+                        <div className="flex justify-between text-sm mt-1">
+                          <span className="text-gray-600">Duration:</span>
+                          <span className="font-semibold">{routeInfo.legs[0]?.duration.text}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Start Navigation Button */}
-                  <button
-                    onClick={handleStartNavigation}
-                    className="w-full bg-orange-500 text-white font-semibold py-4 rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Navigation size={20} />
-                    Start Navigation
-                  </button>
+                  {/* Route Steps */}
+                  {routeInfo && routeInfo.legs[0]?.steps && routeInfo.legs[0].steps.length > 0 && (
+                    <div className="mb-6">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Route Steps</h4>
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {routeInfo.legs[0].steps.slice(0, 10).map((step, index) => (
+                          <div key={index} className="flex gap-2 text-sm">
+                            <span className="text-gray-400 w-5">{index + 1}.</span>
+                            <span 
+                              className="text-gray-700 flex-1"
+                              dangerouslySetInnerHTML={{ __html: step.instruction }}
+                            />
+                            <span className="text-gray-500 text-xs">{step.distance.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Send to Google Maps Button */}
                   <button
                     onClick={() => {
                       if (selectedRestaurant) {
-                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${selectedRestaurant.lat},${selectedRestaurant.lng}`;
+                        const mode = selectedTravelMode.toLowerCase();
+                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${selectedRestaurant.lat},${selectedRestaurant.lng}&travelmode=${mode}`;
                         window.open(googleMapsUrl, '_blank');
                       }
                     }}
-                    className="w-full mt-3 bg-white border-2 border-gray-300 text-gray-900 font-semibold py-4 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                    className="w-full bg-orange-500 text-white font-semibold py-4 rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
                   >
-                    <MapPin size={20} />
-                    Send to Google Maps
+                    <Navigation size={20} />
+                    Open in Google Maps
                   </button>
                 </div>
               )}

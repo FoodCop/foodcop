@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Navigation, Star, Clock, SlidersHorizontal, Heart } from 'lucide-react';
+import { Search, MapPin, Navigation, Star, Clock, SlidersHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { backendService, formatGooglePlaceResult, getGooglePlacesPhotoUrl } from '../../services/backendService';
 import type { GooglePlace } from '../../types';
@@ -496,12 +496,6 @@ export default function ScoutNew() {
               <Clock className="inline w-4 h-4 mr-2" />
               Fast Delivery
             </button>
-            <button className="px-5 py-2.5 bg-gray-50 text-gray-700 rounded-full text-sm font-medium border border-gray-100 hover:bg-gray-100">
-              🌱 Vegetarian
-            </button>
-            <button className="px-5 py-2.5 bg-gray-50 text-gray-700 rounded-full text-sm font-medium border border-gray-100 hover:bg-gray-100">
-              🏷️ Offers
-            </button>
           </div>
         </section>
 
@@ -552,8 +546,6 @@ export default function ScoutNew() {
 
 // Carousel Card Component (for horizontal scroll)
 function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ restaurant: Restaurant; onClick?: () => void; onNavigate?: (restaurant: Restaurant) => void }>) {
-  const [liked, setLiked] = useState(false);
-  
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$';
   const distanceText = formatDistance(restaurant.distance);
 
@@ -599,17 +591,16 @@ function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ 
           {Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(' • ') : restaurant.cuisine}
         </p>
         
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1">
-              <Clock className="w-3 h-3 text-gray-400" />
-              <span className="text-xs text-gray-600">25 min</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1">
+                <Clock className="w-3 h-3 text-gray-400" />
+                <span className="text-xs text-gray-600">25 min</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <span className="text-xs text-gray-600">{priceLevel}</span>
+              </div>
             </div>
-            <div className="flex items-center space-x-1">
-              <span className="text-xs text-gray-600">{priceLevel}</span>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -619,17 +610,7 @@ function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ 
             >
               <Navigation className="w-4 h-4 text-orange-600" />
             </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setLiked(!liked);
-              }}
-              className="w-9 h-9 bg-gray-50 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-            >
-              <Heart className={`w-4 h-4 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
-            </button>
           </div>
-        </div>
       </div>
     </button>
   );
@@ -739,11 +720,8 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
         {/* Action buttons */}
         <div className="flex space-x-3">
           <button className="flex-1 h-12 bg-gray-900 text-white rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors">
-            <span>📋</span>
-            <span>Book Table</span>
-          </button>
-          <button className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center hover:bg-gray-100 transition-colors">
-            <span className="text-gray-700 text-lg">🔗</span>
+            <span>💾</span>
+            <span>Save to Plate</span>
           </button>
         </div>
       </div>
