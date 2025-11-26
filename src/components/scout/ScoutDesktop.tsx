@@ -307,6 +307,17 @@ export function ScoutDesktop() {
       <aside className="w-[380px] bg-white border-r border-gray-200 flex flex-col overflow-hidden">
         {/* Header */}
         <div className="p-4 border-b border-gray-100">
+          {/* User Location */}
+          <div className="flex items-center gap-2 mb-4 p-2 bg-blue-50 rounded-lg">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="flex-1 min-w-0">
+              <span className="text-xs text-blue-600 font-medium">Your Location</span>
+              <p className="text-sm text-gray-700 truncate">
+                {userLocation[0].toFixed(4)}, {userLocation[1].toFixed(4)}
+              </p>
+            </div>
+          </div>
+          
           {/* Search */}
           <div className="relative mb-4">
             <input
