@@ -14,7 +14,7 @@ import { RestaurantCard } from './RestaurantCard';
 import { useYesNoDialog } from '../../../hooks/useYesNoDialog';
 import { useAuth } from '../../auth/AuthProvider';
 import { DashboardService } from '../../../services/dashboardService';
-import { useChatStore } from '../../../stores/chatStore';
+import { useTakoAIStore } from '../../../stores/takoAIStore';
 
 interface Message {
   id: string;
@@ -31,7 +31,7 @@ interface AIChatWidgetProps {
 export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidgetProps>) {
   const { user } = useAuth();
   const { showYesNo, YesNoDialog } = useYesNoDialog();
-  const { isOpen, closeChat } = useChatStore();
+  const { isOpen, closeChat } = useTakoAIStore();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -267,7 +267,7 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
           <Button
             onClick={() => {
               console.log('🔵 TakoAI button clicked');
-              useChatStore.getState().openChat();
+              useTakoAIStore.getState().openChat();
             }}
             size="icon"
             className="w-14 h-14 rounded-full shadow-lg bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-200 ml-auto"
