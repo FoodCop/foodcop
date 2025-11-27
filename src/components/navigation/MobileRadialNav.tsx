@@ -1,5 +1,4 @@
 import { RadialMenu } from './components/RadialMenu';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Rss, 
   Search, 
@@ -7,10 +6,10 @@ import {
   Pizza, 
   Scissors, 
   Utensils, 
-  MessageCircle, 
-  LayoutDashboard 
+  MessageCircle,
+  Send
 } from 'lucide-react';
-import { useChatStore } from '../../stores/chatStore';
+import { useDMChatStore } from '../../stores/chatStore';
 
 interface MobileRadialNavProps {
   currentPage: string;
@@ -18,13 +17,13 @@ interface MobileRadialNavProps {
 }
 
 export const MobileRadialNav = ({ currentPage, onNavigate }: MobileRadialNavProps) => {
-  const { toggleChat } = useChatStore();
+  const { openChat, unreadCount } = useDMChatStore();
   
   const handleNavigate = (route: string) => {
     console.log('🔵 RadialNav handleNavigate:', route);
-    if (route === 'takoai') {
-      console.log('🔵 Opening TakoAI chat');
-      toggleChat();
+    if (route === 'messages') {
+      console.log('🔵 Opening DM Chat');
+      openChat();
       return; // Don't navigate
     }
     onNavigate(route);
@@ -62,9 +61,9 @@ export const MobileRadialNav = ({ currentPage, onNavigate }: MobileRadialNavProp
       icon: <Utensils size={20} />,
     },
     {
-      label: 'TakoAI',
-      route: 'takoai',
-      icon: <MessageCircle size={20} />,
+      label: unreadCount > 0 ? `Chat (${unreadCount})` : 'Chat',
+      route: 'messages',
+      icon: <Send size={20} />,
     },
   ];
 

@@ -8,8 +8,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { X, Heart, Bookmark, Send, MapPin, Star } from 'lucide-react';
-import { sampleRestaurants } from './data/feed-content';
-import type { RestaurantCard } from './data/feed-content';
+import { FeedService } from '../../services/feedService';
+import type { RestaurantCard, FeedCard } from './data/feed-content';
 
 type SwipeDirection = 'left' | 'right' | 'up' | 'down';
 
@@ -264,10 +264,31 @@ function SwipeableCard({
 }
 
 export function FeedMobile() {
-  const [cards] = useState<RestaurantCard[]>(sampleRestaurants);
+  const [cards, setCards] = useState<RestaurantCard[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [exitDirection, setExitDirection] = useState<SwipeDirection | null>(null);
+
+  // Load feed data on mount
+  useEffect(() => {
+    const loadFeed = async () => {
+      try {
+        setIsLoading(true);
+        const feedCards = await FeedService.generateFeed({ pageSize: 20 });
+        // Filter to only restaurant cards for now
+        const restaurantCards = feedCards.filter(
+          (card): card is RestaurantCard => card.type === 'restaurant'
+        );
+        setCards(restaurantCards);
+      } catch (error) {
+        console.error('Failed to load feed:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadFeed();
+  }, []);
 
   const handleSwipe = useCallback((direction: SwipeDirection) => {
     if (isAnimating) return;

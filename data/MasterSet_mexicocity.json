@@ -1,0 +1,3711 @@
+[
+  {
+    "title": "Quintonil",
+    "description": "Noted restaurant with a tasting menu offering ambitious meat & seafood dishes, plus wine pairing.",
+    "price": "MX$1,000+",
+    "categoryName": "Fine dining restaurant",
+    "address": "Av. Isaac Newton 55, Polanco, Polanco IV Secc, Miguel Hidalgo, 11560 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Polanco, Polanco IV Sección",
+    "street": "Av. Isaac Newton 55",
+    "city": "Miguel Hidalgo, Mexico City",
+    "postalCode": "11560",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "http://www.quintonil.com/",
+    "phone": "+52 55 5280 2680",
+    "phoneUnformatted": "+525552802680",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.4308408,
+      "lng": -99.1917115
+    },
+    "totalScore": 4.4,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJbS8EZf8B0oURwwD8B0MpqK0",
+    "categories": [
+      "Fine dining restaurant",
+      "Restaurant"
+    ],
+    "fid": "0x85d201ff65042f6d:0xada8294307fc00c3",
+    "cid": "12513296932522426563",
+    "reviewsCount": 2804,
+    "imagesCount": 10041,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:37.076Z",
+    "reserveTableUrl": "https://www.google.com/maps/reserve/v/dine/c/n5kjoYBkCIM?source=pa&opi=79508299&hl=en-US&gei=oBbIaJv8B-yup84Pg5edmAY&sourceurl=https://www.google.com/service/MapsSearchService/Search?hl%3Den%26authuser%3D0%26gl%3Dus%26q%3Dfine%2Bdining%2Brestaurant%2Bin%2BMexico%2BCity,%2BMexico%26tbm%3Dmap",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1 PM to 12 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1 PM to 12 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 PM to 12 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "1 PM to 12 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Closed"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Onsite services": true
+        },
+        {
+          "Dine-in": true
+        },
+        {
+          "Delivery": false
+        },
+        {
+          "Takeout": false
+        }
+      ],
+      "Highlights": [
+        {
+          "Great beer selection": true
+        },
+        {
+          "Great cocktails": true
+        },
+        {
+          "Great coffee": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        },
+        {
+          "Great wine list": true
+        },
+        {
+          "Rooftop seating": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Organic dishes": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Vegan options": true
+        },
+        {
+          "Vegetarian options": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Bar onsite": true
+        },
+        {
+          "Restroom": true
+        },
+        {
+          "Wi-Fi": true
+        },
+        {
+          "Free Wi-Fi": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Romantic": true
+        },
+        {
+          "Trendy": true
+        },
+        {
+          "Upscale": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Groups": true
+        },
+        {
+          "Tourists": true
+        }
+      ],
+      "Planning": [
+        {
+          "Lunch reservations recommended": true
+        },
+        {
+          "Reservations required": true
+        },
+        {
+          "Dinner reservations recommended": true
+        },
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Parking": [
+        {
+          "Free street parking": true
+        },
+        {
+          "Paid street parking": true
+        },
+        {
+          "Usually somewhat difficult to find a space": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Quintonil&query_place_id=ChIJbS8EZf8B0oURwwD8B0MpqK0",
+    "searchPageUrl": "https://www.google.com/maps/search/fine+dining+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "fine+dining+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 3,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/p/AF1QipNBKIZRYjA3jXFCUu5E_xOPZ1pNFuJOLqLzrBBO=w408-h272-k-no",
+    "kgmid": "/g/1hjgq6992"
+  },
+  {
+    "title": "Pujol",
+    "price": "MX$1,000+",
+    "categoryName": "Mexican restaurant",
+    "address": "Tennyson 133, Polanco, Polanco IV Secc, Miguel Hidalgo, 11570 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Polanco, Polanco IV Sección",
+    "street": "Tennyson 133",
+    "city": "Miguel Hidalgo, Mexico City",
+    "postalCode": "11570",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "http://pujol.com.mx/",
+    "phone": "+52 55 5545 4111",
+    "phoneUnformatted": "+525555454111",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.4323763,
+      "lng": -99.1948132
+    },
+    "totalScore": 4.4,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJWZ2zdav40YURFvsU_rU3uaE",
+    "categories": [
+      "Mexican restaurant"
+    ],
+    "fid": "0x85d1f8ab75b39d59:0xa1b937b5fe14fb16",
+    "cid": "11653406765589265174",
+    "reviewsCount": 5475,
+    "imagesCount": 17619,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:37.076Z",
+    "reserveTableUrl": "https://www.google.com/maps/reserve/v/dine/c/gn1iYWeOLts?source=pa&opi=79508299&hl=en-US&gei=oBbIaJv8B-yup84Pg5edmAY&sourceurl=https://www.google.com/service/MapsSearchService/Search?hl%3Den%26authuser%3D0%26gl%3Dus%26q%3Dfine%2Bdining%2Brestaurant%2Bin%2BMexico%2BCity,%2BMexico%26tbm%3Dmap",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "1 to 9:30 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "1 to 9:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1 to 9:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1 to 9:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 to 9:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "1 to 9:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Closed"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Outdoor seating": true
+        },
+        {
+          "Dine-in": true
+        },
+        {
+          "Delivery": false
+        },
+        {
+          "Takeout": false
+        }
+      ],
+      "Highlights": [
+        {
+          "Great beer selection": true
+        },
+        {
+          "Great cocktails": true
+        },
+        {
+          "Great coffee": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        },
+        {
+          "Great wine list": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Wheelchair accessible restroom": true
+        },
+        {
+          "Wheelchair accessible seating": true
+        },
+        {
+          "Assistive hearing loop": false
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Private dining room": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Seating": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Bar onsite": true
+        },
+        {
+          "Restroom": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Romantic": true
+        },
+        {
+          "Trendy": true
+        },
+        {
+          "Upscale": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Groups": true
+        },
+        {
+          "LGBTQ+ friendly": true
+        },
+        {
+          "Tourists": true
+        },
+        {
+          "Transgender safespace": true
+        }
+      ],
+      "Planning": [
+        {
+          "Lunch reservations recommended": true
+        },
+        {
+          "Reservations required": true
+        },
+        {
+          "Dinner reservations recommended": true
+        },
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Parking": [
+        {
+          "Free parking lot": true
+        },
+        {
+          "Free street parking": true
+        },
+        {
+          "Paid street parking": true
+        },
+        {
+          "Usually difficult to find a space": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Pujol&query_place_id=ChIJWZ2zdav40YURFvsU_rU3uaE",
+    "searchPageUrl": "https://www.google.com/maps/search/fine+dining+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "fine+dining+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 5,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqfu9c9-zWYGZw3jG9sd1zdwn9pKHGRm_mfADoH6ql2gXWON1X8gBeqxxYrici-HRg0wCHC1xcev3ZU5HRZ7DUx6kcWFm5dsbago28d3sk_nqkGyTIDiMGkrZn2qxfANAO9zOzF=w408-h250-k-no",
+    "kgmid": "/m/0h568hy"
+  },
+  {
+    "title": "Raíz",
+    "subTitle": "Restaurante Raíz",
+    "price": "MX$1,000+",
+    "categoryName": "Fine dining restaurant",
+    "address": "Schiller 331, Polanco, Polanco V Secc, Miguel Hidalgo, 11560 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Polanco, Polanco V Sección",
+    "street": "Schiller 331",
+    "city": "Miguel Hidalgo, Mexico City",
+    "postalCode": "11560",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "http://www.restauranteraiz.com/",
+    "phone": "+52 55 1247 6047",
+    "phoneUnformatted": "+525512476047",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.4320246,
+      "lng": -99.1865747
+    },
+    "totalScore": 4.5,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJb2bGJKv40YURSRf5qxN_yoA",
+    "categories": [
+      "Fine dining restaurant",
+      "Mexican restaurant",
+      "Restaurant"
+    ],
+    "fid": "0x85d1f8ab24c6666f:0x80ca7f13abf91749",
+    "cid": "9280369704616662857",
+    "reviewsCount": 659,
+    "imagesCount": 1339,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:37.076Z",
+    "reserveTableUrl": "https://www.google.com/maps/reserve/v/dine/c/M1TAj1r6568?source=pa&opi=79508299&hl=en-US&gei=oBbIaJv8B-yup84Pg5edmAY&sourceurl=https://www.google.com/service/MapsSearchService/Search?hl%3Den%26authuser%3D0%26gl%3Dus%26q%3Dfine%2Bdining%2Brestaurant%2Bin%2BMexico%2BCity,%2BMexico%26tbm%3Dmap",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "5:30 PM to 12 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "5:30 PM to 12 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "5:30 PM to 12 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "5:30 PM to 12 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "5:30 PM to 12 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "1:30 to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Closed"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Delivery": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great cocktails": true
+        },
+        {
+          "Great coffee": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        },
+        {
+          "Great wine list": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Wheelchair accessible restroom": true
+        },
+        {
+          "Wheelchair accessible seating": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Vegan options": true
+        },
+        {
+          "Vegetarian options": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Bar onsite": true
+        },
+        {
+          "Restroom": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Romantic": true
+        },
+        {
+          "Trendy": true
+        },
+        {
+          "Upscale": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Groups": true
+        }
+      ],
+      "Planning": [
+        {
+          "Lunch reservations recommended": true
+        },
+        {
+          "Dinner reservations recommended": true
+        },
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "NFC mobile payments": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Parking": [
+        {
+          "Paid parking lot": true
+        },
+        {
+          "Usually plenty of parking": true
+        },
+        {
+          "Valet parking": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Ra%C3%ADz&query_place_id=ChIJb2bGJKv40YURSRf5qxN_yoA",
+    "searchPageUrl": "https://www.google.com/maps/search/fine+dining+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "fine+dining+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 6,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4no93-O09Q0Lv-VlJOm0n-5BTtJQXnIfaR-W-a9Wv0oXDTpCO9M7Vg5w1Txek_4trZqb9Mys7_bzOhcM1LzDjK4gSoUsGJCActn3YWL4aQ_vcKCzDLJ_KdfcPMF37_0R_c4tBvXZpw=w408-h306-k-no",
+    "kgmid": "/g/1hf0cptg6"
+  },
+  {
+    "title": "Rosa Negra",
+    "subTitle": "RosaNegra | Latin American Restaurant in Polanco",
+    "price": "MX$1,000+",
+    "categoryName": "Latin American restaurant",
+    "address": "Av. Pdte. Masaryk 298, Polanco, Polanco IV Secc, Miguel Hidalgo, 11550 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Polanco, Polanco IV Sección",
+    "street": "Av. Pdte. Masaryk 298",
+    "city": "Miguel Hidalgo, Mexico City",
+    "postalCode": "11550",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "https://www.rosanegra.com.mx/restaurantes-polanco-mexico-city-restaurants?utm_source=organic&utm_medium=gmb&utm_campaign=rosapolanco&ot_source=gmb_2834_rnp",
+    "phone": "+52 55 5282 2603",
+    "phoneUnformatted": "+525552822603",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.4313687,
+      "lng": -99.1932413
+    },
+    "totalScore": 4.5,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJrwqHxQEC0oURQc3yfAC7XdI",
+    "categories": [
+      "Latin American restaurant",
+      "Bar",
+      "Fine dining restaurant"
+    ],
+    "fid": "0x85d20201c5870aaf:0xd25dbb007cf2cd41",
+    "cid": "15158477531569638721",
+    "reviewsCount": 6824,
+    "imagesCount": 6116,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:37.077Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 PM to 2 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 PM to 2 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 PM to 2 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 PM to 2 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 PM to 2 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 PM to 2 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 PM to 2 AM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Outdoor seating": true
+        },
+        {
+          "Onsite services": true
+        },
+        {
+          "Dine-in": true
+        },
+        {
+          "Delivery": false
+        }
+      ],
+      "Highlights": [
+        {
+          "Great beer selection": true
+        },
+        {
+          "Great cocktails": true
+        },
+        {
+          "Great coffee": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        },
+        {
+          "Great wine list": true
+        },
+        {
+          "Live music": true
+        },
+        {
+          "Rooftop seating": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Wheelchair accessible restroom": true
+        },
+        {
+          "Wheelchair accessible seating": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Counter service": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Seating": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Bar onsite": true
+        },
+        {
+          "Restroom": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Romantic": true
+        },
+        {
+          "Trendy": true
+        },
+        {
+          "Upscale": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Groups": true
+        },
+        {
+          "Tourists": true
+        }
+      ],
+      "Planning": [
+        {
+          "Lunch reservations recommended": true
+        },
+        {
+          "Reservations required": true
+        },
+        {
+          "Dinner reservations recommended": true
+        },
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "NFC mobile payments": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "Has changing table(s)": true
+        },
+        {
+          "High chairs": true
+        }
+      ],
+      "Parking": [
+        {
+          "Paid street parking": true
+        },
+        {
+          "Usually plenty of parking": true
+        },
+        {
+          "Valet parking": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Rosa%20Negra&query_place_id=ChIJrwqHxQEC0oURQc3yfAC7XdI",
+    "searchPageUrl": "https://www.google.com/maps/search/fine+dining+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "fine+dining+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 7,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4np636domdecWJdIqfKbynqPBZWMlo9QnuDzqIl8K7VB3xI1_rW8kzysgfAdeyUw-KNA_YcCbCwAl1wEIl5skoGb8LmxKh5IByBCbB_bywqgF39zOrKx5S3bNcFOWMRkHr2GpV-sqw=w408-h262-k-no",
+    "kgmid": "/g/11g6z2qw55"
+  },
+  {
+    "title": "Taquería en la calle (street-food)",
+    "price": null,
+    "categoryName": "Mexican restaurant",
+    "address": "Calle Santos Dumont 131(105, Aviación Civil, Venustiano Carranza, 15740 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Aviación Civil",
+    "street": "Calle Santos Dumont 131(105",
+    "city": "Venustiano Carranza, Mexico City",
+    "postalCode": "15740",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "claimThisBusiness": true,
+    "location": {
+      "lat": 19.4174918,
+      "lng": -99.0779999
+    },
+    "totalScore": 5,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJT4EmU7D90YURgBm8QimOZOQ",
+    "categories": [
+      "Mexican restaurant"
+    ],
+    "fid": "0x85d1fdb05326814f:0xe4648e2942bc1980",
+    "cid": "16457435246183061888",
+    "reviewsCount": 2,
+    "imagesCount": 3,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:37.421Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Thursday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Friday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Saturday",
+        "hours": "Open 24 hours"
+      },
+      {
+        "day": "Sunday",
+        "hours": "Open 24 hours"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Solo dining": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Quick bite": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Casual": true
+        },
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Trendy": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Groups": true
+        }
+      ],
+      "Children": [
+        {
+          "Good for kids": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Taquer%C3%ADa%20en%20la%20calle%20(street-food)&query_place_id=ChIJT4EmU7D90YURgBm8QimOZOQ",
+    "searchPageUrl": "https://www.google.com/maps/search/street+food+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "street+food+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 1,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX5nEtQ7lBOJvVEyW3WQAu6HmgJfV3UyzlW0Jb_mS6R-J0Bje8HD4CVLPTiQLU_b7bCixdA7wBDQgm7b2mWTHYT5ULpcMtkOGts2IzayG-Ms1koTYjN7D3w7c7PLaaFO_HtKaQ=w426-h240-k-no",
+    "kgmid": "/g/11rn7w3ygj"
+  },
+  {
+    "title": "Tori Tori Polanco",
+    "subTitle": "Tori Tori",
+    "price": "MX$1,000+",
+    "categoryName": "Japanese restaurant",
+    "address": "Temístocles 61, Polanco, Polanco IV Secc, Miguel Hidalgo, 11550 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Polanco, Polanco IV Sección",
+    "street": "Temístocles 61",
+    "city": "Miguel Hidalgo, Mexico City",
+    "postalCode": "11550",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "http://www.toritori.com.mx/",
+    "phone": "+52 55 5280 8067",
+    "phoneUnformatted": "+525552808067",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.4304401,
+      "lng": -99.1919388
+    },
+    "totalScore": 4.5,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJl2tJKAAC0oURzWeACONi9Tg",
+    "categories": [
+      "Japanese restaurant",
+      "Authentic Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "fid": "0x85d2020028496b97:0x38f562e3088067cd",
+    "cid": "4104295362657806285",
+    "reviewsCount": 1800,
+    "imagesCount": 1414,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:38.062Z",
+    "reserveTableUrl": "https://www.google.com/maps/reserve/v/dine/c/pVhejgnz1xY?source=pa&opi=79508299&hl=en-US&gei=oBbIaIOVMrrGp84P65mt2AE&sourceurl=https://www.google.com/service/MapsSearchService/Search?hl%3Den%26authuser%3D0%26gl%3Dus%26q%3Dsushi%2Brestaurant%2Bin%2BMexico%2BCity,%2BMexico%26tbm%3Dmap",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "1 to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "1 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1 PM to 12 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1 PM to 1 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 PM to 1 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "1 PM to 1 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "1 to 8 PM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Outdoor seating": true
+        },
+        {
+          "No-contact delivery": true
+        },
+        {
+          "Delivery": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great beer selection": true
+        },
+        {
+          "Great cocktails": true
+        },
+        {
+          "Great coffee": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        },
+        {
+          "Great wine list": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Wheelchair accessible parking lot": true
+        },
+        {
+          "Wheelchair accessible restroom": true
+        },
+        {
+          "Wheelchair accessible seating": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Late-night food": true
+        },
+        {
+          "Quick bite": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Vegan options": true
+        },
+        {
+          "Vegetarian options": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Catering": true
+        },
+        {
+          "Counter service": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Seating": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Bar onsite": true
+        },
+        {
+          "Restroom": true
+        },
+        {
+          "Wi-Fi": true
+        },
+        {
+          "Free Wi-Fi": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Romantic": true
+        },
+        {
+          "Trendy": true
+        },
+        {
+          "Upscale": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Groups": true
+        },
+        {
+          "Tourists": true
+        }
+      ],
+      "Planning": [
+        {
+          "Lunch reservations recommended": true
+        },
+        {
+          "Dinner reservations recommended": true
+        },
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "NFC mobile payments": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "High chairs": true
+        }
+      ],
+      "Parking": [
+        {
+          "Paid parking lot": true
+        },
+        {
+          "Paid street parking": true
+        },
+        {
+          "Usually plenty of parking": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Tori%20Tori%20Polanco&query_place_id=ChIJl2tJKAAC0oURzWeACONi9Tg",
+    "searchPageUrl": "https://www.google.com/maps/search/sushi+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "sushi+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 2,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noM_WUr8Ny9qPqUsUE27-tfh8Y9pCZIXO-XpSE13HuEmO2g1TlT2S-UTfZnMtcgn_a01EFEwGzpjabvqFqicX3Ae34QLgoRMJDWtbFcjjy4Y0qchJuyYOo1OIKihA9Mh1eeLlEyQw=w408-h305-k-no",
+    "kgmid": "/g/124s_mvyp"
+  },
+  {
+    "title": "Ryoshi",
+    "description": "Upscale destination cooking Japanese seafood, meat & veggie dishes, plus a sushi & sashimi bar.",
+    "price": "MX$1,000+",
+    "categoryName": "Japanese restaurant",
+    "address": "Av. Pdte. Masaryk 111, Polanco, Polanco V Secc, Miguel Hidalgo, 11560 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Polanco, Polanco V Sección",
+    "street": "Av. Pdte. Masaryk 111",
+    "city": "Miguel Hidalgo, Mexico City",
+    "postalCode": "11560",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "https://www.ryoshi.mx/",
+    "phone": "+52 55 8848 0754",
+    "phoneUnformatted": "+525588480754",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.4317117,
+      "lng": -99.1862479
+    },
+    "totalScore": 4.9,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJUcS1TAr50YURuwZKxZdg-ak",
+    "categories": [
+      "Japanese restaurant"
+    ],
+    "fid": "0x85d1f90a4cb5c451:0xa9f96097c54a06bb",
+    "cid": "12247926866577065659",
+    "reviewsCount": 10829,
+    "imagesCount": 5033,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:38.062Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12:30 PM to 1 AM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12:30 PM to 2 AM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12:30 PM to 2 AM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12:30 PM to 2 AM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12:30 PM to 2 AM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12:30 PM to 2 AM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12:30 PM to 12 AM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Outdoor seating": true
+        },
+        {
+          "No-contact delivery": true
+        },
+        {
+          "Delivery": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great beer selection": true
+        },
+        {
+          "Great cocktails": true
+        },
+        {
+          "Great coffee": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        },
+        {
+          "Great wine list": true
+        },
+        {
+          "Rooftop seating": true
+        },
+        {
+          "Sports": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Wheelchair accessible parking lot": true
+        },
+        {
+          "Wheelchair accessible restroom": true
+        },
+        {
+          "Wheelchair accessible seating": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Late-night food": true
+        },
+        {
+          "Private dining room": true
+        },
+        {
+          "Quick bite": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Vegetarian options": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Catering": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Seating": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Bar onsite": true
+        },
+        {
+          "Restroom": true
+        },
+        {
+          "Wi-Fi": true
+        },
+        {
+          "Free Wi-Fi": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Romantic": true
+        },
+        {
+          "Trendy": true
+        },
+        {
+          "Upscale": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Family-friendly": true
+        },
+        {
+          "Groups": true
+        },
+        {
+          "Tourists": true
+        }
+      ],
+      "Planning": [
+        {
+          "Lunch reservations recommended": true
+        },
+        {
+          "Reservations required": true
+        },
+        {
+          "Dinner reservations recommended": true
+        },
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "NFC mobile payments": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "Has changing table(s)": true
+        },
+        {
+          "High chairs": true
+        }
+      ],
+      "Parking": [
+        {
+          "Free street parking": true
+        },
+        {
+          "Paid parking lot": true
+        },
+        {
+          "Usually plenty of parking": true
+        },
+        {
+          "Valet parking": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Ryoshi&query_place_id=ChIJUcS1TAr50YURuwZKxZdg-ak",
+    "searchPageUrl": "https://www.google.com/maps/search/sushi+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "sushi+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 3,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nonmllV0LDZ7XsSoLRfkodK3as3VBiHbr0oHq5LsIfUCH2CdTPditCnkjoFTXZI-UBWvom4nlTjZfwL8LaCS8MT5H7uXj7CHXufMMMpRmkGNA7dhwS4V29azO0gngOJbrB2-9sS=w408-h306-k-no",
+    "kgmid": "/g/11fp83fdy3"
+  },
+  {
+    "title": "Suntory Del Valle",
+    "price": "MX$1,000+",
+    "categoryName": "Japanese restaurant",
+    "address": "Torres Adalid 14, Col del Valle Nte, Benito Juárez, 03103 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Colonia del Valle Norte",
+    "street": "Torres Adalid 14",
+    "city": "Benito Juarez, Mexico City",
+    "postalCode": "03103",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "http://www.suntory.com.mx/",
+    "phone": "+52 55 5536 9432",
+    "phoneUnformatted": "+525555369432",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.3926616,
+      "lng": -99.171867
+    },
+    "totalScore": 4.7,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJN2VNtnP_0YURs-NRYpIzOZM",
+    "categories": [
+      "Japanese restaurant",
+      "Authentic Japanese restaurant",
+      "Sushi restaurant"
+    ],
+    "fid": "0x85d1ff73b64d6537:0x933933926251e3b3",
+    "cid": "10608567101055689651",
+    "reviewsCount": 4136,
+    "imagesCount": 2823,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:38.062Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "1 to 11 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "1 to 11 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1 to 11 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1 to 11 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 to 11:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "1 to 11:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "1 to 9 PM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Outdoor seating": true
+        },
+        {
+          "No-contact delivery": true
+        },
+        {
+          "Delivery": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great beer selection": true
+        },
+        {
+          "Great cocktails": true
+        },
+        {
+          "Great coffee": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        },
+        {
+          "Great wine list": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Wheelchair accessible parking lot": true
+        },
+        {
+          "Wheelchair accessible restroom": true
+        },
+        {
+          "Wheelchair accessible seating": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Organic dishes": true
+        },
+        {
+          "Private dining room": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Vegan options": true
+        },
+        {
+          "Vegetarian options": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Catering": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Seating": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Bar onsite": true
+        },
+        {
+          "Restroom": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Romantic": true
+        },
+        {
+          "Trendy": true
+        },
+        {
+          "Upscale": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Groups": true
+        },
+        {
+          "Tourists": true
+        }
+      ],
+      "Planning": [
+        {
+          "Lunch reservations recommended": true
+        },
+        {
+          "Reservations required": true
+        },
+        {
+          "Dinner reservations recommended": true
+        },
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "NFC mobile payments": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "Has changing table(s)": true
+        },
+        {
+          "High chairs": true
+        }
+      ],
+      "Parking": [
+        {
+          "Paid street parking": true
+        },
+        {
+          "Usually plenty of parking": true
+        },
+        {
+          "Valet parking": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Suntory%20Del%20Valle&query_place_id=ChIJN2VNtnP_0YURs-NRYpIzOZM",
+    "searchPageUrl": "https://www.google.com/maps/search/sushi+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "sushi+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 4,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nryJ85CGLQY1xoRxwcqsSlpolT3hbgZck7I4pis1aIK5F3PD5siGvTYF2P9iVNjNo515VavyNyxCt96cONkEVZHe6dKFSofNLqQk_JmrROiLer6CJohbTVy8GLZmGgKwOF3uCo=w426-h240-k-no",
+    "kgmid": "/g/1pzs4ctnv"
+  },
+  {
+    "title": "Nagaoka",
+    "subTitle": "Restaurante Nagaoka",
+    "description": "Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients.",
+    "price": "$$",
+    "categoryName": "Japanese restaurant",
+    "address": "Arkansas 38, Nápoles, Benito Juárez, 03810 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Colonia Nápoles",
+    "street": "Arkansas 38",
+    "city": "Benito Juarez, Mexico City",
+    "postalCode": "03810",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "phone": "+52 55 5543 9530",
+    "phoneUnformatted": "+525555439530",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.3915588,
+      "lng": -99.1747521
+    },
+    "totalScore": 4.7,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJe64RFXH_0YUR6boSlh5TJN0",
+    "categories": [
+      "Japanese restaurant",
+      "Restaurant",
+      "Sushi restaurant"
+    ],
+    "fid": "0x85d1ff711511ae7b:0xdd24531e9612bae9",
+    "cid": "15934952772375591657",
+    "reviewsCount": 4162,
+    "imagesCount": 2328,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:38.062Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "1 to 10:30 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1 to 10:30 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1 to 10:30 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 to 10:30 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "1 to 10:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "1 to 7:30 PM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "No-contact delivery": true
+        },
+        {
+          "Delivery": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great beer selection": true
+        },
+        {
+          "Great cocktails": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Wheelchair accessible parking lot": true
+        },
+        {
+          "Wheelchair accessible restroom": true
+        },
+        {
+          "Wheelchair accessible seating": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Private dining room": true
+        },
+        {
+          "Quick bite": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Vegetarian options": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Restroom": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Casual": true
+        },
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Trendy": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Family-friendly": true
+        },
+        {
+          "Groups": true
+        },
+        {
+          "Tourists": true
+        }
+      ],
+      "Planning": [
+        {
+          "Lunch reservations recommended": true
+        },
+        {
+          "Dinner reservations recommended": true
+        },
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "NFC mobile payments": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "Has changing table(s)": true
+        }
+      ],
+      "Parking": [
+        {
+          "Free parking lot": true
+        },
+        {
+          "Paid street parking": true
+        },
+        {
+          "Usually plenty of parking": true
+        },
+        {
+          "Valet parking": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Nagaoka&query_place_id=ChIJe64RFXH_0YUR6boSlh5TJN0",
+    "searchPageUrl": "https://www.google.com/maps/search/sushi+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "sushi+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 5,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npDvuQ34NdZLvEXROiTAbw2f63TEN_Q-XKuzeh1__pKM1t0vSmypzHz41xB-invvVlG4EAcc1wDGk8m4RKW3JPaLOStX1TFBjxA4Ub4HOaDXbqmlzRkqRBb6L03DZ1b6vsH_x_qrA=w408-h306-k-no",
+    "kgmid": "/g/1td4dxbs"
+  },
+  {
+    "title": "Básico",
+    "price": "MX$200–300",
+    "categoryName": "Health food restaurant",
+    "address": "Virgilio 8-Local C, Polanco, Polanco III Secc, Miguel Hidalgo, 11560 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Polanco, Polanco III Sección",
+    "street": "Virgilio 8-Local C",
+    "city": "Miguel Hidalgo, Mexico City",
+    "postalCode": "11560",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "http://www.sebasico.com/",
+    "phone": "+52 55 7095 6246",
+    "phoneUnformatted": "+525570956246",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.4304299,
+      "lng": -99.197283
+    },
+    "totalScore": 4.5,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJ5Q5GDwIC0oURUJCTYs2ddRc",
+    "categories": [
+      "Health food restaurant",
+      "Dessert shop",
+      "Juice shop",
+      "Organic restaurant",
+      "Salad shop"
+    ],
+    "fid": "0x85d202020f460ee5:0x17759dcd62939050",
+    "cid": "1690430740595183696",
+    "reviewsCount": 993,
+    "imagesCount": 487,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:38.691Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "8 AM to 8 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "8 AM to 8 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "8 AM to 8 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "8 AM to 8 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "8 AM to 8 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "9 AM to 5:30 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "9 AM to 5:30 PM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Outdoor seating": true
+        },
+        {
+          "No-contact delivery": true
+        },
+        {
+          "Delivery": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great coffee": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Breakfast": true
+        },
+        {
+          "Lunch": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Organic dishes": true
+        },
+        {
+          "Quick bite": true
+        },
+        {
+          "Salad bar": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Vegan options": true
+        },
+        {
+          "Vegetarian options": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Breakfast": true
+        },
+        {
+          "Brunch": true
+        },
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Seating": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Gender-neutral restroom": true
+        },
+        {
+          "Restroom": true
+        },
+        {
+          "Wi-Fi": true
+        },
+        {
+          "Free Wi-Fi": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Casual": true
+        },
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Trendy": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Family-friendly": true
+        },
+        {
+          "LGBTQ+ friendly": true
+        },
+        {
+          "Tourists": true
+        },
+        {
+          "Transgender safespace": true
+        }
+      ],
+      "Planning": [
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "NFC mobile payments": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Parking": [
+        {
+          "Paid parking lot": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=B%C3%A1sico&query_place_id=ChIJ5Q5GDwIC0oURUJCTYs2ddRc",
+    "searchPageUrl": "https://www.google.com/maps/search/healthy+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "healthy+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 3,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr8ZrOmMMuUr5ioXnSYYp34Qz99a5aMKRW82MIx1YPBGfToN_ovF6OOrvG3E6bvHynu0SYNazSCPxibJY43CiUsDZCwqBBGAS-kOaOPsgON3dJDgoWnJadOoiJjWAqV4leTIEorxA=w408-h306-k-no",
+    "kgmid": "/g/11cnbmx5b0"
+  },
+  {
+    "title": "Goy's Bistró Plant-Based Nuevo Polanco",
+    "price": "MX$200–300",
+    "categoryName": "Vegan restaurant",
+    "address": "Parques Plaza Nuevo Polanco, Lago Alberto 442, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Anáhuac I Sección",
+    "street": "Parques Plaza Nuevo Polanco, Lago Alberto 442",
+    "city": "Miguel Hidalgo, Mexico City",
+    "postalCode": "11320",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "http://goysbistro.com/",
+    "phone": "+52 55 4634 0471",
+    "phoneUnformatted": "+525546340471",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.4392575,
+      "lng": -99.1784863
+    },
+    "totalScore": 4.8,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJdRpmPRED0oURjYadKdDH3bM",
+    "categories": [
+      "Vegan restaurant",
+      "Brunch restaurant",
+      "Espresso bar",
+      "Fast food restaurant",
+      "Hamburger restaurant",
+      "Delivery Restaurant",
+      "Restaurant",
+      "Vegetarian restaurant"
+    ],
+    "fid": "0x85d203113d661a75:0xb3ddc7d0299d868d",
+    "cid": "12960734999507469965",
+    "reviewsCount": 894,
+    "imagesCount": 529,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:38.691Z",
+    "reserveTableUrl": "https://www.google.com/maps/reserve/v/dine/c/17uLVIOy8OQ?source=pa&opi=79508299&hl=en-US&gei=oRbIaM3MNNe_p84P75azgQM&sourceurl=https://www.google.com/service/MapsSearchService/Search?hl%3Den%26authuser%3D0%26gl%3Dus%26q%3Dhealthy%2Brestaurant%2Bin%2BMexico%2BCity,%2BMexico%26tbm%3Dmap",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "12 to 8 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "12 to 8 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "12 to 8 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "12 to 8 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "12 to 8 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 8 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "12 to 8 PM"
+      }
+    ],
+    "additionalOpeningHours": {
+      "Breakfast": [
+        {
+          "day": "Monday",
+          "hours": "12–8 PM"
+        },
+        {
+          "day": "Tuesday",
+          "hours": "12–8 PM"
+        },
+        {
+          "day": "Wednesday",
+          "hours": "12–8 PM"
+        },
+        {
+          "day": "Thursday",
+          "hours": "9 AM–8 PM"
+        },
+        {
+          "day": "Friday",
+          "hours": "9 AM–8 PM"
+        },
+        {
+          "day": "Saturday",
+          "hours": "12–8 PM"
+        },
+        {
+          "day": "Sunday",
+          "hours": "12–8 PM"
+        }
+      ]
+    },
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "From the business": [
+        {
+          "Identifies as women-owned": true
+        }
+      ],
+      "Service options": [
+        {
+          "Outdoor seating": true
+        },
+        {
+          "No-contact delivery": true
+        },
+        {
+          "Delivery": true
+        },
+        {
+          "Onsite services": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great dessert": true
+        },
+        {
+          "Rooftop seating": true
+        },
+        {
+          "Sports": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Wheelchair accessible seating": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Organic dishes": true
+        },
+        {
+          "Private dining room": true
+        },
+        {
+          "Quick bite": true
+        },
+        {
+          "Small plates": true
+        },
+        {
+          "Vegan options": true
+        },
+        {
+          "Vegetarian options": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Breakfast": true
+        },
+        {
+          "Brunch": true
+        },
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Seating": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Restroom": true
+        },
+        {
+          "Wi-Fi": true
+        },
+        {
+          "Free Wi-Fi": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Casual": true
+        },
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Trendy": true
+        }
+      ],
+      "Crowd": [
+        {
+          "College students": true
+        },
+        {
+          "Family-friendly": true
+        },
+        {
+          "Groups": true
+        },
+        {
+          "LGBTQ+ friendly": true
+        },
+        {
+          "Tourists": true
+        },
+        {
+          "Transgender safespace": true
+        }
+      ],
+      "Planning": [
+        {
+          "Accepts reservations": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "Kids' menu": true
+        }
+      ],
+      "Parking": [
+        {
+          "On-site parking": true
+        },
+        {
+          "Paid parking garage": true
+        },
+        {
+          "Paid parking lot": true
+        },
+        {
+          "Paid street parking": true
+        },
+        {
+          "Valet parking": true
+        }
+      ],
+      "Pets": [
+        {
+          "Dogs allowed": true
+        },
+        {
+          "Dogs allowed inside": true
+        },
+        {
+          "Dogs allowed outside": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Goy's%20Bistr%C3%B3%20Plant-Based%20Nuevo%20Polanco&query_place_id=ChIJdRpmPRED0oURjYadKdDH3bM",
+    "searchPageUrl": "https://www.google.com/maps/search/healthy+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "healthy+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 6,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrvtNpvz5k91ojPMQiLa9E6VZx_q310VC3aQwObkcUak_oIwIJVkPaF3oeE4TRvZ147Gi0dF4ROu1o6pg4ENkNj4SXlDWLstNbs_O5emjraz8JyFHU5cGH5ntsn6PAVKREfG6khPg=w408-h544-k-no",
+    "kgmid": "/g/11kjm01hln"
+  },
+  {
+    "title": "Pinche Gringo BBQ Patio - Narvarte",
+    "price": "$$",
+    "categoryName": "Barbecue restaurant",
+    "address": "Cumbres de Maltrata 360, Narvarte Poniente, Benito Juárez, 03020 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Narvarte Poniente",
+    "street": "Cumbres de Maltrata 360",
+    "city": "Benito Juarez, Mexico City",
+    "postalCode": "03020",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "https://www.pgbbq.mx/",
+    "phone": "+52 55 6389 1129",
+    "phoneUnformatted": "+525563891129",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.3931052,
+      "lng": -99.1521152
+    },
+    "totalScore": 4.4,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJBe3CbgT_0YURG29lbNVTx9Y",
+    "categories": [
+      "Barbecue restaurant",
+      "Pub"
+    ],
+    "fid": "0x85d1ff046ec2ed05:0xd6c753d56c656f1b",
+    "cid": "15476430820593725211",
+    "reviewsCount": 10418,
+    "imagesCount": 4988,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:41.039Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "1 to 7 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "1 to 7 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1 to 7 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1 to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11 AM to 8 PM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Delivery": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great beer selection": true
+        },
+        {
+          "Live music": true
+        },
+        {
+          "Sports": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Assistive hearing loop": false
+        },
+        {
+          "Wheelchair accessible parking lot": false
+        },
+        {
+          "Wheelchair accessible restroom": false
+        },
+        {
+          "Wheelchair accessible seating": false
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Happy hour food": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Late-night food": true
+        },
+        {
+          "Quick bite": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Catering": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Bar onsite": true
+        },
+        {
+          "Restroom": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Casual": true
+        },
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Trendy": true
+        }
+      ],
+      "Crowd": [
+        {
+          "College students": true
+        },
+        {
+          "Family-friendly": true
+        },
+        {
+          "Groups": true
+        },
+        {
+          "LGBTQ+ friendly": true
+        },
+        {
+          "Tourists": true
+        },
+        {
+          "Transgender safespace": true
+        }
+      ],
+      "Planning": [
+        {
+          "Accepts reservations": false
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "High chairs": true
+        }
+      ],
+      "Parking": [
+        {
+          "Free street parking": true
+        },
+        {
+          "Valet parking": true
+        }
+      ],
+      "Pets": [
+        {
+          "Dogs allowed": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Pinche%20Gringo%20BBQ%20Patio%20-%20Narvarte&query_place_id=ChIJBe3CbgT_0YURG29lbNVTx9Y",
+    "searchPageUrl": "https://www.google.com/maps/search/bbq+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "bbq+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 2,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npGXCMH4JAVKSDNpDHdaEsuL7prpQIqFypafmTB7pwn9zSEe0cckKCMIm-0VRghTIPE7Mu_dT9W_IF6AD4ztrhKcB7FC7y0B20PBgzF7IbAGMadAP1s38Rs9f-hn8BSyBm_CVOg=w408-h306-k-no",
+    "kgmid": "/g/1pxw94b5v"
+  },
+  {
+    "title": "Smoky Barbecue",
+    "price": "MX$200–300",
+    "categoryName": "Barbecue restaurant",
+    "address": "Rufino Blanco Fombona 2707, Iztaccihuatl, Benito Juárez, 03520 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Iztaccihuatl",
+    "street": "Rufino Blanco Fombona 2707",
+    "city": "Benito Juarez, Mexico City",
+    "postalCode": "03520",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "claimThisBusiness": true,
+    "location": {
+      "lat": 19.389972,
+      "lng": -99.1358558
+    },
+    "totalScore": 4.9,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJUW6PNgD_0YURHoQOzekKrb8",
+    "categories": [
+      "Barbecue restaurant"
+    ],
+    "fid": "0x85d1ff00368f6e51:0xbfad0ae9cd0e841e",
+    "cid": "13811707631499117598",
+    "reviewsCount": 63,
+    "imagesCount": 64,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:41.039Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "1 to 8 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1 to 8 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1 to 9 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "1 to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "1 to 8 PM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Offerings": [
+        {
+          "Quick bite": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Casual": true
+        },
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Trendy": true
+        }
+      ],
+      "Crowd": [
+        {
+          "Groups": true
+        }
+      ],
+      "Payments": [
+        {
+          "Debit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "Good for kids": true
+        }
+      ],
+      "Parking": [
+        {
+          "Free street parking": true
+        },
+        {
+          "Usually somewhat difficult to find a space": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Smoky%20Barbecue&query_place_id=ChIJUW6PNgD_0YURHoQOzekKrb8",
+    "searchPageUrl": "https://www.google.com/maps/search/bbq+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "bbq+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 4,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4np8uZmRHpttPnphji0VWAugetUDs7mLQanYQ3EHIF2my9lSa2z8Yzg8JkpAeqrYVQ3Q9p7geBBciusLOIchx0U5wSzFaRN06VgjRT7SqmX4XfVp-I7QjxRPPI0hiO3RQM-gQfD0cmwbNAiw=w408-h725-k-no",
+    "kgmid": "/g/11wvs4xqrq"
+  },
+  {
+    "title": "Pinche Gringo BBQ Warehouse - Polanco",
+    "price": "$$$",
+    "categoryName": "Barbecue restaurant",
+    "address": "Lago Iseo 296, Anáhuac I Secc, Miguel Hidalgo, 11320 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Anáhuac I Sección",
+    "street": "Lago Iseo 296",
+    "city": "Miguel Hidalgo, Mexico City",
+    "postalCode": "11320",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "https://www.pgbbq.mx/",
+    "phone": "+52 55 6389 1129",
+    "phoneUnformatted": "+525563891129",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.440864,
+      "lng": -99.181493
+    },
+    "totalScore": 4.4,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJO15Tnyj50YUR8xGDGnFwlTk",
+    "categories": [
+      "Barbecue restaurant"
+    ],
+    "fid": "0x85d1f9289f535e3b:0x399570711a8311f3",
+    "cid": "4149346262770192883",
+    "reviewsCount": 4099,
+    "imagesCount": 3680,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:41.039Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "1 to 7 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "1 to 7 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "1 to 7 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "1 to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "1 to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "12 to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "11 AM to 8 PM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Delivery": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great beer selection": true
+        },
+        {
+          "Great cocktails": true
+        },
+        {
+          "Great coffee": true
+        },
+        {
+          "Live music": true
+        },
+        {
+          "Sports": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible entrance": true
+        },
+        {
+          "Wheelchair accessible restroom": true
+        },
+        {
+          "Wheelchair accessible seating": true
+        },
+        {
+          "Assistive hearing loop": false
+        },
+        {
+          "Wheelchair accessible parking lot": false
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Braille menu": true
+        },
+        {
+          "Cocktails": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Hard liquor": true
+        },
+        {
+          "Late-night food": true
+        },
+        {
+          "Quick bite": true
+        },
+        {
+          "Wine": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Restroom": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Casual": true
+        },
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Trendy": true
+        }
+      ],
+      "Crowd": [
+        {
+          "College students": true
+        },
+        {
+          "Family-friendly": true
+        },
+        {
+          "Groups": true
+        },
+        {
+          "LGBTQ+ friendly": true
+        },
+        {
+          "Tourists": true
+        },
+        {
+          "Transgender safespace": true
+        }
+      ],
+      "Planning": [
+        {
+          "Accepts reservations": false
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "High chairs": true
+        }
+      ],
+      "Parking": [
+        {
+          "Free street parking": true
+        },
+        {
+          "Usually plenty of parking": true
+        },
+        {
+          "Valet parking": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Pinche%20Gringo%20BBQ%20Warehouse%20-%20Polanco&query_place_id=ChIJO15Tnyj50YUR8xGDGnFwlTk",
+    "searchPageUrl": "https://www.google.com/maps/search/bbq+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "bbq+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 7,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nofqu-HgdCfbkI3lrQmTNUhy_oLsIrCr1YetZMhVY_Q0nHde-lAo1axO2_BHB9-YcJpned5jNp-Okshp2cYIo26vjN7zW_nD_sUdIJcS5iB_knwZs8dAU4QugAghCDl43UANd4sXg=w408-h306-k-no",
+    "kgmid": "/g/11frp9lrbz"
+  },
+  {
+    "title": "Café Vegetal",
+    "price": "MX$100–200",
+    "categoryName": "Vegan restaurant",
+    "address": "Enrique Rébsamen 364, Narvarte Poniente, Benito Juárez, 03020 Ciudad de México, CDMX, Mexico",
+    "neighborhood": "Narvarte Poniente",
+    "street": "Enrique Rébsamen 364",
+    "city": "Benito Juarez, Mexico City",
+    "postalCode": "03020",
+    "state": "Mexico City",
+    "countryCode": "MX",
+    "website": "https://www.cafevegetal.com/",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 19.3963943,
+      "lng": -99.1587861
+    },
+    "totalScore": 4.5,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJD-Qt-en_0YURVNBp_PfrydQ",
+    "categories": [
+      "Vegan restaurant",
+      "Coffee shop"
+    ],
+    "fid": "0x85d1ffe9f92de40f:0xd4c9ebf7fc69d054",
+    "cid": "15333045856683806804",
+    "reviewsCount": 1429,
+    "imagesCount": 1016,
+    "imageCategories": [],
+    "scrapedAt": "2025-09-15T13:37:41.162Z",
+    "googleFoodUrl": null,
+    "hotelAds": [],
+    "openingHours": [
+      {
+        "day": "Monday",
+        "hours": "Closed"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "9 AM to 10 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "9 AM to 10 PM"
+      }
+    ],
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "Service options": [
+        {
+          "Outdoor seating": true
+        },
+        {
+          "Delivery": true
+        },
+        {
+          "Takeout": true
+        },
+        {
+          "Dine-in": true
+        }
+      ],
+      "Highlights": [
+        {
+          "Great coffee": true
+        },
+        {
+          "Great dessert": true
+        },
+        {
+          "Great tea selection": true
+        },
+        {
+          "Rooftop seating": true
+        }
+      ],
+      "Popular for": [
+        {
+          "Breakfast": true
+        },
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Solo dining": true
+        }
+      ],
+      "Accessibility": [
+        {
+          "Wheelchair accessible seating": true
+        },
+        {
+          "Wheelchair accessible parking lot": false
+        }
+      ],
+      "Offerings": [
+        {
+          "Alcohol": true
+        },
+        {
+          "Beer": true
+        },
+        {
+          "Coffee": true
+        },
+        {
+          "Quick bite": true
+        },
+        {
+          "Vegan options": true
+        },
+        {
+          "Vegetarian options": true
+        }
+      ],
+      "Dining options": [
+        {
+          "Breakfast": true
+        },
+        {
+          "Brunch": true
+        },
+        {
+          "Lunch": true
+        },
+        {
+          "Dinner": true
+        },
+        {
+          "Dessert": true
+        },
+        {
+          "Seating": true
+        },
+        {
+          "Table service": true
+        }
+      ],
+      "Amenities": [
+        {
+          "Restroom": true
+        },
+        {
+          "Wi-Fi": true
+        },
+        {
+          "Free Wi-Fi": true
+        }
+      ],
+      "Atmosphere": [
+        {
+          "Casual": true
+        },
+        {
+          "Cozy": true
+        },
+        {
+          "Quiet": true
+        },
+        {
+          "Romantic": true
+        },
+        {
+          "Trendy": true
+        }
+      ],
+      "Crowd": [
+        {
+          "College students": true
+        },
+        {
+          "Family-friendly": true
+        },
+        {
+          "Groups": true
+        },
+        {
+          "LGBTQ+ friendly": true
+        },
+        {
+          "Tourists": true
+        },
+        {
+          "Transgender safespace": true
+        }
+      ],
+      "Payments": [
+        {
+          "Credit cards": true
+        },
+        {
+          "Debit cards": true
+        },
+        {
+          "NFC mobile payments": true
+        },
+        {
+          "Credit cards": true
+        }
+      ],
+      "Children": [
+        {
+          "High chairs": true
+        }
+      ],
+      "Parking": [
+        {
+          "Free street parking": true
+        },
+        {
+          "Usually somewhat difficult to find a space": true
+        }
+      ],
+      "Pets": [
+        {
+          "Dogs allowed": true
+        },
+        {
+          "Dogs allowed inside": true
+        },
+        {
+          "Dogs allowed outside": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=Caf%C3%A9%20Vegetal&query_place_id=ChIJD-Qt-en_0YURVNBp_PfrydQ",
+    "searchPageUrl": "https://www.google.com/maps/search/vegan+restaurant+in+Mexico+City,+Mexico?hl=en",
+    "searchString": "vegan+restaurant+in+Mexico+City,+Mexico",
+    "language": "en",
+    "rank": 2,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrEjrY2KSTnns08TEy-5L8e6APH7xsumXbEyI7Gf4zoVgVdZE9dEN_T6GRgVIIAIEJ5hRrcfR-Apbjji43GRS17oW7wRRtvaKpBaq0lbfa-Hm6GymRlkzKR5qzptZUium89yW0=w408-h544-k-no",
+    "kgmid": "/g/11h_5_s0jk"
+  }
+]

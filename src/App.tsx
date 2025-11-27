@@ -5,7 +5,8 @@ import { ErrorBoundary, PageErrorBoundary } from './components/common/ErrorBound
 import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { PageLoader } from './components/common/PageLoader'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
-import { LogOut } from 'lucide-react'
+import { LogOut, MessageCircle } from 'lucide-react'
+import { useDMChatStore } from './stores/chatStore'
 import { toastHelpers } from './utils/toastHelpers'
 import { Toaster } from './components/ui/sonner'
 import { MobileRadialNav } from './components/navigation/MobileRadialNav'
@@ -13,6 +14,7 @@ import { AIChatWidget } from './components/tako/components/AIChatWidget'
 import { NavigationHints } from './components/common/NavigationHints'
 import { UniversalViewerProvider, useUniversalViewer } from './contexts/UniversalViewerContext'
 import { UniversalViewer } from './components/ui/universal-viewer/UniversalViewer'
+import { ChatDrawer } from './components/chat'
 import './App.css'
 import './styles/mobile.css'
 
@@ -20,6 +22,8 @@ import './styles/mobile.css'
 import { NewLandingPage } from './components/home/NewLandingPage'
 import DebugApp from './components/debug/Debug'
 import AuthPage from './components/auth/AuthPage'
+import AllAlerts from './pages/allAlerts'
+import TestChatPage from './pages/TestChatPage'
 
 // Helper function to wrap lazy imports with error handling and retry logic
 const lazyWithRetry = (componentImport: () => Promise<any>, retries = 3) => {
@@ -154,6 +158,7 @@ function AppLayout() {
   // Navigation component with auth context access
   const Navigation = () => {
     const { user, signOut } = useAuth();
+    const { openChat: openDMChat, unreadCount } = useDMChatStore();
 
     const handleSignOut = async () => {
       try {
@@ -195,6 +200,24 @@ function AppLayout() {
             title="Toggle Color Mode"
           >
             <i className="fa-solid fa-palette"></i>
+          </button>
+
+          {/* DM Chat Button */}
+          <button
+            onClick={openDMChat}
+            className="relative px-4 py-2 rounded-full border-2 transition ml-2 hover:bg-orange-50"
+            style={{ 
+              borderColor: '#E5E7EB',
+              backgroundColor: '#FFFFFF',
+            }}
+            title="Messages"
+          >
+            <MessageCircle className="h-4 w-4 text-gray-700" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-orange-500 text-white text-xs font-bold rounded-full">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
           </button>
 
           {/* AI Chat Button */}
@@ -269,6 +292,8 @@ function AppLayout() {
             <Route path="/landing" element={<NewLandingPage onNavigateToSignup={() => navigate('/auth')} />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/debug" element={<DebugApp />} />
+            <Route path="/all-alerts" element={<AllAlerts />} />
+            <Route path="/test-chat" element={<TestChatPage />} />
 
             {/* Protected Routes */}
             <Route
@@ -400,6 +425,9 @@ function AppLayout() {
         onNavigate={navigateViewer}
         onDelete={deleteHandler ? (itemId: string, itemType: string) => deleteHandler(itemId, itemType) : undefined}
       />
+
+      {/* DM Chat Drawer - Available app-wide */}
+      {showNavigation && <ChatDrawer />}
     </div>
   );
 }

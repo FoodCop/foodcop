@@ -7,6 +7,8 @@ import { withCache, generateLocationKey, generatePreferencesKey } from './feedCa
 import feedCache from './feedCache';
 import { imageOptimizer } from './imageOptimizer';
 import { getPlaceHeroImage } from './googlePlacesImages';
+import { LocationDataService } from './locationDataService';
+import type { MasterSetLocation } from '../types/location';
 import type { FeedCard, RestaurantCard, RecipeCard, VideoCard, MasterbotCard, AdCard } from '../components/feed/data/feed-content';
 
 // Core interfaces for feed generation
@@ -153,6 +155,45 @@ const withTimeout = async <T>(
 };
 
 // Transformation Functions
+/**
+ * Transform MasterSetLocation (local JSON) to RestaurantCard
+ */
+export const transformMasterSetToFeedCard = (
+  location: MasterSetLocation,
+  userLocation?: UserLocation
+): RestaurantCard => {
+  const distance = userLocation
+    ? calculateDistance(
+        userLocation.lat,
+        userLocation.lng,
+        location.location.lat,
+        location.location.lng
+      )
+    : null;
+
+  // Use fallback images based on cuisine type
+  // Future: Fetch actual images from Google Places API or store image URLs in JSON
+  const imageUrl = generateRestaurantFallbackImage(location.categoryName);
+
+  return {
+    id: `restaurant-${location.placeId}`,
+    type: 'restaurant',
+    saveCategory: 'Places',
+    name: location.title,
+    cuisine: location.categoryName || 'Restaurant',
+    priceRange: location.price || '$$',
+    rating: location.totalScore || 0,
+    reviewCount: location.reviewsCount || 0,
+    location: location.neighborhood
+      ? `${location.neighborhood}, ${location.city}`
+      : location.city,
+    distance: distance ? `${distance.toFixed(1)} km away` : 'Distance unavailable',
+    imageUrl,
+    description: location.description || `${location.categoryName} in ${location.city}`,
+    tags: location.categories?.slice(0, 3) || [],
+  };
+};
+
 export const transformRestaurantToFeedCard = async (
   restaurant: GoogleRestaurant, 
   userLocation?: UserLocation
@@ -573,7 +614,8 @@ export const FeedService = {
         videoResults
       ] = await Promise.allSettled([
         withTimeout(
-          this.fetchRestaurantCards(userLocation, cardCounts.restaurant, userId),
+          // Use local JSON data as primary source for restaurants
+          this.fetchRestaurantCardsFromJSON(userLocation, cardCounts.restaurant, userId),
           API_TIMEOUTS.restaurant,
           'Restaurant'
         ),
@@ -683,7 +725,52 @@ export const FeedService = {
   },
 
   /**
-   * Fetch restaurant cards based on location
+   * Fetch restaurant cards from local JSON data (MasterSet)
+   * This is the primary source for restaurant data
+   */
+  async fetchRestaurantCardsFromJSON(
+    userLocation?: UserLocation,
+    count: number = 4,
+    _userId?: string
+  ): Promise<RestaurantCard[]> {
+    try {
+      let locations: MasterSetLocation[];
+
+      if (userLocation) {
+        // Get nearby locations sorted by distance
+        const nearbyWithDistance = await LocationDataService.getNearbyLocations(
+          { lat: userLocation.lat, lng: userLocation.lng },
+          15, // 15km radius
+          count * 3, // Fetch extra for filtering
+          'barcelona'
+        );
+        locations = nearbyWithDistance;
+      } else {
+        // Get random locations if no user location
+        locations = await LocationDataService.getRandomLocations(count * 3, 'barcelona');
+      }
+
+      // Transform to RestaurantCard format
+      const cards = locations.map((loc) => transformMasterSetToFeedCard(loc, userLocation));
+
+      // Filter seen content
+      const filteredCards = this.filterSeenContent(cards, 'restaurant');
+
+      console.log('🍽️ JSON restaurant cards:', {
+        totalFromJSON: locations.length,
+        afterFiltering: filteredCards.length,
+        returning: Math.min(filteredCards.length, count),
+      });
+
+      return filteredCards.slice(0, count);
+    } catch (error) {
+      console.error('❌ Error fetching restaurant cards from JSON:', error);
+      return [];
+    }
+  },
+
+  /**
+   * Fetch restaurant cards based on location (Google Places API - fallback)
    */
   async fetchRestaurantCards(
     userLocation?: UserLocation, 
