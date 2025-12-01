@@ -1,0 +1,1454 @@
+[
+  {
+    "placeId": "ChIJLWlCk9GY4jARpNGpRcq5ABY",
+    "title": "Cheaper & Better Street Food",
+    "city": "Bang Rak",
+    "imagePath": "/generated-images/ChIJLWlCk9GY4jARpNGpRcq5ABY_v2.png",
+    "location": {
+      "lat": 13.72507,
+      "lng": 100.5229338
+    },
+    "prompt": "A Thai restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, tropical, vibrant",
+    "generatedAt": "2025-11-30T05:12:37.615Z"
+  },
+  {
+    "placeId": "ChIJm9eXpcuZ4jAROxvGhh77SsY",
+    "title": "Petchaburi Soi 5 Food Street",
+    "city": "Ratchathewi",
+    "imagePath": "/generated-images/ChIJm9eXpcuZ4jAROxvGhh77SsY_v2.png",
+    "location": {
+      "lat": 13.755659,
+      "lng": 100.5287756
+    },
+    "prompt": "A Hawker center serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:12:52.746Z"
+  },
+  {
+    "placeId": "ChIJV83lo1Kf4jARJ5j8HB2Gnh8",
+    "title": "Thai Street Food Place",
+    "city": "Watthana",
+    "imagePath": "/generated-images/ChIJV83lo1Kf4jARJ5j8HB2Gnh8_v2.png",
+    "location": {
+      "lat": 13.7396701,
+      "lng": 100.5613454
+    },
+    "prompt": "A Food court serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:13:07.709Z"
+  },
+  {
+    "placeId": "ChIJSSTzpQCZ4jARTl-EkRb3Jlw",
+    "title": "เจ๊เฮียง อาหารตามสั่ง เยาวราช Hiang A-la-carte Street Food",
+    "city": "Samphanthawong",
+    "imagePath": "/generated-images/ChIJSSTzpQCZ4jARTl-EkRb3Jlw_v2.png",
+    "location": {
+      "lat": 13.7404854,
+      "lng": 100.5093666
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:13:25.286Z"
+  },
+  {
+    "placeId": "ChIJ1SsP3aif4jARyxax7z5P_4E",
+    "title": "Food Street Soi 38",
+    "city": "Khlong Toei",
+    "imagePath": "/generated-images/ChIJ1SsP3aif4jARyxax7z5P_4E_v2.png",
+    "location": {
+      "lat": 13.7235119,
+      "lng": 100.5789226
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:13:40.295Z"
+  },
+  {
+    "placeId": "ChIJbYao6cif4jARF8mR5mjFcUI",
+    "title": "Central World Square Street Food",
+    "city": "Pathum Wan",
+    "imagePath": "/generated-images/ChIJbYao6cif4jARF8mR5mjFcUI_v2.png",
+    "location": {
+      "lat": 13.7471465,
+      "lng": 100.5402351
+    },
+    "prompt": "A Thai restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, tropical, vibrant",
+    "generatedAt": "2025-11-30T05:13:55.701Z"
+  },
+  {
+    "placeId": "ChIJoeqsy4Kf4jARol7aevww6OE",
+    "title": "Convent Road Street Food",
+    "city": "Bang Rak",
+    "imagePath": "/generated-images/ChIJoeqsy4Kf4jARol7aevww6OE_v2.png",
+    "location": {
+      "lat": 13.7276856,
+      "lng": 100.5332289
+    },
+    "prompt": "A Hawker stall serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:14:11.175Z"
+  },
+  {
+    "placeId": "ChIJf-5ObPue4jAROd8Q_RDSo3U",
+    "title": "Sushi Juban Asok Branch",
+    "city": "Watthana",
+    "imagePath": "/generated-images/ChIJf-5ObPue4jAROd8Q_RDSo3U_v2.png",
+    "location": {
+      "lat": 13.7400146,
+      "lng": 100.5652823
+    },
+    "prompt": "A Sushi restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:14:26.200Z"
+  },
+  {
+    "placeId": "ChIJhQpOHFSe4jAR-rDq_LXsjrk",
+    "title": "SUSHI JUBAN Takumi",
+    "city": "Watthana",
+    "imagePath": "/generated-images/ChIJhQpOHFSe4jAR-rDq_LXsjrk_v2.png",
+    "location": {
+      "lat": 13.738292,
+      "lng": 100.579515
+    },
+    "prompt": "A Sushi restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:14:41.674Z"
+  },
+  {
+    "placeId": "ChIJIWE_TNee4jARNJ1T53PapGc",
+    "title": "Zuma Bangkok",
+    "city": "Pathum Wan",
+    "imagePath": "/generated-images/ChIJIWE_TNee4jARNJ1T53PapGc_v2.png",
+    "location": {
+      "lat": 13.7396195,
+      "lng": 100.5401105
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:14:58.453Z"
+  },
+  {
+    "placeId": "ChIJdZ8wAwOf4jARWGdeSBVyS-M",
+    "title": "Akira Back",
+    "city": "Khlong Toei",
+    "imagePath": "/generated-images/ChIJdZ8wAwOf4jARWGdeSBVyS-M_v2.png",
+    "location": {
+      "lat": 13.7302993,
+      "lng": 100.5654855
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:15:17.585Z"
+  },
+  {
+    "placeId": "ChIJQSB4GI6ipBIR0owzy0TgXoY",
+    "title": "Robata",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJQSB4GI6ipBIR0owzy0TgXoY_v2.png",
+    "location": {
+      "lat": 41.390463,
+      "lng": 2.1584258
+    },
+    "prompt": "Sushi rolls, seafood & Japanese beef dishes in a relaxed locale with modern decor & mellow lighting., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:15:32.279Z"
+  },
+  {
+    "placeId": "ChIJybfY7_mipBIR9LU_PRzJdqI",
+    "title": "Shunka",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJybfY7_mipBIR9LU_PRzJdqI_v2.png",
+    "location": {
+      "lat": 41.3851944,
+      "lng": 2.17515
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:15:45.971Z"
+  },
+  {
+    "placeId": "ChIJk__0muqipBIRacIQTkTRgGU",
+    "title": "Can Kenji",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJk__0muqipBIRacIQTkTRgGU_v2.png",
+    "location": {
+      "lat": 41.4004302,
+      "lng": 2.1663634
+    },
+    "prompt": "Classic bites like sushi, plus Western dishes with a Japanese twist, in a multihued dining room., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:16:00.616Z"
+  },
+  {
+    "placeId": "ChIJW33aGMWjpBIRS4i9jUmbYKk",
+    "title": "IKOYA Izakaya",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJW33aGMWjpBIRS4i9jUmbYKk_v2.png",
+    "location": {
+      "lat": 41.3865815,
+      "lng": 2.1777497
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:16:16.731Z"
+  },
+  {
+    "placeId": "ChIJiZ6Gso2ipBIR53l5H75CrJA",
+    "title": "Restaurante FUTAMI",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJiZ6Gso2ipBIR53l5H75CrJA_v2.png",
+    "location": {
+      "lat": 41.3886111,
+      "lng": 2.1616667
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:16:31.440Z"
+  },
+  {
+    "placeId": "ChIJ6495uYujpBIRPEWqKQ3I8W0",
+    "title": "Matsuri Sushi Bar - Restaurante Japonés",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJ6495uYujpBIRPEWqKQ3I8W0_v2.png",
+    "location": {
+      "lat": 41.3817578,
+      "lng": 2.1787228
+    },
+    "prompt": "Sushi & sashimi, plus Thai curries & noodles, in a sleek establishment with an intimate vibe., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:16:46.783Z"
+  },
+  {
+    "placeId": "ChIJVQuWCqKipBIRcOD2jN1RrpQ",
+    "title": "Restaurante Hitsumabushi",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJVQuWCqKipBIRcOD2jN1RrpQ_v2.png",
+    "location": {
+      "lat": 41.4012484,
+      "lng": 2.151082
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:17:00.800Z"
+  },
+  {
+    "placeId": "ChIJTSzGu4WipBIRkznre9Zwis0",
+    "title": "Disfrutar",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJTSzGu4WipBIRkznre9Zwis0_v2.png",
+    "location": {
+      "lat": 41.3877627,
+      "lng": 2.153199
+    },
+    "prompt": "Experimental tasting menus emphasise Mediterranean seafood in an airy, upscale dining room., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:17:19.384Z"
+  },
+  {
+    "placeId": "ChIJ8TMSh46ipBIRVmVx_17vwLE",
+    "title": "Cinc Sentits",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJ8TMSh46ipBIRVmVx_17vwLE_v2.png",
+    "location": {
+      "lat": 41.3783882,
+      "lng": 2.1524171
+    },
+    "prompt": "Sleek space offering high-end tasting menus of contemporary Catalan cuisine with wine pairings., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:17:32.240Z"
+  },
+  {
+    "placeId": "ChIJm29JzI-ipBIRgONW28jE414",
+    "title": "Osmosis",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJm29JzI-ipBIRgONW28jE414_v2.png",
+    "location": {
+      "lat": 41.3903007,
+      "lng": 2.157169
+    },
+    "prompt": "Stylish venue with moody decor, offering set lunches, modern European tasting menus & wine pairings., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:17:46.873Z"
+  },
+  {
+    "placeId": "ChIJxXEkMe6ipBIRHtCUX_CpuCE",
+    "title": "Caelis",
+    "city": "Barcelona",
+    "imagePath": "/generated-images/ChIJxXEkMe6ipBIRHtCUX_CpuCE_v2.png",
+    "location": {
+      "lat": 41.3870395,
+      "lng": 2.1742657
+    },
+    "prompt": "Artfully plated gastronomical creations in a sleek space with an open kitchen & tasting menus., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:18:02.274Z"
+  },
+  {
+    "placeId": "ChIJFwtMgYABBDQRIdPKLifT-Gc",
+    "title": "Street food",
+    "city": "Tsim Sha Tsui",
+    "imagePath": "/generated-images/ChIJFwtMgYABBDQRIdPKLifT-Gc_v2.png",
+    "location": {
+      "lat": 22.2965209,
+      "lng": 114.171551
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:18:15.759Z"
+  },
+  {
+    "placeId": "ChIJBxDbVPsBBDQR2MDn0IJ8eYE",
+    "title": "Oh Wahh Street Food",
+    "city": "Tsim Sha Tsui",
+    "imagePath": "/generated-images/ChIJBxDbVPsBBDQR2MDn0IJ8eYE_v2.png",
+    "location": {
+      "lat": 22.2983486,
+      "lng": 114.1741485
+    },
+    "prompt": "A Hong Kong style fast food restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:18:29.024Z"
+  },
+  {
+    "placeId": "ChIJaxp6UEoBBDQRKg5wi6Me7yM",
+    "title": "Street Food Central",
+    "city": "Central",
+    "imagePath": "/generated-images/ChIJaxp6UEoBBDQRKg5wi6Me7yM_v2.png",
+    "location": {
+      "lat": 22.2839325,
+      "lng": 114.1553613
+    },
+    "prompt": "A Food court serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:18:43.055Z"
+  },
+  {
+    "placeId": "ChIJxVuvlXYBBDQRsjS0uztrz8M",
+    "title": "Night street food market",
+    "city": "Yau Ma Tei",
+    "imagePath": "/generated-images/ChIJxVuvlXYBBDQRsjS0uztrz8M_v2.png",
+    "location": {
+      "lat": 22.3108238,
+      "lng": 114.1700011
+    },
+    "prompt": "A Chinese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, traditional, artistic",
+    "generatedAt": "2025-11-30T05:18:59.883Z"
+  },
+  {
+    "placeId": "ChIJc5ON4Xb_AzQR_dqjqgq0XkM",
+    "title": "Bingaz Street Food",
+    "city": "Sai Ying Pun",
+    "imagePath": "/generated-images/ChIJc5ON4Xb_AzQR_dqjqgq0XkM_v2.png",
+    "location": {
+      "lat": 22.2851857,
+      "lng": 114.1429503
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:19:13.968Z"
+  },
+  {
+    "placeId": "ChIJL5LYelwABDQR0Rey5f0FQN4",
+    "title": "街食 Street Food",
+    "city": "Wan Chai",
+    "imagePath": "/generated-images/ChIJL5LYelwABDQR0Rey5f0FQN4_v2.png",
+    "location": {
+      "lat": 22.2782859,
+      "lng": 114.1729793
+    },
+    "prompt": "A Snack bar serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:19:28.038Z"
+  },
+  {
+    "placeId": "ChIJ1eUMdFYABDQRWaUtGn67QWw",
+    "title": "Fashion Walk Food Street",
+    "city": "Causeway Bay",
+    "imagePath": "/generated-images/ChIJ1eUMdFYABDQRWaUtGn67QWw_v2.png",
+    "location": {
+      "lat": 22.2823583,
+      "lng": 114.1852532
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:19:42.436Z"
+  },
+  {
+    "placeId": "ChIJK_Ki6GQABDQR6msLLCzNE04",
+    "title": "Amber",
+    "city": "Central",
+    "imagePath": "/generated-images/ChIJK_Ki6GQABDQR6msLLCzNE04_v2.png",
+    "location": {
+      "lat": 22.2809925,
+      "lng": 114.1577835
+    },
+    "prompt": "Upscale hotel restaurant serving French cuisine in a stylish, contemporary dining room., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:19:57.021Z"
+  },
+  {
+    "placeId": "ChIJzbDWTWIABDQRfEbzv7wxi40",
+    "title": "Caprice",
+    "city": "Central",
+    "imagePath": "/generated-images/ChIJzbDWTWIABDQRfEbzv7wxi40_v2.png",
+    "location": {
+      "lat": 22.2864047,
+      "lng": 114.1570968
+    },
+    "prompt": "Elegant French fine dining restaurant in an upscale hotel, with artisanal cheeses & vegetarian menu., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:20:10.239Z"
+  },
+  {
+    "placeId": "ChIJR8MwLmYABDQRkyi_aTFRBcM",
+    "title": "Restaurant Petrus",
+    "city": "Central",
+    "imagePath": "/generated-images/ChIJR8MwLmYABDQRkyi_aTFRBcM_v2.png",
+    "location": {
+      "lat": 22.2773632,
+      "lng": 114.1644981
+    },
+    "prompt": "A French restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:20:28.428Z"
+  },
+  {
+    "placeId": "ChIJhcOtY3wABDQR39uGw41EIYM",
+    "title": "The Chairman Restaurant",
+    "city": "Central",
+    "imagePath": "/generated-images/ChIJhcOtY3wABDQR39uGw41EIYM_v2.png",
+    "location": {
+      "lat": 22.2848237,
+      "lng": 114.1530091
+    },
+    "prompt": "Upmarket eatery serving classic Cantonese dishes with homemade & locally sourced ingredients., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:20:42.227Z"
+  },
+  {
+    "placeId": "ChIJqRRRk9UFdkgRCO7lejEKHnM",
+    "title": "Hungama Indian Street Food",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJqRRRk9UFdkgRCO7lejEKHnM_v2.png",
+    "location": {
+      "lat": 51.5103697,
+      "lng": -0.128559
+    },
+    "prompt": "A Modern Indian restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, warm colors, spices theme",
+    "generatedAt": "2025-11-30T05:20:57.118Z"
+  },
+  {
+    "placeId": "ChIJD4dBYbgFdkgRv99UblXvkYw",
+    "title": "Seven Dials Market",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJD4dBYbgFdkgRv99UblXvkYw_v2.png",
+    "location": {
+      "lat": 51.5139632,
+      "lng": -0.1260421
+    },
+    "prompt": "Chic multi-level food court with dozens of micro-restaurants & bars, plus a bookshop & event space., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:21:11.172Z"
+  },
+  {
+    "placeId": "ChIJp5w4kdYEdkgRzuu4EVm4VY4",
+    "title": "Street Food Market - StreetFoodish",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJp5w4kdYEdkgRzuu4EVm4VY4_v2.png",
+    "location": {
+      "lat": 51.5089216,
+      "lng": -0.1366165
+    },
+    "prompt": "A Food court serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:21:26.027Z"
+  },
+  {
+    "placeId": "ChIJZ9jUVEEDdkgRN7k3RDL_908",
+    "title": "Maltby Street Market",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJZ9jUVEEDdkgRN7k3RDL_908_v2.png",
+    "location": {
+      "lat": 51.4994579,
+      "lng": -0.0759299
+    },
+    "prompt": "Outdoor weekend street market with food & drink vendors below 19th-century railway arches., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:21:41.802Z"
+  },
+  {
+    "placeId": "ChIJD2bPdVcDdkgRuUSgnOXnKDE",
+    "title": "Borough Market",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJD2bPdVcDdkgRuUSgnOXnKDE_v2.png",
+    "location": {
+      "lat": 51.5055826,
+      "lng": -0.0904808
+    },
+    "prompt": "Huge market under the railway lines, for British-reared meat and artisanal baked and dairy goods., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:21:54.949Z"
+  },
+  {
+    "placeId": "ChIJ05iDR6EEdkgR42XNGDj22yE",
+    "title": "Mercato Metropolitano",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJ05iDR6EEdkgR42XNGDj22yE_v2.png",
+    "location": {
+      "lat": 51.4984598,
+      "lng": -0.0984096
+    },
+    "prompt": "Massive, airy market offering a range of street fare from Italian to Vietnamese, plus cocktails., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:22:09.395Z"
+  },
+  {
+    "placeId": "ChIJkQ1Cka8cdkgRdcX1NRF15Ew",
+    "title": "Falafel Street food",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJkQ1Cka8cdkgRdcX1NRF15Ew_v2.png",
+    "location": {
+      "lat": 51.5247372,
+      "lng": -0.0834686
+    },
+    "prompt": "A Food court serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:22:23.674Z"
+  },
+  {
+    "placeId": "ChIJW7PbgAYFdkgRKzZcm_oVjnM",
+    "title": "SUSHISAMBA",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJW7PbgAYFdkgRKzZcm_oVjnM_v2.png",
+    "location": {
+      "lat": 51.5123967,
+      "lng": -0.1224727
+    },
+    "prompt": "Creative Japanese & Latin American sushi in contemporary surroundings, plus cocktails., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:22:37.493Z"
+  },
+  {
+    "placeId": "ChIJVaCnTHwFdkgRUvbE7DqnZn4",
+    "title": "The Sushi Co - Waterloo",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJVaCnTHwFdkgRUvbE7DqnZn4_v2.png",
+    "location": {
+      "lat": 51.5015256,
+      "lng": -0.1114341
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:22:51.645Z"
+  },
+  {
+    "placeId": "ChIJk0govMocdkgRMHymyiHS2BQ",
+    "title": "SUSHINOEN",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJk0govMocdkgRMHymyiHS2BQ_v2.png",
+    "location": {
+      "lat": 51.5159921,
+      "lng": -0.0691277
+    },
+    "prompt": "Stylish modern dining room with kimono-clad staff, serving classic and modern fusion dishes., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:23:06.144Z"
+  },
+  {
+    "placeId": "ChIJf8nquTcFdkgRFtVR_nVal6M",
+    "title": "The Sushi Co - Kensington",
+    "city": "London",
+    "imagePath": "/generated-images/ChIJf8nquTcFdkgRFtVR_nVal6M_v2.png",
+    "location": {
+      "lat": 51.4930905,
+      "lng": -0.1765058
+    },
+    "prompt": "A Sushi restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:23:21.533Z"
+  },
+  {
+    "placeId": "ChIJbS8EZf8B0oURwwD8B0MpqK0",
+    "title": "Quintonil",
+    "city": "Miguel Hidalgo, Mexico City",
+    "imagePath": "/generated-images/ChIJbS8EZf8B0oURwwD8B0MpqK0_v2.png",
+    "location": {
+      "lat": 19.4308408,
+      "lng": -99.1917115
+    },
+    "prompt": "Noted restaurant with a tasting menu offering ambitious meat & seafood dishes, plus wine pairing., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:23:40.311Z"
+  },
+  {
+    "placeId": "ChIJWZ2zdav40YURFvsU_rU3uaE",
+    "title": "Pujol",
+    "city": "Miguel Hidalgo, Mexico City",
+    "imagePath": "/generated-images/ChIJWZ2zdav40YURFvsU_rU3uaE_v2.png",
+    "location": {
+      "lat": 19.4323763,
+      "lng": -99.1948132
+    },
+    "prompt": "A Mexican restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, bold, colorful, festive",
+    "generatedAt": "2025-11-30T05:23:55.552Z"
+  },
+  {
+    "placeId": "ChIJb2bGJKv40YURSRf5qxN_yoA",
+    "title": "Raíz",
+    "city": "Miguel Hidalgo, Mexico City",
+    "imagePath": "/generated-images/ChIJb2bGJKv40YURSRf5qxN_yoA_v2.png",
+    "location": {
+      "lat": 19.4320246,
+      "lng": -99.1865747
+    },
+    "prompt": "A Fine dining restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:24:12.122Z"
+  },
+  {
+    "placeId": "ChIJrwqHxQEC0oURQc3yfAC7XdI",
+    "title": "Rosa Negra",
+    "city": "Miguel Hidalgo, Mexico City",
+    "imagePath": "/generated-images/ChIJrwqHxQEC0oURQc3yfAC7XdI_v2.png",
+    "location": {
+      "lat": 19.4313687,
+      "lng": -99.1932413
+    },
+    "prompt": "A Latin American restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:24:28.033Z"
+  },
+  {
+    "placeId": "ChIJT4EmU7D90YURgBm8QimOZOQ",
+    "title": "Taquería en la calle (street-food)",
+    "city": "Venustiano Carranza, Mexico City",
+    "imagePath": "/generated-images/ChIJT4EmU7D90YURgBm8QimOZOQ_v2.png",
+    "location": {
+      "lat": 19.4174918,
+      "lng": -99.0779999
+    },
+    "prompt": "A Mexican restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, bold, colorful, festive",
+    "generatedAt": "2025-11-30T05:24:42.684Z"
+  },
+  {
+    "placeId": "ChIJl2tJKAAC0oURzWeACONi9Tg",
+    "title": "Tori Tori Polanco",
+    "city": "Miguel Hidalgo, Mexico City",
+    "imagePath": "/generated-images/ChIJl2tJKAAC0oURzWeACONi9Tg_v2.png",
+    "location": {
+      "lat": 19.4304401,
+      "lng": -99.1919388
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:24:55.224Z"
+  },
+  {
+    "placeId": "ChIJUcS1TAr50YURuwZKxZdg-ak",
+    "title": "Ryoshi",
+    "city": "Miguel Hidalgo, Mexico City",
+    "imagePath": "/generated-images/ChIJUcS1TAr50YURuwZKxZdg-ak_v2.png",
+    "location": {
+      "lat": 19.4317117,
+      "lng": -99.1862479
+    },
+    "prompt": "Upscale destination cooking Japanese seafood, meat & veggie dishes, plus a sushi & sashimi bar., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:25:10.307Z"
+  },
+  {
+    "placeId": "ChIJN2VNtnP_0YURs-NRYpIzOZM",
+    "title": "Suntory Del Valle",
+    "city": "Benito Juarez, Mexico City",
+    "imagePath": "/generated-images/ChIJN2VNtnP_0YURs-NRYpIzOZM_v2.png",
+    "location": {
+      "lat": 19.3926616,
+      "lng": -99.171867
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:25:23.550Z"
+  },
+  {
+    "placeId": "ChIJe64RFXH_0YUR6boSlh5TJN0",
+    "title": "Nagaoka",
+    "city": "Benito Juarez, Mexico City",
+    "imagePath": "/generated-images/ChIJe64RFXH_0YUR6boSlh5TJN0_v2.png",
+    "location": {
+      "lat": 19.3915588,
+      "lng": -99.1747521
+    },
+    "prompt": "Family-run stalwart serving up sushi, sashimi & sukiyaki with an emphasis on seasonal ingredients., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:25:39.021Z"
+  },
+  {
+    "placeId": "ChIJ5Q5GDwIC0oURUJCTYs2ddRc",
+    "title": "Básico",
+    "city": "Miguel Hidalgo, Mexico City",
+    "imagePath": "/generated-images/ChIJ5Q5GDwIC0oURUJCTYs2ddRc_v2.png",
+    "location": {
+      "lat": 19.4304299,
+      "lng": -99.197283
+    },
+    "prompt": "A Health food restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, fresh, organic feel, natural",
+    "generatedAt": "2025-11-30T05:25:52.874Z"
+  },
+  {
+    "placeId": "ChIJdRpmPRED0oURjYadKdDH3bM",
+    "title": "Goy's Bistró Plant-Based Nuevo Polanco",
+    "city": "Miguel Hidalgo, Mexico City",
+    "imagePath": "/generated-images/ChIJdRpmPRED0oURjYadKdDH3bM_v2.png",
+    "location": {
+      "lat": 19.4392575,
+      "lng": -99.1784863
+    },
+    "prompt": "A Vegan restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, fresh, organic feel, natural",
+    "generatedAt": "2025-11-30T05:26:06.122Z"
+  },
+  {
+    "placeId": "ChIJOW5d0SLR5zsRdOb864OWRxg",
+    "title": "Street Food stalls",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJOW5d0SLR5zsRdOb864OWRxg_v2.png",
+    "location": {
+      "lat": 18.9284122,
+      "lng": 72.831578
+    },
+    "prompt": "A Food court serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:26:22.080Z"
+  },
+  {
+    "placeId": "ChIJsYFP93jR5zsRcKWa8kY7-Ig",
+    "title": "Khau galli Street Food",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJsYFP93jR5zsRcKWa8kY7-Ig_v2.png",
+    "location": {
+      "lat": 18.9341176,
+      "lng": 72.8354901
+    },
+    "prompt": "A Fast food restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:26:37.448Z"
+  },
+  {
+    "placeId": "ChIJL0EwAI_O5zsRKTWGclEoGgA",
+    "title": "Street Food Of Mumbai",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJL0EwAI_O5zsRKTWGclEoGgA_v2.png",
+    "location": {
+      "lat": 18.9960269,
+      "lng": 72.8189992
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:26:51.491Z"
+  },
+  {
+    "placeId": "ChIJ_8z1h4LJ5zsRXssl018zApA",
+    "title": "Radha Krishna Sweets & Street Food",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJ_8z1h4LJ5zsRXssl018zApA_v2.png",
+    "location": {
+      "lat": 19.0806149,
+      "lng": 72.8430336
+    },
+    "prompt": "A Fast food restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:27:05.836Z"
+  },
+  {
+    "placeId": "ChIJE9l-ryPO5zsRRrqjIsy9fBw",
+    "title": "Mohanbhai Pudlawala",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJE9l-ryPO5zsRRrqjIsy9fBw_v2.png",
+    "location": {
+      "lat": 18.9511543,
+      "lng": 72.8314887
+    },
+    "prompt": "A Gujarati restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:27:20.105Z"
+  },
+  {
+    "placeId": "ChIJOZdnQwfR5zsRBarhOYp355c",
+    "title": "Food Street CSMT",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJOZdnQwfR5zsRBarhOYp355c_v2.png",
+    "location": {
+      "lat": 18.9398612,
+      "lng": 72.8339681
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:27:39.035Z"
+  },
+  {
+    "placeId": "ChIJ5TOqIwLJ5zsRNyF9uOKWAec",
+    "title": "Street Food",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJ5TOqIwLJ5zsRNyF9uOKWAec_v2.png",
+    "location": {
+      "lat": 19.0774839,
+      "lng": 72.8652747
+    },
+    "prompt": "A Food court serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:27:54.554Z"
+  },
+  {
+    "placeId": "ChIJ5fCLBsPR5zsRTd3EZe_to9U",
+    "title": "Wasabi by Morimoto",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJ5fCLBsPR5zsRTd3EZe_to9U_v2.png",
+    "location": {
+      "lat": 18.9225215,
+      "lng": 72.8332292
+    },
+    "prompt": "This upscale contemporary Japanese dining room in a hotel serves classics, sushi and rare sakes., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:28:07.577Z"
+  },
+  {
+    "placeId": "ChIJ2-XDY_LJ5zsRqZp-HET_oCE",
+    "title": "Izumi Bandra",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJ2-XDY_LJ5zsRqZp-HET_oCE_v2.png",
+    "location": {
+      "lat": 19.0642831,
+      "lng": 72.8329865
+    },
+    "prompt": "A Authentic Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:28:21.260Z"
+  },
+  {
+    "placeId": "ChIJLV1aZ1PJ5zsRBMYvITR05Zw",
+    "title": "Kuuraku Bandra West Mumbai",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJLV1aZ1PJ5zsRBMYvITR05Zw_v2.png",
+    "location": {
+      "lat": 19.0609121,
+      "lng": 72.8370265
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:28:36.626Z"
+  },
+  {
+    "placeId": "ChIJawF5YRHJ5zsRkD1WYndszyc",
+    "title": "Kofuku (Cloud Kitchen)",
+    "city": "Mumbai",
+    "imagePath": "/generated-images/ChIJawF5YRHJ5zsRkD1WYndszyc_v2.png",
+    "location": {
+      "lat": 19.0779139,
+      "lng": 72.82946
+    },
+    "prompt": "Traditional Japanese dishes and sushi are served at this dining room decorated in East Asian style., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:28:51.411Z"
+  },
+  {
+    "placeId": "ChIJzXZ-XGpbwokRz2YaBRnvBzU",
+    "title": "Mott Street Eatery",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJzXZ-XGpbwokRz2YaBRnvBzU_v2.png",
+    "location": {
+      "lat": 40.7171726,
+      "lng": -73.9972861
+    },
+    "prompt": "A Food court serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:29:04.868Z"
+  },
+  {
+    "placeId": "ChIJJQAPYXlpwokRgvICh9Dog-o",
+    "title": "Street Bites NYC",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJJQAPYXlpwokRgvICh9Dog-o_v2.png",
+    "location": {
+      "lat": 40.7594274,
+      "lng": -73.9822296
+    },
+    "prompt": "A Halal restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:29:19.037Z"
+  },
+  {
+    "placeId": "ChIJtY1bZAD3wokR7QS5gAkPurM",
+    "title": "K-Street Food/Sushi King",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJtY1bZAD3wokR7QS5gAkPurM_v2.png",
+    "location": {
+      "lat": 40.7976513,
+      "lng": -73.9484526
+    },
+    "prompt": "A Asian fusion restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:29:33.164Z"
+  },
+  {
+    "placeId": "ChIJV4FxFgD3wokRSf50lKA8Bz8",
+    "title": "K-street food",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJV4FxFgD3wokRSf50lKA8Bz8_v2.png",
+    "location": {
+      "lat": 40.7919918,
+      "lng": -73.941226
+    },
+    "prompt": "A Korean restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:29:52.145Z"
+  },
+  {
+    "placeId": "ChIJheD4kfxYwokR-5X6NNDNYnk",
+    "title": "Uncle Gussy's",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJheD4kfxYwokR-5X6NNDNYnk_v2.png",
+    "location": {
+      "lat": 40.7575718,
+      "lng": -73.9733483
+    },
+    "prompt": "Greek food truck specializing in tzatziki sauce serves salad, platters, cheesesteak, pita & burgers., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:30:08.480Z"
+  },
+  {
+    "placeId": "ChIJwZCWumNZwokRA_PDwYfl0No",
+    "title": "Street food vendor",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJwZCWumNZwokRA_PDwYfl0No_v2.png",
+    "location": {
+      "lat": 40.7845476,
+      "lng": -73.9798433
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:30:23.195Z"
+  },
+  {
+    "placeId": "ChIJCar0f49ZwokR6ozLV-dHNTE",
+    "title": "Katz's Delicatessen",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJCar0f49ZwokR6ozLV-dHNTE_v2.png",
+    "location": {
+      "lat": 40.722233,
+      "lng": -73.987429
+    },
+    "prompt": "No-frills deli with theatrically cranky service serving mile-high sandwiches since 1888., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:30:37.546Z"
+  },
+  {
+    "placeId": "ChIJ09ZGju5YwokRXOcNC23JRwk",
+    "title": "Daniel",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJ09ZGju5YwokRXOcNC23JRwk_v2.png",
+    "location": {
+      "lat": 40.7668083,
+      "lng": -73.9675769
+    },
+    "prompt": "Daniel Boulud's renowned restaurant with refined European dishes & an acclaimed wine selection in elegant surrounds., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:30:49.867Z"
+  },
+  {
+    "placeId": "ChIJp3PsL_ZYwokRZYqs_40RJF4",
+    "title": "Per Se",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJp3PsL_ZYwokRZYqs_40RJF4_v2.png",
+    "location": {
+      "lat": 40.7682178,
+      "lng": -73.9828988
+    },
+    "prompt": "Chef Thomas Keller's New American restaurant offers luxe fixed-price menus, with Central Park views., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:31:04.734Z"
+  },
+  {
+    "placeId": "ChIJV7QQ6kdZwokRax4615zpSGU",
+    "title": "Le Bernardin",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJV7QQ6kdZwokRax4615zpSGU_v2.png",
+    "location": {
+      "lat": 40.7614218,
+      "lng": -73.9817558
+    },
+    "prompt": "Elite French restaurant offers chef Eric Ripert's refined seafood, expert service & luxurious decor., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:31:18.444Z"
+  },
+  {
+    "placeId": "ChIJMW-gxPtYwokRzDlnsRgq9rA",
+    "title": "The Modern",
+    "city": "New York",
+    "imagePath": "/generated-images/ChIJMW-gxPtYwokRzDlnsRgq9rA_v2.png",
+    "location": {
+      "lat": 40.761081,
+      "lng": -73.976753
+    },
+    "prompt": "French/New American fare in a modernist space with garden views at the Museum of Modern Art., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:31:31.902Z"
+  },
+  {
+    "placeId": "ChIJnywNMVv_0YURVuuTE-_GX4Q",
+    "title": "Ling Ling by Hakkasan",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJnywNMVv_0YURVuuTE-_GX4Q_v2.png",
+    "location": {
+      "lat": 19.4240425,
+      "lng": -99.1757592
+    },
+    "prompt": "Asian-inspired cuisine, sushi & cocktails in a sophisticated skyscraper setting with a terrace., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:31:44.884Z"
+  },
+  {
+    "placeId": "ChIJmVxSVGP50YURnTjlP1025aU",
+    "title": "Casa Prime Hilton Centro Histórico",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJmVxSVGP50YURnTjlP1025aU_v2.png",
+    "location": {
+      "lat": 19.4348687,
+      "lng": -99.1464088
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:31:58.684Z"
+  },
+  {
+    "placeId": "ChIJZ0xZYzT_0YURGspQnHeDisw",
+    "title": "The Capital Grille",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJZ0xZYzT_0YURGspQnHeDisw_v2.png",
+    "location": {
+      "lat": 19.4283341,
+      "lng": -99.1628266
+    },
+    "prompt": "A Steak house serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:32:11.202Z"
+  },
+  {
+    "placeId": "ChIJ3ZJlBjX_0YURwpkIBV6-LvM",
+    "title": "Street Food. Carnitas",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJ3ZJlBjX_0YURwpkIBV6-LvM_v2.png",
+    "location": {
+      "lat": 19.4291881,
+      "lng": -99.1657003
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:32:24.062Z"
+  },
+  {
+    "placeId": "ChIJO58Te0n_0YURSPlf8bujU0Y",
+    "title": "Street Tacos",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJO58Te0n_0YURSPlf8bujU0Y_v2.png",
+    "location": {
+      "lat": 19.4148572,
+      "lng": -99.178309
+    },
+    "prompt": "A Mexican restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, bold, colorful, festive",
+    "generatedAt": "2025-11-30T05:32:39.689Z"
+  },
+  {
+    "placeId": "ChIJAeuc20X50YURmbaLaj44lKE",
+    "title": "BiGOS street tacos",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJAeuc20X50YURmbaLaj44lKE_v2.png",
+    "location": {
+      "lat": 19.4333452,
+      "lng": -99.1501928
+    },
+    "prompt": "A Taco restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, bold, colorful, festive",
+    "generatedAt": "2025-11-30T05:32:53.094Z"
+  },
+  {
+    "placeId": "ChIJNzf4fbn50YUR3NsIAAMCxW0",
+    "title": "Cà Phê Vietnam Street Food",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJNzf4fbn50YUR3NsIAAMCxW0_v2.png",
+    "location": {
+      "lat": 19.4360429,
+      "lng": -99.150815
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, fresh, organic feel, natural",
+    "generatedAt": "2025-11-30T05:33:06.337Z"
+  },
+  {
+    "placeId": "ChIJtc3HnSr50YURI6AdcbUW5x0",
+    "title": "Tacos- Street Food Vendor",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJtc3HnSr50YURI6AdcbUW5x0_v2.png",
+    "location": {
+      "lat": 19.4349873,
+      "lng": -99.147499
+    },
+    "prompt": "A Taco restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, bold, colorful, festive",
+    "generatedAt": "2025-11-30T05:33:28.619Z"
+  },
+  {
+    "placeId": "ChIJZ-dNcTr_0YURvT79FclhNi0",
+    "title": "Birria Estilo Jalisco - Food Stand",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJZ-dNcTr_0YURvT79FclhNi0_v2.png",
+    "location": {
+      "lat": 19.4198893,
+      "lng": -99.1605107
+    },
+    "prompt": "A Mexican restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, bold, colorful, festive",
+    "generatedAt": "2025-11-30T05:33:43.004Z"
+  },
+  {
+    "placeId": "ChIJrxn-r0f_0YURDXlBWYaD_24",
+    "title": "Kura",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJrxn-r0f_0YURDXlBWYaD_24_v2.png",
+    "location": {
+      "lat": 19.4175392,
+      "lng": -99.1698588
+    },
+    "prompt": "Laid-back spot serving Japanese dishes such as sushi, ramen & oden, plus seafood, Wagyu beef & beer., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:33:57.851Z"
+  },
+  {
+    "placeId": "ChIJjUpcMyX_0YURKD01V_kJOhM",
+    "title": "Mog Bistro",
+    "city": "Cuauhtémoc, Mexico City",
+    "imagePath": "/generated-images/ChIJjUpcMyX_0YURKD01V_kJOhM_v2.png",
+    "location": {
+      "lat": 19.4162998,
+      "lng": -99.155061
+    },
+    "prompt": "Hip, industrial dining room & terrace serving Asian-style meat skewers, dumplings, sushi & noodles., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:34:12.147Z"
+  },
+  {
+    "placeId": "ChIJlVvipTFu5kcR6VwB1PiwKv8",
+    "title": "Pur' - Jean-François Rouquette",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJlVvipTFu5kcR6VwB1PiwKv8_v2.png",
+    "location": {
+      "lat": 48.8689056,
+      "lng": 2.3301781
+    },
+    "prompt": "Upscale restaurant in the Park Hyatt Hotel preparing imaginative local dishes from a tasting menu., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:34:26.541Z"
+  },
+  {
+    "placeId": "ChIJ64SRn-xv5kcRH7AlSsBFASQ",
+    "title": "Restaurant Guy Savoy",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJ64SRn-xv5kcRH7AlSsBFASQ_v2.png",
+    "location": {
+      "lat": 48.8567046,
+      "lng": 2.3391491
+    },
+    "prompt": "Sophisticated restaurant offering high-concept a la carte & fixed-price menus, plus wine pairings., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:34:40.602Z"
+  },
+  {
+    "placeId": "ChIJqTQzIehv5kcRaF3hD1SzX5A",
+    "title": "Le Cinq",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJqTQzIehv5kcRaF3hD1SzX5A_v2.png",
+    "location": {
+      "lat": 48.868849,
+      "lng": 2.300683
+    },
+    "prompt": "Creatively plated French dishes in a richly decorated, Regency-style dining room with a wine cellar., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:34:57.325Z"
+  },
+  {
+    "placeId": "ChIJVeUHqupv5kcRDHPinmB3LtU",
+    "title": "Epicure",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJVeUHqupv5kcRDHPinmB3LtU_v2.png",
+    "location": {
+      "lat": 48.8717373,
+      "lng": 2.3148528
+    },
+    "prompt": "Upscale hotel restaurant overlooking a courtyard garden & specializing in French fine dining & wine., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:35:11.421Z"
+  },
+  {
+    "placeId": "ChIJR4kFR0xv5kcR-x6duNRh3uE",
+    "title": "Sphère",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJR4kFR0xv5kcR-x6duNRh3uE_v2.png",
+    "location": {
+      "lat": 48.8742665,
+      "lng": 2.3169387
+    },
+    "prompt": "A French restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:35:25.921Z"
+  },
+  {
+    "placeId": "ChIJQ-V5FQBy5kcRRd_d6D3GQGg",
+    "title": "Restaurant H",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJQ-V5FQBy5kcRRd_d6D3GQGg_v2.png",
+    "location": {
+      "lat": 48.8545233,
+      "lng": 2.368052
+    },
+    "prompt": "Sophisticated choice with a set menu spotlighting reimagined local cuisine paired with wine., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:35:40.745Z"
+  },
+  {
+    "placeId": "ChIJ3ciEyNhx5kcRPVo1NKwoM2k",
+    "title": "Boutary",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJ3ciEyNhx5kcRPVo1NKwoM2k_v2.png",
+    "location": {
+      "lat": 48.8549894,
+      "lng": 2.3380174
+    },
+    "prompt": "Intimate contemporary dining room offering sophisticated tasting menus, caviar & champagne., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:35:58.826Z"
+  },
+  {
+    "placeId": "ChIJ9Z6nGDtu5kcRgc34rnb__eA",
+    "title": "Sushi-B",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJ9Z6nGDtu5kcRgc34rnb__eA_v2.png",
+    "location": {
+      "lat": 48.8676992,
+      "lng": 2.337377
+    },
+    "prompt": "Intimate, minimalist restaurant for elegantly presented sushi & omakase chef's choice menus., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:36:16.431Z"
+  },
+  {
+    "placeId": "ChIJoZGnsQhv5kcRuU-gAvV-dyA",
+    "title": "Kuma",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJoZGnsQhv5kcRuU-gAvV-dyA_v2.png",
+    "location": {
+      "lat": 48.8566298,
+      "lng": 2.3583762
+    },
+    "prompt": "A Japanese restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:36:33.739Z"
+  },
+  {
+    "placeId": "ChIJEZfXAcVx5kcRHQGcF21SLyw",
+    "title": "Kanpai",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJEZfXAcVx5kcRHQGcF21SLyw_v2.png",
+    "location": {
+      "lat": 48.8428953,
+      "lng": 2.3300336
+    },
+    "prompt": "Japanese classics are served in this understated, intimate restaurant with a terrace., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:36:49.846Z"
+  },
+  {
+    "placeId": "ChIJieMCDTpu5kcRkW5IXfriXEk",
+    "title": "Restaurant japonais La Marina",
+    "city": "Paris",
+    "imagePath": "/generated-images/ChIJieMCDTpu5kcRkW5IXfriXEk_v2.png",
+    "location": {
+      "lat": 48.8704377,
+      "lng": 2.3349044
+    },
+    "prompt": "Creative sushi rolls, noodle soups & grilled fish & meat skewers, dished up in a no-frills room., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:37:02.617Z"
+  },
+  {
+    "placeId": "ChIJER0J1Cgb2jERZy0VE0BS8Nc",
+    "title": "AMGD Superfood Restaurant & AMGD Healthy Food Delivery",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJER0J1Cgb2jERZy0VE0BS8Nc_v2.png",
+    "location": {
+      "lat": 1.2864428,
+      "lng": 103.8145137
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:37:17.612Z"
+  },
+  {
+    "placeId": "ChIJ5yMyKwwZ2jERGVM_791Jn-o",
+    "title": "Grain Traders",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJ5yMyKwwZ2jERGVM_791Jn-o_v2.png",
+    "location": {
+      "lat": 1.2821756,
+      "lng": 103.8499191
+    },
+    "prompt": "A Health food restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, fresh, organic feel, natural",
+    "generatedAt": "2025-11-30T05:37:31.212Z"
+  },
+  {
+    "placeId": "ChIJCVEAMZ8Q2jERADAqDsnXjss",
+    "title": "The Living Cafe",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJCVEAMZ8Q2jERADAqDsnXjss_v2.png",
+    "location": {
+      "lat": 1.3310546,
+      "lng": 103.79644
+    },
+    "prompt": "A Cafe serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:37:44.897Z"
+  },
+  {
+    "placeId": "ChIJafybayUZ2jERkDSI52lN_oU",
+    "title": "Food Lab",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJafybayUZ2jERkDSI52lN_oU_v2.png",
+    "location": {
+      "lat": 1.3012067,
+      "lng": 103.8411571
+    },
+    "prompt": "A Health food restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, fresh, organic feel, natural",
+    "generatedAt": "2025-11-30T05:37:58.045Z"
+  },
+  {
+    "placeId": "ChIJDxQtJT8Q2jERSNsdeBemT70",
+    "title": "Sunnychoice Vegan Cafe and Healthy Option Store",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJDxQtJT8Q2jERSNsdeBemT70_v2.png",
+    "location": {
+      "lat": 1.3501645,
+      "lng": 103.7499001
+    },
+    "prompt": "A Vegetarian restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, fresh, organic feel, natural",
+    "generatedAt": "2025-11-30T05:38:12.268Z"
+  },
+  {
+    "placeId": "ChIJWbs-UOwZ2jERwP0GZgSvsgk",
+    "title": "iNCREDi BOWL - Clarke Quay",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJWbs-UOwZ2jERwP0GZgSvsgk_v2.png",
+    "location": {
+      "lat": 1.289971,
+      "lng": 103.8452405
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:38:25.880Z"
+  },
+  {
+    "placeId": "ChIJ8x3C5EMa2jERbYQrehIx42o",
+    "title": "The Lawn Cafe (Dog-Friendly!)",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJ8x3C5EMa2jERbYQrehIx42o_v2.png",
+    "location": {
+      "lat": 1.3043649,
+      "lng": 103.792365
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:38:40.077Z"
+  },
+  {
+    "placeId": "ChIJQ2O4_J0Z2jERk0k8rwB5gQI",
+    "title": "Decker Barbecue",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJQ2O4_J0Z2jERk0k8rwB5gQI_v2.png",
+    "location": {
+      "lat": 1.2900111,
+      "lng": 103.8388802
+    },
+    "prompt": "A Barbecue restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:38:56.079Z"
+  },
+  {
+    "placeId": "ChIJn9LYSzwZ2jERC1pdZ_LOvIY",
+    "title": "Ajoomma Korean Charcoal BBQ Restaurant",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJn9LYSzwZ2jERC1pdZ_LOvIY_v2.png",
+    "location": {
+      "lat": 1.2825065,
+      "lng": 103.847015
+    },
+    "prompt": "A Restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:39:15.945Z"
+  },
+  {
+    "placeId": "ChIJt2Ztmr8Z2jER9ZTHTrhVY9o",
+    "title": "Hanjip Korean Grill House",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJt2Ztmr8Z2jER9ZTHTrhVY9o_v2.png",
+    "location": {
+      "lat": 1.2902129,
+      "lng": 103.8459626
+    },
+    "prompt": "A Korean barbecue restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:39:30.370Z"
+  },
+  {
+    "placeId": "ChIJVTI_dpEZ2jERXKAaXOqUSzg",
+    "title": "Tengoku Yakiniku Singapore | Japanese Restaurant Singapore | Japanese BBQ",
+    "city": "Singapore",
+    "imagePath": "/generated-images/ChIJVTI_dpEZ2jERXKAaXOqUSzg_v2.png",
+    "location": {
+      "lat": 1.2990597,
+      "lng": 103.8537436
+    },
+    "prompt": "A Yakiniku restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:39:45.858Z"
+  },
+  {
+    "placeId": "ChIJteJvnl2NGGAR5ffwH6q3ntA",
+    "title": "THAI STREET FOOD",
+    "city": "Toshima City",
+    "imagePath": "/generated-images/ChIJteJvnl2NGGAR5ffwH6q3ntA_v2.png",
+    "location": {
+      "lat": 35.7309273,
+      "lng": 139.7104197
+    },
+    "prompt": "A Thai restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:39:59.792Z"
+  },
+  {
+    "placeId": "ChIJo3aTTv6NGGAR52gWuI2ZwZ4",
+    "title": "Ryu no Miyako Inshokugai (Shinjuku)",
+    "city": "Shinjuku City",
+    "imagePath": "/generated-images/ChIJo3aTTv6NGGAR52gWuI2ZwZ4_v2.png",
+    "location": {
+      "lat": 35.6906414,
+      "lng": 139.7020365
+    },
+    "prompt": "A Food court serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:40:15.206Z"
+  },
+  {
+    "placeId": "ChIJGeYlX_mLGGARwsJahMe-XZg",
+    "title": "Tokyo Ramen Street",
+    "city": "Chiyoda City",
+    "imagePath": "/generated-images/ChIJGeYlX_mLGGARwsJahMe-XZg_v2.png",
+    "location": {
+      "lat": 35.6802935,
+      "lng": 139.7679568
+    },
+    "prompt": "Renowned strip of 8 neighboring noodle shops, set in the underground precinct at Tokyo Station., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, playful, dynamic, energetic",
+    "generatedAt": "2025-11-30T05:40:28.322Z"
+  },
+  {
+    "placeId": "ChIJoUfFe9KNGGARFzs_SomCDXE",
+    "title": "Indian Street Food & Bar Gond",
+    "city": "Chiyoda City",
+    "imagePath": "/generated-images/ChIJoUfFe9KNGGARFzs_SomCDXE_v2.png",
+    "location": {
+      "lat": 35.6960873,
+      "lng": 139.7639487
+    },
+    "prompt": "A Indian restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, warm colors, spices theme",
+    "generatedAt": "2025-11-30T05:40:44.163Z"
+  },
+  {
+    "placeId": "ChIJGQbqZlWNGGARHZcB-VdLjBU",
+    "title": "J Boy Hong Kong Street Food",
+    "city": "Shibuya",
+    "imagePath": "/generated-images/ChIJGQbqZlWNGGARHZcB-VdLjBU_v2.png",
+    "location": {
+      "lat": 35.6602563,
+      "lng": 139.699198
+    },
+    "prompt": "A Chinese takeaway serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, traditional, artistic",
+    "generatedAt": "2025-11-30T05:40:56.925Z"
+  },
+  {
+    "placeId": "ChIJ0cQhcdXzGGARACZgRGFgnI4",
+    "title": "Pocha Korean Street Food",
+    "city": "Shibuya",
+    "imagePath": "/generated-images/ChIJ0cQhcdXzGGARACZgRGFgnI4_v2.png",
+    "location": {
+      "lat": 35.6907158,
+      "lng": 139.6837709
+    },
+    "prompt": "A Korean restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:41:11.656Z"
+  },
+  {
+    "placeId": "ChIJ8eQ-zqiMGGARLHwGVIXrvXk",
+    "title": "Luke's Lobster Shibuya Park Street Shop",
+    "city": "Shibuya",
+    "imagePath": "/generated-images/ChIJ8eQ-zqiMGGARLHwGVIXrvXk_v2.png",
+    "location": {
+      "lat": 35.6635241,
+      "lng": 139.6995462
+    },
+    "prompt": "A Seafood restaurant serving delicious food, minimal illustration, flat design, simple shapes, vibrant colors, clean lines, modern, contemporary",
+    "generatedAt": "2025-11-30T05:41:25.196Z"
+  },
+  {
+    "placeId": "ChIJ9fcZgFWJGGARba-URZY-YKw",
+    "title": "Tapas Molecular Bar",
+    "city": "Chuo City",
+    "imagePath": "/generated-images/ChIJ9fcZgFWJGGARba-URZY-YKw_v2.png",
+    "location": {
+      "lat": 35.6870501,
+      "lng": 139.7730495
+    },
+    "prompt": "High-concept tasting menu offered in a lauded, intimate restaurant in the Mandarin Oriental hotel., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:41:38.200Z"
+  },
+  {
+    "placeId": "ChIJV7oGAWWLGGARslO9OGTuG-A",
+    "title": "L’Effervescence",
+    "city": "Minato City",
+    "imagePath": "/generated-images/ChIJV7oGAWWLGGARslO9OGTuG-A_v2.png",
+    "location": {
+      "lat": 35.660214,
+      "lng": 139.719405
+    },
+    "prompt": "French-influenced tasting menus from a top-level Japanese chef, paired with wine or sake flights., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:41:53.417Z"
+  },
+  {
+    "placeId": "ChIJrbAVNIOMGGARXNvkApcqvng",
+    "title": "Narisawa",
+    "city": "Minato City",
+    "imagePath": "/generated-images/ChIJrbAVNIOMGGARXNvkApcqvng_v2.png",
+    "location": {
+      "lat": 35.6716221,
+      "lng": 139.7221161
+    },
+    "prompt": "Fine-dining restaurant serving a seasonal & carefully sourced menu of innovative Japanese dishes., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, zen aesthetic, minimalist, clean composition",
+    "generatedAt": "2025-11-30T05:42:06.436Z"
+  },
+  {
+    "placeId": "ChIJGUC_l3iLGGARJ0V_A5BfZJs",
+    "title": "Héritage by Kei Kobayashi（エリタージュ バイ ケイ コバヤシ）",
+    "city": "Minato City",
+    "imagePath": "/generated-images/ChIJGUC_l3iLGGARJ0V_A5BfZJs_v2.png",
+    "location": {
+      "lat": 35.6662932,
+      "lng": 139.7312789
+    },
+    "prompt": "Elegant, contemporary French venue with an expansive view of the city skyline., minimal illustration, flat design, simple shapes, vibrant colors, clean lines, elegant, sophisticated, refined",
+    "generatedAt": "2025-11-30T05:42:20.118Z"
+  }
+]

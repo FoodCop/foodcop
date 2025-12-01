@@ -73,7 +73,7 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
   const polylineRef = useRef<google.maps.Polyline | null>(null);
   const clustererRef = useRef<MarkerClusterer | null>(null);
   const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
-  
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -81,7 +81,6 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
   useEffect(() => {
     const initMap = async () => {
       try {
-        // Use centralized script loader to prevent multiple loads
         await loadGoogleMapsScript();
         setIsLoaded(true);
       } catch (err) {
@@ -96,65 +95,6 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
   // Create map instance
   useEffect(() => {
     if (!isLoaded || !mapRef.current || mapInstanceRef.current) return;
-
-    // Double-check that google.maps.Map is fully loaded
-    if (!window.google?.maps?.Map) {
-      console.warn('Google Maps API not fully loaded yet, retrying...');
-      // Retry after a short delay
-      const timeoutId = setTimeout(() => {
-        if (window.google?.maps?.Map && mapRef.current && !mapInstanceRef.current) {
-          const mapOptions: google.maps.MapOptions = {
-            center,
-            zoom,
-            mapTypeId,
-            zoomControl: showZoomControls,
-            mapTypeControl: showMapTypeControls,
-            streetViewControl: showStreetViewControls,
-            fullscreenControl: false,
-            styles: [
-              {
-                featureType: 'poi',
-                elementType: 'labels',
-                stylers: [{ visibility: 'off' }],
-              },
-            ],
-          };
-
-          try {
-            mapInstanceRef.current = new google.maps.Map(mapRef.current, mapOptions);
-
-            // Add map click listener
-            if (onMapClick) {
-              mapInstanceRef.current.addListener('click', onMapClick);
-            }
-
-            // Add bounds changed listener
-            if (onBoundsChanged) {
-              mapInstanceRef.current.addListener('bounds_changed', () => {
-                const bounds = mapInstanceRef.current?.getBounds();
-                if (bounds) {
-                  onBoundsChanged(bounds);
-                }
-              });
-            }
-
-            // Initialize info window
-            infoWindowRef.current = new google.maps.InfoWindow();
-          } catch (err) {
-            console.error('Error creating map instance:', err);
-            setError(err instanceof Error ? err.message : 'Failed to create map');
-          }
-        }
-      }, 100);
-      return () => clearTimeout(timeoutId);
-    }
-
-    // Verify google.maps.Map is available before creating map
-    if (!window.google?.maps?.Map) {
-      console.error('Google Maps Map constructor not available');
-      setError('Google Maps API not fully loaded');
-      return;
-    }
 
     const mapOptions: google.maps.MapOptions = {
       center,
@@ -225,7 +165,7 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
       map: mapInstanceRef.current,
       icon: createUserLocationIcon(),
       title: 'Your Location',
-      zIndex: 1000,
+      zIndex: 10000, // Ensure user marker is always on top
     });
   }, [userLocation]);
 
@@ -254,7 +194,7 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
     // Create new markers
     const newMarkers = markers.map(markerData => {
       const isSelected = markerData.id === selectedMarkerId;
-      
+
       const marker = new google.maps.Marker({
         position: markerData.position,
         map: mapInstanceRef.current,
@@ -443,7 +383,7 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
 
   if (error) {
     return (
-      <div 
+      <div
         className={`flex items-center justify-center bg-gray-100 ${className}`}
         style={{ height }}
       >
@@ -457,7 +397,7 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
 
   if (!isLoaded) {
     return (
-      <div 
+      <div
         className={`flex items-center justify-center bg-gray-100 ${className}`}
         style={{ height }}
       >
@@ -470,8 +410,8 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
   }
 
   return (
-    <div 
-      ref={mapRef} 
+    <div
+      ref={mapRef}
       className={className}
       style={{ width: '100%', height }}
     />

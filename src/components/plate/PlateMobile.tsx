@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Heart, Clock, Navigation, Settings, Trash } from 'lucide-react';
+import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Heart, Clock, Navigation, Settings, Trash, UserPlus } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { type SavedItem } from '../../services/savedItemsService';
 import { supabase } from '../../services/supabase';
@@ -19,6 +19,10 @@ import { transformSavedItemToUnified, hydrateSavedRecipeToUnified, hydrateSavedV
 import { savedItemsService } from '../../services/savedItemsService';
 import { PreferencesHintModal } from '../common/PreferencesHintModal';
 import { PreferencesChips } from '../common/PreferencesChips';
+import { FriendFinder } from '../friends/FriendFinder';
+import { UserProfileView } from '../friends/UserProfileView';
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 
 type TabType = 'dashboard' | 'posts' | 'recipes' | 'videos' | 'places';
 
@@ -98,6 +102,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
   });
   const [currentLocation, setCurrentLocation] = useState<{ city?: string; state?: string } | null>(null);
   const [showPreferencesHint, setShowPreferencesHint] = useState(false);
+  const [showFriendFinder, setShowFriendFinder] = useState(false);
+  const [selectedFriendUserId, setSelectedFriendUserId] = useState<string | null>(null);
   
   // Mock user data - will be replaced with real data
   const userPoints = 2450;
@@ -598,6 +604,35 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
         {/* Content */}
         {renderContent()}
       </main>
+
+      {/* Friend Finder Dialog */}
+      <Dialog open={showFriendFinder} onOpenChange={setShowFriendFinder}>
+        <DialogContent className="max-w-md h-[80vh] flex flex-col p-0">
+          <DialogHeader className="p-4 border-b">
+            <DialogTitle>Find Friends</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-hidden">
+            <FriendFinder
+              onUserClick={(userId) => {
+                setSelectedFriendUserId(userId);
+                setShowFriendFinder(false);
+              }}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* User Profile View Dialog */}
+      <Dialog open={!!selectedFriendUserId} onOpenChange={(open) => !open && setSelectedFriendUserId(null)}>
+        <DialogContent className="max-w-md h-[80vh] flex flex-col p-0">
+          {selectedFriendUserId && (
+            <UserProfileView
+              userId={selectedFriendUserId}
+              onBack={() => setSelectedFriendUserId(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 
@@ -632,8 +667,17 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
 
           {/* My Crew */}
           <section className="mb-6">
-            <div className="px-5 mb-4">
+            <div className="px-5 mb-4 flex items-center justify-between">
               <SectionHeading>My Crew</SectionHeading>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFriendFinder(true)}
+                className="text-xs"
+              >
+                <UserPlus className="h-3 w-3 mr-1" />
+                Add
+              </Button>
             </div>
             <div className="px-5">
               <div className="bg-white rounded-2xl p-4 shadow-sm">
@@ -651,6 +695,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                     {dashboardData.crew.map((member) => (
                       <button
                         key={member.id}
+                        onClick={() => setSelectedFriendUserId(member.id)}
                         className="flex flex-col items-center shrink-0 hover:opacity-80 transition-opacity"
                       >
                         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#F7C59F] p-[3px]">
@@ -669,6 +714,15 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
                     <p className="text-sm">No crew members yet</p>
                     <p className="text-xs mt-1">Add friends to build your crew!</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowFriendFinder(true)}
+                      className="mt-4"
+                    >
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Find Friends
+                    </Button>
                   </div>
                 )}
               </div>

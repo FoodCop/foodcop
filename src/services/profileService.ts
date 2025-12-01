@@ -6,6 +6,7 @@ import type {
   UserPreferences
 } from '../types/profile';
 import { AuthService } from './authService';
+import { FriendService } from './friendService';
 
 /**
  * Profile service for user profile management
@@ -440,6 +441,23 @@ export class ProfileService {
 
       if (!updateError && updatedProfile) {
         console.log('✅ Onboarding completed via update');
+        
+        // Check if this is a new profile (first time completing onboarding)
+        // If profile was just created, auto-friend masterbots
+        const { data: existingProfile } = await supabase
+          .from('users')
+          .select('created_at')
+          .eq('id', user.id)
+          .single();
+        
+        if (existingProfile) {
+          const profileAge = Date.now() - new Date(existingProfile.created_at).getTime();
+          // If profile was created less than 5 minutes ago, treat as new user
+          if (profileAge < 5 * 60 * 1000) {
+            await this.autoFriendMasterbots(user.id);
+          }
+        }
+        
         return {
           success: true,
           data: updatedProfile,
@@ -473,6 +491,10 @@ export class ProfileService {
       }
 
       console.log('✅ Onboarding completed via profile creation');
+      
+      // Auto-friend masterbots for new users
+      await this.autoFriendMasterbots(user.id);
+      
       return {
         success: true,
         data: newProfile,
@@ -621,5 +643,59 @@ export class ProfileService {
    */
   static getSupabaseClient() {
     return supabase;
+  }
+
+  /**
+   * Auto-friend all masterbots for a new user
+   * This should be called when a user profile is first created
+   */
+  static async autoFriendMasterbots(userId: string): Promise<void> {
+    try {
+      console.log('🤖 Auto-friending masterbots for user:', userId);
+
+      // Get all masterbots
+      const { data: masterbots, error: masterbotError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('is_masterbot', true);
+
+      if (masterbotError) {
+        console.error('❌ Error fetching masterbots:', masterbotError);
+        return;
+      }
+
+      if (!masterbots || masterbots.length === 0) {
+        console.log('ℹ️ No masterbots found to auto-friend');
+        return;
+      }
+
+      console.log(`📋 Found ${masterbots.length} masterbot(s) to friend`);
+
+      // Create accepted friend requests for each masterbot
+      // Note: We create requests where the user is the requester and masterbot is requested
+      // Then immediately accept them (status = 'accepted')
+      const friendRequests = masterbots.map((masterbot) => ({
+        requester_id: userId,
+        requested_id: masterbot.id,
+        status: 'accepted' as const,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }));
+
+      const { error: insertError } = await supabase
+        .from('friend_requests')
+        .insert(friendRequests);
+
+      if (insertError) {
+        console.error('❌ Error creating friend requests for masterbots:', insertError);
+        // Don't throw - this is not critical for user signup
+        return;
+      }
+
+      console.log(`✅ Successfully auto-friended ${masterbots.length} masterbot(s)`);
+    } catch (error) {
+      console.error('💥 Error in autoFriendMasterbots:', error);
+      // Don't throw - this is not critical for user signup
+    }
   }
 }

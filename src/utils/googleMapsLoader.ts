@@ -1,16 +1,13 @@
 /**
  * Google Maps Script Loader
  * Ensures Google Maps API is loaded only once across the entire application
+ * Uses the official @googlemaps/js-api-loader for reliable loading
  */
 
+import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 import { config } from '../config/config';
 
-// Global state to track loading
-let isLoading = false;
-let isLoaded = false;
-let loadError: Error | null = null;
-const loadPromises: Array<(value: void) => void> = [];
-const errorCallbacks: Array<(error: Error) => void> = [];
+let loadingPromise: Promise<void> | null = null;
 
 /**
  * Load Google Maps API script
@@ -18,162 +15,52 @@ const errorCallbacks: Array<(error: Error) => void> = [];
  */
 export async function loadGoogleMapsScript(): Promise<void> {
   // If already loaded, return immediately
-  if (isLoaded && globalThis.google?.maps?.Map) {
+  if (globalThis.google?.maps?.Map) {
     return;
   }
 
-  // If there was a previous error, reject with that error
-  if (loadError) {
-    throw loadError;
+  // If currently loading, return the existing promise
+  if (loadingPromise) {
+    return loadingPromise;
   }
 
-  // If currently loading, wait for the existing load to complete
-  if (isLoading) {
-    return new Promise<void>((resolve, reject) => {
-      loadPromises.push(resolve);
-      errorCallbacks.push(reject);
-    });
+  const apiKey = config.google.mapsApiKey;
+  if (!apiKey) {
+    throw new Error('Google Maps API key is not configured');
   }
+
+  // Configure global options
+  setOptions({
+    key: apiKey,
+    v: 'weekly',
+    libraries: ['places', 'geometry'],
+  });
 
   // Start loading
-  isLoading = true;
-
-  return new Promise<void>((resolve, reject) => {
-    try {
-      const apiKey = config.google.mapsApiKey;
-      if (!apiKey) {
-        const error = new Error('Google Maps API key is not configured');
-        loadError = error;
-        isLoading = false;
-        reject(error);
-        for (const cb of errorCallbacks) {
-          cb(error);
-        }
-        return;
-      }
-
-      // Check if script already exists in DOM
-      const existingScript = document.querySelector(
-        'script[src*="maps.googleapis.com/maps/api/js"]'
-      );
-
-      if (existingScript) {
-        // Script exists, check if it's fully loaded
-        const checkReady = () => {
-          if (globalThis.google?.maps?.Map) {
-            isLoaded = true;
-            isLoading = false;
-            resolve();
-            for (const cb of loadPromises) {
-              cb();
-            }
-            return true;
-          }
-          return false;
-        };
-
-        if (checkReady()) {
-          return;
-        }
-
-        // Wait for existing script to load
-        existingScript.addEventListener('load', () => {
-          // Wait for google.maps.Map to be available
-          const waitForMap = () => {
-            if (globalThis.google?.maps?.Map) {
-              isLoaded = true;
-              isLoading = false;
-              resolve();
-              for (const cb of loadPromises) {
-                cb();
-              }
-            } else {
-              setTimeout(waitForMap, 50);
-            }
-          };
-          waitForMap();
-        });
-
-        existingScript.addEventListener('error', () => {
-          const error = new Error('Failed to load Google Maps script');
-          loadError = error;
-          isLoading = false;
-          reject(error);
-          for (const cb of errorCallbacks) {
-            cb(error);
-          }
-        });
-
-        return;
-      }
-
-      // Create new script element
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&v=weekly&loading=async`;
-      script.async = true;
-      script.defer = true;
-
-      script.onload = () => {
-        // Wait for google.maps.Map to be available (it might not be immediately after script load)
-        const checkReady = () => {
-          if (globalThis.google?.maps?.Map) {
-            isLoaded = true;
-            isLoading = false;
-            resolve();
-            for (const cb of loadPromises) {
-              cb();
-            }
-            loadPromises.length = 0;
-            errorCallbacks.length = 0;
-          } else {
-            // Retry after a short delay
-            setTimeout(checkReady, 50);
-          }
-        };
-        checkReady();
-      };
-
-      script.onerror = () => {
-        const error = new Error('Failed to load Google Maps script');
-        loadError = error;
-        isLoading = false;
-        reject(error);
-        for (const cb of errorCallbacks) {
-          cb(error);
-        }
-        loadPromises.length = 0;
-        errorCallbacks.length = 0;
-      };
-
-      document.head.appendChild(script);
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Unknown error loading Google Maps');
-      loadError = error;
-      isLoading = false;
-      reject(error);
-      for (const cb of errorCallbacks) {
-        cb(error);
-      }
-      loadPromises.length = 0;
-      errorCallbacks.length = 0;
-    }
+  loadingPromise = importLibrary('maps').then(() => {
+    // We also need the marker library for AdvancedMarkerElement if we decide to use it,
+    // but for now just ensuring 'maps' is loaded is the core requirement.
+    // The Loader automatically handles the script injection and ready state.
+    return;
+  }).catch((err) => {
+    console.error('Failed to load Google Maps:', err);
+    loadingPromise = null; // Reset promise on error so we can retry
+    throw err;
   });
+
+  return loadingPromise;
 }
 
 /**
  * Check if Google Maps is loaded
  */
 export function isGoogleMapsLoaded(): boolean {
-  return isLoaded && Boolean(globalThis.google?.maps?.Map);
+  return Boolean(globalThis.google?.maps?.Map);
 }
 
 /**
  * Reset the loader state (useful for testing)
  */
 export function resetLoader(): void {
-  isLoading = false;
-  isLoaded = false;
-  loadError = null;
-  loadPromises.length = 0;
-  errorCallbacks.length = 0;
+  loadingPromise = null;
 }

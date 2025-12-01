@@ -38,14 +38,19 @@ export function createCustomMarkerIcon(
 /**
  * Creates a user location marker icon
  */
-export function createUserLocationIcon(): google.maps.Symbol {
+/**
+ * Creates a user location marker icon
+ */
+export function createUserLocationIcon(): google.maps.Icon {
   return {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: '#3b82f6',
-    fillOpacity: 1,
-    strokeColor: '#FFFFFF',
-    strokeWeight: 3,
-    scale: 10,
+    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="20" fill="rgba(59, 130, 246, 0.3)" />
+        <circle cx="24" cy="24" r="12" fill="#3b82f6" stroke="white" stroke-width="3" />
+      </svg>
+    `)}`,
+    scaledSize: new google.maps.Size(48, 48),
+    anchor: new google.maps.Point(24, 24),
   };
 }
 

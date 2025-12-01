@@ -29,7 +29,7 @@ import TestChatPage from './pages/TestChatPage'
 const lazyWithRetry = (componentImport: () => Promise<any>, retries = 3) => {
   return lazy(async () => {
     let lastError: Error | null = null;
-    
+
     for (let i = 0; i < retries; i++) {
       try {
         const module = await componentImport();
@@ -41,7 +41,7 @@ const lazyWithRetry = (componentImport: () => Promise<any>, retries = 3) => {
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
         console.warn(`⚠️ Lazy load attempt ${i + 1}/${retries} failed:`, lastError.message);
-        
+
         if (i === retries - 1) {
           // Last attempt failed, log detailed error and throw
           console.error('❌ All lazy load attempts failed:', {
@@ -51,13 +51,13 @@ const lazyWithRetry = (componentImport: () => Promise<any>, retries = 3) => {
           });
           throw lastError;
         }
-        
+
         // Exponential backoff: 100ms, 200ms, 400ms
         const delay = 100 * Math.pow(2, i);
         await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
-    
+
     throw lastError || new Error('Failed to load component after retries');
   });
 };
@@ -93,7 +93,7 @@ function PageErrorBoundaryWithLocation({ children }: { children: React.ReactNode
 // Wrapper component for lazy-loaded routes with individual error boundaries
 function LazyRouteWrapper({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  
+
   return (
     <ErrorBoundary
       onError={(error, errorInfo) => {
@@ -105,9 +105,9 @@ function LazyRouteWrapper({ children }: { children: React.ReactNode }) {
         });
       }}
     >
-      <Suspense 
+      <Suspense
         fallback={<PageLoader />}
-        // Add timeout to prevent infinite loading
+      // Add timeout to prevent infinite loading
       >
         {children}
       </Suspense>
@@ -118,15 +118,14 @@ function LazyRouteWrapper({ children }: { children: React.ReactNode }) {
 const NavButton = ({ to, label }: NavButtonProps) => {
   const location = useLocation();
   const isActive = location.pathname === to;
-  
+
   return (
     <Link
       to={to}
-      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-        isActive
-          ? 'bg-orange-600 text-white' 
-          : 'text-gray-700 hover:bg-gray-100'
-      }`}
+      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${isActive
+        ? 'bg-orange-600 text-white'
+        : 'text-gray-700 hover:bg-gray-100'
+        }`}
     >
       {label}
     </Link>
@@ -179,7 +178,7 @@ function AppLayout() {
         <Link to="/feed" className="flex items-center">
           <img src="/logo_mobile.png" alt="FUZO" className="h-8" />
         </Link>
-        
+
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-2">
           <NavButton to="/feed" label="Feed" />
@@ -192,12 +191,13 @@ function AppLayout() {
           <button
             onClick={toggleColorMode}
             className="px-4 py-2 rounded-full border-2 transition ml-2"
-            style={{ 
+            style={{
               borderColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
               backgroundColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
               color: '#000000'
             }}
             title="Toggle Color Mode"
+            aria-label="Toggle Color Mode"
           >
             <i className="fa-solid fa-palette"></i>
           </button>
@@ -206,11 +206,12 @@ function AppLayout() {
           <button
             onClick={openDMChat}
             className="relative px-4 py-2 rounded-full border-2 transition ml-2 hover:bg-orange-50"
-            style={{ 
+            style={{
               borderColor: '#E5E7EB',
               backgroundColor: '#FFFFFF',
             }}
             title="Messages"
+            aria-label="Messages"
           >
             <MessageCircle className="h-4 w-4 text-gray-700" />
             {unreadCount > 0 && (
@@ -224,12 +225,13 @@ function AppLayout() {
           <button
             onClick={() => setShowAIChat(!showAIChat)}
             className="px-4 py-2 rounded-full border-2 transition ml-2"
-            style={{ 
+            style={{
               borderColor: showAIChat ? '#3B82F6' : '#E5E7EB',
               backgroundColor: showAIChat ? '#3B82F6' : '#FFFFFF',
               color: showAIChat ? '#FFFFFF' : '#000000'
             }}
             title="AI Assistant"
+            aria-label="AI Assistant"
           >
             <i className="fa-solid fa-robot"></i>
           </button>
@@ -260,11 +262,11 @@ function AppLayout() {
   // Protected Plate component with userId passed as prop
   const PlateProtectedApp = () => {
     const { user } = useAuth();
-    
+
     if (!user) {
       return null; // ProtectedRoute will handle redirect
     }
-    
+
     return (
       <LazyRouteWrapper>
         <PlateApp userId={user.id} currentUser={user} />
@@ -282,7 +284,7 @@ function AppLayout() {
           </div>
         </div>
       )}
-      
+
       {/* Main Content Area */}
       <div className="mobile-content-area">
         <PageErrorBoundaryWithLocation>
@@ -378,7 +380,7 @@ function AppLayout() {
           </Routes>
         </PageErrorBoundaryWithLocation>
       </div>
-      
+
       {/* Mobile Radial Navigation - Only show on main app pages */}
       {showNavigation && (
         <div className="md:hidden">
@@ -402,11 +404,12 @@ function AppLayout() {
             border: '2px solid',
             borderColor: showAIChat ? '#3B82F6' : '#E5E7EB',
           }}
+          aria-label="AI Assistant"
         >
           <i className={`fa-solid fa-robot ${showAIChat ? 'text-white' : 'text-gray-700'}`}></i>
         </button>
       )}
-      
+
       {/* Navigation Hints - Show helpful tips on each page */}
       {showNavigation && <NavigationHints />}
 

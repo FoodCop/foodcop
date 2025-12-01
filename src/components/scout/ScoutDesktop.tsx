@@ -9,6 +9,7 @@ import type { MapMarker } from '../maps/mapUtils';
 import { backendService, formatGooglePlaceResult, getGooglePlacesPhotoUrl } from '../../services/backendService';
 import { getDirections, type TravelMode, type Route } from '../../services/googleDirections';
 import type { GooglePlace } from '../../types';
+import { mapSavedItemToRestaurant, calculateDistanceKm } from '../../utils/savedRestaurantMapper';
 
 // Format distance: meters for < 1km, kilometers for >= 1km
 const formatDistance = (distanceKm: number | undefined): string => {
@@ -49,13 +50,20 @@ interface Restaurant {
 export function ScoutDesktop() {
   const { user } = useAuth();
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [visibleLimit, setVisibleLimit] = useState(10);
+  const [activeTab, setActiveTab] = useState<'discover' | 'my-map'>('discover');
+  const [savedRestaurants, setSavedRestaurants] = useState<Restaurant[]>([]);
+  const [savedLoading, setSavedLoading] = useState(false);
+  const [savedError, setSavedError] = useState<string | null>(null);
+  const [myMapFilter, setMyMapFilter] = useState<'nearby' | 'all'>('nearby');
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [distance, setDistance] = useState(2.5);
   const [activeFilter, setActiveFilter] = useState<string>('popular');
-  const [activeTab, setActiveTab] = useState<'overview' | 'reviews' | 'photos' | 'menu'>('overview');
+  const [detailTab, setDetailTab] = useState<'overview' | 'reviews' | 'photos' | 'menu'>('overview');
   const [showDirections, setShowDirections] = useState(false);
-  const [userLocation, setUserLocation] = useState<[number, number]>([13.1072, 80.0915456]); // Default to Tamil Nadu
+  // Start with a neutral default (San Francisco); real location is loaded via geolocation on mount
+  const [userLocation, setUserLocation] = useState<[number, number]>([37.7849, -122.4094]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [routePolyline, setRoutePolyline] = useState<string | null>(null);
@@ -136,6 +144,7 @@ export function ScoutDesktop() {
 
       results.sort((a, b) => (a.distance || 0) - (b.distance || 0));
       setRestaurants(results);
+      setVisibleLimit(10);
       
       if (results.length > 0) {
         setSelectedRestaurant(results[0]);
@@ -273,15 +282,29 @@ export function ScoutDesktop() {
 
     if (!selectedRestaurant) return;
 
+    const cuisineText = Array.isArray(selectedRestaurant.cuisine)
+      ? selectedRestaurant.cuisine.join(', ')
+      : selectedRestaurant.cuisine;
+
     try {
       const result = await savedItemsService.saveItem({
         itemId: selectedRestaurant.id,
         itemType: 'restaurant',
         metadata: {
+          name: selectedRestaurant.name,
           address: selectedRestaurant.address,
+          cuisine: cuisineText,
           rating: selectedRestaurant.rating,
-          cuisine: selectedRestaurant.cuisine,
-          image: selectedRestaurant.image
+          lat: selectedRestaurant.lat,
+          lng: selectedRestaurant.lng,
+          place_id: selectedRestaurant.id,
+          price_level: selectedRestaurant.price_level,
+          distance: selectedRestaurant.distance ? selectedRestaurant.distance * 1000 : undefined,
+          photos: selectedRestaurant.photos,
+          phone: selectedRestaurant.phone,
+          website: selectedRestaurant.website,
+          image: selectedRestaurant.image,
+          image_url: selectedRestaurant.image
         }
       });
 
@@ -298,10 +321,125 @@ export function ScoutDesktop() {
     }
   };
 
+  // Load saved restaurants for My Map
+  useEffect(() => {
+    const loadSavedRestaurants = async () => {
+      if (!user || activeTab !== 'my-map') {
+        return;
+      }
+
+      setSavedLoading(true);
+      setSavedError(null);
+
+      try {
+        const result = await savedItemsService.listSavedItems({ itemType: 'restaurant' });
+
+        if (!result.success || !result.data) {
+          setSavedError(result.error || 'Failed to load saved places');
+          setSavedRestaurants([]);
+          return;
+        }
+
+        const mapped: Restaurant[] = [];
+        for (const item of result.data) {
+          const mappedRestaurant = mapSavedItemToRestaurant(item);
+          if (mappedRestaurant) {
+            mapped.push({
+              id: mappedRestaurant.id,
+              name: mappedRestaurant.name,
+              address: mappedRestaurant.address,
+              lat: mappedRestaurant.lat,
+              lng: mappedRestaurant.lng,
+              rating: mappedRestaurant.rating ?? 0,
+              userRatingsTotal: undefined,
+              price_level: mappedRestaurant.price_level,
+              cuisine: mappedRestaurant.cuisine,
+              distance: mappedRestaurant.distanceMeters
+                ? mappedRestaurant.distanceMeters / 1000
+                : undefined,
+              deliveryTime: undefined,
+              image: mappedRestaurant.image || mappedRestaurant.image_url,
+              photos: Array.isArray(mappedRestaurant.photos)
+                ? mappedRestaurant.photos.map((p) =>
+                    typeof p === 'string' ? p : getGooglePlacesPhotoUrl(p.photo_reference, 800),
+                  )
+                : undefined,
+              phone: undefined,
+              website: undefined,
+              opening_hours: undefined,
+              description: undefined,
+              reviews: undefined,
+            });
+          }
+        }
+
+        setSavedRestaurants(mapped);
+        if (mapped.length > 0 && !selectedRestaurant) {
+          setSelectedRestaurant(mapped[0]);
+        }
+      } catch (error) {
+        console.error('❌ ScoutDesktop: Error loading saved restaurants for My Map:', error);
+        setSavedError('Failed to load saved places');
+        setSavedRestaurants([]);
+      } finally {
+        setSavedLoading(false);
+      }
+    };
+
+    void loadSavedRestaurants();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, user]);
+
+  const filteredSavedRestaurants = (() => {
+    if (myMapFilter === 'all') return savedRestaurants;
+
+    if (!userLocation) return savedRestaurants;
+
+    const origin = { lat: userLocation[0], lng: userLocation[1] };
+    const MAX_NEARBY_KM = 20;
+
+    return savedRestaurants.filter((r) => {
+      try {
+        const d = calculateDistanceKm(origin, { lat: r.lat, lng: r.lng });
+        return d <= MAX_NEARBY_KM;
+      } catch {
+        return false;
+      }
+    });
+  })();
+
   const priceLevel = selectedRestaurant?.price_level ? '$'.repeat(selectedRestaurant.price_level) : '$$';
 
   return (
     <div className="flex flex-col h-screen bg-gray-50" style={{ fontSize: '10pt' }}>
+      {/* Tabs for Discover / My Map */}
+      <div className="border-b border-gray-200 bg-white px-4 pt-2">
+        <div className="inline-flex rounded-full bg-gray-100 p-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab('discover')}
+            className={`px-4 py-1.5 text-xs font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1 ${
+              activeTab === 'discover'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Discover
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('my-map')}
+            className={`px-4 py-1.5 text-xs font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1 ${
+              activeTab === 'my-map'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            My Map
+          </button>
+        </div>
+      </div>
+
       <div className="flex flex-1">
       {/* Left Sidebar */}
       <aside className="w-[380px] bg-white border-r border-gray-200 flex flex-col overflow-hidden">
@@ -317,169 +455,340 @@ export function ScoutDesktop() {
               </p>
             </div>
           </div>
-          
-          {/* Search */}
-          <div className="relative mb-4">
-            <input
-              type="text"
-              placeholder="Search restaurants, cuisines..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
-            />
-            <Search className="absolute left-4 top-4 text-gray-400" size={18} />
-          </div>
 
-          {/* Distance Slider */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <i className="fa-solid fa-person-walking text-gray-700" style={{ fontSize: '10pt' }} aria-label="Distance"></i>
-              <span className="text-sm font-semibold text-orange-600">{formatDistance(distance)}</span>
-            </div>
-            <input
-              type="range"
-              min="0.5"
-              max="50"
-              step="0.5"
-              value={distance}
-              onChange={(e) => setDistance(Number.parseFloat(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
-            />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>0.5km</span>
-              <span>10km</span>
-            </div>
-          </div>
+          {activeTab === 'discover' ? (
+            <>
+              {/* Search */}
+              <div className="relative mb-4">
+                <input
+                  type="text"
+                  placeholder="Search restaurants, cuisines..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
+                />
+                <Search className="absolute left-4 top-4 text-gray-400" size={18} />
+              </div>
 
-          {/* Filters */}
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setActiveFilter('popular')}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-                activeFilter === 'popular'
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Popular
-            </button>
-            <button
-              onClick={() => setActiveFilter('top-rated')}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-                activeFilter === 'top-rated'
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Top Rated
-            </button>
-            <button
-              onClick={() => setActiveFilter('fast-delivery')}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-                activeFilter === 'fast-delivery'
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Fast Delivery
-            </button>
-          </div>
+              {/* Distance Slider */}
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <i
+                    className="fa-solid fa-person-walking text-gray-700"
+                    style={{ fontSize: '10pt' }}
+                    aria-label="Distance"
+                  ></i>
+                  <span className="text-sm font-semibold text-orange-600">
+                    {formatDistance(distance)}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0.5"
+                  max="50"
+                  step="0.5"
+                  value={distance}
+                  onChange={(e) => setDistance(Number.parseFloat(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                />
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>0.5km</span>
+                  <span>10km</span>
+                </div>
+              </div>
+
+              {/* Filters */}
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={() => setActiveFilter('popular')}
+                  className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                    activeFilter === 'popular'
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Popular
+                </button>
+                <button
+                  onClick={() => setActiveFilter('top-rated')}
+                  className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                    activeFilter === 'top-rated'
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Top Rated
+                </button>
+                <button
+                  onClick={() => setActiveFilter('fast-delivery')}
+                  className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                    activeFilter === 'fast-delivery'
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Fast Delivery
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-sm font-semibold text-gray-900">My Saved Places</h2>
+                {!user && (
+                  <span className="text-[11px] text-gray-500">
+                    Sign in to see your saved restaurants
+                  </span>
+                )}
+              </div>
+              {/* Nearby / All toggle */}
+              <div className="flex items-center gap-3 mb-3">
+                <label className="inline-flex items-center gap-1 text-xs text-gray-700 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="my-map-filter"
+                    value="nearby"
+                    checked={myMapFilter === 'nearby'}
+                    onChange={() => setMyMapFilter('nearby')}
+                    className="text-orange-500 focus:ring-orange-500"
+                  />
+                  <span>Nearby</span>
+                </label>
+                <label className="inline-flex items-center gap-1 text-xs text-gray-700 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="my-map-filter"
+                    value="all"
+                    checked={myMapFilter === 'all'}
+                    onChange={() => setMyMapFilter('all')}
+                    className="text-orange-500 focus:ring-orange-500"
+                  />
+                  <span>All</span>
+                </label>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Restaurant List */}
         <div className="flex-1 overflow-y-auto">
-          {loading ? (
-            <div className="flex items-center justify-center h-full">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-                <p className="text-gray-600">Finding nearby restaurants...</p>
-              </div>
-            </div>
-          ) : error ? (
-            <div className="flex items-center justify-center h-full">
-              <div className="text-center px-4">
-                <p className="text-red-600 mb-2">❌ {error}</p>
-                <button
-                  onClick={() => fetchRestaurants(userLocation[0], userLocation[1], distance)}
-                  className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
-                >
-                  Try Again
-                </button>
-              </div>
-            </div>
-          ) : restaurants.length === 0 ? (
-            <div className="flex items-center justify-center h-full">
-              <div className="text-center px-4">
-                <MapPin className="text-gray-400 mx-auto mb-4" size={48} />
-                <p className="text-gray-600 mb-2">No restaurants found</p>
-                <p className="text-sm text-gray-500">Try increasing the search radius</p>
-              </div>
-            </div>
-          ) : (
-            restaurants.map((restaurant) => (
-              <button
-                key={restaurant.id}
-                onClick={() => handleRestaurantClick(restaurant)}
-                className={`w-full p-4 border-b border-gray-100 hover:bg-orange-50 cursor-pointer transition-colors text-left ${
-                  selectedRestaurant?.id === restaurant.id ? 'bg-orange-50' : ''
-                }`}
-              >
-                <div className="flex gap-3">
-                  <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-200">
-                    {restaurant.image ? (
-                      <img 
-                        src={restaurant.image} 
-                        alt={restaurant.name} 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
-                          if (placeholder) placeholder.style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
-                    <div className={`w-full h-full flex items-center justify-center ${restaurant.image ? 'hidden' : ''}`}>
-                      <MapPin className="text-gray-400" size={32} />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
-                    <div className="flex items-center gap-1 mb-1">
-                      <div className="flex text-orange-500 text-xs">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            size={12}
-                            className={i < Math.floor(restaurant.rating) ? 'fill-orange-500' : ''}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm font-medium text-gray-900">{restaurant.rating}</span>
-                      <span className="text-xs text-gray-500">({restaurant.userRatingsTotal})</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
-                      <span>{restaurant.cuisine}</span>
-                      <span className="text-gray-400">·</span>
-                      <span>{restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$'}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-600">{formatDistance(restaurant.distance)}</span>
-                      <span
-                        className={`px-2 py-0.5 text-xs font-medium rounded ${
-                          restaurant.opening_hours?.open_now
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                        }`}
-                      >
-                        {restaurant.opening_hours?.open_now ? 'Open' : 'Closed'}
-                      </span>
-                    </div>
+          {activeTab === 'discover' ? (
+            <>
+              {loading ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Finding nearby restaurants...</p>
                   </div>
                 </div>
-              </button>
-            ))
+              ) : error ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center px-4">
+                    <p className="text-red-600 mb-2">❌ {error}</p>
+                    <button
+                      onClick={() => fetchRestaurants(userLocation[0], userLocation[1], distance)}
+                      className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                </div>
+              ) : restaurants.length === 0 ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center px-4">
+                    <MapPin className="text-gray-400 mx-auto mb-4" size={48} />
+                    <p className="text-gray-600 mb-2">No restaurants found</p>
+                    <p className="text-sm text-gray-500">Try increasing the search radius</p>
+                  </div>
+                </div>
+              ) : (
+                restaurants.slice(0, visibleLimit).map((restaurant) => (
+                  <button
+                    key={restaurant.id}
+                    onClick={() => handleRestaurantClick(restaurant)}
+                    className={`w-full p-4 border-b border-gray-100 hover:bg-orange-50 cursor-pointer transition-colors text-left ${
+                      selectedRestaurant?.id === restaurant.id ? 'bg-orange-50' : ''
+                    }`}
+                  >
+                    <div className="flex gap-3">
+                      <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                        {restaurant.image ? (
+                          <img
+                            src={restaurant.image}
+                            alt={restaurant.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
+                              if (placeholder) placeholder.style.display = 'flex';
+                            }}
+                          />
+                        ) : null}
+                        <div
+                          className={`w-full h-full flex items-center justify-center ${
+                            restaurant.image ? 'hidden' : ''
+                          }`}
+                        >
+                          <MapPin className="text-gray-400" size={32} />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
+                        <div className="flex items-center gap-1 mb-1">
+                          <div className="flex text-orange-500 text-xs">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                size={12}
+                                className={i < Math.floor(restaurant.rating) ? 'fill-orange-500' : ''}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-sm font-medium text-gray-900">
+                            {restaurant.rating}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            ({restaurant.userRatingsTotal})
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
+                          <span>{restaurant.cuisine}</span>
+                          <span className="text-gray-400">·</span>
+                          <span>
+                            {restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-600">
+                            {formatDistance(restaurant.distance)}
+                          </span>
+                          <span
+                            className={`px-2 py-0.5 text-xs font-medium rounded ${
+                              restaurant.opening_hours?.open_now
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-red-100 text-red-700'
+                            }`}
+                          >
+                            {restaurant.opening_hours?.open_now ? 'Open' : 'Closed'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))
+              )}
+            </>
+          ) : (
+            <>
+              {savedLoading ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading your saved places...</p>
+                  </div>
+                </div>
+              ) : savedError ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center px-4">
+                    <p className="text-red-600 mb-2">❌ {savedError}</p>
+                    <p className="text-xs text-gray-500">
+                      Open Plate and try saving a few restaurants, then come back here.
+                    </p>
+                  </div>
+                </div>
+              ) : filteredSavedRestaurants.length === 0 ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center px-4">
+                    <MapPin className="text-gray-400 mx-auto mb-4" size={40} />
+                    <p className="text-gray-600 mb-2">No saved restaurants yet</p>
+                    <p className="text-xs text-gray-500">
+                      Save places from Scout or Plate to see them on your map.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                filteredSavedRestaurants.map((restaurant) => (
+                  <button
+                    key={restaurant.id}
+                    onClick={() => setSelectedRestaurant(restaurant)}
+                    className={`w-full p-4 border-b border-gray-100 hover:bg-orange-50 cursor-pointer transition-colors text-left ${
+                      selectedRestaurant?.id === restaurant.id ? 'bg-orange-50' : ''
+                    }`}
+                  >
+                    <div className="flex gap-3">
+                      <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                        {restaurant.image ? (
+                          <img
+                            src={restaurant.image}
+                            alt={restaurant.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
+                              if (placeholder) placeholder.style.display = 'flex';
+                            }}
+                          />
+                        ) : null}
+                        <div
+                          className={`w-full h-full flex items-center justify-center ${
+                            restaurant.image ? 'hidden' : ''
+                          }`}
+                        >
+                          <MapPin className="text-gray-400" size={32} />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
+                        <div className="flex items-center gap-1 mb-1">
+                          <div className="flex text-orange-500 text-xs">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                size={12}
+                                className={i < Math.floor(restaurant.rating) ? 'fill-orange-500' : ''}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-sm font-medium text-gray-900">
+                            {restaurant.rating}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
+                          <span>{restaurant.cuisine}</span>
+                          {restaurant.price_level && (
+                            <>
+                              <span className="text-gray-400">·</span>
+                              <span>{'$'.repeat(restaurant.price_level)}</span>
+                            </>
+                          )}
+                        </div>
+                        {restaurant.distance && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-gray-600">
+                              {formatDistance(restaurant.distance)}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))
+              )}
+            </>
           )}
         </div>
+
+        {/* Pagination - Load More */}
+        {activeTab === 'discover' && restaurants.length > visibleLimit && (
+          <div className="border-t border-gray-100 p-3 flex items-center justify-center bg-white">
+            <button
+              onClick={() => setVisibleLimit((prev) => Math.min(prev + 10, restaurants.length))}
+              className="px-4 py-2 text-sm font-semibold rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors"
+            >
+              Load more results
+            </button>
+          </div>
+        )}
       </aside>
 
       {/* Map Container */}
@@ -492,20 +801,25 @@ export function ScoutDesktop() {
           }
           zoom={14}
           userLocation={{ lat: userLocation[0], lng: userLocation[1] }}
-          markers={restaurants.map((restaurant): MapMarker => ({
-            id: restaurant.id,
-            position: { lat: restaurant.lat, lng: restaurant.lng },
-            title: restaurant.name,
-            data: restaurant,
-          }))}
+          markers={(activeTab === 'discover' ? restaurants : filteredSavedRestaurants).map(
+            (restaurant): MapMarker => ({
+              id: restaurant.id,
+              position: { lat: restaurant.lat, lng: restaurant.lng },
+              title: restaurant.name,
+              data: restaurant,
+            }),
+          )}
           selectedMarkerId={selectedRestaurant?.id}
           onMarkerClick={(markerId) => {
-            const restaurant = restaurants.find(r => r.id === markerId);
+            const source = activeTab === 'discover' ? restaurants : filteredSavedRestaurants;
+            const restaurant = source.find((r) => r.id === markerId);
             if (restaurant) {
               handleRestaurantClick(restaurant);
             }
           }}
-          enableClustering={restaurants.length > 20}
+          enableClustering={
+            (activeTab === 'discover' ? restaurants : filteredSavedRestaurants).length > 20
+          }
           route={showDirections && routePolyline ? routePolyline : undefined}
           className="w-full h-full"
         />
@@ -639,9 +953,9 @@ export function ScoutDesktop() {
                 <>
                   <div className="flex gap-4 mb-6 border-b border-gray-200">
                     <button
-                      onClick={() => setActiveTab('overview')}
+                      onClick={() => setDetailTab('overview')}
                       className={`pb-3 px-1 font-semibold ${
-                        activeTab === 'overview'
+                        detailTab === 'overview'
                           ? 'text-orange-500 border-b-2 border-orange-500'
                           : 'text-gray-600 hover:text-gray-900'
                       }`}
@@ -649,9 +963,9 @@ export function ScoutDesktop() {
                       Overview
                     </button>
                     <button
-                      onClick={() => setActiveTab('reviews')}
+                      onClick={() => setDetailTab('reviews')}
                       className={`pb-3 px-1 font-medium ${
-                        activeTab === 'reviews'
+                        detailTab === 'reviews'
                           ? 'text-orange-500 border-b-2 border-orange-500'
                           : 'text-gray-600 hover:text-gray-900'
                       }`}
@@ -659,9 +973,9 @@ export function ScoutDesktop() {
                       Reviews
                     </button>
                     <button
-                      onClick={() => setActiveTab('photos')}
+                      onClick={() => setDetailTab('photos')}
                       className={`pb-3 px-1 font-medium ${
-                        activeTab === 'photos'
+                        detailTab === 'photos'
                           ? 'text-orange-500 border-b-2 border-orange-500'
                           : 'text-gray-600 hover:text-gray-900'
                       }`}
@@ -669,9 +983,9 @@ export function ScoutDesktop() {
                       Photos
                     </button>
                     <button
-                      onClick={() => setActiveTab('menu')}
+                      onClick={() => setDetailTab('menu')}
                       className={`pb-3 px-1 font-medium ${
-                        activeTab === 'menu'
+                        detailTab === 'menu'
                           ? 'text-orange-500 border-b-2 border-orange-500'
                           : 'text-gray-600 hover:text-gray-900'
                       }`}
@@ -681,7 +995,7 @@ export function ScoutDesktop() {
                   </div>
 
                   {/* Overview Tab */}
-                  {activeTab === 'overview' && (
+                  {detailTab === 'overview' && (
                     <>
                       {/* About */}
                       {selectedRestaurant.description && (
@@ -764,7 +1078,7 @@ export function ScoutDesktop() {
                   )}
 
                   {/* Reviews Tab */}
-                  {activeTab === 'reviews' && (
+                  {detailTab === 'reviews' && (
                     <div>
                       {selectedRestaurant.reviews && selectedRestaurant.reviews.length > 0 ? (
                         <div className="space-y-4">
@@ -801,7 +1115,7 @@ export function ScoutDesktop() {
                   )}
 
                   {/* Photos Tab */}
-                  {activeTab === 'photos' && (
+                  {detailTab === 'photos' && (
                     <div>
                       {selectedRestaurant.photos && selectedRestaurant.photos.length > 0 ? (
                         <div className="grid grid-cols-2 gap-2">
@@ -824,7 +1138,7 @@ export function ScoutDesktop() {
                   )}
 
                   {/* Menu Tab */}
-                  {activeTab === 'menu' && (
+                  {detailTab === 'menu' && (
                     <div className="text-center text-gray-500 py-8">
                       <p>Menu coming soon</p>
                     </div>

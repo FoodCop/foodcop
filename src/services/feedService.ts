@@ -141,8 +141,8 @@ const API_TIMEOUTS = {
  * Phase 2: Timeout wrapper for API calls
  */
 const withTimeout = async <T>(
-  promise: Promise<T>, 
-  timeoutMs: number, 
+  promise: Promise<T>,
+  timeoutMs: number,
   apiName: string
 ): Promise<T> => {
   const timeoutPromise = new Promise<never>((_, reject) => {
@@ -164,43 +164,29 @@ export const transformMasterSetToFeedCard = (
 ): RestaurantCard => {
   const distance = userLocation
     ? calculateDistance(
-        userLocation.lat,
-        userLocation.lng,
-        location.location.lat,
-        location.location.lng
-      )
-    : null;
-
-  // Use fallback images based on cuisine type
-  // Future: Fetch actual images from Google Places API or store image URLs in JSON
-  const imageUrl = generateRestaurantFallbackImage(location.categoryName);
-
-  return {
-    id: `restaurant-${location.placeId}`,
-    type: 'restaurant',
-    saveCategory: 'Places',
-    name: location.title,
-    cuisine: location.categoryName || 'Restaurant',
-    priceRange: location.price || '$$',
-    rating: location.totalScore || 0,
-    reviewCount: location.reviewsCount || 0,
-    location: location.neighborhood
+      userLocation.lat,
+      name: location.title,
+      cuisine: location.categoryName || 'Restaurant',
+      priceRange: location.price || '$$',
+      rating: location.totalScore || 0,
+      reviewCount: location.reviewsCount || 0,
+      location: location.neighborhood
       ? `${location.neighborhood}, ${location.city}`
       : location.city,
-    distance: distance ? `${distance.toFixed(1)} km away` : 'Distance unavailable',
-    imageUrl,
-    description: location.description || `${location.categoryName} in ${location.city}`,
-    tags: location.categories?.slice(0, 3) || [],
+      distance: distance ? `${distance.toFixed(1)} km away` : 'Distance unavailable',
+      imageUrl,
+      description: location.description || `${location.categoryName} in ${location.city}`,
+      tags: location.categories?.slice(0, 3) || [],
   };
 };
 
 export const transformRestaurantToFeedCard = async (
-  restaurant: GoogleRestaurant, 
+  restaurant: GoogleRestaurant,
   userLocation?: UserLocation
 ): Promise<RestaurantCard> => {
-  const distance = userLocation ? 
+  const distance = userLocation ?
     calculateDistance(
-      userLocation.lat, 
+      userLocation.lat,
       userLocation.lng,
       restaurant.geometry.location.lat,
       restaurant.geometry.location.lng
@@ -208,7 +194,7 @@ export const transformRestaurantToFeedCard = async (
 
   // Map Google Places types to cuisine categories
   const cuisine = mapPlaceTypesToCuisine(restaurant.types || []);
-  
+
   // ✅ FIX: Use photo reference from nearby search instead of fetching details
   // This eliminates 20+ serial API calls per feed load
   let rawImageUrl: string;
@@ -229,7 +215,7 @@ export const transformRestaurantToFeedCard = async (
     console.warn('Failed to fetch Google Places image:', error);
     rawImageUrl = generateRestaurantFallbackImage(cuisine);
   }
-    
+
   // Phase 3: Optimize restaurant image for performance
   const optimizedImage = imageOptimizer.optimizeImageByType(rawImageUrl, 'restaurant');
 
@@ -301,12 +287,12 @@ export const transformMasterbotToFeedCard = (post: MasterbotPost): MasterbotCard
   // Ensure we have valid URLs before optimization
   const avatarUrl = post.avatar_url || 'https://lgladnskxmbkhcnrsfxv.supabase.co/storage/v1/object/public/master-bot-posts/avatars/jun_zen_minimalist.png';
   const optimizedAvatar = imageOptimizer.optimizeImageByType(avatarUrl, 'avatar');
-  
+
   // TEMPORARY: Bypass image optimization to debug the issue
   let finalImageUrl = post.image_url || 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80';
-  
+
   // Try image optimization but fallback to original if it fails
-  const optimizedImage = post.image_url 
+  const optimizedImage = post.image_url
     ? imageOptimizer.optimizeImageByType(post.image_url, 'feedCard')
     : null;
 
@@ -367,7 +353,7 @@ export const generatePlaceholderAdCard = (): AdCard => {
   ];
 
   const ad = placeholderAds[Math.floor(Math.random() * placeholderAds.length)];
-  
+
   return {
     id: `ad-${Date.now()}-${Math.random()}`,
     type: 'ad',
@@ -408,11 +394,11 @@ export const FeedService = {
 
     try {
       console.log('🔍 Loading user swipe history for anti-repetition (first time)...');
-      
+
       // Query user's swipe history from last 30 days to avoid repetition
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      
+
       const { data: swipeHistory, error } = await supabase
         .from('user_swipe_history')
         .select('content_id, swipe_direction, created_at')
@@ -440,7 +426,7 @@ export const FeedService = {
       });
 
       console.log(`🚫 Loaded ${seenContentIds.size} previously seen items for filtering`);
-      
+
       // ✅ Mark as initialized
       seenContentInitialized = true;
       lastInitializedUserId = userId;
@@ -464,7 +450,7 @@ export const FeedService = {
    */
   filterSeenContent<T extends { id: string }>(items: T[], contentType: string): T[] {
     const startCount = items.length;
-    
+
     const filtered = items.filter(item => {
       // For restaurants, be less aggressive - only filter if seen in current session
       // This prevents infinite loops while still providing some variety
@@ -477,15 +463,15 @@ export const FeedService = {
         // Don't add to session tracking here - do it when actually shown/swiped
         return true;
       }
-      
+
       // For other content types, use full filtering
       const alreadySeen = seenContentIds.has(item.id) || sessionSeenIds.has(item.id);
-      
+
       if (alreadySeen) {
         console.log(`🚫 Filtered seen ${contentType}:`, item.id);
         return false;
       }
-      
+
       return true;
     });
 
@@ -542,11 +528,11 @@ export const FeedService = {
     let videoCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.video);
     let masterbotCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.masterbot);
     let adCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.ad);
-    
+
     // Calculate remainder to distribute
     const totalAssigned = restaurantCount + recipeCount + videoCount + masterbotCount + adCount;
     const remainder = pageSize - totalAssigned;
-    
+
     // Distribute remainder based on priority (restaurants first, then recipes, etc.)
     const priorities = [
       { key: 'restaurant', count: restaurantCount },
@@ -555,7 +541,7 @@ export const FeedService = {
       { key: 'masterbot', count: masterbotCount },
       { key: 'ad', count: adCount }
     ];
-    
+
     for (let i = 0; i < remainder; i++) {
       const priorityIndex = i % priorities.length;
       if (priorities[priorityIndex].key === 'restaurant') restaurantCount++;
@@ -564,7 +550,7 @@ export const FeedService = {
       else if (priorities[priorityIndex].key === 'masterbot') masterbotCount++;
       else if (priorities[priorityIndex].key === 'ad') adCount++;
     }
-    
+
     return {
       restaurant: restaurantCount,
       recipe: recipeCount,
@@ -590,10 +576,10 @@ export const FeedService = {
     try {
       // Phase 2: Initialize anti-repetition system
       await this.initializeSeenContent(userId);
-      
+
       // Phase 2: Enhanced weighted card distribution algorithm
       const cardCounts = this.calculateWeightedDistribution(pageSize);
-      
+
       console.log('📊 Phase 2 weighted distribution:', {
         restaurant: cardCounts.restaurant,
         recipe: cardCounts.recipe,
@@ -606,7 +592,7 @@ export const FeedService = {
       // Phase 2: Fetch all card types in parallel with timeout management
       const startTime = Date.now();
       console.log('🔄 Starting parallel API orchestration...');
-      
+
       const [
         restaurantResults,
         masterbotResults,
@@ -635,7 +621,7 @@ export const FeedService = {
           'Video'
         )
       ]);
-      
+
       const fetchTime = Date.now() - startTime;
       console.log(`⚡ Parallel API orchestration completed in ${fetchTime}ms`);
 
@@ -714,7 +700,7 @@ export const FeedService = {
 
       // Shuffle for natural feed experience
       const shuffledCards = this.shuffleFeedCards(feedCards);
-      
+
       console.log('🎲 Final feed generated:', shuffledCards.length, 'cards');
       return shuffledCards;
 
@@ -773,7 +759,7 @@ export const FeedService = {
    * Fetch restaurant cards based on location (Google Places API - fallback)
    */
   async fetchRestaurantCards(
-    userLocation?: UserLocation, 
+    userLocation?: UserLocation,
     count: number = 4,
     userId?: string
   ): Promise<RestaurantCard[]> {
@@ -785,18 +771,18 @@ export const FeedService = {
     try {
       // Phase 3: Use intelligent caching for restaurant data with anti-repetition
       const locationKey = generateLocationKey(userLocation.lat, userLocation.lng, DEFAULT_RADIUS);
-      
+
       // Include session state in cache key to avoid repetition
       const sessionSeenCount = sessionSeenIds.size;
       const cacheOffset = Math.floor(sessionSeenCount / 10); // Change cache key every 10 seen items
-      
+
       const cachedRestaurants = await withCache(
         'restaurant',
         [locationKey, count, userId || 'anonymous', cacheOffset],
         async () => {
           // Try backendService first, fallback to direct Google Places API
           console.log('🔍 Requesting restaurants from backend for location:', userLocation, 'radius:', DEFAULT_RADIUS);
-          
+
           let result = await backendService.searchNearbyPlaces(
             { lat: userLocation.lat, lng: userLocation.lng },
             DEFAULT_RADIUS,
@@ -820,7 +806,7 @@ export const FeedService = {
               DEFAULT_RADIUS,
               'restaurant'
             );
-            
+
             console.log('🔍 Direct Google Places API response:', {
               success: result.success,
               error: result.error,
@@ -835,8 +821,8 @@ export const FeedService = {
             return [];
           }
 
-          console.log('🔍 Restaurant API Response Structure:', { 
-            success: result.success, 
+          console.log('🔍 Restaurant API Response Structure:', {
+            success: result.success,
             dataType: typeof result.data,
             isArray: Array.isArray(result.data),
             dataKeys: result.data ? Object.keys(result.data) : null,
@@ -846,10 +832,10 @@ export const FeedService = {
 
           // Enhanced data extraction with multiple possible structures
           let restaurantData = result.data;
-          
+
           if (!Array.isArray(restaurantData)) {
             console.log('🔧 Extracting restaurant data from wrapper object...');
-            
+
             // Try common response patterns
             const possibleArrayPaths = [
               'results',           // Google Places API style
@@ -861,7 +847,7 @@ export const FeedService = {
               'items',             // Generic items
               'list'               // Generic list
             ];
-            
+
             let extracted = false;
             for (const path of possibleArrayPaths) {
               if (restaurantData[path] && Array.isArray(restaurantData[path])) {
@@ -871,7 +857,7 @@ export const FeedService = {
                 break;
               }
             }
-            
+
             if (!extracted) {
               // If no standard paths work, try to find any array in the object
               const arrayValues = Object.values(restaurantData).filter(val => Array.isArray(val));
@@ -881,7 +867,7 @@ export const FeedService = {
                 extracted = true;
               }
             }
-            
+
             if (!extracted) {
               console.error('❌ No restaurant array found in response structure:', {
                 availableKeys: Object.keys(restaurantData),
@@ -895,20 +881,20 @@ export const FeedService = {
 
           // Transform Google Places results to RestaurantCard format (async)
           return Promise.all(
-            restaurantData.map(restaurant => 
+            restaurantData.map(restaurant =>
               transformRestaurantToFeedCard(restaurant, userLocation)
             )
           );
         }
       );
-      
+
       // Phase 2: Filter out seen content and apply anti-repetition
       let filteredRestaurants = this.filterSeenContent(cachedRestaurants, 'restaurant');
-      
+
       // If we don't have enough unique restaurants, try expanding the search
       if (filteredRestaurants.length < count) {
         console.log(`⚠️ Only ${filteredRestaurants.length} unique restaurants found, expanding search...`);
-        
+
         try {
           // Try multiple strategies for more variety
           const searchStrategies = [
@@ -919,23 +905,23 @@ export const FeedService = {
             { radius: DEFAULT_RADIUS, type: 'meal_takeaway' },
             { radius: DEFAULT_RADIUS, type: 'cafe' }
           ];
-          
+
           const additionalRestaurants: RestaurantCard[] = [];
-          
+
           for (const strategy of searchStrategies) {
             if (filteredRestaurants.length >= count) break;
-            
+
             console.log(`🔍 Trying search strategy: ${strategy.type} at ${strategy.radius}m`);
-            
+
             const expandedResult = await backendService.searchNearbyPlaces(
               { lat: userLocation.lat, lng: userLocation.lng },
               strategy.radius,
               strategy.type
             );
-            
+
             if (expandedResult.success && expandedResult.data) {
               let expandedData = expandedResult.data;
-              
+
               // Extract array if needed (same logic as before)
               if (!Array.isArray(expandedData)) {
                 const possibleArrayPaths = ['results', 'data', 'places', 'restaurants', 'businesses'];
@@ -946,26 +932,26 @@ export const FeedService = {
                   }
                 }
               }
-              
+
               if (Array.isArray(expandedData)) {
                 const expandedCards = await Promise.all(
-                  expandedData.map(restaurant => 
+                  expandedData.map(restaurant =>
                     transformRestaurantToFeedCard(restaurant, userLocation)
                   )
                 );
-                
+
                 // Filter and combine with existing results
-                const newUniqueCards = expandedCards.filter(card => 
+                const newUniqueCards = expandedCards.filter(card =>
                   !filteredRestaurants.some(existing => existing.id === card.id) &&
                   !sessionSeenIds.has(card.id)
                 );
-                
+
                 additionalRestaurants.push(...newUniqueCards);
                 console.log(`✅ Strategy ${strategy.type} added ${newUniqueCards.length} new restaurants`);
               }
             }
           }
-          
+
           // Add new restaurants to the filtered results
           filteredRestaurants = [...filteredRestaurants, ...additionalRestaurants];
           console.log(`🎯 Total expansion added ${additionalRestaurants.length} unique restaurants`);
@@ -973,7 +959,7 @@ export const FeedService = {
           console.warn('⚠️ Expanded search failed:', expandError);
         }
       }
-      
+
       console.log('🎯 Final restaurant feed results:', {
         totalFromAPI: cachedRestaurants.length,
         afterFiltering: filteredRestaurants.length,
@@ -983,7 +969,7 @@ export const FeedService = {
         restaurantCuisines: filteredRestaurants.slice(0, count).map(r => r.cuisine),
         restaurantLocations: filteredRestaurants.slice(0, count).map(r => r.location)
       });
-      
+
       // Return requested count, may be less if many were filtered
       return filteredRestaurants.slice(0, count);
 
@@ -1011,12 +997,12 @@ export const FeedService = {
       // ✅ OPTIMIZED: Reduced sample size and optimized query to minimize egress
       // Only fetch essential fields to reduce data transfer
       const sampleSize = Math.max(count * 2, 10); // Reduced from 15 to 10
-      
+
       // ✅ OPTIMIZED: Use random offset for variety
       const totalPostsEstimate = 490;
       const maxOffset = Math.max(0, totalPostsEstimate - sampleSize);
       const randomOffset = Math.floor(Math.random() * maxOffset);
-      
+
       // ✅ OPTIMIZED: Only select necessary fields to reduce egress
       const query = supabase
         .from('master_bot_posts')
@@ -1047,7 +1033,7 @@ export const FeedService = {
         console.error('❌ Supabase masterbot query error:', error);
         return [];
       }
-      
+
       // Shuffle the results to ensure random selection from different authors
       const shuffledPosts = posts ? [...posts].sort(() => Math.random() - 0.5) : [];
 
@@ -1063,7 +1049,7 @@ export const FeedService = {
       // Transform to MasterbotCard format
       const allPosts = shuffledPosts.map(post => {
         const userData = Array.isArray(post.users) ? post.users[0] : post.users;
-        
+
         // Debug logging for masterbot images
         console.log('🤖 Masterbot post data:', {
           id: post.id,
@@ -1071,7 +1057,7 @@ export const FeedService = {
           avatar_url: userData?.avatar_url,
           username: userData?.username
         });
-        
+
         return transformMasterbotToFeedCard({
           ...post,
           display_name: userData?.display_name || 'Unknown User',
@@ -1082,7 +1068,7 @@ export const FeedService = {
 
       // Phase 2: Filter out seen content and apply anti-repetition
       const filteredPosts = this.filterSeenContent(allPosts, 'masterbot');
-      
+
       // Return requested count, may be less if many were filtered
       return filteredPosts.slice(0, count);
 
@@ -1103,13 +1089,13 @@ export const FeedService = {
     try {
       // Determine search query based on preferences or use trending terms
       const searchQuery = this.generateRecipeSearchQuery(userPreferences);
-      
+
       // Phase 3: Use intelligent caching for recipe data
-      const preferencesKey = generatePreferencesKey({ 
-        query: searchQuery, 
-        preferences: userPreferences || {} 
+      const preferencesKey = generatePreferencesKey({
+        query: searchQuery,
+        preferences: userPreferences || {}
       });
-      
+
       const cachedRecipes = await withCache(
         'recipe',
         [preferencesKey, count, userId || 'anonymous'],
@@ -1125,10 +1111,10 @@ export const FeedService = {
           return result.data.results.map(recipe => transformRecipeToFeedCard(recipe));
         }
       );
-      
+
       // Phase 2: Filter out seen content and apply anti-repetition
       const filteredRecipes = this.filterSeenContent(cachedRecipes, 'recipe');
-      
+
       // Return requested count, may be less if many were filtered
       return filteredRecipes.slice(0, count);
 
@@ -1149,13 +1135,13 @@ export const FeedService = {
     try {
       // Determine search query based on preferences or use trending terms
       const searchQuery = this.generateVideoSearchQuery(userPreferences);
-      
+
       // Phase 3: Use intelligent caching for video data
-      const preferencesKey = generatePreferencesKey({ 
-        query: searchQuery, 
-        preferences: userPreferences || {} 
+      const preferencesKey = generatePreferencesKey({
+        query: searchQuery,
+        preferences: userPreferences || {}
       });
-      
+
       const cachedVideos = await withCache(
         'video',
         [preferencesKey, count, userId || 'anonymous'],
@@ -1171,10 +1157,10 @@ export const FeedService = {
           return result.data.items.map(video => transformVideoToFeedCard(video));
         }
       );
-      
+
       // Phase 2: Filter out seen content and apply anti-repetition
       const filteredVideos = this.filterSeenContent(cachedVideos, 'video');
-      
+
       // Return requested count, may be less if many were filtered
       return filteredVideos.slice(0, count);
 
@@ -1212,11 +1198,11 @@ export const FeedService = {
     const cuisine = userPreferences.cuisinePreferences[
       Math.floor(Math.random() * userPreferences.cuisinePreferences.length)
     ];
-    
+
     // Add variety to query
     const queryTypes = ['recipes', 'dishes', 'meals', 'food ideas'];
     const queryType = queryTypes[Math.floor(Date.now() / (60 * 60 * 1000)) % queryTypes.length];
-    
+
     return `${cuisine} ${queryType}`;
   },
 
@@ -1248,11 +1234,11 @@ export const FeedService = {
     const cuisine = userPreferences.cuisinePreferences[
       Math.floor(Math.random() * userPreferences.cuisinePreferences.length)
     ];
-    
+
     // Add variety to avoid same videos
     const queryTypes = ['cooking tutorial', 'recipe guide', 'cooking tips', 'how to cook'];
     const queryType = queryTypes[Math.floor(Date.now() / (60 * 60 * 1000)) % queryTypes.length];
-    
+
     return `${cuisine} ${queryType}`;
   },
 
@@ -1289,24 +1275,24 @@ export const FeedService = {
     const result: FeedCard[] = [];
     const typeIterators = new Map<string, number>();
     const typeNames = Array.from(cardsByType.keys());
-    
+
     // Initialize iterators
     typeNames.forEach(type => typeIterators.set(type, 0));
 
     // Distribute cards with diversity enforcement
     while (result.length < cards.length) {
       let placed = false;
-      
+
       // Try each type in random order
       const shuffledTypes = this.fisherYatesShuffle([...typeNames]);
-      
+
       for (const type of shuffledTypes) {
         const typeCards = cardsByType.get(type)!;
         const iterator = typeIterators.get(type)!;
-        
+
         // Check if we have cards of this type left
         if (iterator >= typeCards.length) continue;
-        
+
         // Check diversity constraint: avoid consecutive same types
         const lastCard = result[result.length - 1];
         if (lastCard && lastCard.type === type && result.length > 0) {
@@ -1315,21 +1301,21 @@ export const FeedService = {
             continue;
           }
         }
-        
+
         // Place the card
         result.push(typeCards[iterator]);
         typeIterators.set(type, iterator + 1);
         placed = true;
         break;
       }
-      
+
       // Fallback: if no card could be placed due to constraints, 
       // place any available card to avoid infinite loop
       if (!placed) {
         for (const type of typeNames) {
           const typeCards = cardsByType.get(type)!;
           const iterator = typeIterators.get(type)!;
-          
+
           if (iterator < typeCards.length) {
             result.push(typeCards[iterator]);
             typeIterators.set(type, iterator + 1);
@@ -1340,7 +1326,7 @@ export const FeedService = {
     }
 
     const shuffleTime = Date.now() - startTime;
-    
+
     // Analyze diversity quality
     const consecutivePairs = this.analyzeConsecutivePairs(result);
     console.log(`🎯 Diversity shuffle completed in ${shuffleTime}ms:`, {
@@ -1368,8 +1354,8 @@ export const FeedService = {
    * Check if other card types are still available
    */
   hasOtherTypesAvailable(
-    cardsByType: Map<string, FeedCard[]>, 
-    typeIterators: Map<string, number>, 
+    cardsByType: Map<string, FeedCard[]>,
+    typeIterators: Map<string, number>,
     excludeType: string
   ): boolean {
     for (const [type, cards] of cardsByType.entries()) {
@@ -1387,7 +1373,7 @@ export const FeedService = {
   analyzeConsecutivePairs(cards: FeedCard[]): { consecutive: number, diversityScore: number } {
     let consecutive = 0;
     for (let i = 1; i < cards.length; i++) {
-      if (cards[i].type === cards[i-1].type) {
+      if (cards[i].type === cards[i - 1].type) {
         consecutive++;
       }
     }

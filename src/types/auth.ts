@@ -18,6 +18,7 @@ export interface AuthUser {
   dietary_preferences?: string[];
   cuisine_preferences?: string[];
   preferences_hint_shown?: boolean;
+  is_masterbot?: boolean;
   updated_at?: string;
 }
 

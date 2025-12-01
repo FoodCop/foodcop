@@ -84,6 +84,7 @@ export interface MasterSetLocation {
 
   // Scrape metadata
   scrapedAt: string;
+  imageUrl?: string;
 }
 
 // Query parameters for filtering locations

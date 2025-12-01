@@ -19,6 +19,7 @@ export interface UserProfile {
   cuisine_preferences?: string[];
   preferences_hint_shown?: boolean;
   onboarding_completed?: boolean;
+  is_masterbot?: boolean;
   created_at?: string;
   updated_at?: string;
 }
