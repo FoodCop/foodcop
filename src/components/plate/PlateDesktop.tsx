@@ -65,10 +65,10 @@ function getUserLevel(points: number) {
   const currentIndex = LEVELS.indexOf(level);
   const nextLevel = LEVELS[currentIndex + 1];
   const pointsToNext = nextLevel ? nextLevel.minPoints - points : 0;
-  const progressPercent = nextLevel 
+  const progressPercent = nextLevel
     ? ((points - level.minPoints) / (nextLevel.minPoints - level.minPoints)) * 100
     : 100;
-  
+
   return {
     ...level,
     level: currentIndex + 1,
@@ -80,11 +80,11 @@ function getUserLevel(points: number) {
 export default function PlateDesktop({ userId: propUserId, currentUser }: PlateDesktopProps = {}) {
   const { user: authUser } = useAuth();
   const location = useLocation();
-  
+
   // Use prop userId if provided, otherwise fall back to auth user
   const user = currentUser || authUser;
   const userId = propUserId || user?.id;
-  
+
   const [selectedTab, setSelectedTab] = useState<TabType>('places');
   const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -106,17 +106,17 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
   const [showFriendFinder, setShowFriendFinder] = useState(false);
   const [selectedFriendUserId, setSelectedFriendUserId] = useState<string | null>(null);
   const [showPreferencesHint, setShowPreferencesHint] = useState(false);
-  
+
   // Mock user data - will be replaced with real data
   const userPoints = 2450;
   const userRewards = 18;
   const userLevel = getUserLevel(userPoints);
-  
+
   // Check if preferences hint should be shown
   useEffect(() => {
     const checkPreferencesHint = async () => {
       if (!user) return;
-      
+
       try {
         const profileResult = await ProfileService.getProfile();
         if (profileResult.success && profileResult.data) {
@@ -132,7 +132,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
 
     checkPreferencesHint();
   }, [user]);
-  
+
   // Get location from geolocation if profile doesn't have it
   useEffect(() => {
     const fetchGeolocation = async () => {
@@ -161,7 +161,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
   useEffect(() => {
     const fetchDashboardData = async () => {
       if (!user) return;
-      
+
       try {
         // Fetch user profile
         const profileResult = await ProfileService.getProfile();
@@ -171,7 +171,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
 
         // Get user location from profile or geolocation
         let userLocation: { lat: number; lng: number } | undefined;
-        
+
         // Try to get from browser geolocation
         if ('geolocation' in navigator) {
           try {
@@ -190,7 +190,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
         // Fetch all dashboard data
         const data = await DashboardService.fetchDashboardData(user.id, userLocation);
         setDashboardData(data);
-        
+
         setLoadingSection({
           crew: false,
           recipes: false,
@@ -204,7 +204,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
 
     fetchDashboardData();
   }, [user]);
-  
+
   const getUserLocation = () => {
     // First try profile location
     if (userProfile?.location_city) {
@@ -291,7 +291,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
   });
 
   const { openViewer } = useUniversalViewer();
-  
+
   const handleDeleteSavedItem = useCallback(
     async (item: SavedItem) => {
       try {
@@ -327,8 +327,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
           item.item_type === 'recipe'
             ? await hydrateSavedRecipeToUnified(item)
             : item.item_type === 'video'
-            ? await hydrateSavedVideoToUnified(item)
-            : transformSavedItemToUnified(item);
+              ? await hydrateSavedVideoToUnified(item)
+              : transformSavedItemToUnified(item);
 
         openViewer(unified);
       } catch (error) {
@@ -428,88 +428,82 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
           }}
         />
       )}
-      
+
       <div className="flex flex-1">
         {/* Left Sidebar - Navigation */}
         <aside className="w-64 bg-white border-r border-gray-200 sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto flex-shrink-0">
           <div className="p-6">
             <nav className="space-y-2">
-              <Link 
-                to="/feed" 
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  location.pathname === '/feed' 
-                    ? 'bg-[#FF6B35] text-white' 
+              <Link
+                to="/feed"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/feed'
+                    ? 'bg-[#FF6B35] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 <Rss className="w-5 h-5" />
                 <span className="font-medium">Feed</span>
               </Link>
-              <Link 
-                to="/scout" 
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  location.pathname === '/scout' 
-                    ? 'bg-[#FF6B35] text-white' 
+              <Link
+                to="/scout"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/scout'
+                    ? 'bg-[#FF6B35] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 <Search className="w-5 h-5" />
                 <span className="font-medium">Scout</span>
               </Link>
-              <Link 
-                to="/bites" 
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  location.pathname === '/bites' 
-                    ? 'bg-[#FF6B35] text-white' 
+              <Link
+                to="/bites"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/bites'
+                    ? 'bg-[#FF6B35] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 <Pizza className="w-5 h-5" />
                 <span className="font-medium">Bites</span>
               </Link>
-              <Link 
-                to="/trims" 
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  location.pathname === '/trims' 
-                    ? 'bg-[#FF6B35] text-white' 
+              <Link
+                to="/trims"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/trims'
+                    ? 'bg-[#FF6B35] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 <Scissors className="w-5 h-5" />
                 <span className="font-medium">Trims</span>
               </Link>
-              <Link 
-                to="/plate" 
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  location.pathname === '/plate' 
-                    ? 'bg-[#FF6B35] text-white' 
+              <Link
+                to="/plate"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/plate'
+                    ? 'bg-[#FF6B35] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 <Utensils className="w-5 h-5" />
                 <span className="font-medium">Plate</span>
               </Link>
-              <Link 
-                to="/snap" 
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  location.pathname === '/snap' 
-                    ? 'bg-[#FF6B35] text-white' 
+              <Link
+                to="/snap"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/snap'
+                    ? 'bg-[#FF6B35] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 <Camera className="w-5 h-5" />
                 <span className="font-medium">Snap</span>
               </Link>
               <div className="pt-4 border-t border-gray-200 mt-4">
-                <Link 
-                  to="/plate" 
+                <Link
+                  to="/plate"
                   className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-gray-700 hover:bg-gray-100"
                 >
                   <Bookmark className="w-5 h-5" />
                   <span className="font-medium">Saved</span>
                 </Link>
-                <Link 
-                  to="/plate" 
+                <Link
+                  to="/plate"
                   className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-gray-700 hover:bg-gray-100"
                 >
                   <Settings className="w-5 h-5" />
@@ -523,196 +517,191 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
         {/* Main Content - Center */}
         <main className="flex-1 min-w-0 px-8 py-6 overflow-y-auto">
           <div className="max-w-3xl mx-auto">
-          {/* Profile Header */}
-          <section className="bg-white rounded-xl shadow-sm px-8 py-6 mb-6">
-            <div className="flex items-start gap-6 mb-6">
-              {/* Avatar */}
-              <div className="relative">
-                <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-[#FF6B35] bg-gray-200">
-                  <img 
-                    src={user?.user_metadata?.avatar_url || user?.user_metadata?.picture || 
-                         'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg'} 
-                    alt="Profile" 
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      target.style.display = 'none';
-                      const fallback = target.nextElementSibling as HTMLElement;
-                      if (fallback) {
-                        fallback.style.display = 'flex';
-                        const initials = getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-                        if (fallback.textContent === '') {
-                          fallback.textContent = initials || 'U';
+            {/* Profile Header */}
+            <section className="bg-white rounded-xl shadow-sm px-8 py-6 mb-6">
+              <div className="flex items-start gap-6 mb-6">
+                {/* Avatar */}
+                <div className="relative">
+                  <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-[#FF6B35] bg-gray-200">
+                    <img
+                      src={user?.user_metadata?.avatar_url || user?.user_metadata?.picture ||
+                        'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg'}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        target.style.display = 'none';
+                        const fallback = target.nextElementSibling as HTMLElement;
+                        if (fallback) {
+                          fallback.style.display = 'flex';
+                          const initials = getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                          if (fallback.textContent === '') {
+                            fallback.textContent = initials || 'U';
+                          }
                         }
-                      }
-                    }}
+                      }}
+                    />
+                    <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white font-bold text-2xl">
+                      {getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
+                    </div>
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-9 h-9 bg-gradient-to-br from-yellow-400 to-[#FF6B35] rounded-full flex items-center justify-center border-2 border-white">
+                    <Star className="w-4 h-4 text-white fill-white" />
+                  </div>
+                </div>
+
+                {/* Profile Info */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h1 className="text-xl font-bold text-[#8B0000]">{getUserDisplayName()}</h1>
+                    <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                      <Crown className="w-3 h-3 text-white fill-white" />
+                    </div>
+                  </div>
+                  <p className="mb-4" style={{ color: '#808080' }}>{getUserBio()}</p>
+                  <div className="mb-3">
+                    <PreferencesChips
+                      userProfile={userProfile}
+                      onPreferencesUpdated={handlePreferencesUpdated}
+                    />
+                  </div>
+                  <div className="flex gap-3">
+                    <button className="w-10 h-10 flex items-center justify-center text-[#FF6B35] border border-[#FF6B35] rounded-lg hover:bg-[#FF6B35] hover:text-white transition-colors">
+                      <Settings className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats Row */}
+              <div className="flex items-center justify-around py-4 border-t border-gray-200">
+                <button className="flex flex-col items-center hover:opacity-80 transition-opacity">
+                  <span className="text-2xl font-bold text-[#1A1A1A]">{userPoints.toLocaleString()}</span>
+                  <span className="text-xs mt-1" style={{ color: '#808080' }}>Points</span>
+                </button>
+                <div className="w-px h-10 bg-gray-200"></div>
+                <button
+                  onClick={() => setSelectedTab('posts')}
+                  className="flex flex-col items-center hover:opacity-80 transition-opacity"
+                >
+                  <span className="text-2xl font-bold text-[#1A1A1A]">{savedItems.length}</span>
+                  <span className="text-xs mt-1" style={{ color: '#808080' }}>Saved</span>
+                </button>
+                <div className="w-px h-10 bg-gray-200"></div>
+                <button className="flex flex-col items-center hover:opacity-80 transition-opacity">
+                  <span className="text-2xl font-bold text-[#1A1A1A]">{userRewards}</span>
+                  <span className="text-xs mt-1" style={{ color: '#808080' }}>Rewards</span>
+                </button>
+              </div>
+
+              {/* Level Progress */}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-[#FF6B35] rounded-full flex items-center justify-center">
+                      <Trophy className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#1A1A1A]">{userLevel.name}</p>
+                      <p className="text-xs" style={{ color: '#808080' }}>Level {userLevel.level}</p>
+                    </div>
+                  </div>
+                  <span className="text-sm font-medium text-[#FF6B35]">
+                    {userLevel.pointsToNext > 0 ? `${userLevel.pointsToNext} to next level` : 'Max Level!'}
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#FF6B35] to-[#FFD500] rounded-full transition-all duration-500"
+                    style={{ width: `${userLevel.progressPercent}%` }}
                   />
-                  <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white font-bold text-2xl">
-                    {getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
-                  </div>
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-9 h-9 bg-gradient-to-br from-yellow-400 to-[#FF6B35] rounded-full flex items-center justify-center border-2 border-white">
-                  <Star className="w-4 h-4 text-white fill-white" />
                 </div>
               </div>
-              
-              {/* Profile Info */}
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h1 className="text-xl font-bold text-[#8B0000]">{getUserDisplayName()}</h1>
-                  <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
-                    <Crown className="w-3 h-3 text-white fill-white" />
-                  </div>
-                </div>
-                <p className="mb-4" style={{ color: '#808080' }}>{getUserBio()}</p>
-                <div className="mb-3">
-                  <PreferencesChips 
-                    userProfile={userProfile} 
-                    onPreferencesUpdated={handlePreferencesUpdated}
-                  />
-                </div>
-                <div className="flex gap-3">
-                  <button className="w-10 h-10 flex items-center justify-center text-[#FF6B35] border border-[#FF6B35] rounded-lg hover:bg-[#FF6B35] hover:text-white transition-colors">
-                    <Settings className="w-5 h-5" />
-                  </button>
-                </div>
+            </section>
+
+            {/* Tab Navigation */}
+            <nav className="bg-white rounded-xl shadow-sm border-b border-gray-200 mb-6">
+              <div className="flex">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelectedTab('places');
+                  }}
+                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'places'
+                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
+                      : 'hover:text-[#1A1A1A]'
+                    }`}
+                  style={selectedTab !== 'places' ? { color: '#808080' } : {}}
+                >
+                  Places
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelectedTab('recipes');
+                  }}
+                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'recipes'
+                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
+                      : 'hover:text-[#1A1A1A]'
+                    }`}
+                  style={selectedTab !== 'recipes' ? { color: '#808080' } : {}}
+                >
+                  Recipes
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelectedTab('videos');
+                  }}
+                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'videos'
+                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
+                      : 'hover:text-[#1A1A1A]'
+                    }`}
+                  style={selectedTab !== 'videos' ? { color: '#808080' } : {}}
+                >
+                  Videos
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelectedTab('crew');
+                  }}
+                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'crew'
+                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
+                      : 'hover:text-[#1A1A1A]'
+                    }`}
+                  style={selectedTab !== 'crew' ? { color: '#808080' } : {}}
+                >
+                  Crew
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelectedTab('posts');
+                  }}
+                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'posts'
+                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
+                      : 'hover:text-[#1A1A1A]'
+                    }`}
+                  style={selectedTab !== 'posts' ? { color: '#808080' } : {}}
+                >
+                  Posts
+                </button>
               </div>
-            </div>
+            </nav>
 
-            {/* Stats Row */}
-            <div className="flex items-center justify-around py-4 border-t border-gray-200">
-              <button className="flex flex-col items-center hover:opacity-80 transition-opacity">
-                <span className="text-2xl font-bold text-[#1A1A1A]">{userPoints.toLocaleString()}</span>
-                <span className="text-xs mt-1" style={{ color: '#808080' }}>Points</span>
-              </button>
-              <div className="w-px h-10 bg-gray-200"></div>
-              <button 
-                onClick={() => setSelectedTab('posts')}
-                className="flex flex-col items-center hover:opacity-80 transition-opacity"
-              >
-                <span className="text-2xl font-bold text-[#1A1A1A]">{savedItems.length}</span>
-                <span className="text-xs mt-1" style={{ color: '#808080' }}>Saved</span>
-              </button>
-              <div className="w-px h-10 bg-gray-200"></div>
-              <button className="flex flex-col items-center hover:opacity-80 transition-opacity">
-                <span className="text-2xl font-bold text-[#1A1A1A]">{userRewards}</span>
-                <span className="text-xs mt-1" style={{ color: '#808080' }}>Rewards</span>
-              </button>
-            </div>
-
-            {/* Level Progress */}
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-[#FF6B35] rounded-full flex items-center justify-center">
-                    <Trophy className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#1A1A1A]">{userLevel.name}</p>
-                    <p className="text-xs" style={{ color: '#808080' }}>Level {userLevel.level}</p>
-                  </div>
-                </div>
-                <span className="text-sm font-medium text-[#FF6B35]">
-                  {userLevel.pointsToNext > 0 ? `${userLevel.pointsToNext} to next level` : 'Max Level!'}
-                </span>
-              </div>
-              <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-[#FF6B35] to-[#FFD500] rounded-full transition-all duration-500"
-                  style={{ width: `${userLevel.progressPercent}%` }}
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Tab Navigation */}
-          <nav className="bg-white rounded-xl shadow-sm border-b border-gray-200 mb-6">
-            <div className="flex">
-              <button 
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedTab('places');
-                }}
-                className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                  selectedTab === 'places' 
-                    ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                    : 'hover:text-[#1A1A1A]'
-                }`}
-                style={selectedTab !== 'places' ? { color: '#808080' } : {}}
-              >
-                Places
-              </button>
-              <button 
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedTab('recipes');
-                }}
-                className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                  selectedTab === 'recipes' 
-                    ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                    : 'hover:text-[#1A1A1A]'
-                }`}
-                style={selectedTab !== 'recipes' ? { color: '#808080' } : {}}
-              >
-                Recipes
-              </button>
-              <button 
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedTab('videos');
-                }}
-                className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                  selectedTab === 'videos' 
-                    ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                    : 'hover:text-[#1A1A1A]'
-                }`}
-                style={selectedTab !== 'videos' ? { color: '#808080' } : {}}
-              >
-                Videos
-              </button>
-              <button 
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedTab('crew');
-                }}
-                className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                  selectedTab === 'crew' 
-                    ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                    : 'hover:text-[#1A1A1A]'
-                }`}
-                style={selectedTab !== 'crew' ? { color: '#808080' } : {}}
-              >
-                Crew
-              </button>
-              <button 
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedTab('posts');
-                }}
-                className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                  selectedTab === 'posts' 
-                    ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                    : 'hover:text-[#1A1A1A]'
-                }`}
-                style={selectedTab !== 'posts' ? { color: '#808080' } : {}}
-              >
-                Posts
-              </button>
-            </div>
-          </nav>
-
-          {/* Content */}
-          {renderContent()}
+            {/* Content */}
+            {renderContent()}
           </div>
         </main>
 
@@ -828,119 +817,120 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               </div>
             </section>
 
-          {/* Saved Recipes */}
-          <section>
-            <div className="mb-4">
-              <SectionHeading>Saved Recipes</SectionHeading>
-            </div>
-            {loadingSection.recipes ? (
-              <div className="grid grid-cols-4 gap-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div className="h-36 bg-gray-200 animate-pulse" />
-                    <div className="p-3 space-y-2">
-                      <div className="h-4 bg-gray-200 rounded animate-pulse" />
-                      <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" />
-                    </div>
-                  </div>
-                ))}
+            {/* Saved Recipes */}
+            <section>
+              <div className="mb-4">
+                <SectionHeading>Saved Recipes</SectionHeading>
               </div>
-            ) : dashboardData.savedRecipes.length > 0 ? (
-              <div className="grid grid-cols-4 gap-3">
-                {dashboardData.savedRecipes.map((recipe) => (
-                  <div
-                    key={recipe.id}
-                    className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all"
-                  >
-                    <div className="relative h-36">
-                      <img
-                        src={recipe.image}
-                        alt={recipe.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Recipe';
-                        }}
-                      />
-                    </div>
-                    <div className="p-3">
-                      <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1 leading-tight">
-                        {recipe.name}
-                      </CardHeading>
-                      <div className="flex items-center gap-1.5" style={{ color: '#6B7280', fontSize: '10pt' }}>
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>{recipe.time}</span>
+              {loadingSection.recipes ? (
+                <div className="grid grid-cols-4 gap-3">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
+                      <div className="h-36 bg-gray-200 animate-pulse" />
+                      <div className="p-3 space-y-2">
+                        <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                        <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" />
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
-                <p className="text-sm">No saved recipes yet</p>
-                <p className="text-xs mt-1">Save recipes from Bites to see them here!</p>
-              </div>
-            )}
-          </section>
+                  ))}
+                </div>
+              ) : dashboardData.savedRecipes.length > 0 ? (
+                <div className="grid grid-cols-4 gap-3">
+                  {dashboardData.savedRecipes.map((recipe) => (
+                    <div
+                      key={recipe.id}
+                      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all"
+                    >
+                      <div className="relative h-36">
+                        <img
+                          src={recipe.image}
+                          alt={recipe.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Recipe';
+                          }}
+                        />
+                      </div>
+                      <div className="p-3">
+                        <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1 leading-tight">
+                          {recipe.name}
+                        </CardHeading>
+                        <div className="flex items-center gap-1.5" style={{ color: '#6B7280', fontSize: '10pt' }}>
+                          <Clock className="w-3.5 h-3.5" />
+                          <span>{recipe.time}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
+                  <p className="text-sm">No saved recipes yet</p>
+                  <p className="text-xs mt-1">Save recipes from Bites to see them here!</p>
+                </div>
+              )}
+            </section>
 
-          {/* Restaurant Recommendations */}
-          <section>
-            <div className="mb-4">
-              <SectionHeading>Nearby Restaurants</SectionHeading>
-            </div>
-            {loadingSection.restaurants ? (
-              <div className="grid grid-cols-3 gap-6">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div className="h-44 bg-gray-200 animate-pulse" />
-                    <div className="p-4 space-y-2">
-                      <div className="h-5 bg-gray-200 rounded animate-pulse" />
-                      <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
-                    </div>
-                  </div>
-                ))}
+            {/* Restaurant Recommendations */}
+            <section>
+              <div className="mb-4">
+                <SectionHeading>Nearby Restaurants</SectionHeading>
               </div>
-            ) : dashboardData.restaurantRecommendations.length > 0 ? (
-              <div className="grid grid-cols-3 gap-6">
-                {dashboardData.restaurantRecommendations.map((restaurant) => (
-                  <div
-                    key={restaurant.id}
-                    className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all"
-                  >
-                    <div className="relative h-44">
-                      <img
-                        src={restaurant.image}
-                        alt={restaurant.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Restaurant';
-                        }}
-                      />
-                      <div className="absolute top-3 left-3 flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#10B981] text-white shadow-md">
-                        <Star className="w-3.5 h-3.5 fill-white" />
-                        <span className="text-xs font-bold">{restaurant.rating.toFixed(1)}</span>
+              {loadingSection.restaurants ? (
+                <div className="grid grid-cols-3 gap-6">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
+                      <div className="h-44 bg-gray-200 animate-pulse" />
+                      <div className="p-4 space-y-2">
+                        <div className="h-5 bg-gray-200 rounded animate-pulse" />
+                        <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
                       </div>
                     </div>
-                    <div className="p-4">
-                      <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
-                        {restaurant.name}
-                      </CardHeading>
-                      <p className="mb-3" style={{ color: '#6B7280', fontSize: '10pt' }}>{restaurant.cuisine}</p>
-                      <div className="flex items-center gap-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
-                        <Navigation className="w-4 h-4 text-[#FF6B35]" />
-                        <span>{restaurant.distance}</span>
+                  ))}
+                </div>
+              ) : dashboardData.restaurantRecommendations.length > 0 ? (
+                <div className="grid grid-cols-3 gap-6">
+                  {dashboardData.restaurantRecommendations.map((restaurant) => (
+                    <div
+                      key={restaurant.id}
+                      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all"
+                    >
+                      <div className="relative h-44">
+                        <img
+                          src={restaurant.image}
+                          alt={restaurant.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Restaurant';
+                          }}
+                        />
+                        <div className="absolute top-3 left-3 flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#10B981] text-white shadow-md">
+                          <Star className="w-3.5 h-3.5 fill-white" />
+                          <span className="text-xs font-bold">{restaurant.rating.toFixed(1)}</span>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
+                          {restaurant.name}
+                        </CardHeading>
+                        <p className="mb-3" style={{ color: '#6B7280', fontSize: '10pt' }}>{restaurant.cuisine}</p>
+                        <div className="flex items-center gap-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
+                          <Navigation className="w-4 h-4 text-[#FF6B35]" />
+                          <span>{restaurant.distance}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
-                <p className="text-sm">No restaurant recommendations</p>
-                <p className="text-xs mt-1">Enable location to see nearby restaurants!</p>
-              </div>
-            )}
-          </section>
-        </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
+                  <p className="text-sm">No restaurant recommendations</p>
+                  <p className="text-xs mt-1">Enable location to see nearby restaurants!</p>
+                </div>
+              )}
+            </section>
+          </div>
+        </>
       );
     }
 
@@ -956,7 +946,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
             <p className="text-center mb-6" style={{ color: '#808080' }}>
               Share your food adventures and connect with friends!
             </p>
-            <button 
+            <button
               onClick={() => toast.info('Create post coming soon')}
               className="bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
             >
@@ -998,7 +988,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
           <p className="text-center mb-6" style={{ color: '#808080' }}>
             {`Tap the bookmark icon to save ${selectedTab}`}
           </p>
-          <button 
+          <button
             onClick={() => toast.info('Navigate to explore page')}
             className="bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
           >
@@ -1028,26 +1018,26 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               extendedIngredients: (metadata.extendedIngredients as any[]) || []
             };
-            
-          return (
-            <div key={item.id} className="relative">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteSavedItem(item);
-                }}
-                className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
-                aria-label="Delete saved recipe"
-              >
-                <Trash className="w-4 h-4 text-red-500" />
-              </button>
-              <RecipeCard 
-                recipe={recipe} 
-                onClick={() => void handleItemClick(item)} 
-              />
-            </div>
-          );
+
+            return (
+              <div key={item.id} className="relative">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteSavedItem(item);
+                  }}
+                  className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
+                  aria-label="Delete saved recipe"
+                >
+                  <Trash className="w-4 h-4 text-red-500" />
+                </button>
+                <RecipeCard
+                  recipe={recipe}
+                  onClick={() => void handleItemClick(item)}
+                />
+              </div>
+            );
           })}
         </section>
       );
@@ -1070,23 +1060,23 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               photos: metadata.photos as { photo_reference: string }[],
               image_url: (metadata.image_url || metadata.image) as string
             };
-            
-          return (
-            <div key={item.id} className="relative">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteSavedItem(item);
-                }}
-                className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
-                aria-label="Delete saved place"
-              >
-                <Trash className="w-4 h-4 text-red-500" />
-              </button>
-              <RestaurantCardComponent restaurant={restaurant} onClick={() => void handleItemClick(item)} />
-            </div>
-          );
+
+            return (
+              <div key={item.id} className="relative">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteSavedItem(item);
+                  }}
+                  className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
+                  aria-label="Delete saved place"
+                >
+                  <Trash className="w-4 h-4 text-red-500" />
+                </button>
+                <RestaurantCardComponent restaurant={restaurant} onClick={() => void handleItemClick(item)} />
+              </div>
+            );
           })}
         </section>
       );
@@ -1098,9 +1088,9 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
         <section className="grid grid-cols-3 gap-4">
           {filteredItems.map((item) => {
             const metadata = item.metadata;
-            
+
             return (
-              <button 
+              <button
                 key={item.id}
                 type="button"
                 onClick={() => void handleItemClick(item)}
@@ -1119,8 +1109,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                 </button>
                 <div className="relative aspect-video bg-gray-900">
                   {((metadata.thumbnail_url || metadata.thumbnailUrl || metadata.image) as string | undefined) ? (
-                    <img 
-                      src={(metadata.thumbnail_url || metadata.thumbnailUrl || metadata.image) as string} 
+                    <img
+                      src={(metadata.thumbnail_url || metadata.thumbnailUrl || metadata.image) as string}
                       alt={(metadata.title as string) || 'Video'}
                       className="w-full h-full object-cover"
                     />
@@ -1167,8 +1157,8 @@ function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant:
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((restaurant as any).image) return (restaurant as any).image;
     if (restaurant.photos && restaurant.photos.length > 0) {
-      const photoRef = typeof restaurant.photos[0] === 'string' 
-        ? restaurant.photos[0] 
+      const photoRef = typeof restaurant.photos[0] === 'string'
+        ? restaurant.photos[0]
         : restaurant.photos[0].photo_reference;
       return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoRef}&key=${import.meta.env.VITE_GOOGLE_PLACES_API_KEY}`;
     }
@@ -1181,8 +1171,8 @@ function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant:
       className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-lg transition-shadow text-left w-full"
     >
       <div className="relative h-48 overflow-hidden">
-        <img 
-          src={getImageUrl()} 
+        <img
+          src={getImageUrl()}
           alt={restaurant.name}
           className="w-full h-full object-cover"
           onError={(e) => {

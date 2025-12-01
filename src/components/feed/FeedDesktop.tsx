@@ -10,6 +10,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, RefreshCw } from 'lucide-react';
 import { FeedService } from '../../services/feedService';
+import { GeocodingService } from '../../services/geocodingService';
 import type { RestaurantCard } from './data/feed-content';
 
 // --- DealCard Component ---
@@ -77,25 +78,17 @@ function DealCard({ card, index }: DealCardProps) {
       >
         {/* Front of Card (Face Down) */}
         <div
-          className="absolute inset-0 w-full h-full backface-hidden rounded-xl shadow-xl overflow-hidden border-4 border-white"
+          className="absolute inset-0 w-full h-full backface-hidden rounded-xl shadow-xl overflow-hidden border-4 border-white bg-white"
           style={{
             backfaceVisibility: "hidden",
-            background: "linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%)",
           }}
         >
           <div className="flex items-center justify-center h-full">
-            <div className="text-white text-center">
-              <img src="/logo_desktop.png" alt="Logo" className="w-24 h-24 mx-auto mb-4 opacity-90" />
-              <p className="font-bold text-xl opacity-90">Click to Reveal</p>
+            <div className="text-center">
+              <img src="/logo_mobile.png" alt="Logo" className="w-24 h-24 mx-auto mb-4 opacity-90" />
+              <i className="fa-solid fa-eye text-gray-700 text-3xl"></i>
             </div>
           </div>
-          {/* Decorative Pattern */}
-          <div className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage: 'radial-gradient(circle, #fff 2px, transparent 2.5px)',
-              backgroundSize: '20px 20px'
-            }}
-          />
         </div>
 
         {/* Back of Card (Face Up - Content) */}
@@ -170,19 +163,40 @@ export function FeedDesktop() {
   const [isLoading, setIsLoading] = useState(true);
   const [dealKey, setDealKey] = useState(0); // Key to force re-render for deal animation
 
-  // Load feed data
+  // Get user location and load feed data
   useEffect(() => {
     const loadFeed = async () => {
       try {
         setIsLoading(true);
-        const feedCards = await FeedService.generateFeed({ pageSize: 20 });
+        
+        // Get user location
+        let userLocation: { lat: number; lng: number } | undefined;
+        try {
+          const coordinates = await GeocodingService.getCurrentLocation();
+          if (coordinates) {
+            userLocation = {
+              lat: coordinates.latitude,
+              lng: coordinates.longitude
+            };
+            console.log('📍 FeedDesktop: Using user location:', userLocation);
+          }
+        } catch (error) {
+          console.warn('⚠️ FeedDesktop: Could not get user location, using default:', error);
+        }
+
+        const feedCards = await FeedService.generateFeed({ 
+          pageSize: 20,
+          userLocation 
+        });
         const restaurantCards = feedCards.filter(
           (card): card is RestaurantCard => card.type === 'restaurant'
         );
         setAllCards(restaurantCards);
 
         // Deal first batch
-        setCurrentBatch(restaurantCards.slice(0, BATCH_SIZE));
+        const firstBatch = restaurantCards.slice(0, BATCH_SIZE);
+        console.log('🎴 Setting initial batch:', firstBatch.length, 'cards');
+        setCurrentBatch(firstBatch);
         setBatchIndex(BATCH_SIZE);
       } catch (error) {
         console.error('Failed to load feed:', error);
@@ -223,6 +237,16 @@ export function FeedDesktop() {
     );
   }
 
+  if (currentBatch.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA]">
+        <div className="text-center">
+          <p className="text-gray-500">No cards available. Check back later!</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="min-h-screen flex flex-col bg-[#FAFAFA] bg-cover bg-center bg-no-repeat overflow-hidden"
@@ -234,7 +258,7 @@ export function FeedDesktop() {
         <div className="relative w-full max-w-6xl mx-auto h-[600px] flex items-center justify-center">
           {/* Card Container */}
           <div className="flex gap-8 items-center justify-center perspective-1000">
-            <AnimatePresence mode='wait'>
+            <AnimatePresence>
               {currentBatch.map((card, index) => (
                 <DealCard
                   key={`${dealKey}-${card.id}`} // Key change triggers mount animation

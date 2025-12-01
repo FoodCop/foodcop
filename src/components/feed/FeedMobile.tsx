@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { X, Heart, Bookmark, Send, MapPin, Star } from 'lucide-react';
 import { FeedService } from '../../services/feedService';
+import { GeocodingService } from '../../services/geocodingService';
 import type { RestaurantCard, FeedCard } from './data/feed-content';
 
 type SwipeDirection = 'left' | 'right' | 'up' | 'down';
@@ -270,12 +271,31 @@ export function FeedMobile() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [exitDirection, setExitDirection] = useState<SwipeDirection | null>(null);
 
-  // Load feed data on mount
+  // Get user location and load feed data on mount
   useEffect(() => {
     const loadFeed = async () => {
       try {
         setIsLoading(true);
-        const feedCards = await FeedService.generateFeed({ pageSize: 20 });
+        
+        // Get user location
+        let userLocation: { lat: number; lng: number } | undefined;
+        try {
+          const coordinates = await GeocodingService.getCurrentLocation();
+          if (coordinates) {
+            userLocation = {
+              lat: coordinates.latitude,
+              lng: coordinates.longitude
+            };
+            console.log('📍 FeedMobile: Using user location:', userLocation);
+          }
+        } catch (error) {
+          console.warn('⚠️ FeedMobile: Could not get user location, using default:', error);
+        }
+
+        const feedCards = await FeedService.generateFeed({ 
+          pageSize: 20,
+          userLocation 
+        });
         // Filter to only restaurant cards for now
         const restaurantCards = feedCards.filter(
           (card): card is RestaurantCard => card.type === 'restaurant'
