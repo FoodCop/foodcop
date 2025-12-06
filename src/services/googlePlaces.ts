@@ -35,7 +35,7 @@ export const GooglePlacesService = {
         },
         {
           useCache: true,
-          cacheDuration: 20 * 60 * 1000 // 20 minutes
+          cacheDuration: 24 * 60 * 60 * 1000 // 24 hours - restaurant data doesn't change frequently
         }
       );
 
@@ -66,7 +66,7 @@ export const GooglePlacesService = {
         },
         {
           useCache: true,
-          cacheDuration: 30 * 60 * 1000 // 30 minutes - place details don't change often
+          cacheDuration: 24 * 60 * 60 * 1000 // 24 hours - place details don't change often
         }
       );
 
@@ -106,7 +106,7 @@ export const GooglePlacesService = {
         },
         {
           useCache: true,
-          cacheDuration: 20 * 60 * 1000 // 20 minutes
+          cacheDuration: 24 * 60 * 60 * 1000 // 24 hours - nearby restaurants don't change frequently
         }
       );
 
