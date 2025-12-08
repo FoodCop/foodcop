@@ -41,7 +41,7 @@ function DealCard({ card, index }: DealCardProps) {
       opacity: 1,
       rotate: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 12,
         stiffness: 100,
         delay: i * 0.15 // Staggered deal
@@ -168,7 +168,7 @@ export function FeedDesktop() {
     const loadFeed = async () => {
       try {
         setIsLoading(true);
-        
+
         // Get user location
         let userLocation: { lat: number; lng: number } | undefined;
         try {
@@ -184,9 +184,9 @@ export function FeedDesktop() {
           console.warn('⚠️ FeedDesktop: Could not get user location, using default:', error);
         }
 
-        const feedCards = await FeedService.generateFeed({ 
+        const feedCards = await FeedService.generateFeed({
           pageSize: 20,
-          userLocation 
+          userLocation
         });
         const restaurantCards = feedCards.filter(
           (card): card is RestaurantCard => card.type === 'restaurant'

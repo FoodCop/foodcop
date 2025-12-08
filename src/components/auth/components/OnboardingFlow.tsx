@@ -1,7 +1,17 @@
 import { useState } from 'react';
-import type { UserData } from '../App';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
+
+// Define UserData type locally
+interface UserData {
+  name?: string;
+  phone?: string;
+  location?: {
+    lat: number;
+    lng: number;
+    address: string;
+  };
+}
 
 // Inline BasicInfoStep component
 function BasicInfoStep({ userData, onNext }: {
@@ -10,7 +20,7 @@ function BasicInfoStep({ userData, onNext }: {
   onNext: (data: Partial<UserData>) => void;
 }) {
   const [localData, setLocalData] = useState({ name: userData.name || '', phone: userData.phone || '' });
-  
+
   const handleNext = () => {
     onNext(localData);
   };
@@ -40,14 +50,14 @@ function LocationStep({ userData, onNext }: {
   onNext: (data: Partial<UserData>) => void;
 }) {
   const [address, setAddress] = useState(userData.location?.address || '');
-  
+
   const handleNext = () => {
-    onNext({ 
-      location: { 
-        lat: 0, 
-        lng: 0, 
-        address 
-      } 
+    onNext({
+      location: {
+        lat: 0,
+        lng: 0,
+        address
+      }
     });
   };
 
@@ -125,9 +135,8 @@ export function OnboardingFlow({ userData, onComplete }: OnboardingFlowProps) {
                 {steps.map((_, index) => (
                   <div
                     key={index}
-                    className={`h-1 flex-1 rounded-full transition-colors ${
-                      index <= currentStep ? 'bg-gray-900' : 'bg-gray-200'
-                    }`}
+                    className={`h-1 flex-1 rounded-full transition-colors ${index <= currentStep ? 'bg-gray-900' : 'bg-gray-200'
+                      }`}
                   />
                 ))}
               </div>
@@ -144,7 +153,7 @@ export function OnboardingFlow({ userData, onComplete }: OnboardingFlowProps) {
         <h2 className="mb-8">{steps[currentStep].title}</h2>
         <CurrentStepComponent
           userData={formData}
-          onDataChange={() => {}}
+          onDataChange={() => { }}
           onNext={handleStepComplete}
         />
       </div>

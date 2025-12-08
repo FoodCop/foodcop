@@ -932,7 +932,8 @@ export const FeedService = {
               const existingIds = new Set(nearbyWithDistance.map(loc => loc.placeId));
               for (const loc of randomLocations) {
                 if (!existingIds.has(loc.placeId)) {
-                  allLocations.push(loc);
+                  // Add distance property for random locations (set to a default value since they're not based on proximity)
+                  allLocations.push({ ...loc, distance: 999 });
                 }
               }
               locations = allLocations;

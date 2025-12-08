@@ -1,7 +1,18 @@
 import { useNavigate } from 'react-router-dom';
-import type { UserData } from '../App';
 import { Button } from '../../ui/button-simple';
 import { cookieUtils } from '../../../utils/cookies';
+
+// Define UserData type locally
+interface UserData {
+  name?: string;
+  email?: string;
+  phone?: string;
+  location?: {
+    lat: number;
+    lng: number;
+    address?: string;
+  };
+}
 // import { CheckCircle2 } from 'lucide-react'; // Removed - not available
 
 interface SuccessScreenProps {
@@ -14,7 +25,7 @@ export function SuccessScreen({ userData }: SuccessScreenProps) {
   const handleGoToApp = () => {
     // Get and clear the stored return path from cookie
     let returnPath = cookieUtils.getAndClearReturnPath();
-    
+
     // Clean up return path - remove any full URLs and keep only the path
     if (returnPath) {
       try {
@@ -36,12 +47,12 @@ export function SuccessScreen({ userData }: SuccessScreenProps) {
         console.warn('⚠️ Could not parse return path as URL, treating as path:', returnPath);
       }
     }
-    
+
     console.log('🍪 SuccessScreen: Cookie return path check:', {
       returnPath,
       isValidReturn: returnPath && returnPath !== '/auth' && returnPath !== '#auth',
     });
-    
+
     if (returnPath && returnPath !== '/auth' && returnPath !== '#auth' && returnPath.startsWith('/')) {
       console.log('✅ SuccessScreen: Redirecting to stored path:', returnPath);
       navigate(returnPath, { replace: true });
@@ -71,14 +82,14 @@ export function SuccessScreen({ userData }: SuccessScreenProps) {
             <p className="text-sm text-gray-600">Email</p>
             <p>{userData.email}</p>
           </div>
-          
+
           {userData.phone && (
             <div className="space-y-2">
               <p className="text-sm text-gray-600">Phone</p>
               <p>{userData.phone}</p>
             </div>
           )}
-          
+
           {userData.location && (
             <div className="space-y-2">
               <p className="text-sm text-gray-600">Location</p>
@@ -89,8 +100,8 @@ export function SuccessScreen({ userData }: SuccessScreenProps) {
           )}
         </div>
 
-        <Button 
-          className="w-full" 
+        <Button
+          className="w-full"
           onClick={handleGoToApp}
         >
           Go to App

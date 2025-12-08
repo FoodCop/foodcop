@@ -196,7 +196,7 @@ export function ScoutDesktop() {
   const handleRestaurantClick = async (restaurant: Restaurant) => {
     setSelectedRestaurant(restaurant);
     setShowDirections(false);
-    setActiveTab('overview');
+    setDetailTab('overview');
 
     // Fetch detailed info including reviews and photos
     if (restaurant.id) {

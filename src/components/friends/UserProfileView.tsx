@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, MessageCircle, UserPlus, MapPin, Calendar, Loader2 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { FriendService } from '../../services/friendService';
-import { ProfileService, type UserProfile } from '../../services/profileService';
+import { ProfileService } from '../../services/profileService';
+import type { UserProfile } from '../../types/profile';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { useDMChatStore } from '../../stores/chatStore';
@@ -82,11 +83,11 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
 
     setActionLoading(true);
     const result = await FriendService.sendFriendRequest(user.id, userId);
-    
+
     if (result.success) {
       await checkFriendStatus();
     }
-    
+
     setActionLoading(false);
   };
 
@@ -95,11 +96,11 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
 
     setActionLoading(true);
     const result = await FriendService.acceptFriendRequest(requestId);
-    
+
     if (result.success) {
       await checkFriendStatus();
     }
-    
+
     setActionLoading(false);
   };
 
@@ -108,11 +109,11 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
 
     setActionLoading(true);
     const result = await FriendService.declineFriendRequest(requestId);
-    
+
     if (result.success) {
       await checkFriendStatus();
     }
-    
+
     setActionLoading(false);
   };
 
@@ -121,11 +122,11 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
 
     setActionLoading(true);
     const result = await FriendService.cancelFriendRequest(requestId);
-    
+
     if (result.success) {
       await checkFriendStatus();
     }
-    
+
     setActionLoading(false);
   };
 
