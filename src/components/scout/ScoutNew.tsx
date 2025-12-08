@@ -9,6 +9,9 @@ import { GoogleMapView } from '../maps/GoogleMapView';
 import { MapView } from './components/MapView';
 import type { MapMarker } from '../maps/mapUtils';
 import { SectionHeading } from '../ui/section-heading';
+import { useAuth } from '../auth/AuthProvider';
+import { savedItemsService } from '../../services';
+import { toastHelpers } from '../../utils/toastHelpers';
 
 // Hook to detect screen size
 function useIsDesktop() {
@@ -74,7 +77,7 @@ const CUISINE_CATEGORIES = [
 export default function ScoutNew() {
   // Detect desktop screen size
   const isDesktop = useIsDesktop();
-  
+
   // Mobile-specific state
   const [userLocation, setUserLocation] = useState<[number, number]>([37.7849, -122.4094]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -103,17 +106,17 @@ export default function ScoutNew() {
 
     try {
       const response = await backendService.getPlaceDetails(restaurant.place_id);
-      
+
       if (response.success && response.data?.result) {
         const details = response.data.result;
-        
+
         // Convert photo references to full URLs
-        const photos = details.photos 
-          ? details.photos.slice(0, 5).map((photo: { photo_reference: string }) => 
-              getGooglePlacesPhotoUrl(photo.photo_reference, 800)
-            )
+        const photos = details.photos
+          ? details.photos.slice(0, 5).map((photo: { photo_reference: string }) =>
+            getGooglePlacesPhotoUrl(photo.photo_reference, 800)
+          )
           : restaurant.photos;
-        
+
         // Merge basic info with detailed info
         const enrichedRestaurant: Restaurant = {
           ...restaurant,
@@ -131,7 +134,7 @@ export default function ScoutNew() {
             time: review.relative_time_description
           })) : undefined
         };
-        
+
         setSelectedRestaurant(enrichedRestaurant);
       } else {
         // Fallback to basic info if details fetch fails
@@ -149,7 +152,7 @@ export default function ScoutNew() {
   useEffect(() => {
     const getUserLocation = () => {
       console.log('🌍 Attempting to get user location...');
-      
+
       if (!navigator.geolocation) {
         console.warn('⚠️ Geolocation not supported by browser');
         const defaultLocation: [number, number] = [37.7849, -122.4094];
@@ -173,10 +176,10 @@ export default function ScoutNew() {
           setUserLocation(defaultLocation);
           fetchRestaurants(37.7849, -122.4094, radiusKm);
         },
-        { 
-          enableHighAccuracy: true, 
-          timeout: 10000, 
-          maximumAge: 300000 
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000
         }
       );
     };
@@ -203,7 +206,7 @@ export default function ScoutNew() {
         { headers: { 'User-Agent': 'FUZO-FoodApp/1.0' } }
       );
       const data = await response.json();
-      
+
       if (data?.display_name) {
         console.log('Location:', data.display_name);
       }
@@ -216,24 +219,24 @@ export default function ScoutNew() {
     console.log('fetchRestaurants called:', { lat, lng, radius, query });
     setError(null);
     setLoading(true);
-    
+
     try {
       let results: Restaurant[] = [];
       const radiusMeters = radius * 1000;
-      
+
       if (query?.trim()) {
         console.log('Searching by text:', `${query} restaurant`);
         const response = await backendService.searchPlacesByText(
           `${query} restaurant`,
           { lat, lng }
         );
-        
+
         console.log('Search response:', response);
-        
+
         if (response.success && response.data?.results) {
-          results = response.data.results.map((place: GooglePlace) => 
+          results = response.data.results.map((place: GooglePlace) =>
             formatGooglePlaceResult(place, { lat, lng })
-          ).filter((restaurant: Restaurant) => 
+          ).filter((restaurant: Restaurant) =>
             restaurant.distance !== undefined && restaurant.distance <= radius
           );
         } else {
@@ -247,11 +250,11 @@ export default function ScoutNew() {
           radiusMeters,
           'restaurant'
         );
-        
+
         console.log('Nearby response:', response);
-        
+
         if (response.success && response.data?.results) {
-          results = response.data.results.map((place: GooglePlace) => 
+          results = response.data.results.map((place: GooglePlace) =>
             formatGooglePlaceResult(place, { lat, lng })
           );
           console.log('✅ Successfully formatted', results.length, 'restaurants from API');
@@ -260,11 +263,11 @@ export default function ScoutNew() {
           setError(response.error || 'Failed to load nearby restaurants');
         }
       }
-      
+
       results.sort((a, b) => (a.distance || 0) - (b.distance || 0));
       console.log('Setting restaurants:', results.length);
       setRestaurants(results);
-      
+
       if (results.length === 0) {
         toast.error(`No restaurants found within ${radius}km`);
       } else {
@@ -292,7 +295,7 @@ export default function ScoutNew() {
       const timeoutId = setTimeout(() => {
         fetchRestaurants(userLocation[0], userLocation[1], radiusKm, searchQuery);
       }, 500);
-      
+
       return () => clearTimeout(timeoutId);
     } else {
       const category = CUISINE_CATEGORIES.find(c => c.id === selectedCategory);
@@ -310,7 +313,7 @@ export default function ScoutNew() {
     <div className="min-h-screen bg-white">
       {/* Mobile Container - Max width for mobile view */}
       <div className="max-w-md mx-auto bg-white min-h-screen md:max-w-full">
-        
+
         {/* Header */}
         <header className="bg-white px-5 pt-6 pb-4 sticky top-0 z-50 shadow-sm">
           <div className="flex items-center justify-between mb-5">
@@ -319,7 +322,7 @@ export default function ScoutNew() {
               <SlidersHorizontal className="text-gray-700 text-lg" />
             </button>
           </div>
-          
+
           {/* Search Bar */}
           <div className="relative">
             <input
@@ -375,15 +378,15 @@ export default function ScoutNew() {
               className="w-full h-full"
               height="320px"
             />
-            
+
             {/* Your Location Badge */}
             <div className="absolute top-4 left-4 bg-white px-4 py-2 rounded-full shadow-md flex items-center space-x-2 pointer-events-none z-10">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
               <span className="text-xs font-medium text-gray-900">Your Location</span>
             </div>
-            
+
             {/* Recenter button */}
-            <button 
+            <button
               onClick={() => {
                 if (navigator.geolocation) {
                   navigator.geolocation.getCurrentPosition(
@@ -401,7 +404,7 @@ export default function ScoutNew() {
               <Navigation className="text-gray-700 text-lg" />
             </button>
           </div>
-          
+
           {/* Location info */}
           <div className="flex items-center justify-center mt-4 space-x-2">
             <MapPin className="text-red-500 text-sm" />
@@ -440,7 +443,7 @@ export default function ScoutNew() {
             <div className="px-5 mb-4">
               <SectionHeading>Nearby Restaurants</SectionHeading>
             </div>
-            
+
             <div className="flex overflow-x-auto space-x-4 px-5 pb-2 hide-scrollbar">
               {restaurants.slice(0, 6).map((restaurant) => (
                 <RestaurantCarouselCard
@@ -472,22 +475,20 @@ export default function ScoutNew() {
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => handleCategoryClick('all')}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                selectedCategory === 'all'
+              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${selectedCategory === 'all'
                   ? 'bg-gray-900 text-white'
                   : 'bg-gray-50 text-gray-700 border border-gray-100 hover:bg-gray-100'
-              }`}
+                }`}
             >
               <Star className="inline w-4 h-4 mr-2" />
               Popular
             </button>
             <button
               onClick={() => handleCategoryClick('italian')}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                selectedCategory === 'italian'
+              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${selectedCategory === 'italian'
                   ? 'bg-gray-900 text-white'
                   : 'bg-gray-50 text-gray-700 border border-gray-100 hover:bg-gray-100'
-              }`}
+                }`}
             >
               <Star className="inline w-4 h-4 mr-2" />
               Top Rated
@@ -557,8 +558,8 @@ function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ 
       {/* Image placeholder */}
       <div className="relative h-40 overflow-hidden bg-linear-to-br from-gray-100 to-gray-200">
         {restaurant.photos && restaurant.photos.length > 0 ? (
-          <img 
-            src={restaurant.photos[0]} 
+          <img
+            src={restaurant.photos[0]}
             alt={restaurant.name}
             className="w-full h-full object-cover"
             onError={(e) => {
@@ -571,46 +572,46 @@ function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ 
         <div className={`w-full h-full flex items-center justify-center ${restaurant.photos && restaurant.photos.length > 0 ? 'hidden' : ''}`}>
           <MapPin className="w-12 h-12 text-gray-300" />
         </div>
-        
+
         {/* Rating badge */}
         <div className="absolute top-3 right-3 bg-white px-3 py-1 rounded-full flex items-center space-x-1">
           <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
           <span className="text-sm font-bold text-gray-900">{restaurant.rating}</span>
         </div>
-        
+
         {/* Distance badge */}
         <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium">
           {distanceText}
         </div>
       </div>
-      
+
       {/* Content */}
       <div className="p-4">
         <h3 className="text-lg font-bold text-gray-900 mb-1 truncate">{restaurant.name}</h3>
         <p className="text-sm text-gray-500 mb-3 truncate">
           {Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(' • ') : restaurant.cuisine}
         </p>
-        
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1">
-                <Clock className="w-3 h-3 text-gray-400" />
-                <span className="text-xs text-gray-600">25 min</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <span className="text-xs text-gray-600">{priceLevel}</span>
-              </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-1">
+              <Clock className="w-3 h-3 text-gray-400" />
+              <span className="text-xs text-gray-600">25 min</span>
             </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onNavigate) onNavigate(restaurant);
-              }}
-              className="w-9 h-9 bg-orange-50 rounded-full flex items-center justify-center hover:bg-orange-100 transition-colors"
-            >
-              <Navigation className="w-4 h-4 text-orange-600" />
-            </button>
+            <div className="flex items-center space-x-1">
+              <span className="text-xs text-gray-600">{priceLevel}</span>
+            </div>
           </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onNavigate) onNavigate(restaurant);
+            }}
+            className="w-9 h-9 bg-orange-50 rounded-full flex items-center justify-center hover:bg-orange-100 transition-colors"
+          >
+            <Navigation className="w-4 h-4 text-orange-600" />
+          </button>
+        </div>
       </div>
     </button>
   );
@@ -618,11 +619,60 @@ function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ 
 
 // Featured Restaurant Card Component
 function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ restaurant: Restaurant; onClick?: () => void; onNavigate?: (restaurant: Restaurant) => void }>) {
+  const { user } = useAuth();
+  const [saving, setSaving] = useState(false);
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$$';
   const distanceText = `${formatDistance(restaurant.distance)} away`;
-  
+
   const cuisineTypes: string[] = Array.isArray(restaurant.cuisine) ? restaurant.cuisine : [restaurant.cuisine || 'Restaurant'];
-  
+
+  const handleSaveToPlate = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (!user) {
+      toast.error('Please sign in to save restaurants');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const cuisineText = Array.isArray(restaurant.cuisine)
+        ? restaurant.cuisine.join(', ')
+        : restaurant.cuisine;
+
+      const result = await savedItemsService.saveItem({
+        itemId: restaurant.place_id || restaurant.id,
+        itemType: 'restaurant',
+        metadata: {
+          name: restaurant.name,
+          cuisine: cuisineText,
+          rating: restaurant.rating,
+          address: restaurant.address,
+          lat: restaurant.lat,
+          lng: restaurant.lng,
+          place_id: restaurant.place_id || restaurant.id,
+          price_level: restaurant.price_level,
+          photos: restaurant.photos,
+          phone: restaurant.phone,
+          website: restaurant.website,
+        }
+      });
+
+      if (result.success) {
+        toastHelpers.saved(restaurant.name);
+      } else if (result.error === 'Item already saved') {
+        toastHelpers.saved(restaurant.name, true);
+      } else {
+        toastHelpers.error(result.error || 'Failed to save restaurant');
+      }
+    } catch (error) {
+      console.error('Error saving restaurant:', error);
+      toast.error('An error occurred while saving the restaurant');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <button
       onClick={onClick}
@@ -631,8 +681,8 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
       {/* Hero image with gradient overlay */}
       <div className="relative h-56 overflow-hidden bg-linear-to-br from-gray-200 to-gray-300">
         {restaurant.photos && restaurant.photos.length > 0 ? (
-          <img 
-            src={restaurant.photos[0]} 
+          <img
+            src={restaurant.photos[0]}
             alt={restaurant.name}
             className="w-full h-full object-cover"
             onError={(e) => {
@@ -645,10 +695,10 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
         <div className={`w-full h-full flex items-center justify-center ${restaurant.photos && restaurant.photos.length > 0 ? 'hidden' : ''}`}>
           <MapPin className="w-16 h-16 text-gray-400" />
         </div>
-        
+
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent"></div>
-        
+
         {/* Bottom content */}
         <div className="absolute bottom-4 left-4 right-4">
           <div className="flex items-center justify-between">
@@ -666,7 +716,7 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
           </div>
         </div>
       </div>
-      
+
       {/* Details section */}
       <div className="p-5">
         {/* Tags */}
@@ -680,12 +730,12 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
             {priceLevel}
           </span>
         </div>
-        
+
         {/* Description */}
         <p className="text-sm text-gray-600 mb-5 leading-relaxed line-clamp-2">
           Experience exquisite cuisine in an elegant setting. Our chef-curated menu features seasonal ingredients and classic techniques.
         </p>
-        
+
         {/* Action icons */}
         <div className="grid grid-cols-3 gap-4 mb-5">
           <div className="text-center">
@@ -716,12 +766,16 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
             <p className="text-sm font-semibold text-gray-900">{distanceText}</p>
           </div>
         </div>
-        
+
         {/* Action buttons */}
         <div className="flex space-x-3">
-          <button className="flex-1 h-12 bg-gray-900 text-white rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors">
+          <button
+            onClick={handleSaveToPlate}
+            disabled={saving}
+            className="flex-1 h-12 bg-gray-900 text-white rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <span>💾</span>
-            <span>Save to Plate</span>
+            <span>{saving ? 'Saving...' : 'Save to Plate'}</span>
           </button>
         </div>
       </div>
