@@ -100,9 +100,9 @@
     font-family: 'IBM Plex Serif', serif;
   }
 
-  /* Headings use Noto Serif Display */
+  /* Headings use Google Sans Flex */
   h1, h2, h3 {
-    font-family: 'Noto Serif Display', serif;
+    font-family: 'Google Sans Flex', sans-serif;
   }
 
   /* H1 uses deep red color */
@@ -125,7 +125,7 @@
 @layer base {
   :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
     h1 {
-      font-family: 'Noto Serif Display', serif;
+      font-family: 'Google Sans Flex', sans-serif;
       font-size: var(--text-xl); /* Reduced from text-2xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
@@ -133,7 +133,7 @@
     }
 
     h2 {
-      font-family: 'Noto Serif Display', serif;
+      font-family: 'Google Sans Flex', sans-serif;
       font-size: var(--text-lg); /* Reduced from text-xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
@@ -141,7 +141,7 @@
     }
 
     h3:not([class*="text-card-heading"]):not([style*="font-family"]) {
-      font-family: 'Noto Serif Display', serif;
+      font-family: 'Google Sans Flex', sans-serif;
       font-size: var(--text-base); /* Reduced from text-lg */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
@@ -199,7 +199,7 @@ button,
 h2[style*="font-family"],
 h3[style*="font-family"],
 h4[style*="font-family"] {
-  font-family: 'Noto Serif Display', serif !important;
+  font-family: 'Google Sans Flex', sans-serif !important;
 }
 
 /* Ensure card-heading font sizes override global h3 font-size - Tailwind classes handle the sizing */

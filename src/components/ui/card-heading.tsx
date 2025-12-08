@@ -74,7 +74,7 @@ export function CardHeading({
     <Component 
       className={classes}
       style={{ 
-        fontFamily: "'Noto Serif Display', serif",
+        fontFamily: "'Google Sans Flex', sans-serif",
         fontSize: fontSizeMap[size],
         lineHeight: lineHeightMap[size]
       }}

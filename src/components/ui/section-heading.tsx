@@ -28,7 +28,7 @@ export function SectionHeading({
   return (
     <Component 
       className={classes}
-      style={{ fontFamily: "'Noto Serif Display', serif" }}
+      style={{ fontFamily: "'Google Sans Flex', sans-serif" }}
     >
       {children}
     </Component>
