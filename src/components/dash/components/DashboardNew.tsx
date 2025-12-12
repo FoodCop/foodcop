@@ -42,11 +42,11 @@ export function DashboardNew() {
           console.log('🔍 DashboardNew: preferences_hint_shown =', hintShown);
           
           // Only show hint if explicitly false or undefined
-          if (!hintShown) {
+          if (hintShown) {
+            console.log('❌ DashboardNew: Hint already shown, skipping modal');
+          } else {
             console.log('✅ DashboardNew: Showing preferences hint modal');
             setShowPreferencesHint(true);
-          } else {
-            console.log('❌ DashboardNew: Hint already shown, skipping modal');
           }
         }
       } catch (error) {
@@ -281,7 +281,7 @@ export function DashboardNew() {
                     }
                   }}
                 />
-                <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white font-bold text-xl">
+                <div className="w-full h-full items-center justify-center bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white font-bold text-xl" style={{ display: 'none' }}>
                   {getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
                 </div>
               </div>

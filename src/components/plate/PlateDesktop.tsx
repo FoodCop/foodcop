@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Heart, Clock, Navigation, Home, Search, MessageCircle, Bookmark, Settings, Rss, Scissors, Pizza, Trash, UserPlus } from 'lucide-react';
+import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Clock, Navigation, Search, MessageCircle, Bookmark, Settings, Rss, Scissors, Pizza, Trash, UserPlus } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
 import { type SavedItem } from '../../services/savedItemsService';
@@ -126,11 +126,11 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
           console.log('🔍 PlateDesktop: preferences_hint_shown =', hintShown);
           
           // Only show hint if explicitly false or undefined
-          if (!hintShown) {
+          if (hintShown) {
+            console.log('❌ PlateDesktop: Hint already shown, skipping modal');
+          } else {
             console.log('✅ PlateDesktop: Showing preferences hint modal');
             setShowPreferencesHint(true);
-          } else {
-            console.log('❌ PlateDesktop: Hint already shown, skipping modal');
           }
         }
       } catch (error) {
@@ -306,7 +306,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
         const meta = item.metadata as Record<string, unknown>;
         const itemName = (meta.title as string) || (meta.name as string) || 'this item';
 
-        const confirmed = window.confirm(`Delete "${itemName}" from your Plate?`);
+        const confirmed = globalThis.confirm(`Delete "${itemName}" from your Plate?`);
         if (!confirmed) return;
 
         const result = await savedItemsService.unsaveItem({
@@ -641,7 +641,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                       ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
                       : 'hover:text-[#1A1A1A]'
                     }`}
-                  style={selectedTab !== 'places' ? { color: '#808080' } : {}}
+                  style={selectedTab === 'places' ? {} : { color: '#808080' }}
                 >
                   Places
                 </button>
@@ -656,7 +656,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                       ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
                       : 'hover:text-[#1A1A1A]'
                     }`}
-                  style={selectedTab !== 'recipes' ? { color: '#808080' } : {}}
+                  style={selectedTab === 'recipes' ? {} : { color: '#808080' }}
                 >
                   Recipes
                 </button>
@@ -671,7 +671,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                       ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
                       : 'hover:text-[#1A1A1A]'
                     }`}
-                  style={selectedTab !== 'videos' ? { color: '#808080' } : {}}
+                  style={selectedTab === 'videos' ? {} : { color: '#808080' }}
                 >
                   Videos
                 </button>
@@ -686,7 +686,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                       ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
                       : 'hover:text-[#1A1A1A]'
                     }`}
-                  style={selectedTab !== 'crew' ? { color: '#808080' } : {}}
+                  style={selectedTab === 'crew' ? {} : { color: '#808080' }}
                 >
                   Crew
                 </button>
@@ -701,7 +701,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                       ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
                       : 'hover:text-[#1A1A1A]'
                     }`}
-                  style={selectedTab !== 'posts' ? { color: '#808080' } : {}}
+                  style={selectedTab === 'posts' ? {} : { color: '#808080' }}
                 >
                   Posts
                 </button>
