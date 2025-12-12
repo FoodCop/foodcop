@@ -38,9 +38,15 @@ export function DashboardNew() {
       try {
         const profileResult = await ProfileService.getProfile();
         if (profileResult.success && profileResult.data) {
-          // Show hint if preferences_hint_shown is false or undefined
-          if (!profileResult.data.preferences_hint_shown) {
+          const hintShown = profileResult.data.preferences_hint_shown === true;
+          console.log('🔍 DashboardNew: preferences_hint_shown =', hintShown);
+          
+          // Only show hint if explicitly false or undefined
+          if (!hintShown) {
+            console.log('✅ DashboardNew: Showing preferences hint modal');
             setShowPreferencesHint(true);
+          } else {
+            console.log('❌ DashboardNew: Hint already shown, skipping modal');
           }
         }
       } catch (error) {

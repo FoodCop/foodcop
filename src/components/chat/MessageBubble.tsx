@@ -1,16 +1,21 @@
 import { DMMessage, SharedItem } from '../../services/dmChatService';
 import { cn } from '../ui/utils';
+import { MessageStatusIcon, MessageStatus } from './MessageStatusIcon';
 
 interface MessageBubbleProps {
   message: DMMessage;
   isOwn: boolean;
   onSharedItemClick?: (item: SharedItem) => void;
+  status?: MessageStatus;
+  onRetry?: () => void;
 }
 
 export function MessageBubble({
   message,
   isOwn,
   onSharedItemClick,
+  status = 'delivered', // Default to delivered for existing messages
+  onRetry,
 }: MessageBubbleProps) {
   const hasSharedItem = message.shared_item !== null;
 
@@ -71,18 +76,26 @@ export function MessageBubble({
           </p>
         )}
 
-        {/* Timestamp */}
-        <p
-          className={cn(
-            'text-[10px] mt-1',
-            isOwn ? 'text-orange-100' : 'text-gray-400'
+        {/* Timestamp and Status */}
+        <div className="flex items-center gap-1.5 mt-1">
+          <p
+            className={cn(
+              'text-[10px]',
+              isOwn ? 'text-orange-100' : 'text-gray-400'
+            )}
+          >
+            {new Date(message.created_at).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </p>
+          {isOwn && status && (
+            <MessageStatusIcon
+              status={status}
+              onRetry={onRetry}
+            />
           )}
-        >
-          {new Date(message.created_at).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </p>
+        </div>
       </div>
     </div>
   );

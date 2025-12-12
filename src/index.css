@@ -246,6 +246,7 @@ h2.text-lg {
 }
 
 /* Center Toast Animations */
+/* Chat empty state animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -267,7 +268,19 @@ h2.text-lg {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.2s ease-out;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-fade-in-delay {
+  animation: fadeIn 0.4s ease-in-out 0.1s both;
+}
+
+.animate-fade-in-delay-2 {
+  animation: fadeIn 0.4s ease-in-out 0.2s both;
+}
+
+.animate-fade-in-delay-3 {
+  animation: fadeIn 0.4s ease-in-out 0.3s both;
 }
 
 .animate-toast-center-in {

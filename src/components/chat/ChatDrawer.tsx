@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, MessageCircle, UserPlus, Users } from 'lucide-react';
 import {
   Drawer,
@@ -10,21 +10,23 @@ import {
 } from '../ui/drawer';
 import { Button } from '../ui/button';
 import { useDMChatStore } from '../../stores/chatStore';
-import { DMConversation, SharedItem } from '../../services/dmChatService';
+import { DMConversation, SharedItem, DMChatService } from '../../services/dmChatService';
 import { ConversationList } from './ConversationList';
 import { ChatThread } from './ChatThread';
 import { FriendFinder } from '../friends/FriendFinder';
 import { FriendRequestList } from '../friends/FriendRequestList';
+import { MessageRequestList } from './MessageRequestList';
 import { UserProfileView } from '../friends/UserProfileView';
+import { UserDiscoveryModal } from './UserDiscoveryModal';
 import { useAuthStore } from '../../stores/authStore';
 
 interface ChatDrawerProps {
   onSharedItemClick?: (item: SharedItem) => void;
 }
 
-type ViewType = 'messages' | 'find-friends' | 'requests' | 'profile';
+type ViewType = 'messages' | 'find-friends' | 'requests' | 'message-requests' | 'profile';
 
-export function ChatDrawer({ onSharedItemClick }: ChatDrawerProps) {
+export function ChatDrawer({ onSharedItemClick }: Readonly<ChatDrawerProps>) {
   const { isOpen, closeChat } = useDMChatStore();
   const { user } = useAuthStore();
   const { startConversation } = useDMChatStore();
@@ -32,6 +34,21 @@ export function ChatDrawer({ onSharedItemClick }: ChatDrawerProps) {
     useState<DMConversation | null>(null);
   const [currentView, setCurrentView] = useState<ViewType>('messages');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [isDiscoveryModalOpen, setIsDiscoveryModalOpen] = useState(false);
+  const [pendingRequestCount, setPendingRequestCount] = useState(0);
+
+  // Load pending request count
+  useEffect(() => {
+    if (user?.id && isOpen) {
+      const loadCount = async () => {
+        const result = await DMChatService.fetchPendingRequests(user.id);
+        if (result.success && result.data) {
+          setPendingRequestCount(result.data.length);
+        }
+      };
+      loadCount();
+    }
+  }, [user?.id, isOpen]);
 
   const handleClose = () => {
     setSelectedConversation(null);
@@ -71,30 +88,41 @@ export function ChatDrawer({ onSharedItemClick }: ChatDrawerProps) {
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()} direction="right">
       <DrawerContent className="h-full w-full sm:max-w-md">
-        {selectedConversation ? (
-          <ChatThread
-            conversation={selectedConversation}
-            onBack={handleBack}
-            onSharedItemClick={onSharedItemClick}
-          />
-        ) : selectedUserId ? (
-          <UserProfileView
-            userId={selectedUserId}
-            onBack={handleBack}
-            onStartConversation={handleStartConversation}
-          />
-        ) : (
-          <>
-            <DrawerHeader className="border-b">
+        {(() => {
+          if (selectedConversation) {
+            return (
+              <ChatThread
+                conversation={selectedConversation}
+                onBack={handleBack}
+                onSharedItemClick={onSharedItemClick}
+              />
+            );
+          }
+          
+          if (selectedUserId) {
+            return (
+              <UserProfileView
+                userId={selectedUserId}
+                onBack={handleBack}
+                onStartConversation={handleStartConversation}
+              />
+            );
+          }
+          
+          return (
+            <>
+              <DrawerHeader className="border-b">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {currentView === 'messages' && <MessageCircle className="h-5 w-5 text-orange-500" />}
                   {currentView === 'find-friends' && <UserPlus className="h-5 w-5 text-orange-500" />}
                   {currentView === 'requests' && <Users className="h-5 w-5 text-orange-500" />}
+                  {currentView === 'message-requests' && <MessageCircle className="h-5 w-5 text-orange-500" />}
                   <DrawerTitle>
                     {currentView === 'messages' && 'Messages'}
                     {currentView === 'find-friends' && 'Find Friends'}
                     {currentView === 'requests' && 'Friend Requests'}
+                    {currentView === 'message-requests' && 'Message Requests'}
                   </DrawerTitle>
                 </div>
                 <Button
@@ -112,33 +140,35 @@ export function ChatDrawer({ onSharedItemClick }: ChatDrawerProps) {
             <div className="flex border-b">
               <button
                 onClick={() => setCurrentView('messages')}
-                className={`flex-1 py-3 text-sm font-medium transition-colors ${
-                  currentView === 'messages'
-                    ? 'text-orange-500 border-b-2 border-orange-500'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`flex-1 py-3 text-sm font-medium transition-colors ${currentView === 'messages'
+                  ? 'text-orange-500 border-b-2 border-orange-500'
+                  : 'text-gray-600 hover:text-gray-900'
+                  }`}
               >
                 Messages
               </button>
               <button
-                onClick={() => setCurrentView('find-friends')}
-                className={`flex-1 py-3 text-sm font-medium transition-colors ${
-                  currentView === 'find-friends'
-                    ? 'text-orange-500 border-b-2 border-orange-500'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Find Friends
-              </button>
-              <button
-                onClick={() => setCurrentView('requests')}
-                className={`flex-1 py-3 text-sm font-medium transition-colors ${
-                  currentView === 'requests'
-                    ? 'text-orange-500 border-b-2 border-orange-500'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                onClick={() => setCurrentView('message-requests')}
+                className={`flex-1 py-3 text-sm font-medium transition-colors relative ${currentView === 'message-requests'
+                  ? 'text-orange-500 border-b-2 border-orange-500'
+                  : 'text-gray-600 hover:text-gray-900'
+                  }`}
               >
                 Requests
+                {pendingRequestCount > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-orange-500 text-white text-xs font-bold rounded-full">
+                    {pendingRequestCount > 9 ? '9+' : pendingRequestCount}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => setCurrentView('find-friends')}
+                className={`flex-1 py-3 text-sm font-medium transition-colors ${currentView === 'find-friends'
+                  ? 'text-orange-500 border-b-2 border-orange-500'
+                  : 'text-gray-600 hover:text-gray-900'
+                  }`}
+              >
+                Find Friends
               </button>
             </div>
 
@@ -149,9 +179,26 @@ export function ChatDrawer({ onSharedItemClick }: ChatDrawerProps) {
                 />
               )}
               {currentView === 'find-friends' && (
-                <FriendFinder
-                  onUserClick={handleUserClick}
-                  onStartConversation={handleStartConversation}
+                <div className="p-4">
+                  <Button
+                    onClick={() => setIsDiscoveryModalOpen(true)}
+                    className="w-full bg-orange-500 hover:bg-orange-600 mb-4"
+                  >
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Find People to Message
+                  </Button>
+                  <FriendFinder
+                    onUserClick={handleUserClick}
+                    onStartConversation={handleStartConversation}
+                  />
+                </div>
+              )}
+              {currentView === 'message-requests' && (
+                <MessageRequestList
+                  onAccept={(conversation) => {
+                    // After accepting, optionally open the conversation
+                    // setSelectedConversation(conversation);
+                  }}
                 />
               )}
               {currentView === 'requests' && (
@@ -161,9 +208,16 @@ export function ChatDrawer({ onSharedItemClick }: ChatDrawerProps) {
                 />
               )}
             </div>
-          </>
-        )}
+            </>
+          );
+        })()}
       </DrawerContent>
+
+      {/* User Discovery Modal */}
+      <UserDiscoveryModal
+        isOpen={isDiscoveryModalOpen}
+        onClose={() => setIsDiscoveryModalOpen(false)}
+      />
     </Drawer>
   );
 }

@@ -1,63 +1,76 @@
 import { useEffect } from 'react';
 import { MessageCircle, Loader2 } from 'lucide-react';
-import { ConversationSkeleton } from './ConversationSkeleton';
-import { NoConversationsEmptyState } from './EmptyState';
 import { useDMChatStore } from '../../stores/chatStore';
 import { useAuthStore } from '../../stores/authStore';
 import { DMConversation } from '../../services/dmChatService';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { cn } from '../ui/utils';
 
-interface ConversationListProps {
-  onSelectConversation: (conversation: DMConversation) => void;
+interface RecentChatsProps {
+  limit?: number;
+  onSelectConversation?: (conversation: DMConversation) => void;
 }
 
-export function ConversationList({
-  onSelectConversation,
-}: ConversationListProps) {
+export function RecentChats({ limit = 5, onSelectConversation }: RecentChatsProps) {
   const { user } = useAuthStore();
-  const { conversations, loadConversations, isLoadingConversations } =
+  const { conversations, loadConversations, isLoadingConversations, openChat, setActiveConversation } =
     useDMChatStore();
 
   useEffect(() => {
     if (user?.id) {
       loadConversations(user.id);
     }
-  }, [user?.id]);
+  }, [user?.id, loadConversations]);
+
+  const handleConversationClick = (conversation: DMConversation) => {
+    setActiveConversation(conversation.id);
+    openChat();
+    if (onSelectConversation) {
+      onSelectConversation(conversation);
+    }
+  };
 
   if (isLoadingConversations) {
-    return <ConversationSkeleton />;
+    return (
+      <div className="flex items-center justify-center h-32">
+        <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+      </div>
+    );
   }
 
-  if (conversations.length === 0) {
+  const recentConversations = conversations.slice(0, limit);
+
+  if (recentConversations.length === 0) {
     return (
-      <NoConversationsEmptyState
-        onStartChat={() => {
-          // This will be handled by ChatDrawer's "Find Friends" tab
-        }}
-      />
+      <div className="flex flex-col items-center justify-center h-32 text-gray-400 px-4">
+        <MessageCircle className="h-8 w-8 mb-2 stroke-1" />
+        <p className="text-sm text-center">No recent chats</p>
+        <p className="text-xs text-center text-gray-400">
+          Start a conversation by sharing something!
+        </p>
+      </div>
     );
   }
 
   return (
-    <div className="divide-y divide-gray-100">
-      {conversations.map((conv) => (
-        <ConversationItem
+    <div className="space-y-2">
+      {recentConversations.map((conv) => (
+        <RecentChatItem
           key={conv.id}
           conversation={conv}
-          onClick={() => onSelectConversation(conv)}
+          onClick={() => handleConversationClick(conv)}
         />
       ))}
     </div>
   );
 }
 
-interface ConversationItemProps {
+interface RecentChatItemProps {
   conversation: DMConversation;
   onClick: () => void;
 }
 
-function ConversationItem({ conversation, onClick }: ConversationItemProps) {
+function RecentChatItem({ conversation, onClick }: RecentChatItemProps) {
   const otherUser = conversation.other_user;
   const lastMessage = conversation.last_message;
   const unreadCount = conversation.unread_count || 0;
@@ -65,7 +78,8 @@ function ConversationItem({ conversation, onClick }: ConversationItemProps) {
   const getPreviewText = () => {
     if (!lastMessage) return 'No messages yet';
     if (lastMessage.shared_item) {
-      return `Shared a ${lastMessage.shared_item.type}`;
+      const itemType = lastMessage.shared_item.type?.toLowerCase() || 'item';
+      return `Shared a ${itemType}`;
     }
     return lastMessage.content || '';
   };
@@ -89,28 +103,27 @@ function ConversationItem({ conversation, onClick }: ConversationItemProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors text-left focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded-lg"
-      aria-label={`Open conversation with ${otherUser?.display_name || 'Unknown'}`}
+      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-left group"
     >
-      <div className="relative">
-        <Avatar className="h-12 w-12">
+      <div className="relative shrink-0">
+        <Avatar className="h-10 w-10">
           <AvatarImage src={otherUser?.avatar_url} />
-          <AvatarFallback className="bg-orange-100 text-orange-600">
+          <AvatarFallback className="bg-orange-100 text-orange-600 text-sm">
             {otherUser?.display_name?.charAt(0)?.toUpperCase() || '?'}
           </AvatarFallback>
         </Avatar>
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-orange-500 text-white text-xs font-bold rounded-full">
+          <span className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center bg-orange-500 text-white text-[10px] font-bold rounded-full">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </div>
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2 mb-1">
           <p
             className={cn(
-              'font-medium truncate',
+              'text-sm font-medium truncate',
               unreadCount > 0 ? 'text-gray-900' : 'text-gray-700'
             )}
           >
@@ -120,7 +133,7 @@ function ConversationItem({ conversation, onClick }: ConversationItemProps) {
         </div>
         <p
           className={cn(
-            'text-sm truncate',
+            'text-xs truncate',
             unreadCount > 0 ? 'text-gray-900 font-medium' : 'text-gray-500'
           )}
         >
@@ -131,5 +144,5 @@ function ConversationItem({ conversation, onClick }: ConversationItemProps) {
   );
 }
 
-export default ConversationList;
+export default RecentChats;
 

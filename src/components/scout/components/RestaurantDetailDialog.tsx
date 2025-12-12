@@ -5,6 +5,7 @@ import { useAuth } from "../../auth/AuthProvider";
 import { toast } from "sonner";
 import { toastHelpers } from "../../../utils/toastHelpers";
 import { MapView } from "./MapView";
+import { SharePostButton } from "../../feed/SharePostButton";
 
 interface Restaurant {
   id: string;
@@ -110,19 +111,7 @@ export function RestaurantDetailDialog({
     setShowMap(true);
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: restaurant.name,
-        text: `Check out ${restaurant.name} on FUZO!`,
-        url: globalThis.location.href,
-      }).catch(() => {
-        // User cancelled share
-      });
-    } else {
-      toast.info('Share feature not available on this device');
-    }
-  };
+  // Removed handleShare - now using SharePostButton component
 
   // Calculate review stats
   const totalReviews = restaurant.reviews?.length || 0;
@@ -168,12 +157,15 @@ export function RestaurantDetailDialog({
           </button>
           
           <div className="absolute top-6 right-5 flex gap-2">
-            <button
-              onClick={handleShare}
-              className="w-11 h-11 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg hover:bg-white transition-colors"
-            >
-              <Share2 className="text-gray-900 w-5 h-5" />
-            </button>
+            <div className="w-11 h-11 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+              <SharePostButton
+                cardId={restaurant.place_id || restaurant.id}
+                title={restaurant.name}
+                imageUrl={restaurant.photos?.[0]}
+                type="RESTAURANT"
+                subtitle={cuisineText}
+              />
+            </div>
             <button
               onClick={() => setLiked(!liked)}
               className="w-11 h-11 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg hover:bg-white transition-colors"

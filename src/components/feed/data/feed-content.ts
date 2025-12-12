@@ -21,6 +21,7 @@ export interface RestaurantCard extends BaseFeedCard {
   tags?: string[];
   ownerImage?: string;
   ownerName?: string;
+  ownerId?: string; // User ID for chat integration
 }
 
 // Masterbot post card (influencer/chef posts)
@@ -35,6 +36,7 @@ export interface MasterbotCard extends BaseFeedCard {
   likes: number;
   restaurantTag?: string;
   tags?: string[];
+  userId?: string; // User ID for chat integration
 }
 
 // Ad card
@@ -56,6 +58,7 @@ export interface RecipeCard extends BaseFeedCard {
   title: string;
   author: string;
   authorImage?: string;
+  authorId?: string; // User ID for chat integration
   imageUrl: string;
   prepTime: string;
   cookTime: string;
@@ -72,6 +75,7 @@ export interface VideoCard extends BaseFeedCard {
   title: string;
   creator: string;
   creatorImage?: string;
+  creatorId?: string; // User ID for chat integration
   thumbnailUrl: string;
   duration: string;
   views: number;
@@ -286,27 +290,27 @@ export const sampleVideos: VideoCard[] = [
 // Ratio: 2 restaurants, 2 masterbot posts, 1 ad, 1 recipe, 1 video (7 cards per cycle)
 export function createMixedFeed(cycles: number = 3): FeedCard[] {
   const feed: FeedCard[] = [];
-  
+
   for (let i = 0; i < cycles; i++) {
     const cycleOffset = i * 7;
-    
+
     // Add 2 restaurants
     feed.push(sampleRestaurants[i % sampleRestaurants.length]);
     feed.push(sampleRestaurants[(i + 1) % sampleRestaurants.length]);
-    
+
     // Add 2 masterbot posts
     feed.push(sampleMasterbotPosts[i % sampleMasterbotPosts.length]);
     feed.push(sampleMasterbotPosts[(i + 1) % sampleMasterbotPosts.length]);
-    
+
     // Add 1 ad
     feed.push(sampleAds[i % sampleAds.length]);
-    
+
     // Add 1 recipe
     feed.push(sampleRecipes[i % sampleRecipes.length]);
-    
+
     // Add 1 video
     feed.push(sampleVideos[i % sampleVideos.length]);
   }
-  
+
   return feed;
 }

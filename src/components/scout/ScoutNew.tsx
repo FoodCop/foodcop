@@ -12,6 +12,7 @@ import { SectionHeading } from '../ui/section-heading';
 import { useAuth } from '../auth/AuthProvider';
 import { savedItemsService } from '../../services';
 import { toastHelpers } from '../../utils/toastHelpers';
+import { SharePostButton } from '../feed/SharePostButton';
 
 // Hook to detect screen size
 function useIsDesktop() {
@@ -549,6 +550,7 @@ export default function ScoutNew() {
 function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ restaurant: Restaurant; onClick?: () => void; onNavigate?: (restaurant: Restaurant) => void }>) {
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$';
   const distanceText = formatDistance(restaurant.distance);
+  const cuisineText = Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(', ') : restaurant.cuisine;
 
   return (
     <button
@@ -577,6 +579,17 @@ function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ 
         <div className="absolute top-3 right-3 bg-white px-3 py-1 rounded-full flex items-center space-x-1">
           <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
           <span className="text-sm font-bold text-gray-900">{restaurant.rating}</span>
+        </div>
+
+        {/* Share to Chat button */}
+        <div className="absolute top-3 right-12">
+          <SharePostButton
+            cardId={restaurant.place_id || restaurant.id}
+            title={restaurant.name}
+            imageUrl={restaurant.photos?.[0]}
+            type="RESTAURANT"
+            subtitle={cuisineText}
+          />
         </div>
 
         {/* Distance badge */}
@@ -623,6 +636,7 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
   const [saving, setSaving] = useState(false);
   const priceLevel = restaurant.price_level ? '$'.repeat(restaurant.price_level) : '$$$';
   const distanceText = `${formatDistance(restaurant.distance)} away`;
+  const cuisineText = Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(', ') : restaurant.cuisine;
 
   const cuisineTypes: string[] = Array.isArray(restaurant.cuisine) ? restaurant.cuisine : [restaurant.cuisine || 'Restaurant'];
 
@@ -698,6 +712,17 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent"></div>
+
+        {/* Share to Chat button */}
+        <div className="absolute top-4 right-4">
+          <SharePostButton
+            cardId={restaurant.place_id || restaurant.id}
+            title={restaurant.name}
+            imageUrl={restaurant.photos?.[0]}
+            type="RESTAURANT"
+            subtitle={cuisineText}
+          />
+        </div>
 
         {/* Bottom content */}
         <div className="absolute bottom-4 left-4 right-4">

@@ -7,18 +7,23 @@ import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { MessageBubble } from './MessageBubble';
+import { MessageRetentionNotice } from './MessageRetentionNotice';
+import { MessageSkeleton } from './ConversationSkeleton';
+import { NoMessagesEmptyState } from './EmptyState';
 
 interface ChatThreadProps {
   conversation: DMConversation;
   onBack: () => void;
   onSharedItemClick?: (item: SharedItem) => void;
+  onAvatarClick?: (userId: string) => void;
 }
 
 export function ChatThread({
   conversation,
   onBack,
   onSharedItemClick,
-}: ChatThreadProps) {
+  onAvatarClick,
+}: Readonly<ChatThreadProps>) {
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuthStore();
@@ -31,6 +36,8 @@ export function ChatThread({
     subscribeToConversation,
     isLoadingMessages,
     isSending,
+    messageStatus,
+    retryMessage,
   } = useDMChatStore();
 
   const conversationMessages = messages[conversation.id] || [];
@@ -77,12 +84,18 @@ export function ChatThread({
         <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0">
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <Avatar className="h-10 w-10">
-          <AvatarImage src={otherUser?.avatar_url} />
-          <AvatarFallback>
-            {otherUser?.display_name?.charAt(0)?.toUpperCase() || '?'}
-          </AvatarFallback>
-        </Avatar>
+        <button
+          onClick={() => onAvatarClick?.(otherUser?.id || '')}
+          className="shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
+          title="View profile"
+        >
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={otherUser?.avatar_url} />
+            <AvatarFallback>
+              {otherUser?.display_name?.charAt(0)?.toUpperCase() || '?'}
+            </AvatarFallback>
+          </Avatar>
+        </button>
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-gray-900 truncate">
             {otherUser?.display_name || 'Unknown'}
@@ -94,29 +107,46 @@ export function ChatThread({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-        {isLoadingMessages ? (
-          <div className="flex items-center justify-center h-full">
-            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-          </div>
-        ) : conversationMessages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400">
-            <p>No messages yet</p>
-            <p className="text-sm">Say hello! 👋</p>
-          </div>
-        ) : (
-          <>
-            {conversationMessages.map((msg) => (
-              <MessageBubble
-                key={msg.id}
-                message={msg}
-                isOwn={msg.sender_id === user?.id}
-                onSharedItemClick={onSharedItemClick}
-              />
-            ))}
-            <div ref={messagesEndRef} />
-          </>
-        )}
+      <div className="flex-1 overflow-y-auto p-4 bg-white">
+        {(() => {
+          if (isLoadingMessages) {
+            return <MessageSkeleton />;
+          }
+          
+          if (conversationMessages.length === 0) {
+            return <NoMessagesEmptyState />;
+          }
+          
+          return (
+            <>
+              {/* Show retention notice only once when there are messages */}
+              {conversationMessages.length > 0 && (
+                <MessageRetentionNotice />
+              )}
+              {conversationMessages.map((msg) => {
+              const status = messageStatus[msg.id] || 'delivered';
+              const handleRetry =
+                msg.sender_id === user?.id && status === 'failed'
+                  ? () => {
+                      retryMessage(conversation.id, user.id, msg.content || '', msg.id);
+                    }
+                  : undefined;
+
+              return (
+                <MessageBubble
+                  key={msg.id}
+                  message={msg}
+                  isOwn={msg.sender_id === user?.id}
+                  onSharedItemClick={onSharedItemClick}
+                  status={status}
+                  onRetry={handleRetry}
+                />
+              );
+              })}
+              <div ref={messagesEndRef} />
+            </>
+          );
+        })()}
       </div>
 
       {/* Input */}
@@ -127,14 +157,16 @@ export function ChatThread({
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type a message..."
-            className="flex-1"
+            className="flex-1 transition-all"
             disabled={isSending}
+            aria-label="Message input"
           />
           <Button
             onClick={handleSend}
             disabled={!inputValue.trim() || isSending}
             size="icon"
-            className="bg-orange-500 hover:bg-orange-600"
+            className="bg-orange-500 hover:bg-orange-600 transition-colors"
+            aria-label="Send message"
           >
             {isSending ? (
               <Loader2 className="h-4 w-4 animate-spin" />

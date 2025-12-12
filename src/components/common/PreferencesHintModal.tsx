@@ -12,8 +12,8 @@ interface PreferencesHintModalProps {
   isEditMode?: boolean;
 }
 
-export function PreferencesHintModal({ 
-  onClose, 
+export function PreferencesHintModal({
+  onClose,
   onPreferencesSet,
   initialPreferences = [],
   isEditMode = false
@@ -54,9 +54,11 @@ export function PreferencesHintModal({
 
     try {
       // Normalize preferences: if "no restrictions" is selected, set empty array
-      const dietaryPrefs = selectedDietary.includes('no restrictions') 
-        ? [] 
+      const dietaryPrefs = selectedDietary.includes('no restrictions')
+        ? []
         : selectedDietary;
+
+      console.log('💾 PreferencesHintModal: Saving preferences and setting hint_shown flag');
 
       const result = await ProfileService.updateProfile({
         dietary_preferences: dietaryPrefs,
@@ -67,42 +69,22 @@ export function PreferencesHintModal({
         throw new Error(result.error || 'Failed to save preferences');
       }
 
+      console.log('✅ PreferencesHintModal: Successfully saved, hint_shown = true');
       toast.success('Preferences saved!');
       onPreferencesSet();
       onClose();
     } catch (error) {
-      console.error('Error saving preferences:', error);
+      console.error('❌ Error saving preferences:', error);
       toast.error('Failed to save preferences. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Skip - set empty preferences and mark hint as shown
-  const handleSkip = async () => {
-    if (!user) {
-      onClose();
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const result = await ProfileService.updateProfile({
-        dietary_preferences: [], // Empty = show all
-        preferences_hint_shown: true
-      });
-
-      if (!result.success) {
-        console.error('Failed to save skip state:', result.error);
-      }
-
-      onClose();
-    } catch (error) {
-      console.error('Error skipping preferences:', error);
-    } finally {
-      setLoading(false);
-    }
+  // Skip - just close modal for now (will show again next time)
+  const handleSkip = () => {
+    console.log('⏭️ PreferencesHintModal: User skipped, NOT setting hint_shown flag (will show again)');
+    if (onClose) onClose();
   };
 
   // Don't show again - just mark hint as shown
@@ -115,17 +97,21 @@ export function PreferencesHintModal({
     setLoading(true);
 
     try {
+      console.log('🚫 PreferencesHintModal: User clicked "Don\'t Show Again", setting hint_shown flag');
+
       const result = await ProfileService.updateProfile({
         preferences_hint_shown: true
       });
 
       if (!result.success) {
-        console.error('Failed to save preference:', result.error);
+        console.error('❌ Failed to save preference:', result.error);
+      } else {
+        console.log('✅ PreferencesHintModal: "Don\'t Show Again" saved, hint_shown = true');
       }
 
       onClose();
     } catch (error) {
-      console.error('Error saving preference:', error);
+      console.error('❌ Error saving preference:', error);
     } finally {
       setLoading(false);
     }
@@ -162,17 +148,16 @@ export function PreferencesHintModal({
               {DIETARY_OPTIONS.map((option) => {
                 const normalized = option.toLowerCase();
                 const isSelected = selectedDietary.includes(normalized);
-                
+
                 return (
                   <button
                     key={option}
                     onClick={() => toggleDietary(option)}
                     disabled={loading}
-                    className={`py-3 px-4 rounded-xl font-medium transition-all ${
-                      isSelected
+                    className={`py-3 px-4 rounded-xl font-medium transition-all ${isSelected
                         ? 'bg-orange-500 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    } disabled:opacity-50`}
+                      } disabled:opacity-50`}
                   >
                     {option}
                   </button>
@@ -196,7 +181,7 @@ export function PreferencesHintModal({
             >
               {loading ? 'Saving...' : isEditMode ? 'Update Preferences' : 'Save Preferences'}
             </button>
-            
+
             {!isEditMode && (
               <div className="flex gap-3">
                 <button

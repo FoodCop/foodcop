@@ -15,6 +15,7 @@ import { NavigationHints } from './components/common/NavigationHints'
 import { UniversalViewerProvider, useUniversalViewer } from './contexts/UniversalViewerContext'
 import { UniversalViewer } from './components/ui/universal-viewer/UniversalViewer'
 import { ChatDrawer } from './components/chat'
+import { useChatNotifications } from './hooks/useChatNotifications'
 import './App.css'
 import './styles/mobile.css'
 
@@ -139,6 +140,9 @@ function AppLayout() {
   const location = useLocation()
   const navigate = useNavigate()
   const { viewerState, closeViewer, navigateViewer, deleteHandler } = useUniversalViewer()
+  
+  // Enable chat notifications
+  useChatNotifications()
 
   // Apply color mode to CSS variable
   useEffect(() => {

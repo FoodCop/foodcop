@@ -23,6 +23,9 @@ import { FriendFinder } from '../friends/FriendFinder';
 import { UserProfileView } from '../friends/UserProfileView';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { RecentChats } from './RecentChats';
+import { useDMChatStore } from '../../stores/chatStore';
+import { MessageCircle } from 'lucide-react';
 
 type TabType = 'dashboard' | 'posts' | 'recipes' | 'videos' | 'places';
 
@@ -114,13 +117,19 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
   useEffect(() => {
     const checkPreferencesHint = async () => {
       if (!user) return;
-      
+
       try {
         const profileResult = await ProfileService.getProfile();
         if (profileResult.success && profileResult.data) {
-          // Show hint if preferences_hint_shown is false or undefined
-          if (!profileResult.data.preferences_hint_shown) {
+          const hintShown = profileResult.data.preferences_hint_shown === true;
+          console.log('🔍 PlateMobile: preferences_hint_shown =', hintShown);
+          
+          // Only show hint if explicitly false or undefined
+          if (!hintShown) {
+            console.log('✅ PlateMobile: Showing preferences hint modal');
             setShowPreferencesHint(true);
+          } else {
+            console.log('❌ PlateMobile: Hint already shown, skipping modal');
           }
         }
       } catch (error) {
@@ -129,9 +138,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
     };
 
     checkPreferencesHint();
-  }, [user]);
-  
-  // Get location from geolocation if profile doesn't have it
+  }, [user]);  // Get location from geolocation if profile doesn't have it
   useEffect(() => {
     const fetchGeolocation = async () => {
       // Only fetch if profile doesn't have location
@@ -725,6 +732,30 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                     </Button>
                   </div>
                 )}
+              </div>
+            </div>
+          </section>
+
+          {/* Recent Chats */}
+          <section className="mb-6">
+            <div className="px-5 mb-4 flex items-center justify-between">
+              <SectionHeading>Recent Chats</SectionHeading>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const { openChat } = useDMChatStore.getState();
+                  openChat();
+                }}
+                className="text-xs text-[#FF6B35] hover:text-[#FF6B35] hover:bg-orange-50"
+              >
+                <MessageCircle className="h-3 w-3 mr-1" />
+                View All
+              </Button>
+            </div>
+            <div className="px-5">
+              <div className="bg-white rounded-2xl p-4 shadow-sm">
+                <RecentChats limit={5} />
               </div>
             </div>
           </section>

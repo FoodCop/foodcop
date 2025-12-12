@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Check, X, Loader2, UserPlus, Users } from 'lucide-react';
+import { Check, X, Loader2, Users } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { FriendService, type FriendData } from '../../services/friendService';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
@@ -10,7 +10,7 @@ interface FriendRequestListProps {
   onStartConversation?: (userId: string) => void;
 }
 
-export function FriendRequestList({ onUserClick, onStartConversation }: FriendRequestListProps) {
+export function FriendRequestList({ onUserClick, onStartConversation }: Readonly<FriendRequestListProps>) {
   const { user } = useAuthStore();
   const [friendData, setFriendData] = useState<{
     friends: FriendData[];
@@ -18,6 +18,7 @@ export function FriendRequestList({ onUserClick, onStartConversation }: FriendRe
     outgoingRequests: FriendData[];
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,10 +31,13 @@ export function FriendRequestList({ onUserClick, onStartConversation }: FriendRe
     if (!user?.id) return;
 
     setIsLoading(true);
+    setError(null);
     const result = await FriendService.fetchAllFriendData(user.id);
     
     if (result.success && result.data) {
       setFriendData(result.data);
+    } else {
+      setError(result.error || 'Failed to load friend data');
     }
     
     setIsLoading(false);
@@ -94,6 +98,17 @@ export function FriendRequestList({ onUserClick, onStartConversation }: FriendRe
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-48 text-gray-400 px-4">
+        <p className="text-center text-red-500 mb-4">{error}</p>
+        <Button onClick={loadFriendData} variant="outline" size="sm">
+          Try Again
+        </Button>
+      </div>
+    );
+  }
+
   const incomingCount = friendData?.incomingRequests.length || 0;
   const outgoingCount = friendData?.outgoingRequests.length || 0;
 
@@ -118,7 +133,7 @@ export function FriendRequestList({ onUserClick, onStartConversation }: FriendRe
             Incoming Requests ({incomingCount})
           </h3>
           <div className="divide-y divide-gray-100">
-            {friendData!.incomingRequests.map((request) => {
+            {friendData.incomingRequests.map((request) => {
               const isLoading = actionLoading === request.friendshipId;
 
               return (
@@ -186,7 +201,7 @@ export function FriendRequestList({ onUserClick, onStartConversation }: FriendRe
             Outgoing Requests ({outgoingCount})
           </h3>
           <div className="divide-y divide-gray-100">
-            {friendData!.outgoingRequests.map((request) => {
+            {friendData.outgoingRequests.map((request) => {
               const isLoading = actionLoading === request.friendshipId;
 
               return (

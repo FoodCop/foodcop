@@ -10,6 +10,7 @@ import { backendService, formatGooglePlaceResult, getGooglePlacesPhotoUrl } from
 import { getDirections, type TravelMode, type Route } from '../../services/googleDirections';
 import type { GooglePlace } from '../../types';
 import { mapSavedItemToRestaurant, calculateDistanceKm } from '../../utils/savedRestaurantMapper';
+import { SharePostButton } from '../feed/SharePostButton';
 
 // Format distance: meters for < 1km, kilometers for >= 1km
 const formatDistance = (distanceKm: number | undefined): string => {
@@ -925,6 +926,18 @@ export function ScoutDesktop() {
                     <Heart size={18} />
                     Save to Plate
                   </button>
+                  <div className="flex items-center justify-center border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    <SharePostButton
+                      cardId={selectedRestaurant.id}
+                      title={selectedRestaurant.name}
+                      imageUrl={selectedRestaurant.image || selectedRestaurant.photos?.[0]}
+                      type="RESTAURANT"
+                      subtitle={Array.isArray(selectedRestaurant.cuisine) ? selectedRestaurant.cuisine.join(', ') : selectedRestaurant.cuisine}
+                      variant="light"
+                      className="!text-gray-700 hover:!bg-gray-100"
+                    />
+                    <span className="pr-4 text-gray-700 font-medium text-sm">Share to Chat</span>
+                  </div>
                 </div>
 
                 {/* Stats Grid */}
