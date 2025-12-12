@@ -1,7 +1,8 @@
 /* NewLandingPage CSS - Self-contained styling */
 
 .new-landing-page {
-  --background: #FAFAFA; /* Default, changed by toggle */
+  --background: #FAFAFA;
+  /* Default, changed by toggle */
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
@@ -148,126 +149,145 @@
 /* Heading Styles - Large Font Sizes */
 .new-landing-page .heading-hero-mobile {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 4rem; /* 64px */
+  font-size: 4rem;
+  /* 64px */
   font-weight: 700;
   line-height: 1.1;
 }
 
 .new-landing-page .heading-hero-desktop {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 6rem; /* 96px */
+  font-size: 6rem;
+  /* 96px */
   font-weight: 700;
   line-height: 1.1;
 }
 
 @media (min-width: 768px) {
   .new-landing-page .heading-hero-desktop {
-    font-size: 8rem; /* 128px */
+    font-size: 8rem;
+    /* 128px */
   }
 }
 
 @media (min-width: 1024px) {
   .new-landing-page .heading-hero-desktop {
-    font-size: 9rem; /* 144px */
+    font-size: 9rem;
+    /* 144px */
   }
 }
 
 .new-landing-page .heading-pin-food {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 3.5rem; /* 56px */
+  font-size: 3.5rem;
+  /* 56px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 @media (min-width: 768px) {
   .new-landing-page .heading-pin-food {
-    font-size: 5.5rem; /* 88px */
+    font-size: 5.5rem;
+    /* 88px */
   }
 }
 
 @media (min-width: 1024px) {
   .new-landing-page .heading-pin-food {
-    font-size: 6.5rem; /* 104px */
+    font-size: 6.5rem;
+    /* 104px */
   }
 }
 
 .new-landing-page .heading-cook-watch-mobile {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 3.5rem; /* 56px */
+  font-size: 3.5rem;
+  /* 56px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 .new-landing-page .heading-cook-watch-desktop {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 5rem; /* 80px */
+  font-size: 5rem;
+  /* 80px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 @media (min-width: 768px) {
   .new-landing-page .heading-cook-watch-desktop {
-    font-size: 7rem; /* 112px */
+    font-size: 7rem;
+    /* 112px */
   }
 }
 
 .new-landing-page .heading-food-storyboard-mobile {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 3.5rem; /* 56px */
+  font-size: 3.5rem;
+  /* 56px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 .new-landing-page .heading-food-storyboard-desktop {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 5rem; /* 80px */
+  font-size: 5rem;
+  /* 80px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 @media (min-width: 768px) {
   .new-landing-page .heading-food-storyboard-desktop {
-    font-size: 7rem; /* 112px */
+    font-size: 7rem;
+    /* 112px */
   }
 }
 
 .new-landing-page .heading-tako-mobile {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 3.5rem; /* 56px */
+  font-size: 3.5rem;
+  /* 56px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 .new-landing-page .heading-tako-desktop {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 5rem; /* 80px */
+  font-size: 5rem;
+  /* 80px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 @media (min-width: 768px) {
   .new-landing-page .heading-tako-desktop {
-    font-size: 7rem; /* 112px */
+    font-size: 7rem;
+    /* 112px */
   }
 }
 
 .new-landing-page .heading-explore-mobile {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 3.5rem; /* 56px */
+  font-size: 3.5rem;
+  /* 56px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 .new-landing-page .heading-explore-desktop {
   font-family: 'Google Sans Flex', sans-serif;
-  font-size: 5rem; /* 80px */
+  font-size: 5rem;
+  /* 80px */
   font-weight: 700;
   line-height: 1.2;
 }
 
 @media (min-width: 768px) {
   .new-landing-page .heading-explore-desktop {
-    font-size: 7rem; /* 112px */
+    font-size: 7rem;
+    /* 112px */
   }
 }
 
@@ -278,31 +298,35 @@
 
 .new-landing-page .body-text-mobile {
   font-family: 'IBM Plex Serif', serif;
-  font-size: 1.125rem; /* 18px */
+  font-size: 1.125rem;
+  /* 18px */
   line-height: 1.6;
 }
 
 .new-landing-page .body-text-desktop {
   font-family: 'IBM Plex Serif', serif;
-  font-size: 1.25rem; /* 20px */
+  font-size: 1.25rem;
+  /* 20px */
   line-height: 1.7;
 }
 
 @media (min-width: 768px) {
   .new-landing-page .body-text-desktop {
-    font-size: 1.5rem; /* 24px */
+    font-size: 1.5rem;
+    /* 24px */
   }
 }
 
 @media (min-width: 1024px) {
   .new-landing-page .body-text-desktop {
-    font-size: 1.75rem; /* 28px */
+    font-size: 1.75rem;
+    /* 28px */
   }
 }
 
-/* Button Styles - Orange with White Text, Courier Prime Font */
+/* Button Styles - Orange with White Text, Roboto Font */
 .new-landing-page button {
-  font-family: 'Courier Prime', monospace;
+  font-family: 'Roboto', sans-serif;
   background-color: #F14C35;
   color: #ffffff;
   border: none;

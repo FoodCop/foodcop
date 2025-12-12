@@ -101,13 +101,16 @@
   }
 
   /* Headings use Google Sans Flex */
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: 'Google Sans Flex', sans-serif;
   }
 
   /* H1 uses deep red color */
   h1 {
-    color: #8B0000; /* Deep red for page headings */
+    color: #8B0000;
+    /* Deep red for page headings */
   }
 
   /* H2 uses dark grey color */
@@ -126,15 +129,18 @@
   :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
     h1 {
       font-family: 'Google Sans Flex', sans-serif;
-      font-size: var(--text-xl); /* Reduced from text-2xl */
+      font-size: var(--text-xl);
+      /* Reduced from text-2xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
-      color: #8B0000; /* Deep red for page headings */
+      color: #8B0000;
+      /* Deep red for page headings */
     }
 
     h2 {
       font-family: 'Google Sans Flex', sans-serif;
-      font-size: var(--text-lg); /* Reduced from text-xl */
+      font-size: var(--text-lg);
+      /* Reduced from text-xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
       color: #1A1A1A;
@@ -142,7 +148,8 @@
 
     h3:not([class*="text-card-heading"]):not([style*="font-family"]) {
       font-family: 'Google Sans Flex', sans-serif;
-      font-size: var(--text-base); /* Reduced from text-lg */
+      font-size: var(--text-base);
+      /* Reduced from text-lg */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
     }
@@ -168,7 +175,7 @@
     }
 
     button {
-      font-family: 'Courier Prime', monospace;
+      font-family: 'Roboto', sans-serif;
       font-size: var(--text-base);
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
@@ -186,13 +193,13 @@ html {
   font-size: var(--font-size);
 }
 
-/* Global button font - Courier Prime for all buttons, toasts, and notifications */
+/* Global button font - Roboto for all buttons, toasts, and notifications */
 button,
 [role="button"],
 [data-sonner-toast] button,
 .toast button,
 .notification button {
-  font-family: 'Courier Prime', monospace !important;
+  font-family: 'Roboto', sans-serif !important;
 }
 
 /* Ensure CardHeading and SectionHeading components override global h2/h3 styles */
@@ -222,17 +229,19 @@ h2.text-lg {
 
 .feed-card-mobile {
   width: 100%;
-  max-width: 420px; /* mobile card max width */
+  max-width: 420px;
+  /* mobile card max width */
   margin: 0 auto 16px;
   background: var(--card);
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
 
 .feed-card-hero {
   width: 100%;
-  height: 300px; /* fixed hero height for mobile */
+  height: 300px;
+  /* fixed hero height for mobile */
   object-fit: cover;
   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
 }
@@ -251,6 +260,7 @@ h2.text-lg {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -261,6 +271,7 @@ h2.text-lg {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.8) !important;
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1) !important;

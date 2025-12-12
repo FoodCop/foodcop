@@ -56,12 +56,12 @@ const colorMap = {
 };
 
 export const gamifiedToast = (options: GamifiedToastOptions) => {
-  const { 
-    message, 
-    type, 
-    title, 
-    showContinue = false, 
-    onContinue, 
+  const {
+    message,
+    type,
+    title,
+    showContinue = false,
+    onContinue,
     continueText = 'Continue',
     position = 'top-center'
   } = options;
@@ -72,17 +72,17 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
   // Create a unique key for this toast based on message and type
   const toastKey = `${type}-${message}`;
   const now = Date.now();
-  
+
   // Check if this exact toast was shown recently
   const lastShown = activeToasts.get(toastKey);
   if (lastShown && (now - lastShown) < TOAST_COOLDOWN) {
     // Toast was shown recently, don't show it again
     return null;
   }
-  
+
   // Mark this toast as shown
   activeToasts.set(toastKey, now);
-  
+
   // Clean up old entries (older than cooldown period)
   for (const [key, timestamp] of activeToasts.entries()) {
     if (now - timestamp > TOAST_COOLDOWN) {
@@ -99,7 +99,7 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
             // Cleanup handled by Sonner
           };
         }, []);
-        
+
         return createPortal(
           <>
             {/* Backdrop */}
@@ -110,7 +110,7 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                 animation: 'fadeIn 0.2s ease-out',
               }}
             />
-            
+
             {/* Toast Container */}
             <div
               className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-md w-[90%] z-[9999] bg-white rounded-xl shadow-lg p-6 pointer-events-auto border-2"
@@ -123,16 +123,16 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center flex-1">
                   {/* Logo - no background, as-is */}
-                  <div 
+                  <div
                     className="w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 p-2"
                   >
-                    <img 
+                    <img
                       src="/logo_white.png"
                       alt="FUZO"
                       className="w-full h-full object-contain"
                     />
                   </div>
-                  
+
                   {/* Title and Message - grey text on white background */}
                   <div className="flex-1 min-w-0">
                     <h3 className="text-base font-semibold text-gray-800 mb-1">
@@ -143,7 +143,7 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Action Button - Continue or Close */}
                 {showContinue ? (
                   <button
@@ -154,7 +154,7 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                     className="ml-4 px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105 flex-shrink-0"
                     style={{
                       backgroundColor: colors.bg,
-                      fontFamily: "'Courier Prime', monospace",
+                      fontFamily: "'Roboto', sans-serif",
                     }}
                   >
                     {continueText}
@@ -174,10 +174,10 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
           document.body
         );
       };
-      
+
       return <CenterToast />;
     }
-    
+
     // Regular toast (non-center) - rendered normally by Sonner
     return (
       <div className="relative">
@@ -189,56 +189,56 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
             fontSize: '12pt',
           }}
         >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center flex-1">
-          {/* Logo - no background, as-is */}
-          <div 
-            className="w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 p-2"
-          >
-            <img 
-              src="/logo_white.png"
-              alt="FUZO"
-              className="w-full h-full object-contain"
-            />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center flex-1">
+              {/* Logo - no background, as-is */}
+              <div
+                className="w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 p-2"
+              >
+                <img
+                  src="/logo_white.png"
+                  alt="FUZO"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+
+              {/* Title and Message - grey text on white background */}
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base font-semibold text-gray-800 mb-1">
+                  {displayTitle}
+                </h3>
+                <p className="text-sm" style={{ color: '#808080' }}>
+                  {message}
+                </p>
+              </div>
+            </div>
+
+            {/* Action Button - Continue or Close */}
+            {showContinue ? (
+              <button
+                onClick={() => {
+                  onContinue?.();
+                  toast.dismiss(t);
+                }}
+                className="ml-4 px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105 flex-shrink-0"
+                style={{
+                  backgroundColor: colors.bg,
+                }}
+              >
+                {continueText}
+              </button>
+            ) : (
+              <button
+                onClick={() => toast.dismiss(t)}
+                className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Close"
+              >
+                <i className="fa-solid fa-xmark text-lg" />
+              </button>
+            )}
           </div>
-          
-          {/* Title and Message - grey text on white background */}
-          <div className="flex-1 min-w-0">
-            <h3 className="text-base font-semibold text-gray-800 mb-1">
-              {displayTitle}
-            </h3>
-            <p className="text-sm" style={{ color: '#808080' }}>
-              {message}
-            </p>
-          </div>
-        </div>
-        
-        {/* Action Button - Continue or Close */}
-        {showContinue ? (
-          <button
-            onClick={() => {
-              onContinue?.();
-              toast.dismiss(t);
-            }}
-            className="ml-4 px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105 flex-shrink-0"
-            style={{
-              backgroundColor: colors.bg,
-            }}
-          >
-            {continueText}
-          </button>
-        ) : (
-          <button
-            onClick={() => toast.dismiss(t)}
-            className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Close"
-          >
-            <i className="fa-solid fa-xmark text-lg" />
-          </button>
-        )}
         </div>
       </div>
-    </div>
     );
   }, {
     duration: showContinue ? Infinity : 4000,
