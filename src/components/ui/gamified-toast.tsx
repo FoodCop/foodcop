@@ -9,6 +9,9 @@ interface GamifiedToastOptions {
   showContinue?: boolean;
   onContinue?: () => void;
   continueText?: string;
+  showSecondary?: boolean;
+  onSecondary?: () => void;
+  secondaryText?: string;
   position?: 'center' | 'top-center' | 'bottom-center';
 }
 
@@ -63,6 +66,9 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
     showContinue = false,
     onContinue,
     continueText = 'Continue',
+    showSecondary = false,
+    onSecondary,
+    secondaryText = "Don't Show Again",
     position = 'top-center'
   } = options;
   const colors = colorMap[type];
@@ -145,29 +151,48 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                 </div>
 
                 {/* Action Button - Continue or Close */}
-                {showContinue ? (
-                  <button
-                    onClick={() => {
-                      onContinue?.();
-                      toast.dismiss(t);
-                    }}
-                    className="ml-4 px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105 flex-shrink-0"
-                    style={{
-                      backgroundColor: colors.bg,
-                      fontFamily: "'Roboto', sans-serif",
-                    }}
-                  >
-                    {continueText}
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => toast.dismiss(t)}
-                    className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-                    aria-label="Close"
-                  >
-                    <i className="fa-solid fa-xmark text-lg" />
-                  </button>
-                )}
+                <div className="flex gap-2 ml-4 flex-shrink-0 items-center">
+                  {showSecondary && (
+                    <button
+                      onClick={() => {
+                        onSecondary?.();
+                        toast.dismiss(t);
+                      }}
+                      className="px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg font-medium text-xs transition-all"
+                      style={{
+                        fontFamily: "'Roboto', sans-serif",
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {secondaryText}
+                    </button>
+                  )}
+
+                  {showContinue ? (
+                    <button
+                      onClick={() => {
+                        onContinue?.();
+                        toast.dismiss(t);
+                      }}
+                      className="px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105"
+                      style={{
+                        backgroundColor: colors.bg,
+                        fontFamily: "'Roboto', sans-serif",
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {continueText}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => toast.dismiss(t)}
+                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                      aria-label="Close"
+                    >
+                      <i className="fa-solid fa-xmark text-lg" />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </>,
@@ -214,28 +239,47 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
             </div>
 
             {/* Action Button - Continue or Close */}
-            {showContinue ? (
-              <button
-                onClick={() => {
-                  onContinue?.();
-                  toast.dismiss(t);
-                }}
-                className="ml-4 px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105 flex-shrink-0"
-                style={{
-                  backgroundColor: colors.bg,
-                }}
-              >
-                {continueText}
-              </button>
-            ) : (
-              <button
-                onClick={() => toast.dismiss(t)}
-                className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label="Close"
-              >
-                <i className="fa-solid fa-xmark text-lg" />
-              </button>
-            )}
+            <div className="flex gap-2 ml-4 flex-shrink-0 items-center">
+              {showSecondary && (
+                <button
+                  onClick={() => {
+                    onSecondary?.();
+                    toast.dismiss(t);
+                  }}
+                  className="px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg font-medium text-xs transition-all"
+                  style={{
+                    fontFamily: "'Roboto', sans-serif",
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {secondaryText}
+                </button>
+              )}
+
+              {showContinue ? (
+                <button
+                  onClick={() => {
+                    onContinue?.();
+                    toast.dismiss(t);
+                  }}
+                  className="px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105"
+                  style={{
+                    backgroundColor: colors.bg,
+                    fontFamily: "'Roboto', sans-serif",
+                  }}
+                >
+                  {continueText}
+                </button>
+              ) : (
+                <button
+                  onClick={() => toast.dismiss(t)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label="Close"
+                >
+                  <i className="fa-solid fa-xmark text-lg" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -245,4 +289,3 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
     position: isCenter ? undefined : position, // Let Sonner handle non-center positions
   });
 };
-

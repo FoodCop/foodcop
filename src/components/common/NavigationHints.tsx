@@ -86,19 +86,30 @@ export function NavigationHints() {
       toastHelpers.navigationHint(
         currentHint.description,
         {
-          label: 'Continue',
+          label: 'Got it',
           onClick: () => {
-            // Mark as dismissed when user clicks Continue
+            // "Got it" -> Just close for now, don't mark as permanently dismissed
+            // It will be added to shownHints below automatically
+            console.log('User acknowledged hint, closing temporary');
+          }
+        },
+        currentHint.title, // Use the hint title (e.g., "Watch Cooking Videos")
+        {
+          label: "Don't Show Again",
+          onClick: () => {
+            // "Don't Show Again" -> Mark as permanently dismissed in localStorage
             const newDismissed = new Set(dismissedHints);
             newDismissed.add(currentHint.id);
             setDismissedHints(newDismissed);
             localStorage.setItem('dismissed-navigation-hints', JSON.stringify(Array.from(newDismissed)));
+            console.log('User silenced hint permanently:', currentHint.id);
           }
-        },
-        currentHint.title // Use the hint title (e.g., "Watch Cooking Videos")
+        }
       );
-      
-      // Mark as shown so it doesn't appear again on this page
+
+      // Mark as shown so it doesn't appear again on this page RELOAD/session
+      // But if they didn't click "Don't Show Again", it WILL show next time they visit the app/route in a new session
+      // (Assuming `shownHints` is state-only, which it is)
       setShownHints(prev => new Set(prev).add(currentHint.id));
     }
   }, [location.pathname, dismissedHints, shownHints]);

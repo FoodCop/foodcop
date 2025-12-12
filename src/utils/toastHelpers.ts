@@ -18,20 +18,20 @@ const TOAST_COOLDOWN = 3000; // 3 seconds
 const shouldShowToast = (key: string): boolean => {
   const now = Date.now();
   const lastShown = recentToasts.get(key);
-  
+
   if (lastShown && (now - lastShown) < TOAST_COOLDOWN) {
     return false; // Too soon, don't show
   }
-  
+
   recentToasts.set(key, now);
-  
+
   // Clean up old entries
   for (const [k, timestamp] of recentToasts.entries()) {
     if (now - timestamp > TOAST_COOLDOWN * 2) {
       recentToasts.delete(k);
     }
   }
-  
+
   return true;
 };
 
@@ -42,7 +42,7 @@ export const toastHelpers = {
   success: (message: string, action?: ToastAction) => {
     const key = `success-${message}`;
     if (!shouldShowToast(key)) return null;
-    
+
     return gamifiedToast({
       message,
       type: 'success',
@@ -59,7 +59,7 @@ export const toastHelpers = {
   error: (message: string, action?: ToastAction) => {
     const key = `error-${message}`;
     if (!shouldShowToast(key)) return null;
-    
+
     return gamifiedToast({
       message,
       type: 'error',
@@ -78,7 +78,7 @@ export const toastHelpers = {
     const fullMessage = description ? `${message}\n${description}` : message;
     const key = `info-${fullMessage}`;
     if (!shouldShowToast(key)) return null;
-    
+
     return gamifiedToast({
       message: fullMessage,
       type: 'info',
@@ -93,7 +93,7 @@ export const toastHelpers = {
     const fullMessage = description ? `${message}\n${description}` : message;
     const key = `warning-${fullMessage}`;
     if (!shouldShowToast(key)) return null;
-    
+
     return gamifiedToast({
       message: fullMessage,
       type: 'warning',
@@ -114,10 +114,10 @@ export const toastHelpers = {
   /**
    * Show navigation hint toast - unified format matching saved toasts (centered for visibility)
    */
-  navigationHint: (message: string, action?: ToastAction, title?: string) => {
+  navigationHint: (message: string, action?: ToastAction, title?: string, secondaryAction?: ToastAction) => {
     const key = `navigationHint-${message}`;
     if (!shouldShowToast(key)) return null;
-    
+
     return gamifiedToast({
       message,
       type: 'info',
@@ -125,6 +125,9 @@ export const toastHelpers = {
       showContinue: !!action,
       onContinue: action?.onClick,
       continueText: action?.label || 'Continue',
+      showSecondary: !!secondaryAction,
+      onSecondary: secondaryAction?.onClick,
+      secondaryText: secondaryAction?.label || "Don't Show Again",
       position: 'center', // Navigation hints appear in center for first-time guidance
     });
   },
@@ -137,17 +140,17 @@ export const toastHelpers = {
     if (isDuplicate) {
       const key = `saved-duplicate-${itemName}`;
       if (!shouldShowToast(key)) return null;
-      
+
       return gamifiedToast({
         message: `${itemName} is already in your Plate`,
         type: 'info',
         title: 'Info',
       });
     }
-    
+
     const key = `saved-${itemName}`;
     if (!shouldShowToast(key)) return null;
-    
+
     return gamifiedToast({
       message: `${itemName} saved to Plate`,
       type: 'success',
@@ -164,7 +167,7 @@ export const toastHelpers = {
   comingSoon: (feature: string) => {
     const key = `comingSoon-${feature}`;
     if (!shouldShowToast(key)) return null;
-    
+
     return gamifiedToast({
       message: `${feature} will be available in a future update`,
       type: 'info',
