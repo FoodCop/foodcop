@@ -88,7 +88,7 @@ export class DMChatService {
       // If users are friends, create as 'active', otherwise 'pending'
       const status = isFriend ? 'active' : 'pending';
       const acceptedAt = isFriend ? new Date().toISOString() : null;
-      
+
       const { data, error } = await supabase
         .from('dm_conversations')
         .insert({
@@ -348,7 +348,7 @@ export class DMChatService {
         sender: Array.isArray(msg.sender) ? msg.sender[0] : msg.sender,
       }));
 
-      return { success: true, data: messages.toReversed() };
+      return { success: true, data: [...messages].reverse() };
     } catch (error) {
       console.error('💥 Error in fetchMessages:', error);
       return {
