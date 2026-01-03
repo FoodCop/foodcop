@@ -1,18 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Camera, X, Star, Trophy, Award, Medal } from 'lucide-react';
-import { Button } from '../ui/button';
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
-import { Label } from '../ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Badge } from '../ui/badge';
+import { Camera, X, Star, MapPin, Clock, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { useAuth } from '../auth/AuthProvider';
 import { SavedItemsService } from '../../services/savedItemsService';
-import { cn } from '../ui/utils';
+import { MinimalHeader } from '../common/MinimalHeader';
 
 // Mock mode - set to true to bypass camera and use mock photo
 const MOCK_CAMERA_MODE = false;
@@ -30,34 +22,39 @@ interface CapturedPhoto {
 }
 
 const cuisineTypes = [
-  'Italian', 'Chinese', 'Japanese', 'Mexican', 'Indian', 
-  'Thai', 'French', 'American', 'Mediterranean', 'Korean',
-  'Vietnamese', 'Spanish', 'Greek', 'Middle Eastern', 'Other'
-];
-
-const gamificationMessages = [
-  { icon: Trophy, message: "Restaurant Explorer!", color: "text-yellow-500" },
-  { icon: Award, message: "Food Critic!", color: "text-purple-500" },
-  { icon: Medal, message: "Taste Master!", color: "text-blue-500" },
-  { icon: Star, message: "Culinary Detective!", color: "text-green-500" }
+  { icon: 'fa-solid fa-pizza-slice', label: 'Italian' },
+  { icon: 'fa-solid fa-bowl-food', label: 'Chinese' },
+  { icon: 'fa-solid fa-fish', label: 'Japanese' },
+  { icon: 'fa-solid fa-pepper-hot', label: 'Mexican' },
+  { icon: 'fa-solid fa-pepper-hot', label: 'Indian' },
+  { icon: 'fa-solid fa-bowl-rice', label: 'Thai' },
+  { icon: 'fa-solid fa-baguette', label: 'French' },
+  { icon: 'fa-solid fa-burger', label: 'American' },
+  { icon: 'fa-solid fa-salad', label: 'Mediterranean' },
+  { icon: 'fa-solid fa-bowl-rice', label: 'Korean' },
+  { icon: 'fa-solid fa-bowl-rice', label: 'Vietnamese' },
+  { icon: 'fa-solid fa-pepper-hot', label: 'Spanish' },
+  { icon: 'fa-solid fa-salad', label: 'Greek' },
+  { icon: 'fa-solid fa-pepper-hot', label: 'Middle Eastern' },
+  { icon: 'fa-solid fa-utensils', label: 'Other' }
 ];
 
 export function Snap() {
-  const { user } = useAuth();  // Add authentication
+  const { user } = useAuth();
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [showTagging, setShowTagging] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [saving, setSaving] = useState(false);  // Add saving state
+  const [saving, setSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   
   // Form states
   const [restaurantName, setRestaurantName] = useState('');
   const [cuisine, setCuisine] = useState('');
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState('');
-  const [gamificationReward, setGamificationReward] = useState<typeof gamificationMessages[0] | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -75,7 +72,9 @@ export function Snap() {
   useEffect(() => {
     return () => {
       if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+        for (const track of stream.getTracks()) {
+          track.stop();
+        }
       }
     };
   }, [stream]);
@@ -83,7 +82,7 @@ export function Snap() {
   const getGeolocation = (): Promise<PhotoMetadata> => {
     return new Promise((resolve) => {
       if (!navigator.geolocation) {
-        toast.error('Geolocation is not supported by your browser');
+        toast.error('Geolocation is not supported');
         resolve({
           latitude: null,
           longitude: null,
@@ -101,10 +100,10 @@ export function Snap() {
             timestamp: new Date(),
             accuracy: position.coords.accuracy
           });
-          toast.success('Location captured successfully!');
+          toast.success('Location captured!');
         },
         (_error) => {
-          toast.error('Unable to get location. Photo will be saved without location data.');
+          toast.error('Unable to get location');
           resolve({
             latitude: null,
             longitude: null,
@@ -138,7 +137,7 @@ export function Snap() {
       }
       setShowCamera(true);
     } catch (error) {
-      toast.error('Unable to access camera. Please grant camera permissions.');
+      toast.error('Unable to access camera');
       console.error('Camera access error:', error);
     }
   };
@@ -152,23 +151,19 @@ export function Snap() {
 
     if (!context) return;
 
-    // Set canvas dimensions to video dimensions
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
-    // Draw video frame to canvas
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Get image data
     const imageData = canvas.toDataURL('image/jpeg', 0.9);
 
-    // Get geolocation
-    toast.info('Capturing location data...');
+    toast.info('Capturing location...');
     const metadata = await getGeolocation();
 
-    // Stop camera stream
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      for (const track of stream.getTracks()) {
+        track.stop();
+      }
     }
 
     setCapturedPhoto({ imageData, metadata });
@@ -179,7 +174,6 @@ export function Snap() {
   const handleDisclaimerContinue = () => {
     setShowDisclaimer(false);
     if (MOCK_CAMERA_MODE) {
-      // Show mock camera screen
       setShowCamera(true);
     } else {
       startCamera();
@@ -187,22 +181,19 @@ export function Snap() {
   };
 
   const createMockPhoto = async () => {
-    // Create a mock photo with a colored placeholder
     const canvas = document.createElement('canvas');
     canvas.width = 800;
     canvas.height = 600;
     const ctx = canvas.getContext('2d');
     
     if (ctx) {
-      // Create a gradient background
       const gradient = ctx.createLinearGradient(0, 0, 800, 600);
-      gradient.addColorStop(0, '#FF6B6B');
+      gradient.addColorStop(0, '#FF6B35');
       gradient.addColorStop(0.5, '#FFE66D');
       gradient.addColorStop(1, '#4ECDC4');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, 800, 600);
       
-      // Add text
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 48px sans-serif';
       ctx.textAlign = 'center';
@@ -210,13 +201,11 @@ export function Snap() {
       ctx.fillText('🍕 Mock Food Photo', 400, 250);
       ctx.font = '24px sans-serif';
       ctx.fillText('This is a placeholder for testing', 400, 320);
-      ctx.fillText('Tagging flow', 400, 360);
     }
     
     const imageData = canvas.toDataURL('image/jpeg', 0.9);
     
-    // Get mock geolocation (San Francisco coordinates)
-    toast.info('Using mock location data...');
+    toast.info('Using mock location...');
     const metadata: PhotoMetadata = {
       latitude: 37.7749,
       longitude: -122.4194,
@@ -240,7 +229,6 @@ export function Snap() {
   };
 
   const handleTaggingSubmit = async () => {
-    // Check authentication first
     if (!user) {
       toast.error('Please sign in to save photos');
       return;
@@ -263,13 +251,12 @@ export function Snap() {
     try {
       setSaving(true);
       
-      // Create photo metadata for saved_items
       const photoMetadata = {
         restaurant_name: restaurantName,
         cuisine_type: cuisine,
         rating: rating,
         description: description,
-        image_data: capturedPhoto.imageData,  // Base64 image data
+        image_data: capturedPhoto.imageData,
         latitude: capturedPhoto.metadata.latitude,
         longitude: capturedPhoto.metadata.longitude,
         timestamp: capturedPhoto.metadata.timestamp.toISOString(),
@@ -277,25 +264,20 @@ export function Snap() {
         content_type: 'photo'
       };
 
-      // Save to plate using savedItemsService
       const savedItemsService = new SavedItemsService();
       const result = await savedItemsService.saveItem({
-        itemId: `photo-${Date.now()}`,  // Generate unique ID
+        itemId: `photo-${Date.now()}`,
         itemType: 'photo',
         metadata: photoMetadata
       });
 
       if (result.success) {
-        // Show gamification reward
-        const reward = gamificationMessages[Math.floor(Math.random() * gamificationMessages.length)];
-        setGamificationReward(reward);
-
+        setShowSuccess(true);
         toastHelpers.saved('Photo');
         
-        // Reset after showing reward
         setTimeout(() => {
           resetForm();
-          setGamificationReward(null);
+          setShowSuccess(false);
           setShowTagging(false);
         }, 2000);
       } else {
@@ -303,7 +285,7 @@ export function Snap() {
       }
     } catch (error) {
       console.error('Error submitting photo:', error);
-      toast.error('Failed to save photo. Please try again.');
+      toast.error('Failed to save photo');
     } finally {
       setSaving(false);
     }
@@ -319,7 +301,9 @@ export function Snap() {
 
   const handleCancel = () => {
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      for (const track of stream.getTracks()) {
+        track.stop();
+      }
     }
     setShowCamera(false);
     setShowTagging(false);
@@ -331,249 +315,303 @@ export function Snap() {
     setRating(value === rating ? 0 : value);
   };
 
-  return (
-    <div className="w-full h-full flex items-center justify-center bg-background relative">
-      {/* Disclaimer Modal */}
-      <Dialog open={showDisclaimer} onOpenChange={setShowDisclaimer}>
-        <DialogContent className="max-w-md mx-4 bg-white z-50">
-          <DialogHeader>
-            <DialogTitle>Welcome to SNAP! 📸</DialogTitle>
-          </DialogHeader>
-          <div className="pt-4 space-y-3 text-sm">
-            <p className="text-muted-foreground">This is a family-friendly site focused solely on food photography.</p>
-            <div>
-              <p className="text-foreground mb-2">Please be respectful and post only:</p>
-              <ul className="list-disc list-inside space-y-1 ml-2 text-muted-foreground">
-                <li>Food photos</li>
-                <li>Restaurant frontages</li>
-              </ul>
-            </div>
-            <p className="text-muted-foreground">Please avoid selfies and egregious or lewd photos.</p>
-          </div>
-          <DialogFooter>
-            <Button onClick={handleDisclaimerContinue} className="w-full">
-              Continue
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Camera View */}
-      {showCamera && (
-        <div className="fixed inset-0 bg-black z-50 flex flex-col">
-          <div className="flex-1 relative overflow-hidden">
-            {MOCK_CAMERA_MODE ? (
-              // Mock camera viewfinder
-              <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900">
-                <div className="text-center space-y-6 p-8">
-                  <Camera className="h-32 w-32 text-white/30 mx-auto" />
-                  <div className="space-y-2">
-                    <h2 className="text-white/90">Mock Camera Mode</h2>
-                    <p className="text-white/60">Click the camera button below to capture</p>
-                  </div>
-                  {/* Camera grid overlay */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    <div className="w-full h-full grid grid-cols-3 grid-rows-3">
-                      <div className="border-r border-b border-white/10"></div>
-                      <div className="border-r border-b border-white/10"></div>
-                      <div className="border-b border-white/10"></div>
-                      <div className="border-r border-b border-white/10"></div>
-                      <div className="border-r border-b border-white/10"></div>
-                      <div className="border-b border-white/10"></div>
-                      <div className="border-r border-white/10"></div>
-                      <div className="border-r border-white/10"></div>
-                      <div></div>
-                    </div>
-                  </div>
-                </div>
+  // Disclaimer Screen
+  if (showDisclaimer) {
+    return (
+      <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen">
+        {/* Content */}
+        <div className="px-5 py-8">
+          <div className="bg-white rounded-2xl shadow-[0_2px_8px_0_rgba(0,0,0,0.1)] p-6 space-y-6">
+            <div className="text-center mb-6">
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#EA580C] flex items-center justify-center">
+                <Camera className="w-12 h-12 text-white" />
               </div>
-            ) : (
-              // Real camera video feed
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                className="w-full h-full object-cover"
-              />
-            )}
-            <canvas ref={canvasRef} className="hidden" />
-          </div>
-          
-          <div className="bg-black/80 p-6 flex flex-col gap-4">
-            <div className="flex items-center justify-center gap-4">
-              <Button
-                onClick={handleCancel}
-                variant="outline"
-                size="icon"
-                className="h-12 w-12 rounded-full"
-              >
-                <X className="h-6 w-6" />
-              </Button>
-              
-              <Button
-                onClick={handleCameraCapture}
-                size="icon"
-                className="h-16 w-16 rounded-full bg-white hover:bg-gray-200"
-              >
-                <Camera className="h-8 w-8 text-black" />
-              </Button>
+              <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Welcome to SNAP!</h2>
+              <p className="text-gray-600 text-sm">Share your food discoveries</p>
             </div>
+
+            <div className="space-y-4 text-sm">
+              <p className="text-gray-700">This is a family-friendly site focused solely on food photography.</p>
+              
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                <p className="font-semibold text-green-900 mb-2">✅ Please post:</p>
+                <ul className="space-y-1 ml-4 text-green-800">
+                  <li className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>Food photos</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>Restaurant frontages</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>Meal presentations</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                <p className="font-semibold text-red-900 mb-2">❌ Please avoid:</p>
+                <ul className="space-y-1 ml-4 text-red-800">
+                  <li className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>Selfies or people photos</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span>•</span>
+                    <span>Inappropriate content</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <button
+              onClick={handleDisclaimerContinue}
+              className="w-full h-12 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+            >
+              Continue to Camera
+            </button>
           </div>
         </div>
-      )}
+      </div>
+    );
+  }
 
-      {/* Tagging Modal */}
-      <DialogPrimitive.Root open={showTagging} onOpenChange={(open) => !open && handleCancel()}>
-        <DialogPrimitive.Portal>
-          {/* Custom overlay with no background */}
-          <DialogPrimitive.Overlay className="fixed inset-0 bg-transparent z-40" />
-          <DialogPrimitive.Content 
-            className={cn(
-              "fixed left-[50%] top-[50%] z-50 grid w-full max-w-2xl translate-x-[-50%] translate-y-[-50%] gap-4 bg-white p-6 shadow-2xl duration-200 border-0 rounded-lg",
-              "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
-              "max-h-[90vh] overflow-y-auto mx-4"
-            )}
-          >
-            <div className="flex flex-col space-y-1.5 text-center sm:text-left">
-              <DialogPrimitive.Title className="text-lg font-semibold leading-none tracking-tight text-gray-900">
-                Tag Your Photo
-              </DialogPrimitive.Title>
-              <DialogPrimitive.Description className="text-sm text-gray-700">
-                Add details about the restaurant and food
-              </DialogPrimitive.Description>
-            </div>
-
-          {gamificationReward ? (
-            <div className="flex flex-col items-center justify-center py-12 gap-4">
-              <gamificationReward.icon className={`h-24 w-24 ${gamificationReward.color}`} />
-              <h3 className={gamificationReward.color}>{gamificationReward.message}</h3>
-              <Badge variant="secondary" className="px-4 py-2">
-                +10 Points
-              </Badge>
+  // Camera Screen
+  if (showCamera) {
+    return (
+      <div className="fixed inset-0 bg-black z-50 flex flex-col">
+        <div className="flex-1 relative overflow-hidden">
+          {MOCK_CAMERA_MODE ? (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+              <div className="text-center space-y-6 p-8">
+                <Camera className="h-32 w-32 text-white/30 mx-auto" />
+                <div className="space-y-2">
+                  <h2 className="text-white text-xl font-semibold">Mock Camera Mode</h2>
+                  <p className="text-white/60">Click capture button below</p>
+                </div>
+              </div>
+              {/* Grid overlay */}
+              <div className="absolute inset-0 pointer-events-none grid grid-cols-3 grid-rows-3">
+                {[...new Array(9)].map((_, i) => (
+                  <div key={`grid-${i}`} className="border border-white/10" />
+                ))}
+              </div>
             </div>
           ) : (
-            <div className="space-y-6">
-              {/* Photo Preview */}
-              {capturedPhoto && (
-                <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-                  <img 
-                    src={capturedPhoto.imageData} 
-                    alt="Captured" 
-                    className="w-full h-full object-cover"
-                  />
-                  {capturedPhoto.metadata.latitude && capturedPhoto.metadata.longitude && (
-                    <Badge className="absolute top-2 right-2 bg-green-600">
-                      Location Captured
-                    </Badge>
-                  )}
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          )}
+          <canvas ref={canvasRef} className="hidden" />
+        </div>
+        
+        {/* Camera Controls */}
+        <div className="bg-black/90 p-6 flex flex-col gap-4">
+          <div className="flex items-center justify-center gap-8">
+            <button
+              onClick={handleCancel}
+              className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
+            
+            <button
+              onClick={handleCameraCapture}
+              className="w-16 h-16 rounded-full bg-white hover:bg-gray-100 transition-colors flex items-center justify-center shadow-lg"
+            >
+              <Camera className="w-8 h-8 text-[#FF6B35]" />
+            </button>
+
+            <div className="w-12 h-12" /> {/* Spacer for centering */}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tagging Screen
+  if (showTagging) {
+    // Success screen
+    if (showSuccess) {
+      return (
+        <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex items-center justify-center">
+          <div className="text-center px-8">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center animate-bounce">
+              <Heart className="w-12 h-12 text-white fill-white" />
+            </div>
+            <h2 className="font-[Poppins] font-bold text-2xl text-gray-900 mb-2">Saved! 🎉</h2>
+            <p className="text-gray-600">Your food photo is now in your Plate</p>
+            <div className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] text-white rounded-full font-semibold">
+              <span>+10 Points</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen">
+        {/* Content */}
+        <div className="px-5 py-6 space-y-6">
+          {/* Photo Preview */}
+          {capturedPhoto && (
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-[0_2px_8px_0_rgba(0,0,0,0.1)]">
+              <img 
+                src={capturedPhoto.imageData} 
+                alt="Captured" 
+                className="w-full h-full object-cover"
+              />
+              {Boolean(capturedPhoto.metadata.latitude && capturedPhoto.metadata.longitude) && (
+                <div className="absolute top-3 right-3 flex items-center gap-1 px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+                  <MapPin className="w-3 h-3" />
+                  <span>Located</span>
                 </div>
               )}
-
-              {/* Form */}
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="restaurant-name">
-                    Restaurant Name <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="restaurant-name"
-                    value={restaurantName}
-                    onChange={(e) => setRestaurantName(e.target.value)}
-                    placeholder="Enter restaurant name"
-                  />
+              {capturedPhoto.metadata.timestamp && (
+                <div className="absolute bottom-3 left-3 flex items-center gap-1 px-3 py-1 bg-black/50 text-white text-xs font-semibold rounded-full">
+                  <Clock className="w-3 h-3" />
+                  <span>{new Date(capturedPhoto.metadata.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cuisine">
-                    Type of Cuisine <span className="text-destructive">*</span>
-                  </Label>
-                  <Select value={cuisine} onValueChange={setCuisine}>
-                    <SelectTrigger id="cuisine" className="relative z-10">
-                      <SelectValue placeholder="Select cuisine type" />
-                    </SelectTrigger>
-                    <SelectContent className="z-[9999] bg-white border-2 shadow-xl">
-                      {cuisineTypes.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Rating (Optional)</Label>
-                  <div className="flex gap-2">
-                    {[1, 2, 3, 4, 5].map((value) => (
-                      <button
-                        key={value}
-                        type="button"
-                        onClick={() => handleRatingClick(value)}
-                        className="transition-transform hover:scale-110"
-                      >
-                        <Star
-                          className={`h-8 w-8 ${
-                            value <= rating
-                              ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description (Optional)</Label>
-                  <Textarea
-                    id="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Tell us about your experience..."
-                    rows={4}
-                  />
-                </div>
-              </div>
+              )}
             </div>
           )}
 
-          {!gamificationReward && (
-            <DialogFooter className="flex-col sm:flex-row gap-2">
-              {/* Authentication Status */}
-              <div className="w-full text-sm text-gray-600 mb-2">
-                {user ? (
-                  <span className="text-green-600">✅ Signed in as {user.email}</span>
-                ) : (
-                  <span className="text-red-600">❌ Please sign in to save photos</span>
-                )}
-              </div>
-              
-              <Button onClick={handleCancel} variant="outline" className="w-full sm:w-auto">
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleTaggingSubmit} 
-                className="w-full sm:w-auto"
-                disabled={saving || !user}
-              >
-                {saving ? 'Saving...' : 'Save to Plate'}
-              </Button>
-            </DialogFooter>
-          )}
-        </DialogPrimitive.Content>
-        </DialogPrimitive.Portal>
-      </DialogPrimitive.Root>
+          {/* Form */}
+          <div className="space-y-5">
+            {/* Restaurant Name */}
+            <div className="space-y-2">
+              <label htmlFor="restaurant-name" className="text-sm font-semibold text-gray-900">
+                Restaurant Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="restaurant-name"
+                type="text"
+                value={restaurantName}
+                onChange={(e) => setRestaurantName(e.target.value)}
+                placeholder="e.g. Joe's Pizza"
+                className="w-full h-12 px-4 bg-[#F5F5F5] border-none rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
+              />
+            </div>
 
-      {/* Default State - Show button to start */}
-      {!showCamera && !showTagging && !showDisclaimer && (
-        <div className="flex flex-col items-center gap-4 p-8">
-          <Camera className="h-16 w-16 text-muted-foreground" />
-          <h2>Ready to SNAP?</h2>
-          <Button onClick={() => setShowDisclaimer(true)} size="lg">
-            Start Camera
-          </Button>
+            {/* Cuisine Type */}
+            <div className="space-y-2">
+              <label htmlFor="cuisine-type" className="text-sm font-semibold text-gray-900">
+                Type of Cuisine <span className="text-red-500">*</span>
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {cuisineTypes.map((type) => (
+                  <button
+                    key={type.label}
+                    onClick={() => setCuisine(type.label)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      cuisine === type.label
+                        ? 'bg-[#FF6B35] text-white shadow-md'
+                        : 'bg-[#F5F5F5] text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <i className={type.icon} style={{ fontSize: '10pt' }}></i>
+                    {type.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Rating */}
+            <div className="space-y-2">
+              <label htmlFor="rating" className="text-sm font-semibold text-gray-900">Rating (Optional)</label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <button
+                    key={value}
+                    onClick={() => handleRatingClick(value)}
+                    className="transition-transform hover:scale-110 active:scale-95"
+                  >
+                    <Star
+                      className={`w-10 h-10 ${
+                        value <= rating
+                          ? 'fill-yellow-400 text-yellow-400'
+                          : 'text-gray-300'
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="space-y-2">
+              <label htmlFor="description" className="text-sm font-semibold text-gray-900">Description (Optional)</label>
+              <textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Tell us about your experience..."
+                rows={4}
+                className="w-full px-4 py-3 bg-[#F5F5F5] border-none rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FF6B35] resize-none"
+              />
+            </div>
+          </div>
+
+          {/* Auth Status */}
+          {!user && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+              <p className="text-sm text-red-800">
+                ❌ Please sign in to save photos
+              </p>
+            </div>
+          )}
+
+          {user && (
+            <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+              <p className="text-sm text-green-800">
+                ✅ Signed in as {user.email}
+              </p>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex gap-3">
+            <button
+              onClick={handleCancel}
+              className="flex-1 h-12 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleTaggingSubmit}
+              disabled={saving || !user}
+              className="flex-1 h-12 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {saving ? 'Saving...' : 'Save to Plate'}
+            </button>
+          </div>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  // Default State
+  return (
+    <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex flex-col" style={{ fontSize: '10pt' }}>
+      <MinimalHeader showLogo={true} logoPosition="left" />
+      <div className="flex-1 flex items-center justify-center">
+      <div className="text-center px-8">
+        <Camera className="w-24 h-24 text-gray-400 mx-auto mb-6" />
+        <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Ready to SNAP?</h2>
+        <p className="text-gray-600 mb-6">Capture and share your food moments</p>
+        <button
+          onClick={() => setShowDisclaimer(true)}
+          className="px-8 py-3 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+        >
+          Start Camera
+        </button>
+      </div>
+      </div>
     </div>
   );
 }

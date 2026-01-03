@@ -78,7 +78,7 @@ const MEAL_TYPES = [
   { id: 'dessert', label: 'Dessert' },
 ];
 
-export default function BitesNewMobile() {
+export default function BitesMobile() {
   const isDesktop = useIsDesktop();
   const { user } = useAuth();
   const { openViewer } = useUniversalViewer();

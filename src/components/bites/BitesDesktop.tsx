@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Masonry from 'react-masonry-css';
 import { 
   Search, 
   Clock, 
@@ -9,6 +10,8 @@ import {
 } from 'lucide-react';
 import { SpoonacularService } from '../../services/spoonacular';
 import type { Recipe } from './components/RecipeCard';
+import { AdCard } from './components/AdCard';
+import { mixRecipesWithAds, isAd, type BitesContent } from '../../utils/contentMixer';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
@@ -30,6 +33,8 @@ const BitesDesktop: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recommendedRecipes, setRecommendedRecipes] = useState<Recipe[]>([]);
+  const [mixedContent, setMixedContent] = useState<BitesContent[]>([]);
+  const [mixedRecommended, setMixedRecommended] = useState<BitesContent[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
@@ -94,6 +99,13 @@ const BitesDesktop: React.FC = () => {
         
         setRecommendedRecipes(allRecipes.slice(0, 6));
         setRecipes(allRecipes);
+        
+        // Mix recipes with ads
+        const mixedRec = mixRecipesWithAds(allRecipes.slice(0, 6), false);
+        const mixedAll = mixRecipesWithAds(allRecipes, false);
+        console.log(`📊 Setting mixed content - Recommended: ${mixedRec.length}, All: ${mixedAll.length}`);
+        setMixedRecommended(mixedRec);
+        setMixedContent(mixedAll);
       }
     } catch (err) {
       setError('Failed to load recipes');
@@ -123,6 +135,7 @@ const BitesDesktop: React.FC = () => {
       });
       if (results.success && results.data?.results) {
         setRecipes(results.data.results);
+        setMixedContent(mixRecipesWithAds(results.data.results, false));
       }
     } catch (err) {
       setError('Failed to load filtered recipes');
@@ -178,6 +191,7 @@ const BitesDesktop: React.FC = () => {
       });
       if (results.success && results.data?.results) {
         setRecipes(results.data.results);
+        setMixedContent(mixRecipesWithAds(results.data.results, false));
       }
     } catch (err) {
       setError('Failed to search recipes');
@@ -336,42 +350,73 @@ const BitesDesktop: React.FC = () => {
         )}
 
         {/* Recommended Section */}
-        {!loading && !error && recommendedRecipes.length > 0 && selectedFilter === 'All' && (
+        {!loading && !error && mixedRecommended.length > 0 && selectedFilter === 'All' && (
           <section className="mb-12">
             <div className="mb-6">
               <SectionHeading>Recommended For You</SectionHeading>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recommendedRecipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  recipe={recipe}
-                  onClick={() => handleRecipeClick(recipe)}
-                  onSave={(e) => handleSaveRecipe(recipe, e)}
-                  onShare={(e) => handleShareRecipe(recipe, e)}
-                />
+            <Masonry
+              breakpointCols={{
+                default: 3,
+                1400: 3,
+                1024: 2,
+                768: 2
+              }}
+              className="masonry-grid"
+              columnClassName="masonry-grid-column"
+            >
+              {mixedRecommended.map((item) => (
+                isAd(item) ? (
+                  <AdCard key={item.id} ad={item} />
+                ) : (
+                  <RecipeCard
+                    key={item.id}
+                    recipe={item}
+                    onClick={() => handleRecipeClick(item)}
+                    onSave={(e) => handleSaveRecipe(item, e)}
+                    onShare={(e) => handleShareRecipe(item, e)}
+                  />
+                )
               ))}
-            </div>
+            </Masonry>
           </section>
         )}
 
         {/* All Recipes Grid */}
-        {!loading && !error && recipes.length > 0 && (
+        {!loading && !error && mixedContent.length > 0 && (
           <section>
             <SectionHeading className="mb-6">
               {selectedFilter === 'All' ? 'All Recipes' : `${selectedFilter} Recipes`}
+              {console.log('🔍 Rendering mixed content, total items:', mixedContent.length, 'First 5:', mixedContent.slice(0, 5))}
             </SectionHeading>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  recipe={recipe}
-                  onClick={() => handleRecipeClick(recipe)}
-                  onSave={(e) => handleSaveRecipe(recipe, e)}
-                  onShare={(e) => handleShareRecipe(recipe, e)}
-                />
-              ))}
-            </div>
+            <Masonry
+              breakpointCols={{
+                default: 3,
+                1400: 3,
+                1024: 2,
+                768: 2
+              }}
+              className="masonry-grid"
+              columnClassName="masonry-grid-column"
+            >
+              {mixedContent.map((item) => {
+                const itemIsAd = isAd(item);
+                if (itemIsAd) {
+                  console.log('🎯 Rendering ad:', item.id);
+                }
+                return itemIsAd ? (
+                  <AdCard key={item.id} ad={item} />
+                ) : (
+                  <RecipeCard
+                    key={item.id}
+                    recipe={item}
+                    onClick={() => handleRecipeClick(item)}
+                    onSave={(e) => handleSaveRecipe(item, e)}
+                    onShare={(e) => handleShareRecipe(item, e)}
+                  />
+                );
+              })}
+            </Masonry>
           </section>
         )}
 

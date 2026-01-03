@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
-import { Clock, Shuffle, Search, SlidersHorizontal, Star } from "lucide-react";
+import Masonry from 'react-masonry-css';
+import { Shuffle, Search, SlidersHorizontal } from "lucide-react";
 import type { Recipe } from "./components/RecipeCard";
+import { RecipeCard } from "./components/RecipeCard";
+import { AdCard } from "./components/AdCard";
 import { RecipeDetailDialog } from "./components/RecipeDetailDialog";
 import { SpoonacularService } from "../../services/spoonacular";
 import { useAuth } from "../auth/AuthProvider";
 import { SectionHeading } from "../ui/section-heading";
-import { CardHeading } from "../ui/card-heading";
 import { ProfileService } from "../../services/profileService";
 import { PreferencesFilterDrawer } from "../common/PreferencesFilterDrawer";
 import type { UserProfile } from "../../types/profile";
 import { toast } from "sonner";
 import { DIETARY_OPTIONS } from "../../types/onboarding";
 import { SidebarPanel, SidebarSection } from "../common/SidebarPanel";
+import { mixRecipesWithAds, isAd, type BitesContent } from '../../utils/contentMixer';
 
 // Spoonacular API response types
 interface SpoonacularRecipe {
@@ -55,14 +58,18 @@ const dietCategories = [
   { id: 'ketogenic', label: 'Keto', emoji: '🥑' },
 ];
 
-export default function BitesNew() {
+export default function Bites() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDiets, setSelectedDiets] = useState<string[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [fallbackRecipes, setFallbackRecipes] = useState<Recipe[]>([]); // For when main results are sparse
+  const [mixedRecommended, setMixedRecommended] = useState<BitesContent[]>([]);
+  const [mixedMightLike, setMixedMightLike] = useState<BitesContent[]>([]);
+  const [mixedSimilar, setMixedSimilar] = useState<BitesContent[]>([]); // For fallback content
   const [loading, setLoading] = useState(false);
+  const [loadingFallback, setLoadingFallback] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -94,6 +101,7 @@ export default function BitesNew() {
   const loadRecipes = async (query: string) => {
     setLoading(true);
     setError(null);
+    setFallbackRecipes([]); // Clear fallback recipes when new search starts
     
     try {
       // Fetch user preferences
@@ -109,10 +117,11 @@ export default function BitesNew() {
       const { getSpoonacularDietParam } = await import('../../utils/preferenceMapper');
       const dietParam = getSpoonacularDietParam(userPreferences);
 
-      // Build search params
+      // Build search params - increase number based on preferences
+      const hasPreferences = userPreferences.length > 0;
       const searchParams: Parameters<typeof SpoonacularService.searchRecipes>[0] = {
         query,
-        number: 12
+        number: hasPreferences ? 24 : 12 // Request more when filtering
       };
 
       // Add diet filter if user has preferences
@@ -153,6 +162,11 @@ export default function BitesNew() {
         }
         
         setRecipes(finalRecipes);
+        
+        // If we got fewer than 6 results, fetch fallback recipes with relaxed filters
+        if (finalRecipes.length < 6 && dietParam) {
+          loadFallbackRecipes(query, userPreferences);
+        }
       } else {
         setError(result.error || "Failed to load recipes");
       }
@@ -161,6 +175,69 @@ export default function BitesNew() {
       console.error("Recipe loading error:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Load fallback recipes with relaxed dietary restrictions
+  const loadFallbackRecipes = async (query: string, userPreferences: string[]) => {
+    setLoadingFallback(true);
+    
+    try {
+      console.log('📦 Loading fallback recipes to supplement sparse results...');
+      
+      // Strategy: Remove strictest filters first, keep major ones
+      // Priority: Keep vegan/vegetarian, relax gluten-free, dairy-free, etc.
+      const relaxedPrefs = userPreferences.filter(pref => 
+        pref === 'vegan' || pref === 'vegetarian'
+      );
+      
+      const { getSpoonacularDietParam } = await import('../../utils/preferenceMapper');
+      const relaxedDietParam = getSpoonacularDietParam(relaxedPrefs);
+      
+      const fallbackParams: Parameters<typeof SpoonacularService.searchRecipes>[0] = {
+        query: query || 'popular healthy recipes',
+        number: 12
+      };
+      
+      if (relaxedDietParam) {
+        fallbackParams.diet = relaxedDietParam;
+      }
+      
+      const result = await SpoonacularService.searchRecipes(fallbackParams);
+      
+      if (result.success && result.data?.results) {
+        const transformedRecipes: Recipe[] = result.data.results.map((recipe: SpoonacularRecipe) => ({
+          id: recipe.id,
+          title: recipe.title,
+          image: recipe.image,
+          readyInMinutes: recipe.readyInMinutes || 30,
+          servings: recipe.servings || 4,
+          diets: recipe.diets || [],
+          cuisines: recipe.cuisines || [],
+          summary: recipe.summary || "No description available.",
+          instructions: recipe.instructions || "",
+          extendedIngredients: recipe.extendedIngredients || [],
+          sourceUrl: recipe.sourceUrl,
+          aggregateLikes: recipe.aggregateLikes,
+          healthScore: recipe.healthScore,
+          pricePerServing: recipe.pricePerServing,
+          analyzedInstructions: recipe.analyzedInstructions,
+          preparationMinutes: recipe.preparationMinutes,
+          cookingMinutes: recipe.cookingMinutes,
+        }));
+        
+        // Filter out any duplicates with main recipes
+        const mainRecipeIds = new Set(recipes.map(r => r.id));
+        const uniqueFallbacks = transformedRecipes.filter(r => !mainRecipeIds.has(r.id));
+        
+        console.log(`✅ Loaded ${uniqueFallbacks.length} fallback recipes`);
+        setFallbackRecipes(uniqueFallbacks);
+      }
+    } catch (err) {
+      console.error('Fallback recipe loading error:', err);
+      // Don't show error for fallback loading
+    } finally {
+      setLoadingFallback(false);
     }
   };
 
@@ -175,11 +252,6 @@ export default function BitesNew() {
     }
   }, [searchQuery]);
 
-  const handleDietToggle = (diet: string) => {
-    setSelectedDiets((prev) =>
-      prev.includes(diet) ? prev.filter((d) => d !== diet) : [...prev, diet]
-    );
-  };
 
   const toggleDesktopDietary = (option: string) => {
     const normalized = option.toLowerCase();
@@ -258,8 +330,27 @@ export default function BitesNew() {
     return matchesSearch && matchesDiets;
   });
 
+  // Use fallback recipes to supplement main results when sparse
+  const filteredFallbackRecipes = fallbackRecipes.filter((recipe) => {
+    const matchesSearch = recipe.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesDiets =
+      selectedDiets.length === 0 ||
+      selectedDiets.some((diet) => recipe.diets.includes(diet));
+    return matchesSearch && matchesDiets;
+  });
+
   const recommendedRecipes = filteredRecipes.slice(0, 3);
   const mightLikeRecipes = filteredRecipes.slice(3);
+  const similarRecipes = filteredFallbackRecipes; // All fallback recipes go here
+  
+  // Mix recipes with ads - using useEffect to update when filtered recipes change
+  useEffect(() => {
+    setMixedRecommended(mixRecipesWithAds(recommendedRecipes, false));
+    setMixedMightLike(mixRecipesWithAds(mightLikeRecipes, false));
+    setMixedSimilar(mixRecipesWithAds(similarRecipes, false));
+  }, [recipes, fallbackRecipes, searchQuery, selectedDiets]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
@@ -415,12 +506,13 @@ export default function BitesNew() {
           )}
 
           {/* Empty State */}
-          {filteredRecipes.length === 0 && !loading && !error && (
+          {filteredRecipes.length === 0 && !loading && !error && !loadingFallback && (
             <div className="px-5 text-center py-12">
               <div className="w-16 h-16 rounded-full bg-[#F3F4F6] flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">🔍</span>
               </div>
-              <p className="text-[#6B7280] text-sm">No recipes found. Try adjusting your filters.</p>
+              <p className="text-[#6B7280] text-sm mb-2">No recipes found matching your criteria.</p>
+              <p className="text-[#9CA3AF] text-xs">Try adjusting your filters or search terms.</p>
             </div>
           )}
 
@@ -430,39 +522,24 @@ export default function BitesNew() {
               <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
                 <SectionHeading>Recommended for You</SectionHeading>
               </div>
-              <div className="px-5 md:px-8 lg:px-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                {recommendedRecipes.map((recipe) => (
-                  <div
-                    key={recipe.id}
-                    onClick={() => handleRecipeClick(recipe)}
-                    className="bg-white rounded-2xl shadow-[_-2px_4px_12px_4px_rgba(51,51,51,0.05)] overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
-                  >
-                    <div className="relative h-32 md:h-40 lg:h-48">
-                      <img
-                        src={recipe.image}
-                        alt={recipe.title}
-                        className="w-full h-full object-cover"
+              <div className="px-5 md:px-8 lg:px-12">
+                <Masonry
+                  breakpointCols={{ default: 4, 1400: 4, 1024: 3, 768: 2, 640: 2 }}
+                  className="masonry-grid"
+                  columnClassName="masonry-grid-column"
+                >
+                  {mixedRecommended.map((item) => (
+                    isAd(item) ? (
+                      <AdCard key={item.id} ad={item} />
+                    ) : (
+                      <RecipeCard
+                        key={item.id}
+                        recipe={item}
+                        onClick={() => handleRecipeClick(item)}
                       />
-                      {recipe.healthScore && recipe.healthScore > 70 && (
-                        <div className="absolute top-2 md:top-3 left-2 md:left-3 flex items-center gap-1 px-2 md:px-3 py-1 rounded-full bg-green-500 text-white">
-                          <Star className="w-3 h-3 md:w-4 md:h-4" />
-                          <span className="text-xs md:text-sm font-bold">Healthy</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-3 md:p-4">
-                      <CardHeading variant="accent" size="sm" lineClamp={2} className="mb-2">
-                        {recipe.title}
-                      </CardHeading>
-                      <div className="flex items-center text-[#6B7280] text-xs md:text-sm">
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3 md:w-4 md:h-4" />
-                          <span>{recipe.readyInMinutes} min</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    )
+                  ))}
+                </Masonry>
               </div>
             </section>
           )}
@@ -473,39 +550,60 @@ export default function BitesNew() {
               <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
                 <SectionHeading>You Might Also Like</SectionHeading>
               </div>
-              <div className="px-5 md:px-8 lg:px-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                {mightLikeRecipes.map((recipe) => (
-                  <div
-                    key={recipe.id}
-                    onClick={() => handleRecipeClick(recipe)}
-                    className="bg-white rounded-2xl shadow-[_-2px_4px_12px_4px_rgba(51,51,51,0.05)] overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
-                  >
-                    <div className="relative h-32 md:h-40 lg:h-48">
-                      <img
-                        src={recipe.image}
-                        alt={recipe.title}
-                        className="w-full h-full object-cover"
+              <div className="px-5 md:px-8 lg:px-12">
+                <Masonry
+                  breakpointCols={{ default: 4, 1400: 4, 1024: 3, 768: 2, 640: 2 }}
+                  className="masonry-grid"
+                  columnClassName="masonry-grid-column"
+                >
+                  {mixedMightLike.map((item) => (
+                    isAd(item) ? (
+                      <AdCard key={item.id} ad={item} />
+                    ) : (
+                      <RecipeCard
+                        key={item.id}
+                        recipe={item}
+                        onClick={() => handleRecipeClick(item)}
                       />
-                      {recipe.healthScore && recipe.healthScore > 70 && (
-                        <div className="absolute top-2 md:top-3 left-2 md:left-3 flex items-center gap-1 px-2 py-1 rounded-full bg-green-500 text-white">
-                          <Star className="w-3 h-3 md:w-4 md:h-4" />
-                          <span className="text-xs md:text-sm font-bold">Healthy</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-3 md:p-4">
-                      <CardHeading variant="accent" size="sm" lineClamp={2} className="mb-2">
-                        {recipe.title}
-                      </CardHeading>
-                      <div className="flex items-center text-[#6B7280] text-xs md:text-sm">
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3 md:w-4 md:h-4" />
-                          <span>{recipe.readyInMinutes} min</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    )
+                  ))}
+                </Masonry>
+              </div>
+            </section>
+          )}
+
+          {/* Similar Recipes (Fallback content with relaxed filters) */}
+          {!loading && !error && mixedSimilar.length > 0 && (
+            <section className="mb-6 md:mb-8">
+              <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
+                <SectionHeading>
+                  More Options for You
+                  {loadingFallback && (
+                    <span className="ml-2 text-xs text-gray-500">Loading...</span>
+                  )}
+                </SectionHeading>
+                <p className="text-xs md:text-sm text-gray-600 mt-1">
+                  These recipes match most of your preferences
+                </p>
+              </div>
+              <div className="px-5 md:px-8 lg:px-12">
+                <Masonry
+                  breakpointCols={{ default: 4, 1400: 4, 1024: 3, 768: 2, 640: 2 }}
+                  className="masonry-grid"
+                  columnClassName="masonry-grid-column"
+                >
+                  {mixedSimilar.map((item) => (
+                    isAd(item) ? (
+                      <AdCard key={item.id} ad={item} />
+                    ) : (
+                      <RecipeCard
+                        key={item.id}
+                        recipe={item}
+                        onClick={() => handleRecipeClick(item)}
+                      />
+                    )
+                  ))}
+                </Masonry>
               </div>
             </section>
           )}

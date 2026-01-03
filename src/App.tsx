@@ -20,7 +20,7 @@ import './App.css'
 import './styles/mobile.css'
 
 // Eager load critical components
-import { NewLandingPage } from './components/home/NewLandingPage'
+import { LandingPage } from './components/home/LandingPage'
 import DebugApp from './components/debug/Debug'
 import AuthPage from './components/auth/AuthPage'
 import AllAlerts from './pages/allAlerts'
@@ -65,14 +65,14 @@ const lazyWithRetry = (componentImport: () => Promise<any>, retries = 3) => {
 
 // Lazy load page components for code splitting with retry logic
 const OnboardingFlow = lazyWithRetry(() => import('./components/onboarding/OnboardingFlow'))
-const FeedApp = lazyWithRetry(() => import('./components/feed/FeedNew').then(module => ({ default: module.FeedNew })))
-const ScoutApp = lazyWithRetry(() => import('./components/scout/ScoutNew'))
-const BitesApp = lazyWithRetry(() => import('./components/bites/BitesNew'))
-const TrimsApp = lazyWithRetry(() => import('./components/trims/TrimsNew'))
+const FeedApp = lazyWithRetry(() => import('./components/feed/Feed').then(module => ({ default: module.Feed })))
+const ScoutApp = lazyWithRetry(() => import('./components/scout/Scout'))
+const BitesApp = lazyWithRetry(() => import('./components/bites/Bites'))
+const TrimsApp = lazyWithRetry(() => import('./components/trims/Trims'))
 // Dashboard merged into Plate - keeping import for backward compatibility but redirecting to /plate
-const DashApp = lazyWithRetry(() => import('./components/plate/PlateNew'))
-const SnapApp = lazyWithRetry(() => import('./components/snap/SnapNew').then(module => ({ default: module.SnapNew })))
-const PlateApp: React.ComponentType<{ userId?: string; currentUser?: unknown }> = lazyWithRetry(() => import('./components/plate/PlateNew'))
+const DashApp = lazyWithRetry(() => import('./components/plate/Plate'))
+const SnapApp = lazyWithRetry(() => import('./components/snap/Snap').then(module => ({ default: module.Snap })))
+const PlateApp: React.ComponentType<{ userId?: string; currentUser?: unknown }> = lazyWithRetry(() => import('./components/plate/Plate'))
 
 // Helper component for navigation button
 interface NavButtonProps {
@@ -295,7 +295,7 @@ function AppLayout() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Navigate to="/landing" replace />} />
-            <Route path="/landing" element={<NewLandingPage onNavigateToSignup={() => navigate('/auth')} />} />
+            <Route path="/landing" element={<LandingPage onNavigateToSignup={() => navigate('/auth')} />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/debug" element={<DebugApp />} />
             <Route path="/all-alerts" element={<AllAlerts />} />

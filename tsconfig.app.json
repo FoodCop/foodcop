@@ -34,6 +34,7 @@
     "src/components/ui/chart.tsx",
     "src/App_old.tsx",
     "src/test/**",
-    "main-services/**"
+    "main-services/**",
+    "src/unused/**"
   ]
 }

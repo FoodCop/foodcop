@@ -3,10 +3,10 @@ import { FeedDesktop } from './FeedDesktop';
 import { FeedMobile } from './FeedMobile';
 
 /**
- * FeedNew Component
+ * Feed Component
  * Main feed component that renders desktop or mobile version based on screen size
  */
-export function FeedNew() {
+export function Feed() {
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {

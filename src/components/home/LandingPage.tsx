@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './NewLandingPage.css';
+import './LandingPage.css';
 import { PhoneFan } from './components/PhoneFan';
 import { useAuth } from '../auth/AuthProvider';
 
-interface NewLandingPageProps {
+interface LandingPageProps {
   onNavigateToSignup?: () => void;
 }
 
@@ -23,7 +23,7 @@ function StaticPhoneMockup({ image, alt, className = "" }: { image: string; alt:
   );
 }
 
-export function NewLandingPage({ onNavigateToSignup }: NewLandingPageProps) {
+export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
   const [colorMode, setColorMode] = useState<'white' | 'yellow'>('white');
   const { user } = useAuth();
   const navigate = useNavigate();

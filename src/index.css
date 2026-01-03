@@ -1,5 +1,35 @@
 @import "tailwindcss";
 
+/* Masonry Grid Styles */
+.masonry-grid {
+  display: flex;
+  margin-left: -1.5rem; /* gutter size offset */
+  width: auto;
+}
+
+.masonry-grid-column {
+  padding-left: 1.5rem; /* gutter size */
+  background-clip: padding-box;
+}
+
+.masonry-grid-column > div {
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .masonry-grid {
+    margin-left: -1rem;
+  }
+  
+  .masonry-grid-column {
+    padding-left: 1rem;
+  }
+  
+  .masonry-grid-column > div {
+    margin-bottom: 1rem;
+  }
+}
+
 /* Copied from feed globals.css - updated for Tailwind v4 compatibility */
 
 :root {
