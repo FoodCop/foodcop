@@ -16,6 +16,7 @@ import { UniversalViewerProvider, useUniversalViewer } from './contexts/Universa
 import { UniversalViewer } from './components/ui/universal-viewer/UniversalViewer'
 import { ChatDrawer } from './components/chat'
 import { useChatNotifications } from './hooks/useChatNotifications'
+import BottomAdBanner from './components/common/BottomAdBanner'
 import './App.css'
 import './styles/mobile.css'
 
@@ -435,6 +436,11 @@ function AppLayout() {
 
       {/* DM Chat Drawer - Available app-wide */}
       {showNavigation && <ChatDrawer />}
+
+      {/* Bottom Ad Banner - Show on all authenticated pages */}
+      {showNavigation && (
+        <BottomAdBanner adSlot={import.meta.env.VITE_ADSENSE_SLOT_BOTTOM_BANNER} />
+      )}
     </div>
   );
 }

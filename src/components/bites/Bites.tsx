@@ -325,8 +325,8 @@ export default function Bites() {
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     const matchesDiets =
-      selectedDiets.length === 0 ||
-      selectedDiets.some((diet) => recipe.diets.includes(diet));
+      desktopDietaryFilters.length === 0 ||
+      desktopDietaryFilters.some((diet) => recipe.diets.includes(diet));
     return matchesSearch && matchesDiets;
   });
 
@@ -336,8 +336,8 @@ export default function Bites() {
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     const matchesDiets =
-      selectedDiets.length === 0 ||
-      selectedDiets.some((diet) => recipe.diets.includes(diet));
+      desktopDietaryFilters.length === 0 ||
+      desktopDietaryFilters.some((diet) => recipe.diets.includes(diet));
     return matchesSearch && matchesDiets;
   });
 
@@ -350,7 +350,7 @@ export default function Bites() {
     setMixedRecommended(mixRecipesWithAds(recommendedRecipes, false));
     setMixedMightLike(mixRecipesWithAds(mightLikeRecipes, false));
     setMixedSimilar(mixRecipesWithAds(similarRecipes, false));
-  }, [recipes, fallbackRecipes, searchQuery, selectedDiets]);
+  }, [recipes, fallbackRecipes, searchQuery, desktopDietaryFilters]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">

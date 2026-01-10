@@ -2,6 +2,13 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { testAPIs } from './utils/apiTest'
+
+// Expose API test function to window for debugging
+if (typeof window !== 'undefined') {
+  (window as any).testAPIs = testAPIs;
+  console.log('💡 Run testAPIs() in console to check API status');
+}
 
 // Environment variable check for deployment debugging
 const checkEnvVars = () => {

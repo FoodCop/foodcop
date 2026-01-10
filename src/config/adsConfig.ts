@@ -57,9 +57,9 @@ export const AD_INJECTION_CONFIG = {
     minInterval: 4,
     maxInterval: 5
   },
-  // Feed: Insert 1 ad every 5 posts
+  // Feed: Insert 1 ad every 3 posts
   feed: {
-    interval: 5
+    interval: 3
   },
   // Trims: Insert 1 ad every 8 videos
   trims: {

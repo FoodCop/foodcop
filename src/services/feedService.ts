@@ -244,13 +244,13 @@ interface YouTubeVideo {
 }
 
 // Card Distribution Configuration - Phase 2 Enhanced
-// Original working formula: 2 Restaurants + 2 Masterbot + 1 Ad + 1 Recipe + 1 Video
+// Seed-based distribution: 1 restaurant, 1 recipe, 1 video, 1 maps, 1 ad, 1 trivia per 6-card cycle
 const DEFAULT_CARD_DISTRIBUTION = {
-  restaurant: 0.30,  // 30% - Location-based restaurants (2-3 per 10 cards)
-  masterbot: 0.25,   // 25% - Masterbot influencer posts (2-3 per 10 cards) ✅ RESTORED
-  recipe: 0.20,      // 20% - Personalized recipes (2 per 10 cards)
-  video: 0.15,       // 15% - Cooking videos (1-2 per 10 cards)
-  ad: 0.10          // 10% - Sponsored content (1 per 10 cards)
+  restaurant: 0.30,  // 30% - Location-based restaurants (includes generated images)
+  recipe: 0.25,      // 25% - Spoonacular recipes (INCREASED for 30 cards)
+  video: 0.25,       // 25% - YouTube cooking videos (INCREASED for 30 cards)
+  maps: 0.10,        // 10% - Google Maps locations
+  ad: 0.10           // 10% - Ads (handled by seed dealer)
 };
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -681,11 +681,11 @@ export const FeedService = {
     let restaurantCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.restaurant);
     let recipeCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.recipe);
     let videoCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.video);
-    let masterbotCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.masterbot);
-    let adCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.ad);
+    let mapsCount = Math.floor(pageSize * DEFAULT_CARD_DISTRIBUTION.maps);
+    let adCount = 0; // Ads handled by seed dealer, not fetched here
 
     // Calculate remainder to distribute
-    const totalAssigned = restaurantCount + recipeCount + videoCount + masterbotCount + adCount;
+    const totalAssigned = restaurantCount + recipeCount + videoCount + mapsCount + adCount;
     const remainder = pageSize - totalAssigned;
 
     // Distribute remainder based on priority (restaurants first, then recipes, etc.)
@@ -693,7 +693,7 @@ export const FeedService = {
       { key: 'restaurant', count: restaurantCount },
       { key: 'recipe', count: recipeCount },
       { key: 'video', count: videoCount },
-      { key: 'masterbot', count: masterbotCount },
+      { key: 'maps', count: mapsCount },
       { key: 'ad', count: adCount }
     ];
 
@@ -702,7 +702,7 @@ export const FeedService = {
       if (priorities[priorityIndex].key === 'restaurant') restaurantCount++;
       else if (priorities[priorityIndex].key === 'recipe') recipeCount++;
       else if (priorities[priorityIndex].key === 'video') videoCount++;
-      else if (priorities[priorityIndex].key === 'masterbot') masterbotCount++;
+      else if (priorities[priorityIndex].key === 'maps') mapsCount++;
       else if (priorities[priorityIndex].key === 'ad') adCount++;
     }
 
@@ -710,7 +710,7 @@ export const FeedService = {
       restaurant: restaurantCount,
       recipe: recipeCount,
       video: videoCount,
-      masterbot: masterbotCount,
+      maps: mapsCount,
       ad: adCount
     };
   },
@@ -739,9 +739,9 @@ export const FeedService = {
         restaurant: cardCounts.restaurant,
         recipe: cardCounts.recipe,
         video: cardCounts.video,
-        masterbot: cardCounts.masterbot,
+        maps: cardCounts.maps,
         ad: cardCounts.ad,
-        total: cardCounts.restaurant + cardCounts.recipe + cardCounts.video + cardCounts.masterbot + cardCounts.ad
+        total: cardCounts.restaurant + cardCounts.recipe + cardCounts.video + cardCounts.maps + cardCounts.ad
       });
 
       // Phase 2: Fetch all card types in parallel with timeout management
@@ -750,20 +750,15 @@ export const FeedService = {
 
       const [
         restaurantResults,
-        masterbotResults,
         recipeResults,
-        videoResults
+        videoResults,
+        mapsResults
       ] = await Promise.allSettled([
         withTimeout(
-          // Use local JSON data as primary source for restaurants
+          // Use local JSON data as primary source for restaurants (includes former masterbot images)
           this.fetchRestaurantCardsFromJSON(userLocation, cardCounts.restaurant, userId),
           API_TIMEOUTS.restaurant,
           'Restaurant'
-        ),
-        withTimeout(
-          this.fetchMasterbotCards(userLocation, cardCounts.masterbot, userId),
-          API_TIMEOUTS.masterbot,
-          'Masterbot'
         ),
         withTimeout(
           this.fetchRecipeCards(userPreferences, cardCounts.recipe, userId),
@@ -774,6 +769,11 @@ export const FeedService = {
           this.fetchVideoCards(userPreferences, cardCounts.video, userId),
           API_TIMEOUTS.video,
           'Video'
+        ),
+        withTimeout(
+          this.fetchGoogleMapsCards(userLocation, cardCounts.maps, userId),
+          API_TIMEOUTS.restaurant, // Use same timeout as restaurants
+          'GoogleMaps'
         )
       ]);
 
@@ -786,32 +786,21 @@ export const FeedService = {
       // Process results with enhanced error handling
       const processedResults = {
         restaurants: 0,
-        masterbot: 0,
         recipes: 0,
         videos: 0,
+        maps: 0,
         failed: [] as string[]
       };
 
-      // Add restaurants
+      // Add restaurants (includes former masterbot generated images)
       if (restaurantResults.status === 'fulfilled') {
         const cards = restaurantResults.value as RestaurantCard[];
         feedCards.push(...cards);
         processedResults.restaurants = cards.length;
-        console.log('✅ Added', cards.length, 'restaurant cards');
+        console.log('✅ Added', cards.length, 'restaurant cards (includes generated images)');
       } else {
         console.error('❌ Failed to fetch restaurant cards:', restaurantResults.reason);
         processedResults.failed.push('restaurants');
-      }
-
-      // Add masterbot posts
-      if (masterbotResults.status === 'fulfilled') {
-        const cards = masterbotResults.value as MasterbotCard[];
-        feedCards.push(...cards);
-        processedResults.masterbot = cards.length;
-        console.log('✅ Added', cards.length, 'masterbot cards');
-      } else {
-        console.error('❌ Failed to fetch masterbot cards:', masterbotResults.reason);
-        processedResults.failed.push('masterbot');
       }
 
       // Add recipes
@@ -836,12 +825,16 @@ export const FeedService = {
         processedResults.failed.push('videos');
       }
 
-      // Add placeholder ads
-      for (let i = 0; i < cardCounts.ad; i++) {
-        feedCards.push(generatePlaceholderAdCard());
+      // Add Google Maps cards
+      if (mapsResults.status === 'fulfilled') {
+        const cards = mapsResults.value as RestaurantCard[]; // Maps cards use RestaurantCard format
+        feedCards.push(...cards);
+        processedResults.maps = cards.length;
+        console.log('✅ Added', cards.length, 'Google Maps cards');
+      } else {
+        console.error('❌ Failed to fetch Google Maps cards:', mapsResults.reason);
+        processedResults.failed.push('maps');
       }
-      // Ads are always successful since they're generated locally
-      console.log('✅ Added', cardCounts.ad, 'placeholder ad cards');
 
       // Phase 2: Enhanced orchestration summary
       console.log('📊 API Orchestration Results:', {
@@ -853,11 +846,10 @@ export const FeedService = {
         fetchTime: `${fetchTime}ms`
       });
 
-      // Shuffle for natural feed experience
-      const shuffledCards = this.shuffleFeedCards(feedCards);
-
-      console.log('🎲 Final feed generated:', shuffledCards.length, 'cards');
-      return shuffledCards;
+      // ⚠️ SEED DEALER SYSTEM: Return raw cards without shuffling
+      // The seed dealer in FeedMobile will handle mixing ads, trivia, and card distribution
+      console.log('✅ Returning raw feed cards for seed dealer:', feedCards.length, 'cards');
+      return feedCards;
 
     } catch (error) {
       console.error('💥 Error generating feed:', error);
@@ -1132,6 +1124,67 @@ export const FeedService = {
   },
 
   /**
+   * Fetch Google Maps restaurant cards (distinct from JSON cards)
+   * Uses Google Places API to get real-time restaurant data
+   */
+  async fetchGoogleMapsCards(
+    userLocation?: UserLocation,
+    count: number = 2,
+    userId?: string
+  ): Promise<RestaurantCard[]> {
+    if (!userLocation || count === 0) {
+      console.log('⚠️ No user location or count is 0 for Google Maps cards');
+      return [];
+    }
+
+    try {
+      // Use Google Places API via backend service
+      const result = await backendService.searchNearbyPlaces(
+        { lat: userLocation.lat, lng: userLocation.lng },
+        DEFAULT_RADIUS,
+        'restaurant'
+      );
+
+      if (!result.success || !result.data) {
+        console.error('❌ Google Maps API failed:', result.error);
+        return [];
+      }
+
+      let restaurantData = result.data;
+
+      // Handle nested response structures
+      if (restaurantData.results) {
+        restaurantData = restaurantData.results;
+      }
+
+      // Transform to RestaurantCard format with maps- prefix
+      const cards = await Promise.all(
+        restaurantData.slice(0, count).map(async restaurant => {
+          const card = await transformRestaurantToFeedCard(restaurant, userLocation);
+          // Add maps- prefix to distinguish from JSON restaurants
+          return { ...card, id: `maps-${card.id}` };
+        })
+      );
+
+      // Filter seen content
+      const filteredCards = this.filterSeenContent(cards, 'maps');
+
+      console.log('🗺️ Google Maps cards:', {
+        totalFromAPI: restaurantData.length,
+        transformed: cards.length,
+        afterFiltering: filteredCards.length,
+        returning: Math.min(filteredCards.length, count)
+      });
+
+      return filteredCards.slice(0, count);
+
+    } catch (error) {
+      console.error('💥 Error fetching Google Maps cards:', error);
+      return [];
+    }
+  },
+
+  /**
    * Fetch masterbot cards from Supabase
    */
   async fetchMasterbotCards(
@@ -1252,6 +1305,7 @@ export const FeedService = {
         'recipe',
         [preferencesKey, count, userId || 'anonymous'],
         async () => {
+          console.log(`🔍 Fetching ${count} recipes with query: "${searchQuery}"`);
           const result = await SpoonacularService.searchRecipes({ query: searchQuery, number: count });
 
           if (!result.success || !result.data?.results) {
@@ -1259,6 +1313,7 @@ export const FeedService = {
             return [];
           }
 
+          console.log(`✅ Spoonacular returned ${result.data.results.length} recipes`);
           // Transform Spoonacular results to RecipeCard format
           return result.data.results.map(recipe => transformRecipeToFeedCard(recipe));
         }
@@ -1267,6 +1322,8 @@ export const FeedService = {
       // Phase 2: Filter out seen content and apply anti-repetition
       const filteredRecipes = this.filterSeenContent(cachedRecipes, 'recipe');
 
+      console.log(`🍳 Recipe cards: fetched ${cachedRecipes.length}, filtered to ${filteredRecipes.length}, returning ${Math.min(filteredRecipes.length, count)}`);
+      
       // Return requested count, may be less if many were filtered
       return filteredRecipes.slice(0, count);
 
@@ -1298,6 +1355,7 @@ export const FeedService = {
         'video',
         [preferencesKey, count, userId || 'anonymous'],
         async () => {
+          console.log(`🔍 Fetching ${count} videos with query: "${searchQuery}"`);
           const result = await YouTubeService.searchVideos(searchQuery, count);
 
           if (!result.success || !result.data?.items) {
@@ -1305,6 +1363,7 @@ export const FeedService = {
             return [];
           }
 
+          console.log(`✅ YouTube returned ${result.data.items.length} videos`);
           // Transform YouTube results to VideoCard format
           return result.data.items.map(video => transformVideoToFeedCard(video));
         }
@@ -1313,6 +1372,8 @@ export const FeedService = {
       // Phase 2: Filter out seen content and apply anti-repetition
       const filteredVideos = this.filterSeenContent(cachedVideos, 'video');
 
+      console.log(`📹 Video cards: fetched ${cachedVideos.length}, filtered to ${filteredVideos.length}, returning ${Math.min(filteredVideos.length, count)}`);
+      
       // Return requested count, may be less if many were filtered
       return filteredVideos.slice(0, count);
 

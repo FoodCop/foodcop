@@ -10,15 +10,15 @@ import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { X, Heart, Bookmark, Send, MapPin, Star } from 'lucide-react';
 import { FeedService } from '../../services/feedService';
 import { GeocodingService } from '../../services/geocodingService';
-import type { RestaurantCard } from './data/feed-content';
-import { mixFeedWithAds, isAd, type FeedContent } from '../../utils/feedMixer';
+import type { FeedCard } from './data/feed-content';
+import { dealCardsWithSeed, generateSeed, isAd, isTrivia, type DealerContent } from '../../utils/seedDealer';
 import { AdCard } from './AdCard';
-import type { AdItem } from '../../types/ad';
+import { TriviaCard } from './TriviaCard';
 
 type SwipeDirection = 'left' | 'right' | 'up' | 'down';
 
 interface SwipeableCardProps {
-  card: FeedContent<RestaurantCard>;
+  card: DealerContent;
   onSwipe: (direction: SwipeDirection) => void;
   isActive: boolean;
   zIndex: number;
@@ -28,7 +28,91 @@ interface SwipeableCardProps {
   exitDirection?: SwipeDirection | null;
 }
 
-function SwipeableCard({ 
+// Separate component for Ad cards
+function AdCardWrapper({ 
+  card, 
+  onSwipe, 
+  isActive, 
+  zIndex, 
+  scale, 
+  translateY, 
+  opacity 
+}: SwipeableCardProps) {
+  return (
+    <motion.div
+      className="absolute inset-0 flex items-center justify-center pointer-events-auto"
+      style={{
+        zIndex,
+        scale,
+        y: translateY,
+        opacity,
+      }}
+      onClick={() => {
+        // Skip to next card when clicking ad
+        if (isActive) {
+          onSwipe('right');
+        }
+      }}
+    >
+      <div className="w-full max-w-[335px] h-[540px]">
+        <AdCard ad={card as any} />
+      </div>
+    </motion.div>
+  );
+}
+
+// Separate component for Trivia cards
+function TriviaCardWrapper({ 
+  card, 
+  onSwipe, 
+  isActive, 
+  zIndex, 
+  scale, 
+  translateY, 
+  opacity 
+}: SwipeableCardProps) {
+  return (
+    <motion.div
+      className="absolute inset-0 flex items-center justify-center pointer-events-auto"
+      style={{
+        zIndex,
+        scale,
+        y: translateY,
+        opacity,
+      }}
+      onClick={() => {
+        // Skip to next card when clicking trivia
+        if (isActive) {
+          onSwipe('right');
+        }
+      }}
+    >
+      <div className="w-full max-w-[335px] h-[540px]">
+        <TriviaCard trivia={card as any} />
+      </div>
+    </motion.div>
+  );
+}
+
+// Main SwipeableCard component
+function SwipeableCard(props: SwipeableCardProps) {
+  const { card } = props;
+  
+  // Check type and render appropriate component
+  if (isAd(card)) {
+    return <AdCardWrapper {...props} />;
+  }
+  
+  if (isTrivia(card)) {
+    return <TriviaCardWrapper {...props} />;
+  }
+  
+  // All other feed card types (restaurant, recipe, video, masterbot) use the same swipeable card
+  return <feedCardWrapper {...props} />;
+}
+
+// Separate component for Restaurant cards with all hooks
+function feedCardWrapper({ 
   card, 
   onSwipe, 
   isActive, 
@@ -50,34 +134,8 @@ function SwipeableCard({
   const hintUpOpacity = useTransform(y, [-100, -50], [1, 0]);
   const hintDownOpacity = useTransform(y, [50, 100], [0, 1]);
 
-  // Check if this is an ad
-  if (isAd(card)) {
-    // Ad card - non-swipeable, just display
-    return (
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center pointer-events-auto"
-        style={{
-          zIndex,
-          scale,
-          y: translateY,
-          opacity,
-        }}
-        onClick={() => {
-          // Skip to next card when clicking ad
-          if (isActive) {
-            onSwipe('right');
-          }
-        }}
-      >
-        <div className="w-full max-w-[335px] h-[540px]">
-          <AdCard ad={card as AdItem} />
-        </div>
-      </motion.div>
-    );
-  }
-
   // Restaurant card logic
-  const restaurantCard = card as RestaurantCard;
+  const feedCard = card as FeedCard;
 
   const handleDragEnd = useCallback((_event: unknown, info: PanInfo) => {
     const threshold = 100;
@@ -134,7 +192,10 @@ function SwipeableCard({
   }, [isActive, x, y]);
 
   if (!isActive) {
-    // Background card - static
+    // Background card - static - show simplified preview
+    const imageUrl = (feedCard as any).imageUrl || (feedCard as any).thumbnailUrl;
+    const cardTitle = (feedCard as any).name || (feedCard as any).title;
+    
     return (
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -145,30 +206,18 @@ function SwipeableCard({
           opacity,
         }}
       >
-        <div className="w-full max-w-[335px] h-[540px] bg-white rounded-[10px] shadow-[_-2px_4px_12px_4px_rgba(51,51,51,0.05)] overflow-hidden">
+        <div className="w-full max-w-[335px] h-[540px] bg-white rounded-[10px] shadow-[-2px_4px_12px_4px_rgba(51,51,51,0.05)] overflow-hidden">
           {/* Image Section */}
           <div className="relative h-80 overflow-hidden">
             <img
-              src={restaurantCard.imageUrl}
-              alt={restaurantCard.name}
+              src={imageUrl}
+              alt={cardTitle}
               className="w-full h-full object-cover"
             />
           </div>
-          {/* Content Section */}
-          <div className="p-5 space-y-2.5">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">{restaurantCard.name}</h2>
-                <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-                  <MapPin className="w-3 h-3" />
-                  {restaurantCard.location} • {restaurantCard.distance}
-                </p>
-              </div>
-              <div className="bg-[#FFD500] text-[#8A8A8A] px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
-                <Star className="w-3 h-3 fill-current" />
-                {restaurantCard.rating.toFixed(1)}
-              </div>
-            </div>
+          {/* Content Section - Simplified */}
+          <div className="p-5">
+            <h2 className="text-2xl font-bold text-gray-900 line-clamp-2">{cardTitle}</h2>
           </div>
         </div>
       </motion.div>
@@ -247,40 +296,107 @@ function SwipeableCard({
           </div>
         </motion.div>
 
-        {/* Image Section */}
-        <div className="relative h-80 overflow-hidden">
-          <img
-            src={restaurantCard.imageUrl}
-            alt={restaurantCard.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        {/* Content Section */}
-        <div className="p-5 space-y-2.5">
-          <div className="flex items-start justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">{restaurantCard.name}</h2>
-              <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-                <MapPin className="w-3 h-3" />
-                {restaurantCard.location} • {restaurantCard.distance}
-              </p>
-            </div>
-            <div className="bg-[#FFD500] text-[#8A8A8A] px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
-              <Star className="w-3 h-3 fill-current" />
-              {restaurantCard.rating.toFixed(1)}
-            </div>
+        {/* Card Content - Dynamic based on type */}
+        {/* Ads and Trivia: Show as full vertical images without details */}
+        {(isAd(feedCard) || isTrivia(feedCard)) ? (
+          <div className="h-[540px] overflow-hidden bg-white flex items-center justify-center">
+            <img
+              src={feedCard.imageUrl}
+              alt={isAd(feedCard) ? (feedCard as any).brandName : 'Food Trivia'}
+              className="w-full h-full object-contain"
+            />
           </div>
-          
-          {restaurantCard.description && (
-            <p className="text-gray-900 text-sm leading-relaxed line-clamp-2">
-              {restaurantCard.description}
-            </p>
+        ) : (
+          <>
+            <div className="relative h-80 overflow-hidden">
+              <img
+                src={feedCard.imageUrl || (feedCard as any).thumbnailUrl}
+                alt={(feedCard as any).name || (feedCard as any).title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Content Section - Dynamic based on card type */}
+            <div className="p-5 space-y-2.5">{feedCard.type === 'restaurant' && (
+            <>
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">{feedCard.name}</h2>
+                  <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    {feedCard.location} • {feedCard.distance}
+                  </p>
+                </div>
+                <div className="bg-[#FFD500] text-[#8A8A8A] px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+                  <Star className="w-3 h-3 fill-current" />
+                  {feedCard.rating.toFixed(1)}
+                </div>
+              </div>
+              {feedCard.description && (
+                <p className="text-gray-900 text-sm leading-relaxed line-clamp-2">
+                  {feedCard.description}
+                </p>
+              )}
+            </>
+          )}
+
+          {feedCard.type === 'recipe' && (
+            <>
+              <h2 className="text-2xl font-bold text-gray-900">{(feedCard as any).title}</h2>
+              <p className="text-gray-500 text-sm">By {(feedCard as any).author}</p>
+              <p className="text-gray-900 text-sm leading-relaxed line-clamp-2">
+                {(feedCard as any).description}
+              </p>
+              <div className="flex gap-3 text-xs text-gray-600">
+                <span>⏱️ {(feedCard as any).prepTime}</span>
+                <span>🔥 {(feedCard as any).difficulty}</span>
+                <span>🍽️ {(feedCard as any).servings} servings</span>
+              </div>
+            </>
+          )}
+
+          {feedCard.type === 'video' && (
+            <>
+              <h2 className="text-2xl font-bold text-gray-900">{(feedCard as any).title}</h2>
+              <p className="text-gray-500 text-sm">By {(feedCard as any).creator}</p>
+              <p className="text-gray-900 text-sm leading-relaxed line-clamp-2">
+                {(feedCard as any).description}
+              </p>
+              <div className="flex gap-3 text-xs text-gray-600">
+                <span>⏱️ {(feedCard as any).duration}</span>
+                <span>👁️ {(feedCard as any).views.toLocaleString()} views</span>
+              </div>
+            </>
+          )}
+
+          {feedCard.type === 'masterbot' && (
+            <>
+              <div className="flex items-center gap-2 mb-2">
+                {(feedCard as any).avatarUrl && (
+                  <img 
+                    src={(feedCard as any).avatarUrl} 
+                    alt={(feedCard as any).displayName}
+                    className="w-8 h-8 rounded-full"
+                  />
+                )}
+                <div>
+                  <p className="font-semibold text-sm">{(feedCard as any).displayName}</p>
+                  <p className="text-xs text-gray-500">@{(feedCard as any).username}</p>
+                </div>
+              </div>
+              <p className="text-gray-900 text-sm leading-relaxed">
+                {(feedCard as any).caption}
+              </p>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Heart className="w-4 h-4" />
+                <span>{(feedCard as any).likes.toLocaleString()} likes</span>
+              </div>
+            </>
           )}
           
-          {restaurantCard.tags && restaurantCard.tags.length > 0 && (
+          {feedCard.tags && feedCard.tags.length > 0 && (
             <div className="flex gap-2 flex-wrap">
-              {restaurantCard.tags.map((tag, index) => (
+              {feedCard.tags.map((tag, index) => (
                 <span
                   key={index}
                   className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium"
@@ -290,21 +406,34 @@ function SwipeableCard({
               ))}
             </div>
           )}
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </motion.div>
   );
 }
 
 export function FeedMobile() {
-  const [cards, setCards] = useState<FeedContent<RestaurantCard>[]>([]);
+  const [cards, setCards] = useState<DealerContent[]>([]);
+  const [seed, setSeed] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [exitDirection, setExitDirection] = useState<SwipeDirection | null>(null);
 
+  // Generate seed on mount (only once per session)
+  useEffect(() => {
+    const sessionSeed = generateSeed();
+    setSeed(sessionSeed);
+    console.log(`🎲 Generated feed seed: ${sessionSeed}`);
+  }, []);
+
   // Get user location and load feed data on mount
   useEffect(() => {
+    // Only load feed when seed is ready
+    if (!seed) return;
+
     const loadFeed = async () => {
       try {
         setIsLoading(true);
@@ -328,13 +457,13 @@ export function FeedMobile() {
           pageSize: 20,
           userLocation 
         });
-        // Filter to only restaurant cards for now
-        const restaurantCards = feedCards.filter(
-          (card): card is RestaurantCard => card.type === 'restaurant'
-        );
-        // Mix with ads
-        const mixedContent = mixFeedWithAds(restaurantCards);
-        setCards(mixedContent);
+        console.log('📋 FeedMobile: Generated feed cards:', feedCards.length);
+        console.log('📋 FeedMobile: Card types:', feedCards.map(c => c.type));
+        
+        // Deal cards using seed pattern
+        const dealtCards = dealCardsWithSeed(feedCards, seed, 30);
+        
+        setCards(dealtCards);
       } catch (error) {
         console.error('Failed to load feed:', error);
       } finally {
@@ -342,7 +471,7 @@ export function FeedMobile() {
       }
     };
     loadFeed();
-  }, []);
+  }, [seed]);
 
   const handleSwipe = useCallback((direction: SwipeDirection) => {
     if (isAnimating) return;
@@ -447,3 +576,4 @@ export function FeedMobile() {
     </div>
   );
 }
+
