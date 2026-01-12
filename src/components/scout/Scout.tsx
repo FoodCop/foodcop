@@ -566,37 +566,6 @@ export default function ScoutNew() {
           </section>
         )}
 
-        {/* Quick Filters */}
-        <section className="px-5 py-6">
-          <SectionHeading className="mb-4">Quick Filters</SectionHeading>
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => handleCategoryClick('all')}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${selectedCategory === 'all'
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-gray-50 text-gray-700 border border-gray-100 hover:bg-gray-100'
-                }`}
-            >
-              <Star className="inline w-4 h-4 mr-2" />
-              Popular
-            </button>
-            <button
-              onClick={() => handleCategoryClick('italian')}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${selectedCategory === 'italian'
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-gray-50 text-gray-700 border border-gray-100 hover:bg-gray-100'
-                }`}
-            >
-              <Star className="inline w-4 h-4 mr-2" />
-              Top Rated
-            </button>
-            <button className="px-5 py-2.5 bg-gray-50 text-gray-700 rounded-full text-sm font-medium border border-gray-100 hover:bg-gray-100">
-              <Clock className="inline w-4 h-4 mr-2" />
-              Fast Delivery
-            </button>
-          </div>
-        </section>
-
         {/* Empty State */}
         {!loading && !error && restaurants.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
