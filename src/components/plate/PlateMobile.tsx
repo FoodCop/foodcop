@@ -472,21 +472,19 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           </div>
 
           {/* Stats Row */}
-          <div className="flex items-center justify-around py-4 border-t border-gray-200">
-            <button className="flex flex-col items-center hover:opacity-80 transition-opacity">
+          <div className="flex items-center gap-2 py-4 border-t border-gray-200 px-2">
+            <button className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity">
               <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">{userPoints.toLocaleString()}</span>
               <span className="text-xs mt-1" style={{ color: '#808080' }}>Points</span>
             </button>
-            <div className="w-px h-10 bg-gray-200"></div>
             <button 
               onClick={() => setSelectedTab('posts')}
-              className="flex flex-col items-center hover:opacity-80 transition-opacity"
+              className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity"
             >
               <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">{savedItems.length}</span>
               <span className="text-xs mt-1" style={{ color: '#808080' }}>Saved</span>
             </button>
-            <div className="w-px h-10 bg-gray-200"></div>
-            <button className="flex flex-col items-center hover:opacity-80 transition-opacity">
+            <button className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity">
               <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">{userRewards}</span>
               <span className="text-xs mt-1" style={{ color: '#808080' }}>Rewards</span>
             </button>
