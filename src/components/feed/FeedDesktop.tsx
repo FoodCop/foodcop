@@ -62,7 +62,7 @@ function DealCard({ card, index }: DealCardProps) {
 
   return (
     <motion.div
-      className="relative w-[300px] h-[450px] cursor-pointer perspective-1000"
+      className="relative w-[280px] h-[498px] cursor-pointer perspective-1000"
       custom={index}
       variants={cardVariants}
       initial="hidden"
@@ -111,8 +111,8 @@ function DealCard({ card, index }: DealCardProps) {
             </div>
           ) : (
             <>
-              {/* Image */}
-              <div className="h-1/2 overflow-hidden relative">
+              {/* Image - 9:16 aspect ratio */}
+              <div className="aspect-[9/16] overflow-hidden relative">
                 <img
                   src={(card as any).imageUrl || (card as any).thumbnailUrl}
                   alt={(card as any).name || (card as any).title}
@@ -151,19 +151,32 @@ function DealCard({ card, index }: DealCardProps) {
                   </p>
                 </div>
 
-                <div className="flex justify-between items-center mt-2 pt-3 border-t border-gray-100">
-                  <div className="flex items-center gap-1">
-                    <span className="text-yellow-500">★</span>
-                    <span className="font-bold text-gray-800">
-                      {(card as any).rating || (card as any).difficulty || 'N/A'}
-                    </span>
-                    <span className="text-gray-400 text-xs">
-                      {(card as any).reviewCount ? `(${(card as any).reviewCount})` : ''}
-                    </span>
-                  </div>
-                  <span className="text-xs font-medium text-orange-500 bg-orange-50 px-2 py-1 rounded-full">
-                    {(card as any).cuisine || card.type}
-                  </span>
+                {/* Source Badge */}
+                <div className="flex items-center gap-2 mt-2 pt-3 border-t border-gray-100">
+                  {card.type === 'restaurant' && (
+                    <>
+                      <div className="w-6 h-6 rounded-full bg-[#4285F4] flex items-center justify-center text-white text-xs font-bold">
+                        G
+                      </div>
+                      <span className="text-xs text-gray-500">Google Maps</span>
+                    </>
+                  )}
+                  {card.type === 'video' && (
+                    <>
+                      <div className="w-6 h-6 rounded-full bg-[#FF0000] flex items-center justify-center text-white text-xs font-bold">
+                        Y
+                      </div>
+                      <span className="text-xs text-gray-500">YouTube</span>
+                    </>
+                  )}
+                  {(card.type === 'recipe' || card.type === 'masterbot') && (
+                    <>
+                      <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
+                        F
+                      </div>
+                      <span className="text-xs text-gray-500">FUZO</span>
+                    </>
+                  )}
                 </div>
               </div>
             </>

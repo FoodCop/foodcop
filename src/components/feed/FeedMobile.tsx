@@ -308,7 +308,7 @@ function FeedCardWrapper({
           </div>
         ) : (
           <>
-            <div className="relative h-80 overflow-hidden">
+            <div className="relative aspect-[9/16] overflow-hidden">
               <img
                 src={feedCard.type === 'video' ? feedCard.thumbnailUrl : feedCard.imageUrl}
                 alt={
@@ -332,16 +332,19 @@ function FeedCardWrapper({
                     {feedCard.location} • {feedCard.distance}
                   </p>
                 </div>
-                <div className="bg-[#FFD500] text-[#8A8A8A] px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
-                  <Star className="w-3 h-3 fill-current" />
-                  {feedCard.rating.toFixed(1)}
-                </div>
               </div>
               {feedCard.description && (
                 <p className="text-gray-900 text-sm leading-relaxed line-clamp-2">
                   {feedCard.description}
                 </p>
               )}
+              {/* Source Badge */}
+              <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                <div className="w-6 h-6 rounded-full bg-[#4285F4] flex items-center justify-center text-white text-xs font-bold">
+                  G
+                </div>
+                <span className="text-xs text-gray-500">Google Maps</span>
+              </div>
             </>
           )}
 
@@ -357,6 +360,13 @@ function FeedCardWrapper({
                 <span>🔥 {(feedCard as any).difficulty}</span>
                 <span>🍽️ {(feedCard as any).servings} servings</span>
               </div>
+              {/* Source Badge */}
+              <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
+                  F
+                </div>
+                <span className="text-xs text-gray-500">FUZO</span>
+              </div>
             </>
           )}
 
@@ -370,6 +380,13 @@ function FeedCardWrapper({
               <div className="flex gap-3 text-xs text-gray-600">
                 <span>⏱️ {(feedCard as any).duration}</span>
                 <span>👁️ {(feedCard as any).views.toLocaleString()} views</span>
+              </div>
+              {/* Source Badge */}
+              <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                <div className="w-6 h-6 rounded-full bg-[#FF0000] flex items-center justify-center text-white text-xs font-bold">
+                  Y
+                </div>
+                <span className="text-xs text-gray-500">YouTube</span>
               </div>
             </>
           )}
@@ -395,6 +412,13 @@ function FeedCardWrapper({
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Heart className="w-4 h-4" />
                 <span>{(feedCard as any).likes.toLocaleString()} likes</span>
+              </div>
+              {/* Source Badge */}
+              <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
+                  F
+                </div>
+                <span className="text-xs text-gray-500">FUZO</span>
               </div>
             </>
           )}
