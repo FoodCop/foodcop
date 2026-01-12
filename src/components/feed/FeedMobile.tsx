@@ -207,17 +207,42 @@ function FeedCardWrapper({
         }}
       >
         <div className="w-full max-w-[335px] h-[540px] bg-white rounded-[10px] shadow-[-2px_4px_12px_4px_rgba(51,51,51,0.05)] overflow-hidden">
-          {/* Image Section */}
-          <div className="relative h-80 overflow-hidden">
+          {/* Image Section with 9:16 aspect ratio */}
+          <div className="relative aspect-[9/16]">
             <img
               src={imageUrl}
               alt={cardTitle}
               className="w-full h-full object-cover"
             />
-          </div>
-          {/* Content Section - Simplified */}
-          <div className="p-5">
-            <h2 className="text-2xl font-bold text-gray-900 line-clamp-2">{cardTitle}</h2>
+            {/* Gradient overlay for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            
+            {/* Text overlay at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-5 pb-20">
+              <h2 className="text-2xl font-bold text-white line-clamp-2">{cardTitle}</h2>
+            </div>
+            
+            {/* Source Badge - Bottom Right Avatar */}
+            {feedCard.type === 'restaurant' && (
+              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4285F4] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
+                G
+              </div>
+            )}
+            {feedCard.type === 'video' && (
+              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF0000] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
+                Y
+              </div>
+            )}
+            {feedCard.type === 'recipe' && (
+              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4CAF50] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
+                S
+              </div>
+            )}
+            {feedCard.type === 'masterbot' && (
+              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
+                F
+              </div>
+            )}
           </div>
         </div>
       </motion.div>
@@ -299,22 +324,22 @@ function FeedCardWrapper({
         {/* Card Content - Dynamic based on type */}
         {/* Ads and Trivia: Show as full vertical images without details */}
         {(isAd(feedCard) || isTrivia(feedCard)) ? (
-          <div className="bg-white flex flex-col relative">
-            <div className="aspect-[9/16] overflow-hidden flex items-center justify-center relative">
+          <div className="bg-white flex flex-col relative h-full">
+            <div className="aspect-[9/16] flex items-center justify-center relative">
               <img
                 src={feedCard.imageUrl}
                 alt={isAd(feedCard) ? (feedCard as any).brandName : 'Food Trivia'}
                 className="w-full h-full object-contain"
               />
               {/* Source Badge - Bottom Right Avatar */}
-              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
+              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
                 F
               </div>
             </div>
           </div>
         ) : (
           <>
-            <div className="relative aspect-[9/16] overflow-hidden">
+            <div className="relative aspect-[9/16]">
               <img
                 src={feedCard.type === 'video' ? feedCard.thumbnailUrl : feedCard.imageUrl}
                 alt={
@@ -325,116 +350,103 @@ function FeedCardWrapper({
                 }
                 className="w-full h-full object-cover"
               />
+              
+              {/* Gradient overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              
+              {/* Text overlay at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 p-5 text-white z-10">
+                {feedCard.type === 'restaurant' && (
+                  <>
+                    <h2 className="text-2xl font-bold mb-1">{feedCard.name}</h2>
+                    <p className="text-sm opacity-90 flex items-center gap-1 mb-2">
+                      <MapPin className="w-3 h-3" />
+                      {feedCard.location} • {feedCard.distance}
+                    </p>
+                    {feedCard.description && (
+                      <p className="text-sm opacity-80 line-clamp-2 mb-16">
+                        {feedCard.description}
+                      </p>
+                    )}
+                  </>
+                )}
+                {feedCard.type === 'recipe' && (
+                  <>
+                    <h2 className="text-2xl font-bold mb-1">{(feedCard as any).title}</h2>
+                    <p className="text-sm opacity-90 mb-2">By {(feedCard as any).author}</p>
+                    <p className="text-sm opacity-80 line-clamp-2 mb-3">
+                      {(feedCard as any).description}
+                    </p>
+                    <div className="flex gap-3 text-xs opacity-80 mb-16">
+                      <span>⏱️ {(feedCard as any).prepTime}</span>
+                      <span>🔥 {(feedCard as any).difficulty}</span>
+                      <span>🍽️ {(feedCard as any).servings} servings</span>
+                    </div>
+                  </>
+                )}
+                {feedCard.type === 'video' && (
+                  <>
+                    <h2 className="text-2xl font-bold mb-1">{(feedCard as any).title}</h2>
+                    <p className="text-sm opacity-90 mb-2">By {(feedCard as any).creator}</p>
+                    <p className="text-sm opacity-80 line-clamp-2 mb-3">
+                      {(feedCard as any).description}
+                    </p>
+                    <div className="flex gap-3 text-xs opacity-80 mb-16">
+                      <span>⏱️ {(feedCard as any).duration}</span>
+                      <span>👁️ {(feedCard as any).views.toLocaleString()} views</span>
+                    </div>
+                  </>
+                )}
+                {feedCard.type === 'masterbot' && (
+                  <>
+                    <div className="flex items-center gap-2 mb-2">
+                      {(feedCard as any).avatarUrl && (
+                        <img 
+                          src={(feedCard as any).avatarUrl} 
+                          alt={(feedCard as any).displayName}
+                          className="w-8 h-8 rounded-full border-2 border-white"
+                        />
+                      )}
+                      <div>
+                        <p className="font-semibold text-sm">{(feedCard as any).displayName}</p>
+                        <p className="text-xs opacity-80">@{(feedCard as any).username}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm opacity-90 mb-2">
+                      {(feedCard as any).caption}
+                    </p>
+                    <div className="flex items-center gap-2 text-sm opacity-80 mb-16">
+                      <Heart className="w-4 h-4" />
+                      <span>{(feedCard as any).likes.toLocaleString()} likes</span>
+                    </div>
+                  </>
+                )}
+              </div>
+              
               {/* Source Badge - Bottom Right Avatar */}
               {feedCard.type === 'restaurant' && (
-                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4285F4] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
+                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4285F4] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-20">
                   G
                 </div>
               )}
               {feedCard.type === 'video' && (
-                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF0000] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
+                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF0000] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-20">
                   Y
                 </div>
               )}
               {feedCard.type === 'recipe' && (
-                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4CAF50] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
+                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4CAF50] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-20">
                   S
                 </div>
               )}
               {feedCard.type === 'masterbot' && (
-                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
+                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-20">
                   F
                 </div>
               )}
             </div>
 
-            {/* Content Section - Dynamic based on card type */}
-            <div className="p-5 space-y-2.5">{feedCard.type === 'restaurant' && (
-            <>
-              <div className="flex items-start justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">{feedCard.name}</h2>
-                  <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    {feedCard.location} • {feedCard.distance}
-                  </p>
-                </div>
-              </div>
-              {feedCard.description && (
-                <p className="text-gray-900 text-sm leading-relaxed line-clamp-2">
-                  {feedCard.description}
-                </p>
-              )}
-            </>
-          )}
 
-          {feedCard.type === 'recipe' && (
-            <>
-              <h2 className="text-2xl font-bold text-gray-900">{(feedCard as any).title}</h2>
-              <p className="text-gray-500 text-sm">By {(feedCard as any).author}</p>
-              <p className="text-gray-900 text-sm leading-relaxed line-clamp-2">
-                {(feedCard as any).description}
-              </p>
-              <div className="flex gap-3 text-xs text-gray-600">
-                <span>⏱️ {(feedCard as any).prepTime}</span>
-                <span>🔥 {(feedCard as any).difficulty}</span>
-                <span>🍽️ {(feedCard as any).servings} servings</span>
-              </div>
-            </>
-          )}
-
-          {feedCard.type === 'video' && (
-            <>
-              <h2 className="text-2xl font-bold text-gray-900">{(feedCard as any).title}</h2>
-              <p className="text-gray-500 text-sm">By {(feedCard as any).creator}</p>
-              <p className="text-gray-900 text-sm leading-relaxed line-clamp-2">
-                {(feedCard as any).description}
-              </p>
-              <div className="flex gap-3 text-xs text-gray-600">
-                <span>⏱️ {(feedCard as any).duration}</span>
-                <span>👁️ {(feedCard as any).views.toLocaleString()} views</span>
-              </div>
-            </>
-          )}
-
-          {feedCard.type === 'masterbot' && (
-            <>
-              <div className="flex items-center gap-2 mb-2">
-                {(feedCard as any).avatarUrl && (
-                  <img 
-                    src={(feedCard as any).avatarUrl} 
-                    alt={(feedCard as any).displayName}
-                    className="w-8 h-8 rounded-full"
-                  />
-                )}
-                <div>
-                  <p className="font-semibold text-sm">{(feedCard as any).displayName}</p>
-                  <p className="text-xs text-gray-500">@{(feedCard as any).username}</p>
-                </div>
-              </div>
-              <p className="text-gray-900 text-sm leading-relaxed">
-                {(feedCard as any).caption}
-              </p>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Heart className="w-4 h-4" />
-                <span>{(feedCard as any).likes.toLocaleString()} likes</span>
-              </div>
-            </>
-          )}
-          
-          {'tags' in feedCard && feedCard.tags && feedCard.tags.length > 0 && (
-            <div className="flex gap-2 flex-wrap">
-              {feedCard.tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-            </div>
           </>
         )}
       </div>
