@@ -299,12 +299,21 @@ function FeedCardWrapper({
         {/* Card Content - Dynamic based on type */}
         {/* Ads and Trivia: Show as full vertical images without details */}
         {(isAd(feedCard) || isTrivia(feedCard)) ? (
-          <div className="h-[540px] overflow-hidden bg-white flex items-center justify-center">
-            <img
-              src={feedCard.imageUrl}
-              alt={isAd(feedCard) ? (feedCard as any).brandName : 'Food Trivia'}
-              className="w-full h-full object-contain"
-            />
+          <div className="bg-white flex flex-col">
+            <div className="aspect-[9/16] overflow-hidden flex items-center justify-center">
+              <img
+                src={feedCard.imageUrl}
+                alt={isAd(feedCard) ? (feedCard as any).brandName : 'Food Trivia'}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            {/* FUZO Badge for ads and trivia */}
+            <div className="p-5 border-t border-gray-100 flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
+                F
+              </div>
+              <span className="text-xs text-gray-500">FUZO</span>
+            </div>
           </div>
         ) : (
           <>

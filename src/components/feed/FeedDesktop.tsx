@@ -102,17 +102,26 @@ function DealCard({ card, index }: DealCardProps) {
         >
           {/* Ads and Trivia: Show as full vertical images */}
           {(isAd(card) || isTrivia(card)) ? (
-            <div className="h-full w-full bg-white flex items-center justify-center">
-              <img
-                src={card.imageUrl}
-                alt={isAd(card) ? card.altText : 'Food Trivia'}
-                className="w-full h-full object-contain"
-              />
+            <div className="h-full w-full bg-white flex flex-col">
+              <div className="flex-1 flex items-center justify-center">
+                <img
+                  src={card.imageUrl}
+                  alt={isAd(card) ? card.altText : 'Food Trivia'}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              {/* FUZO Badge for ads and trivia */}
+              <div className="p-4 border-t border-gray-100 flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
+                  F
+                </div>
+                <span className="text-xs text-gray-500">FUZO</span>
+              </div>
             </div>
           ) : (
             <>
               {/* Image - 9:16 aspect ratio */}
-              <div className="aspect-[9/16] overflow-hidden relative">
+              <div className="h-[60%] overflow-hidden relative">
                 <img
                   src={(card as any).imageUrl || (card as any).thumbnailUrl}
                   alt={(card as any).name || (card as any).title}
@@ -129,7 +138,7 @@ function DealCard({ card, index }: DealCardProps) {
               </div>
 
               {/* Details */}
-              <div className="p-4 h-1/2 flex flex-col justify-between">
+              <div className="p-4 h-[40%] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center text-gray-600 mb-2 text-sm">
                     <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
