@@ -1,36 +1,55 @@
 # FuzoFoodCop - Food Discovery & Social Platform
 
-A comprehensive food application built with Vite + React + TypeScript that integrates with multiple APIs and services for restaurant discovery, social features, and real-time chat.
+A comprehensive food application built with Vite + React + TypeScript featuring a unique **seed-based content delivery system** that provides diverse, engaging content through multiple APIs and services.
 
 ## Project Overview
 
 FuzoFoodCop is a food-focused social application featuring:
-- **Restaurant Discovery**: Google Places API integration for finding nearby restaurants
-- **AI-Powered Features**: OpenAI integration for smart recommendations
+- **Seed-Based Feed System**: Deterministic card dealing algorithm ensures balanced content distribution
+- **Restaurant Discovery**: Google Places API + Local JSON data with 206 generated images
+- **Video Content**: YouTube cooking videos and tutorials
+- **Recipe Integration**: Spoonacular API for diverse recipes
+- **Ads & Trivia**: Vertical format cards for engagement and monetization
 - **Real-time Chat**: Direct messaging with friend system
-- **Social Feed**: Share and discover food experiences
-- **Recipe Management**: Save and explore recipes
 - **Location Services**: Geocoding and map integration
 
 ## Tech Stack
 
 - **Frontend**: Vite, React 18, TypeScript
 - **Backend**: Supabase (PostgreSQL, Authentication, Real-time)
-- **Styling**: Tailwind CSS, Radix UI components
+- **Styling**: Tailwind CSS, Radix UI components, Framer Motion
 - **APIs**: 
-  - Google Places API
-  - OpenAI API
-  - Spoonacular API
-  - YouTube API
+  - Google Places API (Maps & Locations)
+  - OpenAI API (Smart recommendations)
+  - Spoonacular API (Recipes)
+  - YouTube API (Cooking videos)
 - **Deployment**: Vercel (Frontend), Supabase Functions (Backend)
 
 ## Key Features
 
+### 🎲 Seed-Based Content Delivery System
+- **Deterministic Dealing**: Each session generates a unique seed that determines card order
+- **Balanced Distribution**: Every 6-card cycle contains:
+  - 1 Restaurant (from local JSON/generated images)
+  - 1 Recipe (Spoonacular)
+  - 1 Video (YouTube)
+  - 1 Maps Location (Google Places)
+  - 1 Ad (vertical format)
+  - 1 Trivia (vertical format)
+- **Shuffled Pattern**: Seed shuffles the order for variety while maintaining balance
+- **Fallback Logic**: Graceful handling when APIs fail (falls back to restaurants)
+
 ### 🍽️ Restaurant Discovery
-- Nearby restaurant recommendations
-- Advanced filtering and search
-- Interactive map view
-- Restaurant details and reviews
+- **Local Data First**: 49 Mumbai locations with 206 AI-generated images
+- **Google Maps Integration**: Real-time location data with "maps-" prefix distinction
+- **Advanced Filtering**: Cuisine, price range, distance
+- **Interactive Views**: Desktop card flip mechanic, mobile swipe interface
+
+### 📺 Content Variety
+- **Video Cards**: YouTube cooking tutorials with creator info
+- **Recipe Cards**: Detailed recipes with prep time, difficulty, servings
+- **Trivia Cards**: 59 food trivia images (full vertical display)
+- **Ad Cards**: 75 monetization-ready vertical ads (full vertical display)
 
 ### 👥 Social Features
 - Friend system with requests
@@ -44,40 +63,82 @@ FuzoFoodCop is a food-focused social application featuring:
 - Conversation management
 - Unread badges and notifications
 
-### 🎯 Additional Features
-- Recipe saving and management
-- Dietary preferences
-- Location-based content
-- Responsive design (mobile-first)
-
 ## Known Issues & In Progress
 
-### Chat & Social Features
-- **User Discovery**: Currently debugging the "Find Friends" feature where users list may not load properly
-  - Issue: Query may be executing but returning no results
-  - Debugging logs added to track fetch process
-- **Friend Requests**: Loading state improvements added with error handling
+### Content Delivery
+- **Spoonacular API**: Experiencing timeouts (6000ms limit) - recipes currently fall back to restaurant cards
+- **Recipe Caching**: 24-hour cache helps reduce API calls when available
+- **Video Integration**: YouTube API working correctly with 5 videos per batch
 
-### UI Improvements
-- Recently updated all modal/dialog backgrounds from transparent (`bg-background`) to solid white (`bg-white`) for consistency
-- Chat message area background updated to match component design system
+### Feed System
+- **Seed Dealer**: Successfully implemented in both FeedDesktop and FeedMobile
+- **Card Distribution**: Balanced 6-card cycle pattern operational
+- **Fallback Logic**: Recipes/videos gracefully fall back to restaurants when APIs fail
+
+### UI/UX
+- **Ads & Trivia**: Display as full vertical images (object-contain) without details
+- **Desktop Cards**: Flip mechanic with face-down dealing animation
+- **Mobile Cards**: Swipe interface with hint overlays
 
 ## Project Structure
 
 ```
 src/
-├── components/     # Reusable UI components
-│   ├── auth/      # Authentication components
-│   ├── chat/      # Messaging components
-│   ├── friends/   # Friend management
-│   ├── feed/      # Social feed
-│   └── ui/        # Base UI components (buttons, dialogs, etc.)
-├── services/      # API integration services
-├── stores/        # State management (Zustand)
-├── hooks/         # Custom React hooks
-├── types/         # TypeScript definitions
-└── utils/         # Utility functions
+├── components/         # Reusable UI components
+│   ├── auth/          # Authentication components
+│   ├── chat/          # Messaging components
+│   ├── friends/       # Friend management
+│   ├── feed/          # Social feed (FeedMobile, FeedDesktop, TriviaCard)
+│   ├── common/        # AdBanner, BottomAdBanner
+│   └── ui/            # Base UI components (buttons, dialogs, etc.)
+├── services/          # API integration services
+│   ├── feedService.ts # Feed generation with parallel API orchestration
+│   ├── spoonacular.ts # Recipe API
+│   ├── youtube.ts     # Video API
+│   └── googlePlaces.ts# Maps & locations
+├── utils/             # Utility functions
+│   └── seedDealer.ts  # Seed-based card dealing algorithm
+├── config/            # Configuration files
+│   ├── adsConfig.ts   # 75 vertical ads
+│   └── triviaConfig.ts# 59 vertical trivia cards
+├── stores/            # State management (Zustand)
+├── hooks/             # Custom React hooks
+├── types/             # TypeScript definitions
+│   ├── trivia.ts      # TriviaItem interface
+│   └── feed-content.ts# FeedCard union types
+└── data/              # Local JSON data
+    └── MasterSet_*.json # Restaurant data by city
+
+public/
+├── generated-images/  # 206 AI-generated restaurant images (v2)
+├── ads/
+│   └── Vertical/      # 55 vertical ad images (F_V_*.png)
+└── trivia/
+    └── vertical/      # 59 trivia images (TRIV_V_*.png)
 ```
+
+## Architecture
+
+### Seed-Based Content Delivery
+
+**Core Algorithm** (`src/utils/seedDealer.ts`):
+```typescript
+// Generates balanced seed: [1,2,3,4,5,6] then shuffles
+generateSeed(): string
+
+// Maps seed digits to card types:
+// 1=restaurant, 2=recipe, 3=video, 4=maps, 5=ad, 6=trivia
+parseSeedPattern(seed: string): string[]
+
+// Deals cards following seed pattern with wraparound
+dealCardsWithSeed(feedCards, seed, totalCards): DealerContent[]
+```
+
+**Feed Service Flow** (`src/services/feedService.ts`):
+1. Parallel API calls (restaurants, recipes, videos, maps)
+2. Returns raw FeedCard[] without shuffling
+3. Seed dealer handles mixing with ads/trivia
+4. Desktop & mobile both use seed system
 
 ## Development
 
@@ -130,10 +191,23 @@ When making changes:
 
 ## Recent Updates
 
+### January 2026 - Seed-Based Feed System
+- ✅ Implemented deterministic seed dealer algorithm
+- ✅ Removed masterbot feature (consolidated into generated images)
+- ✅ Added Google Maps cards (maps- prefix for distinction)
+- ✅ Integrated 59 trivia cards from vertical folder
+- ✅ Ads display as full vertical images (object-contain)
+- ✅ FeedDesktop now uses seed dealer (was filtering restaurants only)
+- ✅ Recipe/video fallback logic when APIs timeout
+- ✅ Parallel API orchestration with timeout management
+- ✅ 206 generated restaurant images loaded from v2 metadata
+
+### UI/UX Improvements
 - Fixed chat drawer background transparency issues
-- Added error handling to friend request loading
-- Improved user discovery modal with authentication checks
-- Updated all dialog components to use solid white backgrounds
+- Updated all dialog components to solid white backgrounds
+- Desktop: Card flip mechanic with deal animation
+- Mobile: Swipe interface with directional hints
+- Ads & Trivia: Full vertical display without text overlays
 
 ## License
 
