@@ -74,7 +74,7 @@ const getRandomAspectRatio = () => {
 export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
   // Use recipe ID to create varied card sizes for masonry effect
   const cardVariant = React.useMemo(() => {
-    const seed = recipe.id;
+    const seed = recipe?.id || 0;
     const variants = [
       { name: 'compact', imageClass: 'h-40', showDiets: false },     // Very short
       { name: 'medium', imageClass: 'h-64', showDiets: true },       // Medium
@@ -82,14 +82,18 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
       { name: 'extra-tall', imageClass: 'h-96', showDiets: true },   // Extra tall
     ];
     return variants[seed % variants.length];
-  }, [recipe.id]);
+  }, [recipe?.id]);
+
+  // Fallback if cardVariant is undefined
+  const imageClass = cardVariant?.imageClass || 'h-64';
+  const showDiets = cardVariant?.showDiets || false;
 
   return (
     <Card
       className="overflow-hidden cursor-pointer transition-all hover:shadow-lg border-gray-200 w-full"
       onClick={onClick}
     >
-      <div className={`${cardVariant.imageClass} w-full overflow-hidden bg-gray-100`}>
+      <div className={`${imageClass} w-full overflow-hidden bg-gray-100`}>
         <ImageWithFallback
           src={recipe.image}
           alt={recipe.title}
