@@ -422,28 +422,6 @@ export default function ScoutNew() {
 
         {/* Discover Tab Content */}
         {activeTab === 'discover' && (<>
-        {/* Header */}
-        <header className="bg-white px-5 pt-6 pb-4 sticky top-0 z-50 shadow-sm">
-          <div className="flex items-center justify-between mb-5">
-            <h1 className="text-2xl font-bold text-gray-900">Find Restaurants</h1>
-            <button className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors">
-              <SlidersHorizontal className="text-gray-700 text-lg" />
-            </button>
-          </div>
-
-          {/* Search Bar */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search restaurants, cuisines..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 pl-12 pr-4 rounded-2xl bg-gray-50 border border-gray-100 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"
-            />
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          </div>
-        </header>
-
         {/* Distance Control */}
         <section className="px-5 py-4 bg-white">
           <div className="flex items-center justify-between mb-3">
