@@ -134,7 +134,12 @@ export function dealCardsWithSeed(
     console.log('📹 Sample video card:', { id: videoCards[0].id, title: videoCards[0].title });
   }
   if (mapsCards.length > 0) {
-    console.log('🗺️ Sample maps card:', { id: mapsCards[0].id, name: mapsCards[0].name });
+    const firstCard = mapsCards[0];
+    const displayName = firstCard.type === 'restaurant' ? firstCard.name : 
+                        firstCard.type === 'masterbot' ? firstCard.username : 
+                        firstCard.type === 'recipe' || firstCard.type === 'video' ? firstCard.title :
+                        firstCard.brandName;
+    console.log('🗺️ Sample maps card:', { id: firstCard.id, name: displayName });
   }
 
   // Index trackers for each pool

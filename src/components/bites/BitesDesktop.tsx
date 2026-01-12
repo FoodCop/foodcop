@@ -383,11 +383,12 @@ const BitesDesktop: React.FC = () => {
         )}
 
         {/* All Recipes Grid */}
-        {!loading && !error && mixedContent.length > 0 && (
+        {!loading && !error && mixedContent.length > 0 && (() => {
+          console.log('🔍 Rendering mixed content, total items:', mixedContent.length, 'First 5:', mixedContent.slice(0, 5));
+          return (
           <section>
             <SectionHeading className="mb-6">
               {selectedFilter === 'All' ? 'All Recipes' : `${selectedFilter} Recipes`}
-              {console.log('🔍 Rendering mixed content, total items:', mixedContent.length, 'First 5:', mixedContent.slice(0, 5))}
             </SectionHeading>
             <Masonry
               breakpointCols={{
@@ -418,7 +419,8 @@ const BitesDesktop: React.FC = () => {
               })}
             </Masonry>
           </section>
-        )}
+          );
+        })()}
 
         {/* Empty State */}
         {!loading && !error && recipes.length === 0 && (

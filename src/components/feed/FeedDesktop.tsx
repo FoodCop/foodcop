@@ -105,7 +105,7 @@ function DealCard({ card, index }: DealCardProps) {
             <div className="h-full w-full bg-white flex items-center justify-center">
               <img
                 src={card.imageUrl}
-                alt={isAd(card) ? card.brandName : 'Food Trivia'}
+                alt={isAd(card) ? card.altText : 'Food Trivia'}
                 className="w-full h-full object-contain"
               />
             </div>

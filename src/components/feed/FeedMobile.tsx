@@ -108,11 +108,11 @@ function SwipeableCard(props: SwipeableCardProps) {
   }
   
   // All other feed card types (restaurant, recipe, video, masterbot) use the same swipeable card
-  return <feedCardWrapper {...props} />;
+  return <FeedCardWrapper {...props} />;
 }
 
 // Separate component for Restaurant cards with all hooks
-function feedCardWrapper({ 
+function FeedCardWrapper({ 
   card, 
   onSwipe, 
   isActive, 
@@ -310,8 +310,13 @@ function feedCardWrapper({
           <>
             <div className="relative h-80 overflow-hidden">
               <img
-                src={feedCard.imageUrl || (feedCard as any).thumbnailUrl}
-                alt={(feedCard as any).name || (feedCard as any).title}
+                src={feedCard.type === 'video' ? feedCard.thumbnailUrl : feedCard.imageUrl}
+                alt={
+                  feedCard.type === 'restaurant' ? feedCard.name :
+                  feedCard.type === 'masterbot' ? feedCard.caption :
+                  feedCard.type === 'ad' ? feedCard.brandName :
+                  feedCard.title
+                }
                 className="w-full h-full object-cover"
               />
             </div>
@@ -394,7 +399,7 @@ function feedCardWrapper({
             </>
           )}
           
-          {feedCard.tags && feedCard.tags.length > 0 && (
+          {'tags' in feedCard && feedCard.tags && feedCard.tags.length > 0 && (
             <div className="flex gap-2 flex-wrap">
               {feedCard.tags.map((tag, index) => (
                 <span

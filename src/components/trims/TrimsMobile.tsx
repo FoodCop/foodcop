@@ -10,6 +10,9 @@ import { useAuth } from '../auth/AuthProvider';
 import { ProfileService } from '../../services/profileService';
 import type { UserProfile } from '../../types/profile';
 import { Card } from '../ui/card';
+import { mixVideosWithAds, isAd, type TrimsContent } from '../../utils/trimsMixer';
+import { AdCard as TrimsAdCard } from './AdCard';
+import type { AdItem } from '../../types/ad';
 
 // YouTube API response types
 interface YouTubeVideo {
@@ -59,9 +62,13 @@ const VIDEO_CATEGORIES = [
 
 export default function TrimsMobile() {
   const { openViewer } = useUniversalViewer();
+  const { user } = useAuth();
   const [mixedContent, setMixedContent] = useState<TrimsContent<TrimVideo>[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   // Helper function to categorize videos
   const getCategoryFromTitle = useCallback((title: string): string[] => {
@@ -128,6 +135,9 @@ export default function TrimsMobile() {
     loadProfile();
     loadVideos('cooking food recipe shorts tutorial');
   }, [user, loadVideos]);
+
+  // Compute filtered videos (excluding ads)
+  const filteredVideos = mixedContent.filter((item): item is TrimVideo => !isAd(item));
 
   const handleVideoClick = (video: TrimVideo) => {
     const unified = transformTrimVideoToUnified(video);
