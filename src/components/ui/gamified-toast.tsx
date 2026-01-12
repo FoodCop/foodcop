@@ -119,15 +119,15 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
 
             {/* Toast Container */}
             <div
-              className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-md w-[90%] z-[9999] bg-white rounded-xl shadow-lg p-6 pointer-events-auto border-2"
+              className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-md w-[90%] z-[9999] bg-white rounded-xl shadow-lg p-4 sm:p-6 pointer-events-auto border-2"
               style={{
                 borderColor: '#EEE',
                 fontSize: '12pt',
                 animation: 'toastCenterIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center flex-1 min-w-0">
                   {/* Logo - no background, as-is */}
                   <div
                     className="w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 p-2"
@@ -151,7 +151,7 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                 </div>
 
                 {/* Action Button - Continue or Close */}
-                <div className="flex gap-2 ml-4 flex-shrink-0 items-center">
+                <div className="flex gap-2 flex-shrink-0 items-center justify-end sm:ml-4">
                   {showSecondary && (
                     <button
                       onClick={() => {
@@ -208,14 +208,14 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
       <div className="relative">
         {/* Toast Container */}
         <div
-          className="bg-white rounded-xl shadow-lg p-6 pointer-events-auto border-2 w-96"
+          className="bg-white rounded-xl shadow-lg p-4 sm:p-6 pointer-events-auto border-2 w-full max-w-[90vw] sm:w-96"
           style={{
             borderColor: '#EEE',
             fontSize: '12pt',
           }}
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center flex-1">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center flex-1 min-w-0">
               {/* Logo - no background, as-is */}
               <div
                 className="w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 p-2"
@@ -239,7 +239,7 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
             </div>
 
             {/* Action Button - Continue or Close */}
-            <div className="flex gap-2 ml-4 flex-shrink-0 items-center">
+            <div className="flex gap-2 flex-shrink-0 items-center justify-end sm:ml-4">
               {showSecondary && (
                 <button
                   onClick={() => {
