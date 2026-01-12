@@ -450,18 +450,29 @@ export default function ScoutNew() {
             <i className="fa-solid fa-person-walking text-gray-700" style={{ fontSize: '10pt' }} aria-label="Distance"></i>
             <span className="text-sm font-bold text-gray-900">{radiusKm} km</span>
           </div>
-          <input
-            type="range"
-            min="0.5"
-            max="10"
-            step="0.5"
-            value={radiusKm}
-            onChange={(e) => setRadiusKm(Number.parseFloat(e.target.value))}
-            className="w-full h-2 bg-gray-100 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gray-900 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-gray-900 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-lg"
-          />
-          <div className="flex justify-between mt-2">
-            <span className="text-xs text-gray-400">0 km</span>
-            <span className="text-xs text-gray-400">10 km</span>
+          <div className="relative">
+            <input
+              type="range"
+              min="0.5"
+              max="10"
+              step="0.5"
+              value={radiusKm}
+              onChange={(e) => setRadiusKm(Number.parseFloat(e.target.value))}
+              className="scout-distance-slider w-full h-2 rounded-full appearance-none cursor-pointer"
+              style={{
+                background: `linear-gradient(to right, #374151 0%, #374151 ${((radiusKm - 0.5) / (10 - 0.5)) * 100}%, #D1D5DB ${((radiusKm - 0.5) / (10 - 0.5)) * 100}%, #D1D5DB 100%)`
+              }}
+            />
+            {/* Tick marks */}
+            <div className="flex justify-between mt-1 px-1">
+              {[0.5, 2, 4, 6, 8, 10].map((tick) => (
+                <div key={tick} className="w-px h-2 bg-gray-300" />
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-between mt-1">
+            <span className="text-xs font-semibold text-gray-900">0.5 km</span>
+            <span className="text-xs font-semibold text-gray-900">10 km</span>
           </div>
         </section>
 
@@ -788,6 +799,28 @@ export default function ScoutNew() {
         .hide-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        
+        /* Distance slider styling */
+        .scout-distance-slider::-webkit-slider-thumb {
+          appearance: none;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: white;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          border: 2px solid #E5E7EB;
+        }
+        
+        .scout-distance-slider::-moz-range-thumb {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: white;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          border: 2px solid #E5E7EB;
         }
       `}</style>
 
