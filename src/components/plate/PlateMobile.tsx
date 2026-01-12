@@ -26,7 +26,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { RecentChats } from './RecentChats';
 import { useDMChatStore } from '../../stores/chatStore';
 
-type TabType = 'dashboard' | 'posts' | 'recipes' | 'videos' | 'places';
+type TabType = 'places' | 'recipes' | 'videos' | 'crew' | 'posts';
 
 interface Post {
   id: string;
@@ -85,7 +85,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
   const user = currentUser || authUser;
   const userId = propUserId || user?.id;
   
-  const [selectedTab, setSelectedTab] = useState<TabType>('dashboard');
+  const [selectedTab, setSelectedTab] = useState<TabType>('places');
   const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -529,32 +529,16 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                setSelectedTab('dashboard');
+                setSelectedTab('places');
               }}
               className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                selectedTab === 'dashboard' 
+                selectedTab === 'places' 
                   ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
                   : 'hover:text-[#1A1A1A]'
               }`}
-              style={selectedTab === 'dashboard' ? {} : { color: '#808080' }}
+              style={selectedTab === 'places' ? {} : { color: '#808080' }}
             >
-              Dashboard
-            </button>
-            <button 
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setSelectedTab('posts');
-              }}
-              className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                selectedTab === 'posts' 
-                  ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                  : 'hover:text-[#1A1A1A]'
-              }`}
-              style={selectedTab === 'posts' ? {} : { color: '#808080' }}
-            >
-              Posts
+              Places
             </button>
             <button 
               type="button"
@@ -593,16 +577,32 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                setSelectedTab('places');
+                setSelectedTab('crew');
               }}
               className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                selectedTab === 'places' 
+                selectedTab === 'crew' 
                   ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
                   : 'hover:text-[#1A1A1A]'
               }`}
-              style={selectedTab === 'places' ? {} : { color: '#808080' }}
+              style={selectedTab === 'crew' ? {} : { color: '#808080' }}
             >
-              Places
+              Crew
+            </button>
+            <button 
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedTab('posts');
+              }}
+              className={`flex-1 py-4 text-sm font-medium transition-colors ${
+                selectedTab === 'posts' 
+                  ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
+                  : 'hover:text-[#1A1A1A]'
+              }`}
+              style={selectedTab === 'posts' ? {} : { color: '#808080' }}
+            >
+              Posts
             </button>
           </div>
         </nav>
@@ -654,284 +654,216 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
       );
     }
 
-    // Dashboard tab - show greeting, crew, recommendations
-    if (selectedTab === 'dashboard') {
+    // Crew tab - show crew members, chats, saved recipes and restaurants
+    if (selectedTab === 'crew') {
       return (
-        <div className="flex-1 pb-6">
-          {/* Greeting Section */}
-          <section className="bg-white px-5 py-6 mb-4">
-            <h1 className="text-xl font-bold mb-1 text-[#8B0000]">
-              {getUserDisplayName()}
-              {getUserLocation() !== 'Location not set' && (
-                <span className="ml-2 text-sm font-normal opacity-70">
-                  <MapPin className="w-3 h-3 inline mr-1" />
-                  {getUserLocation()}
-                </span>
-              )}
-            </h1>
-          </section>
-
-          {/* My Crew */}
-          <section className="mb-6">
-            <div className="px-5 mb-4 flex items-center justify-between">
-              <SectionHeading>My Crew</SectionHeading>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowFriendFinder(true)}
-                className="text-xs"
-              >
-                <UserPlus className="h-3 w-3 mr-1" />
-                Add
-              </Button>
-            </div>
-            <div className="px-5">
-              <div className="bg-white rounded-2xl p-4 shadow-sm">
-                {loadingSection.crew ? (
-                  <div className="flex gap-4 overflow-x-auto pb-2">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="flex flex-col items-center shrink-0">
-                        <div className="w-16 h-16 rounded-full bg-gray-200 animate-pulse" />
-                        <div className="w-12 h-3 bg-gray-200 rounded animate-pulse mt-2" />
-                      </div>
-                    ))}
-                  </div>
-                ) : dashboardData.crew.length > 0 ? (
-                  <div className="flex gap-4 overflow-x-auto pb-2">
-                    {dashboardData.crew.map((member) => (
-                      <button
-                        key={member.id}
-                        onClick={() => setSelectedFriendUserId(member.id)}
-                        className="flex flex-col items-center shrink-0 hover:opacity-80 transition-opacity"
-                      >
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#F7C59F] p-[3px]">
-                          <Avatar className="w-full h-full border-2 border-white">
-                            <AvatarImage src={member.avatar} alt={member.name} />
-                            <AvatarFallback className="bg-gray-100 text-sm">{member.initials}</AvatarFallback>
-                          </Avatar>
+        <div className="pb-20">
+          <div className="space-y-6">
+            {/* My Crew */}
+            <section className="mb-6">
+              <div className="px-5 mb-4 flex items-center justify-between">
+                <SectionHeading>My Crew</SectionHeading>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowFriendFinder(true)}
+                  className="text-xs"
+                >
+                  <UserPlus className="h-3 w-3 mr-1" />
+                  Add
+                </Button>
+              </div>
+              <div className="px-5">
+                <div className="bg-white rounded-2xl p-4 shadow-sm">
+                  {loadingSection.crew ? (
+                    <div className="flex gap-4 overflow-x-auto pb-2">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="flex flex-col items-center shrink-0">
+                          <div className="w-16 h-16 rounded-full bg-gray-200 animate-pulse" />
+                          <div className="w-12 h-3 bg-gray-200 rounded animate-pulse mt-2" />
                         </div>
-                        <span className="text-xs font-medium mt-2 max-w-16 truncate" style={{ color: '#6B7280' }}>
-                          {member.name.split(" ")[0]}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
-                    <p className="text-sm">No crew members yet</p>
-                    <p className="text-xs mt-1">Add friends to build your crew!</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowFriendFinder(true)}
-                      className="mt-4"
+                      ))}
+                    </div>
+                  ) : dashboardData.crew.length > 0 ? (
+                    <div className="flex gap-4 overflow-x-auto pb-2">
+                      {dashboardData.crew.map((member) => (
+                        <button
+                          key={member.id}
+                          onClick={() => setSelectedFriendUserId(member.id)}
+                          className="flex flex-col items-center shrink-0 hover:opacity-80 transition-opacity"
+                        >
+                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#F7C59F] p-[3px]">
+                            <Avatar className="w-full h-full border-2 border-white">
+                              <AvatarImage src={member.avatar} alt={member.name} />
+                              <AvatarFallback className="bg-gray-100 text-sm">{member.initials}</AvatarFallback>
+                            </Avatar>
+                          </div>
+                          <span className="text-xs font-medium mt-2 max-w-16 truncate" style={{ color: '#6B7280' }}>
+                            {member.name.split(" ")[0]}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
+                      <p className="text-sm">No crew members yet</p>
+                      <p className="text-xs mt-1">Add friends to build your crew!</p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowFriendFinder(true)}
+                        className="mt-4"
+                      >
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        Find Friends
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* Recent Chats */}
+            <section className="mb-6">
+              <div className="px-5 mb-4 flex items-center justify-between">
+                <SectionHeading>Recent Chats</SectionHeading>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    const { openChat } = useDMChatStore.getState();
+                    openChat();
+                  }}
+                  className="text-xs text-[#FF6B35] hover:text-[#FF6B35] hover:bg-orange-50"
+                >
+                  <MessageCircle className="h-3 w-3 mr-1" />
+                  View All
+                </Button>
+              </div>
+              <div className="px-5">
+                <div className="bg-white rounded-2xl p-4 shadow-sm">
+                  <RecentChats limit={5} />
+                </div>
+              </div>
+            </section>
+
+            {/* Saved Recipes */}
+            <section className="mb-6">
+              <div className="px-5 mb-4">
+                <SectionHeading>Saved Recipes</SectionHeading>
+              </div>
+              {loadingSection.recipes ? (
+                <div className="px-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                      <div className="h-36 bg-gray-200 animate-pulse" />
+                      <div className="p-3 space-y-2">
+                        <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                        <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : dashboardData.savedRecipes.length > 0 ? (
+                <div className="px-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {dashboardData.savedRecipes.map((recipe) => (
+                    <div
+                      key={recipe.id}
+                      className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all"
                     >
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      Find Friends
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-
-          {/* Recent Chats */}
-          <section className="mb-6">
-            <div className="px-5 mb-4 flex items-center justify-between">
-              <SectionHeading>Recent Chats</SectionHeading>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  const { openChat } = useDMChatStore.getState();
-                  openChat();
-                }}
-                className="text-xs text-[#FF6B35] hover:text-[#FF6B35] hover:bg-orange-50"
-              >
-                <MessageCircle className="h-3 w-3 mr-1" />
-                View All
-              </Button>
-            </div>
-            <div className="px-5">
-              <div className="bg-white rounded-2xl p-4 shadow-sm">
-                <RecentChats limit={5} />
-              </div>
-            </div>
-          </section>
-
-          {/* Saved Recipes */}
-          <section className="mb-6">
-            <div className="px-5 mb-4">
-              <SectionHeading>Saved Recipes</SectionHeading>
-            </div>
-            {loadingSection.recipes ? (
-              <div className="px-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                    <div className="h-36 bg-gray-200 animate-pulse" />
-                    <div className="p-3 space-y-2">
-                      <div className="h-4 bg-gray-200 rounded animate-pulse" />
-                      <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : dashboardData.savedRecipes.length > 0 ? (
-              <div className="px-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {dashboardData.savedRecipes.map((recipe) => (
-                  <div
-                    key={recipe.id}
-                    className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all"
-                  >
-                    <div className="relative h-36">
-                      <img
-                        src={recipe.image}
-                        alt={recipe.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Recipe';
-                        }}
-                      />
-                    </div>
-                    <div className="p-3">
-                      <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1 leading-tight">
-                        {recipe.name}
-                      </CardHeading>
-                      <div className="flex items-center gap-1.5" style={{ color: '#6B7280', fontSize: '10pt' }}>
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>{recipe.time}</span>
+                      <div className="relative h-36">
+                        <img
+                          src={recipe.image}
+                          alt={recipe.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Recipe';
+                          }}
+                        />
+                      </div>
+                      <div className="p-3">
+                        <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1 leading-tight">
+                          {recipe.name}
+                        </CardHeading>
+                        <div className="flex items-center gap-1.5" style={{ color: '#6B7280', fontSize: '10pt' }}>
+                          <Clock className="w-3.5 h-3.5" />
+                          <span>{recipe.time}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="px-5 text-center py-6" style={{ color: '#9CA3AF' }}>
-                <p className="text-sm">No saved recipes yet</p>
-                <p className="text-xs mt-1">Save recipes from Bites to see them here!</p>
-              </div>
-            )}
-          </section>
+                  ))}
+                </div>
+              ) : (
+                <div className="px-5 text-center py-6" style={{ color: '#9CA3AF' }}>
+                  <p className="text-sm">No saved recipes yet</p>
+                  <p className="text-xs mt-1">Save recipes from Bites to see them here!</p>
+                </div>
+              )}
+            </section>
 
-          {/* Restaurant Recommendations */}
-          <section className="mb-6">
-            <div className="px-5 flex items-center justify-between mb-4">
-              <SectionHeading>Nearby Restaurants</SectionHeading>
-              <button className="flex items-center gap-1.5 text-[#FF6B35] text-sm font-medium">
-                <span>Map View</span>
-                <Navigation className="w-4 h-4 fill-current" />
-              </button>
-            </div>
-            {loadingSection.restaurants ? (
-              <div className="px-5 space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                    <div className="h-44 bg-gray-200 animate-pulse" />
-                    <div className="p-4 space-y-2">
-                      <div className="h-5 bg-gray-200 rounded animate-pulse" />
-                      <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
-                    </div>
-                  </div>
-                ))}
+            {/* Restaurant Recommendations */}
+            <section className="mb-6">
+              <div className="px-5 flex items-center justify-between mb-4">
+                <SectionHeading>Nearby Restaurants</SectionHeading>
+                <button className="flex items-center gap-1.5 text-[#FF6B35] text-sm font-medium">
+                  <span>Map View</span>
+                  <Navigation className="w-4 h-4 fill-current" />
+                </button>
               </div>
-            ) : dashboardData.restaurantRecommendations.length > 0 ? (
-              <div className="px-5 space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
-                {dashboardData.restaurantRecommendations.map((restaurant) => (
-                  <div
-                    key={restaurant.id}
-                    className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all"
-                  >
-                    <div className="relative h-44">
-                      <img
-                        src={restaurant.image}
-                        alt={restaurant.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Restaurant';
-                        }}
-                      />
-                      <div className="absolute top-3 left-3 flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#10B981] text-white shadow-md">
-                        <Star className="w-3.5 h-3.5 fill-white" />
-                        <span className="text-xs font-bold">{restaurant.rating.toFixed(1)}</span>
+              {loadingSection.restaurants ? (
+                <div className="px-5 space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                      <div className="h-44 bg-gray-200 animate-pulse" />
+                      <div className="p-4 space-y-2">
+                        <div className="h-5 bg-gray-200 rounded animate-pulse" />
+                        <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
                       </div>
                     </div>
-                    <div className="p-4">
-                      <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
-                        {restaurant.name}
-                      </CardHeading>
-                      <p className="mb-3" style={{ color: '#6B7280', fontSize: '10pt' }}>{restaurant.cuisine}</p>
-                      <div className="flex items-center gap-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
-                        <Navigation className="w-4 h-4 text-[#FF6B35]" />
-                        <span>{restaurant.distance}</span>
+                  ))}
+                </div>
+              ) : dashboardData.restaurantRecommendations.length > 0 ? (
+                <div className="px-5 space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
+                  {dashboardData.restaurantRecommendations.map((restaurant) => (
+                    <div
+                      key={restaurant.id}
+                      className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all"
+                    >
+                      <div className="relative h-44">
+                        <img
+                          src={restaurant.image}
+                          alt={restaurant.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Restaurant';
+                          }}
+                        />
+                        <div className="absolute top-3 left-3 flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#10B981] text-white shadow-md">
+                          <Star className="w-3.5 h-3.5 fill-white" />
+                          <span className="text-xs font-bold">{restaurant.rating.toFixed(1)}</span>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
+                          {restaurant.name}
+                        </CardHeading>
+                        <p className="mb-3" style={{ color: '#6B7280', fontSize: '10pt' }}>{restaurant.cuisine}</p>
+                        <div className="flex items-center gap-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
+                          <Navigation className="w-4 h-4 text-[#FF6B35]" />
+                          <span>{restaurant.distance}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="px-5 text-center py-6" style={{ color: '#9CA3AF' }}>
-                <p className="text-sm">No restaurant recommendations</p>
-                <p className="text-xs mt-1">Enable location to see nearby restaurants!</p>
-              </div>
-            )}
-          </section>
-
-          {/* Trending Food Posts */}
-          <section className="mb-6">
-            <div className="px-5 mb-4">
-              <SectionHeading>Trending Posts</SectionHeading>
-            </div>
-            {loadingSection.masterbot ? (
-              <div className="px-5 space-y-3">
-                {[1, 2].map((i) => (
-                  <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                    <div className="h-48 bg-gray-200 animate-pulse" />
-                  </div>
-                ))}
-              </div>
-            ) : dashboardData.masterbotPosts.length > 0 ? (
-              <div className="px-5 space-y-3">
-                {dashboardData.masterbotPosts.map((post) => (
-                  <div
-                    key={post.id}
-                    className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-all"
-                  >
-                    <div className="relative h-48">
-                      <img
-                        src={post.image_url}
-                        alt={post.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/800x600?text=Post';
-                        }}
-                      />
-                    </div>
-                    <div className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Avatar className="w-8 h-8">
-                          <AvatarImage src={post.masterbot_avatar} alt={post.masterbot_name} />
-                          <AvatarFallback className="bg-gray-100 text-xs">{post.masterbot_name[0]}</AvatarFallback>
-                        </Avatar>
-                        <span className="font-medium" style={{ fontSize: '10pt', color: '#6B7280' }}>
-                          {post.masterbot_name}
-                        </span>
-                      </div>
-                      <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1">
-                        {post.title}
-                      </CardHeading>
-                      <p className="line-clamp-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
-                        {post.content}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="px-5 text-center py-6" style={{ color: '#9CA3AF' }}>
-                <p className="text-sm">No trending posts</p>
-              </div>
-            )}
-          </section>
+                  ))}
+                </div>
+              ) : (
+                <div className="px-5 text-center py-6" style={{ color: '#9CA3AF' }}>
+                  <p className="text-sm">No restaurant recommendations</p>
+                  <p className="text-xs mt-1">Enable location to see nearby restaurants!</p>
+                </div>
+              )}
+            </section>
+          </div>
         </div>
       );
     }
