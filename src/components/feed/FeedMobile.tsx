@@ -299,20 +299,17 @@ function FeedCardWrapper({
         {/* Card Content - Dynamic based on type */}
         {/* Ads and Trivia: Show as full vertical images without details */}
         {(isAd(feedCard) || isTrivia(feedCard)) ? (
-          <div className="bg-white flex flex-col">
-            <div className="aspect-[9/16] overflow-hidden flex items-center justify-center">
+          <div className="bg-white flex flex-col relative">
+            <div className="aspect-[9/16] overflow-hidden flex items-center justify-center relative">
               <img
                 src={feedCard.imageUrl}
                 alt={isAd(feedCard) ? (feedCard as any).brandName : 'Food Trivia'}
                 className="w-full h-full object-contain"
               />
-            </div>
-            {/* FUZO Badge for ads and trivia */}
-            <div className="p-5 border-t border-gray-100 flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
+              {/* Source Badge - Bottom Right Avatar */}
+              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
                 F
               </div>
-              <span className="text-xs text-gray-500">FUZO</span>
             </div>
           </div>
         ) : (
@@ -328,6 +325,27 @@ function FeedCardWrapper({
                 }
                 className="w-full h-full object-cover"
               />
+              {/* Source Badge - Bottom Right Avatar */}
+              {feedCard.type === 'restaurant' && (
+                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4285F4] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
+                  G
+                </div>
+              )}
+              {feedCard.type === 'video' && (
+                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF0000] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
+                  Y
+                </div>
+              )}
+              {feedCard.type === 'recipe' && (
+                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4CAF50] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
+                  S
+                </div>
+              )}
+              {feedCard.type === 'masterbot' && (
+                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white">
+                  F
+                </div>
+              )}
             </div>
 
             {/* Content Section - Dynamic based on card type */}
@@ -347,13 +365,6 @@ function FeedCardWrapper({
                   {feedCard.description}
                 </p>
               )}
-              {/* Source Badge */}
-              <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
-                <div className="w-6 h-6 rounded-full bg-[#4285F4] flex items-center justify-center text-white text-xs font-bold">
-                  G
-                </div>
-                <span className="text-xs text-gray-500">Google Maps</span>
-              </div>
             </>
           )}
 
@@ -369,13 +380,6 @@ function FeedCardWrapper({
                 <span>🔥 {(feedCard as any).difficulty}</span>
                 <span>🍽️ {(feedCard as any).servings} servings</span>
               </div>
-              {/* Source Badge */}
-              <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
-                <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
-                  F
-                </div>
-                <span className="text-xs text-gray-500">FUZO</span>
-              </div>
             </>
           )}
 
@@ -389,13 +393,6 @@ function FeedCardWrapper({
               <div className="flex gap-3 text-xs text-gray-600">
                 <span>⏱️ {(feedCard as any).duration}</span>
                 <span>👁️ {(feedCard as any).views.toLocaleString()} views</span>
-              </div>
-              {/* Source Badge */}
-              <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
-                <div className="w-6 h-6 rounded-full bg-[#FF0000] flex items-center justify-center text-white text-xs font-bold">
-                  Y
-                </div>
-                <span className="text-xs text-gray-500">YouTube</span>
               </div>
             </>
           )}
@@ -421,13 +418,6 @@ function FeedCardWrapper({
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Heart className="w-4 h-4" />
                 <span>{(feedCard as any).likes.toLocaleString()} likes</span>
-              </div>
-              {/* Source Badge */}
-              <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
-                <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
-                  F
-                </div>
-                <span className="text-xs text-gray-500">FUZO</span>
               </div>
             </>
           )}
