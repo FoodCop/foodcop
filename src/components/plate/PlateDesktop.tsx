@@ -577,7 +577,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               </div>
 
               {/* Stats Row */}
-              <div className="flex items-center gap-3 py-4 border-t border-gray-200">
+              <div className="flex items-center gap-3 py-4">
                 <button className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity">
                   <span className="text-2xl font-bold text-[#1A1A1A]">{userPoints.toLocaleString()}</span>
                   <span className="text-xs mt-1" style={{ color: '#808080' }}>Points</span>

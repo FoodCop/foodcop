@@ -421,7 +421,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
       )}
       <main className="max-w-full mx-auto">
         {/* Profile Header */}
-        <section className="bg-white px-5 py-6 border-b border-gray-200">
+        <section className="bg-white px-5 py-6">
           <div className="flex items-start gap-4">
             {/* Avatar */}
             <div className="relative">
@@ -472,7 +472,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           </div>
 
           {/* Stats Row */}
-          <div className="flex items-center gap-2 py-4 border-t border-gray-200 px-2">
+          <div className="flex items-center gap-2 py-4 px-2">
             <button className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity">
               <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">{userPoints.toLocaleString()}</span>
               <span className="text-xs mt-1" style={{ color: '#808080' }}>Points</span>
