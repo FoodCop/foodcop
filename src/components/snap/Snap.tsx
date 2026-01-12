@@ -47,6 +47,7 @@ export function Snap() {
   const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [cameraStarted, setCameraStarted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   
@@ -67,6 +68,18 @@ export function Snap() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Auto-start camera on mobile
+  useEffect(() => {
+    if (isMobile && !cameraStarted) {
+      setCameraStarted(true);
+      if (MOCK_CAMERA_MODE) {
+        setShowCamera(true);
+      } else {
+        startCamera();
+      }
+    }
+  }, [isMobile, cameraStarted]);
 
   // Cleanup stream on unmount
   useEffect(() => {
@@ -595,21 +608,31 @@ export function Snap() {
     );
   }
 
-  // Default State
+  // Default State - Loading for mobile, start button for desktop
   return (
     <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex flex-col" style={{ fontSize: '10pt' }}>
       <MinimalHeader showLogo={true} logoPosition="left" />
       <div className="flex-1 flex items-center justify-center">
       <div className="text-center px-8">
-        <Camera className="w-24 h-24 text-gray-400 mx-auto mb-6" />
-        <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Ready to SNAP?</h2>
-        <p className="text-gray-600 mb-6">Capture and share your food moments</p>
-        <button
-          onClick={() => setShowDisclaimer(true)}
-          className="px-8 py-3 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
-        >
-          Start Camera
-        </button>
+        {isMobile ? (
+          <>
+            <Camera className="w-24 h-24 text-gray-400 mx-auto mb-6 animate-pulse" />
+            <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Starting Camera...</h2>
+            <p className="text-gray-600 mb-6">Please allow camera access</p>
+          </>
+        ) : (
+          <>
+            <Camera className="w-24 h-24 text-gray-400 mx-auto mb-6" />
+            <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Ready to SNAP?</h2>
+            <p className="text-gray-600 mb-6">Capture and share your food moments</p>
+            <button
+              onClick={() => setShowDisclaimer(true)}
+              className="px-8 py-3 bg-gradient-to-r from-[#FF6B35] to-[#EA580C] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+            >
+              Start Camera
+            </button>
+          </>
+        )}
       </div>
       </div>
     </div>
