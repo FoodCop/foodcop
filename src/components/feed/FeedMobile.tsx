@@ -219,7 +219,7 @@ function FeedCardWrapper({
             
             {/* Text overlay at bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-5 pb-20">
-              <h2 className="text-2xl font-bold text-white line-clamp-2">{cardTitle}</h2>
+              <h2 className="feed-card-title line-clamp-2">{cardTitle}</h2>
             </div>
             
             {/* Source Badge - Bottom Right Avatar */}
@@ -358,13 +358,13 @@ function FeedCardWrapper({
               <div className="absolute bottom-0 left-0 right-0 p-5 text-white z-10">
                 {feedCard.type === 'restaurant' && (
                   <>
-                    <h2 className="text-2xl font-bold mb-1">{feedCard.name}</h2>
-                    <p className="text-sm opacity-90 flex items-center gap-1 mb-2">
+                    <h2 className="feed-card-title">{feedCard.name}</h2>
+                    <p className="feed-card-subtitle flex items-center gap-1">
                       <MapPin className="w-3 h-3" />
                       {feedCard.location} • {feedCard.distance}
                     </p>
                     {feedCard.description && (
-                      <p className="text-sm opacity-80 line-clamp-2 mb-16">
+                      <p className="feed-card-description line-clamp-2 mb-16">
                         {feedCard.description}
                       </p>
                     )}
@@ -372,12 +372,12 @@ function FeedCardWrapper({
                 )}
                 {feedCard.type === 'recipe' && (
                   <>
-                    <h2 className="text-2xl font-bold mb-1">{(feedCard as any).title}</h2>
-                    <p className="text-sm opacity-90 mb-2">By {(feedCard as any).author}</p>
-                    <p className="text-sm opacity-80 line-clamp-2 mb-3">
+                    <h2 className="feed-card-title">{(feedCard as any).title}</h2>
+                    <p className="feed-card-subtitle">By {(feedCard as any).author}</p>
+                    <p className="feed-card-description line-clamp-2 mb-3">
                       {(feedCard as any).description}
                     </p>
-                    <div className="flex gap-3 text-xs opacity-80 mb-16">
+                    <div className="feed-card-meta flex gap-3 mb-16">
                       <span>⏱️ {(feedCard as any).prepTime}</span>
                       <span>🔥 {(feedCard as any).difficulty}</span>
                       <span>🍽️ {(feedCard as any).servings} servings</span>
@@ -386,12 +386,12 @@ function FeedCardWrapper({
                 )}
                 {feedCard.type === 'video' && (
                   <>
-                    <h2 className="text-2xl font-bold mb-1">{(feedCard as any).title}</h2>
-                    <p className="text-sm opacity-90 mb-2">By {(feedCard as any).creator}</p>
-                    <p className="text-sm opacity-80 line-clamp-2 mb-3">
+                    <h2 className="feed-card-title">{(feedCard as any).title}</h2>
+                    <p className="feed-card-subtitle">By {(feedCard as any).creator}</p>
+                    <p className="feed-card-description line-clamp-2 mb-3">
                       {(feedCard as any).description}
                     </p>
-                    <div className="flex gap-3 text-xs opacity-80 mb-16">
+                    <div className="feed-card-meta flex gap-3 mb-16">
                       <span>⏱️ {(feedCard as any).duration}</span>
                       <span>👁️ {(feedCard as any).views.toLocaleString()} views</span>
                     </div>
@@ -408,14 +408,14 @@ function FeedCardWrapper({
                         />
                       )}
                       <div>
-                        <p className="font-semibold text-sm">{(feedCard as any).displayName}</p>
-                        <p className="text-xs opacity-80">@{(feedCard as any).username}</p>
+                        <p className="feed-card-subtitle font-semibold">{(feedCard as any).displayName}</p>
+                        <p className="feed-card-meta">@{(feedCard as any).username}</p>
                       </div>
                     </div>
-                    <p className="text-sm opacity-90 mb-2">
+                    <p className="feed-card-subtitle">
                       {(feedCard as any).caption}
                     </p>
-                    <div className="flex items-center gap-2 text-sm opacity-80 mb-16">
+                    <div className="feed-card-meta flex items-center gap-2 mb-16">
                       <Heart className="w-4 h-4" />
                       <span>{(feedCard as any).likes.toLocaleString()} likes</span>
                     </div>
@@ -613,6 +613,43 @@ export function FeedMobile() {
           ))}
         </div>
       </main>
+      
+      <style>{`
+        /* Custom feed card text styles - not inheriting from global */
+        .feed-card-title {
+          color: #ffffff !important;
+          font-size: 1.5rem !important;
+          line-height: 2rem !important;
+          font-weight: 700 !important;
+          margin-bottom: 0.25rem !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+        }
+        
+        .feed-card-subtitle {
+          color: #ffffff !important;
+          font-size: 0.875rem !important;
+          line-height: 1.25rem !important;
+          opacity: 0.9 !important;
+          margin-bottom: 0.5rem !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+        }
+        
+        .feed-card-description {
+          color: #ffffff !important;
+          font-size: 0.875rem !important;
+          line-height: 1.25rem !important;
+          opacity: 0.8 !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+        }
+        
+        .feed-card-meta {
+          color: #ffffff !important;
+          font-size: 0.75rem !important;
+          line-height: 1rem !important;
+          opacity: 0.8 !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+        }
+      `}</style>
     </div>
   );
 }
