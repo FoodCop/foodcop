@@ -517,8 +517,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
         </section>
 
         {/* Tab Navigation */}
-        <nav className="bg-white border-b border-gray-200 sticky top-14 z-40 mt-2">
-          <div className="flex">
+        <nav className="bg-white sticky top-14 z-40 mt-2 p-2">
+          <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
             <button 
               type="button"
               onClick={(e) => {
@@ -526,14 +526,20 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                 e.stopPropagation();
                 setSelectedTab('places');
               }}
-              className={`flex-1 py-4 text-sm font-medium transition-colors ${
+              className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'places' 
-                  ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                  : 'hover:text-[#1A1A1A]'
+                  ? 'bg-[#FF6B35] text-white' 
+                  : 'bg-gray-50 text-gray-600'
               }`}
-              style={selectedTab === 'places' ? {} : { color: '#808080' }}
             >
               Places
+              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                selectedTab === 'places' 
+                  ? 'bg-white/20 text-white' 
+                  : 'bg-gray-200 text-gray-700'
+              }`}>
+                {savedItems.filter(item => item.item_type === 'restaurant').length}
+              </span>
             </button>
             <button 
               type="button"
@@ -542,14 +548,20 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                 e.stopPropagation();
                 setSelectedTab('recipes');
               }}
-              className={`flex-1 py-4 text-sm font-medium transition-colors ${
+              className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'recipes' 
-                  ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                  : 'hover:text-[#1A1A1A]'
+                  ? 'bg-[#FF6B35] text-white' 
+                  : 'bg-gray-50 text-gray-600'
               }`}
-              style={selectedTab === 'recipes' ? {} : { color: '#808080' }}
             >
               Recipes
+              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                selectedTab === 'recipes' 
+                  ? 'bg-white/20 text-white' 
+                  : 'bg-gray-200 text-gray-700'
+              }`}>
+                {savedItems.filter(item => item.item_type === 'recipe').length}
+              </span>
             </button>
             <button 
               type="button"
@@ -558,14 +570,20 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                 e.stopPropagation();
                 setSelectedTab('videos');
               }}
-              className={`flex-1 py-4 text-sm font-medium transition-colors ${
+              className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'videos' 
-                  ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                  : 'hover:text-[#1A1A1A]'
+                  ? 'bg-[#FF6B35] text-white' 
+                  : 'bg-gray-50 text-gray-600'
               }`}
-              style={selectedTab === 'videos' ? {} : { color: '#808080' }}
             >
               Videos
+              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                selectedTab === 'videos' 
+                  ? 'bg-white/20 text-white' 
+                  : 'bg-gray-200 text-gray-700'
+              }`}>
+                {savedItems.filter(item => item.item_type === 'video').length}
+              </span>
             </button>
             <button 
               type="button"
@@ -574,14 +592,20 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                 e.stopPropagation();
                 setSelectedTab('crew');
               }}
-              className={`flex-1 py-4 text-sm font-medium transition-colors ${
+              className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'crew' 
-                  ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                  : 'hover:text-[#1A1A1A]'
+                  ? 'bg-[#FF6B35] text-white' 
+                  : 'bg-gray-50 text-gray-600'
               }`}
-              style={selectedTab === 'crew' ? {} : { color: '#808080' }}
             >
               Crew
+              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                selectedTab === 'crew' 
+                  ? 'bg-white/20 text-white' 
+                  : 'bg-gray-200 text-gray-700'
+              }`}>
+                {dashboardData.crew.length}
+              </span>
             </button>
             <button 
               type="button"
@@ -590,14 +614,20 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                 e.stopPropagation();
                 setSelectedTab('posts');
               }}
-              className={`flex-1 py-4 text-sm font-medium transition-colors ${
+              className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'posts' 
-                  ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]' 
-                  : 'hover:text-[#1A1A1A]'
+                  ? 'bg-[#FF6B35] text-white' 
+                  : 'bg-gray-50 text-gray-600'
               }`}
-              style={selectedTab === 'posts' ? {} : { color: '#808080' }}
             >
               Posts
+              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                selectedTab === 'posts' 
+                  ? 'bg-white/20 text-white' 
+                  : 'bg-gray-200 text-gray-700'
+              }`}>
+                {posts.length}
+              </span>
             </button>
           </div>
         </nav>

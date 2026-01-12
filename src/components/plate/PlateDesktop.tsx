@@ -621,8 +621,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
             </section>
 
             {/* Tab Navigation */}
-            <nav className="bg-white rounded-xl shadow-sm border-b border-gray-200 mb-6">
-              <div className="flex">
+            <nav className="bg-white rounded-xl shadow-sm mb-6 p-2">
+              <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -630,13 +630,18 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     e.stopPropagation();
                     setSelectedTab('places');
                   }}
-                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'places'
-                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
-                      : 'hover:text-[#1A1A1A]'
+                  className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'places'
+                      ? 'bg-[#FF6B35] text-white'
+                      : 'hover:bg-gray-50 text-gray-600'
                     }`}
-                  style={selectedTab === 'places' ? {} : { color: '#808080' }}
                 >
                   Places
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${selectedTab === 'places'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-100 text-gray-700'
+                    }`}>
+                    {savedItems.filter(item => item.item_type === 'restaurant').length}
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -645,13 +650,18 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     e.stopPropagation();
                     setSelectedTab('recipes');
                   }}
-                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'recipes'
-                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
-                      : 'hover:text-[#1A1A1A]'
+                  className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'recipes'
+                      ? 'bg-[#FF6B35] text-white'
+                      : 'hover:bg-gray-50 text-gray-600'
                     }`}
-                  style={selectedTab === 'recipes' ? {} : { color: '#808080' }}
                 >
                   Recipes
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${selectedTab === 'recipes'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-100 text-gray-700'
+                    }`}>
+                    {savedItems.filter(item => item.item_type === 'recipe').length}
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -660,13 +670,18 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     e.stopPropagation();
                     setSelectedTab('videos');
                   }}
-                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'videos'
-                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
-                      : 'hover:text-[#1A1A1A]'
+                  className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'videos'
+                      ? 'bg-[#FF6B35] text-white'
+                      : 'hover:bg-gray-50 text-gray-600'
                     }`}
-                  style={selectedTab === 'videos' ? {} : { color: '#808080' }}
                 >
                   Videos
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${selectedTab === 'videos'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-100 text-gray-700'
+                    }`}>
+                    {savedItems.filter(item => item.item_type === 'video').length}
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -675,13 +690,18 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     e.stopPropagation();
                     setSelectedTab('crew');
                   }}
-                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'crew'
-                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
-                      : 'hover:text-[#1A1A1A]'
+                  className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'crew'
+                      ? 'bg-[#FF6B35] text-white'
+                      : 'hover:bg-gray-50 text-gray-600'
                     }`}
-                  style={selectedTab === 'crew' ? {} : { color: '#808080' }}
                 >
                   Crew
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${selectedTab === 'crew'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-100 text-gray-700'
+                    }`}>
+                    {dashboardData.crew.length}
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -690,13 +710,18 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     e.stopPropagation();
                     setSelectedTab('posts');
                   }}
-                  className={`flex-1 py-4 text-sm font-medium transition-colors ${selectedTab === 'posts'
-                      ? 'text-[#FF6B35] border-b-2 border-[#FF6B35]'
-                      : 'hover:text-[#1A1A1A]'
+                  className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'posts'
+                      ? 'bg-[#FF6B35] text-white'
+                      : 'hover:bg-gray-50 text-gray-600'
                     }`}
-                  style={selectedTab === 'posts' ? {} : { color: '#808080' }}
                 >
                   Posts
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${selectedTab === 'posts'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-100 text-gray-700'
+                    }`}>
+                    {posts.length}
+                  </span>
                 </button>
               </div>
             </nav>
