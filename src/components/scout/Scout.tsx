@@ -13,6 +13,7 @@ import { useAuth } from '../auth/AuthProvider';
 import { savedItemsService } from '../../services';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { SharePostButton } from '../feed/SharePostButton';
+import { mapSavedItemToRestaurant, calculateDistanceKm } from '../../utils/savedRestaurantMapper';
 
 // Hook to detect screen size
 function useIsDesktop() {
@@ -78,6 +79,13 @@ const CUISINE_CATEGORIES = [
 export default function ScoutNew() {
   // Detect desktop screen size
   const isDesktop = useIsDesktop();
+  const { user } = useAuth();
+
+  // Tab state
+  const [activeTab, setActiveTab] = useState<'discover' | 'my-map'>('discover');
+  const [myMapFilter, setMyMapFilter] = useState<'nearby' | 'all'>('nearby');
+  const [savedRestaurants, setSavedRestaurants] = useState<Restaurant[]>([]);
+  const [savedLoading, setSavedLoading] = useState(false);
 
   // Mobile-specific state
   const [userLocation, setUserLocation] = useState<[number, number]>([37.7849, -122.4094]);
@@ -200,6 +208,65 @@ export default function ScoutNew() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [radiusKm]);
 
+  // Load saved restaurants for My Map
+  useEffect(() => {
+    const loadSavedRestaurants = async () => {
+      if (!user || activeTab !== 'my-map') {
+        return;
+      }
+
+      setSavedLoading(true);
+      try {
+        const result = await savedItemsService.listSavedItems({ itemType: 'restaurant' });
+        
+        if (!result.success || !result.data) {
+          setSavedRestaurants([]);
+          return;
+        }
+
+        const mapped: Restaurant[] = [];
+        for (const item of result.data) {
+          const mappedRestaurant = mapSavedItemToRestaurant(item);
+          if (mappedRestaurant) {
+            // Calculate distance from user location
+            if (userLocation) {
+              const origin = { lat: userLocation[0], lng: userLocation[1] };
+              const dest = { lat: mappedRestaurant.lat, lng: mappedRestaurant.lng };
+              const distKm = calculateDistanceKm(origin, dest);
+              // Convert to Restaurant type with distance
+              const restaurant: Restaurant = {
+                id: mappedRestaurant.id,
+                name: mappedRestaurant.name,
+                address: mappedRestaurant.address,
+                lat: mappedRestaurant.lat,
+                lng: mappedRestaurant.lng,
+                cuisine: Array.isArray(mappedRestaurant.cuisine) ? mappedRestaurant.cuisine.join(', ') : mappedRestaurant.cuisine,
+                rating: mappedRestaurant.rating || 0,
+                price_level: mappedRestaurant.price_level,
+                distance: distKm,
+                photos: Array.isArray(mappedRestaurant.photos)
+                  ? mappedRestaurant.photos.map((p) =>
+                      typeof p === 'string' ? p : `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${p.photo_reference}&key=${import.meta.env.VITE_GOOGLE_PLACES_API_KEY}`
+                    )
+                  : [],
+              };
+              mapped.push(restaurant);
+            }
+          }
+        }
+
+        setSavedRestaurants(mapped);
+      } catch (err) {
+        console.error('Failed to load saved restaurants:', err);
+        toast.error('Failed to load saved places');
+      } finally {
+        setSavedLoading(false);
+      }
+    };
+
+    loadSavedRestaurants();
+  }, [activeTab, user, userLocation]);
+
   const reverseGeocode = async (lat: number, lng: number) => {
     try {
       const response = await fetch(
@@ -304,6 +371,18 @@ export default function ScoutNew() {
     }
   }, [searchQuery, radiusKm, selectedCategory, userLocation]);
 
+  // Filter saved restaurants based on My Map filter
+  const filteredSavedRestaurants =
+    myMapFilter === 'all'
+      ? savedRestaurants
+      : savedRestaurants.filter((r) => {
+          const distKm = calculateDistanceKm(
+            { lat: userLocation[0], lng: userLocation[1] },
+            { lat: r.lat, lng: r.lng }
+          );
+          return distKm <= 20;
+        });
+
   // Render desktop version for screens >= 1024px
   if (isDesktop) {
     return <ScoutDesktop />;
@@ -315,6 +394,34 @@ export default function ScoutNew() {
       {/* Mobile Container - Max width for mobile view */}
       <div className="max-w-md mx-auto bg-white min-h-screen md:max-w-full">
 
+        {/* Tab Navigation */}
+        <div className="border-b border-gray-200 bg-white px-4 pt-2">
+          <div className="inline-flex rounded-full bg-gray-100 p-1">
+            <button
+              onClick={() => setActiveTab('discover')}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
+                activeTab === 'discover'
+                  ? 'bg-[#FF6B35] text-white'
+                  : 'bg-transparent text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Discover
+            </button>
+            <button
+              onClick={() => setActiveTab('my-map')}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
+                activeTab === 'my-map'
+                  ? 'bg-[#FF6B35] text-white'
+                  : 'bg-transparent text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              My Map
+            </button>
+          </div>
+        </div>
+
+        {/* Discover Tab Content */}
+        {activeTab === 'discover' && (<>
         {/* Header */}
         <header className="bg-white px-5 pt-6 pb-4 sticky top-0 z-50 shadow-sm">
           <div className="flex items-center justify-between mb-5">
@@ -515,6 +622,163 @@ export default function ScoutNew() {
         )}
 
         <div className="h-24"></div>
+        </>)}
+
+      {/* My Map Tab Content */}
+      {activeTab === 'my-map' && (
+        <div className="px-5 py-6">
+          {/* Filter Toggle */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-900">My Saved Places</h2>
+            <div className="inline-flex rounded-full bg-gray-100 p-1">
+              <button
+                onClick={() => setMyMapFilter('nearby')}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  myMapFilter === 'nearby'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'bg-transparent text-gray-600'
+                }`}
+              >
+                Nearby
+              </button>
+              <button
+                onClick={() => setMyMapFilter('all')}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  myMapFilter === 'all'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'bg-transparent text-gray-600'
+                }`}
+              >
+                All
+              </button>
+            </div>
+          </div>
+
+          {/* Map Section */}
+          <div className="relative w-full h-80 rounded-3xl overflow-hidden shadow-lg mb-6">
+            <GoogleMapView
+              center={{ lat: userLocation[0], lng: userLocation[1] }}
+              zoom={13}
+              userLocation={{ lat: userLocation[0], lng: userLocation[1] }}
+              markers={filteredSavedRestaurants.map((restaurant): MapMarker => ({
+                id: restaurant.id,
+                position: { lat: restaurant.lat, lng: restaurant.lng },
+                title: restaurant.name,
+                data: restaurant,
+              }))}
+              selectedMarkerId={selectedRestaurant?.id}
+              onMarkerClick={(markerId, data) => {
+                const restaurant = data as Restaurant;
+                fetchRestaurantDetails(restaurant);
+              }}
+            />
+          </div>
+
+          {/* Loading State */}
+          {savedLoading && (
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="w-12 h-12 border-4 border-gray-900 border-t-transparent rounded-full animate-spin mb-3" />
+              <p className="text-gray-600 text-base">Loading saved places... 🔍</p>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!savedLoading && filteredSavedRestaurants.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                <span className="text-4xl">📍</span>
+              </div>
+              <p className="text-gray-900 font-semibold text-base mb-2">
+                {myMapFilter === 'nearby' ? 'No nearby saved places' : 'No saved places yet'}
+              </p>
+              <p className="text-gray-600 text-sm text-center px-8">
+                {myMapFilter === 'nearby' 
+                  ? 'Try switching to "All" to see all your saved places'
+                  : 'Save restaurants from Discover to see them here'}
+              </p>
+            </div>
+          )}
+
+          {/* Saved Restaurants List */}
+          {!savedLoading && filteredSavedRestaurants.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                {filteredSavedRestaurants.length} {filteredSavedRestaurants.length === 1 ? 'Place' : 'Places'}
+              </h3>
+              {filteredSavedRestaurants.map((restaurant) => (
+                <button
+                  key={restaurant.id}
+                  onClick={() => fetchRestaurantDetails(restaurant)}
+                  className="w-full bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  {/* Image Section */}
+                  <div className="relative h-48 bg-gray-100">
+                    {restaurant.photos && restaurant.photos.length > 0 ? (
+                      <img
+                        src={restaurant.photos[0]}
+                        alt={restaurant.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-6xl">🍽️</span>
+                      </div>
+                    )}
+                    
+                    {/* Overlay with rating and distance */}
+                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                      <div className="bg-gray-900/80 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center space-x-1.5">
+                        <Navigation className="w-3.5 h-3.5 text-white" />
+                        <span className="text-sm text-white">{formatDistance(restaurant.distance)}</span>
+                      </div>
+                      {restaurant.rating && (
+                        <div className="bg-white px-4 py-2 rounded-full flex items-center space-x-1">
+                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                          <span className="text-lg font-bold text-gray-900">{restaurant.rating}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Details Section */}
+                  <div className="p-4">
+                    <h4 className="text-lg font-bold text-gray-900 mb-2">{restaurant.name}</h4>
+                    
+                    {/* Tags */}
+                    <div className="flex items-center space-x-2 mb-3">
+                      {restaurant.cuisine && typeof restaurant.cuisine === 'string' && restaurant.cuisine.split(',').slice(0, 2).map((type) => (
+                        <span key={type.trim()} className="px-3 py-1 bg-gray-50 rounded-full text-xs font-medium text-gray-700">
+                          {type.trim()}
+                        </span>
+                      ))}
+                      {restaurant.price_level && (
+                        <span className="px-3 py-1 bg-gray-50 rounded-full text-xs font-medium text-gray-700">
+                          {'$'.repeat(restaurant.price_level)}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Action Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNavigateToRestaurant(restaurant);
+                      }}
+                      className="w-full h-10 bg-gray-900 text-white rounded-xl font-semibold flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors"
+                    >
+                      <Navigation className="w-4 h-4" />
+                      <span>Navigate</span>
+                    </button>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="h-24"></div>
+        </div>
+      )}
+
       </div>
 
       <style>{`
