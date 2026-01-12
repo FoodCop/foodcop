@@ -234,7 +234,19 @@ interface YouTubeVideo {
     title: string;
     description: string;
     thumbnails: {
+      default?: {
+        url: string;
+      };
       medium: {
+        url: string;
+      };
+      high?: {
+        url: string;
+      };
+      standard?: {
+        url: string;
+      };
+      maxres?: {
         url: string;
       };
     };
@@ -420,7 +432,19 @@ export const transformRecipeToFeedCard = (recipe: SpoonacularRecipe): RecipeCard
 
 export const transformVideoToFeedCard = (video: YouTubeVideo): VideoCard => {
   // Phase 3: Optimize video thumbnail for performance
-  const rawThumbnailUrl = video.snippet.thumbnails.medium.url;
+  // Prefer highest quality thumbnail available: maxresdefault > high > medium
+  const thumbnails = video.snippet.thumbnails;
+  let rawThumbnailUrl = thumbnails.medium.url;
+  
+  // Try to get the highest quality thumbnail available
+  if (thumbnails.maxres?.url) {
+    rawThumbnailUrl = thumbnails.maxres.url;
+  } else if (thumbnails.high?.url) {
+    rawThumbnailUrl = thumbnails.high.url;
+  } else if (thumbnails.standard?.url) {
+    rawThumbnailUrl = thumbnails.standard.url;
+  }
+  
   const optimizedImage = imageOptimizer.optimizeImageByType(rawThumbnailUrl, 'video');
 
   return {
