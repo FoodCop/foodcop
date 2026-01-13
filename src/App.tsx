@@ -9,7 +9,7 @@ import { LogOut, MessageCircle } from 'lucide-react'
 import { useDMChatStore } from './stores/chatStore'
 import { toastHelpers } from './utils/toastHelpers'
 import { Toaster } from './components/ui/sonner'
-import { MobileRadialNav } from './components/navigation/MobileRadialNav'
+import { FloatingActionMenu } from './components/navigation/FloatingActionMenu'
 import { AIChatWidget } from './components/tako/components/AIChatWidget'
 import { NavigationHints } from './components/common/NavigationHints'
 import { UniversalViewerProvider, useUniversalViewer } from './contexts/UniversalViewerContext'
@@ -386,10 +386,10 @@ function AppLayout() {
         </PageErrorBoundaryWithLocation>
       </div>
 
-      {/* Mobile Radial Navigation - Only show on main app pages */}
+      {/* Mobile Floating Action Menu - Only show on main app pages */}
       {showNavigation && (
         <div className="md:hidden">
-          <MobileRadialNav
+          <FloatingActionMenu
             currentPage={currentPage}
             onNavigate={(page) => {
               const path = page.startsWith('/') ? page : `/${page}`;
