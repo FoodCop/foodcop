@@ -56,7 +56,7 @@ export function ClickableUserAvatar({
             >
                 <Avatar className={sizeClasses[size]}>
                     <AvatarImage src={avatarUrl} />
-                    <AvatarFallback className="bg-orange-100 text-orange-600">
+                    <AvatarFallback className="bg-fuzo-orange-100 text-fuzo-orange-600">
                         {userName?.charAt(0)?.toUpperCase() || '?'}
                     </AvatarFallback>
                 </Avatar>

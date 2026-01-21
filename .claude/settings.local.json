@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(dir:*)",
+      "Bash(supabase --version:*)",
+      "Bash(npm:*)",
+      "Bash(git config:*)"
+    ]
+  }
+}

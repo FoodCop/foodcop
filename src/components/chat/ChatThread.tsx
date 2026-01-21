@@ -10,6 +10,7 @@ import { MessageBubble } from './MessageBubble';
 import { MessageRetentionNotice } from './MessageRetentionNotice';
 import { MessageSkeleton } from './ConversationSkeleton';
 import { NoMessagesEmptyState } from './EmptyState';
+import { OnlineStatusDot, LastSeenText } from './OnlineStatusIndicator';
 
 interface ChatThreadProps {
   conversation: DMConversation;
@@ -86,7 +87,7 @@ export function ChatThread({
         </Button>
         <button
           onClick={() => onAvatarClick?.(otherUser?.id || '')}
-          className="shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
+          className="relative shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
           title="View profile"
         >
           <Avatar className="h-10 w-10">
@@ -95,14 +96,23 @@ export function ChatThread({
               {otherUser?.display_name?.charAt(0)?.toUpperCase() || '?'}
             </AvatarFallback>
           </Avatar>
+          {/* Online status dot on avatar */}
+          {otherUser?.id && (
+            <OnlineStatusDot
+              userId={otherUser.id}
+              className="bottom-0 right-0"
+              size="sm"
+            />
+          )}
         </button>
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-gray-900 truncate">
             {otherUser?.display_name || 'Unknown'}
           </p>
-          <p className="text-xs text-gray-500 truncate">
-            @{otherUser?.username}
-          </p>
+          {/* Show "Active now" or "Last seen X ago" */}
+          {otherUser?.id && (
+            <LastSeenText userId={otherUser.id} className="text-xs" />
+          )}
         </div>
       </div>
 
@@ -165,7 +175,7 @@ export function ChatThread({
             onClick={handleSend}
             disabled={!inputValue.trim() || isSending}
             size="icon"
-            className="bg-orange-500 hover:bg-orange-600 transition-colors"
+            className="bg-fuzo-orange-500 hover:bg-fuzo-orange-600 transition-colors"
             aria-label="Send message"
           >
             {isSending ? (

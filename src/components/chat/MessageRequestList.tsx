@@ -179,7 +179,7 @@ function MessageRequestItem({
       <div className="flex items-start gap-3 mb-3">
         <Avatar className="h-12 w-12 shrink-0">
           <AvatarImage src={otherUser?.avatar_url} />
-          <AvatarFallback className="bg-orange-100 text-orange-600">
+          <AvatarFallback className="bg-fuzo-orange-100 text-fuzo-orange-600">
             {otherUser?.display_name?.charAt(0)?.toUpperCase() || '?'}
           </AvatarFallback>
         </Avatar>
@@ -200,7 +200,7 @@ function MessageRequestItem({
               onClick={onAccept}
               disabled={isProcessing}
               size="sm"
-              className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+              className="flex-1 bg-fuzo-orange-500 hover:bg-fuzo-orange-600 text-white"
             >
               {isProcessing ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

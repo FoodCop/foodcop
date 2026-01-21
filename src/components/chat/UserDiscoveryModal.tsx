@@ -159,7 +159,7 @@ export function UserDiscoveryModal({
                         if (isLoading) {
                             return (
                                 <div className="flex items-center justify-center py-12">
-                                    <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+                                    <Loader2 className="h-8 w-8 animate-spin text-fuzo-orange-500" />
                                 </div>
                             );
                         }
@@ -200,7 +200,7 @@ export function UserDiscoveryModal({
                                     {/* Avatar */}
                                     <Avatar className="h-12 w-12 shrink-0">
                                         <AvatarImage src={user.avatar_url} />
-                                        <AvatarFallback className="bg-orange-100 text-orange-600">
+                                        <AvatarFallback className="bg-fuzo-orange-100 text-fuzo-orange-600">
                                             {user.display_name?.charAt(0)?.toUpperCase() || '?'}
                                         </AvatarFallback>
                                     </Avatar>
@@ -229,7 +229,7 @@ export function UserDiscoveryModal({
                                     <Button
                                         onClick={() => handleMessageUser(user.id)}
                                         size="sm"
-                                        className="bg-orange-500 hover:bg-orange-600 shrink-0"
+                                        className="bg-fuzo-orange-500 hover:bg-fuzo-orange-600 shrink-0"
                                     >
                                         Message
                                     </Button>

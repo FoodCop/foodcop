@@ -6,6 +6,7 @@ import { useDMChatStore } from '../../stores/chatStore';
 import { useAuthStore } from '../../stores/authStore';
 import { DMConversation } from '../../services/dmChatService';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+import { OnlineStatusDot } from './OnlineStatusIndicator';
 import { cn } from '../ui/utils';
 
 interface ConversationListProps {
@@ -89,18 +90,27 @@ function ConversationItem({ conversation, onClick }: ConversationItemProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors text-left focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded-lg"
+      className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors text-left focus:outline-none focus:ring-2 focus:ring-fuzo-orange-500 focus:ring-offset-2 rounded-lg"
       aria-label={`Open conversation with ${otherUser?.display_name || 'Unknown'}`}
     >
       <div className="relative">
         <Avatar className="h-12 w-12">
           <AvatarImage src={otherUser?.avatar_url} />
-          <AvatarFallback className="bg-orange-100 text-orange-600">
+          <AvatarFallback className="bg-fuzo-orange-100 text-fuzo-orange-600">
             {otherUser?.display_name?.charAt(0)?.toUpperCase() || '?'}
           </AvatarFallback>
         </Avatar>
+        {/* Online status indicator - bottom right of avatar */}
+        {otherUser?.id && (
+          <OnlineStatusDot
+            userId={otherUser.id}
+            className="bottom-0 right-0"
+            size="md"
+          />
+        )}
+        {/* Unread badge - top right of avatar */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-orange-500 text-white text-xs font-bold rounded-full">
+          <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-fuzo-orange-500 text-white text-xs font-bold rounded-full z-10">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}

@@ -53,9 +53,9 @@ export function NoConversationsEmptyState({
   return (
     <EmptyState
       icon={
-        <div className="h-16 w-16 rounded-full bg-orange-100 flex items-center justify-center">
+        <div className="h-16 w-16 rounded-full bg-fuzo-orange-100 flex items-center justify-center">
           <svg
-            className="h-8 w-8 text-orange-500"
+            className="h-8 w-8 text-fuzo-orange-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -76,7 +76,7 @@ export function NoConversationsEmptyState({
         onStartChat && (
           <button
             onClick={onStartChat}
-            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium text-sm"
+            className="px-4 py-2 bg-fuzo-orange-500 text-white rounded-lg hover:bg-fuzo-orange-600 transition-colors font-medium text-sm"
             aria-label="Start a new conversation"
           >
             Start Chatting
@@ -94,9 +94,9 @@ export function NoMessagesEmptyState() {
   return (
     <EmptyState
       icon={
-        <div className="h-16 w-16 rounded-full bg-orange-100 flex items-center justify-center">
+        <div className="h-16 w-16 rounded-full bg-fuzo-orange-100 flex items-center justify-center">
           <svg
-            className="h-8 w-8 text-orange-500"
+            className="h-8 w-8 text-fuzo-orange-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

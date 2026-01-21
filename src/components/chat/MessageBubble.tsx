@@ -30,7 +30,7 @@ export function MessageBubble({
         className={cn(
           'max-w-[75%] rounded-2xl px-4 py-2',
           isOwn
-            ? 'bg-orange-500 text-white rounded-br-md'
+            ? 'bg-fuzo-orange-500 text-white rounded-br-md'
             : 'bg-gray-100 text-gray-900 rounded-bl-md'
         )}
       >
@@ -81,7 +81,7 @@ export function MessageBubble({
           <p
             className={cn(
               'text-[10px]',
-              isOwn ? 'text-orange-100' : 'text-gray-400'
+              isOwn ? 'text-fuzo-orange-100' : 'text-gray-400'
             )}
           >
             {new Date(message.created_at).toLocaleTimeString([], {

@@ -1,11 +1,12 @@
 /**
  * FeedMobile Component
  * Mobile version of the Feed page with swipe gestures
- * 
+ *
  * Interactive swipe feed based on UXpilot designs
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import './FeedCard.css';
 import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { X, Heart, Bookmark, Send, MapPin, Star } from 'lucide-react';
 import { FeedService } from '../../services/feedService';
@@ -224,22 +225,22 @@ function FeedCardWrapper({
             
             {/* Source Badge - Bottom Right Avatar */}
             {feedCard.type === 'restaurant' && (
-              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4285F4] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
+              <div className="feed-card-badge absolute bottom-3 right-3 bg-platform-google z-10">
                 G
               </div>
             )}
             {feedCard.type === 'video' && (
-              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF0000] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
+              <div className="feed-card-badge absolute bottom-3 right-3 bg-platform-youtube z-10">
                 Y
               </div>
             )}
             {feedCard.type === 'recipe' && (
-              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4CAF50] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
+              <div className="feed-card-badge absolute bottom-3 right-3 bg-platform-spoonacular z-10">
                 S
               </div>
             )}
             {feedCard.type === 'masterbot' && (
-              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
+              <div className="feed-card-badge absolute bottom-3 right-3 bg-platform-fuzo z-10">
                 F
               </div>
             )}
@@ -332,7 +333,7 @@ function FeedCardWrapper({
                 className="w-full h-full object-contain"
               />
               {/* Source Badge - Bottom Right Avatar */}
-              <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-10">
+              <div className="feed-card-badge absolute bottom-3 right-3 bg-platform-fuzo z-10">
                 F
               </div>
             </div>
@@ -425,22 +426,22 @@ function FeedCardWrapper({
               
               {/* Source Badge - Bottom Right Avatar */}
               {feedCard.type === 'restaurant' && (
-                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4285F4] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-20">
+                <div className="feed-card-badge absolute bottom-3 right-3 bg-platform-google z-20">
                   G
                 </div>
               )}
               {feedCard.type === 'video' && (
-                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF0000] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-20">
+                <div className="feed-card-badge absolute bottom-3 right-3 bg-platform-youtube z-20">
                   Y
                 </div>
               )}
               {feedCard.type === 'recipe' && (
-                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#4CAF50] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-20">
+                <div className="feed-card-badge absolute bottom-3 right-3 bg-platform-spoonacular z-20">
                   S
                 </div>
               )}
               {feedCard.type === 'masterbot' && (
-                <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-sm font-bold shadow-lg border-2 border-white z-20">
+                <div className="feed-card-badge absolute bottom-3 right-3 bg-platform-fuzo z-20">
                   F
                 </div>
               )}
@@ -614,42 +615,6 @@ export function FeedMobile() {
         </div>
       </main>
       
-      <style>{`
-        /* Custom feed card text styles - not inheriting from global */
-        .feed-card-title {
-          color: #ffffff !important;
-          font-size: 1.5rem !important;
-          line-height: 2rem !important;
-          font-weight: 700 !important;
-          margin-bottom: 0.25rem !important;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
-        }
-        
-        .feed-card-subtitle {
-          color: #ffffff !important;
-          font-size: 0.875rem !important;
-          line-height: 1.25rem !important;
-          opacity: 0.9 !important;
-          margin-bottom: 0.5rem !important;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
-        }
-        
-        .feed-card-description {
-          color: #ffffff !important;
-          font-size: 0.875rem !important;
-          line-height: 1.25rem !important;
-          opacity: 0.8 !important;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
-        }
-        
-        .feed-card-meta {
-          color: #ffffff !important;
-          font-size: 0.75rem !important;
-          line-height: 1rem !important;
-          opacity: 0.8 !important;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
-        }
-      `}</style>
     </div>
   );
 }

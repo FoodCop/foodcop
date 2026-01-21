@@ -1,0 +1,77 @@
+/**
+ * Feed Card Styles
+ *
+ * Typography and styling for swipeable feed cards
+ * Uses design tokens from design-tokens.css
+ */
+
+/* Feed Card Typography */
+.feed-card-title {
+  color: var(--text-inverse);
+  font-size: var(--text-2xl);       /* 1.728rem / 27.6px */
+  line-height: var(--leading-tight); /* 1.25 */
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-1);   /* 4px */
+  font-family: var(--font-ui);
+}
+
+.feed-card-subtitle {
+  color: var(--text-inverse);
+  font-size: var(--text-sm);         /* 0.833rem / 13.3px */
+  line-height: var(--leading-snug);  /* 1.375 */
+  opacity: 0.9;
+  margin-bottom: var(--spacing-2);   /* 8px */
+  font-family: var(--font-ui);
+}
+
+.feed-card-description {
+  color: var(--text-inverse);
+  font-size: var(--text-sm);         /* 0.833rem / 13.3px */
+  line-height: var(--leading-snug);  /* 1.375 */
+  opacity: 0.8;
+  font-family: var(--font-ui);
+}
+
+.feed-card-meta {
+  color: var(--text-inverse);
+  font-size: var(--text-xs);         /* 0.694rem / 11.1px */
+  line-height: var(--leading-normal); /* 1.5 */
+  opacity: 0.8;
+  font-family: var(--font-ui);
+}
+
+/* Feed Card Container */
+.feed-card-container {
+  width: 100%;
+  max-width: var(--card-mobile-width);  /* 335px */
+  height: var(--card-mobile-height);     /* 540px */
+  background: var(--surface-secondary);
+  border-radius: var(--radius-card);     /* 10px */
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* Feed Card Image Overlay */
+.feed-card-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    transparent 100%
+  );
+}
+
+/* Platform Badge */
+.feed-card-badge {
+  width: 2.5rem;                     /* 40px */
+  height: 2.5rem;                    /* 40px */
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-inverse);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-lg);
+  border: 2px solid var(--surface-secondary);
+}

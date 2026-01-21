@@ -162,13 +162,13 @@ export function ShareToChat({
                 className={cn(
                   'w-full flex items-center gap-3 p-2 rounded-lg transition-colors',
                   selectedFriendId === friend.userId
-                    ? 'bg-orange-50 border border-orange-200'
+                    ? 'bg-fuzo-orange-50 border border-fuzo-orange-200'
                     : 'hover:bg-gray-50'
                 )}
               >
                 <Avatar className="h-10 w-10">
                   <AvatarImage src={friend.avatarUrl} />
-                  <AvatarFallback className="bg-orange-100 text-orange-600">
+                  <AvatarFallback className="bg-fuzo-orange-100 text-fuzo-orange-600">
                     {friend.displayName.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -181,7 +181,7 @@ export function ShareToChat({
                   </p>
                 </div>
                 {selectedFriendId === friend.userId && (
-                  <div className="h-5 w-5 rounded-full bg-orange-500 flex items-center justify-center">
+                  <div className="h-5 w-5 rounded-full bg-fuzo-orange-500 flex items-center justify-center">
                     <Check className="h-3 w-3 text-white" />
                   </div>
                 )}
@@ -207,7 +207,7 @@ export function ShareToChat({
           <Button
             onClick={handleSend}
             disabled={!selectedFriendId || isSending || sent}
-            className="bg-orange-500 hover:bg-orange-600"
+            className="bg-fuzo-orange-500 hover:bg-fuzo-orange-600"
           >
             {sent ? (
               <>

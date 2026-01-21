@@ -15,6 +15,7 @@ import { NavigationHints } from './components/common/NavigationHints'
 import { UniversalViewerProvider, useUniversalViewer } from './contexts/UniversalViewerContext'
 import { UniversalViewer } from './components/ui/universal-viewer/UniversalViewer'
 import { ChatDrawer } from './components/chat'
+import { PresenceTracker } from './components/chat/PresenceTracker'
 import { useChatNotifications } from './hooks/useChatNotifications'
 import BottomAdBanner from './components/common/BottomAdBanner'
 import './App.css'
@@ -141,9 +142,33 @@ function AppLayout() {
   const location = useLocation()
   const navigate = useNavigate()
   const { viewerState, closeViewer, navigateViewer, deleteHandler } = useUniversalViewer()
-  
+
   // Enable chat notifications
   useChatNotifications()
+
+  // Enable presence tracking for online status
+  // This component doesn't render anything, just tracks presence in background
+  return (
+    <>
+      <PresenceTracker />
+      <AppLayoutContent
+        colorMode={colorMode}
+        setColorMode={setColorMode}
+        showAIChat={showAIChat}
+        setShowAIChat={setShowAIChat}
+        location={location}
+        navigate={navigate}
+        viewerState={viewerState}
+        closeViewer={closeViewer}
+        navigateViewer={navigateViewer}
+        deleteHandler={deleteHandler}
+      />
+    </>
+  );
+}
+
+// Extracted layout content to keep code organized
+function AppLayoutContent({ colorMode, setColorMode, showAIChat, setShowAIChat, location, navigate, viewerState, closeViewer, navigateViewer, deleteHandler }: any) {
 
   // Apply color mode to CSS variable
   useEffect(() => {

@@ -44,10 +44,13 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
 
   // Apply color mode to background CSS variable
   useEffect(() => {
-    const backgroundColor = colorMode === 'yellow' ? '#FFD53B' : '#FAFAFA';
     const landingPage = document.querySelector('.new-landing-page') as HTMLElement;
     if (landingPage) {
-      landingPage.style.setProperty('--background', backgroundColor);
+      if (colorMode === 'yellow') {
+        landingPage.style.backgroundColor = 'var(--landing-bg-yellow)';
+      } else {
+        landingPage.style.backgroundColor = 'var(--landing-bg-default)';
+      }
     }
   }, [colorMode]);
 

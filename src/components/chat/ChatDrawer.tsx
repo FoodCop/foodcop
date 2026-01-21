@@ -114,10 +114,10 @@ export function ChatDrawer({ onSharedItemClick }: Readonly<ChatDrawerProps>) {
               <DrawerHeader className="border-b">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  {currentView === 'messages' && <MessageCircle className="h-5 w-5 text-orange-500" />}
-                  {currentView === 'find-friends' && <UserPlus className="h-5 w-5 text-orange-500" />}
-                  {currentView === 'requests' && <Users className="h-5 w-5 text-orange-500" />}
-                  {currentView === 'message-requests' && <MessageCircle className="h-5 w-5 text-orange-500" />}
+                  {currentView === 'messages' && <MessageCircle className="h-5 w-5 text-fuzo-orange-500" />}
+                  {currentView === 'find-friends' && <UserPlus className="h-5 w-5 text-fuzo-orange-500" />}
+                  {currentView === 'requests' && <Users className="h-5 w-5 text-fuzo-orange-500" />}
+                  {currentView === 'message-requests' && <MessageCircle className="h-5 w-5 text-fuzo-orange-500" />}
                   <DrawerTitle>
                     {currentView === 'messages' && 'Messages'}
                     {currentView === 'find-friends' && 'Find Friends'}
@@ -141,7 +141,7 @@ export function ChatDrawer({ onSharedItemClick }: Readonly<ChatDrawerProps>) {
               <button
                 onClick={() => setCurrentView('messages')}
                 className={`flex-1 py-3 text-sm font-medium transition-colors ${currentView === 'messages'
-                  ? 'text-orange-500 border-b-2 border-orange-500'
+                  ? 'text-fuzo-orange-500 border-b-2 border-fuzo-orange-500'
                   : 'text-gray-600 hover:text-gray-900'
                   }`}
               >
@@ -150,13 +150,13 @@ export function ChatDrawer({ onSharedItemClick }: Readonly<ChatDrawerProps>) {
               <button
                 onClick={() => setCurrentView('message-requests')}
                 className={`flex-1 py-3 text-sm font-medium transition-colors relative ${currentView === 'message-requests'
-                  ? 'text-orange-500 border-b-2 border-orange-500'
+                  ? 'text-fuzo-orange-500 border-b-2 border-fuzo-orange-500'
                   : 'text-gray-600 hover:text-gray-900'
                   }`}
               >
                 Requests
                 {pendingRequestCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-orange-500 text-white text-xs font-bold rounded-full">
+                  <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-fuzo-orange-500 text-white text-xs font-bold rounded-full">
                     {pendingRequestCount > 9 ? '9+' : pendingRequestCount}
                   </span>
                 )}
@@ -164,7 +164,7 @@ export function ChatDrawer({ onSharedItemClick }: Readonly<ChatDrawerProps>) {
               <button
                 onClick={() => setCurrentView('find-friends')}
                 className={`flex-1 py-3 text-sm font-medium transition-colors ${currentView === 'find-friends'
-                  ? 'text-orange-500 border-b-2 border-orange-500'
+                  ? 'text-fuzo-orange-500 border-b-2 border-fuzo-orange-500'
                   : 'text-gray-600 hover:text-gray-900'
                   }`}
               >
@@ -182,7 +182,7 @@ export function ChatDrawer({ onSharedItemClick }: Readonly<ChatDrawerProps>) {
                 <div className="p-4">
                   <Button
                     onClick={() => setIsDiscoveryModalOpen(true)}
-                    className="w-full bg-orange-500 hover:bg-orange-600 mb-4"
+                    className="w-full bg-fuzo-orange-500 hover:bg-fuzo-orange-600 mb-4"
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
                     Find People to Message

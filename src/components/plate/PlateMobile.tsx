@@ -369,8 +369,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
-          <h1 className="text-xl font-bold mb-2 text-[#8B0000]">Sign In Required</h1>
-          <p style={{ color: '#808080' }}>Please sign in to view your Plate</p>
+          <h1 className="text-xl font-bold mb-2 text-red-900">Sign In Required</h1>
+          <p className="text-neutral-400">Please sign in to view your Plate</p>
         </div>
       </div>
     );
@@ -425,7 +425,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           <div className="flex items-start gap-4">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-20 h-20 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-[#FF6B35] bg-gray-200">
+              <div className="w-20 h-20 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-fuzo-orange-500 bg-gray-200">
                 <img 
                   src={user?.user_metadata?.avatar_url || user?.user_metadata?.picture || 
                        'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg'} 
@@ -444,11 +444,11 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                     }
                   }}
                 />
-                <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white font-bold text-lg md:text-2xl">
+                <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-fuzo-orange-500 to-fuzo-orange-600 text-white font-bold text-lg md:text-2xl">
                   {getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
                 </div>
               </div>
-              <div className="absolute -bottom-1 -right-1 w-7 h-7 md:w-9 md:h-9 bg-gradient-to-br from-yellow-400 to-[#FF6B35] rounded-full flex items-center justify-center border-2 border-white">
+              <div className="absolute -bottom-1 -right-1 w-7 h-7 md:w-9 md:h-9 bg-gradient-to-br from-yellow-400 to-fuzo-orange-500 rounded-full flex items-center justify-center border-2 border-white">
                 <Star className="w-3 h-3 md:w-4 md:h-4 text-white fill-white" />
               </div>
             </div>
@@ -456,12 +456,12 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             {/* Profile Info */}
             <div className="flex-1 w-full md:w-auto">
               <div className="flex items-center gap-2 mb-1">
-                <h1 className="text-xl font-bold text-[#8B0000]">{getUserDisplayName()}</h1>
+                <h1 className="text-xl font-bold text-red-900">{getUserDisplayName()}</h1>
                 <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
                   <Crown className="w-3 h-3 text-white fill-white" />
                 </div>
               </div>
-              <p className="text-sm md:text-base mb-3 max-w-md" style={{ color: '#808080' }}>{getUserBio()}</p>
+              <p className="text-sm md:text-base mb-3 max-w-md" className="text-neutral-400">{getUserBio()}</p>
               <div className="mb-3">
                 <PreferencesChips 
                   userProfile={userProfile} 
@@ -473,20 +473,20 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
 
           {/* Stats Row */}
           <div className="flex items-center gap-2 py-4 px-2">
-            <button className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity">
-              <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">{userPoints.toLocaleString()}</span>
-              <span className="text-xs mt-1" style={{ color: '#808080' }}>Points</span>
+            <button className="flex-1 flex flex-col items-center py-4 bg-fuzo-orange-50 rounded-xl hover:opacity-80 transition-opacity">
+              <span className="text-xl md:text-2xl font-bold text-neutral-900">{userPoints.toLocaleString()}</span>
+              <span className="text-xs mt-1" className="text-neutral-400">Points</span>
             </button>
             <button 
               onClick={() => setSelectedTab('posts')}
-              className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity"
+              className="flex-1 flex flex-col items-center py-4 bg-fuzo-orange-50 rounded-xl hover:opacity-80 transition-opacity"
             >
-              <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">{savedItems.length}</span>
-              <span className="text-xs mt-1" style={{ color: '#808080' }}>Saved</span>
+              <span className="text-xl md:text-2xl font-bold text-neutral-900">{savedItems.length}</span>
+              <span className="text-xs mt-1" className="text-neutral-400">Saved</span>
             </button>
-            <button className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity">
-              <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">{userRewards}</span>
-              <span className="text-xs mt-1" style={{ color: '#808080' }}>Rewards</span>
+            <button className="flex-1 flex flex-col items-center py-4 bg-fuzo-orange-50 rounded-xl hover:opacity-80 transition-opacity">
+              <span className="text-xl md:text-2xl font-bold text-neutral-900">{userRewards}</span>
+              <span className="text-xs mt-1" className="text-neutral-400">Rewards</span>
             </button>
           </div>
 
@@ -495,21 +495,21 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           <section className="bg-white px-5 py-4 mt-2">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-[#FF6B35] rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-fuzo-orange-500 rounded-full flex items-center justify-center">
                   <Trophy className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[#1A1A1A]">{userLevel.name}</p>
-                  <p className="text-xs" style={{ color: '#808080' }}>Level {userLevel.level}</p>
+                  <p className="text-sm font-semibold text-neutral-900">{userLevel.name}</p>
+                  <p className="text-xs" className="text-neutral-400">Level {userLevel.level}</p>
                 </div>
               </div>
-              <span className="text-sm font-medium text-[#FF6B35]">
+              <span className="text-sm font-medium text-fuzo-orange-500">
                 {userLevel.pointsToNext > 0 ? `${userLevel.pointsToNext} to next level` : 'Max Level!'}
               </span>
             </div>
             <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-[#FF6B35] to-[#FFD500] rounded-full transition-all duration-500"
+                className="h-full bg-gradient-to-r from-fuzo-orange-500 to-accent-yellow-500 rounded-full transition-all duration-500"
                 style={{ width: `${userLevel.progressPercent}%` }}
               />
             </div>
@@ -528,7 +528,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'places' 
-                  ? 'bg-[#FF6B35] text-white' 
+                  ? 'bg-fuzo-orange-500 text-white' 
                   : 'bg-gray-50 text-gray-600'
               }`}
             >
@@ -550,7 +550,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'recipes' 
-                  ? 'bg-[#FF6B35] text-white' 
+                  ? 'bg-fuzo-orange-500 text-white' 
                   : 'bg-gray-50 text-gray-600'
               }`}
             >
@@ -572,7 +572,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'videos' 
-                  ? 'bg-[#FF6B35] text-white' 
+                  ? 'bg-fuzo-orange-500 text-white' 
                   : 'bg-gray-50 text-gray-600'
               }`}
             >
@@ -594,7 +594,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'crew' 
-                  ? 'bg-[#FF6B35] text-white' 
+                  ? 'bg-fuzo-orange-500 text-white' 
                   : 'bg-gray-50 text-gray-600'
               }`}
             >
@@ -616,7 +616,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'posts' 
-                  ? 'bg-[#FF6B35] text-white' 
+                  ? 'bg-fuzo-orange-500 text-white' 
                   : 'bg-gray-50 text-gray-600'
               }`}
             >
@@ -717,20 +717,20 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                           onClick={() => setSelectedFriendUserId(member.id)}
                           className="flex flex-col items-center shrink-0 hover:opacity-80 transition-opacity"
                         >
-                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#F7C59F] p-[3px]">
+                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-fuzo-orange-500 to-[#F7C59F] p-[3px]">
                             <Avatar className="w-full h-full border-2 border-white">
                               <AvatarImage src={member.avatar} alt={member.name} />
                               <AvatarFallback className="bg-gray-100 text-sm">{member.initials}</AvatarFallback>
                             </Avatar>
                           </div>
-                          <span className="text-xs font-medium mt-2 max-w-16 truncate" style={{ color: '#6B7280' }}>
+                          <span className="text-xs font-medium mt-2 max-w-16 truncate" className="text-neutral-500">
                             {member.name.split(" ")[0]}
                           </span>
                         </button>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-6" style={{ color: '#9CA3AF' }}>
+                    <div className="text-center py-6" className="text-neutral-400">
                       <p className="text-sm">No crew members yet</p>
                       <p className="text-xs mt-1">Add friends to build your crew!</p>
                       <Button
@@ -759,7 +759,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                     const { openChat } = useDMChatStore.getState();
                     openChat();
                   }}
-                  className="text-xs text-[#FF6B35] hover:text-[#FF6B35] hover:bg-orange-50"
+                  className="text-xs text-fuzo-orange-500 hover:text-fuzo-orange-500 hover:bg-orange-50"
                 >
                   <MessageCircle className="h-3 w-3 mr-1" />
                   View All
@@ -810,7 +810,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                         <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1 leading-tight">
                           {recipe.name}
                         </CardHeading>
-                        <div className="flex items-center gap-1.5" style={{ color: '#6B7280', fontSize: '10pt' }}>
+                        <div className="flex items-center gap-1.5" className="text-neutral-500 text-sm">
                           <Clock className="w-3.5 h-3.5" />
                           <span>{recipe.time}</span>
                         </div>
@@ -819,7 +819,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   ))}
                 </div>
               ) : (
-                <div className="px-5 text-center py-6" style={{ color: '#9CA3AF' }}>
+                <div className="px-5 text-center py-6" className="text-neutral-400">
                   <p className="text-sm">No saved recipes yet</p>
                   <p className="text-xs mt-1">Save recipes from Bites to see them here!</p>
                 </div>
@@ -830,7 +830,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             <section className="mb-6">
               <div className="px-5 flex items-center justify-between mb-4">
                 <SectionHeading>Nearby Restaurants</SectionHeading>
-                <button className="flex items-center gap-1.5 text-[#FF6B35] text-sm font-medium">
+                <button className="flex items-center gap-1.5 text-fuzo-orange-500 text-sm font-medium">
                   <span>Map View</span>
                   <Navigation className="w-4 h-4 fill-current" />
                 </button>
@@ -863,7 +863,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                             e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Restaurant';
                           }}
                         />
-                        <div className="absolute top-3 left-3 flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#10B981] text-white shadow-md">
+                        <div className="absolute top-3 left-3 flex items-center gap-1 px-3 py-1.5 rounded-full bg-success text-white shadow-md">
                           <Star className="w-3.5 h-3.5 fill-white" />
                           <span className="text-xs font-bold">{restaurant.rating.toFixed(1)}</span>
                         </div>
@@ -872,9 +872,9 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                         <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
                           {restaurant.name}
                         </CardHeading>
-                        <p className="mb-3" style={{ color: '#6B7280', fontSize: '10pt' }}>{restaurant.cuisine}</p>
-                        <div className="flex items-center gap-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
-                          <Navigation className="w-4 h-4 text-[#FF6B35]" />
+                        <p className="mb-3" className="text-neutral-500 text-sm">{restaurant.cuisine}</p>
+                        <div className="flex items-center gap-2" className="text-neutral-500 text-sm">
+                          <Navigation className="w-4 h-4 text-fuzo-orange-500" />
                           <span>{restaurant.distance}</span>
                         </div>
                       </div>
@@ -882,7 +882,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   ))}
                 </div>
               ) : (
-                <div className="px-5 text-center py-6" style={{ color: '#9CA3AF' }}>
+                <div className="px-5 text-center py-6" className="text-neutral-400">
                   <p className="text-sm">No restaurant recommendations</p>
                   <p className="text-xs mt-1">Enable location to see nearby restaurants!</p>
                 </div>
@@ -901,13 +901,13 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
               <Star className="w-10 h-10 text-gray-400" />
             </div>
-            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">No posts yet</h3>
-            <p className="text-center mb-6" style={{ color: '#808080' }}>
+            <h3 className="text-xl font-bold text-neutral-900 mb-2">No posts yet</h3>
+            <p className="text-center mb-6" className="text-neutral-400">
               Share your food adventures and connect with friends!
             </p>
             <button 
               onClick={() => toast.info('Create post coming soon')}
-              className="bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
+              className="bg-fuzo-orange-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-fuzo-orange-600 transition-colors"
             >
               Create Post
             </button>
@@ -923,8 +923,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                 <img src={post.image_url} alt="Post" className="w-full h-64 object-cover" />
               )}
               <div className="p-4">
-                <p className="text-[#1A1A1A] mb-2">{post.content}</p>
-                <span className="text-sm" style={{ color: '#808080' }}>
+                <p className="text-neutral-900 mb-2">{post.content}</p>
+                <span className="text-sm" className="text-neutral-400">
                   {new Date(post.created_at).toLocaleDateString()}
                 </span>
               </div>
@@ -943,13 +943,13 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             {selectedTab === 'videos' && <Play className="w-10 h-10 text-gray-400" />}
             {selectedTab === 'places' && <MapPin className="w-10 h-10 text-gray-400" />}
           </div>
-          <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{`No ${selectedTab} saved`}</h3>
-          <p className="text-center mb-6" style={{ color: '#808080' }}>
+          <h3 className="text-xl font-bold text-neutral-900 mb-2">{`No ${selectedTab} saved`}</h3>
+          <p className="text-center mb-6" className="text-neutral-400">
             {`Tap the bookmark icon to save ${selectedTab}`}
           </p>
           <button 
             onClick={() => toast.info('Navigate to explore page')}
-            className="bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
+            className="bg-fuzo-orange-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-fuzo-orange-600 transition-colors"
           >
             Start Exploring
           </button>
@@ -1080,7 +1080,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   )}
                   <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                     <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
-                      <Play className="w-8 h-8 text-[#FF6B35] fill-[#FF6B35] ml-1" />
+                      <Play className="w-8 h-8 text-fuzo-orange-500 fill-fuzo-orange-500 ml-1" />
                     </div>
                   </div>
                   {metadata.duration && (
@@ -1094,7 +1094,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                     {(metadata.title as string) || (metadata.name as string) || 'Video'}
                   </CardHeading>
                   {metadata.creator && (
-                    <p className="text-sm" style={{ color: '#808080' }}>{metadata.creator as string}</p>
+                    <p className="text-sm" className="text-neutral-400">{metadata.creator as string}</p>
                   )}
                 </div>
               </button>
@@ -1133,7 +1133,7 @@ function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant:
           }}
         />
         {restaurant.rating && (
-          <div className="absolute top-3 left-3 flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#10B981] text-white shadow-md">
+          <div className="absolute top-3 left-3 flex items-center gap-1 px-3 py-1.5 rounded-full bg-success text-white shadow-md">
             <Star className="w-3.5 h-3.5 fill-white" />
             <span className="text-xs font-bold">{restaurant.rating.toFixed(1)}</span>
           </div>
@@ -1144,12 +1144,12 @@ function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant:
           {restaurant.name}
         </CardHeading>
         {restaurant.cuisine && (
-          <p className="text-sm mb-2" style={{ color: '#808080' }}>
+          <p className="text-sm mb-2" className="text-neutral-400">
             {Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(', ') : restaurant.cuisine}
           </p>
         )}
         {restaurant.distance && (
-          <div className="flex items-center gap-1 text-sm" style={{ color: '#808080' }}>
+          <div className="flex items-center gap-1 text-sm" className="text-neutral-400">
             <i className="fa-solid fa-person-walking"></i>
             <span>{(restaurant.distance / 1000).toFixed(1)} km</span>
           </div>

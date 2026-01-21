@@ -116,7 +116,7 @@ export function UserQuickMenu({
                         onClick={handleMessage}
                         className="w-full px-4 py-2.5 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
                     >
-                        <MessageCircle className="h-4 w-4 text-orange-500" />
+                        <MessageCircle className="h-4 w-4 text-fuzo-orange-500" />
                         <span className="text-sm font-medium text-gray-700">Message</span>
                     </button>
                     <button
