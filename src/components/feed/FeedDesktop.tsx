@@ -112,7 +112,7 @@ function DealCard({ card, index }: DealCardProps) {
               </div>
               {/* FUZO Badge for ads and trivia */}
               <div className="p-4 border-t border-gray-100 flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
+                <div className="w-6 h-6 rounded-full bg-[#FFC909] flex items-center justify-center text-white text-xs font-bold">
                   F
                 </div>
                 <span className="text-xs text-gray-500">FUZO</span>
@@ -180,7 +180,7 @@ function DealCard({ card, index }: DealCardProps) {
                   )}
                   {(card.type === 'recipe' || card.type === 'masterbot') && (
                     <>
-                      <div className="w-6 h-6 rounded-full bg-[#FF6B35] flex items-center justify-center text-white text-xs font-bold">
+                      <div className="w-6 h-6 rounded-full bg-[#FFC909] flex items-center justify-center text-white text-xs font-bold">
                         F
                       </div>
                       <span className="text-xs text-gray-500">FUZO</span>

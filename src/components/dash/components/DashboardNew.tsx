@@ -162,7 +162,7 @@ export function DashboardNew() {
         }}
       >
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B35] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FFC909] mx-auto"></div>
           <p className="mt-4 text-[#6B7280] text-sm">Loading your dashboard...</p>
         </div>
       </div>
@@ -263,7 +263,7 @@ export function DashboardNew() {
               />
             </div>
             {userProfile?.avatar_url && (
-              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#FF6B35] shadow-lg shrink-0 ml-6 bg-gray-200">
+              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#FFC909] shadow-lg shrink-0 ml-6 bg-gray-200">
                 <img
                   src={userProfile.avatar_url}
                   alt={getUserDisplayName()}
@@ -281,7 +281,7 @@ export function DashboardNew() {
                     }
                   }}
                 />
-                <div className="w-full h-full items-center justify-center bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white font-bold text-xl" style={{ display: 'none' }}>
+                <div className="w-full h-full items-center justify-center bg-gradient-to-br from-[#FFC909] to-[#E6B508] text-white font-bold text-xl" style={{ display: 'none' }}>
                   {getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
                 </div>
               </div>
@@ -294,7 +294,7 @@ export function DashboardNew() {
       <main className="flex-1 pb-6">
         {/* Snap Your Plate CTA - Mobile Only */}
         <div className="px-4 -mt-6 relative z-10 mb-6 md:hidden">
-          <button className="w-full bg-linear-to-r from-[#FF6B35] to-[#EA580C] text-white font-bold text-lg py-4 rounded-full shadow-lg shadow-[#FF6B35]/50 flex items-center justify-center transition-all duration-300 hover:shadow-xl hover:shadow-[#FF6B35]/60 hover:scale-[1.02]">
+          <button className="w-full bg-linear-to-r from-[#FFC909] to-[#E6B508] text-white font-bold text-lg py-4 rounded-full shadow-lg shadow-[#FFC909]/50 flex items-center justify-center transition-all duration-300 hover:shadow-xl hover:shadow-[#FFC909]/60 hover:scale-[1.02]">
             <Camera className="w-5 h-5 mr-3" />
             Snap Your Plate
           </button>
@@ -326,7 +326,7 @@ export function DashboardNew() {
                       key={member.id}
                       className="flex flex-col items-center shrink-0 hover:opacity-80 transition-opacity"
                     >
-                      <div className="w-16 h-16 rounded-full bg-linear-to-br from-[#FF6B35] to-[#F7C59F] p-[3px]">
+                      <div className="w-16 h-16 rounded-full bg-linear-to-br from-[#FFC909] to-[#F7C59F] p-[3px]">
                         <Avatar className="w-full h-full border-2 border-white">
                           <AvatarImage src={member.avatar} alt={member.name} />
                           <AvatarFallback className="bg-gray-100 text-sm">{member.initials}</AvatarFallback>
@@ -369,7 +369,7 @@ export function DashboardNew() {
                       key={member.id}
                       className="flex flex-col items-center shrink-0 hover:opacity-80 transition-opacity"
                     >
-                      <div className="p-1 bg-linear-to-br from-[#FF6B35] to-[#F7C59F] rounded-full mb-2">
+                      <div className="p-1 bg-linear-to-br from-[#FFC909] to-[#F7C59F] rounded-full mb-2">
                         <div className="w-16 h-16 rounded-full bg-white p-1">
                           <Avatar className="w-full h-full">
                             <AvatarImage src={member.avatar} alt={member.name} />
@@ -424,7 +424,7 @@ export function DashboardNew() {
                       className="w-full h-full object-cover"
                     />
                     <button className="absolute top-2 right-2 w-8 h-8 md:w-9 md:h-9 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform">
-                      <Heart className="w-4 h-4 md:w-4.5 md:h-4.5 text-[#FF6B35]" fill="#FF6B35" />
+                      <Heart className="w-4 h-4 md:w-4.5 md:h-4.5 text-[#FFC909]" fill="#FFC909" />
                     </button>
                   </div>
                   <div className="p-3 md:p-4">
@@ -451,7 +451,7 @@ export function DashboardNew() {
         <section className="mb-6 md:mb-8">
           <div className="px-4 md:px-6 flex items-center justify-between mb-4">
             <SectionHeading>Nearby Restaurants</SectionHeading>
-            <button className="flex items-center gap-1.5 text-[#FF6B35] text-sm md:text-base font-medium md:font-semibold">
+            <button className="flex items-center gap-1.5 text-[#FFC909] text-sm md:text-base font-medium md:font-semibold">
               <span>Map View</span>
               <Navigation className="w-4 h-4 fill-current" />
             </button>
@@ -496,7 +496,7 @@ export function DashboardNew() {
                     </h3>
                     <p className="text-[#6B7280] text-sm mb-3">{restaurant.cuisine}</p>
                     <div className="flex items-center gap-2 text-[#6B7280] text-sm">
-                      <Navigation className="w-4 h-4 text-[#FF6B35]" />
+                      <Navigation className="w-4 h-4 text-[#FFC909]" />
                       <span>{restaurant.distance}</span>
                     </div>
                   </div>
@@ -550,7 +550,7 @@ export function DashboardNew() {
                     <div className="flex items-center gap-2 mb-3">
                       <Avatar className="w-8 h-8 md:w-10 md:h-10 border-2 border-white shadow-sm">
                         <AvatarImage src={post.masterbot_avatar} alt={post.masterbot_name} />
-                        <AvatarFallback className="text-xs md:text-sm bg-orange-100 text-[#FF6B35] font-semibold">
+                        <AvatarFallback className="text-xs md:text-sm bg-orange-100 text-[#FFC909] font-semibold">
                           {post.masterbot_name.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
@@ -559,7 +559,7 @@ export function DashboardNew() {
                     <h3 className="text-sm md:text-base font-bold text-[#1A1A1A] mb-2 line-clamp-2 leading-tight">{post.title}</h3>
                     <p className="text-xs md:text-sm text-[#6B7280] line-clamp-2 mb-2 leading-relaxed">{post.content}</p>
                     {post.restaurant_name && (
-                      <div className="flex items-center gap-1 text-xs md:text-sm text-[#FF6B35] font-semibold mt-3">
+                      <div className="flex items-center gap-1 text-xs md:text-sm text-[#FFC909] font-semibold mt-3">
                         <MapPin className="w-3.5 h-3.5 md:w-4 md:h-4" />
                         <span>{post.restaurant_name}</span>
                       </div>

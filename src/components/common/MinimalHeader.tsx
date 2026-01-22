@@ -9,8 +9,8 @@ interface MinimalHeaderProps {
 export function MinimalHeader({ showLogo = false, logoPosition = 'left', className = '' }: MinimalHeaderProps) {
   return (
     <header className={`w-full ${className}`} style={{ fontSize: '10pt' }}>
-      {/* Thin orange line */}
-      <div className="h-0.5 w-full" style={{ backgroundColor: '#FF6B35' }} />
+      {/* Thin yellow line */}
+      <div className="h-0.5 w-full" style={{ backgroundColor: '#FFC909' }} />
       
       {/* Optional logo */}
       {showLogo && (

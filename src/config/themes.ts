@@ -6,45 +6,45 @@
 import type { Theme } from '../types/theme';
 
 /**
- * 1. FUZO Original - Warm and inviting orange theme (Default)
+ * 1. FUZO Original - Warm and inviting yellow theme (Default)
  */
 export const FUZO_ORIGINAL: Theme = {
   id: 'fuzo-original',
   name: 'FUZO Original',
-  description: 'Warm and inviting orange theme - perfect for food discovery',
+  description: 'Warm and inviting yellow theme - perfect for food discovery',
   category: 'colorful',
   isCustom: false,
   isPremium: false,
   colors: {
     // Primary Brand Colors
-    primary: '#FF6B35',
-    primaryHover: '#E55A2B',
-    primaryLight: '#FF8C42',
-    primaryDark: '#CC5529',
-    
+    primary: '#FFC909',
+    primaryHover: '#E6B508',
+    primaryLight: '#FFE45C',
+    primaryDark: '#CC9F07',
+
     // Secondary Colors
-    secondary: '#FFA556',
-    secondaryHover: '#FF9138',
-    secondaryLight: '#FFB87A',
-    secondaryDark: '#E68A3D',
-    
+    secondary: '#FFEC85',
+    secondaryHover: '#FFE45C',
+    secondaryLight: '#FFF3AD',
+    secondaryDark: '#E6B508',
+
     // Background Colors
-    background: '#FFFFFF',
-    backgroundAlt: '#FFF7F0',
-    surface: '#FFFFFF',
-    surfaceHover: '#FFF5ED',
-    
+    background: '#F5C89A',
+    backgroundAlt: '#F5C89A',
+    surface: '#F5C89A',
+    surfaceHover: '#EEBB8A',
+
     // Border Colors
     border: '#E5E7EB',
     borderLight: '#F3F4F6',
     borderDark: '#D1D5DB',
-    
+
     // Text Colors
     textPrimary: '#111827',
     textSecondary: '#6B7280',
     textMuted: '#9CA3AF',
     textInverse: '#FFFFFF',
-    
+
     // Semantic Colors
     success: '#10B981',
     successLight: '#6EE7B7',
@@ -58,22 +58,22 @@ export const FUZO_ORIGINAL: Theme = {
     info: '#3B82F6',
     infoLight: '#93C5FD',
     infoDark: '#2563EB',
-    
+
     // Component Specific
     navbarBg: '#FFFFFF',
     navbarText: '#111827',
-    radialMenuPrimary: '#FF6B35',
-    radialMenuSecondary: '#FFA556',
+    radialMenuPrimary: '#FFC909',
+    radialMenuSecondary: '#FFEC85',
     cardBg: '#FFFFFF',
     cardBorder: '#E5E7EB',
     inputBg: '#F9FAFB',
     inputBorder: '#D1D5DB',
-    buttonText: '#FFFFFF',
+    buttonText: '#111827',
   },
   preview: {
-    gradient: 'linear-gradient(135deg, #FF6B35 0%, #FFA556 100%)',
-    primarySample: '#FF6B35',
-    secondarySample: '#FFA556',
+    gradient: 'linear-gradient(135deg, #FFC909 0%, #FFEC85 100%)',
+    primarySample: '#FFC909',
+    secondarySample: '#FFEC85',
     backgroundSample: '#FFFFFF',
   }
 };
@@ -382,34 +382,34 @@ export const DARK_MODE: Theme = {
   isPremium: false,
   colors: {
     // Primary Brand Colors
-    primary: '#FF6B35',
-    primaryHover: '#FF8C42',
-    primaryLight: '#FFA556',
-    primaryDark: '#E55A2B',
-    
+    primary: '#FFC909',
+    primaryHover: '#FFE45C',
+    primaryLight: '#FFEC85',
+    primaryDark: '#E6B508',
+
     // Secondary Colors
-    secondary: '#FFA556',
-    secondaryHover: '#FFB87A',
-    secondaryLight: '#FFC899',
-    secondaryDark: '#FF9138',
-    
+    secondary: '#FFEC85',
+    secondaryHover: '#FFF3AD',
+    secondaryLight: '#FFF9D6',
+    secondaryDark: '#FFE45C',
+
     // Background Colors
     background: '#0F172A',
     backgroundAlt: '#1E293B',
     surface: '#1E293B',
     surfaceHover: '#334155',
-    
+
     // Border Colors
     border: '#334155',
     borderLight: '#475569',
     borderDark: '#1E293B',
-    
+
     // Text Colors
     textPrimary: '#F1F5F9',
     textSecondary: '#CBD5E1',
     textMuted: '#94A3B8',
     textInverse: '#0F172A',
-    
+
     // Semantic Colors
     success: '#10B981',
     successLight: '#34D399',
@@ -423,22 +423,22 @@ export const DARK_MODE: Theme = {
     info: '#3B82F6',
     infoLight: '#60A5FA',
     infoDark: '#2563EB',
-    
+
     // Component Specific
     navbarBg: '#1E293B',
     navbarText: '#F1F5F9',
-    radialMenuPrimary: '#FF6B35',
-    radialMenuSecondary: '#FFA556',
+    radialMenuPrimary: '#FFC909',
+    radialMenuSecondary: '#FFEC85',
     cardBg: '#1E293B',
     cardBorder: '#334155',
     inputBg: '#0F172A',
     inputBorder: '#334155',
-    buttonText: '#FFFFFF',
+    buttonText: '#111827',
   },
   preview: {
-    gradient: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #FF6B35 100%)',
-    primarySample: '#FF6B35',
-    secondarySample: '#FFA556',
+    gradient: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #FFC909 100%)',
+    primarySample: '#FFC909',
+    secondarySample: '#FFEC85',
     backgroundSample: '#0F172A',
   }
 };

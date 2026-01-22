@@ -445,7 +445,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <Link
                 to="/feed"
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/feed'
-                    ? 'bg-[#FF6B35] text-white'
+                    ? 'bg-[#FFC909] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                   }`}
               >
@@ -455,7 +455,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <Link
                 to="/scout"
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/scout'
-                    ? 'bg-[#FF6B35] text-white'
+                    ? 'bg-[#FFC909] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                   }`}
               >
@@ -465,7 +465,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <Link
                 to="/bites"
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/bites'
-                    ? 'bg-[#FF6B35] text-white'
+                    ? 'bg-[#FFC909] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                   }`}
               >
@@ -475,7 +475,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <Link
                 to="/trims"
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/trims'
-                    ? 'bg-[#FF6B35] text-white'
+                    ? 'bg-[#FFC909] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                   }`}
               >
@@ -485,7 +485,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <Link
                 to="/plate"
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/plate'
-                    ? 'bg-[#FF6B35] text-white'
+                    ? 'bg-[#FFC909] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                   }`}
               >
@@ -495,7 +495,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <Link
                 to="/snap"
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/snap'
-                    ? 'bg-[#FF6B35] text-white'
+                    ? 'bg-[#FFC909] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                   }`}
               >
@@ -530,7 +530,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <div className="flex items-start gap-6 mb-6">
                 {/* Avatar */}
                 <div className="relative">
-                  <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-[#FF6B35] bg-gray-200">
+                  <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-[#FFC909] bg-gray-200">
                     <img
                       src={user?.user_metadata?.avatar_url || user?.user_metadata?.picture ||
                         'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg'}
@@ -549,11 +549,11 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                         }
                       }}
                     />
-                    <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-[#FF6B35] to-[#EA580C] text-white font-bold text-2xl">
+                    <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-[#FFC909] to-[#E6B508] text-white font-bold text-2xl">
                       {getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
                     </div>
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-9 h-9 bg-gradient-to-br from-yellow-400 to-[#FF6B35] rounded-full flex items-center justify-center border-2 border-white">
+                  <div className="absolute -bottom-1 -right-1 w-9 h-9 bg-gradient-to-br from-yellow-400 to-[#FFC909] rounded-full flex items-center justify-center border-2 border-white">
                     <Star className="w-4 h-4 text-white fill-white" />
                   </div>
                 </div>
@@ -599,7 +599,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-[#FF6B35] rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-[#FFC909] rounded-full flex items-center justify-center">
                       <Trophy className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -607,13 +607,13 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                       <p className="text-xs" style={{ color: '#808080' }}>Level {userLevel.level}</p>
                     </div>
                   </div>
-                  <span className="text-sm font-medium text-[#FF6B35]">
+                  <span className="text-sm font-medium text-[#FFC909]">
                     {userLevel.pointsToNext > 0 ? `${userLevel.pointsToNext} to next level` : 'Max Level!'}
                   </span>
                 </div>
                 <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-[#FF6B35] to-[#FFD500] rounded-full transition-all duration-500"
+                    className="h-full bg-gradient-to-r from-[#FFC909] to-[#FFD500] rounded-full transition-all duration-500"
                     style={{ width: `${userLevel.progressPercent}%` }}
                   />
                 </div>
@@ -631,7 +631,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('places');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'places'
-                      ? 'bg-[#FF6B35] text-white'
+                      ? 'bg-[#FFC909] text-white'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -651,7 +651,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('recipes');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'recipes'
-                      ? 'bg-[#FF6B35] text-white'
+                      ? 'bg-[#FFC909] text-white'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -671,7 +671,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('videos');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'videos'
-                      ? 'bg-[#FF6B35] text-white'
+                      ? 'bg-[#FFC909] text-white'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -691,7 +691,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('crew');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'crew'
-                      ? 'bg-[#FF6B35] text-white'
+                      ? 'bg-[#FFC909] text-white'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -711,7 +711,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('posts');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'posts'
-                      ? 'bg-[#FF6B35] text-white'
+                      ? 'bg-[#FFC909] text-white'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -813,7 +813,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                         onClick={() => setSelectedFriendUserId(member.id)}
                         className="flex flex-col items-center shrink-0 hover:opacity-80 transition-opacity"
                       >
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#F7C59F] p-[3px]">
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FFC909] to-[#F7C59F] p-[3px]">
                           <Avatar className="w-full h-full border-2 border-white">
                             <AvatarImage src={member.avatar} alt={member.name} />
                             <AvatarFallback className="bg-gray-100 text-sm">{member.initials}</AvatarFallback>
@@ -854,7 +854,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     const { openChat } = useDMChatStore.getState();
                     openChat();
                   }}
-                  className="text-xs text-[#FF6B35] hover:text-[#FF6B35] hover:bg-orange-50"
+                  className="text-xs text-[#FFC909] hover:text-[#FFC909] hover:bg-orange-50"
                 >
                   <MessageCircle className="h-3 w-3 mr-1" />
                   View All
@@ -963,7 +963,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                         </CardHeading>
                         <p className="mb-3" style={{ color: '#6B7280', fontSize: '10pt' }}>{restaurant.cuisine}</p>
                         <div className="flex items-center gap-2" style={{ color: '#6B7280', fontSize: '10pt' }}>
-                          <Navigation className="w-4 h-4 text-[#FF6B35]" />
+                          <Navigation className="w-4 h-4 text-[#FFC909]" />
                           <span>{restaurant.distance}</span>
                         </div>
                       </div>
@@ -996,7 +996,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
             </p>
             <button
               onClick={() => toast.info('Create post coming soon')}
-              className="bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
+              className="bg-[#FFC909] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
             >
               Create Post
             </button>
@@ -1038,7 +1038,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
           </p>
           <button
             onClick={() => toast.info('Navigate to explore page')}
-            className="bg-[#FF6B35] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
+            className="bg-[#FFC909] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
           >
             Start Exploring
           </button>
@@ -1169,7 +1169,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                   )}
                   <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                     <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
-                      <Play className="w-8 h-8 text-[#FF6B35] fill-[#FF6B35] ml-1" />
+                      <Play className="w-8 h-8 text-[#FFC909] fill-[#FFC909] ml-1" />
                     </div>
                   </div>
                   {metadata.duration && (

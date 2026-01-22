@@ -53,6 +53,11 @@ export const config = {
     url: import.meta.env.DEV 
       ? (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')
       : (import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')),
+    // Feature Flags
+    features: {
+      // Chat functionality - disabled until proper integration is complete
+      chatEnabled: false,
+    },
   },
 
   // Feature Flags

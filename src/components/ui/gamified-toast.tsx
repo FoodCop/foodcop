@@ -43,16 +43,16 @@ const colorMap = {
     defaultTitle: 'Error',
   },
   warning: {
-    bg: '#FF6B35', // Orange
-    text: '#FFFFFF',
-    border: '#EA580C',
+    bg: '#FFC909', // Yellow
+    text: '#111827',
+    border: '#E6B508',
     icon: 'fa-triangle-exclamation',
     defaultTitle: 'Warning',
   },
   info: {
-    bg: '#FF6B35', // Orange
-    text: '#FFFFFF',
-    border: '#EA580C',
+    bg: '#FFC909', // Yellow
+    text: '#111827',
+    border: '#E6B508',
     icon: 'fa-circle-info',
     defaultTitle: 'Info',
   },

@@ -8,24 +8,25 @@ import { MessageCircle } from 'lucide-react';
 /**
  * Hook to handle chat notifications via toast
  * Shows toast notifications for new messages when chat is closed or different conversation is active
+ * @param enabled - Whether chat notifications are enabled (defaults to true)
  */
-export function useChatNotifications() {
+export function useChatNotifications(enabled: boolean = true) {
   const { user } = useAuthStore();
   const { subscribeToUnreadCount, setNotificationCallback } = useDMChatStore();
   const notificationRefs = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!enabled || !user?.id) return;
 
     // Subscribe to all messages for this user
     const unsubscribe = subscribeToUnreadCount(user.id);
 
     return unsubscribe;
-  }, [user?.id, subscribeToUnreadCount]);
+  }, [enabled, user?.id, subscribeToUnreadCount]);
 
   // Set up notification callback
   useEffect(() => {
-    if (!user?.id) {
+    if (!enabled || !user?.id) {
       setNotificationCallback(() => {});
       return;
     }
@@ -89,7 +90,7 @@ export function useChatNotifications() {
     return () => {
       setNotificationCallback(() => {});
     };
-  }, [user?.id, setNotificationCallback]);
+  }, [enabled, user?.id, setNotificationCallback]);
 
   // Clean up notification refs periodically
   useEffect(() => {

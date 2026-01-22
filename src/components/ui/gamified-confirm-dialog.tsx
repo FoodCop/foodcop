@@ -33,7 +33,7 @@ export function GamifiedConfirmDialog({
         className="bg-white rounded-lg shadow-2xl p-7 max-w-md w-full mx-4 border-2"
         onClick={(e) => e.stopPropagation()}
         style={{
-          borderColor: '#FF6B35',
+          borderColor: '#FFC909',
         }}
       >
         <div className="flex items-start justify-between mb-5">
@@ -78,7 +78,7 @@ export function GamifiedConfirmDialog({
             }}
             className="px-5 py-2.5 rounded-md font-medium text-white"
             style={{
-              backgroundColor: '#FF6B35',
+              backgroundColor: '#FFC909',
               fontSize: '12pt',
             }}
           >

@@ -72,7 +72,7 @@ export const MobileRadialNav = ({ currentPage, onNavigate }: MobileRadialNavProp
       items={menuItems}
       onNavigate={handleNavigate}
       currentRoute={currentPage}
-      barrelColor="#FF6B35"
+      barrelColor="#FFC909"
     />
   );
 };

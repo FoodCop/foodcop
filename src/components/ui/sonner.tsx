@@ -23,10 +23,10 @@ const Toaster = ({ ...props }: React.ComponentProps<typeof Sonner>) => {
           "--success-border": "#B45309",
           "--error-bg": "#DC2626",
           "--error-border": "#B91C1C",
-          "--warning-bg": "#FF6B35",
-          "--warning-border": "#EA580C",
-          "--info-bg": "#FF6B35",
-          "--info-border": "#EA580C",
+          "--warning-bg": "#FFC909",
+          "--warning-border": "#E6B508",
+          "--info-bg": "#FFC909",
+          "--info-border": "#E6B508",
         } as React.CSSProperties
       }
       {...props}

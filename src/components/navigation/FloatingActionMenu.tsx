@@ -37,7 +37,7 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
       label: 'Feed',
       route: 'feed',
       icon: <Rss size={20} />,
-      color: '#FF6B35'
+      color: '#FFC909'
     },
     {
       label: 'Scout',

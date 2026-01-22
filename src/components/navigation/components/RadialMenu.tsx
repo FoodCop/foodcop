@@ -15,7 +15,7 @@ interface RadialMenuProps {
 
 export function RadialMenu({ 
   items, 
-  barrelColor: _barrelColor = '#FF6B35',
+  barrelColor: _barrelColor = '#FFC909',
   onNavigate,
   currentRoute,
 }: RadialMenuProps) {
@@ -227,8 +227,8 @@ export function RadialMenu({
                   <button
                     className="w-full h-full rounded-full bg-white border-2 flex items-center justify-center transition-all active:scale-90"
                     style={{
-                      borderColor: isSelected ? '#FF6B35' : '#EEE',
-                      backgroundColor: isSelected ? '#FF6B35' : '#FFFFFF',
+                      borderColor: isSelected ? '#FFC909' : '#EEE',
+                      backgroundColor: isSelected ? '#FFC909' : '#FFFFFF',
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                       color: isSelected ? '#FFFFFF' : '#374151',
                     }}

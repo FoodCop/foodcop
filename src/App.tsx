@@ -8,6 +8,7 @@ import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
 import { LogOut, MessageCircle } from 'lucide-react'
 import { useDMChatStore } from './stores/chatStore'
 import { toastHelpers } from './utils/toastHelpers'
+import config from './config/config'
 import { Toaster } from './components/ui/sonner'
 import { FloatingActionMenu } from './components/navigation/FloatingActionMenu'
 import { AIChatWidget } from './components/tako/components/AIChatWidget'
@@ -15,7 +16,6 @@ import { NavigationHints } from './components/common/NavigationHints'
 import { UniversalViewerProvider, useUniversalViewer } from './contexts/UniversalViewerContext'
 import { UniversalViewer } from './components/ui/universal-viewer/UniversalViewer'
 import { ChatDrawer } from './components/chat'
-import { PresenceTracker } from './components/chat/PresenceTracker'
 import { useChatNotifications } from './hooks/useChatNotifications'
 import BottomAdBanner from './components/common/BottomAdBanner'
 import './App.css'
@@ -142,33 +142,9 @@ function AppLayout() {
   const location = useLocation()
   const navigate = useNavigate()
   const { viewerState, closeViewer, navigateViewer, deleteHandler } = useUniversalViewer()
-
-  // Enable chat notifications
-  useChatNotifications()
-
-  // Enable presence tracking for online status
-  // This component doesn't render anything, just tracks presence in background
-  return (
-    <>
-      <PresenceTracker />
-      <AppLayoutContent
-        colorMode={colorMode}
-        setColorMode={setColorMode}
-        showAIChat={showAIChat}
-        setShowAIChat={setShowAIChat}
-        location={location}
-        navigate={navigate}
-        viewerState={viewerState}
-        closeViewer={closeViewer}
-        navigateViewer={navigateViewer}
-        deleteHandler={deleteHandler}
-      />
-    </>
-  );
-}
-
-// Extracted layout content to keep code organized
-function AppLayoutContent({ colorMode, setColorMode, showAIChat, setShowAIChat, location, navigate, viewerState, closeViewer, navigateViewer, deleteHandler }: any) {
+  
+  // Enable chat notifications only if chat is enabled
+  useChatNotifications(config.app?.features?.chatEnabled ?? false)
 
   // Apply color mode to CSS variable
   useEffect(() => {
@@ -233,23 +209,25 @@ function AppLayoutContent({ colorMode, setColorMode, showAIChat, setShowAIChat, 
           </button>
 
           {/* DM Chat Button */}
-          <button
-            onClick={openDMChat}
-            className="relative px-4 py-2 rounded-full border-2 transition ml-2 hover:bg-orange-50"
-            style={{
-              borderColor: '#E5E7EB',
-              backgroundColor: '#FFFFFF',
-            }}
-            title="Messages"
-            aria-label="Messages"
-          >
-            <MessageCircle className="h-4 w-4 text-gray-700" />
-            {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-orange-500 text-white text-xs font-bold rounded-full">
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </span>
-            )}
-          </button>
+          {config.app.features.chatEnabled && (
+            <button
+              onClick={openDMChat}
+              className="relative px-4 py-2 rounded-full border-2 transition ml-2 hover:bg-orange-50"
+              style={{
+                borderColor: '#E5E7EB',
+                backgroundColor: '#FFFFFF',
+              }}
+              title="Messages"
+              aria-label="Messages"
+            >
+              <MessageCircle className="h-4 w-4 text-gray-700" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-orange-500 text-white text-xs font-bold rounded-full">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+          )}
 
           {/* AI Chat Button */}
           <button
@@ -308,7 +286,7 @@ function AppLayoutContent({ colorMode, setColorMode, showAIChat, setShowAIChat, 
     <div className="min-h-screen bg-background mobile-app-container">
       {/* Desktop Navigation - Only show on authenticated pages */}
       {showNavigation && (
-        <div className="bg-white border-b sticky top-0 z-50 hidden md:block">
+        <div className="bg-[#F5C89A] border-b sticky top-0 z-50 hidden md:block">
           <div className="container mx-auto px-4">
             <Navigation />
           </div>
@@ -325,7 +303,7 @@ function AppLayoutContent({ colorMode, setColorMode, showAIChat, setShowAIChat, 
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/debug" element={<DebugApp />} />
             <Route path="/all-alerts" element={<AllAlerts />} />
-            <Route path="/test-chat" element={<TestChatPage />} />
+            {config.app.features.chatEnabled && <Route path="/test-chat" element={<TestChatPage />} />}
 
             {/* Protected Routes */}
             <Route
@@ -459,8 +437,8 @@ function AppLayoutContent({ colorMode, setColorMode, showAIChat, setShowAIChat, 
         onDelete={deleteHandler ? (itemId: string, itemType: string) => deleteHandler(itemId, itemType) : undefined}
       />
 
-      {/* DM Chat Drawer - Available app-wide */}
-      {showNavigation && <ChatDrawer />}
+      {/* DM Chat Drawer - Only show if chat is enabled */}
+      {config.app.features.chatEnabled && <ChatDrawer />}
 
       {/* Bottom Ad Banner - Show on all authenticated pages */}
       {showNavigation && (

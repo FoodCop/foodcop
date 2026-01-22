@@ -206,10 +206,11 @@ export default function TrimsDesktop() {
 
   return (
     <div className="flex bg-black h-screen overflow-hidden">
-      {/* Sidebar Panel */}
+      {/* Sidebar Panel - Apricot Theme */}
       <SidebarPanel
         className="hidden md:flex flex-shrink-0"
         fullHeight
+        themeColor="apricot"
         eyebrow="Customize"
         title="Trims Filters"
         action={
@@ -273,7 +274,7 @@ export default function TrimsDesktop() {
           {/* Loading State */}
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-12 h-12 border-4 border-[#FF6B35] border-t-transparent rounded-full animate-spin" />
+              <div className="w-12 h-12 border-4 border-[#FFC909] border-t-transparent rounded-full animate-spin" />
               <p className="mt-4 text-gray-400 text-sm">Finding best content...</p>
             </div>
           )}
@@ -289,7 +290,7 @@ export default function TrimsDesktop() {
               <button
                 type="button"
                 onClick={() => loadVideos('cooking shorts')}
-                className="px-6 py-3 bg-[#FF6B35] text-white rounded-xl font-medium"
+                className="px-6 py-3 bg-[#FFC909] text-white rounded-xl font-medium"
               >
                 Try Again
               </button>
@@ -362,7 +363,7 @@ function VideoCard({
         {/* Play Button Overlay */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform transition-transform group-hover:scale-110">
-            <Play className="w-8 h-8 text-[#FF6B35] fill-[#FF6B35] ml-1" />
+            <Play className="w-8 h-8 text-[#FFC909] fill-[#FFC909] ml-1" />
           </div>
         </div>
       </div>

@@ -1,11 +1,11 @@
-/* Scout Slider Orange Color Fix */
-/* This addresses the Radix UI Slider orange color visibility issue */
+/* Scout Slider Yellow Color Fix */
+/* This addresses the Radix UI Slider color visibility issue */
 
 .scout-slider {
-  /* Force orange colors for the scout distance slider */
+  /* Force yellow colors for the scout distance slider */
   --slider-track-bg: #f3f4f6;
-  --slider-range-bg: #f97316;
-  --slider-thumb-bg: #f97316;
+  --slider-range-bg: #FFC909;
+  --slider-thumb-bg: #FFC909;
   --slider-thumb-border: #ffffff;
 }
 
@@ -22,19 +22,19 @@
 .scout-slider [data-slot="slider-thumb"] {
   background-color: var(--slider-thumb-bg) !important;
   border: 2px solid var(--slider-thumb-border) !important;
-  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(255, 201, 9, 0.3) !important;
   width: 20px !important;
   height: 20px !important;
 }
 
 .scout-slider [data-slot="slider-thumb"]:hover {
-  box-shadow: 0 2px 12px rgba(249, 115, 22, 0.4) !important;
+  box-shadow: 0 2px 12px rgba(255, 201, 9, 0.4) !important;
   transform: scale(1.1);
   transition: all 0.2s ease;
 }
 
 .scout-slider [data-slot="slider-thumb"]:focus-visible {
-  outline: 2px solid #f97316;
+  outline: 2px solid #FFC909;
   outline-offset: 2px;
 }
 

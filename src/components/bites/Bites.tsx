@@ -354,10 +354,11 @@ export default function Bites() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
-      {/* Full-height Sidebar for desktop */}
+      {/* Full-height Sidebar for desktop - Apricot Theme */}
       <SidebarPanel
         className="hidden md:flex"
         fullHeight
+        themeColor="apricot"
         eyebrow="Customize"
         title="Filters"
         action={
@@ -437,11 +438,11 @@ export default function Bites() {
                 placeholder="Search recipes, ingredients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-14 md:pr-16 rounded-2xl bg-[#F3F4F6] text-sm md:text-base text-[#1A1A1A] placeholder:text-[#ADAEBC] border-0 focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/20"
+                className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-14 md:pr-16 rounded-2xl bg-[#F3F4F6] text-sm md:text-base text-[#1A1A1A] placeholder:text-[#ADAEBC] border-0 focus:outline-none focus:ring-2 focus:ring-[#FFC909]/20"
               />
               <button
                 onClick={() => setShowFilterDrawer(true)}
-                className="absolute right-2 top-2 w-8 h-8 rounded-xl bg-[#FF6B35] flex items-center justify-center hover:bg-[#EA580C] transition-colors md:hidden"
+                className="absolute right-2 top-2 w-8 h-8 rounded-xl bg-[#FFC909] flex items-center justify-center hover:bg-[#EA580C] transition-colors md:hidden"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5 text-white" />
               </button>
@@ -473,7 +474,7 @@ export default function Bites() {
             <button
               onClick={handleRandomize}
               disabled={loading}
-              className="w-full md:max-w-md md:mx-auto h-12 md:h-14 rounded-2xl bg-white border-2 border-[#FF6B35] text-[#FF6B35] font-bold text-sm md:text-base flex items-center justify-center gap-2 hover:bg-[#FF6B35] hover:text-white transition-all disabled:opacity-50"
+              className="w-full md:max-w-md md:mx-auto h-12 md:h-14 rounded-2xl bg-white border-2 border-[#FFC909] text-[#FFC909] font-bold text-sm md:text-base flex items-center justify-center gap-2 hover:bg-[#FFC909] hover:text-white transition-all disabled:opacity-50"
             >
               <Shuffle className="w-4 h-4 md:w-5 md:h-5" />
               Shuffle Recipes
@@ -483,7 +484,7 @@ export default function Bites() {
           {/* Loading State */}
           {loading && (
             <div className="px-5 md:px-8 lg:px-12 flex flex-col items-center justify-center py-12 md:py-16">
-              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-2 md:border-b-3 border-[#FF6B35] mb-4"></div>
+              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-2 md:border-b-3 border-[#FFC909] mb-4"></div>
               <p className="text-[#6B7280] text-sm md:text-base">Loading delicious recipes...</p>
             </div>
           )}
@@ -498,7 +499,7 @@ export default function Bites() {
               <p className="text-[#6B7280] text-sm md:text-base mb-4">{error}</p>
               <button
                 onClick={() => loadRecipes("popular recipes")}
-                className="px-6 md:px-8 py-2 md:py-3 rounded-xl bg-[#FF6B35] text-white font-semibold text-sm md:text-base"
+                className="px-6 md:px-8 py-2 md:py-3 rounded-xl bg-[#FFC909] text-white font-semibold text-sm md:text-base"
               >
                 Try Again
               </button>

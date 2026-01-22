@@ -5,7 +5,8 @@
       "Bash(dir:*)",
       "Bash(supabase --version:*)",
       "Bash(npm:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(powershell -Command \"Get-ChildItem -Path ''src'' -Recurse -Include ''*.tsx'',''*.ts'' | ForEach-Object { \\(Get-Content $_FullName -Raw\\) -replace ''#FF6B35'', ''#FFC909'' -replace ''#FF6900'', ''#FFC909'' -replace ''#f97316'', ''#FFC909'' -replace ''#ea580c'', ''#FFC909'' | Set-Content $_FullName -NoNewline }\")"
     ]
   }
 }

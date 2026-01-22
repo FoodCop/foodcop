@@ -449,10 +449,10 @@ export function ScoutDesktop() {
       </div>
 
       <div className="flex flex-1">
-        {/* Left Sidebar */}
-        <aside className="w-[380px] bg-white border-r border-gray-200 flex flex-col overflow-hidden">
+        {/* Left Sidebar - Apricot Theme */}
+        <aside className="w-[380px] border-r flex flex-col overflow-hidden" style={{ backgroundColor: '#F5C89A', borderColor: '#E5B88A' }}>
           {/* Header */}
-          <div className="p-4 border-b border-gray-100">
+          <div className="p-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
             {/* User Location */}
             <div className="flex items-center gap-2 mb-4 p-2 bg-blue-50 rounded-lg">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
@@ -505,36 +505,6 @@ export function ScoutDesktop() {
                   </div>
                 </div>
 
-                {/* Filters */}
-                <div className="flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => setActiveFilter('popular')}
-                    className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeFilter === 'popular'
-                      ? 'bg-orange-500 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                  >
-                    Popular
-                  </button>
-                  <button
-                    onClick={() => setActiveFilter('top-rated')}
-                    className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeFilter === 'top-rated'
-                      ? 'bg-orange-500 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                  >
-                    Top Rated
-                  </button>
-                  <button
-                    onClick={() => setActiveFilter('fast-delivery')}
-                    className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeFilter === 'fast-delivery'
-                      ? 'bg-orange-500 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                  >
-                    Fast Delivery
-                  </button>
-                </div>
               </>
             ) : (
               <>
@@ -611,7 +581,7 @@ export function ScoutDesktop() {
                     <button
                       key={restaurant.id}
                       onClick={() => handleRestaurantClick(restaurant)}
-                      className={`w-full p-4 border-b border-gray-100 hover:bg-orange-50 cursor-pointer transition-colors text-left ${selectedRestaurant?.id === restaurant.id ? 'bg-orange-50' : ''
+                      className={`w-full p-4 border-b border-gray-100 cursor-pointer transition-colors text-left ${selectedRestaurant?.id === restaurant.id ? 'bg-[#E47A24]/20' : 'hover:bg-[#E47A24]/10'
                         }`}
                     >
                       <div className="flex gap-3">
@@ -713,7 +683,7 @@ export function ScoutDesktop() {
                     <button
                       key={restaurant.id}
                       onClick={() => setSelectedRestaurant(restaurant)}
-                      className={`w-full p-4 border-b border-gray-100 hover:bg-orange-50 cursor-pointer transition-colors text-left ${selectedRestaurant?.id === restaurant.id ? 'bg-orange-50' : ''
+                      className={`w-full p-4 border-b border-gray-100 cursor-pointer transition-colors text-left ${selectedRestaurant?.id === restaurant.id ? 'bg-[#E47A24]/20' : 'hover:bg-[#E47A24]/10'
                         }`}
                     >
                       <div className="flex gap-3">
@@ -846,9 +816,9 @@ export function ScoutDesktop() {
           </button>
         </div>
 
-        {/* Right Panel */}
+        {/* Right Panel - Apricot Theme */}
         {selectedRestaurant && (
-          <aside className="w-[420px] bg-white border-l border-gray-200 flex flex-col overflow-hidden">
+          <aside className="w-[420px] border-l flex flex-col overflow-hidden" style={{ backgroundColor: '#F5C89A', borderColor: '#E5B88A' }}>
             <div className="flex-1 overflow-y-auto">
               {/* Hero Image */}
               <div className="h-64 overflow-hidden bg-gray-200">
@@ -890,11 +860,11 @@ export function ScoutDesktop() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
+                {/* Action Buttons - Dark Mango with Blood Orange hover */}
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   <button
                     onClick={handleGetDirections}
-                    className="flex items-center justify-center gap-2 px-4 py-3 bg-orange-500 text-white font-medium rounded-lg hover:bg-orange-600 transition-colors"
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[#D55123] text-white font-medium rounded-lg hover:bg-[#BF2C20] transition-colors"
                   >
                     <Navigation size={18} />
                     Directions
@@ -902,7 +872,7 @@ export function ScoutDesktop() {
                   {selectedRestaurant.phone && (
                     <a
                       href={`tel:${selectedRestaurant.phone}`}
-                      className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[#D55123] text-white font-medium rounded-lg hover:bg-[#BF2C20] transition-colors"
                     >
                       <Phone size={18} />
                       Call
@@ -913,7 +883,7 @@ export function ScoutDesktop() {
                       href={selectedRestaurant.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[#D55123] text-white font-medium rounded-lg hover:bg-[#BF2C20] transition-colors"
                     >
                       <Globe size={18} />
                       Website
@@ -921,12 +891,12 @@ export function ScoutDesktop() {
                   )}
                   <button
                     onClick={handleSaveToPlate}
-                    className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[#D55123] text-white font-medium rounded-lg hover:bg-[#BF2C20] transition-colors"
                   >
                     <Heart size={18} />
                     Save to Plate
                   </button>
-                  <div className="flex items-center justify-center border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-center bg-[#D55123] text-white rounded-lg hover:bg-[#BF2C20] transition-colors">
                     <SharePostButton
                       cardId={selectedRestaurant.id}
                       title={selectedRestaurant.name}
@@ -934,29 +904,20 @@ export function ScoutDesktop() {
                       type="RESTAURANT"
                       subtitle={Array.isArray(selectedRestaurant.cuisine) ? selectedRestaurant.cuisine.join(', ') : selectedRestaurant.cuisine}
                       variant="light"
-                      className="!text-gray-700 hover:!bg-gray-100"
+                      className="!text-white hover:!bg-transparent"
                     />
-                    <span className="pr-4 text-gray-700 font-medium text-sm">Share to Chat</span>
+                    <span className="pr-4 text-white font-medium text-sm">Share to Chat</span>
                   </div>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-4 gap-4 mb-6 pb-6 border-b border-gray-200">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-500 mb-1">{selectedRestaurant.rating}</div>
-                    <div className="text-xs text-gray-600">Rating</div>
+                {/* Stats */}
+                <div className="flex items-center justify-center gap-4 mb-6 pb-6 border-b border-[#4d382a]">
+                  <div className="flex items-center gap-2 px-6 py-4 bg-[#eda600] rounded-xl">
+                    <span className="text-4xl">⭐</span>
+                    <span className="text-5xl font-bold text-white">{selectedRestaurant.rating}</span>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900 mb-1">{selectedRestaurant.deliveryTime || '30m'}</div>
-                    <div className="text-xs text-gray-600">Delivery</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900 mb-1">{formatDistance(selectedRestaurant.distance)}</div>
-                    <div className="text-xs text-gray-600">Distance</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900 mb-1">{priceLevel}</div>
-                    <div className="text-xs text-gray-600">Price</div>
+                  <div className="px-6 py-4 bg-[#eda600] rounded-xl">
+                    <span className="text-5xl font-bold text-white">{formatDistance(selectedRestaurant.distance)}</span>
                   </div>
                 </div>
 

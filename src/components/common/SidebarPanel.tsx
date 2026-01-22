@@ -10,6 +10,8 @@ interface SidebarPanelProps {
   className?: string;
   /** Use full-height style matching Scout/Plate (no rounded corners, full height) */
   fullHeight?: boolean;
+  /** Theme color for the sidebar (defaults to white) */
+  themeColor?: 'pineapple' | 'apricot' | 'dark-mango' | 'blood-orange' | 'candy-apple' | 'white';
 }
 
 interface SidebarSectionProps {
@@ -22,6 +24,16 @@ interface SidebarSectionProps {
   contentClassName?: string;
 }
 
+// Theme color mapping
+const themeColors = {
+  pineapple: { bg: '#eda600', text: '#FFFFFF', border: '#d99600' },
+  apricot: { bg: '#F5C89A', text: '#0f172a', border: '#E5B88A' },
+  'dark-mango': { bg: '#D55123', text: '#FFFFFF', border: '#C54113' },
+  'blood-orange': { bg: '#BF2C20', text: '#FFFFFF', border: '#AF1C10' },
+  'candy-apple': { bg: '#951A21', text: '#FFFFFF', border: '#850A11' },
+  white: { bg: '#FFFFFF', text: '#0f172a', border: '#EEE' },
+};
+
 export function SidebarPanel({
   eyebrow,
   title,
@@ -30,28 +42,50 @@ export function SidebarPanel({
   children,
   className,
   fullHeight = false,
+  themeColor = 'white',
 }: SidebarPanelProps) {
+  const colors = themeColors[themeColor];
+  const isColored = themeColor !== 'white' && themeColor !== 'apricot';
+  const isLightBg = themeColor === 'white' || themeColor === 'apricot';
+
   // Full-height style: matches Scout sidebar (border-r, no rounded corners, full height)
   if (fullHeight) {
     return (
       <aside
         className={cn(
-          'w-[280px] bg-white border-r border-gray-200 flex flex-col h-full',
+          'w-[280px] border-r flex flex-col h-full',
           className
         )}
+        style={{
+          backgroundColor: colors.bg,
+          borderColor: colors.border,
+        }}
         aria-label={title ?? 'Sidebar'}
       >
         {/* Header */}
         {(eyebrow || title || action) && (
-          <div className="p-4 border-b border-gray-100">
+          <div
+            className="p-4 border-b"
+            style={{ borderColor: isLightBg ? '#f3f4f6' : 'rgba(255,255,255,0.2)' }}
+          >
             <div className="flex items-center justify-between gap-3">
               <div>
                 {eyebrow && (
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#8A8A8A]">
+                  <p
+                    className="text-[11px] font-semibold uppercase tracking-[0.3em]"
+                    style={{ color: isLightBg ? '#8A8A8A' : 'rgba(255,255,255,0.7)' }}
+                  >
                     {eyebrow}
                   </p>
                 )}
-                {title && <h3 className="text-lg font-bold text-[#0f172a]">{title}</h3>}
+                {title && (
+                  <h3
+                    className="text-lg font-bold"
+                    style={{ color: colors.text }}
+                  >
+                    {title}
+                  </h3>
+                )}
               </div>
               {action}
             </div>
@@ -63,7 +97,12 @@ export function SidebarPanel({
 
         {/* Footer */}
         {footer && (
-          <div className="p-4 border-t border-gray-100">{footer}</div>
+          <div
+            className="p-4 border-t"
+            style={{ borderColor: isLightBg ? '#f3f4f6' : 'rgba(255,255,255,0.2)' }}
+          >
+            {footer}
+          </div>
         )}
       </aside>
     );
@@ -73,16 +112,32 @@ export function SidebarPanel({
   return (
     <aside className={cn('w-80 flex-shrink-0', className)} aria-label={title ?? 'Sidebar'}>
       <div className="sticky top-6">
-        <div className="bg-white border border-[#EEE] rounded-3xl shadow-sm p-6 flex flex-col gap-6">
+        <div
+          className="border rounded-3xl shadow-sm p-6 flex flex-col gap-6"
+          style={{
+            backgroundColor: colors.bg,
+            borderColor: colors.border,
+          }}
+        >
           {(eyebrow || title || action) && (
             <div className="flex items-center justify-between gap-3">
               <div>
                 {eyebrow && (
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#8A8A8A]">
+                  <p
+                    className="text-[11px] font-semibold uppercase tracking-[0.3em]"
+                    style={{ color: isLightBg ? '#8A8A8A' : 'rgba(255,255,255,0.7)' }}
+                  >
                     {eyebrow}
                   </p>
                 )}
-                {title && <h3 className="text-2xl font-bold text-[#0f172a]">{title}</h3>}
+                {title && (
+                  <h3
+                    className="text-2xl font-bold"
+                    style={{ color: colors.text }}
+                  >
+                    {title}
+                  </h3>
+                )}
               </div>
               {action}
             </div>
@@ -91,7 +146,12 @@ export function SidebarPanel({
           <div className="space-y-6">{children}</div>
 
           {footer && (
-            <div className="pt-4 border-t border-[#EEE]">{footer}</div>
+            <div
+              className="pt-4 border-t"
+              style={{ borderColor: isLightBg ? '#EEE' : 'rgba(255,255,255,0.2)' }}
+            >
+              {footer}
+            </div>
           )}
         </div>
       </div>

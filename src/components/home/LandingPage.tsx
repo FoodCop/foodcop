@@ -24,9 +24,28 @@ function StaticPhoneMockup({ image, alt, className = "" }: { image: string; alt:
 }
 
 export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
-  const [colorMode, setColorMode] = useState<'white' | 'yellow'>('white');
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [
+    {
+      image: '/images/hero1.png',
+      title: 'Discover Your Next Flavor Adventure'
+    },
+    {
+      image: '/images/hero2.png',
+      title: 'Explore World Cuisines'
+    },
+    {
+      image: '/images/hero3.png',
+      title: 'Create Your Food Journey'
+    },
+    {
+      image: '/images/hero4.png',
+      title: 'Connect Through Food'
+    }
+  ];
 
   const handleGetStarted = () => {
     if (onNavigateToSignup) {
@@ -38,21 +57,13 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
     }
   };
 
-  const toggleColorMode = () => {
-    setColorMode(prev => prev === 'white' ? 'yellow' : 'white');
-  };
-
-  // Apply color mode to background CSS variable
+  // Auto-advance carousel
   useEffect(() => {
-    const landingPage = document.querySelector('.new-landing-page') as HTMLElement;
-    if (landingPage) {
-      if (colorMode === 'yellow') {
-        landingPage.style.backgroundColor = 'var(--landing-bg-yellow)';
-      } else {
-        landingPage.style.backgroundColor = 'var(--landing-bg-default)';
-      }
-    }
-  }, [colorMode]);
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   // Animate phone mockups on scroll for desktop
   useEffect(() => {
@@ -93,31 +104,13 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
   return (
     <div className="new-landing-page">
       {/* Header */}
-      <header className="fixed w-full top-0 bg-white/80 backdrop-blur-md shadow-sm z-50">
+      <header className="fixed w-full top-0 shadow-sm z-50" style={{ backgroundColor: '#F5C89A' }}>
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <img src="/logo_mobile.png" alt="FUZO" className="h-10" />
           </div>
           <nav className="hidden md:flex space-x-8"></nav>
           <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleColorMode}
-              className="px-4 py-2 rounded-full border-2 transition"
-              style={{ 
-                borderColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
-                backgroundColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
-                color: '#000000'
-              }}
-              title="Toggle Color Mode"
-            >
-              <i className="fa-solid fa-palette"></i>
-            </button>
-            <button
-              onClick={handleGetStarted}
-              className="hidden md:block px-6 py-2 font-semibold rounded-full transition"
-            >
-              START
-            </button>
             <button className="md:hidden focus:outline-none">
               <i className="fa-solid fa-bars text-foreground text-xl"></i>
             </button>
@@ -125,58 +118,54 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
         </div>
       </header>
 
-      {/* Hero Section - Mobile Version */}
-      <section className="block md:hidden relative min-h-[600px] overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/Hero.png"
-            alt="world map made of colorful food, continents as dishes"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        
-        <div className="relative z-10 container mx-auto px-4 py-20 min-h-[600px] flex flex-col justify-center">
-          <div className="flex flex-col items-center gap-8">
-            <div className="text-center max-w-2xl">       
-            
-              <button
-                onClick={handleGetStarted}
-                className="font-bold text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              > START<i className="fa-solid fa-arrow-right ml-2"></i>
-              </button>
-            </div>
-            
-           
-          </div>
-        </div>
-      </section>
-
-      {/* Hero Section - Desktop Version */}
-      <section className="hidden md:flex relative h-[800px] items-center justify-center overflow-hidden mt-16">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/Hero.png"
-            alt="world map made of colorful food, continents as dishes"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex flex-col items-center text-center">
-            <div className="max-w-4xl">
-              <img 
-                src="/logo_white.png" 
-                alt="FUZO" 
-                className="mx-auto mb-8 h-32 md:h-40 lg:h-48 drop-shadow-lg" 
+      {/* Hero Carousel Section */}
+      <section className="relative h-[600px] md:h-[800px] overflow-hidden mt-0 md:mt-16">
+        {/* Slides */}
+        <div className="relative w-full h-full">
+          {slides.map((slide, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+              }`}
+            >
+              <img
+                src={slide.image}
+                alt={slide.title}
+                className="w-full h-full object-cover"
               />
-              <button
-                onClick={handleGetStarted}
-                className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105"
-              >
-                START <i className="fa-solid fa-arrow-right ml-2"></i>
-              </button>
+              <div className="absolute inset-0 bg-black/20 z-20"></div>
             </div>
-            <div className="hidden md:flex justify-center items-center"></div>
-          </div>
+          ))}
+        </div>
+
+        {/* Content Overlay */}
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center container mx-auto px-4 md:px-6">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white text-center mb-8 drop-shadow-lg">
+            {slides[currentSlide].title}
+          </h1>
+          <button
+            onClick={handleGetStarted}
+            className="font-bold text-lg px-10 py-4 md:px-12 md:py-5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-white text-black"
+          >
+            START
+          </button>
+        </div>
+
+        {/* Navigation Dots */}
+        <div className="absolute bottom-8 left-0 right-0 z-40 flex justify-center gap-3">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? 'bg-white w-8'
+                  : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
       </section>
 
@@ -453,7 +442,7 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
       </section>
 
       {/* Tako AI Section - Desktop */}
-      <section className="hidden md:block py-20 md:py-32 bg-linear-to-b from-yellow-50 to-orange-50">
+      <section className="hidden md:block py-20 md:py-32" style={{ backgroundColor: '#F5C89A' }}>
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="heading-tako-desktop font-bold text-foreground mb-6">

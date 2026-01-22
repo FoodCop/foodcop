@@ -176,7 +176,7 @@ export default function TrimsMobile() {
         {/* Loading State */}
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-10 h-10 border-4 border-[#FF6B35] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-[#FFC909] border-t-transparent rounded-full animate-spin" />
             <p className="mt-4 text-gray-500 text-xs text-center font-medium">Baking fresh Trims...</p>
           </div>
         )}
@@ -191,7 +191,7 @@ export default function TrimsMobile() {
             <p className="text-gray-500 text-xs text-center mb-6">{error}</p>
             <button
               onClick={() => loadVideos('cooking shorts')}
-              className="px-5 py-2.5 bg-[#FF6B35] text-white rounded-lg text-sm font-medium"
+              className="px-5 py-2.5 bg-[#FFC909] text-white rounded-lg text-sm font-medium"
             >
               Try Again
             </button>
@@ -295,7 +295,7 @@ function VideoCard({
         {/* Play Button - Center */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-14 h-14 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-            <Play className="w-6 h-6 text-[#FF6B35] fill-[#FF6B35] ml-1" />
+            <Play className="w-6 h-6 text-[#FFC909] fill-[#FFC909] ml-1" />
           </div>
         </div>
       </div>

@@ -62,7 +62,7 @@ export function createRestaurantMarkerIcon(isSelected: boolean = false): google.
   return {
     url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 40">
-        <path d="M16 0C7.2 0 0 7.2 0 16c0 12 16 24 16 24s16-12 16-24C32 7.2 24.8 0 16 0z" fill="${color === 'red' ? '#ef4444' : '#f97316'}"/>
+        <path d="M16 0C7.2 0 0 7.2 0 16c0 12 16 24 16 24s16-12 16-24C32 7.2 24.8 0 16 0z" fill="${color === 'red' ? '#ef4444' : '#FFC909'}"/>
         <circle cx="16" cy="16" r="6" fill="white"/>
       </svg>
     `)}`,
