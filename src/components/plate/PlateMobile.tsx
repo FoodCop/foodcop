@@ -461,7 +461,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   <Crown className="w-3 h-3 text-white fill-white" />
                 </div>
               </div>
-              <p className="text-sm md:text-base mb-3 max-w-md" className="text-neutral-400">{getUserBio()}</p>
+              <p className="text-sm md:text-base mb-3 max-w-md text-neutral-400">{getUserBio()}</p>
               <div className="mb-3">
                 <PreferencesChips 
                   userProfile={userProfile} 
@@ -475,18 +475,18 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           <div className="flex items-center gap-2 py-4 px-2">
             <button className="flex-1 flex flex-col items-center py-4 bg-fuzo-orange-50 rounded-xl hover:opacity-80 transition-opacity">
               <span className="text-xl md:text-2xl font-bold text-neutral-900">{userPoints.toLocaleString()}</span>
-              <span className="text-xs mt-1" className="text-neutral-400">Points</span>
+              <span className="text-xs mt-1 text-neutral-400">Points</span>
             </button>
             <button 
               onClick={() => setSelectedTab('posts')}
               className="flex-1 flex flex-col items-center py-4 bg-fuzo-orange-50 rounded-xl hover:opacity-80 transition-opacity"
             >
               <span className="text-xl md:text-2xl font-bold text-neutral-900">{savedItems.length}</span>
-              <span className="text-xs mt-1" className="text-neutral-400">Saved</span>
+              <span className="text-xs mt-1 text-neutral-400">Saved</span>
             </button>
             <button className="flex-1 flex flex-col items-center py-4 bg-fuzo-orange-50 rounded-xl hover:opacity-80 transition-opacity">
               <span className="text-xl md:text-2xl font-bold text-neutral-900">{userRewards}</span>
-              <span className="text-xs mt-1" className="text-neutral-400">Rewards</span>
+              <span className="text-xs mt-1 text-neutral-400">Rewards</span>
             </button>
           </div>
 
@@ -500,7 +500,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-neutral-900">{userLevel.name}</p>
-                  <p className="text-xs" className="text-neutral-400">Level {userLevel.level}</p>
+                  <p className="text-xs text-neutral-400">Level {userLevel.level}</p>
                 </div>
               </div>
               <span className="text-sm font-medium text-fuzo-orange-500">
@@ -723,14 +723,14 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                               <AvatarFallback className="bg-gray-100 text-sm">{member.initials}</AvatarFallback>
                             </Avatar>
                           </div>
-                          <span className="text-xs font-medium mt-2 max-w-16 truncate" className="text-neutral-500">
+                          <span className="text-xs font-medium mt-2 max-w-16 truncate text-neutral-500">
                             {member.name.split(" ")[0]}
                           </span>
                         </button>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-6" className="text-neutral-400">
+                    <div className="text-center py-6 text-neutral-400">
                       <p className="text-sm">No crew members yet</p>
                       <p className="text-xs mt-1">Add friends to build your crew!</p>
                       <Button
@@ -810,7 +810,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                         <CardHeading variant="accent" size="lg" lineClamp={2} className="mb-1 leading-tight">
                           {recipe.name}
                         </CardHeading>
-                        <div className="flex items-center gap-1.5" className="text-neutral-500 text-sm">
+                        <div className="flex items-center gap-1.5 text-neutral-500 text-sm">
                           <Clock className="w-3.5 h-3.5" />
                           <span>{recipe.time}</span>
                         </div>
@@ -819,7 +819,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   ))}
                 </div>
               ) : (
-                <div className="px-5 text-center py-6" className="text-neutral-400">
+                <div className="px-5 text-center py-6 text-neutral-400">
                   <p className="text-sm">No saved recipes yet</p>
                   <p className="text-xs mt-1">Save recipes from Bites to see them here!</p>
                 </div>
@@ -872,8 +872,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                         <CardHeading variant="accent" size="lg" lineClamp={1} className="mb-1">
                           {restaurant.name}
                         </CardHeading>
-                        <p className="mb-3" className="text-neutral-500 text-sm">{restaurant.cuisine}</p>
-                        <div className="flex items-center gap-2" className="text-neutral-500 text-sm">
+                        <p className="mb-3 text-neutral-500 text-sm">{restaurant.cuisine}</p>
+                        <div className="flex items-center gap-2 text-neutral-500 text-sm">
                           <Navigation className="w-4 h-4 text-fuzo-orange-500" />
                           <span>{restaurant.distance}</span>
                         </div>
@@ -882,7 +882,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   ))}
                 </div>
               ) : (
-                <div className="px-5 text-center py-6" className="text-neutral-400">
+                <div className="px-5 text-center py-6 text-neutral-400">
                   <p className="text-sm">No restaurant recommendations</p>
                   <p className="text-xs mt-1">Enable location to see nearby restaurants!</p>
                 </div>
@@ -902,7 +902,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               <Star className="w-10 h-10 text-gray-400" />
             </div>
             <h3 className="text-xl font-bold text-neutral-900 mb-2">No posts yet</h3>
-            <p className="text-center mb-6" className="text-neutral-400">
+            <p className="text-center mb-6 text-neutral-400">
               Share your food adventures and connect with friends!
             </p>
             <button 
@@ -924,7 +924,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               )}
               <div className="p-4">
                 <p className="text-neutral-900 mb-2">{post.content}</p>
-                <span className="text-sm" className="text-neutral-400">
+                <span className="text-sm text-neutral-400">
                   {new Date(post.created_at).toLocaleDateString()}
                 </span>
               </div>
@@ -944,7 +944,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             {selectedTab === 'places' && <MapPin className="w-10 h-10 text-gray-400" />}
           </div>
           <h3 className="text-xl font-bold text-neutral-900 mb-2">{`No ${selectedTab} saved`}</h3>
-          <p className="text-center mb-6" className="text-neutral-400">
+          <p className="text-center mb-6 text-neutral-400">
             {`Tap the bookmark icon to save ${selectedTab}`}
           </p>
           <button 
@@ -1094,7 +1094,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                     {(metadata.title as string) || (metadata.name as string) || 'Video'}
                   </CardHeading>
                   {metadata.creator && (
-                    <p className="text-sm" className="text-neutral-400">{metadata.creator as string}</p>
+                    <p className="text-sm text-neutral-400">{metadata.creator as string}</p>
                   )}
                 </div>
               </button>
@@ -1144,12 +1144,12 @@ function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant:
           {restaurant.name}
         </CardHeading>
         {restaurant.cuisine && (
-          <p className="text-sm mb-2" className="text-neutral-400">
+          <p className="text-sm mb-2 text-neutral-400">
             {Array.isArray(restaurant.cuisine) ? restaurant.cuisine.join(', ') : restaurant.cuisine}
           </p>
         )}
         {restaurant.distance && (
-          <div className="flex items-center gap-1 text-sm" className="text-neutral-400">
+          <div className="flex items-center gap-1 text-sm text-neutral-400">
             <i className="fa-solid fa-person-walking"></i>
             <span>{(restaurant.distance / 1000).toFixed(1)} km</span>
           </div>

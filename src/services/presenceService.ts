@@ -47,7 +47,7 @@ export interface OnlineUser {
 
 // Singleton presence channel
 let globalPresenceChannel: RealtimeChannel | null = null;
-let heartbeatInterval: NodeJS.Timeout | null = null;
+let heartbeatInterval: ReturnType<typeof setInterval> | null = null;
 let currentSessionId: string | null = null;
 
 /**
@@ -347,12 +347,13 @@ export function getOnlineUsersFromPresence(): OnlineUser[] {
   const onlineUsers: OnlineUser[] = [];
 
   Object.entries(presenceState).forEach(([userId, presences]) => {
-    const presenceArray = presences as PresenceState[];
+    const presenceArray = Array.isArray(presences) ? presences : [presences as unknown as PresenceState];
     if (presenceArray.length > 0) {
+      const firstPresence = presenceArray[0] as PresenceState;
       onlineUsers.push({
         user_id: userId,
         presence_count: presenceArray.length,
-        last_heartbeat: presenceArray[0].online_at,
+        last_heartbeat: firstPresence.online_at,
       });
     }
   });
