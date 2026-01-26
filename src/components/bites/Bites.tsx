@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Masonry from 'react-masonry-css';
-import { Shuffle, Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import type { Recipe } from "./components/RecipeCard";
 import { RecipeCard } from "./components/RecipeCard";
 import { AdCard } from "./components/AdCard";
@@ -314,12 +314,6 @@ export default function Bites() {
     setDialogOpen(true);
   };
 
-  const handleRandomize = async () => {
-    const { shuffleArray } = await import('../../utils/preferenceMapper');
-    const shuffled = shuffleArray([...recipes]);
-    setRecipes(shuffled);
-  };
-
   const filteredRecipes = recipes.filter((recipe) => {
     const matchesSearch = recipe.title
       .toLowerCase()
@@ -353,21 +347,21 @@ export default function Bites() {
   }, [recipes, fallbackRecipes, searchQuery, desktopDietaryFilters]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-page-utility flex flex-col md:flex-row">
       {/* Full-height Sidebar for desktop - Apricot Theme */}
       <SidebarPanel
         className="hidden md:flex"
         fullHeight
-        themeColor="apricot"
+        themeColor="white"
         eyebrow="Customize"
-        title="Filters"
+        title="Bites Filters"
         action={
           desktopDietaryFilters.length > 0 ? (
             <button
               onClick={clearDesktopDietary}
               className="text-sm font-semibold text-[#f59e0b] hover:text-[#d97706]"
             >
-              Clear All
+              Clear
             </button>
           ) : undefined
         }
@@ -383,7 +377,7 @@ export default function Bites() {
       >
         <SidebarSection
           title="Dietary Preferences"
-          description="Select your dietary preferences to filter recipes."
+          description="Filter recipe content by your dietary needs."
         >
           <div className="space-y-2">
             {DIETARY_OPTIONS.map((option) => {
@@ -394,11 +388,10 @@ export default function Bites() {
                 <button
                   key={option}
                   onClick={() => toggleDesktopDietary(option)}
-                  className={`w-full px-3 py-2 rounded-lg border flex items-center justify-between text-sm transition-colors ${
-                    isSelected
-                      ? "bg-orange-500 border-orange-500 text-white"
-                      : "bg-white border-gray-200 text-gray-700 hover:border-orange-300"
-                  }`}
+                  className={`w-full px-3 py-2 rounded-lg border flex items-center justify-between text-sm transition-colors ${isSelected
+                    ? "bg-orange-50 border-orange-500 text-orange-700"
+                    : "bg-white border-gray-200 text-gray-700 hover:border-orange-300"
+                    }`}
                 >
                   <span className="flex items-center gap-2">
                     <i className="fa-solid fa-seedling text-orange-500" />
@@ -410,21 +403,6 @@ export default function Bites() {
             })}
           </div>
         </SidebarSection>
-
-        {desktopDietaryFilters.length > 0 && (
-          <SidebarSection title="Active Filters">
-            <div className="flex flex-wrap gap-2">
-              {desktopDietaryFilters.map((pref) => (
-                <span
-                  key={pref}
-                  className="inline-flex items-center px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-medium"
-                >
-                  {pref.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}
-                </span>
-              ))}
-            </div>
-          </SidebarSection>
-        )}
       </SidebarPanel>
 
       {/* Main Content */}
@@ -467,19 +445,6 @@ export default function Bites() {
               </div>
             </section>
           )}
-
-          {/* Diet Categories */}
-          {/* Randomize Button */}
-          <section className="px-5 md:px-8 lg:px-12 pb-6 md:pb-8">
-            <button
-              onClick={handleRandomize}
-              disabled={loading}
-              className="w-full md:max-w-md md:mx-auto h-12 md:h-14 rounded-2xl bg-white border-2 border-[#FFC909] text-[#FFC909] font-bold text-sm md:text-base flex items-center justify-center gap-2 hover:bg-[#FFC909] hover:text-white transition-all disabled:opacity-50"
-            >
-              <Shuffle className="w-4 h-4 md:w-5 md:h-5" />
-              Shuffle Recipes
-            </button>
-          </section>
 
           {/* Loading State */}
           {loading && (

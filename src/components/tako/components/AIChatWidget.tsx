@@ -202,7 +202,7 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
                             : 'bg-gray-100 text-gray-900'
                         }`}
                       >
-                        <p className="break-words">{message.content}</p>
+                        <p className={`break-words ${message.role === 'user' ? 'text-white' : ''}`}>{message.content}</p>
                         <span
                           className={`text-xs mt-1 block ${
                             message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
@@ -247,7 +247,7 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   disabled={isLoading}
-                  className="flex-1"
+                  className="flex-1 bg-gray-800 text-white placeholder:text-gray-400 border-gray-600"
                 />
                 <Button
                   onClick={handleSendMessage}
@@ -262,19 +262,6 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
           </Card>
         )}
 
-        {/* Floating Button - fallback trigger */}
-        {!isOpen && (
-          <Button
-            onClick={() => {
-              console.log('🔵 TakoAI button clicked');
-              useTakoAIStore.getState().openChat();
-            }}
-            size="icon"
-            className="w-14 h-14 rounded-full shadow-lg bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-200 ml-auto"
-          >
-            <Sparkles className="w-6 h-6" />
-          </Button>
-        )}
       </div>
     </>
   );

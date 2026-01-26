@@ -113,7 +113,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center" style={{ fontSize: '10pt' }}>
+    <div className="min-h-screen bg-page-utility flex items-center justify-center" style={{ fontSize: '10pt' }}>
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
         <div className="text-center mb-8">
           <img 

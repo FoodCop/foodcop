@@ -258,13 +258,7 @@ const BitesDesktop: React.FC = () => {
   const filterButtons: FilterType[] = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free', 'Keto', 'Low Carb'];
 
   return (
-    <div 
-      className="min-h-screen bg-background bg-cover bg-center bg-no-repeat flex flex-col"
-      style={{
-        backgroundImage: 'url(/bg.svg)',
-        fontSize: '10pt',
-      }}
-    >
+    <div className="min-h-screen bg-page-utility flex flex-col" style={{ fontSize: '10pt' }}>
       <MinimalHeader showLogo={true} logoPosition="left" />
       
       {/* Active Preferences Display */}

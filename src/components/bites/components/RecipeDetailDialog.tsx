@@ -1,4 +1,4 @@
-import { Clock, Bookmark, Share2, Loader2 } from "lucide-react";
+import { Clock, Heart, Share2, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../../ui/dialog";
 import { Badge } from "../../ui/badge";
@@ -209,23 +209,29 @@ export function RecipeDetailDialog({
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
-                <Button
+                {/* Save to Plate */}
+                <div
                   onClick={handleSaveToPlate}
-                  variant="outline"
-                  className="gap-2 border-gray-300 flex-1 sm:flex-none"
+                  className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-[#F3F4F6] text-gray-900 rounded-lg hover:bg-[#E5E7EB] transition-colors cursor-pointer"
                 >
-                  <Bookmark className="w-4 h-4" />
-                  SAVE TO PLATE
-                </Button>
-                <Button
+                  <Heart size={14} />
+                  <span className="font-medium text-sm whitespace-nowrap">
+                    Save to Plate
+                  </span>
+                </div>
+
+                {/* Share with Friend */}
+                <div
                   onClick={handleShareWithFriend}
-                  variant="outline"
-                  className="gap-2 border-gray-300 flex-1 sm:flex-none"
+                  className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-[#D55123] text-white rounded-lg hover:bg-[#BF2C20] transition-colors cursor-pointer"
                 >
                   <Share2 className="w-4 h-4" />
-                  SHARE WITH FRIEND
-                </Button>
+                  <span className="font-medium text-sm whitespace-nowrap">
+                    Share with Friend
+                  </span>
+                </div>
               </div>
+
             </div>
 
             {(enrichedRecipe.diets.length > 0 || enrichedRecipe.cuisines.length > 0) && (

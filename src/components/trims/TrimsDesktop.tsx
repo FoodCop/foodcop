@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Play } from 'lucide-react';
 import { toast } from 'sonner';
+import { toastHelpers } from '../../utils/toastHelpers';
 import { YouTubeService } from '../../services/youtube';
 import { CardHeading } from '../ui/card-heading';
 import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
@@ -71,6 +72,9 @@ export default function TrimsDesktop() {
   const [desktopDietaryFilters, setDesktopDietaryFilters] = useState<string[]>([]);
   const [savingDesktopPrefs, setSavingDesktopPrefs] = useState(false);
 
+  // Prevent multiple video loading attempts
+  const videosLoaded = useRef(false);
+
   // Helper function to categorize videos
   const getCategoryFromTitle = useCallback((title: string): string[] => {
     const lowerTitle = title.toLowerCase();
@@ -90,6 +94,9 @@ export default function TrimsDesktop() {
 
   // Load videos from YouTube
   const loadVideos = useCallback(async (query: string) => {
+    if (videosLoaded.current) return;
+    videosLoaded.current = true;
+
     setLoading(true);
     setError(null);
 
@@ -112,11 +119,11 @@ export default function TrimsDesktop() {
         setMixedContent(mixed);
       } else {
         setError(result.error || 'Failed to load videos');
-        toast.error('Failed to load videos from YouTube');
+        toastHelpers.error('Failed to load videos from YouTube');
       }
     } catch (err) {
       setError('Network error. Please check your connection.');
-      toast.error('Network error loading videos');
+      toastHelpers.error('Network error loading videos');
       console.error('Video loading error:', err);
     } finally {
       setLoading(false);
@@ -205,12 +212,12 @@ export default function TrimsDesktop() {
   };
 
   return (
-    <div className="flex bg-black h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-blood-orange">
       {/* Sidebar Panel - Apricot Theme */}
       <SidebarPanel
         className="hidden md:flex flex-shrink-0"
         fullHeight
-        themeColor="apricot"
+        themeColor="white"
         eyebrow="Customize"
         title="Trims Filters"
         action={
@@ -222,15 +229,6 @@ export default function TrimsDesktop() {
               Clear
             </button>
           ) : undefined
-        }
-        footer={
-          <button
-            onClick={handleDesktopPreferencesSave}
-            disabled={savingDesktopPrefs}
-            className="w-full py-2.5 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
-          >
-            {savingDesktopPrefs ? "Saving..." : "Save Preferences"}
-          </button>
         }
       >
         <SidebarSection
@@ -261,6 +259,17 @@ export default function TrimsDesktop() {
             })}
           </div>
         </SidebarSection>
+
+        {/* Save Preferences Button - Positioned below filters */}
+        <div className="pt-4">
+          <button
+            onClick={handleDesktopPreferencesSave}
+            disabled={savingDesktopPrefs}
+            className="w-full py-2.5 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
+          >
+            {savingDesktopPrefs ? "Saving..." : "Save Preferences"}
+          </button>
+        </div>
       </SidebarPanel>
 
       {/* Main Content Area - Centered Feed (Single Column) */}

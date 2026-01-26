@@ -572,27 +572,16 @@ export function FeedMobile() {
 
   if (cards.length === 0) {
     return (
-      <div 
-        className="min-h-screen bg-[#FAFAFA] flex items-center justify-center bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url(/bg.svg)',
-        }}
-      >
+      <div className="min-h-screen bg-page-feed flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500">No content available. Check back later!</p>
+          <p className="text-white">No content available. Check back later!</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div 
-      className="min-h-screen bg-[#FAFAFA] bg-cover bg-center bg-no-repeat pb-20 flex flex-col"
-      style={{
-        backgroundImage: 'url(/bg.svg)',
-        fontSize: '10pt',
-      }}
-    >
+    <div className="min-h-screen bg-page-feed pb-20 flex flex-col">
       <main className="flex-1 flex flex-col items-center justify-center px-5 py-6 relative overflow-hidden min-h-[750px]">
         {/* Card Stack Container with 3D Perspective */}
         <div 

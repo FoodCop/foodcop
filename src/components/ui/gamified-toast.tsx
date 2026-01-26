@@ -119,9 +119,10 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
 
             {/* Toast Container */}
             <div
-              className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-md w-[90%] z-[9999] bg-white rounded-xl shadow-lg p-4 sm:p-6 pointer-events-auto border-2"
+              className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-md w-[90%] z-[9999] rounded-xl shadow-lg p-4 sm:p-6 pointer-events-auto border-2"
               style={{
-                borderColor: '#EEE',
+                backgroundColor: type === 'error' ? colors.bg : '#FFFFFF',
+                borderColor: type === 'error' ? colors.border : '#EEE',
                 fontSize: '12pt',
                 animation: 'toastCenterIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
@@ -133,18 +134,18 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                     className="w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 p-2"
                   >
                     <img
-                      src="/logo_white.png"
+                      src={type === 'error' ? "/logo_white.png" : "/logo_mobile.png"}
                       alt="FUZO"
                       className="w-full h-full object-contain"
                     />
                   </div>
 
-                  {/* Title and Message - grey text on white background */}
+                  {/* Title and Message */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-base font-semibold text-gray-800 mb-1">
+                    <h3 className="text-base font-semibold mb-1" style={{ color: type === 'error' ? colors.text : '#374151' }}>
                       {displayTitle}
                     </h3>
-                    <p className="text-sm" style={{ color: '#808080' }}>
+                    <p className="text-sm" style={{ color: type === 'error' ? colors.text : '#808080' }}>
                       {message}
                     </p>
                   </div>
@@ -208,9 +209,10 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
       <div className="relative">
         {/* Toast Container */}
         <div
-          className="bg-white rounded-xl shadow-lg p-4 sm:p-6 pointer-events-auto border-2 w-full max-w-[90vw] sm:w-96"
+          className="rounded-xl shadow-lg p-4 sm:p-6 pointer-events-auto border-2 w-full max-w-[90vw] sm:w-96"
           style={{
-            borderColor: '#EEE',
+            backgroundColor: type === 'error' ? colors.bg : '#FFFFFF',
+            borderColor: type === 'error' ? colors.border : '#EEE',
             fontSize: '12pt',
           }}
         >
@@ -221,18 +223,18 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                 className="w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0 p-2"
               >
                 <img
-                  src="/logo_white.png"
+                  src={type === 'error' ? "/logo_white.png" : "/logo_mobile.png"}
                   alt="FUZO"
                   className="w-full h-full object-contain"
                 />
               </div>
 
-              {/* Title and Message - grey text on white background */}
+              {/* Title and Message */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-base font-semibold text-gray-800 mb-1">
+                <h3 className="text-base font-semibold mb-1" style={{ color: type === 'error' ? colors.text : '#374151' }}>
                   {displayTitle}
                 </h3>
-                <p className="text-sm" style={{ color: '#808080' }}>
+                <p className="text-sm" style={{ color: type === 'error' ? colors.text : '#808080' }}>
                   {message}
                 </p>
               </div>

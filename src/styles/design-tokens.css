@@ -13,28 +13,38 @@
    ============================================ */
 
 :root {
-  /* Font Families */
-  --font-display: 'Google Sans Flex', system-ui, -apple-system, sans-serif;
-  --font-body: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;
-  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  --font-button: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* =====================================
+     Font Family (Single source of truth)
+     ===================================== */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+               'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  /* Font Sizes - Modular Scale (1.200 ratio) */
-  --text-xs: 0.694rem;    /* 11.1px */
-  --text-sm: 0.833rem;    /* 13.3px */
-  --text-base: 1rem;      /* 16px - Base size */
-  --text-lg: 1.2rem;      /* 19.2px */
-  --text-xl: 1.44rem;     /* 23px */
-  --text-2xl: 1.728rem;   /* 27.6px */
-  --text-3xl: 2.074rem;   /* 33.2px */
-  --text-4xl: 2.488rem;   /* 39.8px */
-  --text-5xl: 2.986rem;   /* 47.8px */
-  --text-6xl: 3.583rem;   /* 57.3px */
-  --text-7xl: 4.300rem;   /* 68.8px */
-  --text-8xl: 5.160rem;   /* 82.6px */
-  --text-9xl: 6.192rem;   /* 99.1px */
+  /* Aliases (so existing usage doesn’t break) */
+  --font-display: var(--font-sans);
+  --font-body: var(--font-sans);
+  --font-ui: var(--font-sans);
+  --font-button: var(--font-sans);
 
-  /* Font Weights */
+  /* =====================================
+     Font Sizes – Modular Scale (1.2)
+     ===================================== */
+  --text-xs: 0.694rem;
+  --text-sm: 0.833rem;
+  --text-base: 1rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.44rem;
+  --text-2xl: 1.728rem;
+  --text-3xl: 2.074rem;
+  --text-4xl: 2.488rem;
+  --text-5xl: 2.986rem;
+  --text-6xl: 3.583rem;
+  --text-7xl: 4.3rem;
+  --text-8xl: 5.16rem;
+  --text-9xl: 6.192rem;
+
+  /* =====================================
+     Font Weights (Hierarchy lives here)
+     ===================================== */
   --font-weight-light: 300;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -42,18 +52,23 @@
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
 
-  /* Line Heights */
+  /* =====================================
+     Line Heights
+     ===================================== */
   --leading-tight: 1.25;
   --leading-snug: 1.375;
   --leading-normal: 1.5;
   --leading-relaxed: 1.625;
   --leading-loose: 2;
 
-  /* Letter Spacing */
-  --tracking-tight: -0.025em;
+  /* =====================================
+     Letter Spacing
+     ===================================== */
+  --tracking-tight: -0.02em;
   --tracking-normal: 0;
   --tracking-wide: 0.025em;
 }
+
 
 /* ============================================
    COLOR SYSTEM
@@ -154,6 +169,13 @@
   --border-secondary: rgba(0, 0, 0, 0.06);
   --border-focus: #FFC909;
   --border-error: #EF4444;
+
+  /* Page Background Colors - Light Mode */
+  --page-bg-feed: #d5711e;        /* Apricot */
+  --page-bg-scout: #db4813;       /* Dark Mango */
+  --page-bg-explore: #BF2C20;     /* Blood Orange */
+  --page-bg-profile: #951A21;     /* Candy Apple */
+  --page-bg-utility: #ffe838;     /* Pineapple */
 }
 
 /* Dark Mode Color Overrides */
@@ -180,6 +202,13 @@
   --border-secondary: rgba(255, 255, 255, 0.06);
   --border-focus: #FFC909;
   --border-error: #EF4444;
+
+  /* Page Background Colors - Dark Mode (same as light mode for consistency) */
+  --page-bg-feed: #E47A24;
+  --page-bg-scout: #D55123;
+  --page-bg-explore: #BF2C20;
+  --page-bg-profile: #951A21;
+  --page-bg-utility: #7A6B5E;
 }
 
 /* ============================================
@@ -402,6 +431,13 @@
 .shadow-card-hover { box-shadow: var(--shadow-card-hover); }
 .shadow-button { box-shadow: var(--shadow-button); }
 
+/* Page Background Utilities */
+.bg-page-feed { background-color: var(--page-bg-feed); }
+.bg-page-scout { background-color: var(--page-bg-scout); }
+.bg-page-explore { background-color: var(--page-bg-explore); }
+.bg-page-profile { background-color: var(--page-bg-profile); }
+.bg-page-utility { background-color: var(--page-bg-utility); }
+
 /* Safe Area Utilities */
 .safe-top { padding-top: var(--safe-area-top); }
 .safe-bottom { padding-bottom: var(--safe-area-bottom); }
@@ -454,3 +490,8 @@
  * - Moderate (300ms): Card movements, modal openings
  * - Slow (500ms+): Large animations, page transitions
  */
+
+/* Blood Orange Background - High Specificity */
+.bg-blood-orange {
+  background-color: #BF2C20 !important;
+}

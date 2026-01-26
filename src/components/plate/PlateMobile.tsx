@@ -409,7 +409,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
   };
 
   return (
-    <div className="min-h-screen bg-white" style={{ backgroundImage: 'url(/bg.svg)', backgroundRepeat: 'repeat' }}>
+    <div className="min-h-screen bg-page-profile">
       {showPreferencesHint && (
         <PreferencesHintModal
           onClose={() => setShowPreferencesHint(false)}

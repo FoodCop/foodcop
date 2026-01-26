@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Clock, Navigation, Search, MessageCircle, Bookmark, Settings, Rss, Scissors, Pizza, Trash, UserPlus } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Clock, Navigation, MessageCircle, Trash, UserPlus } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { type SavedItem } from '../../services/savedItemsService';
 import { supabase } from '../../services/supabase';
@@ -81,7 +80,6 @@ function getUserLevel(points: number) {
 
 export default function PlateDesktop({ userId: propUserId, currentUser }: PlateDesktopProps = {}) {
   const { user: authUser } = useAuth();
-  const location = useLocation();
 
   // Use prop userId if provided, otherwise fall back to auth user
   const user = currentUser || authUser;
@@ -426,7 +424,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col" style={{ backgroundImage: 'url(/bg.svg)', backgroundRepeat: 'repeat' }}>
+    <div className="min-h-screen bg-page-profile flex flex-col">
       {showPreferencesHint && (
         <PreferencesHintModal
           onClose={() => setShowPreferencesHint(false)}
@@ -437,93 +435,9 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
         />
       )}
 
-      <div className="flex flex-1">
-        {/* Left Sidebar - Navigation */}
-        <aside className="w-64 bg-white border-r border-gray-200 sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto flex-shrink-0">
-          <div className="p-6">
-            <nav className="space-y-2">
-              <Link
-                to="/feed"
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/feed'
-                    ? 'bg-[#FFC909] text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-              >
-                <Rss className="w-5 h-5" />
-                <span className="font-medium">Feed</span>
-              </Link>
-              <Link
-                to="/scout"
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/scout'
-                    ? 'bg-[#FFC909] text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-              >
-                <Search className="w-5 h-5" />
-                <span className="font-medium">Scout</span>
-              </Link>
-              <Link
-                to="/bites"
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/bites'
-                    ? 'bg-[#FFC909] text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-              >
-                <Pizza className="w-5 h-5" />
-                <span className="font-medium">Bites</span>
-              </Link>
-              <Link
-                to="/trims"
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/trims'
-                    ? 'bg-[#FFC909] text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-              >
-                <Scissors className="w-5 h-5" />
-                <span className="font-medium">Trims</span>
-              </Link>
-              <Link
-                to="/plate"
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/plate'
-                    ? 'bg-[#FFC909] text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-              >
-                <Utensils className="w-5 h-5" />
-                <span className="font-medium">Plate</span>
-              </Link>
-              <Link
-                to="/snap"
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === '/snap'
-                    ? 'bg-[#FFC909] text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-              >
-                <Camera className="w-5 h-5" />
-                <span className="font-medium">Snap</span>
-              </Link>
-              <div className="pt-4 border-t border-gray-200 mt-4">
-                <Link
-                  to="/plate"
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-gray-700 hover:bg-gray-100"
-                >
-                  <Bookmark className="w-5 h-5" />
-                  <span className="font-medium">Saved</span>
-                </Link>
-                <Link
-                  to="/plate"
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-gray-700 hover:bg-gray-100"
-                >
-                  <Settings className="w-5 h-5" />
-                  <span className="font-medium">Settings</span>
-                </Link>
-              </div>
-            </nav>
-          </div>
-        </aside>
-
-        {/* Main Content - Center */}
-        <main className="flex-1 min-w-0 px-8 py-6 overflow-y-auto">
+      <div className="flex-1">
+        {/* Main Content - Full Width */}
+        <main className="min-w-0 px-8 py-6 overflow-y-auto">
           <div className="max-w-3xl mx-auto">
             {/* Profile Header */}
             <section className="bg-white rounded-xl shadow-sm px-8 py-6 mb-6">

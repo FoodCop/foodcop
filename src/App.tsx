@@ -17,9 +17,13 @@ import { UniversalViewerProvider, useUniversalViewer } from './contexts/Universa
 import { UniversalViewer } from './components/ui/universal-viewer/UniversalViewer'
 import { ChatDrawer } from './components/chat'
 import { useChatNotifications } from './hooks/useChatNotifications'
-import BottomAdBanner from './components/common/BottomAdBanner'
+import BottomAdBanner from './components/common/BottomAdBanner' 
 import './App.css'
 import './styles/mobile.css'
+
+//to directly toggle to the chat interface
+import { useTakoAIStore } from './stores/takoAIStore'
+
 
 // Eager load critical components
 import { LandingPage } from './components/home/LandingPage'
@@ -137,24 +141,14 @@ const NavButton = ({ to, label }: NavButtonProps) => {
 
 // Main App Layout Component
 function AppLayout() {
-  const [colorMode, setColorMode] = useState<'white' | 'yellow'>('white')
-  const [showAIChat, setShowAIChat] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
   const { viewerState, closeViewer, navigateViewer, deleteHandler } = useUniversalViewer()
+  const { isOpen, toggleChat } = useTakoAIStore()
+
   
   // Enable chat notifications only if chat is enabled
   useChatNotifications(config.app?.features?.chatEnabled ?? false)
-
-  // Apply color mode to CSS variable
-  useEffect(() => {
-    const backgroundColor = colorMode === 'yellow' ? '#FFD53B' : '#FAFAFA';
-    document.documentElement.style.setProperty('--background', backgroundColor);
-  }, [colorMode]);
-
-  const toggleColorMode = () => {
-    setColorMode(prev => prev === 'white' ? 'yellow' : 'white');
-  };
 
   // Check if current route should show navigation
   const showNavigation = !['/landing', '/auth', '/onboarding'].includes(location.pathname);
@@ -193,21 +187,6 @@ function AppLayout() {
           <NavButton to="/trims" label="Trims" />
           <NavButton to="/plate" label="Plate" />
 
-          {/* Color Toggle Button */}
-          <button
-            onClick={toggleColorMode}
-            className="px-4 py-2 rounded-full border-2 transition ml-2"
-            style={{
-              borderColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
-              backgroundColor: colorMode === 'yellow' ? '#FFD53B' : '#FFFFFF',
-              color: '#000000'
-            }}
-            title="Toggle Color Mode"
-            aria-label="Toggle Color Mode"
-          >
-            <i className="fa-solid fa-palette"></i>
-          </button>
-
           {/* DM Chat Button */}
           {config.app.features.chatEnabled && (
             <button
@@ -231,18 +210,19 @@ function AppLayout() {
 
           {/* AI Chat Button */}
           <button
-            onClick={() => setShowAIChat(!showAIChat)}
+            onClick={toggleChat}
             className="px-4 py-2 rounded-full border-2 transition ml-2"
             style={{
-              borderColor: showAIChat ? '#3B82F6' : '#E5E7EB',
-              backgroundColor: showAIChat ? '#3B82F6' : '#FFFFFF',
-              color: showAIChat ? '#FFFFFF' : '#000000'
+              borderColor: isOpen ? '#3B82F6' : '#E5E7EB',
+              backgroundColor: isOpen ? '#3B82F6' : '#FFFFFF',
+              color: isOpen ? '#FFFFFF' : '#000000'
             }}
             title="AI Assistant"
             aria-label="AI Assistant"
           >
             <i className="fa-solid fa-robot"></i>
           </button>
+
 
           {/* User Profile Dropdown */}
           {user && (
@@ -258,7 +238,6 @@ function AppLayout() {
                 className="px-3 py-2 bg-white text-gray-700 font-semibold rounded-full border-2 border-gray-300 hover:bg-gray-50 transition flex items-center space-x-2"
               >
                 <LogOut className="h-4 w-4" />
-                <span>Sign Out</span>
               </button>
             </div>
           )}
@@ -286,7 +265,7 @@ function AppLayout() {
     <div className="min-h-screen bg-background mobile-app-container">
       {/* Desktop Navigation - Only show on authenticated pages */}
       {showNavigation && (
-        <div className="bg-[#F5C89A] border-b sticky top-0 z-50 hidden md:block">
+        <div className="bg-white border-b sticky top-0 z-50 hidden md:block">
           <div className="container mx-auto px-4">
             <Navigation />
           </div>
@@ -405,18 +384,19 @@ function AppLayout() {
       {/* Mobile AI Chat Button - Top right floating button */}
       {showNavigation && (
         <button
-          onClick={() => setShowAIChat(!showAIChat)}
+          onClick={toggleChat}
           className="md:hidden fixed top-4 right-4 z-40 w-12 h-12 rounded-full shadow-lg transition-all"
           style={{
-            backgroundColor: showAIChat ? '#3B82F6' : '#FFFFFF',
+            backgroundColor: isOpen ? '#3B82F6' : '#FFFFFF',
             border: '2px solid',
-            borderColor: showAIChat ? '#3B82F6' : '#E5E7EB',
+            borderColor: isOpen ? '#3B82F6' : '#E5E7EB',
           }}
           aria-label="AI Assistant"
         >
-          <i className={`fa-solid fa-robot ${showAIChat ? 'text-white' : 'text-gray-700'}`}></i>
+          <i className={`fa-solid fa-robot ${isOpen ? 'text-white' : 'text-gray-700'}`}></i>
         </button>
       )}
+
 
       {/* Navigation Hints - Show helpful tips on each page */}
       {showNavigation && <NavigationHints />}
@@ -425,9 +405,7 @@ function AppLayout() {
       <Toaster />
 
       {/* AI Chat Widget - Available on all authenticated pages */}
-      {showNavigation && showAIChat && (
-        <AIChatWidget position="bottom-right" />
-      )}
+      {showNavigation && <AIChatWidget position="bottom-right" />}
 
       {/* Universal Viewer - Available app-wide */}
       <UniversalViewer
@@ -442,7 +420,10 @@ function AppLayout() {
 
       {/* Bottom Ad Banner - Show on all authenticated pages */}
       {showNavigation && (
-        <BottomAdBanner adSlot={import.meta.env.VITE_ADSENSE_SLOT_BOTTOM_BANNER} />
+        <BottomAdBanner 
+          adSlot={import.meta.env.VITE_ADSENSE_SLOT_BOTTOM_BANNER}
+          bannerImage="/ads/ad-banner.png"
+        />
       )}
     </div>
   );

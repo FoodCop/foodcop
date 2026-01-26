@@ -114,6 +114,14 @@ export default {
           secondary: 'var(--fuzo-pink-500)',
           accent: 'var(--fuzo-purple-500)',
         },
+        // Page background colors
+        'page-bg': {
+          feed: 'var(--page-bg-feed)',
+          scout: 'var(--page-bg-scout)',
+          explore: 'var(--page-bg-explore)',
+          profile: 'var(--page-bg-profile)',
+          utility: 'var(--page-bg-utility)',
+        },
       },
       spacing: {
         'safe-top': 'var(--safe-area-top)',

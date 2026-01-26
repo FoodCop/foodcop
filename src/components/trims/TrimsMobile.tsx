@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Play, Search, SlidersHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
+import { toastHelpers } from '../../utils/toastHelpers';
 import { YouTubeService } from '../../services/youtube';
 import { CardHeading } from '../ui/card-heading';
 import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
@@ -111,11 +112,11 @@ export default function TrimsMobile() {
         setMixedContent(mixed);
       } else {
         setError(result.error || 'Failed to load videos');
-        toast.error('Failed to load videos from YouTube');
+        toastHelpers.error('Failed to load videos from YouTube');
       }
     } catch (err) {
       setError('Network error. Please check your connection.');
-      toast.error('Network error loading videos');
+      toastHelpers.error('Network error loading videos');
       console.error('Video loading error:', err);
     } finally {
       setLoading(false);
@@ -145,7 +146,7 @@ export default function TrimsMobile() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col h-screen bg-blood-orange">
       {/* Search/Filter Header for Mobile */}
       <header className="px-4 py-3 bg-white/80 backdrop-blur-md sticky top-0 z-50 flex items-center gap-3 border-b border-gray-100">
         <div className="relative flex-1">

@@ -610,7 +610,7 @@ export function Snap() {
 
   // Default State - Loading for mobile, start button for desktop
   return (
-    <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex flex-col" style={{ fontSize: '10pt' }}>
+    <div className="w-full max-w-[375px] mx-auto bg-page-utility min-h-screen flex flex-col" style={{ fontSize: '10pt' }}>
       <MinimalHeader showLogo={true} logoPosition="left" />
       <div className="flex-1 flex items-center justify-center">
       <div className="text-center px-8">

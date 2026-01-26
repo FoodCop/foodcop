@@ -90,7 +90,7 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
 
   return (
     <Card
-      className="overflow-hidden cursor-pointer transition-all hover:shadow-lg border-gray-200 w-full"
+      className="overflow-hidden cursor-pointer transition-all hover:shadow-lg border-gray-200 w-full bg-white"
       onClick={onClick}
     >
       <div className={`${imageClass} w-full overflow-hidden bg-gray-100`}>

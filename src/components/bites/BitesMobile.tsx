@@ -399,7 +399,7 @@ export default function BitesMobile() {
             <button
               key={recipe.id}
               onClick={() => handleRecipeClick(recipe)}
-              className="w-full bg-surface-secondary rounded-2xl overflow-hidden border border-neutral-200 shadow-sm"
+              className="w-full bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-sm"
             >
               <div className="h-44 overflow-hidden">
                 <img
@@ -467,10 +467,7 @@ export default function BitesMobile() {
 
   // Home view
   return (
-    <div
-      className="min-h-screen bg-surface-primary bg-cover bg-center bg-no-repeat flex flex-col text-sm"
-      style={{ backgroundImage: 'url(/bg.svg)' }}
-    >
+    <div className="min-h-screen bg-page-utility flex flex-col text-sm">
       <MinimalHeader showLogo={true} logoPosition="left" />
       <header className="px-4 pt-6 pb-4 bg-surface-secondary sticky top-0 z-50">
         <div className="relative">
@@ -535,7 +532,7 @@ export default function BitesMobile() {
                 onClick={() => handleCategoryClick(category)}
                 className="flex flex-col items-center gap-2"
               >
-                <div className="w-16 h-16 rounded-2xl bg-surface-secondary border border-neutral-200 flex items-center justify-center shadow-sm">
+                <div className="w-16 h-16 rounded-2xl bg-white border border-neutral-200 flex items-center justify-center shadow-sm">
                   <i className={`${category.icon} text-xl`}></i>
                 </div>
                 <span className="text-xs font-medium text-neutral-900 text-center">{category.label}</span>
@@ -560,7 +557,7 @@ export default function BitesMobile() {
                 <button
                   key={recipe.id}
                   onClick={() => handleRecipeClick(recipe)}
-                  className="w-full bg-surface-secondary rounded-2xl overflow-hidden border border-neutral-200 shadow-sm"
+                  className="w-full bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-sm"
                 >
                   <div className="h-44 overflow-hidden">
                     <img
@@ -590,7 +587,7 @@ export default function BitesMobile() {
                     {recipe.diets.length > 0 && (
                       <div className="flex items-center gap-2 mb-3">
                         {recipe.diets.slice(0, 2).map((diet) => (
-                          <span key={diet} className="px-2.5 py-1 rounded-full bg-surface-tertiary text-xs font-medium text-neutral-900">
+                          <span key={diet} className="px-2.5 py-1 rounded-full bg-gray-100 text-xs font-medium text-neutral-900">
                             {diet}
                           </span>
                         ))}
@@ -632,7 +629,7 @@ export default function BitesMobile() {
                 <button
                   key={recipe.id}
                   onClick={() => handleRecipeClick(recipe)}
-                  className="shrink-0 w-40 bg-surface-secondary rounded-2xl overflow-hidden border border-neutral-200 shadow-sm"
+                  className="shrink-0 w-40 bg-white rounded-2xl overflow-hidden border border-neutral-200 shadow-sm"
                 >
                   <div className="h-32 overflow-hidden">
                     <img

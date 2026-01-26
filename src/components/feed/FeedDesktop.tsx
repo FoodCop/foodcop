@@ -296,10 +296,7 @@ export function FeedDesktop() {
   }
 
   return (
-    <div
-      className="min-h-screen flex flex-col bg-[#FAFAFA] bg-cover bg-center bg-no-repeat overflow-hidden"
-      style={{ backgroundImage: 'url(/bg.svg)' }}
-    >
+    <div className="min-h-screen flex flex-col bg-page-feed overflow-hidden">
       <div className="flex-1 flex flex-col items-center justify-center py-12">
 
         {/* Table / Card Area */}

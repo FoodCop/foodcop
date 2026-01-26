@@ -67,7 +67,7 @@ export const toastHelpers = {
       showContinue: !!action,
       onContinue: action?.onClick,
       continueText: action?.label || 'Continue',
-      position: 'center', // Critical errors appear in center
+      position: 'top-center', // Changed from 'center' to 'top-center' for testing
     });
   },
 

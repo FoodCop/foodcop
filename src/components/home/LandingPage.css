@@ -2,7 +2,7 @@
 
 .new-landing-page {
   /* Landing page specific overrides */
-  --landing-bg-default: var(--surface-primary);
+  --landing-bg-default: var(--page-bg-utility);
   --landing-bg-yellow: #FFD53B;
 
   font-family: var(--font-body);
