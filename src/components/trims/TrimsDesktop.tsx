@@ -273,9 +273,9 @@ export default function TrimsDesktop() {
       </SidebarPanel>
 
       {/* Main Content Area - Centered Feed (Single Column) */}
-      <div className="flex-1 flex justify-center bg-white overflow-hidden">
+      <div className="flex-1 flex justify-center bg-page-profile overflow-hidden">
         <div
-          className="h-screen w-full md:max-w-[450px] overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative bg-white px-4 py-8"
+          className="h-screen w-full md:max-w-[450px] overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative bg-page-profile px-4 py-8"
           style={{
             fontSize: '10pt',
           }}
