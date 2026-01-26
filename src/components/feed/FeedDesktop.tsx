@@ -345,9 +345,9 @@ export function FeedDesktop() {
       </div>
 
       {/* Page Endpoint Banner (Desktop only) */}
-      <footer className="hidden md:block w-full py-6 bg-page-profile">
-        <div className="w-full max-w-6xl mx-auto px-4">
-          <img src="/banners/fb_01.png" alt="Feed banner" className="w-full h-auto rounded-md shadow-sm" />
+      <footer className="hidden md:block px-8 py-6">
+        <div className="max-w-3xl mx-auto">
+          <img src="/banners/fb_01.png" alt="Feed banner" className="max-w-full h-auto rounded-md shadow-sm" />
         </div>
       </footer>
     </div>
