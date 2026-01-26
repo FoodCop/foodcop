@@ -573,6 +573,15 @@ export default function Bites() {
               </div>
             </section>
           )}
+
+          {/* Page Endpoint Banners (Desktop only) */}
+          <div className="hidden md:block mt-10">
+            <div className="space-y-4 px-5 md:px-8 lg:px-12">
+              <img src="/banners/fb_03.png" alt="Bites banner 1" className="w-full h-auto rounded-md shadow-sm" />
+              <img src="/banners/fb_04.png" alt="Bites banner 2" className="w-full h-auto rounded-md shadow-sm" />
+              <img src="/banners/fb_05.png" alt="Bites banner 3" className="w-full h-auto rounded-md shadow-sm" />
+            </div>
+          </div>
         </main>
 
       <RecipeDetailDialog
