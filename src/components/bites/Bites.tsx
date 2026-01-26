@@ -353,13 +353,11 @@ export default function Bites() {
         className="hidden md:flex"
         fullHeight
         themeColor="vibrant-pink"
-        eyebrow="Customize"
-        title="Bites Filters"
         action={
           desktopDietaryFilters.length > 0 ? (
             <button
               onClick={clearDesktopDietary}
-              className="text-sm font-semibold text-[#f59e0b] hover:text-[#d97706]"
+              className="text-sm font-semibold text-white hover:text-gray-200"
             >
               Clear
             </button>
@@ -369,40 +367,51 @@ export default function Bites() {
           <button
             onClick={handleDesktopPreferencesSave}
             disabled={savingDesktopPrefs}
-            className="w-full py-2.5 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
+            className="w-full py-2.5 rounded-lg bg-white text-[#ac0039] font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
           >
             {savingDesktopPrefs ? "Saving..." : "Save Preferences"}
           </button>
         }
       >
-        <SidebarSection
-          title="Dietary Preferences"
-          description="Filter recipe content by your dietary needs."
-        >
-          <div className="space-y-2">
-            {DIETARY_OPTIONS.map((option) => {
-              const normalized = option.toLowerCase();
-              const isSelected = desktopDietaryFilters.includes(normalized);
+        <div className="space-y-2">
+          {DIETARY_OPTIONS.map((option) => {
+            const normalized = option.toLowerCase();
+            const isSelected = desktopDietaryFilters.includes(normalized);
+            
+            // Color coding for each dietary preference
+            const dietaryColors: Record<string, { bg: string; icon: string }> = {
+              'vegetarian': { bg: '#10b981', icon: '🥗' },
+              'vegan': { bg: '#22c55e', icon: '🌱' },
+              'pescetarian': { bg: '#06b6d4', icon: '🐟' },
+              'ketogenic': { bg: '#f59e0b', icon: '🥑' },
+              'paleo': { bg: '#f97316', icon: '🍖' },
+              'gluten-free': { bg: '#eab308', icon: '🌾' },
+              'dairy-free': { bg: '#8b5cf6', icon: '🥛' },
+              'no restrictions': { bg: '#6b7280', icon: '🍽️' }
+            };
+            
+            const colors = dietaryColors[normalized] || { bg: '#6b7280', icon: '🍽️' };
 
-              return (
-                <button
-                  key={option}
-                  onClick={() => toggleDesktopDietary(option)}
-                  className={`w-full px-3 py-2 rounded-lg border flex items-center justify-between text-sm transition-colors ${isSelected
-                    ? "bg-orange-50 border-orange-500 text-orange-700"
-                    : "bg-white border-gray-200 text-gray-700 hover:border-orange-300"
-                    }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <i className="fa-solid fa-seedling text-orange-500" />
-                    {option}
-                  </span>
-                  {isSelected && <span className="text-xs font-medium">✓</span>}
-                </button>
-              );
-            })}
-          </div>
-        </SidebarSection>
+            return (
+              <button
+                key={option}
+                onClick={() => toggleDesktopDietary(option)}
+                className="w-full px-3 py-2.5 rounded-lg flex items-center justify-between text-sm font-medium transition-all hover:opacity-90"
+                style={{
+                  backgroundColor: isSelected ? colors.bg : `${colors.bg}80`,
+                  color: 'white',
+                  border: 'none'
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-base">{colors.icon}</span>
+                  <span>{option}</span>
+                </span>
+                {isSelected && <span className="text-xs font-bold">✓</span>}
+              </button>
+            );
+          })}
+        </div>
       </SidebarPanel>
 
       {/* Main Content */}
