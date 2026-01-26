@@ -647,8 +647,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
         </main>
 
         {/* Page Endpoint Banners (Desktop only) */}
-        <div className="hidden md:block mt-10">
-          <div className="space-y-4 px-5 md:px-8 lg:px-12">
+        <div className="hidden md:block mt-10 px-8">
+          <div className="max-w-3xl mx-auto space-y-4">
             <img src="/banners/fb_06.png" alt="Plate banner 1" className="max-w-full h-auto rounded-md shadow-sm" />
             <img src="/banners/fb_07.png" alt="Plate banner 2" className="max-w-full h-auto rounded-md shadow-sm" />
             <img src="/banners/fb_08.png" alt="Plate banner 3" className="max-w-full h-auto rounded-md shadow-sm" />
