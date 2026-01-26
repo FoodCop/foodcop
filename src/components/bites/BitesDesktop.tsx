@@ -424,6 +424,15 @@ const BitesDesktop: React.FC = () => {
         )}
       </main>
 
+      {/* Page Endpoint Banners (Desktop only) */}
+      <footer className="hidden md:block w-full py-6 bg-page-profile">
+        <div className="w-full max-w-7xl mx-auto px-6 space-y-4">
+          <img src="/banners/fb_03.png" alt="Bites banner 1" className="w-full h-auto rounded-md shadow-sm" />
+          <img src="/banners/fb_04.png" alt="Bites banner 2" className="w-full h-auto rounded-md shadow-sm" />
+          <img src="/banners/fb_05.png" alt="Bites banner 3" className="w-full h-auto rounded-md shadow-sm" />
+        </div>
+      </footer>
+
       {/* Preferences Filter Drawer */}
       <PreferencesFilterDrawer
         isOpen={showFilterDrawer}

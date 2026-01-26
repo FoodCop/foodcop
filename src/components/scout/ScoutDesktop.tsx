@@ -427,7 +427,7 @@ export function ScoutDesktop() {
   const priceLevel = selectedRestaurant?.price_level ? '$'.repeat(selectedRestaurant.price_level) : '$$';
 
   return (
-    <div className="flex flex-col h-screen bg-page-profile" style={{ fontSize: '10pt' }}>
+    <div className="flex flex-col min-h-screen bg-page-profile" style={{ fontSize: '10pt' }}>
       {/* Tabs for Discover / My Map */}
       <div className="border-b border-gray-200 bg-page-profile px-4 pt-2">
         <div className="inline-flex rounded-full p-1">
@@ -1260,6 +1260,13 @@ export function ScoutDesktop() {
           </aside>
         )}
       </div>
+
+      {/* Page Endpoint Banner (Desktop only) */}
+      <footer className="hidden md:block w-full py-6 bg-page-profile">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <img src="/banners/fb_02.png" alt="Scout banner" className="w-full h-auto rounded-md shadow-sm" />
+        </div>
+      </footer>
     </div>
   );
 }

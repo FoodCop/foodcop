@@ -516,6 +516,16 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-[#FFC909] rounded-full flex items-center justify-center">
                       <Trophy className="w-5 h-5 text-white" />
                     </div>
+
+                    {/* Page Endpoint Banners (Desktop only) */}
+                    <footer className="hidden md:block w-full py-6 bg-page-profile">
+                      <div className="w-full max-w-5xl mx-auto px-6 space-y-4">
+                        <img src="/banners/fb_06.png" alt="Plate banner 1" className="w-full h-auto rounded-md shadow-sm" />
+                        <img src="/banners/fb_07.png" alt="Plate banner 2" className="w-full h-auto rounded-md shadow-sm" />
+                        <img src="/banners/fb_08.png" alt="Plate banner 3" className="w-full h-auto rounded-md shadow-sm" />
+                        <img src="/banners/fb_09.png" alt="Plate banner 4" className="w-full h-auto rounded-md shadow-sm" />
+                      </div>
+                    </footer>
                     <div>
                       <p className="text-sm font-semibold text-[#1A1A1A]">{userLevel.name}</p>
                       <p className="text-xs" style={{ color: '#808080' }}>Level {userLevel.level}</p>
