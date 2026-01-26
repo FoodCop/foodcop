@@ -175,9 +175,9 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                         onContinue?.();
                         toast.dismiss(t);
                       }}
-                      className="px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:scale-105"
+                      className="px-5 py-2 text-white rounded-lg font-medium text-sm transition-all hover:bg-[#EA580C]"
                       style={{
-                        backgroundColor: colors.bg,
+                        backgroundColor: '#FFC909',
                         fontFamily: "'Roboto', sans-serif",
                         whiteSpace: 'nowrap'
                       }}
