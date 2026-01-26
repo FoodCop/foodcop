@@ -484,9 +484,9 @@ export function ScoutDesktop() {
                     placeholder="Search restaurants, cuisines..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all text-[#F4E3B2] placeholder:text-[#F4E3B2]"
+                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all bg-white text-[#6B7280] placeholder:text-[#9CA3AF]"
                   />
-                  <Search className="absolute left-4 top-4 text-gray-400" size={18} />
+                  <Search className="absolute left-4 top-4 text-[#9CA3AF]" size={18} />
                 </div>
 
                 {/* Distance Slider */}

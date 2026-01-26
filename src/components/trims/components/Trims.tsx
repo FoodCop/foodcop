@@ -141,13 +141,13 @@ export function Trims() {
         
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
           <Input
             type="search"
             placeholder="Search food shorts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
+            className="pl-9 bg-white text-[#6B7280] placeholder:text-[#9CA3AF] border-gray-200"
           />
         </div>
 

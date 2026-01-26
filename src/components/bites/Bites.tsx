@@ -416,7 +416,7 @@ export default function Bites() {
                 placeholder="Search recipes, ingredients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-14 md:pr-16 rounded-2xl bg-[#F3F4F6] text-sm md:text-base text-[#1A1A1A] placeholder:text-[#ADAEBC] border-0 focus:outline-none focus:ring-2 focus:ring-[#FFC909]/20"
+                className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-14 md:pr-16 rounded-2xl bg-white text-sm md:text-base text-[#6B7280] placeholder:text-[#9CA3AF] border-0 focus:outline-none focus:ring-2 focus:ring-[#FFC909]/20"
               />
               <button
                 onClick={() => setShowFilterDrawer(true)}

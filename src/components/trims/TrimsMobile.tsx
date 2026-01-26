@@ -150,14 +150,14 @@ export default function TrimsMobile() {
       {/* Search/Filter Header for Mobile */}
       <header className="px-4 py-3 bg-white/80 backdrop-blur-md sticky top-0 z-50 flex items-center gap-3 border-b border-gray-100">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-[#9CA3AF]" />
           <input
             type="text"
             placeholder="Search Trims..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && loadVideos(`${searchQuery} shorts`)}
-            className="w-full h-9 pl-9 pr-4 rounded-full bg-gray-100 text-sm text-gray-900 border-none focus:outline-none focus:ring-1 focus:ring-orange-500/30"
+            className="w-full h-9 pl-9 pr-4 rounded-full bg-white text-sm text-[#6B7280] placeholder:text-[#9CA3AF] border-none focus:outline-none focus:ring-1 focus:ring-orange-500/30"
           />
         </div>
         <button

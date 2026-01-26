@@ -311,13 +311,13 @@ const BitesDesktop: React.FC = () => {
         <div className="mb-12">
           <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
               <input
                 type="text"
                 placeholder="Search for recipes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-border bg-white text-foreground focus:outline-none focus:border-primary transition-colors"
+                className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-300 bg-white text-[#6B7280] placeholder:text-[#9CA3AF] focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-colors"
               />
             </div>
           </form>
