@@ -2,6 +2,25 @@
 
 A comprehensive food application built with Vite + React + TypeScript featuring a unique **seed-based content delivery system** that provides diverse, engaging content through multiple APIs and services.
 
+## Recent Updates (Jan 26, 2026)
+
+### 🎨 Design System Overhaul
+- **Unified Color Theme**: Standardized all pages to use `bg-page-profile` (#951A21) for easy future theme changes
+- **Navigation Styling**: Menu bar updated to golden yellow (#f8b44a) with profile red hover states
+- **Scout Sidebar**: Changed to vibrant pink (#ac0039) for better visual hierarchy
+- **Tako AI Chat Widget**: Full styling refresh with custom frame color (#bb6155), white input boxes, and profile red buttons
+- **CSS Cleanup**: Removed 78+ lines of unused tokens and font definitions
+
+### 🎬 Animation & Motion Improvements
+- **Smooth Card Dealing**: Optimized Framer Motion spring physics with higher damping (28) for jerk-free animations
+- **Sequential Batch Transitions**: Cards now exit smoothly before new batch enters, preventing layout thrashing
+- **Feed Desktop**: Full bleed images for ads/trivia with overlaid Fuzo badges
+
+### 🖼️ Feed System Enhancements
+- **Ad/Trivia Cards**: Full bleed `object-cover` with badge positioning
+- **Image Loading**: Debug logging for network diagnostics
+- **Responsive Design**: Maintained mobile/desktop parity
+
 ## Project Overview
 
 FuzoFoodCop is a food-focused social application featuring:
@@ -9,7 +28,7 @@ FuzoFoodCop is a food-focused social application featuring:
 - **Restaurant Discovery**: Google Places API + Local JSON data with 206 generated images
 - **Video Content**: YouTube cooking videos and tutorials
 - **Recipe Integration**: Spoonacular API for diverse recipes
-- **Ads & Trivia**: Vertical format cards for engagement and monetization
+- **Ads & Trivia**: Vertical format cards for engagement and monetization (now with full-bleed images)
 - **Real-time Chat**: Direct messaging with friend system
 - **Location Services**: Geocoding and map integration
 
@@ -18,6 +37,7 @@ FuzoFoodCop is a food-focused social application featuring:
 - **Frontend**: Vite, React 18, TypeScript
 - **Backend**: Supabase (PostgreSQL, Authentication, Real-time)
 - **Styling**: Tailwind CSS, Radix UI components, Framer Motion
+- **Animation**: Framer Motion with optimized spring physics
 - **APIs**: 
   - Google Places API (Maps & Locations)
   - OpenAI API (Smart recommendations)
@@ -34,8 +54,8 @@ FuzoFoodCop is a food-focused social application featuring:
   - 1 Recipe (Spoonacular)
   - 1 Video (YouTube)
   - 1 Maps Location (Google Places)
-  - 1 Ad (vertical format)
-  - 1 Trivia (vertical format)
+  - 1 Ad (vertical format, full-bleed)
+  - 1 Trivia (vertical format, full-bleed)
 - **Shuffled Pattern**: Seed shuffles the order for variety while maintaining balance
 - **Fallback Logic**: Graceful handling when APIs fail (falls back to restaurants)
 

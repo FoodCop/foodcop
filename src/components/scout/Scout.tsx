@@ -390,9 +390,9 @@ export default function ScoutNew() {
 
   // Mobile version below
   return (
-    <div className="min-h-screen bg-page-scout">
+    <div className="min-h-screen bg-page-profile">
       {/* Mobile Container - Max width for mobile view */}
-      <div className="max-w-md mx-auto bg-page-scout min-h-screen md:max-w-full">
+      <div className="max-w-md mx-auto bg-page-profile min-h-screen md:max-w-full">
 
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 bg-white px-4 pt-2">

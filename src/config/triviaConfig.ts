@@ -25,6 +25,9 @@ function generateTriviasFromFolder(): TriviaItem[] {
   }
   
   console.log(`🧠 Generated ${trivias.length} trivias from folder`);
+  if (trivias.length > 0) {
+    console.log(`📸 Sample trivia URL: ${trivias[0].imageUrl}`);
+  }
   return trivias;
 }
 

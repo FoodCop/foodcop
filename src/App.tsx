@@ -18,7 +18,6 @@ import { UniversalViewer } from './components/ui/universal-viewer/UniversalViewe
 import { ChatDrawer } from './components/chat'
 import { useChatNotifications } from './hooks/useChatNotifications'
 import BottomAdBanner from './components/common/BottomAdBanner' 
-import './App.css'
 import './styles/mobile.css'
 
 //to directly toggle to the chat interface
@@ -129,10 +128,24 @@ const NavButton = ({ to, label }: NavButtonProps) => {
   return (
     <Link
       to={to}
-      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${isActive
-        ? 'bg-orange-600 text-white'
-        : 'text-gray-700 hover:bg-gray-100'
+      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+        isActive
+          ? 'bg-orange-600 text-white'
+          : 'text-white hover:text-white'
         }`}
+      style={{
+        backgroundColor: isActive ? undefined : 'transparent'
+      }}
+      onMouseEnter={(e) => {
+        if (!isActive) {
+          e.currentTarget.style.backgroundColor = '#951A21';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isActive) {
+          e.currentTarget.style.backgroundColor = 'transparent';
+        }
+      }}
     >
       {label}
     </Link>
@@ -211,11 +224,10 @@ function AppLayout() {
           {/* AI Chat Button */}
           <button
             onClick={toggleChat}
-            className="px-4 py-2 rounded-full border-2 transition ml-2"
+            className="px-4 py-2 rounded-full transition ml-2"
             style={{
-              borderColor: isOpen ? '#3B82F6' : '#E5E7EB',
-              backgroundColor: isOpen ? '#3B82F6' : '#FFFFFF',
-              color: isOpen ? '#FFFFFF' : '#000000'
+              backgroundColor: isOpen ? '#951A21' : 'transparent',
+              color: '#FFFFFF'
             }}
             title="AI Assistant"
             aria-label="AI Assistant"
@@ -235,7 +247,7 @@ function AppLayout() {
               </Avatar>
               <button
                 onClick={handleSignOut}
-                className="px-3 py-2 bg-white text-gray-700 font-semibold rounded-full border-2 border-gray-300 hover:bg-gray-50 transition flex items-center space-x-2"
+                className="px-3 py-2 text-white font-semibold rounded-full transition flex items-center space-x-2"
               >
                 <LogOut className="h-4 w-4" />
               </button>
@@ -265,7 +277,7 @@ function AppLayout() {
     <div className="min-h-screen bg-background mobile-app-container">
       {/* Desktop Navigation - Only show on authenticated pages */}
       {showNavigation && (
-        <div className="bg-white border-b sticky top-0 z-50 hidden md:block">
+        <div className="border-b sticky top-0 z-50 hidden md:block" style={{ backgroundColor: '#f8b44a' }}>
           <div className="container mx-auto px-4">
             <Navigation />
           </div>

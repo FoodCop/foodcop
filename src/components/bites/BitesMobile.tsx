@@ -467,7 +467,7 @@ export default function BitesMobile() {
 
   // Home view
   return (
-    <div className="min-h-screen bg-page-utility flex flex-col text-sm">
+    <div className="min-h-screen bg-page-profile flex flex-col text-sm">
       <MinimalHeader showLogo={true} logoPosition="left" />
       <header className="px-4 pt-6 pb-4 bg-surface-secondary sticky top-0 z-50">
         <div className="relative">

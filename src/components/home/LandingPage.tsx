@@ -31,19 +31,19 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
   const slides = [
     {
       image: '/images/hero1.png',
-      title: 'Discover Your Next Flavor Adventure'
+      title: 'Explore the World Through Taste.'
     },
     {
       image: '/images/hero2.png',
-      title: 'Explore World Cuisines'
+      title: 'Every Culture Has a Flavor.'
     },
     {
       image: '/images/hero3.png',
-      title: 'Create Your Food Journey'
+      title: 'Your Taste Has a Point of View.'
     },
     {
       image: '/images/hero4.png',
-      title: 'Connect Through Food'
+      title: 'Your Food World, Curated.'
     }
   ];
 
@@ -141,7 +141,7 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
 
         {/* Content Overlay */}
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center container mx-auto px-4 md:px-6">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white text-center mb-8 drop-shadow-lg">
+          <h1 className="text-[48px] font-bold text-white text-center mb-8 drop-shadow-lg">
             {slides[currentSlide].title}
           </h1>
           <button

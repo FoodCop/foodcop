@@ -23,7 +23,7 @@ interface MobileHeaderProps {
 
 export const MobileHeader = ({ config }: MobileHeaderProps) => {
   return (
-    <header className="mobile-header sticky top-0 bg-white border-b border-gray-200 z-40 md:hidden safe-area-top">
+    <header className="mobile-header sticky top-0 border-b border-gray-200 z-40 md:hidden safe-area-top" style={{ backgroundColor: '#f8b44a' }}>
       <div className="flex items-center justify-between h-14 px-4">
         {/* Left Section - Back Button */}
         <div className="flex items-center">

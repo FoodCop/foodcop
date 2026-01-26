@@ -347,7 +347,7 @@ export default function Bites() {
   }, [recipes, fallbackRecipes, searchQuery, desktopDietaryFilters]);
 
   return (
-    <div className="min-h-screen bg-page-utility flex flex-col md:flex-row">
+    <div className="min-h-screen bg-page-profile flex flex-col md:flex-row">
       {/* Full-height Sidebar for desktop - Apricot Theme */}
       <SidebarPanel
         className="hidden md:flex"

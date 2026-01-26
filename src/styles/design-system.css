@@ -4,7 +4,6 @@
  */
 
 /* Import Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -20,8 +19,6 @@
   /* Warm Browns */
   --color-chocolate: #6B4423;
   --color-seal-brown: #4A3728;
-  --color-raw-umber: #865C3C;
-  --color-dark-green-brown: #6B7A2C;
 
   /* Yellows & Warm Accents */
   --color-fuzo-yellow: #FFC909;
@@ -31,7 +28,6 @@
 
   /* === TYPOGRAPHY === */
   /* Font Families */
-  --font-heading: 'Playfair Display', 'Georgia', serif;
   --font-body: 'DM Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', sans-serif;
   --font-label: 'DM Sans', 'Inter', sans-serif;
 
@@ -44,9 +40,6 @@
 
   /* Type Scale */
   --text-h1: 36px;
-  --text-h2: 28px;
-  --text-h3: 22px;
-  --text-h4: 18px;
   --text-body-large: 16px;
   --text-body: 14px;
   --text-body-small: 12px;
@@ -54,10 +47,6 @@
   --text-caption: 11px;
 
   /* Line Heights */
-  --line-height-h1: 44px;
-  --line-height-h2: 36px;
-  --line-height-h3: 28px;
-  --line-height-h4: 24px;
   --line-height-body-large: 24px;
   --line-height-body: 21px;
   --line-height-body-small: 18px;
@@ -134,42 +123,6 @@
 }
 
 /* === TYPOGRAPHY UTILITIES === */
-.heading-h1 {
-  font-family: var(--font-heading);
-  font-size: var(--text-h1);
-  line-height: var(--line-height-h1);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 0.5px;
-  color: var(--color-chocolate);
-}
-
-.heading-h2 {
-  font-family: var(--font-heading);
-  font-size: var(--text-h2);
-  line-height: var(--line-height-h2);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 0.3px;
-  color: var(--color-chocolate);
-}
-
-.heading-h3 {
-  font-family: var(--font-heading);
-  font-size: var(--text-h3);
-  line-height: var(--line-height-h3);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 0.2px;
-  color: var(--color-chocolate);
-}
-
-.heading-h4 {
-  font-family: var(--font-heading);
-  font-size: var(--text-h4);
-  line-height: var(--line-height-h4);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 0.1px;
-  color: var(--color-chocolate);
-}
-
 .body-large {
   font-family: var(--font-body);
   font-size: var(--text-body-large);
