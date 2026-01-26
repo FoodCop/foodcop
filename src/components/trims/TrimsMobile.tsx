@@ -146,7 +146,7 @@ export default function TrimsMobile() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-blood-orange">
+    <div className="flex flex-col h-screen bg-page-profile">
       {/* Search/Filter Header for Mobile */}
       <header className="px-4 py-3 bg-white/80 backdrop-blur-md sticky top-0 z-50 flex items-center gap-3 border-b border-gray-100">
         <div className="relative flex-1">

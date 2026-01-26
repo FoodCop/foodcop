@@ -212,12 +212,12 @@ export default function TrimsDesktop() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-blood-orange">
-      {/* Sidebar Panel - Apricot Theme */}
+    <div className="flex h-screen overflow-hidden bg-page-profile">
+      {/* Sidebar Panel - Vibrant Pink Theme */}
       <SidebarPanel
         className="hidden md:flex flex-shrink-0"
         fullHeight
-        themeColor="white"
+        themeColor="vibrant-pink"
         eyebrow="Customize"
         title="Trims Filters"
         action={
