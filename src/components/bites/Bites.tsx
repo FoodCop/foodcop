@@ -347,7 +347,7 @@ export default function Bites() {
   }, [recipes, fallbackRecipes, searchQuery, desktopDietaryFilters]);
 
   return (
-    <div className="min-h-screen bg-page-profile flex flex-col md:flex-row">
+    <div className="flex h-screen overflow-hidden bg-page-profile">
       {/* Full-height Sidebar for desktop - Vibrant Pink Theme */}
       <SidebarPanel
         className="hidden md:flex"
@@ -406,7 +406,7 @@ export default function Bites() {
       </SidebarPanel>
 
       {/* Main Content */}
-      <main className="flex-1 pb-6 max-w-[375px] md:max-w-full mx-auto p-4 md:p-6">
+      <main className="flex-1 overflow-y-auto pb-6 max-w-[375px] md:max-w-full mx-auto p-4 md:p-6">
           {/* Search Bar */}
           <section className="px-5 md:px-8 lg:px-12 pt-5 md:pt-6 pb-6 md:pb-8">
             <div className="relative md:max-w-2xl lg:max-w-3xl md:mx-auto">
