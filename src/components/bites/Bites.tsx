@@ -348,11 +348,11 @@ export default function Bites() {
 
   return (
     <div className="min-h-screen bg-page-profile flex flex-col md:flex-row">
-      {/* Full-height Sidebar for desktop - Apricot Theme */}
+      {/* Full-height Sidebar for desktop - Vibrant Pink Theme */}
       <SidebarPanel
         className="hidden md:flex"
         fullHeight
-        themeColor="white"
+        themeColor="vibrant-pink"
         eyebrow="Customize"
         title="Bites Filters"
         action={
