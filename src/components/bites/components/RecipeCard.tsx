@@ -1,7 +1,5 @@
-import { Clock } from "lucide-react";
-import React from "react";
+﻿import React from "react";
 import { Card } from "../../ui/card";
-import { Badge } from "../../ui/badge";
 import { ImageWithFallback } from "../../ui/image-with-fallback";
 import { CardHeading } from "../../ui/card-heading";
 
@@ -22,7 +20,6 @@ export interface Recipe {
     amount?: number;
     unit?: string;
   }[];
-  // Additional fields from Spoonacular detail endpoint
   sourceUrl?: string;
   aggregateLikes?: number;
   healthScore?: number;
@@ -59,38 +56,24 @@ interface RecipeCardProps {
   onClick: () => void;
 }
 
-// Generate random aspect ratio for variety
-const getRandomAspectRatio = () => {
-  const ratios = [
-    'aspect-square',      // 1:1
-    'aspect-[3/4]',       // 3:4 (vertical)
-    'aspect-[4/3]',       // 4:3 (landscape)
-    'aspect-[3/4]',       // More vertical for variety
-    'aspect-[4/5]',       // Slightly vertical
-  ];
-  return ratios[Math.floor(Math.random() * ratios.length)];
-};
-
 export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
-  // Use recipe ID to create varied card sizes for masonry effect
   const cardVariant = React.useMemo(() => {
     const seed = recipe?.id || 0;
     const variants = [
-      { name: 'compact', imageClass: 'h-40', showDiets: false },     // Very short
-      { name: 'medium', imageClass: 'h-64', showDiets: true },       // Medium
-      { name: 'tall', imageClass: 'h-80', showDiets: true },         // Tall
-      { name: 'extra-tall', imageClass: 'h-96', showDiets: true },   // Extra tall
+      { name: "compact", imageClass: "h-40" },
+      { name: "medium", imageClass: "h-64" },
+      { name: "tall", imageClass: "h-80" },
+      { name: "extra-tall", imageClass: "h-96" },
     ];
     return variants[seed % variants.length];
   }, [recipe?.id]);
 
-  // Fallback if cardVariant is undefined
-  const imageClass = cardVariant?.imageClass || 'h-64';
-  const showDiets = cardVariant?.showDiets || false;
+  const imageClass = cardVariant?.imageClass || "h-64";
 
   return (
     <Card
-      className="overflow-hidden cursor-pointer transition-all hover:shadow-lg border-gray-200 w-full bg-white"
+      className="overflow-hidden cursor-pointer transition-all hover:shadow-lg w-full"
+      style={{ backgroundColor: "#FFC909", borderColor: "#a36027", borderWidth: "2px", borderStyle: "solid" }}
       onClick={onClick}
     >
       <div className={`${imageClass} w-full overflow-hidden bg-gray-100`}>
@@ -101,14 +84,16 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
         />
       </div>
       <div className="p-4">
-        <CardHeading variant="accent" size="md" lineClamp={2} className="mb-3">{recipe.title}</CardHeading>
-        
+        <CardHeading variant="accent" size="md" lineClamp={2} className="mb-3 text-black">
+          {recipe.title}
+        </CardHeading>
+
         {/* Source Attribution with Avatar */}
         <div className="flex items-center gap-2 mt-3">
           <div className="w-6 h-6 rounded-full bg-[#8DC63F] flex items-center justify-center text-white text-xs font-bold">
             S
           </div>
-          <span className="text-xs text-gray-500">Spoonacular</span>
+          <span className="text-xs text-black">Spoonacular</span>
         </div>
       </div>
     </Card>

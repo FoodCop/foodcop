@@ -238,8 +238,9 @@ function VideoCard({
 
   return (
     <Card
-      className="overflow-hidden cursor-pointer snap-start transition-all hover:shadow-xl border-gray-100 w-full group shadow-lg"
+      className="overflow-hidden cursor-pointer snap-start transition-all hover:shadow-xl w-full group shadow-lg"
       onClick={() => onVideoClick(video)}
+      style={{ borderColor: '#500200', borderWidth: '2px' }}
     >
       {/* Video Content Area */}
       <div className="relative aspect-[9/16] w-full overflow-hidden bg-gray-50">
@@ -261,12 +262,12 @@ function VideoCard({
       </div>
 
       {/* Info Section - Just Title */}
-      <div className="p-6 bg-white">
+      <div className="p-6" style={{ backgroundColor: '#ac0039' }}>
         <CardHeading
           variant="accent"
           size="lg"
           weight="bold"
-          className="text-center leading-tight tracking-tight"
+          className="text-center leading-tight tracking-tight text-white"
         >
           {cleanTitle(video.title)}
         </CardHeading>

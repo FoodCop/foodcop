@@ -11,7 +11,13 @@ A comprehensive food application built with Vite + React + TypeScript featuring 
 - **Tako AI Chat Widget**: Full styling refresh with custom frame color (#bb6155), white input boxes, and profile red buttons
 - **CSS Cleanup**: Removed 78+ lines of unused tokens and font definitions
 
-### 🎬 Animation & Motion Improvements
+### �️ Bites & Trims Styling
+- **Recipe Cards**: Menu-bar yellow background (#FFC909), brown outline (#a36027), and black text for readability
+- **Section Headings**: "Recommended for You" and "You Might Also Like" now match Scout title treatment (white, larger)
+- **Trims Cards**: Deep burgundy outlines (#500200) with neon pink info panels (#ac0039) and white titles
+- **Type Safety**: Recipe shape tightened (required fields, `extendedIngredients.original` enforced) to keep builds clean
+
+### �🎬 Animation & Motion Improvements
 - **Smooth Card Dealing**: Optimized Framer Motion spring physics with higher damping (28) for jerk-free animations
 - **Sequential Batch Transitions**: Cards now exit smoothly before new batch enters, preventing layout thrashing
 - **Feed Desktop**: Full bleed images for ads/trivia with overlaid Fuzo badges

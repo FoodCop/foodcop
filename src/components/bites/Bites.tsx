@@ -495,7 +495,7 @@ export default function Bites() {
           {!loading && !error && recommendedRecipes.length > 0 && (
             <section className="mb-6 md:mb-8">
               <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
-                <SectionHeading>Recommended for You</SectionHeading>
+                <SectionHeading className="text-2xl text-white">Recommended for You</SectionHeading>
               </div>
               <div className="px-5 md:px-8 lg:px-12">
                 <Masonry
@@ -523,7 +523,7 @@ export default function Bites() {
           {!loading && !error && mightLikeRecipes.length > 0 && (
             <section className="mb-6 md:mb-8">
               <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
-                <SectionHeading>You Might Also Like</SectionHeading>
+                <SectionHeading className="text-2xl text-white">You Might Also Like</SectionHeading>
               </div>
               <div className="px-5 md:px-8 lg:px-12">
                 <Masonry
