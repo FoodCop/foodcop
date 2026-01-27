@@ -122,6 +122,8 @@ export default {
           profile: 'var(--page-bg-profile)',
           utility: 'var(--page-bg-utility)',
         },
+        // Blood orange color
+        'blood-orange': '#BF2C20',
       },
       spacing: {
         'safe-top': 'var(--safe-area-top)',
