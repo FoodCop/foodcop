@@ -29,13 +29,13 @@ export function FilterBar({
   return (
     <div className="space-y-4">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9CA3AF] w-5 h-5" />
         <Input
           type="text"
           placeholder="Search recipes..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 bg-white border-gray-200"
+          className="pl-10 bg-white text-[#6B7280] placeholder:text-[#9CA3AF] border-gray-200"
         />
       </div>
 

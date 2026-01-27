@@ -258,7 +258,7 @@ const BitesDesktop: React.FC = () => {
   const filterButtons: FilterType[] = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free', 'Keto', 'Low Carb'];
 
   return (
-    <div className="min-h-screen bg-page-utility flex flex-col" style={{ fontSize: '10pt' }}>
+    <div className="min-h-screen bg-page-profile flex flex-col" style={{ fontSize: '10pt' }}>
       <MinimalHeader showLogo={true} logoPosition="left" />
       
       {/* Active Preferences Display */}
@@ -311,13 +311,13 @@ const BitesDesktop: React.FC = () => {
         <div className="mb-12">
           <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
               <input
                 type="text"
                 placeholder="Search for recipes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-border bg-white text-foreground focus:outline-none focus:border-primary transition-colors"
+                className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-300 bg-white text-[#6B7280] placeholder:text-[#9CA3AF] focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-colors"
               />
             </div>
           </form>
@@ -423,6 +423,15 @@ const BitesDesktop: React.FC = () => {
           </div>
         )}
       </main>
+
+      {/* Page Endpoint Banners (Desktop only) */}
+      <footer className="hidden md:block w-full py-6 bg-page-profile">
+        <div className="w-full max-w-7xl mx-auto px-6 space-y-4">
+          <img src="/banners/fb_03.png" alt="Bites banner 1" className="w-full h-auto rounded-md shadow-sm" />
+          <img src="/banners/fb_04.png" alt="Bites banner 2" className="w-full h-auto rounded-md shadow-sm" />
+          <img src="/banners/fb_05.png" alt="Bites banner 3" className="w-full h-auto rounded-md shadow-sm" />
+        </div>
+      </footer>
 
       {/* Preferences Filter Drawer */}
       <PreferencesFilterDrawer

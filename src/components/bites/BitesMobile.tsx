@@ -378,13 +378,13 @@ export default function BitesMobile() {
             </button>
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-3 w-4 h-4 text-neutral-400" />
+                <Search className="absolute left-3 top-3 w-4 h-4 text-[#9CA3AF]" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search recipes..."
-                  className="w-full h-10 pl-10 pr-4 rounded-xl bg-surface-secondary text-sm border-none focus:outline-none focus:ring-2 focus:ring-accent-yellow-500/20"
+                  className="w-full h-10 pl-10 pr-4 rounded-xl bg-white text-[#6B7280] placeholder:text-[#9CA3AF] text-sm border-none focus:outline-none focus:ring-2 focus:ring-accent-yellow-500/20"
                 />
               </div>
             </div>
@@ -467,17 +467,17 @@ export default function BitesMobile() {
 
   // Home view
   return (
-    <div className="min-h-screen bg-page-utility flex flex-col text-sm">
+    <div className="min-h-screen bg-page-profile flex flex-col text-sm">
       <MinimalHeader showLogo={true} logoPosition="left" />
       <header className="px-4 pt-6 pb-4 bg-surface-secondary sticky top-0 z-50">
         <div className="relative">
-          <Search className="absolute left-4 top-3 w-4 h-4 text-neutral-400" />
+          <Search className="absolute left-4 top-3 w-4 h-4 text-[#9CA3AF]" />
           <input
             type="text"
             placeholder="Search recipes, ingredients..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 pl-12 pr-14 rounded-2xl bg-surface-secondary text-sm border-none focus:outline-none focus:ring-2 focus:ring-accent-yellow-500/20"
+            className="w-full h-12 pl-12 pr-14 rounded-2xl bg-white text-[#6B7280] placeholder:text-[#9CA3AF] text-sm border-none focus:outline-none focus:ring-2 focus:ring-accent-yellow-500/20"
           />
           <button
             onClick={() => setShowFilters(!showFilters)}

@@ -43,15 +43,17 @@ function DealCard({ card, index }: DealCardProps) {
       rotate: 0,
       transition: {
         type: "spring" as const,
-        damping: 12,
-        stiffness: 100,
-        delay: i * 0.15 // Staggered deal
+        damping: 28,
+        stiffness: 140,
+        mass: 0.8,
+        velocity: 0,
+        delay: i * 0.08
       }
     }),
     exit: {
       y: 1000,
       opacity: 0,
-      transition: { duration: 0.5 }
+      transition: { duration: 0.3 }
     }
   };
 
@@ -79,15 +81,16 @@ function DealCard({ card, index }: DealCardProps) {
       >
         {/* Front of Card (Face Down) */}
         <div
-          className="absolute inset-0 w-full h-full backface-hidden rounded-xl shadow-xl overflow-hidden border-4 border-white bg-white"
+          className="absolute inset-0 w-full h-full backface-hidden rounded-xl shadow-xl overflow-hidden border-4 border-white"
           style={{
             backfaceVisibility: "hidden",
+            backgroundColor: "#df3733"
           }}
         >
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
               <img src="/logo_mobile.png" alt="Logo" className="w-24 h-24 mx-auto mb-4 opacity-90" />
-              <i className="fa-solid fa-eye text-gray-700 text-3xl"></i>
+              <i className="fa-solid fa-eye text-white text-3xl"></i>
             </div>
           </div>
         </div>
@@ -102,20 +105,24 @@ function DealCard({ card, index }: DealCardProps) {
         >
           {/* Ads and Trivia: Show as full vertical images */}
           {(isAd(card) || isTrivia(card)) ? (
-            <div className="h-full w-full bg-white flex flex-col">
-              <div className="flex-1 flex items-center justify-center">
-                <img
-                  src={card.imageUrl}
-                  alt={isAd(card) ? card.altText : 'Food Trivia'}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              {/* FUZO Badge for ads and trivia */}
-              <div className="p-4 border-t border-gray-100 flex items-center gap-2">
+            <div className="h-full w-full relative overflow-hidden">
+              <img
+                src={card.imageUrl}
+                alt={isAd(card) ? card.altText : 'Food Trivia'}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  console.error(`❌ Image failed to load: ${card.imageUrl}`, e);
+                }}
+                onLoad={() => {
+                  console.log(`✅ Loaded: ${card.imageUrl}`);
+                }}
+              />
+              {/* FUZO Badge for ads and trivia - overlaid */}
+              <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full">
                 <div className="w-6 h-6 rounded-full bg-[#FFC909] flex items-center justify-center text-white text-xs font-bold">
                   F
                 </div>
-                <span className="text-xs text-gray-500">FUZO</span>
+                <span className="text-xs text-gray-700 font-medium">FUZO</span>
               </div>
             </div>
           ) : (
@@ -206,7 +213,6 @@ export function FeedDesktop() {
   const [currentBatch, setCurrentBatch] = useState<DealerContent[]>([]);
   const [batchIndex, setBatchIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [dealKey, setDealKey] = useState(0); // Key to force re-render for deal animation
 
   // Get user location and load feed data
   useEffect(() => {
@@ -271,10 +277,15 @@ export function FeedDesktop() {
       nextIndex = remainder;
     }
 
-    // Update state
-    setBatchIndex(nextIndex);
-    setCurrentBatch(nextBatch);
-    setDealKey(prev => prev + 1); // Trigger deal animation
+    // Sequential state updates: first exit old cards, then enter new cards
+    // This prevents simultaneous animations that cause jerk
+    setCurrentBatch([]);
+    
+    // Small timeout to let exit animation complete before showing new batch
+    setTimeout(() => {
+      setBatchIndex(nextIndex);
+      setCurrentBatch(nextBatch);
+    }, 300); // Matches exit animation duration
   };
 
   if (isLoading) {
@@ -296,17 +307,17 @@ export function FeedDesktop() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-page-feed overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-page-profile overflow-hidden">
       <div className="flex-1 flex flex-col items-center justify-center py-12">
 
         {/* Table / Card Area */}
         <div className="relative w-full max-w-6xl mx-auto h-[600px] flex items-center justify-center">
           {/* Card Container */}
           <div className="flex gap-8 items-center justify-center perspective-1000">
-            <AnimatePresence>
+            <AnimatePresence mode="popLayout">
               {currentBatch.map((card, index) => (
                 <DealCard
-                  key={`${dealKey}-${card.id}`} // Key change triggers mount animation
+                  key={card.id} // Stable key - animation triggered by AnimatePresence layout change
                   card={card}
                   index={index}
                 />
@@ -319,7 +330,10 @@ export function FeedDesktop() {
         <div className="mt-8">
           <motion.button
             onClick={dealNextHand}
-            className="flex items-center gap-2 px-8 py-4 bg-gray-900 text-white rounded-full font-bold text-lg shadow-lg hover:bg-gray-800 transition-colors"
+            className="flex items-center gap-2 px-8 py-4 text-white rounded-full font-bold text-lg shadow-lg transition-colors"
+            style={{ backgroundColor: "#f8b44a" }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f5a03a"}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#f8b44a"}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -329,6 +343,13 @@ export function FeedDesktop() {
         </div>
 
       </div>
+
+      {/* Page Endpoint Banner (Desktop only) */}
+      <footer className="hidden md:block px-8 py-6">
+        <div className="max-w-3xl mx-auto">
+          <img src="/banners/fb_01.png" alt="Feed banner" className="max-w-full h-auto rounded-md shadow-sm" />
+        </div>
+      </footer>
     </div>
   );
 }

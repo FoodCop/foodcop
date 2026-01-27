@@ -11,7 +11,7 @@ interface SidebarPanelProps {
   /** Use full-height style matching Scout/Plate (no rounded corners, full height) */
   fullHeight?: boolean;
   /** Theme color for the sidebar (defaults to white) */
-  themeColor?: 'pineapple' | 'apricot' | 'dark-mango' | 'blood-orange' | 'candy-apple' | 'white';
+  themeColor?: 'pineapple' | 'apricot' | 'dark-mango' | 'blood-orange' | 'candy-apple' | 'white' | 'vibrant-pink';
 }
 
 interface SidebarSectionProps {
@@ -31,6 +31,7 @@ const themeColors = {
   'dark-mango': { bg: '#D55123', text: '#FFFFFF', border: '#C54113' },
   'blood-orange': { bg: '#BF2C20', text: '#FFFFFF', border: '#AF1C10' },
   'candy-apple': { bg: '#951A21', text: '#FFFFFF', border: '#850A11' },
+  'vibrant-pink': { bg: '#ac0039', text: '#FFFFFF', border: '#E5B88A' },
   white: { bg: '#FFFFFF', text: '#0f172a', border: '#EEE' },
 };
 

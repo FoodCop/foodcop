@@ -30,20 +30,32 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
 
   const slides = [
     {
-      image: '/images/hero1.png',
-      title: 'Discover Your Next Flavor Adventure'
+      image: '/images/h1.png',
+      title: 'Explore the World Through Taste.',
+      subtitle: 'Discover global cuisines and flavors',
+      buttonText: 'Start Exploring',
+      buttonColor: '#52B788'
     },
     {
-      image: '/images/hero2.png',
-      title: 'Explore World Cuisines'
+      image: '/images/h2.png',
+      title: 'Every Culture Has a Flavor.',
+      subtitle: 'Celebrate diversity of global cuisine',
+      buttonText: 'Discover Cultures',
+      buttonColor: '#E07856'
     },
     {
-      image: '/images/hero3.png',
-      title: 'Create Your Food Journey'
+      image: '/images/h4.png',
+      title: 'Your Food World, Curated.',
+      subtitle: 'AI-powered recommendations just for you',
+      buttonText: 'Get Started',
+      buttonColor: '#00BCD4'
     },
     {
-      image: '/images/hero4.png',
-      title: 'Connect Through Food'
+      image: '/images/h5.png',
+      title: 'Discover What the World Eats.',
+      subtitle: 'Uncover hidden culinary gems',
+      buttonText: 'Start Discovering',
+      buttonColor: '#E07856'
     }
   ];
 
@@ -141,14 +153,18 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
 
         {/* Content Overlay */}
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center container mx-auto px-4 md:px-6">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white text-center mb-8 drop-shadow-lg">
+          <h1 className="text-[48px] font-bold text-white text-center mb-4 drop-shadow-lg">
             {slides[currentSlide].title}
           </h1>
+          <p className="text-lg md:text-xl text-white text-center mb-8 drop-shadow-lg max-w-2xl">
+            {slides[currentSlide].subtitle}
+          </p>
           <button
             onClick={handleGetStarted}
-            className="font-bold text-lg px-10 py-4 md:px-12 md:py-5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-white text-black"
+            className="font-bold text-lg px-10 py-4 md:px-12 md:py-5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-white"
+            style={{ backgroundColor: slides[currentSlide].buttonColor }}
           >
-            START
+            {slides[currentSlide].buttonText}
           </button>
         </div>
 

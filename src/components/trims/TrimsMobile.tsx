@@ -1,15 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Play, Search, SlidersHorizontal } from 'lucide-react';
+import { Play, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { YouTubeService } from '../../services/youtube';
 import { CardHeading } from '../ui/card-heading';
 import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
 import { transformTrimVideoToUnified } from '../../utils/unifiedContentTransformers';
-import { PreferencesFilterDrawer } from '../common/PreferencesFilterDrawer';
-import { useAuth } from '../auth/AuthProvider';
-import { ProfileService } from '../../services/profileService';
-import type { UserProfile } from '../../types/profile';
 import { Card } from '../ui/card';
 import { mixVideosWithAds, isAd, type TrimsContent } from '../../utils/trimsMixer';
 import { AdCard as TrimsAdCard } from './AdCard';
@@ -63,13 +59,10 @@ const VIDEO_CATEGORIES = [
 
 export default function TrimsMobile() {
   const { openViewer } = useUniversalViewer();
-  const { user } = useAuth();
   const [mixedContent, setMixedContent] = useState<TrimsContent<TrimVideo>[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   // Helper function to categorize videos
   const getCategoryFromTitle = useCallback((title: string): string[] => {
@@ -125,17 +118,8 @@ export default function TrimsMobile() {
 
   // Load initial videos
   useEffect(() => {
-    const loadProfile = async () => {
-      if (user) {
-        const profileResult = await ProfileService.getProfile();
-        if (profileResult.success && profileResult.data) {
-          setUserProfile(profileResult.data);
-        }
-      }
-    };
-    loadProfile();
     loadVideos('cooking food recipe shorts tutorial');
-  }, [user, loadVideos]);
+  }, [loadVideos]);
 
   // Compute filtered videos (excluding ads)
   const filteredVideos = mixedContent.filter((item): item is TrimVideo => !isAd(item));
@@ -146,26 +130,20 @@ export default function TrimsMobile() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-blood-orange">
+    <div className="flex flex-col h-screen bg-page-profile">
       {/* Search/Filter Header for Mobile */}
       <header className="px-4 py-3 bg-white/80 backdrop-blur-md sticky top-0 z-50 flex items-center gap-3 border-b border-gray-100">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-[#9CA3AF]" />
           <input
             type="text"
             placeholder="Search Trims..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && loadVideos(`${searchQuery} shorts`)}
-            className="w-full h-9 pl-9 pr-4 rounded-full bg-gray-100 text-sm text-gray-900 border-none focus:outline-none focus:ring-1 focus:ring-orange-500/30"
+            className="w-full h-9 pl-9 pr-4 rounded-full bg-white text-sm text-[#6B7280] placeholder:text-[#9CA3AF] border-none focus:outline-none focus:ring-1 focus:ring-orange-500/30"
           />
         </div>
-        <button
-          onClick={() => setShowFilters(true)}
-          className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-600"
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-        </button>
       </header>
 
       <div
@@ -230,27 +208,6 @@ export default function TrimsMobile() {
         )}
       </div>
 
-      {/* Preferences Filter Drawer */}
-      <PreferencesFilterDrawer
-        isOpen={showFilters}
-        onClose={() => setShowFilters(false)}
-        userProfile={userProfile}
-        onPreferencesUpdated={async () => {
-          if (user) {
-            const profileResult = await ProfileService.getProfile();
-            if (profileResult.success && profileResult.data) {
-              setUserProfile(profileResult.data);
-              // Reload videos with preferences
-              const prefs = profileResult.data.dietary_preferences || [];
-              const query = prefs.length > 0
-                ? `${prefs.join(' ')} cooking food shorts`
-                : 'cooking food shorts';
-              loadVideos(query);
-            }
-          }
-        }}
-      />
-
       <style>{`
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
@@ -279,11 +236,12 @@ function VideoCard({
 
   return (
     <Card
-      className="overflow-hidden cursor-pointer snap-start shadow-md border-gray-100"
+      className="overflow-hidden cursor-pointer snap-start shadow-md"
       onClick={() => onVideoClick(video)}
+      style={{ borderColor: '#500200', borderWidth: '2px' }}
     >
       {/* Video Content Area */}
-      <div className="relative aspect-[9/16] w-full overflow-hidden bg-gray-50 border-b border-gray-100">
+      <div className="relative aspect-[9/16] w-full overflow-hidden bg-gray-50">
         <img
           src={video.thumbnail}
           alt={video.title}
@@ -302,12 +260,12 @@ function VideoCard({
       </div>
 
       {/* Info Section - Just Title */}
-      <div className="p-5">
+      <div className="p-5" style={{ backgroundColor: '#ac0039' }}>
         <CardHeading
           variant="accent"
           size="md"
           weight="bold"
-          className="text-center"
+          className="text-center text-white"
         >
           {cleanTitle(video.title)}
         </CardHeading>

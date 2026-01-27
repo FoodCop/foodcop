@@ -155,7 +155,7 @@ export function PreferencesHintModal({
                     onClick={() => toggleDietary(option)}
                     disabled={loading}
                     className={`py-3 px-4 rounded-xl font-medium transition-all ${isSelected
-                        ? 'bg-orange-500 text-white shadow-md'
+                        ? 'bg-[#FFC909] text-white shadow-md hover:bg-[#EA580C]'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       } disabled:opacity-50`}
                   >
@@ -177,7 +177,7 @@ export function PreferencesHintModal({
             <button
               onClick={handleSavePreferences}
               disabled={loading}
-              className="w-full py-3 px-4 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 bg-[#FFC909] text-white font-semibold rounded-xl hover:bg-[#EA580C] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Saving...' : isEditMode ? 'Update Preferences' : 'Save Preferences'}
             </button>

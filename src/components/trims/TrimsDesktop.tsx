@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Play } from 'lucide-react';
+import { Play, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { YouTubeService } from '../../services/youtube';
@@ -7,12 +7,7 @@ import { CardHeading } from '../ui/card-heading';
 import { useUniversalViewer } from '../../contexts/UniversalViewerContext';
 import { transformTrimVideoToUnified } from '../../utils/unifiedContentTransformers';import { mixVideosWithAds, isAd, type TrimsContent } from '../../utils/trimsMixer';
 import { AdCard as TrimsAdCard } from './AdCard';
-import type { AdItem } from '../../types/ad';import { SidebarPanel, SidebarSection } from '../common/SidebarPanel';
-import { useAuth } from '../auth/AuthProvider';
-import { ProfileService } from '../../services/profileService';
-import { DIETARY_OPTIONS } from '../../types/onboarding';
-import type { UserProfile } from '../../types/profile';
-import { Card } from '../ui/card';
+import type { AdItem } from '../../types/ad';import { Card } from '../ui/card';
 
 // TrimVideo interface for short-form cooking videos
 interface TrimVideo {
@@ -63,14 +58,11 @@ const VIDEO_CATEGORIES = [
 const VIDEOS_PER_PAGE = 12;
 
 export default function TrimsDesktop() {
-  const { user } = useAuth();
   const { openViewer } = useUniversalViewer();
   const [mixedContent, setMixedContent] = useState<TrimsContent<TrimVideo>[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [desktopDietaryFilters, setDesktopDietaryFilters] = useState<string[]>([]);
-  const [savingDesktopPrefs, setSavingDesktopPrefs] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Prevent multiple video loading attempts
   const videosLoaded = useRef(false);
@@ -132,79 +124,9 @@ export default function TrimsDesktop() {
 
   // Load initial videos
   useEffect(() => {
-    const loadProfile = async () => {
-      if (user) {
-        const profileResult = await ProfileService.getProfile();
-        if (profileResult.success && profileResult.data) {
-          setUserProfile(profileResult.data);
-          if (profileResult.data.dietary_preferences) {
-            setDesktopDietaryFilters(profileResult.data.dietary_preferences);
-          }
-        }
-      }
-    };
-    loadProfile();
-
     // Add "shorts" to query to get vertical content
     loadVideos('cooking food recipe shorts tutorial');
-  }, [user, loadVideos]);
-
-  const toggleDesktopDietary = (option: string) => {
-    const normalized = option.toLowerCase();
-    setDesktopDietaryFilters((prev) => {
-      if (prev.includes(normalized)) {
-        return prev.filter((item) => item !== normalized);
-      }
-      if (normalized === "no restrictions") {
-        return [normalized];
-      }
-      return [...prev.filter((item) => item !== "no restrictions"), normalized];
-    });
-  };
-
-  const clearDesktopDietary = () => setDesktopDietaryFilters([]);
-
-  const handleDesktopPreferencesSave = async () => {
-    if (!user) {
-      toast.warning("Sign in to save your preferences");
-      return;
-    }
-
-    setSavingDesktopPrefs(true);
-
-    try {
-      const dietaryPrefs = desktopDietaryFilters.includes("no restrictions")
-        ? []
-        : desktopDietaryFilters;
-
-      const result = await ProfileService.updateProfile({
-        dietary_preferences: dietaryPrefs,
-      });
-
-      if (!result.success) {
-        throw new Error(result.error || "Failed to save preferences");
-      }
-
-      toast.success("Preferences updated");
-
-      const profileResult = await ProfileService.getProfile();
-      if (profileResult.success && profileResult.data) {
-        setUserProfile(profileResult.data);
-      }
-
-      // Reload videos with updated preferences context
-      const query = dietaryPrefs.length > 0
-        ? `${dietaryPrefs.join(' ')} cooking food recipe shorts`
-        : 'cooking food recipe shorts tutorial';
-
-      await loadVideos(query);
-    } catch (error) {
-      console.error("Error saving desktop preferences:", error);
-      toast.error("Unable to save preferences");
-    } finally {
-      setSavingDesktopPrefs(false);
-    }
-  };
+  }, [loadVideos]);
 
   const handleVideoClick = (video: TrimVideo) => {
     const unified = transformTrimVideoToUnified(video);
@@ -212,70 +134,31 @@ export default function TrimsDesktop() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-blood-orange">
-      {/* Sidebar Panel - Apricot Theme */}
-      <SidebarPanel
-        className="hidden md:flex flex-shrink-0"
-        fullHeight
-        themeColor="white"
-        eyebrow="Customize"
-        title="Trims Filters"
-        action={
-          desktopDietaryFilters.length > 0 ? (
-            <button
-              onClick={clearDesktopDietary}
-              className="text-sm font-semibold text-[#f59e0b] hover:text-[#d97706]"
-            >
-              Clear
-            </button>
-          ) : undefined
-        }
-      >
-        <SidebarSection
-          title="Dietary Preferences"
-          description="Filter video content by your dietary needs."
-        >
-          <div className="space-y-2">
-            {DIETARY_OPTIONS.map((option) => {
-              const normalized = option.toLowerCase();
-              const isSelected = desktopDietaryFilters.includes(normalized);
-
-              return (
-                <button
-                  key={option}
-                  onClick={() => toggleDesktopDietary(option)}
-                  className={`w-full px-3 py-2 rounded-lg border flex items-center justify-between text-sm transition-colors ${isSelected
-                    ? "bg-orange-50 border-orange-500 text-orange-700"
-                    : "bg-white border-gray-200 text-gray-700 hover:border-orange-300"
-                    }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <i className="fa-solid fa-seedling text-orange-500" />
-                    {option}
-                  </span>
-                  {isSelected && <span className="text-xs font-medium">✓</span>}
-                </button>
-              );
-            })}
+    <div className="flex h-screen overflow-hidden bg-page-profile justify-center">
+      {/* Main Content Area - Centered Feed with Search */}
+      <div className="h-screen w-full md:max-w-[450px] overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative bg-page-profile">
+        {/* Search Bar */}
+        <div className="sticky top-0 z-10 bg-page-profile px-4 py-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search cooking videos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && searchQuery.trim()) {
+                  videosLoaded.current = false;
+                  loadVideos(searchQuery.trim());
+                }
+              }}
+              className="w-full h-11 pl-10 pr-4 rounded-full bg-white text-sm text-[#6B7280] placeholder:text-[#9CA3AF] border-none focus:outline-none focus:ring-2 focus:ring-[#FFC909]/20"
+            />
           </div>
-        </SidebarSection>
-
-        {/* Save Preferences Button - Positioned below filters */}
-        <div className="pt-4">
-          <button
-            onClick={handleDesktopPreferencesSave}
-            disabled={savingDesktopPrefs}
-            className="w-full py-2.5 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
-          >
-            {savingDesktopPrefs ? "Saving..." : "Save Preferences"}
-          </button>
         </div>
-      </SidebarPanel>
 
-      {/* Main Content Area - Centered Feed (Single Column) */}
-      <div className="flex-1 flex justify-center bg-white overflow-hidden">
         <div
-          className="h-screen w-full md:max-w-[450px] overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative bg-white px-4 py-8"
+          className="px-4 py-4"
           style={{
             fontSize: '10pt',
           }}
@@ -355,8 +238,9 @@ function VideoCard({
 
   return (
     <Card
-      className="overflow-hidden cursor-pointer snap-start transition-all hover:shadow-xl border-gray-100 w-full group shadow-lg"
+      className="overflow-hidden cursor-pointer snap-start transition-all hover:shadow-xl w-full group shadow-lg"
       onClick={() => onVideoClick(video)}
+      style={{ borderColor: '#500200', borderWidth: '2px' }}
     >
       {/* Video Content Area */}
       <div className="relative aspect-[9/16] w-full overflow-hidden bg-gray-50">
@@ -378,12 +262,12 @@ function VideoCard({
       </div>
 
       {/* Info Section - Just Title */}
-      <div className="p-6 bg-white">
+      <div className="p-6" style={{ backgroundColor: '#ac0039' }}>
         <CardHeading
           variant="accent"
           size="lg"
           weight="bold"
-          className="text-center leading-tight tracking-tight"
+          className="text-center leading-tight tracking-tight text-white"
         >
           {cleanTitle(video.title)}
         </CardHeading>

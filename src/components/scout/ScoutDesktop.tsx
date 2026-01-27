@@ -427,27 +427,33 @@ export function ScoutDesktop() {
   const priceLevel = selectedRestaurant?.price_level ? '$'.repeat(selectedRestaurant.price_level) : '$$';
 
   return (
-    <div className="flex flex-col h-screen bg-page-scout" style={{ fontSize: '10pt' }}>
+    <div className="flex flex-col min-h-screen bg-page-profile" style={{ fontSize: '10pt' }}>
       {/* Tabs for Discover / My Map */}
-      <div className="border-b border-gray-200 bg-white px-4 pt-2">
-        <div className="inline-flex rounded-full bg-gray-100 p-1">
+      <div className="border-b border-gray-200 bg-page-profile px-4 pt-2">
+        <div className="inline-flex rounded-full p-1">
           <button
             type="button"
             onClick={() => setActiveTab('discover')}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1 ${activeTab === 'discover'
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
+            className={`px-4 py-1.5 text-xs font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-1 ${activeTab === 'discover'
+              ? 'text-white shadow-sm'
+              : 'text-white hover:text-gray-100'
               }`}
+            style={{
+              backgroundColor: activeTab === 'discover' ? '#f8b44a' : 'transparent'
+            }}
           >
             Discover
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('my-map')}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1 ${activeTab === 'my-map'
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
+            className={`px-4 py-1.5 text-xs font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-1 ${activeTab === 'my-map'
+              ? 'text-white shadow-sm'
+              : 'text-white hover:text-gray-100'
               }`}
+            style={{
+              backgroundColor: activeTab === 'my-map' ? '#f8b44a' : 'transparent'
+            }}
           >
             My Map
           </button>
@@ -456,15 +462,14 @@ export function ScoutDesktop() {
 
       <div className="flex flex-1">
         {/* Left Sidebar - Apricot Theme */}
-        <aside className="w-[380px] border-r flex flex-col overflow-hidden" style={{ backgroundColor: '#502503', borderColor: '#E5B88A' }}>
+        <aside className="w-[380px] border-r flex flex-col overflow-hidden" style={{ backgroundColor: '#ac0039', borderColor: '#E5B88A' }}>
           {/* Header */}
           <div className="p-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
             {/* User Location */}
-            <div className="flex items-center gap-2 mb-4 p-2 bg-blue-50 rounded-lg">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="flex items-center gap-2 mb-4 p-2">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
               <div className="flex-1 min-w-0">
-                <span className="text-xs text-blue-600 font-medium">Your Location</span>
-                <p className="text-sm text-gray-800 truncate">
+                <p className="text-sm text-white truncate">
                   {userLocation[0].toFixed(4)}, {userLocation[1].toFixed(4)}
                 </p>
               </div>
@@ -479,9 +484,9 @@ export function ScoutDesktop() {
                     placeholder="Search restaurants, cuisines..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all text-[#F4E3B2] placeholder:text-[#F4E3B2]"
+                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all bg-white text-[#6B7280] placeholder:text-[#9CA3AF]"
                   />
-                  <Search className="absolute left-4 top-4 text-gray-400" size={18} />
+                  <Search className="absolute left-4 top-4 text-[#9CA3AF]" size={18} />
                 </div>
 
                 {/* Distance Slider */}
@@ -825,7 +830,7 @@ export function ScoutDesktop() {
 
         {/* Right Panel - Apricot Theme */}
         {selectedRestaurant && (
-          <aside className="w-[420px] border-l flex flex-col overflow-hidden" style={{ backgroundColor: '#502503', borderColor: '#E5B88A' }}>
+          <aside className="w-[420px] border-l flex flex-col overflow-hidden" style={{ backgroundColor: '#ac0039', borderColor: '#E5B88A' }}>
             <div className="flex-1 overflow-y-auto">
               {/* Hero Image */}
               <div className="h-64 overflow-hidden bg-gray-200">
@@ -1255,6 +1260,13 @@ export function ScoutDesktop() {
           </aside>
         )}
       </div>
+
+      {/* Page Endpoint Banner (Desktop only) */}
+      <footer className="hidden md:block px-8 py-6">
+        <div className="max-w-3xl mx-auto">
+          <img src="/banners/fb_02.png" alt="Scout banner" className="max-w-full h-auto rounded-md shadow-sm" />
+        </div>
+      </footer>
     </div>
   );
 }

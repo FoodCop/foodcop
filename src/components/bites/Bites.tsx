@@ -347,19 +347,17 @@ export default function Bites() {
   }, [recipes, fallbackRecipes, searchQuery, desktopDietaryFilters]);
 
   return (
-    <div className="min-h-screen bg-page-utility flex flex-col md:flex-row">
-      {/* Full-height Sidebar for desktop - Apricot Theme */}
+    <div className="flex h-screen overflow-hidden bg-page-profile">
+      {/* Full-height Sidebar for desktop - Vibrant Pink Theme */}
       <SidebarPanel
         className="hidden md:flex"
         fullHeight
-        themeColor="white"
-        eyebrow="Customize"
-        title="Bites Filters"
+        themeColor="vibrant-pink"
         action={
           desktopDietaryFilters.length > 0 ? (
             <button
               onClick={clearDesktopDietary}
-              className="text-sm font-semibold text-[#f59e0b] hover:text-[#d97706]"
+              className="text-sm font-semibold text-white hover:text-gray-200"
             >
               Clear
             </button>
@@ -369,44 +367,55 @@ export default function Bites() {
           <button
             onClick={handleDesktopPreferencesSave}
             disabled={savingDesktopPrefs}
-            className="w-full py-2.5 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
+            className="w-full py-2.5 rounded-lg bg-white text-[#ac0039] font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
           >
             {savingDesktopPrefs ? "Saving..." : "Save Preferences"}
           </button>
         }
       >
-        <SidebarSection
-          title="Dietary Preferences"
-          description="Filter recipe content by your dietary needs."
-        >
-          <div className="space-y-2">
-            {DIETARY_OPTIONS.map((option) => {
-              const normalized = option.toLowerCase();
-              const isSelected = desktopDietaryFilters.includes(normalized);
+        <div className="space-y-2">
+          {DIETARY_OPTIONS.map((option) => {
+            const normalized = option.toLowerCase();
+            const isSelected = desktopDietaryFilters.includes(normalized);
+            
+            // Color coding for each dietary preference
+            const dietaryColors: Record<string, { bg: string; icon: string }> = {
+              'vegetarian': { bg: '#10b981', icon: '🥗' },
+              'vegan': { bg: '#22c55e', icon: '🌱' },
+              'pescetarian': { bg: '#06b6d4', icon: '🐟' },
+              'ketogenic': { bg: '#f59e0b', icon: '🥑' },
+              'paleo': { bg: '#f97316', icon: '🍖' },
+              'gluten-free': { bg: '#eab308', icon: '🌾' },
+              'dairy-free': { bg: '#8b5cf6', icon: '🥛' },
+              'no restrictions': { bg: '#6b7280', icon: '🍽️' }
+            };
+            
+            const colors = dietaryColors[normalized] || { bg: '#6b7280', icon: '🍽️' };
 
-              return (
-                <button
-                  key={option}
-                  onClick={() => toggleDesktopDietary(option)}
-                  className={`w-full px-3 py-2 rounded-lg border flex items-center justify-between text-sm transition-colors ${isSelected
-                    ? "bg-orange-50 border-orange-500 text-orange-700"
-                    : "bg-white border-gray-200 text-gray-700 hover:border-orange-300"
-                    }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <i className="fa-solid fa-seedling text-orange-500" />
-                    {option}
-                  </span>
-                  {isSelected && <span className="text-xs font-medium">✓</span>}
-                </button>
-              );
-            })}
-          </div>
-        </SidebarSection>
+            return (
+              <button
+                key={option}
+                onClick={() => toggleDesktopDietary(option)}
+                className="w-full px-3 py-2.5 rounded-lg flex items-center justify-between text-sm font-medium transition-all hover:opacity-90"
+                style={{
+                  backgroundColor: isSelected ? colors.bg : `${colors.bg}80`,
+                  color: 'white',
+                  border: 'none'
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-base">{colors.icon}</span>
+                  <span>{option}</span>
+                </span>
+                {isSelected && <span className="text-xs font-bold">✓</span>}
+              </button>
+            );
+          })}
+        </div>
       </SidebarPanel>
 
       {/* Main Content */}
-      <main className="flex-1 pb-6 max-w-[375px] md:max-w-full mx-auto p-4 md:p-6">
+      <main className="flex-1 overflow-y-auto pb-6 max-w-[375px] md:max-w-full mx-auto p-4 md:p-6">
           {/* Search Bar */}
           <section className="px-5 md:px-8 lg:px-12 pt-5 md:pt-6 pb-6 md:pb-8">
             <div className="relative md:max-w-2xl lg:max-w-3xl md:mx-auto">
@@ -416,7 +425,7 @@ export default function Bites() {
                 placeholder="Search recipes, ingredients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-14 md:pr-16 rounded-2xl bg-[#F3F4F6] text-sm md:text-base text-[#1A1A1A] placeholder:text-[#ADAEBC] border-0 focus:outline-none focus:ring-2 focus:ring-[#FFC909]/20"
+                className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-14 md:pr-16 rounded-2xl bg-white text-sm md:text-base text-[#6B7280] placeholder:text-[#9CA3AF] border-0 focus:outline-none focus:ring-2 focus:ring-[#FFC909]/20"
               />
               <button
                 onClick={() => setShowFilterDrawer(true)}
@@ -486,7 +495,7 @@ export default function Bites() {
           {!loading && !error && recommendedRecipes.length > 0 && (
             <section className="mb-6 md:mb-8">
               <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
-                <SectionHeading>Recommended for You</SectionHeading>
+                <SectionHeading className="text-2xl text-white">Recommended for You</SectionHeading>
               </div>
               <div className="px-5 md:px-8 lg:px-12">
                 <Masonry
@@ -514,7 +523,7 @@ export default function Bites() {
           {!loading && !error && mightLikeRecipes.length > 0 && (
             <section className="mb-6 md:mb-8">
               <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
-                <SectionHeading>You Might Also Like</SectionHeading>
+                <SectionHeading className="text-2xl text-white">You Might Also Like</SectionHeading>
               </div>
               <div className="px-5 md:px-8 lg:px-12">
                 <Masonry
@@ -573,6 +582,15 @@ export default function Bites() {
               </div>
             </section>
           )}
+
+          {/* Page Endpoint Banners (Desktop only) */}
+          <div className="hidden md:block mt-10 px-8">
+            <div className="max-w-3xl mx-auto space-y-4">
+              <img src="/banners/fb_03.png" alt="Bites banner 1" className="max-w-full h-auto rounded-md shadow-sm" />
+              <img src="/banners/fb_04.png" alt="Bites banner 2" className="max-w-full h-auto rounded-md shadow-sm" />
+              <img src="/banners/fb_05.png" alt="Bites banner 3" className="max-w-full h-auto rounded-md shadow-sm" />
+            </div>
+          </div>
         </main>
 
       <RecipeDetailDialog

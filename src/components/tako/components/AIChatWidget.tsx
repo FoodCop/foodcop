@@ -171,18 +171,18 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
       <div className={positionClasses}>
         {/* Chat Interface */}
         {isOpen && (
-          <Card className="mb-4 w-full md:w-[380px] h-[600px] max-h-[calc(100vh-7rem)] flex flex-col shadow-2xl overflow-hidden bg-white">
+          <Card className="mb-4 w-full md:w-[380px] h-[600px] max-h-[calc(100vh-7rem)] flex flex-col shadow-2xl overflow-hidden" style={{ backgroundColor: '#bb6155' }}>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-white flex-shrink-0 mx-[12px] my-[0px]">
-              <div className="flex items-center gap-2 text-gray-900">
+            <div className="flex items-center justify-between p-4 border-b flex-shrink-0 mx-[12px] my-[0px]" style={{ backgroundColor: '#bb6155', borderColor: 'rgba(255,255,255,0.2)' }}>
+              <div className="flex items-center gap-2 text-white">
                 <Sparkles className="w-5 h-5" />
-                <h3>TakoAI</h3>
+                <h3 className="text-white">TakoAI</h3>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={closeChat}
-                className="text-gray-600 hover:bg-gray-100"
+                className="text-white hover:bg-white hover:bg-opacity-20"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -198,14 +198,17 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
                       <div
                         className={`max-w-[80%] rounded-lg p-3 ${
                           message.role === 'user'
-                            ? 'bg-blue-600 text-white'
+                            ? 'text-gray-900'
                             : 'bg-gray-100 text-gray-900'
                         }`}
+                        style={{
+                          backgroundColor: message.role === 'user' ? '#f8b44a' : undefined
+                        }}
                       >
-                        <p className={`break-words ${message.role === 'user' ? 'text-white' : ''}`}>{message.content}</p>
+                        <p className={`break-words ${message.role === 'user' ? 'text-gray-900' : ''}`}>{message.content}</p>
                         <span
                           className={`text-xs mt-1 block ${
-                            message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
+                            message.role === 'user' ? 'text-gray-700' : 'text-gray-500'
                           }`}
                         >
                           {formatTime(message.timestamp)}
@@ -239,7 +242,7 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
             </ScrollArea>
 
             {/* Input Area */}
-            <div className="p-4 border-t bg-white flex-shrink-0">
+            <div className="p-4 border-t flex-shrink-0" style={{ backgroundColor: '#bb6155' }}>
               <div className="flex gap-2">
                 <Input
                   placeholder="Type your message..."
@@ -247,13 +250,13 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   disabled={isLoading}
-                  className="flex-1 bg-gray-800 text-white placeholder:text-gray-400 border-gray-600"
+                  className="flex-1 bg-white text-gray-900 placeholder:text-gray-400 border-white"
                 />
                 <Button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isLoading}
                   size="icon"
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="text-white !bg-[#951A21] hover:!bg-[#f8b44a]"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
