@@ -263,13 +263,13 @@ const BitesDesktop: React.FC = () => {
       
       {/* Active Preferences Display */}
       {userProfile?.dietary_preferences && userProfile.dietary_preferences.length > 0 && (
-        <div className="sticky top-0 z-30 bg-orange-50 border-b border-orange-200 px-6 py-3">
+        <div className="sticky top-0 z-30 bg-yellow-50 border-b border-yellow-200 px-6 py-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-semibold text-orange-700">Active Filters:</span>
+            <span className="text-xs font-semibold text-yellow-700">Active Filters:</span>
             {userProfile.dietary_preferences.map((pref) => (
               <span
                 key={pref}
-                className="inline-flex items-center px-2.5 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium"
+                className="inline-flex items-center px-2.5 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium"
               >
                 {pref.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
               </span>

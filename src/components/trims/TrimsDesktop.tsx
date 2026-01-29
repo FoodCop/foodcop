@@ -182,7 +182,7 @@ export default function TrimsDesktop() {
               <button
                 type="button"
                 onClick={() => loadVideos('cooking shorts')}
-                className="px-6 py-3 bg-[#FFC909] text-white rounded-xl font-medium"
+                className="px-6 py-3 bg-[#FFC909] text-gray-900 rounded-xl font-medium"
               >
                 Try Again
               </button>
@@ -240,7 +240,7 @@ function VideoCard({
     <Card
       className="overflow-hidden cursor-pointer snap-start transition-all hover:shadow-xl w-full group shadow-lg"
       onClick={() => onVideoClick(video)}
-      style={{ borderColor: '#500200', borderWidth: '2px' }}
+      style={{ borderColor: '#ffe838', borderWidth: '2px' }}
     >
       {/* Video Content Area */}
       <div className="relative aspect-[9/16] w-full overflow-hidden bg-gray-50">
@@ -262,12 +262,12 @@ function VideoCard({
       </div>
 
       {/* Info Section - Just Title */}
-      <div className="p-6" style={{ backgroundColor: '#ac0039' }}>
+      <div className="p-6" style={{ backgroundColor: '#ffe838' }}>
         <CardHeading
           variant="accent"
           size="lg"
           weight="bold"
-          className="text-center leading-tight tracking-tight text-white"
+          className="text-center leading-tight tracking-tight text-gray-900"
         >
           {cleanTitle(video.title)}
         </CardHeading>

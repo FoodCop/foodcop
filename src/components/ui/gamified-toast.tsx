@@ -29,16 +29,16 @@ const hexToRgba = (hex: string, opacity: number): string => {
 
 const colorMap = {
   success: {
-    bg: '#D97706', // Ocher yellow
-    text: '#FFFFFF',
-    border: '#B45309',
+    bg: '#ffe838', // Pineapple yellow
+    text: '#111827',
+    border: '#ffd600',
     icon: 'fa-circle-check',
     defaultTitle: 'Success',
   },
   error: {
-    bg: '#DC2626', // Fire engine red
-    text: '#FFFFFF',
-    border: '#B91C1C',
+    bg: '#ffe838', // Pineapple yellow
+    text: '#111827',
+    border: '#ffd600',
     icon: 'fa-circle-xmark',
     defaultTitle: 'Error',
   },

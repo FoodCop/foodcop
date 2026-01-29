@@ -107,12 +107,13 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
                 className={`relative flex items-center gap-3 px-4 py-3 rounded-full shadow-lg 
                   transition-all duration-200 hover:scale-105 active:scale-95
                   ${isActive 
-                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white' 
+                    ? 'text-gray-900 hover:text-gray-700' 
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
                 style={{
                   minWidth: '56px',
-                  border: isActive ? 'none' : '1px solid #E5E7EB'
+                  border: isActive ? 'none' : '1px solid #E5E7EB',
+                  backgroundColor: isActive ? '#ffe838' : undefined
                 }}
                 aria-label={item.label}
               >
@@ -143,8 +144,11 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
           transition-all duration-300 hover:scale-110 active:scale-95
           ${isOpen 
             ? 'bg-gray-700 rotate-0' 
-            : 'bg-gradient-to-br from-orange-500 to-orange-600 rotate-0'
+            : 'rotate-0'
           }`}
+        style={{
+          backgroundColor: isOpen ? undefined : '#ffe838'
+        }}
         aria-label={isOpen ? 'Close menu' : 'Open menu'}
         aria-expanded={isOpen}
       >

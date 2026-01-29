@@ -440,11 +440,19 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
         <main className="min-w-0 px-8 py-6 overflow-y-auto">
           <div className="max-w-3xl mx-auto">
             {/* Profile Header */}
-            <section className="bg-white rounded-xl shadow-sm px-8 py-6 mb-6">
-              <div className="flex items-start gap-6 mb-6">
+            <section className="rounded-xl shadow-sm px-8 py-6 mb-6" style={{ backgroundColor: '#fbd556' }}>
+              <div className="flex flex-col items-center gap-6 mb-6 text-center">
+                {/* User Name */}
+                <div className="flex items-center gap-2 justify-center">
+                  <h1 className="text-xl font-bold text-[#8B0000]">{getUserDisplayName()}</h1>
+                  <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                    <Crown className="w-3 h-3 text-white fill-white" />
+                  </div>
+                </div>
+
                 {/* Avatar */}
                 <div className="relative">
-                  <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-[#FFC909] bg-gray-200">
+                  <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-[#FFC909] bg-gray-200">
                     <img
                       src={user?.user_metadata?.avatar_url || user?.user_metadata?.picture ||
                         'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg'}
@@ -473,14 +481,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                 </div>
 
                 {/* Profile Info */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h1 className="text-xl font-bold text-[#8B0000]">{getUserDisplayName()}</h1>
-                    <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
-                      <Crown className="w-3 h-3 text-white fill-white" />
-                    </div>
-                  </div>
-                  <p className="mb-4" style={{ color: '#808080' }}>{getUserBio()}</p>
+                <div className="flex flex-col items-center">
+                  <p className="mb-4 text-center" style={{ color: '#808080' }}>{getUserBio()}</p>
                   <div className="mb-3">
                     <PreferencesChips
                       userProfile={userProfile}
@@ -546,7 +548,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('places');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'places'
-                      ? 'bg-[#FFC909] text-white'
+                      ? 'bg-[#FFC909] text-gray-900'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -566,7 +568,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('recipes');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'recipes'
-                      ? 'bg-[#FFC909] text-white'
+                      ? 'bg-[#FFC909] text-gray-900'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -586,7 +588,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('videos');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'videos'
-                      ? 'bg-[#FFC909] text-white'
+                      ? 'bg-[#FFC909] text-gray-900'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -606,7 +608,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('crew');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'crew'
-                      ? 'bg-[#FFC909] text-white'
+                      ? 'bg-[#FFC909] text-gray-900'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -626,7 +628,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                     setSelectedTab('posts');
                   }}
                   className={`flex-1 py-3 px-4 text-sm font-medium transition-all rounded-lg flex items-center justify-center gap-2 ${selectedTab === 'posts'
-                      ? 'bg-[#FFC909] text-white'
+                      ? 'bg-[#FFC909] text-gray-900'
                       : 'hover:bg-gray-50 text-gray-600'
                     }`}
                 >
@@ -708,7 +710,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
           <div className="space-y-6">
             {/* My Crew */}
             <section>
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex flex-col items-center justify-center gap-2">
                 <SectionHeading>My Crew</SectionHeading>
                 <Button
                   variant="outline"
@@ -770,7 +772,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
 
             {/* Recent Chats */}
             <section>
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex flex-col items-center justify-center gap-2">
                 <SectionHeading>Recent Chats</SectionHeading>
                 <Button
                   variant="ghost"
@@ -921,7 +923,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
             </p>
             <button
               onClick={() => toast.info('Create post coming soon')}
-              className="bg-[#FFC909] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
+              className="bg-[#FFC909] text-gray-900 px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
             >
               Create Post
             </button>
@@ -963,7 +965,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
           </p>
           <button
             onClick={() => toast.info('Navigate to explore page')}
-            className="bg-[#FFC909] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
+            className="bg-[#FFC909] text-gray-900 px-6 py-3 rounded-xl font-medium hover:bg-[#e55a2a] transition-colors"
           >
             Start Exploring
           </button>

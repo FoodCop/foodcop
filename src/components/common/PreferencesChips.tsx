@@ -32,13 +32,13 @@ export function PreferencesChips({ userProfile, onPreferencesUpdated, className 
 
   return (
     <>
-      <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+      <div className={`flex flex-wrap items-center justify-center gap-2 ${className}`}>
         {hasPreferences ? (
           <>
             {preferences.map((pref) => (
               <span
                 key={pref}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-100 text-orange-800 rounded-full text-sm font-medium"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium"
               >
                 {formatPreferenceLabel(pref)}
               </span>

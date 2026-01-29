@@ -348,16 +348,18 @@ export default function Bites() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-page-profile">
-      {/* Full-height Sidebar for desktop - Vibrant Pink Theme */}
+      {/* Full-height Sidebar for desktop - Banana Yellow Theme */}
       <SidebarPanel
         className="hidden md:flex"
         fullHeight
-        themeColor="vibrant-pink"
+        themeColor="banana-yellow"
+        eyebrow="Preferences"
+        title="Customize Diet"
         action={
           desktopDietaryFilters.length > 0 ? (
             <button
               onClick={clearDesktopDietary}
-              className="text-sm font-semibold text-white hover:text-gray-200"
+              className="text-sm font-semibold text-gray-900 hover:text-gray-700"
             >
               Clear
             </button>
@@ -367,7 +369,7 @@ export default function Bites() {
           <button
             onClick={handleDesktopPreferencesSave}
             disabled={savingDesktopPrefs}
-            className="w-full py-2.5 rounded-lg bg-white text-[#ac0039] font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
+            className="w-full py-2.5 rounded-lg bg-white text-gray-900 font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50 border border-gray-200"
           >
             {savingDesktopPrefs ? "Saving..." : "Save Preferences"}
           </button>
@@ -473,7 +475,7 @@ export default function Bites() {
               <p className="text-[#6B7280] text-sm md:text-base mb-4">{error}</p>
               <button
                 onClick={() => loadRecipes("popular recipes")}
-                className="px-6 md:px-8 py-2 md:py-3 rounded-xl bg-[#FFC909] text-white font-semibold text-sm md:text-base"
+                className="px-6 md:px-8 py-2 md:py-3 rounded-xl bg-[#FFC909] text-gray-900 font-semibold text-sm md:text-base"
               >
                 Try Again
               </button>
@@ -495,7 +497,7 @@ export default function Bites() {
           {!loading && !error && recommendedRecipes.length > 0 && (
             <section className="mb-6 md:mb-8">
               <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
-                <SectionHeading className="text-2xl text-white">Recommended for You</SectionHeading>
+                <SectionHeading className="text-2xl text-gray-900">Recommended for You</SectionHeading>
               </div>
               <div className="px-5 md:px-8 lg:px-12">
                 <Masonry
@@ -523,7 +525,7 @@ export default function Bites() {
           {!loading && !error && mightLikeRecipes.length > 0 && (
             <section className="mb-6 md:mb-8">
               <div className="px-5 md:px-8 lg:px-12 mb-3 md:mb-4">
-                <SectionHeading className="text-2xl text-white">You Might Also Like</SectionHeading>
+                <SectionHeading className="text-2xl text-gray-900">You Might Also Like</SectionHeading>
               </div>
               <div className="px-5 md:px-8 lg:px-12">
                 <Masonry

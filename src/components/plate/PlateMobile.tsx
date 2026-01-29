@@ -421,11 +421,19 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
       )}
       <main className="max-w-full mx-auto">
         {/* Profile Header */}
-        <section className="bg-white px-5 py-6">
-          <div className="flex items-start gap-4">
+        <section className="px-5 py-6" style={{ backgroundColor: '#fbd556' }}>
+          <div className="flex flex-col items-center gap-4 text-center">
+            {/* User Name */}
+            <div className="flex items-center gap-2 justify-center">
+              <h1 className="text-xl font-bold text-red-900">{getUserDisplayName()}</h1>
+              <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                <Crown className="w-3 h-3 text-white fill-white" />
+              </div>
+            </div>
+
             {/* Avatar */}
             <div className="relative">
-              <div className="w-20 h-20 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-fuzo-orange-500 bg-gray-200">
+              <div className="w-24 h-24 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-fuzo-orange-500 bg-gray-200">
                 <img 
                   src={user?.user_metadata?.avatar_url || user?.user_metadata?.picture || 
                        'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg'} 
@@ -454,14 +462,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             </div>
             
             {/* Profile Info */}
-            <div className="flex-1 w-full md:w-auto">
-              <div className="flex items-center gap-2 mb-1">
-                <h1 className="text-xl font-bold text-red-900">{getUserDisplayName()}</h1>
-                <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
-                  <Crown className="w-3 h-3 text-white fill-white" />
-                </div>
-              </div>
-              <p className="text-sm md:text-base mb-3 max-w-md text-neutral-400">{getUserBio()}</p>
+            <div className="w-full md:w-auto flex flex-col items-center">
+              <p className="text-sm md:text-base mb-3 text-center text-neutral-400">{getUserBio()}</p>
               <div className="mb-3">
                 <PreferencesChips 
                   userProfile={userProfile} 
@@ -509,7 +511,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             </div>
             <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-fuzo-orange-500 to-accent-yellow-500 rounded-full transition-all duration-500"
+                className="h-full bg-gradient-to-r from-[#fbd556] to-[#f8b44a] rounded-full transition-all duration-500"
                 style={{ width: `${userLevel.progressPercent}%` }}
               />
             </div>
@@ -517,7 +519,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
         </section>
 
         {/* Tab Navigation */}
-        <nav className="bg-white sticky top-14 z-40 mt-2 p-2">
+        <nav className="bg-[#fbd556] sticky top-14 z-40 mt-2 p-2">
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
             <button 
               type="button"
@@ -528,8 +530,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'places' 
-                  ? 'bg-fuzo-orange-500 text-white' 
-                  : 'bg-gray-50 text-gray-600'
+                  ? 'bg-[#ffe838] text-gray-900' 
+                  : 'bg-white/30 text-gray-800'
               }`}
             >
               Places
@@ -550,8 +552,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'recipes' 
-                  ? 'bg-fuzo-orange-500 text-white' 
-                  : 'bg-gray-50 text-gray-600'
+                  ? 'bg-gray-900 text-white' 
+                  : 'bg-white/30 text-gray-800'
               }`}
             >
               Recipes
@@ -572,8 +574,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'videos' 
-                  ? 'bg-fuzo-orange-500 text-white' 
-                  : 'bg-gray-50 text-gray-600'
+                  ? 'bg-gray-900 text-white' 
+                  : 'bg-white/30 text-gray-800'
               }`}
             >
               Videos
@@ -594,8 +596,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'crew' 
-                  ? 'bg-fuzo-orange-500 text-white' 
-                  : 'bg-gray-50 text-gray-600'
+                  ? 'bg-gray-900 text-white' 
+                  : 'bg-white/30 text-gray-800'
               }`}
             >
               Crew
@@ -616,8 +618,8 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'posts' 
-                  ? 'bg-fuzo-orange-500 text-white' 
-                  : 'bg-gray-50 text-gray-600'
+                  ? 'bg-gray-900 text-white' 
+                  : 'bg-white/30 text-gray-800'
               }`}
             >
               Posts
@@ -686,7 +688,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
           <div className="space-y-6">
             {/* My Crew */}
             <section className="mb-6">
-              <div className="px-5 mb-4 flex items-center justify-between">
+              <div className="px-5 mb-4 flex flex-col items-center justify-center gap-2">
                 <SectionHeading>My Crew</SectionHeading>
                 <Button
                   variant="outline"
@@ -750,7 +752,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
 
             {/* Recent Chats */}
             <section className="mb-6">
-              <div className="px-5 mb-4 flex items-center justify-between">
+              <div className="px-5 mb-4 flex flex-col items-center justify-center gap-2">
                 <SectionHeading>Recent Chats</SectionHeading>
                 <Button
                   variant="ghost"
@@ -828,7 +830,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
 
             {/* Restaurant Recommendations */}
             <section className="mb-6">
-              <div className="px-5 flex items-center justify-between mb-4">
+              <div className="px-5 flex flex-col items-center justify-center gap-2 mb-4">
                 <SectionHeading>Nearby Restaurants</SectionHeading>
                 <button className="flex items-center gap-1.5 text-fuzo-orange-500 text-sm font-medium">
                   <span>Map View</span>

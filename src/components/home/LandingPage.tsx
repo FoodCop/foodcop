@@ -116,7 +116,7 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
   return (
     <div className="new-landing-page">
       {/* Header */}
-      <header className="fixed w-full top-0 shadow-sm z-50" style={{ backgroundColor: '#F5C89A' }}>
+      <header className="fixed w-full top-0 shadow-sm z-50" style={{ backgroundColor: '#fbd556' }}>
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <img src="/logo_mobile.png" alt="FUZO" className="h-10" />
@@ -458,7 +458,7 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
       </section>
 
       {/* Tako AI Section - Desktop */}
-      <section className="hidden md:block py-20 md:py-32" style={{ backgroundColor: '#F5C89A' }}>
+      <section className="hidden md:block py-20 md:py-32" style={{ backgroundColor: '#fbd556' }}>
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="heading-tako-desktop font-bold text-foreground mb-6">

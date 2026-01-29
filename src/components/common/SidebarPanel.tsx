@@ -11,7 +11,7 @@ interface SidebarPanelProps {
   /** Use full-height style matching Scout/Plate (no rounded corners, full height) */
   fullHeight?: boolean;
   /** Theme color for the sidebar (defaults to white) */
-  themeColor?: 'pineapple' | 'apricot' | 'dark-mango' | 'blood-orange' | 'candy-apple' | 'white' | 'vibrant-pink';
+  themeColor?: 'pineapple' | 'apricot' | 'dark-mango' | 'blood-orange' | 'candy-apple' | 'white' | 'vibrant-pink' | 'banana-yellow';
 }
 
 interface SidebarSectionProps {
@@ -32,6 +32,7 @@ const themeColors = {
   'blood-orange': { bg: '#BF2C20', text: '#FFFFFF', border: '#AF1C10' },
   'candy-apple': { bg: '#951A21', text: '#FFFFFF', border: '#850A11' },
   'vibrant-pink': { bg: '#ac0039', text: '#FFFFFF', border: '#E5B88A' },
+  'banana-yellow': { bg: '#fff1b7', text: '#0f172a', border: '#E5B88A' },
   white: { bg: '#FFFFFF', text: '#0f172a', border: '#EEE' },
 };
 
@@ -46,8 +47,8 @@ export function SidebarPanel({
   themeColor = 'white',
 }: SidebarPanelProps) {
   const colors = themeColors[themeColor];
-  const isColored = themeColor !== 'white' && themeColor !== 'apricot';
-  const isLightBg = themeColor === 'white' || themeColor === 'apricot';
+  const isColored = themeColor !== 'white' && themeColor !== 'apricot' && themeColor !== 'banana-yellow';
+  const isLightBg = themeColor === 'white' || themeColor === 'apricot' || themeColor === 'banana-yellow';
 
   // Full-height style: matches Scout sidebar (border-r, no rounded corners, full height)
   if (fullHeight) {

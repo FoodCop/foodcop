@@ -130,15 +130,15 @@ const NavButton = ({ to, label }: NavButtonProps) => {
       to={to}
       className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
         isActive
-          ? 'bg-orange-600 text-white'
-          : 'text-white hover:text-white'
+          ? 'bg-white text-gray-900'
+          : 'text-gray-900 hover:text-gray-900'
         }`}
       style={{
         backgroundColor: isActive ? undefined : 'transparent'
       }}
       onMouseEnter={(e) => {
         if (!isActive) {
-          e.currentTarget.style.backgroundColor = '#951A21';
+          e.currentTarget.style.backgroundColor = '#f8b44a';
         }
       }}
       onMouseLeave={(e) => {
@@ -277,7 +277,7 @@ function AppLayout() {
     <div className="min-h-screen bg-background mobile-app-container">
       {/* Desktop Navigation - Only show on authenticated pages */}
       {showNavigation && (
-        <div className="border-b sticky top-0 z-50 hidden md:block" style={{ backgroundColor: '#f8b44a' }}>
+        <div className="border-b sticky top-0 z-50 hidden md:block" style={{ backgroundColor: '#fbd556' }}>
           <div className="container mx-auto px-4">
             <Navigation />
           </div>

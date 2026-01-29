@@ -294,7 +294,7 @@ export function DashboardNew() {
       <main className="flex-1 pb-6">
         {/* Snap Your Plate CTA - Mobile Only */}
         <div className="px-4 -mt-6 relative z-10 mb-6 md:hidden">
-          <button className="w-full bg-linear-to-r from-[#FFC909] to-[#E6B508] text-white font-bold text-lg py-4 rounded-full shadow-lg shadow-[#FFC909]/50 flex items-center justify-center transition-all duration-300 hover:shadow-xl hover:shadow-[#FFC909]/60 hover:scale-[1.02]">
+          <button className="w-full bg-[#fbd556] text-gray-900 font-bold text-lg py-4 rounded-full shadow-lg shadow-[#fbd556]/50 flex items-center justify-center transition-all duration-300 hover:shadow-xl hover:shadow-[#fbd556]/60 hover:scale-[1.02]">
             <Camera className="w-5 h-5 mr-3" />
             Snap Your Plate
           </button>

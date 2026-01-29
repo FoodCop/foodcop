@@ -25,6 +25,7 @@ export function PreferencesDialog({
   const [currentStep, setCurrentStep] = useState<Step>(showLocationStep ? 'location' : 'dietary');
   const [loading, setLoading] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
+  const [hoveredOption, setHoveredOption] = useState<string | null>(null);
   
   // Location state
   const [locationData, setLocationData] = useState<LocationData | null>(null);
@@ -208,7 +209,8 @@ export function PreferencesDialog({
                 <button
                   onClick={handleRequestLocation}
                   disabled={locationLoading}
-                  className="w-full py-3 px-4 bg-linear-to-r from-orange-500 to-red-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-3 px-4 text-gray-900 font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                  style={{ backgroundColor: '#fbd556' }}
                 >
                   {locationLoading ? (
                     <>
@@ -261,7 +263,8 @@ export function PreferencesDialog({
                       onChange={(e) => setManualCity(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleManualCity()}
                       placeholder="e.g. New York, USA"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2"
+                      style={{ '--tw-ring-color': '#fbd556' } as React.CSSProperties}
                     />
                   </div>
                   <button
@@ -295,7 +298,8 @@ export function PreferencesDialog({
               <button
                 onClick={handleLocationNext}
                 disabled={!locationData || loading}
-                className="flex-1 py-3 px-4 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-3 px-4 text-gray-900 font-semibold rounded-xl hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: '#fbd556' }}
               >
                 {loading ? 'Saving...' : 'Next'}
               </button>
@@ -315,16 +319,19 @@ export function PreferencesDialog({
                 {DIETARY_OPTIONS.map((option) => {
                   const normalized = option.toLowerCase();
                   const isSelected = selectedDietary.includes(normalized);
+                  const isHovered = hoveredOption === option;
+                  const showHighlight = isSelected || isHovered;
                   
                   return (
                     <button
                       key={option}
                       onClick={() => toggleDietary(option)}
+                      onMouseEnter={() => setHoveredOption(option)}
+                      onMouseLeave={() => setHoveredOption(null)}
                       className={`py-3 px-4 rounded-xl font-medium transition-all ${
-                        isSelected
-                          ? 'bg-orange-500 text-white shadow-md'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        showHighlight ? 'text-gray-900 shadow-md' : 'bg-gray-100 text-gray-700'
                       }`}
+                      style={showHighlight ? { backgroundColor: '#fbd556' } : {}}
                     >
                       {option}
                     </button>
@@ -350,7 +357,8 @@ export function PreferencesDialog({
               <button
                 onClick={handleDietarySave}
                 disabled={loading}
-                className="flex-1 py-3 px-4 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-3 px-4 text-gray-900 font-semibold rounded-xl hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: '#fbd556' }}
               >
                 {loading ? 'Saving...' : 'Save & Continue'}
               </button>

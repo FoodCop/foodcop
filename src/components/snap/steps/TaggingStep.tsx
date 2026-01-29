@@ -105,7 +105,7 @@ export function TaggingStep({
                 onClick={() => toggleTag(tag, 'cuisine')}
                 className={`p-2 rounded-lg font-medium text-sm transition ${
                   selectedTags.some(t => t.label === tag && t.category === 'cuisine')
-                    ? 'bg-[#FFC909] text-white'
+                    ? 'bg-[#FFC909] text-gray-900'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -125,7 +125,7 @@ export function TaggingStep({
                 onClick={() => toggleTag(tag, 'dish')}
                 className={`p-2 rounded-lg font-medium text-sm transition ${
                   selectedTags.some(t => t.label === tag && t.category === 'dish')
-                    ? 'bg-[#FFC909] text-white'
+                    ? 'bg-[#FFC909] text-gray-900'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -145,7 +145,7 @@ export function TaggingStep({
                 onClick={() => toggleTag(tag, 'ambiance')}
                 className={`p-2 rounded-lg font-medium text-sm transition ${
                   selectedTags.some(t => t.label === tag && t.category === 'ambiance')
-                    ? 'bg-[#FFC909] text-white'
+                    ? 'bg-[#FFC909] text-gray-900'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -172,7 +172,7 @@ export function TaggingStep({
             <Button
               onClick={addCustomTag}
               disabled={!customTag.trim()}
-              className="bg-[#FFC909] text-white"
+              className="bg-[#FFC909] text-gray-900"
             >
               Add
             </Button>

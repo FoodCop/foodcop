@@ -132,7 +132,7 @@ export default function TrimsMobile() {
   return (
     <div className="flex flex-col h-screen bg-page-profile">
       {/* Search/Filter Header for Mobile */}
-      <header className="px-4 py-3 bg-white/80 backdrop-blur-md sticky top-0 z-50 flex items-center gap-3 border-b border-gray-100">
+      <header className="px-4 py-3 bg-[#fbd556] backdrop-blur-md sticky top-0 z-50 flex items-center gap-3 border-b border-[#E5B88A]">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-2.5 w-4 h-4 text-[#9CA3AF]" />
           <input
@@ -141,7 +141,7 @@ export default function TrimsMobile() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && loadVideos(`${searchQuery} shorts`)}
-            className="w-full h-9 pl-9 pr-4 rounded-full bg-white text-sm text-[#6B7280] placeholder:text-[#9CA3AF] border-none focus:outline-none focus:ring-1 focus:ring-orange-500/30"
+            className="w-full h-9 pl-9 pr-4 rounded-full bg-white text-sm text-[#6B7280] placeholder:text-[#9CA3AF] border-none focus:outline-none focus:ring-1 focus:ring-[#fbd556]/30"
           />
         </div>
       </header>
@@ -170,7 +170,7 @@ export default function TrimsMobile() {
             <p className="text-gray-500 text-xs text-center mb-6">{error}</p>
             <button
               onClick={() => loadVideos('cooking shorts')}
-              className="px-5 py-2.5 bg-[#FFC909] text-white rounded-lg text-sm font-medium"
+              className="px-5 py-2.5 bg-[#FFC909] text-gray-900 rounded-lg text-sm font-medium"
             >
               Try Again
             </button>
@@ -238,7 +238,7 @@ function VideoCard({
     <Card
       className="overflow-hidden cursor-pointer snap-start shadow-md"
       onClick={() => onVideoClick(video)}
-      style={{ borderColor: '#500200', borderWidth: '2px' }}
+      style={{ borderColor: '#ffe838', borderWidth: '2px' }}
     >
       {/* Video Content Area */}
       <div className="relative aspect-[9/16] w-full overflow-hidden bg-gray-50">
@@ -260,12 +260,12 @@ function VideoCard({
       </div>
 
       {/* Info Section - Just Title */}
-      <div className="p-5" style={{ backgroundColor: '#ac0039' }}>
+      <div className="p-5" style={{ backgroundColor: '#fff1b7' }}>
         <CardHeading
           variant="accent"
           size="md"
           weight="bold"
-          className="text-center text-white"
+          className="text-center text-gray-900"
         >
           {cleanTitle(video.title)}
         </CardHeading>

@@ -84,7 +84,7 @@ function DealCard({ card, index }: DealCardProps) {
           className="absolute inset-0 w-full h-full backface-hidden rounded-xl shadow-xl overflow-hidden border-4 border-white"
           style={{
             backfaceVisibility: "hidden",
-            backgroundColor: "#df3733"
+            backgroundColor: "#ffe838"
           }}
         >
           <div className="flex items-center justify-center h-full">
@@ -119,7 +119,7 @@ function DealCard({ card, index }: DealCardProps) {
               />
               {/* FUZO Badge for ads and trivia - overlaid */}
               <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full">
-                <div className="w-6 h-6 rounded-full bg-[#FFC909] flex items-center justify-center text-white text-xs font-bold">
+                <div className="w-6 h-6 rounded-full bg-[#FFC909] flex items-center justify-center text-gray-900 text-xs font-bold">
                   F
                 </div>
                 <span className="text-xs text-gray-700 font-medium">FUZO</span>
@@ -187,7 +187,7 @@ function DealCard({ card, index }: DealCardProps) {
                   )}
                   {(card.type === 'recipe' || card.type === 'masterbot') && (
                     <>
-                      <div className="w-6 h-6 rounded-full bg-[#FFC909] flex items-center justify-center text-white text-xs font-bold">
+                      <div className="w-6 h-6 rounded-full bg-[#FFC909] flex items-center justify-center text-gray-900 text-xs font-bold">
                         F
                       </div>
                       <span className="text-xs text-gray-500">FUZO</span>
@@ -330,10 +330,10 @@ export function FeedDesktop() {
         <div className="mt-8">
           <motion.button
             onClick={dealNextHand}
-            className="flex items-center gap-2 px-8 py-4 text-white rounded-full font-bold text-lg shadow-lg transition-colors"
-            style={{ backgroundColor: "#f8b44a" }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f5a03a"}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#f8b44a"}
+            className="flex items-center gap-2 px-8 py-4 text-gray-900 rounded-full font-bold text-lg shadow-lg transition-colors"
+            style={{ backgroundColor: "#ffe838" }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#ffd600"}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#ffe838"}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

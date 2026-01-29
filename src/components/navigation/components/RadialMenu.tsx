@@ -227,10 +227,10 @@ export function RadialMenu({
                   <button
                     className="w-full h-full rounded-full bg-white border-2 flex items-center justify-center transition-all active:scale-90"
                     style={{
-                      borderColor: isSelected ? '#FFC909' : '#EEE',
-                      backgroundColor: isSelected ? '#FFC909' : '#FFFFFF',
+                      borderColor: isSelected ? '#ffe838' : '#EEE',
+                      backgroundColor: isSelected ? '#ffe838' : '#FFFFFF',
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                      color: isSelected ? '#FFFFFF' : '#374151',
+                      color: isSelected ? '#111827' : '#374151',
                     }}
                     onClick={() => handleItemClick(index)}
                     onMouseDown={(e) => e.stopPropagation()}

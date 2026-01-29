@@ -523,7 +523,7 @@ export function Snap() {
                     onClick={() => setCuisine(type.label)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                       cuisine === type.label
-                        ? 'bg-[#FFC909] text-white shadow-md'
+                        ? 'bg-[#FFC909] text-gray-900 shadow-md'
                         : 'bg-[#F5F5F5] text-gray-700 hover:bg-gray-200'
                     }`}
                   >

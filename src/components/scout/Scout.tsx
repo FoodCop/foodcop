@@ -1041,7 +1041,8 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
           <button
             onClick={handleSaveToPlate}
             disabled={saving}
-            className="flex-1 h-12 bg-gray-900 text-white rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 h-12 text-black rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#ffe838' }}
           >
             <span>💾</span>
             <span>{saving ? 'Saving...' : 'Save to Plate'}</span>
