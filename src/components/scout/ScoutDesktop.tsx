@@ -924,11 +924,11 @@ export function ScoutDesktop() {
 
                 {/* Stats */}
                 <div className="flex items-center justify-center gap-4 mb-6 pb-6 border-b border-[#4d382a]">
-                  <div className="flex items-center gap-2 px-6 py-4 bg-[#eda600] rounded-xl">
+                  <div className="flex items-center gap-2 px-6 py-4 bg-[#fbd556] rounded-xl">
                     <span className="text-4xl">⭐</span>
                     <span className="text-5xl font-bold text-gray-900">{selectedRestaurant.rating}</span>
                   </div>
-                  <div className="px-6 py-4 bg-[#eda600] rounded-xl">
+                  <div className="px-6 py-4 bg-[#fbd556] rounded-xl">
                     <span className="text-5xl font-bold text-gray-900">{formatDistance(selectedRestaurant.distance)}</span>
                   </div>
                 </div>

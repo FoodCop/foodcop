@@ -396,13 +396,13 @@ export default function ScoutNew() {
 
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 bg-white px-4 pt-2">
-          <div className="inline-flex rounded-full bg-gray-100 p-1">
+          <div className="inline-flex rounded-full bg-[#fbd556] p-1">
             <button
               onClick={() => setActiveTab('discover')}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
                 activeTab === 'discover'
-                  ? 'bg-fuzo-orange-500 text-white'
-                  : 'bg-transparent text-gray-600 hover:text-gray-900'
+                  ? 'bg-white text-gray-900'
+                  : 'bg-transparent text-gray-800 hover:text-gray-900'
               }`}
             >
               Discover
@@ -411,8 +411,8 @@ export default function ScoutNew() {
               onClick={() => setActiveTab('my-map')}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
                 activeTab === 'my-map'
-                  ? 'bg-fuzo-orange-500 text-white'
-                  : 'bg-transparent text-gray-600 hover:text-gray-900'
+                  ? 'bg-white text-gray-900'
+                  : 'bg-transparent text-gray-800 hover:text-gray-900'
               }`}
             >
               My Map

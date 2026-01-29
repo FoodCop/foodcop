@@ -197,20 +197,20 @@ export function RestaurantDetailDialog({
         
         {/* Stats Section */}
         <div className="grid grid-cols-4 gap-3 mb-6">
-          <div className="bg-linear-to-br from-yellow-50 to-orange-50 rounded-xl p-3 text-center">
-            <Star className="w-5 h-5 text-yellow-500 mb-1 mx-auto fill-yellow-500" />
+          <div className="rounded-xl p-3 text-center" style={{ backgroundColor: '#fbd556' }}>
+            <Star className="w-5 h-5 text-gray-900 mb-1 mx-auto fill-gray-900" />
             <p className="text-lg font-bold text-gray-900">{restaurant.rating}</p>
-            <p className="text-xs text-gray-600">Rating</p>
+            <p className="text-xs text-gray-700">Rating</p>
           </div>
           <div className="bg-linear-to-br from-blue-50 to-cyan-50 rounded-xl p-3 text-center">
             <Clock className="w-5 h-5 text-blue-500 mb-1 mx-auto" />
             <p className="text-lg font-bold text-gray-900">15-20</p>
             <p className="text-xs text-gray-600">Minutes</p>
           </div>
-          <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-xl p-3 text-center">
-            <MapPin className="w-5 h-5 text-green-500 mb-1 mx-auto" />
+          <div className="rounded-xl p-3 text-center" style={{ backgroundColor: '#fbd556' }}>
+            <MapPin className="w-5 h-5 text-gray-900 mb-1 mx-auto" />
             <p className="text-lg font-bold text-gray-900">{distanceText}</p>
-            <p className="text-xs text-gray-600">away</p>
+            <p className="text-xs text-gray-700">away</p>
           </div>
           <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-xl p-3 text-center">
             <DollarSign className="w-5 h-5 text-purple-500 mb-1 mx-auto" />

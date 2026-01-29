@@ -525,7 +525,8 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
           <div className="text-center">
             <button
               onClick={handleGetStarted}
-              className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105 text-white"
+              style={{ backgroundColor: '#ffe838' }}
             >
               EXPLORE <i className="fa-solid fa-utensils ml-2"></i>
             </button>
@@ -570,7 +571,8 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
           <div className="text-center mt-16">
             <button
               onClick={handleGetStarted}
-              className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105 text-white"
+              style={{ backgroundColor: '#ffe838' }}
             >
               EXPLORE <i className="fa-solid fa-utensils ml-2"></i>
             </button>

@@ -431,9 +431,9 @@ export default function Bites() {
               />
               <button
                 onClick={() => setShowFilterDrawer(true)}
-                className="absolute right-2 top-2 w-8 h-8 rounded-xl bg-[#FFC909] flex items-center justify-center hover:bg-[#EA580C] transition-colors md:hidden"
+                className="absolute right-2 top-2 w-8 h-8 rounded-xl bg-[#fbd556] flex items-center justify-center hover:bg-[#f0a71b] transition-colors md:hidden"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-white" />
+                <SlidersHorizontal className="w-3.5 h-3.5 text-gray-900" />
               </button>
             </div>
           </section>
@@ -441,13 +441,13 @@ export default function Bites() {
           {/* Active Preferences Display - Mobile */}
           {userProfile?.dietary_preferences && userProfile.dietary_preferences.length > 0 && (
             <section className="px-5 md:px-8 lg:px-12 mb-4 md:hidden">
-              <div className="bg-orange-50 border border-orange-200 rounded-xl p-3">
+              <div className="bg-[#fbd556] border border-[#f0a71b] rounded-xl p-3">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-semibold text-orange-700">Active Filters:</span>
+                  <span className="text-xs font-semibold text-gray-900">Active Filters:</span>
                   {userProfile.dietary_preferences.map((pref) => (
                     <span
                       key={pref}
-                      className="inline-flex items-center px-2.5 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium"
+                      className="inline-flex items-center px-2.5 py-1 bg-white text-gray-900 rounded-full text-xs font-medium"
                     >
                       {pref.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}
                     </span>

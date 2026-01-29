@@ -100,8 +100,8 @@ export function PreferencesFilterDrawer({
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-orange-50 flex items-center justify-center">
-              <Filter className="w-5 h-5 text-orange-600" />
+            <div className="w-10 h-10 rounded-2xl bg-[#fbd556]/20 flex items-center justify-center">
+              <Filter className="w-5 h-5 text-[#fbd556]" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900">Edit Preferences</h2>
@@ -125,7 +125,7 @@ export function PreferencesFilterDrawer({
               {selectedDietary.length > 0 && (
                 <button
                   onClick={handleClearAll}
-                  className="text-xs font-semibold text-orange-600 hover:text-orange-700"
+                  className="text-xs font-semibold text-[#fbd556] hover:text-[#f0a71b]"
                   disabled={loading}
                 >
                   Clear All
@@ -137,7 +137,7 @@ export function PreferencesFilterDrawer({
                 {selectedDietary.map((pref) => (
                   <span
                     key={pref}
-                    className="px-3 py-1.5 rounded-full bg-orange-100 text-orange-800 text-xs font-medium"
+                    className="px-3 py-1.5 rounded-full bg-[#fbd556]/20 text-gray-900 text-xs font-medium border border-[#fbd556]"
                   >
                     {pref.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                   </span>
@@ -162,8 +162,8 @@ export function PreferencesFilterDrawer({
                     disabled={loading}
                     className={`relative py-3 px-4 rounded-2xl font-semibold text-left transition-all border ${
                       isSelected
-                        ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
-                        : 'bg-white border-gray-200 text-gray-800 hover:border-orange-300'
+                        ? 'bg-[#fbd556] border-[#fbd556] text-gray-900 shadow-lg shadow-[#fbd556]/30'
+                        : 'bg-white border-gray-200 text-gray-800 hover:border-[#fbd556]'
                     } disabled:opacity-50`}
                   >
                     {option}
@@ -182,7 +182,7 @@ export function PreferencesFilterDrawer({
           <button
             onClick={handleSavePreferences}
             disabled={loading}
-            className="w-full py-3 px-4 bg-orange-500 text-white font-semibold rounded-2xl hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 bg-[#fbd556] text-gray-900 font-semibold rounded-2xl hover:bg-[#f0a71b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Saving...' : 'Save Preferences'}
           </button>
