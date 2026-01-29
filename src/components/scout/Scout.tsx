@@ -431,7 +431,7 @@ export default function ScoutNew() {
         {/* Discover Tab Content */}
         {activeTab === 'discover' && (<>
         {/* Distance Control */}
-        <section className="px-5 py-4 bg-white">
+        <section className="px-5 py-4" style={{ backgroundColor: '#fff1b7' }}>
           <div className="flex items-center justify-between mb-3">
             <i className="fa-solid fa-person-walking text-gray-700" style={{ fontSize: '10pt' }} aria-label="Distance"></i>
             <span className="text-sm font-bold text-gray-900">{radiusKm} km</span>
