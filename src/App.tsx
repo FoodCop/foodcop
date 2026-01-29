@@ -399,9 +399,9 @@ function AppLayout() {
           onClick={toggleChat}
           className="md:hidden fixed top-4 right-4 z-40 w-12 h-12 rounded-full shadow-lg transition-all"
           style={{
-            backgroundColor: isOpen ? '#3B82F6' : '#FFFFFF',
+            backgroundColor: isOpen ? '#951A21' : '#FFFFFF',
             border: '2px solid',
-            borderColor: isOpen ? '#3B82F6' : '#E5E7EB',
+            borderColor: isOpen ? '#951A21' : '#E5E7EB',
           }}
           aria-label="AI Assistant"
         >

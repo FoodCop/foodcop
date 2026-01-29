@@ -396,24 +396,32 @@ export default function ScoutNew() {
 
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 bg-white px-4 pt-2">
-          <div className="inline-flex rounded-full bg-[#fbd556] p-1">
+          <div className="inline-flex rounded-full p-1">
             <button
+              type="button"
               onClick={() => setActiveTab('discover')}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-1.5 text-xs font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-1 ${
                 activeTab === 'discover'
-                  ? 'bg-white text-gray-900'
-                  : 'bg-transparent text-gray-800 hover:text-gray-900'
+                  ? 'text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
+              style={{
+                backgroundColor: activeTab === 'discover' ? '#f8b44a' : 'transparent'
+              }}
             >
               Discover
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab('my-map')}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-1.5 text-xs font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-1 ${
                 activeTab === 'my-map'
-                  ? 'bg-white text-gray-900'
-                  : 'bg-transparent text-gray-800 hover:text-gray-900'
+                  ? 'text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
+              style={{
+                backgroundColor: activeTab === 'my-map' ? '#f8b44a' : 'transparent'
+              }}
             >
               My Map
             </button>
