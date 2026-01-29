@@ -395,7 +395,7 @@ export default function ScoutNew() {
       <div className="max-w-md mx-auto bg-page-profile min-h-screen md:max-w-full">
 
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200 bg-white px-4 pt-2">
+        <div className="border-b border-gray-200 bg-page-profile px-4 pt-2">
           <div className="inline-flex rounded-full p-1">
             <button
               type="button"
