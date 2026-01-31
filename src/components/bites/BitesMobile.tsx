@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, SlidersHorizontal, Star, Clock, Flame, Bookmark, Send } from 'lucide-react';
+import { Search, Tune, Star, Schedule, LocalFireDepartment, BookmarkBorder, Send, WbSunny, Restaurant, DarkMode, Cake, Eco, Park } from '@mui/icons-material';
 import { SpoonacularService } from '../../services/spoonacular';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
@@ -51,14 +51,14 @@ interface SpoonacularRecipe {
 }
 
 const CATEGORIES = [
-  { id: 'breakfast', label: 'Breakfast', icon: 'fa-solid fa-sun', type: 'breakfast' },
-  { id: 'lunch', label: 'Lunch', icon: 'fa-solid fa-utensils', type: 'main course' },
-  { id: 'dinner', label: 'Dinner', icon: 'fa-solid fa-moon', type: 'main course' },
-  { id: 'dessert', label: 'Dessert', icon: 'fa-solid fa-cake-candles', type: 'dessert' },
-  { id: 'vegan', label: 'Vegan', icon: 'fa-solid fa-leaf', diet: 'vegan' },
-  { id: 'keto', label: 'Keto', icon: 'fa-solid fa-seedling', diet: 'ketogenic' },
-  { id: 'glutenFree', label: 'Gluten Free', icon: '🌾', diet: 'gluten free' },
-  { id: 'quick', label: 'Quick', icon: '⚡', maxReadyTime: 30 },
+  { id: 'breakfast', label: 'Breakfast', icon: WbSunny, type: 'breakfast' },
+  { id: 'lunch', label: 'Lunch', icon: Restaurant, type: 'main course' },
+  { id: 'dinner', label: 'Dinner', icon: DarkMode, type: 'main course' },
+  { id: 'dessert', label: 'Dessert', icon: Cake, type: 'dessert' },
+  { id: 'vegan', label: 'Vegan', icon: Eco, diet: 'vegan' },
+  { id: 'keto', label: 'Keto', icon: Park, diet: 'ketogenic' },
+  { id: 'glutenFree', label: 'Gluten Free', icon: Park, diet: 'gluten free' },
+  { id: 'quick', label: 'Quick', icon: LocalFireDepartment, maxReadyTime: 30 },
 ];
 
 const DIETARY_FILTERS = [
@@ -378,7 +378,7 @@ export default function BitesMobile() {
             </button>
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-3 w-4 h-4 text-[#9CA3AF]" />
+                <Search sx={{ position: 'absolute', left: 12, top: 12, fontSize: 16, color: '#9CA3AF' }} />
                 <input
                   type="text"
                   value={searchQuery}
@@ -446,14 +446,14 @@ export default function BitesMobile() {
                     }}
                     className="flex-1 py-2.5 rounded-xl bg-surface-secondary text-foreground text-sm font-medium flex items-center justify-center gap-2"
                   >
-                    <Bookmark className="w-4 h-4" />
+                    <BookmarkBorder sx={{ fontSize: 16 }} />
                     Save
                   </button>
                   <button
                     onClick={(e) => e.stopPropagation()}
                     className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2"
                   >
-                    <Send className="w-4 h-4" />
+                    <Send sx={{ fontSize: 16 }} />
                     Send
                   </button>
                 </div>
@@ -471,7 +471,7 @@ export default function BitesMobile() {
       <MinimalHeader showLogo={true} logoPosition="left" />
       <header className="px-4 pt-6 pb-4 bg-surface-secondary sticky top-0 z-50">
         <div className="relative">
-          <Search className="absolute left-4 top-3 w-4 h-4 text-[#9CA3AF]" />
+          <Search sx={{ position: 'absolute', left: 16, top: 12, fontSize: 16, color: '#9CA3AF' }} />
           <input
             type="text"
             placeholder="Search recipes, ingredients..."
@@ -483,7 +483,7 @@ export default function BitesMobile() {
             onClick={() => setShowFilters(!showFilters)}
             className="absolute right-2 top-2 w-8 h-8 rounded-xl bg-primary flex items-center justify-center"
           >
-            <SlidersHorizontal className="w-4 h-4 text-neutral-600" />
+            <Tune sx={{ fontSize: 16, color: '#374151' }} />
           </button>
         </div>
       </header>
@@ -533,7 +533,7 @@ export default function BitesMobile() {
                 className="flex flex-col items-center gap-2"
               >
                 <div className="w-16 h-16 rounded-2xl bg-white border border-neutral-200 flex items-center justify-center shadow-sm">
-                  <i className={`${category.icon} text-xl`}></i>
+                  <category.icon sx={{ fontSize: 24, color: '#374151' }} />
                 </div>
                 <span className="text-xs font-medium text-foreground text-center">{category.label}</span>
               </button>

@@ -5,7 +5,7 @@ import { ErrorBoundary, PageErrorBoundary } from './components/common/ErrorBound
 import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { PageLoader } from './components/common/PageLoader'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
-import { LogOut, MessageCircle } from 'lucide-react'
+import { Logout, Message, SmartToy } from '@mui/icons-material'
 import { useDMChatStore } from './stores/chatStore'
 import { toastHelpers } from './utils/toastHelpers'
 import config from './config/config'
@@ -212,7 +212,7 @@ function AppLayout() {
               title="Messages"
               aria-label="Messages"
             >
-              <MessageCircle className="h-4 w-4 text-gray-700" />
+              <Message sx={{ fontSize: 16, color: '#374151' }} />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-orange-500 text-white text-xs font-bold rounded-full">
                   {unreadCount > 9 ? '9+' : unreadCount}
@@ -232,7 +232,7 @@ function AppLayout() {
             title="AI Assistant"
             aria-label="AI Assistant"
           >
-            <i className="fa-solid fa-robot"></i>
+            <SmartToy sx={{ fontSize: 18, color: isOpen ? 'white' : '#374151' }} />
           </button>
 
 
@@ -249,7 +249,7 @@ function AppLayout() {
                 onClick={handleSignOut}
                 className="px-3 py-2 text-white font-semibold rounded-full transition flex items-center space-x-2"
               >
-                <LogOut className="h-4 w-4" />
+                <Logout sx={{ fontSize: 16 }} />
               </button>
             </div>
           )}
@@ -405,7 +405,7 @@ function AppLayout() {
           }}
           aria-label="AI Assistant"
         >
-          <i className={`fa-solid fa-robot ${isOpen ? 'text-white' : 'text-gray-700'}`}></i>
+          <SmartToy sx={{ fontSize: 20, color: isOpen ? 'white' : '#374151', m: 'auto' }} />
         </button>
       )}
 

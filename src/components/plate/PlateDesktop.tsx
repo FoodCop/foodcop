@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Star, Crown, Trophy, Utensils, Play, MapPin, Camera, Clock, Navigation, MessageCircle, Trash, UserPlus } from 'lucide-react';
+import { Star, EmojiEvents, MilitaryTech, Restaurant, PlayArrow, Place, CameraAlt, Schedule, Navigation, Message, Delete, PersonAdd, DirectionsWalk } from '@mui/icons-material';
 import { useAuth } from '../auth/AuthProvider';
 import { type SavedItem } from '../../services/savedItemsService';
 import { supabase } from '../../services/supabase';
@@ -54,11 +54,11 @@ interface PlateDesktopProps {
 
 // Level configuration
 const LEVELS = [
-  { name: 'Beginner Chef', minPoints: 0, icon: 'fa-solid fa-medal' },
-  { name: 'Home Cook', minPoints: 500, icon: 'fa-solid fa-trophy' },
-  { name: 'Skilled Chef', minPoints: 1000, icon: 'fa-solid fa-award' },
-  { name: 'Gold Chef', minPoints: 2000, icon: 'fa-solid fa-crown' },
-  { name: 'Master Chef', minPoints: 5000, icon: 'fa-solid fa-star' },
+  { name: 'Beginner Chef', minPoints: 0, icon: EmojiEvents },
+  { name: 'Home Cook', minPoints: 500, icon: EmojiEvents },
+  { name: 'Skilled Chef', minPoints: 1000, icon: MilitaryTech },
+  { name: 'Gold Chef', minPoints: 2000, icon: EmojiEvents },
+  { name: 'Master Chef', minPoints: 5000, icon: Star },
 ];
 
 function getUserLevel(points: number) {
@@ -1172,7 +1172,7 @@ function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant:
         )}
         {restaurant.distance && (
           <div className="flex items-center gap-1 text-sm" style={{ color: '#808080' }}>
-            <i className="fa-solid fa-person-walking"></i>
+            <DirectionsWalk sx={{ fontSize: 16 }} />
             <span>{(restaurant.distance / 1000).toFixed(1)} km</span>
           </div>
         )}

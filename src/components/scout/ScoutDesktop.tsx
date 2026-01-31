@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, MapPin, Star, Clock, Phone, Globe, Navigation, Heart, Share2 } from 'lucide-react';
+import { Search, Place, Star, Schedule, Phone, Language, Navigation, Favorite, Share, DirectionsWalk } from '@mui/icons-material';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
 import { toast } from 'sonner';
@@ -492,11 +492,10 @@ export function ScoutDesktop() {
                 {/* Distance Slider */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <i
-                      className="fa-solid fa-person-walking text-gray-700"
-                      style={{ fontSize: '10pt' }}
+                    <DirectionsWalk
+                      sx={{ fontSize: 14, color: 'var(--gray-700)' }}
                       aria-label="Distance"
-                    ></i>
+                    />
                     <span className="text-sm font-semibold text-gray-900">
                       {formatDistance(distance)}
                     </span>

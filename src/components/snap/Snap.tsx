@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Camera, X, Star, MapPin, Clock, Heart } from 'lucide-react';
+import { CameraAlt, Close, Star, Place, Schedule, Favorite } from '@mui/icons-material';
 import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { useAuth } from '../auth/AuthProvider';
@@ -21,22 +21,24 @@ interface CapturedPhoto {
   metadata: PhotoMetadata;
 }
 
+import { LocalPizza, RamenDining, SetMeal, Whatshot, RiceBowl, BakeryDining, Fastfood, Restaurant } from '@mui/icons-material';
+
 const cuisineTypes = [
-  { icon: 'fa-solid fa-pizza-slice', label: 'Italian' },
-  { icon: 'fa-solid fa-bowl-food', label: 'Chinese' },
-  { icon: 'fa-solid fa-fish', label: 'Japanese' },
-  { icon: 'fa-solid fa-pepper-hot', label: 'Mexican' },
-  { icon: 'fa-solid fa-pepper-hot', label: 'Indian' },
-  { icon: 'fa-solid fa-bowl-rice', label: 'Thai' },
-  { icon: 'fa-solid fa-baguette', label: 'French' },
-  { icon: 'fa-solid fa-burger', label: 'American' },
-  { icon: 'fa-solid fa-salad', label: 'Mediterranean' },
-  { icon: 'fa-solid fa-bowl-rice', label: 'Korean' },
-  { icon: 'fa-solid fa-bowl-rice', label: 'Vietnamese' },
-  { icon: 'fa-solid fa-pepper-hot', label: 'Spanish' },
-  { icon: 'fa-solid fa-salad', label: 'Greek' },
-  { icon: 'fa-solid fa-pepper-hot', label: 'Middle Eastern' },
-  { icon: 'fa-solid fa-utensils', label: 'Other' }
+  { icon: LocalPizza, label: 'Italian' },
+  { icon: RamenDining, label: 'Chinese' },
+  { icon: SetMeal, label: 'Japanese' },
+  { icon: Whatshot, label: 'Mexican' },
+  { icon: Whatshot, label: 'Indian' },
+  { icon: RiceBowl, label: 'Thai' },
+  { icon: BakeryDining, label: 'French' },
+  { icon: Fastfood, label: 'American' },
+  { icon: Restaurant, label: 'Mediterranean' },
+  { icon: RiceBowl, label: 'Korean' },
+  { icon: RiceBowl, label: 'Vietnamese' },
+  { icon: Whatshot, label: 'Spanish' },
+  { icon: Restaurant, label: 'Greek' },
+  { icon: Whatshot, label: 'Middle Eastern' },
+  { icon: Restaurant, label: 'Other' }
 ];
 
 export function Snap() {
@@ -404,7 +406,7 @@ export function Snap() {
           {MOCK_CAMERA_MODE ? (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
               <div className="text-center space-y-6 p-8">
-                <Camera className="h-32 w-32 text-white/30 mx-auto" />
+                <CameraAlt sx={{ fontSize: 128, color: 'rgba(255, 255, 255, 0.3)' }} className="mx-auto" />
                 <div className="space-y-2">
                   <h2 className="text-white text-xl font-semibold">Mock Camera Mode</h2>
                   <p className="text-white/60">Click capture button below</p>
@@ -435,14 +437,14 @@ export function Snap() {
               onClick={handleCancel}
               className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
             >
-              <X className="w-6 h-6 text-white" />
+              <Close sx={{ fontSize: 24, color: 'white' }} />
             </button>
             
             <button
               onClick={handleCameraCapture}
               className="w-16 h-16 rounded-full bg-white hover:bg-gray-100 transition-colors flex items-center justify-center shadow-lg"
             >
-              <Camera className="w-8 h-8 text-[var(--color-primary)]" />
+              <CameraAlt sx={{ fontSize: 32, color: 'var(--color-primary)' }} />
             </button>
 
             <div className="w-12 h-12" /> {/* Spacer for centering */}
@@ -460,7 +462,7 @@ export function Snap() {
         <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex items-center justify-center">
           <div className="text-center px-8">
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center animate-bounce">
-              <Heart className="w-12 h-12 text-white fill-white" />
+              <Favorite sx={{ fontSize: 48, color: 'white' }} />
             </div>
             <h2 className="font-[Poppins] font-bold text-2xl text-gray-900 mb-2">Saved! 🎉</h2>
             <p className="text-gray-600">Your food photo is now in your Plate</p>
@@ -486,13 +488,13 @@ export function Snap() {
               />
               {Boolean(capturedPhoto.metadata.latitude && capturedPhoto.metadata.longitude) && (
                 <div className="absolute top-3 right-3 flex items-center gap-1 px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
-                  <MapPin className="w-3 h-3" />
+                  <Place sx={{ fontSize: 12 }} />
                   <span>Located</span>
                 </div>
               )}
               {capturedPhoto.metadata.timestamp && (
                 <div className="absolute bottom-3 left-3 flex items-center gap-1 px-3 py-1 bg-black/50 text-white text-xs font-semibold rounded-full">
-                  <Clock className="w-3 h-3" />
+                  <Schedule sx={{ fontSize: 12 }} />
                   <span>{new Date(capturedPhoto.metadata.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
                 </div>
               )}
@@ -526,13 +528,13 @@ export function Snap() {
                   <button
                     key={type.label}
                     onClick={() => setCuisine(type.label)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1 ${
                       cuisine === type.label
                         ? 'bg-[var(--color-primary)] text-gray-900 shadow-md'
                         : 'bg-[var(--color-neutral-bg)] text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    <i className={type.icon} style={{ fontSize: '10pt' }}></i>
+                    <type.icon sx={{ fontSize: 14 }} />
                     {type.label}
                   </button>
                 ))}

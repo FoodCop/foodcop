@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Navigation, Star, Clock, SlidersHorizontal } from 'lucide-react';
+import { Search, Place, Navigation, Star, Schedule, Tune } from '@mui/icons-material';
 import { toast } from 'sonner';
 import { backendService, formatGooglePlaceResult, getGooglePlacesPhotoUrl } from '../../services/backendService';
 import type { GooglePlace } from '../../types';
@@ -65,15 +65,17 @@ interface Restaurant {
   }[];
 }
 
+import { Restaurant, LocalPizza, SetMeal, Whatshot, RamenDining, Fastfood, DirectionsWalk } from '@mui/icons-material';
+
 // Cuisine categories
 const CUISINE_CATEGORIES = [
-  { id: 'all', label: 'All', icon: 'fa-solid fa-utensils', query: '' },
-  { id: 'italian', label: 'Italian', icon: 'fa-solid fa-pizza-slice', query: 'italian' },
-  { id: 'japanese', label: 'Japanese', icon: 'fa-solid fa-fish', query: 'japanese sushi' },
-  { id: 'mexican', label: 'Mexican', icon: 'fa-solid fa-pepper-hot', query: 'mexican' },
-  { id: 'chinese', label: 'Chinese', icon: 'fa-solid fa-bowl-food', query: 'chinese' },
-  { id: 'indian', label: 'Indian', icon: 'fa-solid fa-pepper-hot', query: 'indian' },
-  { id: 'american', label: 'American', icon: 'fa-solid fa-burger', query: 'american burger' },
+  { id: 'all', label: 'All', icon: Restaurant, query: '' },
+  { id: 'italian', label: 'Italian', icon: LocalPizza, query: 'italian' },
+  { id: 'japanese', label: 'Japanese', icon: SetMeal, query: 'japanese sushi' },
+  { id: 'mexican', label: 'Mexican', icon: Whatshot, query: 'mexican' },
+  { id: 'chinese', label: 'Chinese', icon: RamenDining, query: 'chinese' },
+  { id: 'indian', label: 'Indian', icon: Whatshot, query: 'indian' },
+  { id: 'american', label: 'American', icon: Fastfood, query: 'american burger' },
 ];
 
 export default function ScoutNew() {
@@ -433,7 +435,7 @@ export default function ScoutNew() {
         {/* Distance Control */}
         <section className="px-5 py-4" style={{ backgroundColor: 'var(--sidebar-bg)' }}>
           <div className="flex items-center justify-between mb-3">
-            <i className="fa-solid fa-person-walking text-gray-700" style={{ fontSize: '10pt' }} aria-label="Distance"></i>
+            <DirectionsWalk sx={{ fontSize: 14, color: 'var(--gray-700)' }} aria-label="Distance" />
             <span className="text-sm font-bold text-gray-900">{radiusKm} km</span>
           </div>
           <div className="relative">
@@ -506,13 +508,13 @@ export default function ScoutNew() {
               }}
               className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow z-10"
             >
-              <Navigation className="text-gray-700 text-lg" />
+              <Navigation sx={{ fontSize: 18, color: 'var(--gray-700)' }} />
             </button>
           </div>
 
           {/* Location info */}
           <div className="flex items-center justify-center mt-4 space-x-2">
-            <MapPin className="text-red-500 text-sm" />
+            <Place sx={{ fontSize: 14, color: 'var(--red-500)' }} />
             <span className="text-sm text-gray-600">{restaurants.length} restaurants nearby</span>
           </div>
         </section>
@@ -694,7 +696,7 @@ export default function ScoutNew() {
                     {/* Overlay with rating and distance */}
                     <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
                       <div className="bg-gray-900/80 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center space-x-1.5">
-                        <Navigation className="w-3.5 h-3.5 text-white" />
+                        <Navigation sx={{ fontSize: 14, color: 'white' }} />
                         <span className="text-sm text-white">{formatDistance(restaurant.distance)}</span>
                       </div>
                       {restaurant.rating && (
