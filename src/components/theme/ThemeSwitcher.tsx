@@ -13,7 +13,7 @@ export function ThemeSwitcher() {
   const presetThemes = themes.filter(theme => !theme.isCustom);
 
   const handleThemeChange = async (themeId: string) => {
-    console.log('🎨 Theme change requested:', themeId);
+    console.log('Theme change requested:', themeId);
     try {
       await setTheme(themeId);
       console.log('✅ Theme changed successfully to:', themeId);

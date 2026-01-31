@@ -29,7 +29,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error details to console
-    console.error('🚨 ErrorBoundary caught an error:', error);
+    console.error('ErrorBoundary caught an error:', error);
     console.error('📍 Error Info:', errorInfo);
 
     // Call optional error handler
@@ -133,7 +133,7 @@ export class PageErrorBoundary extends Component<Props & { location?: string }, 
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('🚨 PageErrorBoundary caught an error:', error);
+    console.error('PageErrorBoundary caught an error:', error);
     console.error('📍 Error Info:', errorInfo);
     console.error('📍 Component Stack:', errorInfo.componentStack);
     console.error('📍 Error Message:', error.message);
@@ -207,7 +207,7 @@ export class PageErrorBoundary extends Component<Props & { location?: string }, 
         console.log('🔄 PageErrorBoundary: No history to go back, just resetting error state');
       }
     } catch (e) {
-      console.warn('⚠️ PageErrorBoundary: Could not go back in history:', e);
+      console.warn('PageErrorBoundary: Could not go back in history:', e);
     }
   };
 

@@ -20,7 +20,7 @@ export function PresenceTracker() {
 
   useEffect(() => {
     if (!user?.id) {
-      console.log('⏸️ User not authenticated, skipping presence tracking');
+      console.log('User not authenticated, skipping presence tracking');
       return;
     }
 

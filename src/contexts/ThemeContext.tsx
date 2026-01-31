@@ -33,7 +33,7 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  console.log('🎨 ThemeProvider mounting');
+  console.log('ThemeProvider mounting');
   
   // Load preferences from localStorage
   const loadPreferences = useCallback((): ThemePreferences => {
@@ -75,7 +75,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   // Get current active theme
   const currentTheme = useMemo(() => {
     const theme = allThemes.find(t => t.id === preferences.activeThemeId);
-    console.log('🎨 Current theme computed:', theme?.name || 'DEFAULT', 'ID:', preferences.activeThemeId);
+    console.log('Current theme computed:', theme?.name || 'DEFAULT', 'ID:', preferences.activeThemeId);
     return theme || DEFAULT_THEME;
   }, [preferences.activeThemeId, allThemes]);
 
@@ -99,13 +99,13 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   // Apply theme to DOM on mount and when theme changes
   useEffect(() => {
-    console.log('🎨 Applying theme to DOM:', currentTheme.name, currentTheme.id);
+    console.log('Applying theme to DOM:', currentTheme.name, currentTheme.id);
     applyThemeToDOM(currentTheme);
   }, [currentTheme]);
 
   // Set active theme
   const setTheme = useCallback(async (themeId: string) => {
-    console.log('🎨 setTheme called with:', themeId);
+    console.log('setTheme called with:', themeId);
     setIsLoading(true);
     try {
       const theme = allThemes.find(t => t.id === themeId);

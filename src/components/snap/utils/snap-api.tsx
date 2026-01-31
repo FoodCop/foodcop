@@ -124,7 +124,7 @@ export async function savePhoto(params: SavePhotoParams) {
  */
 export async function getUserStats(userId?: string) {
   if (MOCK_MODE) {
-    console.log('📊 MOCK: Fetching user stats...');
+    console.log('MOCK: Fetching user stats...');
     await new Promise(resolve => setTimeout(resolve, 500));
     
     return {

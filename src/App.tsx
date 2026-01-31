@@ -46,7 +46,7 @@ const lazyWithRetry = (componentImport: () => Promise<any>, retries = 3) => {
         return module;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        console.warn(`⚠️ Lazy load attempt ${i + 1}/${retries} failed:`, lastError.message);
+        console.warn(`Lazy load attempt ${i + 1}/${retries} failed:`, lastError.message);
 
         if (i === retries - 1) {
           // Last attempt failed, log detailed error and throw
@@ -103,7 +103,7 @@ function LazyRouteWrapper({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary
       onError={(error, errorInfo) => {
-        console.error('🚨 LazyRouteWrapper: Error loading route:', {
+        console.error('LazyRouteWrapper: Error loading route:', {
           path: location.pathname,
           error: error.message,
           stack: error.stack,

@@ -85,7 +85,7 @@ export function ScoutDesktop() {
       console.log('🌍 ScoutDesktop: Getting user location...');
 
       if (!navigator.geolocation) {
-        console.warn('⚠️ Geolocation not supported');
+        console.warn('Geolocation not supported');
         fetchRestaurants(userLocation[0], userLocation[1], distance);
         return;
       }
@@ -120,7 +120,7 @@ export function ScoutDesktop() {
 
   // Fetch restaurants from Google Places API
   const fetchRestaurants = async (lat: number, lng: number, radiusKm: number, query?: string) => {
-    console.log('🔍 ScoutDesktop: Fetching restaurants', { lat, lng, radiusKm, query });
+    console.log('ScoutDesktop: Fetching restaurants', { lat, lng, radiusKm, query });
     setError(null);
     setLoading(true);
 

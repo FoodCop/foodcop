@@ -165,7 +165,7 @@ export default function ScoutNew() {
       console.log('🌍 Attempting to get user location...');
 
       if (!navigator.geolocation) {
-        console.warn('⚠️ Geolocation not supported by browser');
+        console.warn('Geolocation not supported by browser');
         const defaultLocation: [number, number] = [37.7849, -122.4094];
         setUserLocation(defaultLocation);
         fetchRestaurants(37.7849, -122.4094, radiusKm);

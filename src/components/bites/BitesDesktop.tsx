@@ -103,7 +103,7 @@ const BitesDesktop: React.FC = () => {
         // Mix recipes with ads
         const mixedRec = mixRecipesWithAds(allRecipes.slice(0, 6), false);
         const mixedAll = mixRecipesWithAds(allRecipes, false);
-        console.log(`📊 Setting mixed content - Recommended: ${mixedRec.length}, All: ${mixedAll.length}`);
+        console.log(`Setting mixed content - Recommended: ${mixedRec.length}, All: ${mixedAll.length}`);
         setMixedRecommended(mixedRec);
         setMixedContent(mixedAll);
       }
@@ -378,7 +378,7 @@ const BitesDesktop: React.FC = () => {
 
         {/* All Recipes Grid */}
         {!loading && !error && mixedContent.length > 0 && (() => {
-          console.log('🔍 Rendering mixed content, total items:', mixedContent.length, 'First 5:', mixedContent.slice(0, 5));
+          console.log('Rendering mixed content, total items:', mixedContent.length, 'First 5:', mixedContent.slice(0, 5));
           return (
           <section>
             <SectionHeading className="mb-6">
@@ -397,7 +397,7 @@ const BitesDesktop: React.FC = () => {
               {mixedContent.map((item) => {
                 const itemIsAd = isAd(item);
                 if (itemIsAd) {
-                  console.log('🎯 Rendering ad:', item.id);
+                  console.log('Rendering ad:', item.id);
                 }
                 return itemIsAd ? (
                   <AdCard key={item.id} ad={item} />

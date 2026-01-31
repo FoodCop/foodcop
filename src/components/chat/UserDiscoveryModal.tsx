@@ -79,7 +79,7 @@ export function UserDiscoveryModal({
         setError(null);
 
         try {
-            console.log('🔍 Fetching users, excluding:', currentUser.id);
+            console.log('Fetching users, excluding:', currentUser.id);
             const { data, error: fetchError } = await supabase
                 .from('users')
                 .select('id, email, display_name, username, avatar_url, location_city, location_country, bio')

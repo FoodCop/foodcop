@@ -121,7 +121,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
         const profileResult = await ProfileService.getProfile();
         if (profileResult.success && profileResult.data) {
           const hintShown = profileResult.data.preferences_hint_shown === true;
-          console.log('🔍 PlateMobile: preferences_hint_shown =', hintShown);
+          console.log('PlateMobile: preferences_hint_shown =', hintShown);
           
           // Only show hint if explicitly false or undefined
           if (hintShown) {

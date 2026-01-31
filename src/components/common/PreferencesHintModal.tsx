@@ -83,7 +83,7 @@ export function PreferencesHintModal({
 
   // Skip - just close modal for now (will show again next time)
   const handleSkip = () => {
-    console.log('⏭️ PreferencesHintModal: User skipped, NOT setting hint_shown flag (will show again)');
+    console.log('PreferencesHintModal: User skipped, NOT setting hint_shown flag (will show again)');
     if (onClose) onClose();
   };
 

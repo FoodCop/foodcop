@@ -94,7 +94,7 @@ export const useFeedInfiniteScroll = (
       });
 
       if (!newCards || newCards.length === 0) {
-        console.warn('⚠️ No new cards received from FeedService');
+        console.warn('No new cards received from FeedService');
         return [];
       }
 
@@ -165,7 +165,7 @@ export const useFeedInfiniteScroll = (
         };
       });
 
-      console.log(`📊 Feed state updated: ${stateRef.current.cards.length} cards in memory`);
+      console.log(`Feed state updated: ${stateRef.current.cards.length} cards in memory`);
 
     } catch (error) {
       console.error('💥 Error in loadMore:', error);
