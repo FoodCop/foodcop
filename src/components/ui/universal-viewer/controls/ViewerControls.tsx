@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button } from '../../button';
-import { 
-  X, 
-  ChevronLeft, 
-  ChevronRight, 
-  Share2,
-  Trash2 
-} from 'lucide-react';
+import {
+  Close,
+  ChevronLeft,
+  ChevronRight,
+  Share,
+  Delete
+} from '@mui/icons-material';
 import type { ViewerControlsProps } from '../types';
 
 export const ViewerControls: React.FC<ViewerControlsProps> = ({
@@ -74,18 +74,18 @@ export const ViewerControls: React.FC<ViewerControlsProps> = ({
           className="bg-red-500/70 text-white hover:bg-red-600/90"
           title="Remove from Plate"
         >
-          <Trash2 className="w-4 h-4" />
+          <Delete className="w-4 h-4" />
         </Button>
       )}
 
       {/* Close Button */}
-      <Button
+        <Button
         variant="secondary"
         size="icon"
         onClick={onClose}
         className="bg-black/50 text-white hover:bg-black/70"
       >
-        <X className="w-4 h-4" />
+          <Close className="w-4 h-4" />
       </Button>
     </div>
   );

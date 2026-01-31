@@ -435,7 +435,7 @@ export default function Bites() {
                 onClick={() => setShowFilterDrawer(true)}
                 className="absolute right-2 top-2 w-8 h-8 rounded-xl bg-[var(--yellow-secondary)] flex items-center justify-center hover:bg-[var(--yellow-tertiary)] transition-colors md:hidden"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-gray-900" />
+                <Tune className="w-3.5 h-3.5 text-gray-900" />
               </button>
             </div>
           </section>

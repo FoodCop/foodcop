@@ -2,17 +2,17 @@ import React, { useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../card';
 import { Badge } from '../../badge';
 import { Button } from '../../button';
-import { 
-  Play, 
-  Pause, 
-  Volume2, 
-  VolumeX, 
-  Maximize2,
-  Calendar,
-  Clock,
-  Eye,
-  ExternalLink
-} from 'lucide-react';
+import {
+  PlayArrow,
+  Pause,
+  VolumeUp,
+  VolumeOff,
+  OpenInFull,
+  CalendarMonth,
+  Schedule,
+  Visibility,
+  OpenInNew
+} from '@mui/icons-material';
 import type { VideoViewerProps } from '../types';
 
 export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
@@ -99,7 +99,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
                 onClick={togglePlay}
                 className="text-white hover:bg-white/20"
               >
-                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                {isPlaying ? <Pause className="w-5 h-5" /> : <PlayArrow className="w-5 h-5" />}
               </Button>
 
               <Button
@@ -108,7 +108,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
                 onClick={toggleMute}
                 className="text-white hover:bg-white/20"
               >
-                {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                {isMuted ? <VolumeOff className="w-5 h-5" /> : <VolumeUp className="w-5 h-5" />}
               </Button>
 
               <div className="flex-1 text-white text-sm">
@@ -121,7 +121,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
                 onClick={toggleFullscreen}
                 className="text-white hover:bg-white/20"
               >
-                <Maximize2 className="w-5 h-5" />
+                <OpenInFull className="w-5 h-5" />
               </Button>
             </div>
 
@@ -141,7 +141,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
               onClick={togglePlay}
             >
               <div className="bg-white/90 rounded-full p-4">
-                <Play className="w-8 h-8 text-gray-800 ml-1" />
+                <PlayArrow className="w-8 h-8 text-gray-800 ml-1" />
               </div>
             </div>
           )}
@@ -155,7 +155,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
               onClick={openInYouTube}
               className="w-full"
             >
-              <ExternalLink className="w-4 h-4 mr-2" />
+              <OpenInNew className="w-4 h-4 mr-2" />
               Watch on YouTube
             </Button>
           </div>
@@ -176,7 +176,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
                   onClick={openInYouTube}
                   className="text-red-600 hover:text-red-700"
                 >
-                  <ExternalLink className="w-4 h-4" />
+                  <OpenInNew className="w-4 h-4" />
                 </Button>
               )}
             </CardTitle>
@@ -197,7 +197,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-blue-500" />
+                  <Schedule className="w-5 h-5 text-blue-500" />
                   Duration
                 </CardTitle>
               </CardHeader>
@@ -214,7 +214,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Eye className="w-5 h-5 text-green-500" />
+                  <Visibility className="w-5 h-5 text-green-500" />
                   Views
                 </CardTitle>
               </CardHeader>
@@ -231,7 +231,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({ data }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-purple-500" />
+                  <CalendarMonth className="w-5 h-5 text-purple-500" />
                   Uploaded
                 </CardTitle>
               </CardHeader>

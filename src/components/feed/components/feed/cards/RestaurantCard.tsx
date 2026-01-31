@@ -1,5 +1,5 @@
 import type { RestaurantCard } from '../../../data/feed-content';
-import { MapPin, Star } from 'lucide-react';
+import { Place, Star } from '@mui/icons-material';
 import { ClickableUserAvatar } from '../../../../chat/ClickableUserAvatar';
 import { useDMChatStore } from '../../../../../stores/chatStore';
 import { useNavigate } from 'react-router-dom';
@@ -62,7 +62,7 @@ export function RestaurantCardContent({ card }: RestaurantCardContentProps) {
 
         <div className="flex items-center gap-2 mb-2">
           <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <Star className="w-4 h-4 text-yellow-400" style={{ color: '#facc15' }} />
             <span className="text-white">{card.rating}</span>
           </div>
           <span className="text-white/60">({card.reviewCount})</span>
@@ -71,7 +71,7 @@ export function RestaurantCardContent({ card }: RestaurantCardContentProps) {
         </div>
 
         <div className="flex items-center gap-1 text-white/90 mb-2">
-          <MapPin className="w-4 h-4" />
+          <Place className="w-4 h-4" />
           <span>{card.distance}</span>
         </div>
 

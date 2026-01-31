@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Alert, AlertDescription } from '../ui/alert';
-import { CheckCircle, XCircle, Clock, Eye, EyeOff, RefreshCw, AlertTriangle } from 'lucide-react';
+import { CheckCircle, Cancel, Schedule, Visibility, VisibilityOff, Refresh, WarningAmber } from '@mui/icons-material';
 
 interface APITestResult {
   service: string;
@@ -383,9 +383,9 @@ export default function DebugApp() {
   // Get status icon
   const getStatusIcon = (status: APITestResult['status']) => {
     switch (status) {
-      case 'loading': return <Clock className="w-4 h-4 text-yellow-500 animate-spin" />;
+      case 'loading': return <Schedule className="w-4 h-4 text-yellow-500 animate-spin" />;
       case 'success': return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'error': return <XCircle className="w-4 h-4 text-red-500" />;
+      case 'error': return <Cancel className="w-4 h-4 text-red-500" />;
       default: return <div className="w-4 h-4 rounded-full bg-gray-300" />;
     }
   };
@@ -394,7 +394,7 @@ export default function DebugApp() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Alert className="max-w-md">
-          <AlertTriangle className="h-4 w-4" />
+          <WarningAmber className="h-4 w-4" />
           <AlertDescription>
             API Debug page is only available on localhost for security reasons.
             Current hostname: {window.location.hostname}
@@ -428,7 +428,7 @@ export default function DebugApp() {
               size="sm"
               onClick={() => setShowSecrets(!showSecrets)}
             >
-              {showSecrets ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+              {showSecrets ? <VisibilityOff className="w-4 h-4 mr-2" /> : <Visibility className="w-4 h-4 mr-2" />}
               {showSecrets ? 'Hide' : 'Show'} Secrets
             </Button>
           </CardHeader>
@@ -458,7 +458,7 @@ export default function DebugApp() {
               <CardDescription>Test actual API connectivity and responses</CardDescription>
             </div>
             <Button onClick={testAllAPIs} disabled={!isLocalhost}>
-              <RefreshCw className="w-4 h-4 mr-2" />
+              <Refresh className="w-4 h-4 mr-2" />
               Test All APIs
             </Button>
           </CardHeader>

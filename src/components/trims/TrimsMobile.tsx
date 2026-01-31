@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Play, Search } from 'lucide-react';
+import { PlayArrow, Search } from '@mui/icons-material';
 import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { YouTubeService } from '../../services/youtube';
@@ -181,7 +181,7 @@ export default function TrimsMobile() {
         {!loading && !error && filteredVideos.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 px-6">
             <div className="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-              <Play className="w-6 h-6 text-gray-300" />
+              <PlayArrow className="w-6 h-6 text-gray-300" />
             </div>
             <h3 className="text-gray-900 font-bold text-base mb-1">No videos found</h3>
             <p className="text-gray-500 text-xs text-center">Try a different search or filter</p>
@@ -254,7 +254,7 @@ function VideoCard({
         {/* Play Button - Center */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-14 h-14 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-            <Play className="w-6 h-6 text-[var(--yellow-primary)] fill-[var(--yellow-primary)] ml-1" />
+            <PlayArrow className="w-6 h-6 text-[var(--yellow-primary)] ml-1" />
           </div>
         </div>
       </div>

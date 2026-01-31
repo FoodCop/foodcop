@@ -142,7 +142,7 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+        <Loop className="h-6 w-6 animate-spin text-gray-400" />
       </div>
     );
   }
@@ -152,7 +152,7 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
       <div className="flex flex-col items-center justify-center h-full text-gray-400">
         <p>User not found</p>
         <Button variant="ghost" onClick={onBack} className="mt-4">
-          <ArrowLeft className="h-4 w-4 mr-2" />
+          <ArrowBack className="h-4 w-4 mr-2" />
           Back
         </Button>
       </div>
@@ -164,7 +164,7 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b">
         <Button variant="ghost" size="icon" onClick={onBack}>
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowBack className="h-5 w-5" />
         </Button>
         <h2 className="font-semibold text-lg">Profile</h2>
       </div>
@@ -197,7 +197,7 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
         {/* Location */}
         {(profile.location_city || profile.location_country) && (
           <div className="flex items-center gap-2 text-gray-600 mb-4">
-            <MapPin className="h-4 w-4" />
+            <Place className="h-4 w-4" />
             <span className="text-sm">
               {[profile.location_city, profile.location_state, profile.location_country]
                 .filter(Boolean)
@@ -209,7 +209,7 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
         {/* Member Since */}
         {profile.created_at && (
           <div className="flex items-center gap-2 text-gray-600 mb-6">
-            <Calendar className="h-4 w-4" />
+            <CalendarMonth className="h-4 w-4" />
             <span className="text-sm">
               Member since {new Date(profile.created_at).toLocaleDateString('en-US', {
                 month: 'long',
@@ -228,7 +228,7 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
                   onClick={handleStartConversation}
                   className="w-full bg-orange-500 hover:bg-orange-600"
                 >
-                  <MessageCircle className="h-4 w-4 mr-2" />
+                  <Message className="h-4 w-4 mr-2" />
                   Send Message
                 </Button>
               )}
@@ -241,9 +241,9 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
                 className="w-full bg-orange-500 hover:bg-orange-600"
               >
                 {actionLoading ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Loop className="h-4 w-4 mr-2 animate-spin" />
                 ) : (
-                  <UserPlus className="h-4 w-4 mr-2" />
+                  <PersonAdd className="h-4 w-4 mr-2" />
                 )}
                 Accept Friend Request
               </Button>
@@ -264,7 +264,7 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
               className="w-full"
             >
               {actionLoading ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loop className="h-4 w-4 mr-2 animate-spin" />
               ) : (
                 'Cancel Friend Request'
               )}
@@ -276,9 +276,9 @@ export function UserProfileView({ userId, onBack, onStartConversation }: UserPro
               className="w-full bg-orange-500 hover:bg-orange-600"
             >
               {actionLoading ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loop className="h-4 w-4 mr-2 animate-spin" />
               ) : (
-                <UserPlus className="h-4 w-4 mr-2" />
+                <PersonAdd className="h-4 w-4 mr-2" />
               )}
               Send Friend Request
             </Button>

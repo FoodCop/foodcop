@@ -6,6 +6,7 @@ import {
   Star, 
   Share, 
   BookmarkBorder,
+  Bookmark,
   ExpandMore
 } from '@mui/icons-material';
 import { SpoonacularService } from '../../services/spoonacular';
@@ -299,7 +300,7 @@ const BitesDesktop: React.FC = () => {
             </div>
             <button className="px-5 py-2 rounded-full border-2 border-border text-sm font-medium text-foreground hover:border-primary transition-all flex items-center gap-2">
               More Filters
-              <ChevronDown className="w-4 h-4" />
+              <ExpandMore className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -488,7 +489,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
         {Boolean(recipe.readyInMinutes) && (
           <div className="absolute top-3 right-3">
             <div className="flex items-center gap-1 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full">
-              <Clock className="w-3 h-3 text-foreground" />
+              <Schedule className="w-3 h-3 text-foreground" />
               <span className="text-xs font-medium text-foreground">{recipe.readyInMinutes} min</span>
             </div>
           </div>
@@ -530,7 +531,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
             onClick={onShare}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[var(--button-bg-active)] hover:bg-[var(--button-bg-hover)] text-[var(--button-text)] rounded-full transition-colors"
           >
-            <Share2 className="w-4 h-4" />
+            <Share className="w-4 h-4" />
             <span className="text-sm font-medium">Share</span>
           </button>
           <button

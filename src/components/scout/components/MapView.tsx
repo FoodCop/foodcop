@@ -1,4 +1,4 @@
-import { ArrowLeft, MoreVertical, Clock, Car, PersonStanding, Bike, Phone, Play, Plus, Minus, Crosshair, Route as RouteIcon, Circle, MapPin } from "lucide-react";
+import { ArrowBack, MoreVert, Schedule, DirectionsCar, DirectionsWalk, DirectionsBike, Phone, PlayArrow, Add, Remove, MyLocation, Directions as DirectionsIcon, Circle, Place } from '@mui/icons-material';
 import { useState, useEffect, useCallback } from "react";
 import { GoogleMapView } from '../../maps/GoogleMapView';
 import { getDirections, type Route, type TravelMode } from '../../../services/googleDirections';
@@ -220,11 +220,11 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
             onClick={onClose}
             className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors"
           >
-            <ArrowLeft className="text-gray-900" />
+            <ArrowBack className="text-gray-900" />
           </button>
           
           <div className="bg-white rounded-xl px-4 py-2.5 shadow-lg flex items-center gap-2">
-            <Clock className="text-orange-500 w-4 h-4" />
+            <Schedule className="text-orange-500 w-4 h-4" />
             <div>
               <p className="text-xs text-gray-500">ETA</p>
               <p className="text-sm font-bold text-gray-900">{travelTimes[activeMode]}</p>
@@ -232,7 +232,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
           </div>
           
           <button className="w-11 h-11 bg-[var(--button-bg-active)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--button-bg-hover)] transition-colors">
-            <MoreVertical className="text-gray-900" />
+            <MoreVert className="text-gray-900" />
           </button>
         </div>
       </div>
@@ -268,13 +268,13 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
       {/* Map Controls */}
       <div className="absolute right-5 top-1/2 -translate-y-1/2 z-10 flex flex-col gap-2">
         <button className="w-11 h-11 bg-[var(--button-bg-active)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--button-bg-hover)] transition-colors">
-          <Plus className="text-gray-900" />
+          <Add className="text-gray-900" />
         </button>
         <button className="w-11 h-11 bg-[var(--button-bg-active)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--button-bg-hover)] transition-colors">
-          <Minus className="text-gray-900" />
+          <Remove className="text-gray-900" />
         </button>
         <button className="w-11 h-11 bg-[var(--button-bg-active)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--button-bg-hover)] transition-colors mt-2">
-          <Crosshair className="text-orange-500" />
+          <MyLocation className="text-orange-500" />
         </button>
       </div>
 
@@ -311,7 +311,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
             <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-900 mb-1">{restaurant.name}</h2>
               <p className="text-sm text-gray-500 flex items-center gap-1.5">
-                <RouteIcon className="text-orange-500 w-3 h-3" />
+                <DirectionsIcon className="text-orange-500 w-3 h-3" />
                 Via Main Street & 5th Avenue
               </p>
             </div>
@@ -326,9 +326,9 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
-                  {activeMode === 'driving' && <Car className="text-white w-5 h-5" />}
-                  {activeMode === 'walking' && <PersonStanding className="text-white w-5 h-5" />}
-                  {activeMode === 'cycling' && <Bike className="text-white w-5 h-5" />}
+                  {activeMode === 'driving' && <DirectionsCar className="text-white w-5 h-5" />}
+                  {activeMode === 'walking' && <DirectionsWalk className="text-white w-5 h-5" />}
+                  {activeMode === 'cycling' && <DirectionsBike className="text-white w-5 h-5" />}
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-gray-900 capitalize">{activeMode}</p>
@@ -351,7 +351,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
               }`}
             >
               <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-green-100">
-                <PersonStanding className="text-green-600 w-5 h-5" />
+                <DirectionsWalk className="text-green-600 w-5 h-5" />
               </div>
               <div className="text-left">
                 <p className="text-sm font-semibold text-gray-900">25 min</p>
@@ -366,7 +366,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
               }`}
             >
               <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-orange-100">
-                <Bike className="text-orange-600 w-5 h-5" />
+                <DirectionsBike className="text-orange-600 w-5 h-5" />
               </div>
               <div className="text-left">
                 <p className="text-sm font-semibold text-gray-900">15 min</p>
@@ -401,7 +401,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
             
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
-                <MapPin className="text-red-500 w-3 h-3" />
+                <Place className="text-red-500 w-3 h-3" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-gray-900">{restaurant.name}</p>
@@ -416,7 +416,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
               onClick={handleStartNavigation}
               className="flex-1 bg-linear-to-r from-blue-500 to-blue-600 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 hover:shadow-xl transition-shadow"
             >
-              <Play className="w-5 h-5" />
+              <PlayArrow className="w-5 h-5" />
               Start Navigation
             </button>
             
@@ -435,7 +435,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
             onClick={handleSendToGoogleMaps}
             className="w-full bg-[var(--button-bg-default)] text-[var(--button-text)] font-semibold py-4 rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors flex items-center justify-center gap-2 mt-3"
           >
-            <MapPin className="w-5 h-5" />
+            <Place className="w-5 h-5" />
             Send to Google Maps
           </button>
         </div>

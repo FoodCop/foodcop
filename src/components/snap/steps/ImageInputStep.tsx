@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Camera, Upload } from 'lucide-react';
+import { CameraAlt, Upload } from '@mui/icons-material';
 import { toast } from 'sonner';
 import { Button } from '../../ui/button';
 import { MinimalHeader } from '../../common/MinimalHeader';
@@ -257,7 +257,7 @@ export function ImageInputStep({ onImageCaptured, onCancel }: ImageInputStepProp
           disabled={cameraLoading}
           className="p-6 border-2 border-gray-200 rounded-2xl hover:border-[#FFC909] hover:bg-orange-50 transition space-y-3 text-center disabled:opacity-50"
         >
-          <Camera className="w-12 h-12 mx-auto text-[#FFC909]" />
+          <CameraAlt className="w-12 h-12 mx-auto text-[#FFC909]" />
           <div>
             <h3 className="font-semibold text-gray-900">📸 Camera</h3>
             <p className="text-sm text-gray-600">Capture a new photo</p>

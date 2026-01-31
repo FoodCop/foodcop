@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Play, Search } from 'lucide-react';
+import { PlayArrow, Search } from '@mui/icons-material';
 import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { YouTubeService } from '../../services/youtube';
@@ -256,7 +256,7 @@ function VideoCard({
         {/* Play Button Overlay */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform transition-transform group-hover:scale-110">
-            <Play className="w-8 h-8 text-[#FFC909] fill-[#FFC909] ml-1" />
+            <PlayArrow className="w-8 h-8 text-[#FFC909] ml-1" />
           </div>
         </div>
       </div>

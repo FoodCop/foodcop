@@ -3,11 +3,28 @@ import { Card, CardContent, CardHeader, CardTitle } from '../card';
 import { Badge } from '../badge';
 import { Button } from '../button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../tabs';
-import { 
-  Clock, Users, Heart, ExternalLink, MapPin, Star, DollarSign, 
-  Phone, Globe, Navigation, Calendar, Download, ZoomIn, ZoomOut, 
-  RotateCw, Play, Pause, Volume2, VolumeX, Maximize2
-} from 'lucide-react';
+import {
+  Schedule,
+  Group,
+  Favorite,
+  OpenInNew,
+  Place,
+  Star,
+  AttachMoney,
+  Phone,
+  Language,
+  Navigation,
+  CalendarMonth,
+  Download,
+  ZoomIn,
+  ZoomOut,
+  RotateRight,
+  PlayArrow,
+  Pause,
+  VolumeUp,
+  VolumeOff,
+  OpenInFull
+} from '@mui/icons-material';
 import { GoogleMapView } from '../../maps/GoogleMapView';
 import type { UnifiedContentData } from './types';
 
@@ -94,7 +111,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
               onClick={() => setRotation(prev => prev + 90)}
               className="bg-black/50 text-white hover:bg-black/70"
             >
-              <RotateCw className="w-4 h-4" />
+              <RotateRight className="w-4 h-4" />
             </Button>
             <Button
               variant="secondary"
@@ -155,26 +172,26 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {data.metadata.readyInMinutes && (
             <div className="flex items-center gap-2 text-sm">
-              <Clock className="w-4 h-4 text-orange-500" />
+              <Schedule className="w-4 h-4 text-orange-500" />
               <span>{data.metadata.readyInMinutes} min</span>
             </div>
           )}
           {data.metadata.servings && (
             <div className="flex items-center gap-2 text-sm">
-              <Users className="w-4 h-4 text-blue-500" />
+              <Group className="w-4 h-4 text-blue-500" />
               <span>{data.metadata.servings} servings</span>
             </div>
           )}
           {data.metadata.healthScore && (
             <div className="flex items-center gap-2 text-sm">
-              <Heart className="w-4 h-4 text-green-500" />
+              <Favorite className="w-4 h-4 text-green-500" />
               <span>{data.metadata.healthScore}/100</span>
             </div>
           )}
           {data.metadata.sourceUrl && (
             <Button variant="outline" size="sm" asChild>
               <a href={data.metadata.sourceUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-4 h-4 mr-1" />
+                <OpenInNew className="w-4 h-4 mr-1" />
                 Source
               </a>
             </Button>
@@ -194,7 +211,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
           )}
           {data.metadata.priceLevel && (
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-green-500" />
+              <AttachMoney className="w-4 h-4 text-green-500" />
               <span>{'💰'.repeat(data.metadata.priceLevel)}</span>
             </div>
           )}
@@ -210,7 +227,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
               target="_blank" 
               rel="noopener noreferrer"
             >
-              <ExternalLink className="w-4 h-4 mr-1" />
+              <OpenInNew className="w-4 h-4 mr-1" />
               Search
             </a>
           </Button>
@@ -350,7 +367,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
+                  <Place className="w-5 h-5" />
                   Address
                 </CardTitle>
               </CardHeader>
@@ -380,7 +397,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
                   )}
                   {data.metadata.website && (
                     <div className="flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-green-500" />
+                      <Language className="w-4 h-4 text-green-500" />
                       <a 
                         href={data.metadata.website} 
                         target="_blank" 
@@ -399,7 +416,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Clock className="w-5 h-5" />
+                    <Schedule className="w-5 h-5" />
                     Hours
                     {data.metadata.openingHours.open_now !== undefined && (
                       <Badge variant={data.metadata.openingHours.open_now ? "default" : "secondary"}>
@@ -459,7 +476,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
                 ) : (
                   <div className="h-64 bg-gray-200 rounded-lg flex items-center justify-center">
                     <div className="text-center">
-                      <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <Place className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                       <p className="text-gray-500 mb-1">Location not available</p>
                     </div>
                   </div>
@@ -525,7 +542,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-orange-500" />
+                    <Place className="w-5 h-5 text-orange-500" />
                     Location
                   </CardTitle>
                 </CardHeader>
@@ -539,7 +556,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-blue-500" />
+                    <CalendarMonth className="w-5 h-5 text-blue-500" />
                     Visit Date
                   </CardTitle>
                 </CardHeader>
@@ -621,7 +638,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {data.metadata.duration && (
               <div className="flex items-center gap-2 text-sm">
-                <Clock className="w-4 h-4 text-blue-500" />
+                <Schedule className="w-4 h-4 text-blue-500" />
                 <span>{formatDuration(data.metadata.duration)}</span>
               </div>
             )}
@@ -637,7 +654,7 @@ export const UnifiedContentRenderer: React.FC<UnifiedContentRendererProps> = ({ 
             )}
             {data.metadata.uploadDate && (
               <div className="flex items-center gap-2 text-sm">
-                <Calendar className="w-4 h-4 text-gray-500" />
+                <CalendarMonth className="w-4 h-4 text-gray-500" />
                 <span>{new Date(data.metadata.uploadDate).toLocaleDateString()}</span>
               </div>
             )}

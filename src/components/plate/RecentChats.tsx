@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { MessageCircle, Loader2 } from 'lucide-react';
+import { Message, Loop } from '@mui/icons-material';
 import { useDMChatStore } from '../../stores/chatStore';
 import { useAuthStore } from '../../stores/authStore';
 import { DMConversation } from '../../services/dmChatService';
@@ -33,7 +33,7 @@ export function RecentChats({ limit = 5, onSelectConversation }: RecentChatsProp
   if (isLoadingConversations) {
     return (
       <div className="flex items-center justify-center h-32">
-        <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+          <Loop className="h-5 w-5 animate-spin text-gray-400" />
       </div>
     );
   }
@@ -43,7 +43,7 @@ export function RecentChats({ limit = 5, onSelectConversation }: RecentChatsProp
   if (recentConversations.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-32 text-gray-400 px-4">
-        <MessageCircle className="h-8 w-8 mb-2 stroke-1" />
+        <Message className="h-8 w-8 mb-2 stroke-1" />
         <p className="text-sm text-center">No recent chats</p>
         <p className="text-xs text-center text-gray-400">
           Start a conversation by sharing something!

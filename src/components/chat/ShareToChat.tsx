@@ -146,7 +146,7 @@ export function ShareToChat({
         <div className="max-h-48 overflow-y-auto -mx-2">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+              <Loop className="h-6 w-6 animate-spin text-gray-400" />
             </div>
           ) : filteredFriends.length === 0 ? (
             <div className="text-center py-8 text-gray-400">
@@ -216,7 +216,7 @@ export function ShareToChat({
               </>
             ) : isSending ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loop className="h-4 w-4 mr-2 animate-spin" />
                 Sending...
               </>
             ) : (

@@ -1,5 +1,5 @@
 import type { VideoCard } from '../../../data/feed-content';
-import { Play, Eye } from 'lucide-react';
+import { PlayArrow, Visibility } from '@mui/icons-material';
 import { ClickableUserAvatar } from '../../../../chat/ClickableUserAvatar';
 import { useDMChatStore } from '../../../../../stores/chatStore';
 import { useNavigate } from 'react-router-dom';
@@ -59,7 +59,7 @@ export function VideoCardContent({ card }: VideoCardContentProps) {
       {/* Play Button Overlay */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="w-20 h-20 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-xl">
-          <Play className="w-10 h-10 text-orange-500 fill-orange-500 ml-1" />
+          <PlayArrow className="w-10 h-10 text-orange-500 ml-1" style={{ color: '#f97316' }} />
         </div>
       </div>
 
@@ -80,7 +80,7 @@ export function VideoCardContent({ card }: VideoCardContentProps) {
           <div>
             <p className="text-white">{card.creator}</p>
             <div className="flex items-center gap-1.5">
-              <Eye className="w-3 h-3 text-white/70" />
+              <Visibility className="w-3 h-3 text-white/70" />
               <span className="text-white/70 text-[12px]">
                 {card.views >= 1000000
                   ? `${(card.views / 1000000).toFixed(1)}M`

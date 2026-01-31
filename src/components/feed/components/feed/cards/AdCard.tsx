@@ -1,5 +1,5 @@
 import type { AdCard } from '../../../data/feed-content';
-import { ExternalLink } from 'lucide-react';
+import { OpenInNew } from '@mui/icons-material';
 
 interface AdCardContentProps {
   card: AdCard;
@@ -40,7 +40,7 @@ export function AdCardContent({ card }: AdCardContentProps) {
         
         <button className="w-full bg-white text-gray-900 py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors">
           <span>{card.ctaText}</span>
-          <ExternalLink className="w-4 h-4" />
+          <OpenInNew className="w-4 h-4" />
         </button>
       </div>
     </>

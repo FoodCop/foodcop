@@ -1,4 +1,4 @@
-import { RotateCcw, X, Star, Heart, MessageCircle } from 'lucide-react';
+import { RotateLeft, Close, Star, Favorite, Message } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 
 interface SwipeActionsProps {
@@ -29,7 +29,7 @@ export function SwipeActions({
         disabled={disabled || !canRewind}
         className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow disabled:opacity-30 disabled:cursor-not-allowed"
       >
-        <RotateCcw className="w-5 h-5 text-yellow-500" />
+        <RotateLeft className="w-5 h-5 text-yellow-500" />
       </motion.button>
       
       {/* Pass */}
@@ -39,7 +39,7 @@ export function SwipeActions({
         disabled={disabled}
         className="w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow disabled:opacity-30 disabled:cursor-not-allowed"
       >
-        <X className="w-7 h-7 text-red-500" />
+        <Close className="w-7 h-7 text-red-500" />
       </motion.button>
       
       {/* Super Like */}
@@ -49,7 +49,7 @@ export function SwipeActions({
         disabled={disabled}
         className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow disabled:opacity-30 disabled:cursor-not-allowed"
       >
-        <Star className="w-5 h-5 text-blue-500 fill-blue-500" />
+        <Star className="w-5 h-5 text-blue-500" style={{ color: '#3b82f6' }} />
       </motion.button>
       
       {/* Like */}
@@ -59,7 +59,7 @@ export function SwipeActions({
         disabled={disabled}
         className="w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow disabled:opacity-30 disabled:cursor-not-allowed"
       >
-        <Heart className="w-7 h-7 text-green-500 fill-green-500" />
+        <Favorite className="w-7 h-7 text-green-500" style={{ color: '#22c55e' }} />
       </motion.button>
       
       {/* Message */}
@@ -69,7 +69,7 @@ export function SwipeActions({
         disabled={disabled}
         className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow disabled:opacity-30 disabled:cursor-not-allowed"
       >
-        <MessageCircle className="w-5 h-5 text-purple-500 fill-purple-500" />
+        <Message className="w-5 h-5 text-purple-500" style={{ color: '#a855f7' }} />
       </motion.button>
     </div>
   );

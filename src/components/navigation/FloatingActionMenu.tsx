@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { 
-  Rss, 
-  Search, 
-  CameraAlt, 
-  LocalPizza, 
-  ContentCut, 
-  Restaurant, 
+import {
+  RssFeed,
+  Search,
+  CameraAlt,
+  LocalPizza,
+  ContentCut,
+  Restaurant,
   Send,
   Close
 } from '@mui/icons-material';
@@ -36,43 +36,43 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
     {
       label: 'Feed',
       route: 'feed',
-      icon: <Rss size={20} />,
+      icon: <RssFeed style={{ fontSize: 20 }} />,
       color: 'var(--color-menu-feed)'
     },
     {
       label: 'Scout',
       route: 'scout',
-      icon: <Search size={20} />,
+      icon: <Search style={{ fontSize: 20 }} />,
       color: 'var(--color-menu-scout)'
     },
     {
       label: 'Snap',
       route: 'snap',
-      icon: <Camera size={20} />,
+      icon: <CameraAlt style={{ fontSize: 20 }} />,
       color: 'var(--color-menu-snap)'
     },
     {
       label: 'Bites',
       route: 'bites',
-      icon: <Pizza size={20} />,
+      icon: <LocalPizza style={{ fontSize: 20 }} />,
       color: 'var(--color-menu-bites)'
     },
     {
       label: 'Trims',
       route: 'trims',
-      icon: <Scissors size={20} />,
+      icon: <ContentCut style={{ fontSize: 20 }} />,
       color: 'var(--color-menu-trims)'
     },
     {
       label: 'Plate',
       route: 'plate',
-      icon: <Utensils size={20} />,
+      icon: <Restaurant style={{ fontSize: 20 }} />,
       color: 'var(--color-menu-plate)'
     },
     {
       label: unreadCount > 0 ? `Chat (${unreadCount})` : 'Chat',
       route: 'messages',
-      icon: <Send size={20} />,
+      icon: <Send style={{ fontSize: 20 }} />,
       color: 'var(--color-menu-chat)',
       showBadge: unreadCount > 0,
       badgeCount: unreadCount
@@ -154,7 +154,7 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
       >
         <div className={`transition-transform duration-300 ${isOpen ? 'rotate-90' : 'rotate-0'}`}>
           {isOpen ? (
-            <X size={24} className="text-white" />
+            <Close style={{ fontSize: 24 }} className="text-white" />
           ) : (
             <img 
               src="/logo_white.png"

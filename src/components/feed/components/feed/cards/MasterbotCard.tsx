@@ -1,5 +1,5 @@
 import type { MasterbotCard } from '../../../data/feed-content';
-import { Heart, MessageCircle } from 'lucide-react';
+import { Favorite, Message } from '@mui/icons-material';
 import { ClickableUserAvatar } from '../../../../chat/ClickableUserAvatar';
 import { useDMChatStore } from '../../../../../stores/chatStore';
 import { useNavigate } from 'react-router-dom';
@@ -79,11 +79,11 @@ export function MasterbotCardContent({ card }: MasterbotCardContentProps) {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
-            <Heart className="w-5 h-5 text-white" />
+            <Favorite className="w-5 h-5 text-white" />
             <span className="text-white">{card.likes.toLocaleString()}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <MessageCircle className="w-5 h-5 text-white" />
+            <Message className="w-5 h-5 text-white" />
             <span className="text-white">Comment</span>
           </div>
         </div>

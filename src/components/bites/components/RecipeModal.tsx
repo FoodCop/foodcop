@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-  X,
-  Clock,
-  ChefHat,
+  Close,
+  Schedule,
+  Restaurant,
   Send,
-  Bookmark,
+  BookmarkBorder,
   Star,
   Check
-} from 'lucide-react';
+} from '@mui/icons-material';
 import { SpoonacularService } from '../../../services/spoonacular';
 import type { Recipe } from './RecipeCard';
 import { toast } from 'sonner';
@@ -119,7 +119,7 @@ const RecipeModal: React.FC<RecipeModalProps> = ({ recipe, onClose }) => {
             onClick={onClose}
             className="p-2 hover:bg-[var(--color-neutral-bg-light)] rounded-lg transition-colors"
           >
-            <X className="w-6 h-6 text-[var(--color-neutral-text)]" />
+            <Close className="w-6 h-6 text-[var(--color-neutral-text)]" />
           </button>
         </div>
 
@@ -143,7 +143,7 @@ const RecipeModal: React.FC<RecipeModalProps> = ({ recipe, onClose }) => {
               {/* Stats */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="bg-white rounded-xl p-4 text-center border border-[var(--color-border)]">
-                  <Clock className="w-6 h-6 text-[var(--color-primary)] mx-auto mb-2" />
+                  <Schedule className="w-6 h-6 text-[var(--color-primary)] mx-auto mb-2" />
                   <p className="text-2xl font-bold text-[var(--color-neutral-text)]">
                     {recipe.readyInMinutes || 30}
                   </p>
@@ -178,7 +178,7 @@ const RecipeModal: React.FC<RecipeModalProps> = ({ recipe, onClose }) => {
                   onClick={handleSaveToPlate}
                   className="flex-1 flex items-center justify-center gap-3 px-6 py-4 bg-[var(--button-bg-default)] hover:bg-[var(--button-bg-hover)] text-[var(--button-text)] rounded-full transition-colors font-medium shadow-sm"
                 >
-                  <Bookmark className="w-5 h-5" />
+                  <BookmarkBorder className="w-5 h-5" />
                   Save to Plate
                 </button>
               </div>
@@ -202,7 +202,7 @@ const RecipeModal: React.FC<RecipeModalProps> = ({ recipe, onClose }) => {
               {/* Instructions */}
               <div>
                 <h4 className="text-xl font-bold text-[var(--color-neutral-text)] mb-4 flex items-center gap-2">
-                  <ChefHat className="w-5 h-5 text-[var(--color-primary)]" />
+                  <Restaurant className="w-5 h-5 text-[var(--color-primary)]" />
                   Instructions
                 </h4>
                 <div className="space-y-4">

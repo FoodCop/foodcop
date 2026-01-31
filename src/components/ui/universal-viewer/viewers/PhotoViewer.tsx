@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../card';
 import { Badge } from '../../badge';
 import { Button } from '../../button';
-import { 
-  Calendar, 
-  MapPin, 
+import {
+  CalendarMonth,
+  Place,
   Star,
   Download,
   ZoomIn,
   ZoomOut,
-  RotateCw
-} from 'lucide-react';
+  RotateRight
+} from '@mui/icons-material';
 import type { PhotoViewerProps } from '../types';
 
 export const PhotoViewer: React.FC<PhotoViewerProps> = ({ data }) => {
@@ -57,7 +57,7 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({ data }) => {
             }}
           />
         </div>
-
+                <RotateRight className="w-4 h-4" />
         {/* Image Controls */}
         <div className="absolute top-4 left-4 flex gap-2">
           <Button
@@ -75,7 +75,7 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({ data }) => {
             onClick={() => setRotation(prev => prev + 90)}
             className="bg-black/50 text-white hover:bg-black/70"
           >
-            <RotateCw className="w-4 h-4" />
+            <RotateRight className="w-4 h-4" />
           </Button>
           
           <Button
@@ -101,7 +101,7 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({ data }) => {
             </CardHeader>
             {data.description && (
               <CardContent>
-                <p className="text-gray-700 leading-relaxed">{data.description}</p>
+                    <Star className="w-5 h-5 text-yellow-500" />
               </CardContent>
             )}
           </Card>
@@ -114,7 +114,7 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({ data }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-orange-500" />
+                  <Place className="w-5 h-5 text-orange-500" />
                   Location
                 </CardTitle>
               </CardHeader>
@@ -129,7 +129,7 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({ data }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-blue-500" />
+                  <CalendarMonth className="w-5 h-5 text-blue-500" />
                   Visit Date
                 </CardTitle>
               </CardHeader>

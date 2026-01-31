@@ -486,7 +486,7 @@ export function ScoutDesktop() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all bg-white text-[#6B7280] placeholder:text-[#9CA3AF]"
                   />
-                  <Search className="absolute left-4 top-4 text-[#9CA3AF]" size={18} />
+                  <Search className="absolute left-4 top-4 text-[#9CA3AF]" style={{ fontSize: 18 }} />
                 </div>
 
                 {/* Distance Slider */}
@@ -582,7 +582,7 @@ export function ScoutDesktop() {
                 ) : restaurants.length === 0 ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center px-4">
-                      <MapPin className="text-gray-400 mx-auto mb-4" size={48} />
+                      <Place className="text-gray-400 mx-auto mb-4" style={{ fontSize: 48 }} />
                       <p className="text-gray-200 mb-2">No restaurants found</p>
                       <p className="text-sm text-gray-300">Try increasing the search radius</p>
                     </div>
@@ -613,7 +613,7 @@ export function ScoutDesktop() {
                             className={`w-full h-full flex items-center justify-center ${restaurant.image ? 'hidden' : ''
                               }`}
                           >
-                            <MapPin className="text-gray-400" size={32} />
+                            <Place className="text-gray-400" style={{ fontSize: 32 }} />
                           </div>
                         </div>
                         <div className="flex-1">
@@ -623,7 +623,7 @@ export function ScoutDesktop() {
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  size={12}
+                                  style={{ fontSize: 12 }}
                                   className={i < Math.floor(restaurant.rating) ? 'fill-[#F4E3B2]' : ''}
                                 />
                               ))}
@@ -682,7 +682,7 @@ export function ScoutDesktop() {
                 ) : filteredSavedRestaurants.length === 0 ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center px-4">
-                      <MapPin className="text-gray-400 mx-auto mb-4" size={40} />
+                      <Place className="text-gray-400 mx-auto mb-4" style={{ fontSize: 40 }} />
                       <p className="text-gray-600 mb-2">No saved restaurants yet</p>
                       <p className="text-xs text-gray-500">
                         Save places from Scout or Plate to see them on your map.
@@ -715,7 +715,7 @@ export function ScoutDesktop() {
                             className={`w-full h-full flex items-center justify-center ${restaurant.image ? 'hidden' : ''
                               }`}
                           >
-                            <MapPin className="text-gray-400" size={32} />
+                            <Place className="text-gray-400" style={{ fontSize: 32 }} />
                           </div>
                         </div>
                         <div className="flex-1">
@@ -725,7 +725,7 @@ export function ScoutDesktop() {
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  size={12}
+                                  style={{ fontSize: 12 }}
                                   className={i < Math.floor(restaurant.rating) ? 'fill-[#F4E3B2]' : ''}
                                 />
                               ))}
@@ -823,7 +823,7 @@ export function ScoutDesktop() {
             className="absolute bottom-4 right-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
             title="Center on your location"
           >
-            <Navigation size={20} className="text-blue-600" />
+            <Navigation style={{ fontSize: 20 }} className="text-blue-600" />
           </button>
         </div>
 
@@ -846,7 +846,7 @@ export function ScoutDesktop() {
                   />
                 ) : null}
                 <div className={`w-full h-full flex items-center justify-center ${selectedRestaurant.image ? 'hidden' : ''}`}>
-                  <MapPin className="text-gray-400" size={64} />
+                  <Place className="text-gray-400" style={{ fontSize: 64 }} />
                 </div>
               </div>
 
@@ -860,7 +860,7 @@ export function ScoutDesktop() {
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            size={16}
+                            style={{ fontSize: 16 }}
                             className={i < Math.floor(selectedRestaurant.rating) ? 'fill-[#F4E3B2]' : ''}
                           />
                         ))}
@@ -877,7 +877,7 @@ export function ScoutDesktop() {
                     onClick={handleGetDirections}
                     className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                   >
-                    <Navigation size={18} className="text-gray-800" />
+                    <Navigation style={{ fontSize: 18 }} className="text-gray-800" />
                     Directions
                   </button>
                   {selectedRestaurant.phone && (
@@ -885,7 +885,7 @@ export function ScoutDesktop() {
                       href={`tel:${selectedRestaurant.phone}`}
                       className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                     >
-                      <Phone size={18} className="text-gray-800" />
+                      <Phone style={{ fontSize: 18 }} className="text-gray-800" />
                       Call
                     </a>
                   )}
@@ -896,7 +896,7 @@ export function ScoutDesktop() {
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                     >
-                      <Globe size={18} className="text-gray-800" />
+                      <Language style={{ fontSize: 18 }} className="text-gray-800" />
                       Website
                     </a>
                   )}
@@ -904,7 +904,7 @@ export function ScoutDesktop() {
                     onClick={handleSaveToPlate}
                     className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                   >
-                    <Heart size={18} className="text-gray-800" />
+                    <Favorite style={{ fontSize: 18 }} className="text-gray-800" />
                     Save to Plate
                   </button>
                   <div className="flex items-center justify-center px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors">
@@ -1000,13 +1000,13 @@ export function ScoutDesktop() {
                         <div className="mb-6 pb-6 border-b border-gray-400">
                           <h3 className="text-lg font-semibold text-gray-900 mb-3">Location & Hours</h3>
                           <div className="flex items-start gap-3 mb-3">
-                            <MapPin className="text-[#F4E3B2] mt-1" size={20} />
+                            <Place className="text-[#F4E3B2] mt-1" style={{ fontSize: 20 }} />
                             <div>
                               <div className="text-gray-900">{selectedRestaurant.address}</div>
                             </div>
                           </div>
                           <div className="flex items-start gap-3">
-                            <Clock className="text-[#F4E3B2] mt-1" size={20} />
+                            <Schedule className="text-[#F4E3B2] mt-1" style={{ fontSize: 20 }} />
                             <div>
                               <div
                                 className={`font-medium ${selectedRestaurant.opening_hours?.open_now ? 'text-green-600' : 'text-red-600'
@@ -1040,7 +1040,7 @@ export function ScoutDesktop() {
                                       <div className="flex items-center gap-1">
                                         <div className="flex text-[#F4E3B2] text-xs">
                                           {[...Array(5)].map((_, i) => (
-                                            <Star key={i} size={12} className={i < review.rating ? 'fill-[#F4E3B2]' : ''} />
+                                            <Star key={i} style={{ fontSize: 12 }} className={i < review.rating ? 'fill-[#F4E3B2]' : ''} />
                                           ))}
                                         </div>
                                         <span className="text-xs text-gray-700">{review.time}</span>
@@ -1074,7 +1074,7 @@ export function ScoutDesktop() {
                                     <div className="flex items-center gap-1">
                                       <div className="flex text-[#F4E3B2] text-xs">
                                         {[...Array(5)].map((_, i) => (
-                                          <Star key={i} size={12} className={i < review.rating ? 'fill-[#F4E3B2]' : ''} />
+                                          <Star key={i} style={{ fontSize: 12 }} className={i < review.rating ? 'fill-[#F4E3B2]' : ''} />
                                         ))}
                                       </div>
                                       <span className="text-xs text-gray-700">{review.time}</span>
@@ -1249,7 +1249,7 @@ export function ScoutDesktop() {
                       }}
                       className="w-full bg-[var(--button-bg-default)] text-[var(--button-text)] font-semibold py-4 rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors flex items-center justify-center gap-2"
                     >
-                      <Navigation size={20} />
+                      <Navigation style={{ fontSize: 20 }} />
                       Open in Google Maps
                     </button>
                   </div>

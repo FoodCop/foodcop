@@ -1,4 +1,4 @@
-import { Camera } from 'lucide-react';
+import { CameraAlt } from '@mui/icons-material';
 import { Button } from '../../ui/button';
 
 interface DisclaimerDialogProps {
@@ -12,7 +12,7 @@ export function DisclaimerDialog({ onContinue, onClose }: DisclaimerDialogProps)
       <div className="bg-white rounded-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto p-6 space-y-6">
         {/* Header */}
         <div className="text-center">
-          <Camera className="w-12 h-12 mx-auto mb-3 text-[#FFC909]" />
+          <CameraAlt className="w-12 h-12 mx-auto mb-3 text-[#FFC909]" />
           <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Welcome to SNAP!</h2>
           <p className="text-gray-600 text-sm">Share your food discoveries</p>
         </div>

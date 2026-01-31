@@ -1,4 +1,4 @@
-import { Check, DoneAll, Loop, ErrorOutline } from '@mui/icons-material';
+import { Check, DoneAll, Loop, ErrorOutline, Error } from '@mui/icons-material';
 import { cn } from '../ui/utils';
 
 export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
@@ -20,7 +20,7 @@ export function MessageStatusIcon({
         case 'sending':
             return (
                 <div className={cn(baseClasses, className)} title="Sending...">
-                    <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
+                    <Loop className="h-3 w-3 animate-spin text-gray-400" />
                 </div>
             );
 
@@ -34,14 +34,14 @@ export function MessageStatusIcon({
         case 'delivered':
             return (
                 <div className={cn(baseClasses, className)} title="Delivered">
-                    <CheckCheck className="h-3 w-3 text-gray-400" />
+                    <DoneAll className="h-3 w-3 text-gray-400" />
                 </div>
             );
 
         case 'read':
             return (
                 <div className={cn(baseClasses, className)} title="Read">
-                    <CheckCheck className="h-3 w-3 text-blue-500" />
+                    <DoneAll className="h-3 w-3 text-blue-500" />
                 </div>
             );
 
@@ -56,7 +56,7 @@ export function MessageStatusIcon({
                     )}
                     title="Failed to send. Click to retry"
                 >
-                    <AlertCircle className="h-3 w-3 text-red-500" />
+                    <Error className="h-3 w-3 text-red-500" />
                 </button>
             );
 

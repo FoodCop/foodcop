@@ -96,7 +96,7 @@ export function MessageRequestList({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-48">
-        <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+        <Loop className="h-6 w-6 animate-spin text-gray-400" />
       </div>
     );
   }
@@ -203,7 +203,7 @@ function MessageRequestItem({
               className="flex-1 bg-fuzo-orange-500 hover:bg-fuzo-orange-600 text-white"
             >
               {isProcessing ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loop className="h-4 w-4 animate-spin" />
               ) : (
                 <>
                   <Check className="h-4 w-4 mr-1" />
@@ -219,10 +219,10 @@ function MessageRequestItem({
               className="flex-1"
             >
               {isProcessing ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loop className="h-4 w-4 animate-spin" />
               ) : (
                 <>
-                  <X className="h-4 w-4 mr-1" />
+                  <Close className="h-4 w-4 mr-1" />
                   Decline
                 </>
               )}

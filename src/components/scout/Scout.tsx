@@ -826,7 +826,7 @@ function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ 
           />
         ) : null}
         <div className={`w-full h-full flex items-center justify-center ${restaurant.photos && restaurant.photos.length > 0 ? 'hidden' : ''}`}>
-          <MapPin className="w-12 h-12 text-gray-300" />
+          <Place className="w-12 h-12 text-gray-300" />
         </div>
 
         {/* Rating badge */}
@@ -862,7 +862,7 @@ function RestaurantCarouselCard({ restaurant, onClick, onNavigate }: Readonly<{ 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">
-              <Clock className="w-3 h-3 text-gray-400" />
+              <Schedule className="w-3 h-3 text-gray-400" />
               <span className="text-xs text-gray-600">25 min</span>
             </div>
             <div className="flex items-center space-x-1">
@@ -961,7 +961,7 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
           />
         ) : null}
         <div className={`w-full h-full flex items-center justify-center ${restaurant.photos && restaurant.photos.length > 0 ? 'hidden' : ''}`}>
-          <MapPin className="w-16 h-16 text-gray-400" />
+          <Place className="w-16 h-16 text-gray-400" />
         </div>
 
         {/* Gradient overlay */}
@@ -984,7 +984,7 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
             <div>
               <h3 className="text-2xl font-bold text-white mb-1">{restaurant.name}</h3>
               <div className="flex items-center space-x-2">
-                <MapPin className="w-3 h-3 text-white" />
+                <Place className="w-3 h-3 text-white" />
                 <span className="text-sm text-white">{distanceText}</span>
               </div>
             </div>
@@ -1019,7 +1019,7 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
         <div className="grid grid-cols-3 gap-4 mb-5">
           <div className="text-center">
             <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-2">
-              <Clock className="text-gray-700 text-lg" />
+              <Schedule className="text-gray-700 text-lg" />
             </div>
             <span className="text-xs text-gray-500">Open Now</span>
             <p className="text-sm font-semibold text-gray-900">11AM-10PM</p>

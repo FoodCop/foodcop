@@ -93,7 +93,7 @@ export function FriendRequestList({ onUserClick, onStartConversation }: Readonly
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-48">
-        <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+        <Loop className="h-6 w-6 animate-spin text-gray-400" />
       </div>
     );
   }
@@ -115,7 +115,7 @@ export function FriendRequestList({ onUserClick, onStartConversation }: Readonly
   if (incomingCount === 0 && outgoingCount === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-48 text-gray-400 px-4">
-        <Users className="h-12 w-12 mb-2 stroke-1" />
+        <Group className="h-12 w-12 mb-2" />
         <p className="text-center">No friend requests</p>
         <p className="text-sm text-center mt-1">
           Friend requests will appear here
@@ -167,9 +167,9 @@ export function FriendRequestList({ onUserClick, onStartConversation }: Readonly
                         className="text-xs"
                       >
                         {isLoading ? (
-                          <Loader2 className="h-3 w-3 animate-spin" />
+                          <Loop className="h-3 w-3 animate-spin" />
                         ) : (
-                          <X className="h-3 w-3" />
+                          <Close className="h-3 w-3" />
                         )}
                       </Button>
                       <Button
@@ -180,7 +180,7 @@ export function FriendRequestList({ onUserClick, onStartConversation }: Readonly
                         className="bg-orange-500 hover:bg-orange-600 text-xs"
                       >
                         {isLoading ? (
-                          <Loader2 className="h-3 w-3 animate-spin" />
+                          <Loop className="h-3 w-3 animate-spin" />
                         ) : (
                           <Check className="h-3 w-3" />
                         )}
@@ -235,7 +235,7 @@ export function FriendRequestList({ onUserClick, onStartConversation }: Readonly
                         className="text-xs"
                       >
                         {isLoading ? (
-                          <Loader2 className="h-3 w-3 animate-spin" />
+                          <Loop className="h-3 w-3 animate-spin" />
                         ) : (
                           'Cancel'
                         )}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Close, Message, PersonAdd, Group } from '@mui/icons-material';
+import { Close, Message, PersonAdd, Group, Person } from '@mui/icons-material';
 import {
   Drawer,
   DrawerContent,
@@ -114,10 +114,10 @@ export function ChatDrawer({ onSharedItemClick }: Readonly<ChatDrawerProps>) {
               <DrawerHeader className="border-b">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  {currentView === 'messages' && <MessageCircle className="h-5 w-5 text-fuzo-orange-500" />}
-                  {currentView === 'find-friends' && <UserPlus className="h-5 w-5 text-fuzo-orange-500" />}
-                  {currentView === 'requests' && <Users className="h-5 w-5 text-fuzo-orange-500" />}
-                  {currentView === 'message-requests' && <MessageCircle className="h-5 w-5 text-fuzo-orange-500" />}
+                  {currentView === 'messages' && <Message className="h-5 w-5 text-fuzo-orange-500" />}
+                  {currentView === 'find-friends' && <PersonAdd className="h-5 w-5 text-fuzo-orange-500" />}
+                  {currentView === 'requests' && <Group className="h-5 w-5 text-fuzo-orange-500" />}
+                  {currentView === 'message-requests' && <Message className="h-5 w-5 text-fuzo-orange-500" />}
                   <DrawerTitle>
                     {currentView === 'messages' && 'Messages'}
                     {currentView === 'find-friends' && 'Find Friends'}
@@ -131,7 +131,7 @@ export function ChatDrawer({ onSharedItemClick }: Readonly<ChatDrawerProps>) {
                   onClick={handleClose}
                   className="h-8 w-8"
                 >
-                  <X className="h-4 w-4" />
+                  <Close className="h-4 w-4" />
                 </Button>
               </div>
             </DrawerHeader>
@@ -184,7 +184,7 @@ export function ChatDrawer({ onSharedItemClick }: Readonly<ChatDrawerProps>) {
                     onClick={() => setIsDiscoveryModalOpen(true)}
                     className="w-full bg-fuzo-orange-500 hover:bg-fuzo-orange-600 mb-4"
                   >
-                    <UserPlus className="h-4 w-4 mr-2" />
+                    <PersonAdd className="h-4 w-4 mr-2" />
                     Find People to Message
                   </Button>
                   <FriendFinder

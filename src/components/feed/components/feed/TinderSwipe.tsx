@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { FeedCard } from '../../data/feed-content';
 import { SwipeCard } from './SwipeCard';
 import { SwipeActions } from './SwipeActions';
-import { RefreshCw } from 'lucide-react';
+import { Refresh } from '@mui/icons-material';
 
 interface TinderSwipeProps {
   cards: FeedCard[];
@@ -52,7 +52,7 @@ export function TinderSwipeComponent({ cards, onSwipe, onNoMoreCards }: TinderSw
           animate={{ scale: 1 }}
           className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center mb-6"
         >
-          <RefreshCw className="w-12 h-12 text-white" />
+          <Refresh className="w-12 h-12 text-white" />
         </motion.div>
         <h2 className="text-gray-800 mb-2">No More Restaurants</h2>
         <p className="text-gray-600 mb-6">

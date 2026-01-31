@@ -3,7 +3,7 @@ import { gamifiedToast } from '../components/ui/gamified-toast';
 import { toastHelpers } from '../utils/toastHelpers';
 import { PreferencesHintModal } from '../components/common/PreferencesHintModal';
 import { Alert, AlertTitle, AlertDescription } from '../components/ui/alert';
-import { AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
+import { ErrorOutline, CheckCircle, Info } from '@mui/icons-material';
 
 export default function AllAlerts() {
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
@@ -128,7 +128,7 @@ export default function AllAlerts() {
             </AlertDescription>
           </Alert>
           <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
+            <ErrorOutline className="h-4 w-4" />
             <AlertTitle>Destructive Alert</AlertTitle>
             <AlertDescription>
               This is a destructive alert for errors or warnings.

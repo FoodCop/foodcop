@@ -1,5 +1,5 @@
 import type { RecipeCard } from '../../../data/feed-content';
-import { Clock, Users, ChefHat } from 'lucide-react';
+import { Schedule, Group, Restaurant } from '@mui/icons-material';
 import { ClickableUserAvatar } from '../../../../chat/ClickableUserAvatar';
 import { useDMChatStore } from '../../../../../stores/chatStore';
 import { useNavigate } from 'react-router-dom';
@@ -88,15 +88,15 @@ export function RecipeCardContent({ card }: RecipeCardContentProps) {
 
         <div className="flex items-center gap-4 mb-3">
           <div className="flex items-center gap-1.5">
-            <Clock className="w-4 h-4 text-white" />
+            <Schedule className="w-4 h-4 text-white" />
             <span className="text-white text-[14px]">{card.prepTime} prep</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <ChefHat className="w-4 h-4 text-white" />
+            <Restaurant className="w-4 h-4 text-white" />
             <span className="text-white text-[14px]">{card.cookTime} cook</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Users className="w-4 h-4 text-white" />
+            <Group className="w-4 h-4 text-white" />
             <span className="text-white text-[14px]">{card.servings} servings</span>
           </div>
         </div>

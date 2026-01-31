@@ -344,7 +344,7 @@ export function Snap() {
           <div className="bg-white rounded-2xl shadow-[0_2px_8px_0_rgba(0,0,0,0.1)] p-6 space-y-6">
             <div className="text-center mb-6">
               <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] flex items-center justify-center">
-                <Camera className="w-12 h-12 text-white" />
+                <CameraAlt className="w-12 h-12 text-white" />
               </div>
               <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Welcome to SNAP!</h2>
               <p className="text-gray-600 text-sm">Share your food discoveries</p>
@@ -623,13 +623,13 @@ export function Snap() {
       <div className="text-center px-8">
         {isMobile ? (
           <>
-            <Camera className="w-24 h-24 text-gray-400 mx-auto mb-6 animate-pulse" />
+            <CameraAlt className="w-24 h-24 text-gray-400 mx-auto mb-6 animate-pulse" />
             <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Starting Camera...</h2>
             <p className="text-gray-600 mb-6">Please allow camera access</p>
           </>
         ) : (
           <>
-            <Camera className="w-24 h-24 text-gray-400 mx-auto mb-6" />
+            <CameraAlt className="w-24 h-24 text-gray-400 mx-auto mb-6" />
             <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Ready to SNAP?</h2>
             <p className="text-gray-600 mb-6">Capture and share your food moments</p>
             <button

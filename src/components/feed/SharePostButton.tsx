@@ -1,4 +1,4 @@
-import { Share } from 'lucide-react';
+import { Share } from '@mui/icons-material';
 import { UserDiscoveryModal } from '../chat/UserDiscoveryModal';
 import { useState } from 'react';
 import { Button } from '../ui/button';

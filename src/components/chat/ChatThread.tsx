@@ -83,7 +83,7 @@ export function ChatThread({
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b bg-white">
         <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0">
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowBack className="h-5 w-5" />
         </Button>
         <button
           onClick={() => onAvatarClick?.(otherUser?.id || '')}
@@ -179,7 +179,7 @@ export function ChatThread({
             aria-label="Send message"
           >
             {isSending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loop className="h-4 w-4 animate-spin" />
             ) : (
               <Send className="h-4 w-4" />
             )}

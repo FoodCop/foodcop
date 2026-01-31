@@ -8,7 +8,7 @@ import { Button } from '../../ui/button';
 import { Card } from '../../ui/card';
 import { Input } from '../../ui/input';
 import { ScrollArea } from '../../ui/scroll-area';
-import { X, Send, Sparkles } from 'lucide-react';
+import { Close, Send, AutoAwesome } from '@mui/icons-material';
 import { TakoAIService, type RestaurantCardData } from '../../../services/takoAIService';
 import { RestaurantCard } from './RestaurantCard';
 import { useYesNoDialog } from '../../../hooks/useYesNoDialog';
@@ -175,7 +175,7 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b flex-shrink-0 mx-[12px] my-[0px]" style={{ backgroundColor: '#bb6155', borderColor: 'rgba(255,255,255,0.2)' }}>
               <div className="flex items-center gap-2 text-white">
-                <Sparkles className="w-5 h-5" />
+                <AutoAwesome className="w-5 h-5" />
                 <h3 className="text-white">TakoAI</h3>
               </div>
               <Button
@@ -184,7 +184,7 @@ export function AIChatWidget({ position = 'bottom-right' }: Readonly<AIChatWidge
                 onClick={closeChat}
                 className="text-white hover:bg-white hover:bg-opacity-20"
               >
-                <X className="w-5 h-5" />
+                <Close className="w-5 h-5" />
               </Button>
             </div>
 

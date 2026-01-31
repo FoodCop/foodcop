@@ -1,4 +1,4 @@
-import { Clock, Heart, Share2, Loader2 } from "lucide-react";
+import { Schedule, Favorite, Share, Loop } from '@mui/icons-material';
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../../ui/dialog";
 import { Badge } from "../../ui/badge";
@@ -191,7 +191,7 @@ export function RecipeDetailDialog({
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
               <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
                 <div className="flex items-center gap-2 text-gray-600">
-                  <Clock className="w-5 h-5" />
+                  <Schedule className="w-5 h-5" />
                   <span>
                     {enrichedRecipe.readyInMinutes} min
                     {enrichedRecipe.preparationMinutes && enrichedRecipe.cookingMinutes && (
@@ -214,7 +214,7 @@ export function RecipeDetailDialog({
                   onClick={handleSaveToPlate}
                   className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-[var(--button-bg-active)] text-[var(--button-text)] rounded-full hover:bg-[var(--button-bg-hover)] transition-colors cursor-pointer font-medium"
                 >
-                  <Heart size={14} />
+                  <Favorite style={{ fontSize: 14 }} />
                   <span className="text-sm whitespace-nowrap">
                     Save to Plate
                   </span>
@@ -225,7 +225,7 @@ export function RecipeDetailDialog({
                   onClick={handleShareWithFriend}
                   className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-[var(--button-bg-default)] text-[var(--button-text)] rounded-full hover:bg-[var(--button-bg-hover)] transition-colors cursor-pointer font-medium"
                 >
-                  <Share2 className="w-4 h-4" />
+                  <Share className="w-4 h-4" />
                   <span className="text-sm whitespace-nowrap">
                     Share with Friend
                   </span>
@@ -278,7 +278,7 @@ export function RecipeDetailDialog({
               <h4 className="mb-3">Ingredients</h4>
               {loadingDetails ? (
                 <div className="flex items-center gap-2 text-gray-500 py-4">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loop className="w-4 h-4 animate-spin" />
                   <span>Loading ingredients...</span>
                 </div>
               ) : enrichedRecipe.extendedIngredients.length > 0 ? (
@@ -302,7 +302,7 @@ export function RecipeDetailDialog({
               <h4 className="mb-3">Instructions</h4>
               {loadingDetails ? (
                 <div className="flex items-center gap-2 text-gray-500 py-4">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loop className="w-4 h-4 animate-spin" />
                   <span>Loading instructions...</span>
                 </div>
               ) : enrichedRecipe.analyzedInstructions && enrichedRecipe.analyzedInstructions.length > 0 ? (

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../card';
 import { Badge } from '../../badge';
-import { Clock, Users, Heart, ExternalLink } from 'lucide-react';
+import { Schedule, Group, Favorite, OpenInNew } from '@mui/icons-material';
 import { Button } from '../../button';
 import type { RecipeViewerProps } from '../types';
 
@@ -39,23 +39,23 @@ export const RecipeViewer: React.FC<RecipeViewerProps> = ({ data }) => {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="flex items-center gap-2 text-sm">
-          <Clock className="w-4 h-4 text-orange-500" />
+          <Schedule className="w-4 h-4 text-orange-500" />
           <span>{data.readyInMinutes} min</span>
         </div>
         <div className="flex items-center gap-2 text-sm">
-          <Users className="w-4 h-4 text-blue-500" />
+          <Group className="w-4 h-4 text-blue-500" />
           <span>{data.servings} servings</span>
         </div>
         {data.healthScore && (
           <div className="flex items-center gap-2 text-sm">
-            <Heart className="w-4 h-4 text-green-500" />
+            <Favorite className="w-4 h-4 text-green-500" />
             <span>{data.healthScore}/100</span>
           </div>
         )}
         {data.sourceUrl && (
           <Button variant="outline" size="sm" asChild>
             <a href={data.sourceUrl} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="w-4 h-4 mr-1" />
+              <OpenInNew className="w-4 h-4 mr-1" />
               Source
             </a>
           </Button>

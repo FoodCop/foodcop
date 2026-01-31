@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Globe, Lock, AlertCircle } from 'lucide-react';
+import { Public, Lock, ErrorOutline } from '@mui/icons-material';
 import { Button } from '../../ui/button';
 import { MinimalHeader } from '../../common/MinimalHeader';
 import type { SnapTag } from '../../../types/snap';
@@ -114,7 +114,7 @@ export function PublishStep({
           >
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0">
-                <Globe className={`w-6 h-6 ${
+                <Public className={`w-6 h-6 ${
                   selectedTarget === 'feed' ? 'text-[#FFC909]' : 'text-gray-400'
                 }`} />
               </div>
@@ -135,7 +135,7 @@ export function PublishStep({
         <div className="space-y-3">
           {selectedTarget === 'plate' && (
             <div className="bg-blue-50 p-4 rounded-lg flex gap-3">
-              <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <ErrorOutline className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-blue-700">
                 Your Plate is your personal collection. You can always move cards to the Feed later.
               </div>
@@ -144,7 +144,7 @@ export function PublishStep({
 
           {selectedTarget === 'feed' && (
             <div className="bg-green-50 p-4 rounded-lg flex gap-3">
-              <AlertCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <ErrorOutline className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-green-700">
                 Your card will be visible to all FuzoFood users. Be authentic and respectful!
               </div>

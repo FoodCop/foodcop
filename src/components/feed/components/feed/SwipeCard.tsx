@@ -1,7 +1,7 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import type { PanInfo } from 'framer-motion';
 import type { FeedCard } from '../../data/feed-content';
-import { Info, Share2, Bookmark } from 'lucide-react';
+import { InfoOutlined, Share, Bookmark } from '@mui/icons-material';
 import { RestaurantCardContent } from './cards/RestaurantCard';
 import { MasterbotCardContent } from './cards/MasterbotCard';
 import { AdCardContent } from './cards/AdCard';
@@ -111,7 +111,7 @@ export function SwipeCard({ card, onSwipe, style }: SwipeCardProps) {
           style={{ opacity: shareOpacity }}
           className="absolute top-1/3 left-1/2 -translate-x-1/2 px-4 py-2 border-4 border-blue-500 rounded-lg flex items-center gap-2 z-10"
         >
-          <Share2 className="w-5 h-5 text-blue-500" />
+          <Share className="w-5 h-5 text-blue-500" />
           <span className="text-blue-500 tracking-wider">
             SHARE
           </span>
@@ -122,7 +122,7 @@ export function SwipeCard({ card, onSwipe, style }: SwipeCardProps) {
           style={{ opacity: saveOpacity }}
           className="absolute bottom-1/3 left-1/2 -translate-x-1/2 px-4 py-2 border-4 border-purple-500 rounded-lg flex items-center gap-2 z-10"
         >
-          <Bookmark className="w-5 h-5 text-purple-500 fill-purple-500" />
+          <Bookmark className="w-5 h-5 text-purple-500" style={{ color: '#a855f7' }} />
           <span className="text-purple-500 tracking-wider">
             SAVE TO {card.saveCategory.toUpperCase()}
           </span>
@@ -130,7 +130,7 @@ export function SwipeCard({ card, onSwipe, style }: SwipeCardProps) {
         
         {/* Info Button */}
         <button className="absolute top-4 right-4 p-2 bg-black/20 backdrop-blur-sm rounded-full hover:bg-black/30 transition-colors z-10">
-          <Info className="w-5 h-5 text-white" />
+          <InfoOutlined className="w-5 h-5 text-white" />
         </button>
       </div>
     </motion.div>

@@ -1,4 +1,4 @@
-import { MapPin, Star, Phone, Clock, ExternalLink, Navigation, Bookmark, ArrowLeft, Share2, Heart, DollarSign } from "lucide-react";
+import { Place, Star, Phone, Schedule, OpenInNew, Navigation, Bookmark, ArrowBack, Favorite, AttachMoney } from '@mui/icons-material';
 import { useState } from "react";
 import { savedItemsService } from "../../../services";
 import { useAuth } from "../../auth/AuthProvider";
@@ -141,7 +141,7 @@ export function RestaurantDetailDialog({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <MapPin className="w-16 h-16 text-gray-400" />
+              <Place className="w-16 h-16 text-gray-400" />
             </div>
           )}
           
@@ -153,7 +153,7 @@ export function RestaurantDetailDialog({
             onClick={() => onOpenChange(false)}
             className="absolute top-6 left-5 w-11 h-11 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg hover:bg-white transition-colors"
           >
-            <ArrowLeft className="text-gray-900" />
+            <ArrowBack className="text-gray-900" />
           </button>
           
           <div className="absolute top-6 right-5 flex gap-2">
@@ -170,7 +170,7 @@ export function RestaurantDetailDialog({
               onClick={() => setLiked(!liked)}
               className="w-11 h-11 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg hover:bg-white transition-colors"
             >
-              <Heart className={`w-5 h-5 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-900'}`} />
+              <Favorite className={`w-5 h-5 ${liked ? 'text-red-500' : 'text-gray-900'}`} />
             </button>
           </div>
 
@@ -203,17 +203,17 @@ export function RestaurantDetailDialog({
             <p className="text-xs text-gray-700">Rating</p>
           </div>
           <div className="bg-linear-to-br from-blue-50 to-cyan-50 rounded-xl p-3 text-center">
-            <Clock className="w-5 h-5 text-blue-500 mb-1 mx-auto" />
+            <Schedule className="w-5 h-5 text-blue-500 mb-1 mx-auto" />
             <p className="text-lg font-bold text-gray-900">15-20</p>
             <p className="text-xs text-gray-600">Minutes</p>
           </div>
           <div className="rounded-xl p-3 text-center" style={{ backgroundColor: '#fbd556' }}>
-            <MapPin className="w-5 h-5 text-gray-900 mb-1 mx-auto" />
+            <Place className="w-5 h-5 text-gray-900 mb-1 mx-auto" />
             <p className="text-lg font-bold text-gray-900">{distanceText}</p>
             <p className="text-xs text-gray-700">away</p>
           </div>
           <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-xl p-3 text-center">
-            <DollarSign className="w-5 h-5 text-purple-500 mb-1 mx-auto" />
+            <AttachMoney className="w-5 h-5 text-purple-500 mb-1 mx-auto" />
             <p className="text-lg font-bold text-gray-900">{priceLevel}</p>
             <p className="text-xs text-gray-600">Price</p>
           </div>
@@ -267,7 +267,7 @@ export function RestaurantDetailDialog({
           {restaurant.opening_hours?.weekday_text && restaurant.opening_hours.weekday_text.length > 0 && (
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-gray-400" />
+                <Schedule className="w-4 h-4 text-gray-400" />
                 <span className="text-gray-700">{restaurant.opening_hours.weekday_text[0].split(': ')[1]}</span>
               </div>
             </div>
@@ -281,7 +281,7 @@ export function RestaurantDetailDialog({
           </div>
           <div className="bg-gray-50 rounded-2xl p-4 mb-3">
             <div className="flex items-start gap-3 mb-3">
-              <MapPin className="text-orange-500 text-lg mt-1 shrink-0" />
+              <Place className="text-orange-500 text-lg mt-1 shrink-0" />
               <div className="flex-1">
                 <p className="text-sm font-semibold text-gray-900 mb-1">{restaurant.address.split(',')[0]}</p>
                 <p className="text-sm text-gray-600">{restaurant.address}</p>
@@ -297,7 +297,7 @@ export function RestaurantDetailDialog({
             )}
             {restaurant.website && (
               <div className="flex items-center gap-3">
-                <ExternalLink className="text-orange-500 text-lg" />
+                <OpenInNew className="text-orange-500 text-lg" />
                 <a 
                   href={restaurant.website}
                   target="_blank"

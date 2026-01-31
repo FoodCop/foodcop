@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Tune, Star, Schedule, LocalFireDepartment, BookmarkBorder, Send, WbSunny, Restaurant, DarkMode, Cake, Eco, Park } from '@mui/icons-material';
+import { Search, Tune, Star, Schedule, LocalFireDepartment, BookmarkBorder, Bookmark, Send, WbSunny, Restaurant, DarkMode, Cake, Nature, Park, Whatshot } from '@mui/icons-material';
 import { SpoonacularService } from '../../services/spoonacular';
 import { savedItemsService } from '../../services/savedItemsService';
 import { useAuth } from '../auth/AuthProvider';
@@ -55,7 +55,7 @@ const CATEGORIES = [
   { id: 'lunch', label: 'Lunch', icon: Restaurant, type: 'main course' },
   { id: 'dinner', label: 'Dinner', icon: DarkMode, type: 'main course' },
   { id: 'dessert', label: 'Dessert', icon: Cake, type: 'dessert' },
-  { id: 'vegan', label: 'Vegan', icon: Eco, diet: 'vegan' },
+  { id: 'vegan', label: 'Vegan', icon: Nature, diet: 'vegan' },
   { id: 'keto', label: 'Keto', icon: Park, diet: 'ketogenic' },
   { id: 'glutenFree', label: 'Gluten Free', icon: Park, diet: 'gluten free' },
   { id: 'quick', label: 'Quick', icon: LocalFireDepartment, maxReadyTime: 30 },
@@ -421,11 +421,11 @@ export default function BitesMobile() {
                 </p>
                 <div className="flex items-center gap-4 mb-3">
                   <div className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4 text-neutral-400" />
+                    <Schedule className="w-4 h-4 text-neutral-400" />
                     <span className="text-xs text-neutral-400">{recipe.readyInMinutes} min</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Flame className="w-4 h-4 text-warning" />
+                    <Whatshot className="w-4 h-4 text-warning" />
                     <span className="text-xs text-neutral-400">~{Math.round((recipe.pricePerServing || 200) / 3)} kcal</span>
                   </div>
                 </div>
@@ -576,11 +576,11 @@ export default function BitesMobile() {
                     </div>
                     <div className="flex items-center gap-4 mb-3">
                       <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4 text-neutral-400" />
+                        <Schedule className="w-4 h-4 text-neutral-400" />
                         <span className="text-xs text-neutral-400">{recipe.readyInMinutes} min</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <Flame className="w-4 h-4 text-warning" />
+                        <Whatshot className="w-4 h-4 text-warning" />
                         <span className="text-xs text-neutral-400">~{Math.round((recipe.pricePerServing || 200) / 3)} kcal</span>
                       </div>
                     </div>
@@ -601,7 +601,7 @@ export default function BitesMobile() {
                         }}
                         className="flex-1 py-2.5 rounded-xl bg-surface-secondary text-foreground text-sm font-medium flex items-center justify-center gap-2"
                       >
-                        <Bookmark className="w-4 h-4" />
+                        <BookmarkBorder className="w-4 h-4" />
                         Save
                       </button>
                       <button

@@ -147,7 +147,7 @@ export function UserDiscoveryModal({
                                 onClick={() => setSearchQuery('')}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                             >
-                                <X className="h-4 w-4" />
+                                <Close className="h-4 w-4" />
                             </button>
                         )}
                     </div>
@@ -159,7 +159,7 @@ export function UserDiscoveryModal({
                         if (isLoading) {
                             return (
                                 <div className="flex items-center justify-center py-12">
-                                    <Loader2 className="h-8 w-8 animate-spin text-fuzo-orange-500" />
+                                    <Loop className="h-8 w-8 animate-spin text-fuzo-orange-500" />
                                 </div>
                             );
                         }
@@ -215,7 +215,7 @@ export function UserDiscoveryModal({
                                         </p>
                                         {(user.location_city || user.location_country) && (
                                             <div className="flex items-center gap-1 mt-1">
-                                                <MapPin className="h-3 w-3 text-gray-400" />
+                                                <Place className="h-3 w-3 text-gray-400" />
                                                 <p className="text-xs text-gray-400 truncate">
                                                     {[user.location_city, user.location_country]
                                                         .filter(Boolean)

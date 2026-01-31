@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from './button';
-import { X } from 'lucide-react';
+import { Close } from '@mui/icons-material';
 
 interface GamifiedConfirmDialogProps {
   isOpen: boolean;
@@ -52,7 +52,7 @@ export function GamifiedConfirmDialog({
             className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors ml-2"
             aria-label="Close"
           >
-            <X className="w-5 h-5" />
+              <Close className="w-5 h-5" />
           </button>
         </div>
         <div className="flex gap-3 justify-end">

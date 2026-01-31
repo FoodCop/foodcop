@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Clock, Star, Bookmark, ChefHat } from 'lucide-react';
+import { ArrowBack, Schedule, Star, BookmarkBorder, Restaurant } from '@mui/icons-material';
 import type { Recipe } from './RecipeCard';
 import { SpoonacularService } from '../../../services/spoonacular';
 
@@ -80,7 +80,7 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
             onClick={onBack}
             className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
           >
-            <ArrowLeft className="w-5 h-5 text-[var(--color-neutral-text)]" />
+            <ArrowBack className="w-5 h-5 text-[var(--color-neutral-text)]" />
           </button>
           <h2 className="text-lg font-bold text-[var(--color-neutral-text)]">Recipe Details</h2>
           <div className="w-10 h-10" /> {/* Spacer for layout balance */}
@@ -97,7 +97,7 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
             />
           </div>
           <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-xl px-3 py-2 flex items-center gap-2 shadow-lg">
-            <Star className="w-4 h-4 text-[var(--color-primary)] fill-[var(--color-primary)]" />
+            <Star className="w-4 h-4 text-[var(--color-primary)]" style={{ color: 'var(--color-primary)' }} />
             <span className="text-base font-bold text-[var(--color-neutral-text)]">{((fullRecipe.healthScore || 50) / 20).toFixed(1)}</span>
             <span className="text-sm text-[var(--color-neutral-text-lighter)]">({fullRecipe.aggregateLikes || 0})</span>
           </div>
@@ -111,14 +111,14 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
           <div className="grid grid-cols-3 gap-3 mb-4">
             <div className="text-center">
               <div className="w-12 h-12 rounded-full bg-[var(--color-primary-10)] flex items-center justify-center mx-auto mb-1">
-                <Clock className="w-5 h-5 text-[var(--color-warning)]" />
+                <Schedule className="w-5 h-5 text-[var(--color-warning)]" />
               </div>
               <p className="text-xs text-[var(--color-neutral-text-lighter)]">Time</p>
               <p className="text-sm font-bold text-[var(--color-neutral-text)]">{fullRecipe.readyInMinutes} min</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 rounded-full bg-[var(--color-primary-10)] flex items-center justify-center mx-auto mb-1">
-                <ChefHat className="w-5 h-5 text-[var(--color-warning)]" />
+                <Restaurant className="w-5 h-5 text-[var(--color-warning)]" />
               </div>
               <p className="text-xs text-[var(--color-neutral-text-lighter)]">Difficulty</p>
               <p className="text-sm font-bold text-[var(--color-neutral-text)]">
@@ -273,7 +273,7 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-[var(--color-neutral-text)]">Cooking Instructions</h3>
               <div className="px-3 py-1.5 rounded-lg bg-[var(--color-warning-light)] text-sm font-medium text-[var(--color-warning-dark)] flex items-center gap-2">
-                <Clock className="w-3 h-3" />
+                <Schedule className="w-3 h-3" />
                 {fullRecipe.readyInMinutes} min
               </div>
             </div>
@@ -335,11 +335,11 @@ export function RecipeDetailView({ recipe, onBack, onSave }: Readonly<RecipeDeta
             onClick={onSave}
             className="flex-1 py-3 rounded-full bg-[var(--button-bg-active)] text-[var(--button-text)] text-sm font-medium flex items-center justify-center gap-2 hover:bg-[var(--button-bg-hover)] transition-colors"
           >
-            <Bookmark className="w-4 h-4" />
+            <BookmarkBorder className="w-4 h-4" />
             Save to Plate
           </button>
           <button className="flex-1 py-3 rounded-full bg-[var(--button-bg-default)] text-[var(--button-text)] text-sm font-bold flex items-center justify-center gap-2 hover:bg-[var(--button-bg-hover)] transition-colors">
-            <ChefHat className="w-4 h-4" />
+            <Restaurant className="w-4 h-4" />
             Start Cooking
           </button>
         </div>

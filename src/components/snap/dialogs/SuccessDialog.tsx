@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import { Close } from '@mui/icons-material';
 import { Button } from '../../ui/button';
 import type { SnapCard, SnapTag } from '../../../types/snap';
 
@@ -30,7 +30,7 @@ export function SuccessDialog({
           onClick={onDone}
           className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-lg transition"
         >
-          <X className="w-5 h-5 text-gray-500" />
+          <Close className="w-5 h-5 text-gray-500" />
         </button>
 
         {/* Success header */}

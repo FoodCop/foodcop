@@ -11,14 +11,13 @@ import {
 } from '../ui/dialog';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { 
-  CheckCircle, 
-  AlertTriangle, 
-  Loader2, 
-  Save, 
-  Eye,
-  X
-} from 'lucide-react';
+import {
+  CheckCircle,
+  WarningAmber,
+  Loop,
+  Save,
+  Close
+} from '@mui/icons-material';
 import { useSmartSave } from '../../hooks/useSmartSave';
 import type { SaveItemParams, SavedItem } from '../../types/plate';
 
@@ -101,7 +100,7 @@ export function SmartSaveButton({
     if (state.isChecking || state.isSaving) {
       return (
         <>
-          <Loader2 className="w-4 h-4 animate-spin" />
+          <Loop className="w-4 h-4 animate-spin" />
           {state.isChecking ? 'Checking...' : 'Saving...'}
         </>
       );
@@ -146,7 +145,7 @@ export function SmartSaveButton({
         {/* Duplicate Warning Alert */}
         {state.duplicateCheck?.shouldWarn && state.duplicateCheck.similarItems.length > 0 && (
           <Alert className="border-orange-200 bg-orange-50">
-            <AlertTriangle className="h-4 w-4 text-orange-600" />
+            <WarningAmber className="h-4 w-4 text-orange-600" />
             <AlertDescription className="text-orange-800">
               Found {state.duplicateCheck.similarItems.length} similar {itemType}(s) already saved.
               <Button 
@@ -164,7 +163,7 @@ export function SmartSaveButton({
         {/* Error Alert */}
         {state.error && (
           <Alert variant="destructive">
-            <X className="h-4 w-4" />
+            <Close className="h-4 w-4" />
             <AlertDescription>{state.error}</AlertDescription>
           </Alert>
         )}
@@ -175,7 +174,7 @@ export function SmartSaveButton({
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-orange-500" />
+              <WarningAmber className="w-5 h-5 text-orange-500" />
               Similar {itemType.charAt(0).toUpperCase() + itemType.slice(1)}s Found
             </DialogTitle>
             <DialogDescription>
@@ -219,7 +218,7 @@ export function SmartSaveButton({
             <Button onClick={handleConfirmSave} disabled={state.isSaving}>
               {state.isSaving ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loop className="w-4 h-4 animate-spin" />
                   Saving...
                 </>
               ) : (

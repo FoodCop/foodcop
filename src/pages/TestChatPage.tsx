@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Play, Trash2, Download, Loader2, CheckCircle, XCircle, Clock, Users, RefreshCw, AlertCircle } from 'lucide-react';
+import { PlayArrow, Delete, Download, Loop, CheckCircle, Cancel, Schedule, Group, Refresh, ErrorOutline } from '@mui/icons-material';
 import { ChatTestService, TestResult, RealtimeEvent, TestUser } from '../services/chatTestService';
 import { formatDuration, formatTimestamp } from '../utils/chatTestUtils';
 
@@ -184,9 +184,9 @@ export default function TestChatPage() {
       case 'pass':
         return <CheckCircle className="w-5 h-5 text-green-500" />;
       case 'fail':
-        return <XCircle className="w-5 h-5 text-red-500" />;
+        return <Cancel className="w-5 h-5 text-red-500" />;
       case 'running':
-        return <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />;
+        return <Loop className="w-5 h-5 text-blue-500 animate-spin" />;
     }
   };
 
@@ -230,7 +230,7 @@ export default function TestChatPage() {
                 </>
               ) : (
                 <>
-                  <AlertCircle className="w-5 h-5" />
+                  <ErrorOutline className="w-5 h-5" />
                   <span>{authStatus.error || 'Not authenticated'}</span>
                 </>
               )}
@@ -242,7 +242,7 @@ export default function TestChatPage() {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <Users className="w-5 h-5" />
+              <Group className="w-5 h-5" />
               Available Users ({availableUsers.length})
             </h2>
             <button
@@ -250,7 +250,7 @@ export default function TestChatPage() {
               disabled={loadingUsers}
               className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 transition-colors"
             >
-              <RefreshCw className={`w-4 h-4 ${loadingUsers ? 'animate-spin' : ''}`} />
+              <Refresh className={`w-4 h-4 ${loadingUsers ? 'animate-spin' : ''}`} />
               Refresh
             </button>
           </div>
@@ -263,7 +263,7 @@ export default function TestChatPage() {
 
           {loadingUsers ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+              <Loop className="w-6 h-6 animate-spin text-blue-500" />
               <span className="ml-2 text-gray-600">Loading users...</span>
             </div>
           ) : availableUsers.length > 0 ? (
@@ -323,9 +323,9 @@ export default function TestChatPage() {
               className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isRunning ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loop className="w-4 h-4 animate-spin" />
               ) : (
-                <Play className="w-4 h-4" />
+                <PlayArrow className="w-4 h-4" />
               )}
               Run All Tests
             </button>
@@ -367,7 +367,7 @@ export default function TestChatPage() {
               disabled={isRunning}
               className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ml-auto"
             >
-              <Trash2 className="w-4 h-4" />
+              <Delete className="w-4 h-4" />
               Clear
             </button>
 
@@ -383,7 +383,7 @@ export default function TestChatPage() {
 
           {currentTest && (
             <div className="mt-4 flex items-center gap-2 text-blue-600">
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loop className="w-4 h-4 animate-spin" />
               <span>Running: {currentTest}...</span>
             </div>
           )}

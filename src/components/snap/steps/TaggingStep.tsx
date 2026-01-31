@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { X, Award } from 'lucide-react';
+import { Close, EmojiEvents } from '@mui/icons-material';
 import { Button } from '../../ui/button';
 import { MinimalHeader } from '../../common/MinimalHeader';
 import { snapGameification } from '../../../services/snapGameification';
@@ -92,7 +92,7 @@ export function TaggingStep({
             <p className="text-sm text-gray-600">Points earned</p>
             <p className="text-2xl font-bold text-[#FFC909]">{pointsEarned}</p>
           </div>
-          <Award className="w-8 h-8 text-[#FFC909]" />
+          <EmojiEvents className="w-8 h-8 text-[#FFC909]" />
         </div>
 
         {/* Cuisine tags */}
@@ -195,7 +195,7 @@ export function TaggingStep({
                     onClick={() => setSelectedTags(prev => prev.filter(t => t.id !== tag.id))}
                     className="ml-1 hover:text-red-600"
                   >
-                    <X className="w-4 h-4" />
+                    <Close className="w-4 h-4" />
                   </button>
                 </div>
               ))}

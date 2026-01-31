@@ -8,7 +8,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, RefreshCw } from 'lucide-react';
+import { Place, Refresh } from '@mui/icons-material';
 import { dealCardsWithSeed, generateSeed, isAd, isTrivia, type DealerContent } from '../../utils/seedDealer';
 import { FeedService } from '../../services/feedService';
 import { GeocodingService } from '../../services/geocodingService';
@@ -148,7 +148,7 @@ function DealCard({ card, index }: DealCardProps) {
               <div className="p-4 h-[40%] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center text-gray-600 mb-2 text-sm">
-                    <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
+                    <Place className="w-4 h-4 mr-1 flex-shrink-0" />
                     <span className="truncate">
                       {(card as any).location || (card as any).creator || 'Unknown'}
                     </span>
@@ -337,7 +337,7 @@ export function FeedDesktop() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <RefreshCw className="w-5 h-5" />
+            <Refresh className="w-5 h-5" />
             Deal Next Hand
           </motion.button>
         </div>

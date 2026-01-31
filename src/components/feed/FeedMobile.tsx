@@ -8,7 +8,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import './FeedCard.css';
 import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
-import { X, Heart, Bookmark, Send, MapPin, Star } from 'lucide-react';
+import { Close, Favorite, BookmarkBorder, Send, Place, Star } from '@mui/icons-material';
 import { FeedService } from '../../services/feedService';
 import { GeocodingService } from '../../services/geocodingService';
 import type { FeedCard } from './data/feed-content';
@@ -281,7 +281,7 @@ function FeedCardWrapper({
         >
           <div className="bg-[rgba(239,68,68,0.15)] absolute inset-0" />
           <div className="bg-red-500 text-white px-6 py-3 rounded-full font-semibold text-lg flex items-center gap-2 relative z-10">
-            <X className="w-5 h-5" />
+            <Close className="w-5 h-5" />
             <span>NOPE</span>
           </div>
         </motion.div>
@@ -293,7 +293,7 @@ function FeedCardWrapper({
         >
           <div className="bg-[rgba(34,197,94,0.15)] absolute inset-0" />
           <div className="bg-green-500 text-white px-6 py-3 rounded-full font-semibold text-lg flex items-center gap-2 relative z-10">
-            <Heart className="w-5 h-5" />
+            <Favorite className="w-5 h-5" />
             <span>LIKE</span>
           </div>
         </motion.div>
@@ -317,7 +317,7 @@ function FeedCardWrapper({
         >
           <div className="bg-[rgba(245,158,11,0.15)] absolute inset-0" />
           <div className="bg-yellow-500 text-white px-6 py-3 rounded-full font-semibold text-lg flex items-center gap-2 relative z-10">
-            <Bookmark className="w-5 h-5" />
+            <BookmarkBorder className="w-5 h-5" />
             <span>SAVE</span>
           </div>
         </motion.div>
@@ -361,7 +361,7 @@ function FeedCardWrapper({
                   <>
                     <h2 className="feed-card-title">{feedCard.name}</h2>
                     <p className="feed-card-subtitle flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
+                      <Place className="w-3 h-3" />
                       {feedCard.location} • {feedCard.distance}
                     </p>
                     {feedCard.description && (
@@ -417,7 +417,7 @@ function FeedCardWrapper({
                       {(feedCard as any).caption}
                     </p>
                     <div className="feed-card-meta flex items-center gap-2 mb-16">
-                      <Heart className="w-4 h-4" />
+                      <Favorite className="w-4 h-4" />
                       <span>{(feedCard as any).likes.toLocaleString()} likes</span>
                     </div>
                   </>

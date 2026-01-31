@@ -5,7 +5,7 @@ import { Badge } from '../../ui/badge';
 import { Card } from '../../ui/card';
 import { ScrollArea } from '../../ui/scroll-area';
 import { AspectRatio } from '../../ui/aspect-ratio';
-import { Search, Play, Heart, Share2, X, Send, Loader2, AlertCircle } from 'lucide-react';
+import { Search, PlayArrow, FavoriteBorder, Share, Close, Send, Loop, ErrorOutline } from '@mui/icons-material';
 import { Button } from '../../ui/button';
 import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } from '../../ui/dialog';
 import { SmartSaveButton } from '../../ui/smart-save-button';
@@ -173,14 +173,14 @@ export function Trims() {
         <div className="p-4">
           {loading && (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
+              <Loop className="w-8 h-8 animate-spin text-gray-500" />
               <span className="ml-2 text-gray-500">Loading cooking videos...</span>
             </div>
           )}
 
           {error && !loading && (
             <div className="flex items-center justify-center py-12">
-              <AlertCircle className="w-8 h-8 text-red-500" />
+              <ErrorOutline className="w-8 h-8 text-red-500" />
               <div className="ml-2 text-center">
                 <p className="text-red-600 font-medium">Failed to load videos</p>
                 <p className="text-gray-500 text-sm">{error}</p>
@@ -243,7 +243,7 @@ function VideoCard({ video, onPlay }: Readonly<{
           {/* Play button overlay */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <div className="rounded-full bg-black/60 p-4">
-              <Play className="h-8 w-8 text-white fill-white" />
+              <PlayArrow className="h-8 w-8 text-white" />
             </div>
           </div>
 
@@ -264,7 +264,7 @@ function VideoCard({ video, onPlay }: Readonly<{
               setLiked(!liked);
             }}
           >
-            <Heart className={`h-4 w-4 ${liked ? 'fill-red-500 text-red-500' : ''}`} />
+            <FavoriteBorder className={`h-4 w-4 ${liked ? 'text-red-500' : ''}`} />
           </Button>
           <SmartSaveButton
             item={video}
@@ -288,7 +288,7 @@ function VideoCard({ video, onPlay }: Readonly<{
               e.stopPropagation();
             }}
           >
-            <Share2 className="h-4 w-4" />
+            <Share className="h-4 w-4" />
           </Button>
         </div>
       </div>

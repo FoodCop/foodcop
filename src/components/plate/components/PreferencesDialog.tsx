@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, MapPin, Check } from 'lucide-react';
+import { Close, Place, Check } from '@mui/icons-material';
 import { toast } from 'sonner';
 import { GeolocationService, type LocationData } from '../../../services/geolocationService';
 import { ProfileService } from '../../../services/profileService';
@@ -193,7 +193,7 @@ export function PreferencesDialog({
             onClick={onSkip}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <Close className="w-5 h-5" />
           </button>
         </div>
 
@@ -219,7 +219,7 @@ export function PreferencesDialog({
                     </>
                   ) : (
                     <>
-                      <MapPin className="w-5 h-5" />
+                      <Place className="w-5 h-5" />
                       Use My Location
                     </>
                   )}

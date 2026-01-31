@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search } from '@mui/icons-material';
 import React from "react";
 import { Input } from "../../ui/input";
 import { Badge } from "../../ui/badge";

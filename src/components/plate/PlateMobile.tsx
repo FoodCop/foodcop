@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Star, EmojiEvents, MilitaryTech, Restaurant, PlayArrow, Place, Schedule, Navigation, Settings, Delete, PersonAdd, Message, DirectionsWalk } from '@mui/icons-material';
+import { Star, EmojiEvents, MilitaryTech, WorkspacePremium, Restaurant, PlayArrow, Place, Schedule, Navigation, Settings, Delete, PersonAdd, Message, DirectionsWalk } from '@mui/icons-material';
 import { useAuth } from '../auth/AuthProvider';
 import { type SavedItem } from '../../services/savedItemsService';
 import { supabase } from '../../services/supabase';
@@ -427,7 +427,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             <div className="flex items-center gap-2 justify-center">
               <h1 className="text-xl font-bold text-red-900">{getUserDisplayName()}</h1>
               <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
-                <Crown className="w-3 h-3 text-white fill-white" />
+                <WorkspacePremium className="w-3 h-3 text-white" />
               </div>
             </div>
 
@@ -498,7 +498,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-fuzo-orange-500 rounded-full flex items-center justify-center">
-                  <Trophy className="w-5 h-5 text-white" />
+                  <EmojiEvents className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-neutral-900">{userLevel.name}</p>
@@ -696,7 +696,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   onClick={() => setShowFriendFinder(true)}
                   className="text-xs"
                 >
-                  <UserPlus className="h-3 w-3 mr-1" />
+                  <PersonAdd className="h-3 w-3 mr-1" />
                   Add
                 </Button>
               </div>
@@ -741,7 +741,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                         onClick={() => setShowFriendFinder(true)}
                         className="mt-4"
                       >
-                        <UserPlus className="h-4 w-4 mr-2" />
+                        <PersonAdd className="h-4 w-4 mr-2" />
                         Find Friends
                       </Button>
                     </div>
@@ -763,7 +763,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   }}
                   className="text-xs text-fuzo-orange-500 hover:text-fuzo-orange-500 hover:bg-orange-50"
                 >
-                  <MessageCircle className="h-3 w-3 mr-1" />
+                  <Message className="h-3 w-3 mr-1" />
                   View All
                 </Button>
               </div>
@@ -813,7 +813,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                           {recipe.name}
                         </CardHeading>
                         <div className="flex items-center gap-1.5 text-neutral-500 text-sm">
-                          <Clock className="w-3.5 h-3.5" />
+                          <Schedule className="w-3.5 h-3.5" />
                           <span>{recipe.time}</span>
                         </div>
                       </div>
@@ -941,9 +941,9 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
       return (
         <div className="flex flex-col items-center justify-center py-20 px-5">
           <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-            {selectedTab === 'recipes' && <Utensils className="w-10 h-10 text-gray-400" />}
-            {selectedTab === 'videos' && <Play className="w-10 h-10 text-gray-400" />}
-            {selectedTab === 'places' && <MapPin className="w-10 h-10 text-gray-400" />}
+            {selectedTab === 'recipes' && <Restaurant className="w-10 h-10 text-gray-400" />}
+            {selectedTab === 'videos' && <PlayArrow className="w-10 h-10 text-gray-400" />}
+            {selectedTab === 'places' && <Place className="w-10 h-10 text-gray-400" />}
           </div>
           <h3 className="text-xl font-bold text-neutral-900 mb-2">{`No ${selectedTab} saved`}</h3>
           <p className="text-center mb-6 text-neutral-400">
@@ -991,7 +991,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                 className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
                 aria-label="Delete saved recipe"
               >
-                <Trash className="w-4 h-4 text-red-500" />
+                <Delete className="w-4 h-4 text-red-500" />
               </button>
               <RecipeCard 
                 recipe={recipe} 
@@ -1033,7 +1033,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                 className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
                 aria-label="Delete saved place"
               >
-                <Trash className="w-4 h-4 text-red-500" />
+                <Delete className="w-4 h-4 text-red-500" />
               </button>
               <RestaurantCardComponent restaurant={restaurant} onClick={() => void handleItemClick(item)} />
             </div>
@@ -1066,7 +1066,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                   className="absolute top-3 right-3 z-20 rounded-full bg-white/90 p-2 shadow hover:bg-white transition"
                   aria-label="Delete saved video"
                 >
-                  <Trash className="w-4 h-4 text-red-500" />
+                  <Delete className="w-4 h-4 text-red-500" />
                 </button>
                 <div className="relative aspect-video bg-gray-900">
                   {((metadata.thumbnail_url || metadata.thumbnailUrl || metadata.image) as string | undefined) ? (
@@ -1077,12 +1077,12 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Play className="w-16 h-16 text-white/50" />
+                      <PlayArrow className="w-16 h-16 text-white/50" />
                     </div>
                   )}
                   <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                     <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
-                      <Play className="w-8 h-8 text-fuzo-orange-500 fill-fuzo-orange-500 ml-1" />
+                      <PlayArrow className="w-8 h-8 text-fuzo-orange-500 ml-1" />
                     </div>
                   </div>
                   {metadata.duration && (

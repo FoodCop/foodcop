@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MapPin, Camera, Heart, Star, Clock, Navigation } from "lucide-react";
+import { Place, CameraAlt, Favorite, Star, Schedule, Navigation } from '@mui/icons-material';
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { useAuth } from "../../auth/AuthProvider";
 import { ProfileService } from "../../../services/profileService";
@@ -229,7 +229,7 @@ export function DashboardNew() {
           {getUserDisplayName()}
           {getUserLocation() !== 'Location not set' && (
             <span className="ml-2 text-sm font-normal opacity-70">
-              <MapPin className="w-3 h-3 inline mr-1" />
+              <Place className="w-3 h-3 inline mr-1" />
               {getUserLocation()}
             </span>
           )}
@@ -251,7 +251,7 @@ export function DashboardNew() {
                 {getUserDisplayName()}
                 {getUserLocation() !== 'Location not set' && (
                   <span className="ml-3 text-xl font-normal text-[#6B7280]">
-                    <MapPin className="w-5 h-5 inline mr-1" />
+                    <Place className="w-5 h-5 inline mr-1" />
                     {getUserLocation()}
                   </span>
                 )}
@@ -295,7 +295,7 @@ export function DashboardNew() {
         {/* Snap Your Plate CTA - Mobile Only */}
         <div className="px-4 -mt-6 relative z-10 mb-6 md:hidden">
           <button className="w-full bg-[#fbd556] text-gray-900 font-bold text-lg py-4 rounded-full shadow-lg shadow-[#fbd556]/50 flex items-center justify-center transition-all duration-300 hover:shadow-xl hover:shadow-[#fbd556]/60 hover:scale-[1.02]">
-            <Camera className="w-5 h-5 mr-3" />
+            <CameraAlt className="w-5 h-5 mr-3" />
             Snap Your Plate
           </button>
         </div>
@@ -424,7 +424,7 @@ export function DashboardNew() {
                       className="w-full h-full object-cover"
                     />
                     <button className="absolute top-2 right-2 w-8 h-8 md:w-9 md:h-9 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform">
-                      <Heart className="w-4 h-4 md:w-4.5 md:h-4.5 text-[#FFC909]" fill="#FFC909" />
+                      <Favorite className="w-4 h-4 md:w-4.5 md:h-4.5 text-[#FFC909]" style={{ color: '#FFC909' }} />
                     </button>
                   </div>
                   <div className="p-3 md:p-4">
@@ -432,7 +432,7 @@ export function DashboardNew() {
                       {recipe.name}
                     </h3>
                     <div className="flex items-center gap-1.5 text-[#6B7280] text-xs md:text-sm">
-                      <Clock className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                      <Schedule className="w-3.5 h-3.5 md:w-4 md:h-4" />
                       <span>{recipe.time}</span>
                     </div>
                   </div>
@@ -487,7 +487,7 @@ export function DashboardNew() {
                       <span className="text-xs font-bold">{restaurant.rating.toFixed(1)}</span>
                     </div>
                     <button className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform">
-                      <Heart className="w-4 h-4 text-[#6B7280]" />
+                      <Favorite className="w-4 h-4 text-[#6B7280]" />
                     </button>
                   </div>
                   <div className="p-4">
@@ -560,7 +560,7 @@ export function DashboardNew() {
                     <p className="text-xs md:text-sm text-[#6B7280] line-clamp-2 mb-2 leading-relaxed">{post.content}</p>
                     {post.restaurant_name && (
                       <div className="flex items-center gap-1 text-xs md:text-sm text-[#FFC909] font-semibold mt-3">
-                        <MapPin className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                        <Place className="w-3.5 h-3.5 md:w-4 md:h-4" />
                         <span>{post.restaurant_name}</span>
                       </div>
                     )}

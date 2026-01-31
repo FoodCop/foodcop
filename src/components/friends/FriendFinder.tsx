@@ -167,11 +167,11 @@ export function FriendFinder({ onUserClick, onStartConversation }: FriendFinderP
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
           <div className="flex items-center justify-center h-48">
-            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+            <Loop className="h-6 w-6 animate-spin text-gray-400" />
           </div>
         ) : users.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 text-gray-400 px-4">
-            <Users className="h-12 w-12 mb-2 stroke-1" />
+            <Group className="h-12 w-12 mb-2" />
             <p className="text-center">
               {searchQuery ? 'No users found' : 'Start typing to search for users'}
             </p>
@@ -235,7 +235,7 @@ export function FriendFinder({ onUserClick, onStartConversation }: FriendFinderP
                             disabled={isLoading}
                             className="text-xs"
                           >
-                            <X className="h-3 w-3" />
+                            <Close className="h-3 w-3" />
                           </Button>
                           <Button
                             variant="default"
@@ -245,7 +245,7 @@ export function FriendFinder({ onUserClick, onStartConversation }: FriendFinderP
                             className="bg-orange-500 hover:bg-orange-600 text-xs"
                           >
                             {isLoading ? (
-                              <Loader2 className="h-3 w-3 animate-spin" />
+                              <Loop className="h-3 w-3 animate-spin" />
                             ) : (
                               <Check className="h-3 w-3" />
                             )}
@@ -260,7 +260,7 @@ export function FriendFinder({ onUserClick, onStartConversation }: FriendFinderP
                           className="text-xs"
                         >
                           {isLoading ? (
-                            <Loader2 className="h-3 w-3 animate-spin" />
+                            <Loop className="h-3 w-3 animate-spin" />
                           ) : (
                             'Cancel'
                           )}
@@ -274,10 +274,10 @@ export function FriendFinder({ onUserClick, onStartConversation }: FriendFinderP
                           className="bg-orange-500 hover:bg-orange-600 text-xs"
                         >
                           {isLoading ? (
-                            <Loader2 className="h-3 w-3 animate-spin" />
+                            <Loop className="h-3 w-3 animate-spin" />
                           ) : (
                             <>
-                              <UserPlus className="h-3 w-3" />
+                              <PersonAdd className="h-3 w-3" />
                               Add
                             </>
                           )}

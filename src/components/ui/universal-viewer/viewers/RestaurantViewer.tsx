@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../card';
 import { Button } from '../../button';
 import { Badge } from '../../badge';
-import { 
-  MapPin, 
-  Star, 
-  DollarSign, 
-  Phone, 
-  Globe, 
-  ExternalLink,
-  Clock,
+import {
+  Place,
+  Star,
+  AttachMoney,
+  Phone,
+  Language,
+  OpenInNew,
+  Schedule,
   Navigation
-} from 'lucide-react';
+} from '@mui/icons-material';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../tabs';
 import type { RestaurantViewerProps } from '../types';
 
@@ -56,7 +56,7 @@ export const RestaurantViewer: React.FC<RestaurantViewerProps> = ({ data }) => {
         ) : (
           <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
             <div className="text-center text-gray-500">
-              <MapPin className="w-12 h-12 mx-auto mb-2" />
+              <Place className="w-12 h-12 mx-auto mb-2" />
               <p>No photos available</p>
             </div>
           </div>
@@ -80,7 +80,7 @@ export const RestaurantViewer: React.FC<RestaurantViewerProps> = ({ data }) => {
         
         {data.priceLevel && (
           <div className="flex items-center gap-2">
-            <DollarSign className="w-4 h-4 text-green-500" />
+            <AttachMoney className="w-4 h-4 text-green-500" />
             <span>{renderPriceLevel(data.priceLevel)}</span>
           </div>
         )}
@@ -98,7 +98,7 @@ export const RestaurantViewer: React.FC<RestaurantViewerProps> = ({ data }) => {
             target="_blank" 
             rel="noopener noreferrer"
           >
-            <ExternalLink className="w-4 h-4 mr-1" />
+            <OpenInNew className="w-4 h-4 mr-1" />
             Search
           </a>
         </Button>
@@ -116,7 +116,7 @@ export const RestaurantViewer: React.FC<RestaurantViewerProps> = ({ data }) => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <MapPin className="w-5 h-5" />
+                <Place className="w-5 h-5" />
                 Address
               </CardTitle>
             </CardHeader>
@@ -145,7 +145,7 @@ export const RestaurantViewer: React.FC<RestaurantViewerProps> = ({ data }) => {
                 )}
                 {data.website && (
                   <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-green-500" />
+                    <Language className="w-4 h-4 text-green-500" />
                     <a 
                       href={data.website} 
                       target="_blank" 
@@ -165,7 +165,7 @@ export const RestaurantViewer: React.FC<RestaurantViewerProps> = ({ data }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
+                  <Schedule className="w-5 h-5" />
                   Hours
                   {data.openingHours.open_now !== undefined && (
                     <Badge variant={data.openingHours.open_now ? "default" : "secondary"}>
@@ -212,7 +212,7 @@ export const RestaurantViewer: React.FC<RestaurantViewerProps> = ({ data }) => {
             <CardContent className="p-0">
               <div className="h-64 bg-gray-200 rounded-lg flex items-center justify-center">
                 <div className="text-center">
-                  <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                  <Place className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                   <p className="text-gray-500 mb-1">Interactive map coming soon</p>
                   <p className="text-sm text-gray-400 mb-3">
                     Lat: {data.location.lat}, Lng: {data.location.lng}
