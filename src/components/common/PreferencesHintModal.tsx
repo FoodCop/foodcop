@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, Settings } from 'lucide-react';
+import { Close, Settings } from '@mui/icons-material';
 import { toast } from 'sonner';
 import { ProfileService } from '../../services/profileService';
 import { useAuth } from '../auth/AuthProvider';
@@ -133,7 +133,7 @@ export function PreferencesHintModal({
             className="text-gray-400 hover:text-gray-600 transition-colors"
             disabled={loading}
           >
-            <X className="w-5 h-5" />
+            <Close className="w-5 h-5" />
           </button>
         </div>
 

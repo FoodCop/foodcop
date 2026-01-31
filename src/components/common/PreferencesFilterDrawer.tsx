@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Filter, Check } from 'lucide-react';
+import { Close, Tune, Done } from '@mui/icons-material';
 import { toast } from 'sonner';
 import { ProfileService } from '../../services/profileService';
 import { useAuth } from '../auth/AuthProvider';
@@ -101,7 +101,7 @@ export function PreferencesFilterDrawer({
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-[#fbd556]/20 flex items-center justify-center">
-              <Filter className="w-5 h-5 text-[#fbd556]" />
+              <Tune className="w-5 h-5 text-[#fbd556]" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900">Edit Preferences</h2>
@@ -113,7 +113,7 @@ export function PreferencesFilterDrawer({
             className="text-gray-400 hover:text-gray-600 transition-colors"
             disabled={loading}
           >
-            <X className="w-5 h-5" />
+            <Close className="w-5 h-5" />
           </button>
         </div>
 
@@ -168,7 +168,7 @@ export function PreferencesFilterDrawer({
                   >
                     {option}
                     {isSelected && (
-                      <Check className="absolute top-2 right-2 w-4 h-4" />
+                      <Done className="absolute top-2 right-2 w-4 h-4" />
                     )}
                   </button>
                 );

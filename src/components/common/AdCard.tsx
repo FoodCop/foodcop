@@ -1,5 +1,5 @@
 import type { AdItem } from '../../types/ad';
-import { ExternalLink } from 'lucide-react';
+import { OpenInNew } from '@mui/icons-material';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { ImageWithFallback } from '../ui/image-with-fallback';
@@ -96,7 +96,7 @@ export function AdCard({ ad, variant = 'feed', onClick }: AdCardProps) {
           {/* Hover overlay */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all flex items-center justify-center">
             <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-              <ExternalLink className="w-8 h-8 text-white drop-shadow-lg" />
+              <OpenInNew className="w-8 h-8 text-white drop-shadow-lg" />
             </div>
           </div>
         </div>

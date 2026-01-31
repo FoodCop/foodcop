@@ -4,7 +4,7 @@
  */
 
 import { useTheme } from '../../hooks/useTheme';
-import { Palette, Check } from 'lucide-react';
+import { Palette, Done } from '@mui/icons-material';
 
 export function ThemeSwitcher() {
   const { currentTheme, themes, setTheme, isLoading } = useTheme();
@@ -58,7 +58,7 @@ export function ThemeSwitcher() {
               {/* Active indicator */}
               {isActive && (
                 <div className="absolute top-2 right-2 bg-primary text-foreground-inverse rounded-full p-1">
-                  <Check className="w-3 h-3" />
+                  <Done className="w-3 h-3" />
                 </div>
               )}
 

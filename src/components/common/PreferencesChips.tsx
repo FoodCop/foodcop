@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Settings } from 'lucide-react';
+import { Close, Settings } from '@mui/icons-material';
 import { PreferencesHintModal } from './PreferencesHintModal';
 import type { UserProfile } from '../../types/profile';
 

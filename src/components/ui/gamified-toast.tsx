@@ -1,6 +1,7 @@
 import { toast } from 'sonner';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { CheckCircle, Cancel, WarningAmber, Info, Close } from '@mui/icons-material';
 
 interface GamifiedToastOptions {
   message: string;
@@ -32,28 +33,28 @@ const colorMap = {
     bg: '#ffe838', // Pineapple yellow
     text: '#111827',
     border: '#ffd600',
-    icon: 'fa-circle-check',
+    icon: CheckCircle,
     defaultTitle: 'Success',
   },
   error: {
     bg: '#ffe838', // Pineapple yellow
     text: '#111827',
     border: '#ffd600',
-    icon: 'fa-circle-xmark',
+    icon: Cancel,
     defaultTitle: 'Error',
   },
   warning: {
     bg: '#FFC909', // Yellow
     text: '#111827',
     border: '#E6B508',
-    icon: 'fa-triangle-exclamation',
+    icon: WarningAmber,
     defaultTitle: 'Warning',
   },
   info: {
     bg: '#FFC909', // Yellow
     text: '#111827',
     border: '#E6B508',
-    icon: 'fa-circle-info',
+    icon: Info,
     defaultTitle: 'Info',
   },
 };
@@ -190,7 +191,7 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                       className="text-gray-400 hover:text-gray-600 transition-colors"
                       aria-label="Close"
                     >
-                      <i className="fa-solid fa-xmark text-lg" />
+                      <Close sx={{ fontSize: 18 }} />
                     </button>
                   )}
                 </div>
@@ -278,7 +279,7 @@ export const gamifiedToast = (options: GamifiedToastOptions) => {
                   className="text-gray-400 hover:text-gray-600 transition-colors"
                   aria-label="Close"
                 >
-                  <i className="fa-solid fa-xmark text-lg" />
+                  <Close sx={{ fontSize: 18 }} />
                 </button>
               )}
             </div>

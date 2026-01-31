@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { useDMChatStore } from '../stores/chatStore';
 import { useAuthStore } from '../stores/authStore';
 import { DMMessage, DMConversation } from '../services/dmChatService';
-import { MessageCircle } from 'lucide-react';
+import { Message } from '@mui/icons-material';
 
 /**
  * Hook to handle chat notifications via toast
@@ -56,7 +56,7 @@ export function useChatNotifications(enabled: boolean = true) {
       // Show toast notification
       toast(
         <div className="flex items-start gap-3">
-          <MessageCircle className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />
+          <Message className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-sm text-gray-900">{senderName}</p>
             <p className="text-xs text-gray-600 truncate">{preview}</p>

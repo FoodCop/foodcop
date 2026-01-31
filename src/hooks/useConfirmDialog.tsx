@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Button } from '../components/ui/button';
-import { AlertTriangle, Info, AlertCircle } from 'lucide-react';
+import { WarningAmber, Info, ErrorOutline } from '@mui/icons-material';
 
 interface ConfirmDialogOptions {
   title: string;
@@ -46,9 +46,9 @@ export const useConfirmDialog = () => {
     if (!options) return null;
 
     const icons = {
-      warning: AlertTriangle,
+      warning: WarningAmber,
       info: Info,
-      error: AlertCircle
+      error: ErrorOutline
     };
     
     const Icon = options.icon ? icons[options.icon] : null;

@@ -1152,7 +1152,7 @@ function RestaurantCardComponent({ restaurant, onClick }: Readonly<{ restaurant:
         )}
         {restaurant.distance && (
           <div className="flex items-center gap-1 text-sm text-neutral-400">
-            <i className="fa-solid fa-person-walking"></i>
+            <DirectionsWalk style={{ fontSize: '16px' }} />
             <span>{(restaurant.distance / 1000).toFixed(1)} km</span>
           </div>
         )}

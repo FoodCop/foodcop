@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Menu, Restaurant, Instagram, Facebook, Twitter, YouTube } from '@mui/icons-material';
 import './LandingPage.css';
 import { PhoneFan } from './components/PhoneFan';
 import { useAuth } from '../auth/AuthProvider';
@@ -124,7 +125,7 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
           <nav className="hidden md:flex space-x-8"></nav>
           <div className="flex items-center space-x-4">
             <button className="md:hidden focus:outline-none">
-              <i className="fa-solid fa-bars text-foreground text-xl"></i>
+              <Menu className="text-foreground text-xl" />
             </button>
           </div>
         </div>
@@ -528,7 +529,7 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
               className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105 text-white"
               style={{ backgroundColor: '#ffe838' }}
             >
-              EXPLORE <i className="fa-solid fa-utensils ml-2"></i>
+              EXPLORE <Restaurant className="ml-2" style={{ display: 'inline-block', fontSize: '24px' }} />
             </button>
           </div>
         </div>
@@ -574,7 +575,7 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
               className="px-8 py-4 font-bold text-lg rounded-full transition shadow-lg hover:shadow-xl transform hover:scale-105 text-white"
               style={{ backgroundColor: '#ffe838' }}
             >
-              EXPLORE <i className="fa-solid fa-utensils ml-2"></i>
+              EXPLORE <Restaurant className="ml-2" style={{ display: 'inline-block', fontSize: '24px' }} />
             </button>
           </div>
         </div>
@@ -610,16 +611,16 @@ export function LandingPage({ onNavigateToSignup }: LandingPageProps) {
               <h4 className="font-semibold mb-4">Follow Us</h4>
               <div className="flex space-x-4">
                 <a href="#" className="text-gray-400 hover:text-white transition text-xl">
-                  <i className="fa-brands fa-instagram"></i>
+                  <Instagram />
                 </a>
                 <a href="#" className="text-gray-400 hover:text-white transition text-xl">
-                  <i className="fa-brands fa-facebook"></i>
+                  <Facebook />
                 </a>
                 <a href="#" className="text-gray-400 hover:text-white transition text-xl">
-                  <i className="fa-brands fa-twitter"></i>
+                  <Twitter />
                 </a>
                 <a href="#" className="text-gray-400 hover:text-white transition text-xl">
-                  <i className="fa-brands fa-youtube"></i>
+                  <YouTube />
                 </a>
               </div>
             </div>

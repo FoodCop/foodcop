@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, Bell, Settings, MoreVertical } from 'lucide-react';
+import { ArrowBack, Search, Notifications, Settings, MoreVert } from '@mui/icons-material';
 
 export interface MobileHeaderAction {
   id: string;
@@ -33,7 +33,7 @@ export const MobileHeader = ({ config }: MobileHeaderProps) => {
               className="touch-target p-2 -ml-2 text-gray-700 hover:text-gray-900 active:text-orange-600 transition-colors"
               aria-label="Go back"
             >
-              <ArrowLeft className="w-6 h-6" />
+              <ArrowBack className="w-6 h-6" />
             </button>
           )}
         </div>
@@ -61,7 +61,7 @@ export const MobileHeader = ({ config }: MobileHeaderProps) => {
               className="touch-target p-2 text-gray-700 hover:text-gray-900 active:text-orange-600 transition-colors relative"
               aria-label="Notifications"
             >
-              <Bell className="w-5 h-5" />
+              <Notifications className="w-5 h-5" />
               {/* Notification dot */}
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
             </button>
@@ -95,7 +95,7 @@ export const MobileHeader = ({ config }: MobileHeaderProps) => {
               className="touch-target p-2 text-gray-700 hover:text-gray-900 active:text-orange-600 transition-colors"
               aria-label="More options"
             >
-              <MoreVertical className="w-5 h-5" />
+              <MoreVert className="w-5 h-5" />
             </button>
           )}
         </div>

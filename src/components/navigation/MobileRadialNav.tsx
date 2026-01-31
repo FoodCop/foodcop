@@ -1,14 +1,14 @@
 import { RadialMenu } from './components/RadialMenu';
 import { 
-  Rss, 
+  RssFeed,
   Search, 
-  Camera, 
-  Pizza, 
-  Scissors, 
-  Utensils, 
-  MessageCircle,
+  CameraAlt, 
+  LocalPizza,
+  ContentCut,
+  Restaurant, 
+  Message,
   Send
-} from 'lucide-react';
+} from '@mui/icons-material';
 import { useDMChatStore } from '../../stores/chatStore';
 
 interface MobileRadialNavProps {
@@ -33,37 +33,37 @@ export const MobileRadialNav = ({ currentPage, onNavigate }: MobileRadialNavProp
     {
       label: 'Feed',
       route: 'feed',
-      icon: <Rss size={20} />,
+      icon: <RssFeed style={{ fontSize: 20 }} />,
     },
     {
       label: 'Scout',
       route: 'scout',
-      icon: <Search size={20} />,
+      icon: <Search style={{ fontSize: 20 }} />,
     },
     {
       label: 'Snap',
       route: 'snap',
-      icon: <Camera size={20} />,
+      icon: <CameraAlt style={{ fontSize: 20 }} />,
     },
     {
       label: 'Bites',
       route: 'bites',
-      icon: <Pizza size={20} />,
+      icon: <LocalPizza style={{ fontSize: 20 }} />,
     },
     {
       label: 'Trims',
       route: 'trims',
-      icon: <Scissors size={20} />,
+      icon: <ContentCut style={{ fontSize: 20 }} />,
     },
     {
       label: 'Plate',
       route: 'plate',
-      icon: <Utensils size={20} />,
+      icon: <Restaurant style={{ fontSize: 20 }} />,
     },
     {
       label: unreadCount > 0 ? `Chat (${unreadCount})` : 'Chat',
       route: 'messages',
-      icon: <Send size={20} />,
+      icon: <Send style={{ fontSize: 20 }} />,
     },
   ];
 
