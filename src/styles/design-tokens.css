@@ -8,6 +8,9 @@
  * Version: 1.0.0
  */
 
+/* Import unified color system as foundation */
+@import './unified-colors.css';
+
 /* ============================================
    TYPOGRAPHY SYSTEM
    ============================================ */
@@ -75,42 +78,6 @@
    ============================================ */
 
 :root {
-  /* Brand Colors - Primary Palette (Yellow) */
-  --fuzo-orange-50: #FFFDF0;
-  --fuzo-orange-100: #FFF9D6;
-  --fuzo-orange-200: #FFF3AD;
-  --fuzo-orange-300: #FFEC85;
-  --fuzo-orange-400: #FFE45C;
-  --fuzo-orange-500: #FFC909;  /* Primary Brand Yellow */
-  --fuzo-orange-600: #E6B508;
-  --fuzo-orange-700: #CC9F07;
-  --fuzo-orange-800: #997706;
-  --fuzo-orange-900: #665005;
-
-  /* Brand Colors - Secondary Palette (Pink) */
-  --fuzo-pink-50: #FFF1F2;
-  --fuzo-pink-100: #FFE4E6;
-  --fuzo-pink-200: #FECDD3;
-  --fuzo-pink-300: #FDA4AF;
-  --fuzo-pink-400: #FB7185;
-  --fuzo-pink-500: #F6339A;  /* Secondary Brand Pink */
-  --fuzo-pink-600: #E11D48;
-  --fuzo-pink-700: #BE123C;
-  --fuzo-pink-800: #9F1239;
-  --fuzo-pink-900: #881337;
-
-  /* Brand Colors - Accent Palette (Purple) */
-  --fuzo-purple-50: #FAF5FF;
-  --fuzo-purple-100: #F3E8FF;
-  --fuzo-purple-200: #E9D5FF;
-  --fuzo-purple-300: #D8B4FE;
-  --fuzo-purple-400: #C084FC;
-  --fuzo-purple-500: #AD46FF;  /* Accent Purple */
-  --fuzo-purple-600: #9333EA;
-  --fuzo-purple-700: #7E22CE;
-  --fuzo-purple-800: #6B21A8;
-  --fuzo-purple-900: #581C87;
-
   /* Neutral Colors - Grayscale */
   --neutral-50: #FAFAFA;
   --neutral-100: #F5F5F5;
@@ -162,7 +129,7 @@
   --text-tertiary: #737373;
   --text-inverse: #FFFFFF;
   --text-disabled: #A3A3A3;
-  --text-brand: #FFC909;
+   --text-brand: var(--color-primary);
 
   /* Border Colors - Light Mode */
   --border-primary: rgba(0, 0, 0, 0.1);
@@ -170,12 +137,12 @@
   --border-focus: #FFC909;
   --border-error: #EF4444;
 
-  /* Page Background Colors - Light Mode */
-  --page-bg-feed: #d5711e;        /* Apricot */
-  --page-bg-scout: #db4813;       /* Dark Mango */
-  --page-bg-explore: #BF2C20;     /* Blood Orange */
-  --page-bg-profile: #fff1b7;    
-  --page-bg-utility: #ffe838;     /* Pineapple */
+   /* Page Background Colors - Light Mode (lean palette) */
+   --page-bg-feed: var(--color-accent);
+   --page-bg-scout: var(--color-accent);
+   --page-bg-explore: var(--color-accent);
+   --page-bg-profile: var(--color-accent);
+   --page-bg-utility: var(--color-accent);
 }
 
 /* Dark Mode Color Overrides */
@@ -195,7 +162,7 @@
   --text-tertiary: #A3A3A3;
   --text-inverse: #0A0A0A;
   --text-disabled: #525252;
-  --text-brand: #FFC909;
+   --text-brand: var(--color-primary);
 
   /* Border Colors - Dark Mode */
   --border-primary: rgba(255, 255, 255, 0.1);
@@ -203,12 +170,12 @@
   --border-focus: #FFC909;
   --border-error: #EF4444;
 
-  /* Page Background Colors - Dark Mode (same as light mode for consistency) */
-  --page-bg-feed: #E47A24;
-  --page-bg-scout: #D55123;
-  --page-bg-explore: #BF2C20;
-  --page-bg-profile: #951A21;
-  --page-bg-utility: #7A6B5E;
+   /* Page Background Colors - Dark Mode (lean palette) */
+   --page-bg-feed: var(--color-accent);
+   --page-bg-scout: var(--color-accent);
+   --page-bg-explore: var(--color-accent);
+   --page-bg-profile: var(--color-accent);
+   --page-bg-utility: var(--color-accent);
 }
 
 /* ============================================
@@ -408,9 +375,9 @@
    ============================================ */
 
 /* Color Utilities */
-.text-brand { color: var(--fuzo-orange-500); }
-.bg-brand { background-color: var(--fuzo-orange-500); }
-.border-brand { border-color: var(--fuzo-orange-500); }
+.text-brand { color: var(--color-primary); }
+.bg-brand { background-color: var(--color-primary); }
+.border-brand { border-color: var(--color-primary); }
 
 /* Platform Badge Utilities */
 .bg-platform-google { background-color: var(--platform-google); }

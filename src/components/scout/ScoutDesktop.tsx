@@ -427,9 +427,9 @@ export function ScoutDesktop() {
   const priceLevel = selectedRestaurant?.price_level ? '$'.repeat(selectedRestaurant.price_level) : '$$';
 
   return (
-    <div className="flex flex-col min-h-screen bg-page-profile" style={{ fontSize: '10pt' }}>
+    <div className="flex flex-col min-h-screen bg-background" style={{ fontSize: '10pt' }}>
       {/* Tabs for Discover / My Map */}
-      <div className="border-b border-gray-200 bg-page-profile px-4 pt-2">
+      <div className="border-b border-gray-200 bg-background px-4 pt-2">
         <div className="inline-flex rounded-full p-1">
           <button
             type="button"
@@ -439,7 +439,7 @@ export function ScoutDesktop() {
               : 'text-gray-600 hover:text-gray-900'
               }`}
             style={{
-              backgroundColor: activeTab === 'discover' ? '#f8b44a' : 'transparent'
+              backgroundColor: activeTab === 'discover' ? 'var(--yellow-tertiary)' : 'transparent'
             }}
           >
             Discover
@@ -452,7 +452,7 @@ export function ScoutDesktop() {
               : 'text-gray-600 hover:text-gray-900'
               }`}
             style={{
-              backgroundColor: activeTab === 'my-map' ? '#f8b44a' : 'transparent'
+              backgroundColor: activeTab === 'my-map' ? 'var(--yellow-tertiary)' : 'transparent'
             }}
           >
             My Map
@@ -462,7 +462,7 @@ export function ScoutDesktop() {
 
       <div className="flex flex-1">
         {/* Left Sidebar - Apricot Theme */}
-        <aside className="w-[380px] border-r flex flex-col overflow-hidden" style={{ backgroundColor: '#fff1b7', borderColor: '#E5B88A' }}>
+        <aside className="w-[380px] border-r flex flex-col overflow-hidden" style={{ backgroundColor: 'var(--sidebar-bg)', borderColor: 'var(--border-light)' }}>
           {/* Header */}
           <div className="p-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
             {/* User Location */}
@@ -830,7 +830,7 @@ export function ScoutDesktop() {
 
         {/* Right Panel - Apricot Theme */}
         {selectedRestaurant && (
-          <aside className="w-[420px] border-l flex flex-col overflow-hidden" style={{ backgroundColor: '#fff1b7', borderColor: '#E5B88A' }}>
+          <aside className="w-[420px] border-l flex flex-col overflow-hidden" style={{ backgroundColor: 'var(--sidebar-bg)', borderColor: '#E5B88A' }}>
             <div className="flex-1 overflow-y-auto">
               {/* Hero Image */}
               <div className="h-64 overflow-hidden bg-gray-200">
@@ -876,7 +876,7 @@ export function ScoutDesktop() {
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   <button
                     onClick={handleGetDirections}
-                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[#F4E3B2] text-gray-800 font-medium rounded-lg hover:bg-[#E8D5A3] transition-colors"
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                   >
                     <Navigation size={18} className="text-gray-800" />
                     Directions
@@ -884,7 +884,7 @@ export function ScoutDesktop() {
                   {selectedRestaurant.phone && (
                     <a
                       href={`tel:${selectedRestaurant.phone}`}
-                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[#F4E3B2] text-gray-800 font-medium rounded-lg hover:bg-[#E8D5A3] transition-colors"
+                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                     >
                       <Phone size={18} className="text-gray-800" />
                       Call
@@ -895,7 +895,7 @@ export function ScoutDesktop() {
                       href={selectedRestaurant.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[#F4E3B2] text-gray-800 font-medium rounded-lg hover:bg-[#E8D5A3] transition-colors"
+                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                     >
                       <Globe size={18} className="text-gray-800" />
                       Website
@@ -903,12 +903,12 @@ export function ScoutDesktop() {
                   )}
                   <button
                     onClick={handleSaveToPlate}
-                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[#F4E3B2] text-gray-800 font-medium rounded-lg hover:bg-[#E8D5A3] transition-colors"
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                   >
                     <Heart size={18} className="text-gray-800" />
                     Save to Plate
                   </button>
-                  <div className="flex items-center justify-center px-4 py-3 bg-[#F4E3B2] text-gray-800 rounded-lg hover:bg-[#E8D5A3] transition-colors">
+                  <div className="flex items-center justify-center px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors">
                     <SharePostButton
                       cardId={selectedRestaurant.id}
                       title={selectedRestaurant.name}
@@ -1248,7 +1248,7 @@ export function ScoutDesktop() {
                           window.open(googleMapsUrl, '_blank');
                         }
                       }}
-                      className="w-full bg-orange-500 text-white font-semibold py-4 rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
+                      className="w-full bg-[var(--button-bg-default)] text-[var(--button-text)] font-semibold py-4 rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors flex items-center justify-center gap-2"
                     >
                       <Navigation size={20} />
                       Open in Google Maps

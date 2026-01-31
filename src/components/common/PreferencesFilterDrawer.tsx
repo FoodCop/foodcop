@@ -160,10 +160,10 @@ export function PreferencesFilterDrawer({
                     key={option}
                     onClick={() => toggleDietary(option)}
                     disabled={loading}
-                    className={`relative py-3 px-4 rounded-2xl font-semibold text-left transition-all border ${
+                    className={`relative py-3 px-4 rounded-full font-semibold text-left transition-all border ${
                       isSelected
-                        ? 'bg-[#fbd556] border-[#fbd556] text-gray-900 shadow-lg shadow-[#fbd556]/30'
-                        : 'bg-white border-gray-200 text-gray-800 hover:border-[#fbd556]'
+                        ? 'bg-[var(--button-bg-default)] border-[var(--button-bg-default)] text-[var(--button-text)] shadow-lg'
+                        : 'bg-white border-gray-200 text-gray-800 hover:border-[var(--button-bg-default)]'
                     } disabled:opacity-50`}
                   >
                     {option}
@@ -182,7 +182,7 @@ export function PreferencesFilterDrawer({
           <button
             onClick={handleSavePreferences}
             disabled={loading}
-            className="w-full py-3 px-4 bg-[#fbd556] text-gray-900 font-semibold rounded-2xl hover:bg-[#f0a71b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 bg-[var(--button-bg-default)] text-[var(--button-text)] font-semibold rounded-full hover:bg-[var(--button-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Saving...' : 'Save Preferences'}
           </button>
@@ -190,7 +190,7 @@ export function PreferencesFilterDrawer({
           <button
             onClick={onClose}
             disabled={loading}
-            className="w-full py-3 px-4 border border-gray-300 text-gray-700 font-semibold rounded-2xl hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="w-full py-3 px-4 border border-gray-300 text-[var(--button-text)] font-semibold rounded-full hover:bg-[var(--button-bg-hover)] transition-colors disabled:opacity-50"
           >
             Cancel
           </button>

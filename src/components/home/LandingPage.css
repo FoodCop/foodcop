@@ -3,7 +3,7 @@
 .new-landing-page {
   /* Landing page specific overrides */
   --landing-bg-default: var(--page-bg-utility);
-  --landing-bg-yellow: #FFD53B;
+  --landing-bg-yellow: var(--color-primary);
 
   font-family: var(--font-body);
   background-color: var(--landing-bg-default);
@@ -21,11 +21,11 @@
 }
 
 .new-landing-page .bg-primary {
-  background-color: var(--fuzo-orange-500);
+  background-color: var(--color-primary);
 }
 
 .new-landing-page .bg-accent {
-  background-color: var(--fuzo-purple-500);
+  background-color: var(--color-secondary);
 }
 
 .new-landing-page .text-accent-foreground {
@@ -289,14 +289,14 @@
 /* Button Styles - Orange with White Text, Roboto Font */
 .new-landing-page button {
   font-family: var(--font-button);
-  background-color: var(--fuzo-orange-500);
+  background-color: var(--color-primary);
   color: var(--text-inverse);
   border: none;
   transition: var(--transition-button);
 }
 
 .new-landing-page button:hover {
-  background-color: var(--fuzo-orange-600);
+  background-color: var(--color-secondary);
   color: var(--text-inverse);
   box-shadow: var(--shadow-button-hover);
 }

@@ -154,8 +154,8 @@ export function PreferencesHintModal({
                     key={option}
                     onClick={() => toggleDietary(option)}
                     disabled={loading}
-                    className={`py-3 px-4 rounded-xl font-medium transition-all ${isSelected
-                        ? 'bg-[#FFC909] text-gray-900 shadow-md hover:bg-[#EA580C]'
+                    className={`py-3 px-4 rounded-full font-medium transition-all ${isSelected
+                        ? 'bg-[var(--button-bg-default)] text-[var(--button-text)] shadow-md hover:bg-[var(--button-bg-hover)]'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       } disabled:opacity-50`}
                   >
@@ -177,7 +177,7 @@ export function PreferencesHintModal({
             <button
               onClick={handleSavePreferences}
               disabled={loading}
-              className="w-full py-3 px-4 bg-[#FFC909] text-gray-900 font-semibold rounded-xl hover:bg-[#EA580C] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 bg-[var(--button-bg-default)] text-[var(--button-text)] font-semibold rounded-full hover:bg-[var(--button-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Saving...' : isEditMode ? 'Update Preferences' : 'Save Preferences'}
             </button>
@@ -187,14 +187,14 @@ export function PreferencesHintModal({
                 <button
                   onClick={handleSkip}
                   disabled={loading}
-                  className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 px-4 border border-gray-300 text-[var(--button-text)] font-semibold rounded-full hover:bg-[var(--button-bg-hover)] transition-colors disabled:opacity-50"
                 >
                   Skip for Now
                 </button>
                 <button
                   onClick={handleDontShowAgain}
                   disabled={loading}
-                  className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 px-4 border border-gray-300 text-[var(--button-text)] font-semibold rounded-full hover:bg-[var(--button-bg-hover)] transition-colors disabled:opacity-50"
                 >
                   Don't Show Again
                 </button>

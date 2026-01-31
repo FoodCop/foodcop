@@ -258,12 +258,12 @@ const BitesDesktop: React.FC = () => {
   const filterButtons: FilterType[] = ['All', 'Vegetarian', 'Vegan', 'Gluten-Free', 'Keto', 'Low Carb'];
 
   return (
-    <div className="min-h-screen bg-page-profile flex flex-col" style={{ fontSize: '10pt' }}>
+    <div className="min-h-screen bg-background flex flex-col" style={{ fontSize: '10pt' }}>
       <MinimalHeader showLogo={true} logoPosition="left" />
       
       {/* Active Preferences Display */}
       {userProfile?.dietary_preferences && userProfile.dietary_preferences.length > 0 && (
-        <div className="sticky top-0 z-30 bg-yellow-50 border-b border-yellow-200 px-6 py-3">
+        <div className="sticky top-0 z-30 border-b border-yellow-200 px-6 py-3" style={{ backgroundColor: 'var(--sidebar-bg)' }}>
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-semibold text-yellow-700">Active Filters:</span>
             {userProfile.dietary_preferences.map((pref) => (
@@ -311,13 +311,13 @@ const BitesDesktop: React.FC = () => {
         <div className="mb-12">
           <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-neutral-text-lighter)]" />
               <input
                 type="text"
                 placeholder="Search for recipes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-300 bg-white text-[#6B7280] placeholder:text-[#9CA3AF] focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-colors"
+                className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-[var(--color-border)] bg-[var(--color-accent)] text-[var(--color-neutral-text-light)] placeholder:text-[var(--color-neutral-text-lighter)] focus:outline-none focus:border-[var(--color-secondary)] focus:ring-2 focus:ring-[color:var(--color-secondary-20)] transition-colors"
               />
             </div>
           </form>
@@ -329,7 +329,7 @@ const BitesDesktop: React.FC = () => {
             <p className="text-destructive mb-4">{error}</p>
             <button
               onClick={loadRecommendedRecipes}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              className="px-6 py-2 bg-[var(--button-bg-default)] text-[var(--button-text)] rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
             >
               Retry
             </button>
@@ -425,7 +425,7 @@ const BitesDesktop: React.FC = () => {
       </main>
 
       {/* Page Endpoint Banners (Desktop only) */}
-      <footer className="hidden md:block w-full py-6 bg-page-profile">
+      <footer className="hidden md:block w-full py-6 bg-background">
         <div className="w-full max-w-7xl mx-auto px-6 space-y-4">
           <img src="/banners/fb_03.png" alt="Bites banner 1" className="w-full h-auto rounded-md shadow-sm" />
           <img src="/banners/fb_04.png" alt="Bites banner 2" className="w-full h-auto rounded-md shadow-sm" />
@@ -528,14 +528,14 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onClick, onSave, onShar
         <div className="flex items-center gap-3">
           <button
             onClick={onShare}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[var(--button-bg-active)] hover:bg-[var(--button-bg-hover)] text-[var(--button-text)] rounded-full transition-colors"
           >
             <Share2 className="w-4 h-4" />
             <span className="text-sm font-medium">Share</span>
           </button>
           <button
             onClick={onSave}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[var(--button-bg-default)] hover:bg-[var(--button-bg-hover)] text-[var(--button-text)] rounded-full transition-colors"
           >
             <Bookmark className="w-4 h-4" />
             <span className="text-sm font-medium">Save</span>

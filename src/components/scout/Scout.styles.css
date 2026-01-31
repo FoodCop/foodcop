@@ -1,12 +1,14 @@
 /* Scout Slider Yellow Color Fix */
 /* This addresses the Radix UI Slider color visibility issue */
 
+@import '../../styles/unified-colors.css';
+
 .scout-slider {
   /* Force yellow colors for the scout distance slider */
-  --slider-track-bg: #f3f4f6;
-  --slider-range-bg: #FFC909;
-  --slider-thumb-bg: #FFC909;
-  --slider-thumb-border: #ffffff;
+  --slider-track-bg: var(--gray-light);
+  --slider-range-bg: var(--yellow-primary);
+  --slider-thumb-bg: var(--yellow-primary);
+  --slider-thumb-border: var(--white);
 }
 
 .scout-slider [data-slot="slider-track"] {
@@ -22,19 +24,19 @@
 .scout-slider [data-slot="slider-thumb"] {
   background-color: var(--slider-thumb-bg) !important;
   border: 2px solid var(--slider-thumb-border) !important;
-  box-shadow: 0 2px 8px rgba(255, 201, 9, 0.3) !important;
+  box-shadow: 0 2px 8px var(--yellow-primary-30) !important;
   width: 20px !important;
   height: 20px !important;
 }
 
 .scout-slider [data-slot="slider-thumb"]:hover {
-  box-shadow: 0 2px 12px rgba(255, 201, 9, 0.4) !important;
+  box-shadow: 0 2px 12px var(--yellow-primary-40) !important;
   transform: scale(1.1);
   transition: all 0.2s ease;
 }
 
 .scout-slider [data-slot="slider-thumb"]:focus-visible {
-  outline: 2px solid #FFC909;
+  outline: 2px solid var(--yellow-primary);
   outline-offset: 2px;
 }
 

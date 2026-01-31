@@ -347,7 +347,7 @@ export default function Bites() {
   }, [recipes, fallbackRecipes, searchQuery, desktopDietaryFilters]);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-page-profile">
+    <div className="flex h-screen overflow-hidden bg-background">
       {/* Full-height Sidebar for desktop - Banana Yellow Theme */}
       <SidebarPanel
         className="hidden md:flex"
@@ -369,7 +369,7 @@ export default function Bites() {
           <button
             onClick={handleDesktopPreferencesSave}
             disabled={savingDesktopPrefs}
-            className="w-full py-2.5 rounded-lg bg-white text-gray-900 font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50 border border-gray-200"
+            className="w-full py-2.5 rounded-full bg-[var(--button-bg-default)] text-[var(--button-text)] font-semibold hover:bg-[var(--button-bg-hover)] transition-colors disabled:opacity-50"
           >
             {savingDesktopPrefs ? "Saving..." : "Save Preferences"}
           </button>
@@ -380,27 +380,29 @@ export default function Bites() {
             const normalized = option.toLowerCase();
             const isSelected = desktopDietaryFilters.includes(normalized);
             
-            // Color coding for each dietary preference
+            // Color coding for each dietary preference - uses CSS variables from lean-colors.css
             const dietaryColors: Record<string, { bg: string; icon: string }> = {
-              'vegetarian': { bg: '#10b981', icon: '🥗' },
-              'vegan': { bg: '#22c55e', icon: '🌱' },
-              'pescetarian': { bg: '#06b6d4', icon: '🐟' },
-              'ketogenic': { bg: '#f59e0b', icon: '🥑' },
-              'paleo': { bg: '#f97316', icon: '🍖' },
-              'gluten-free': { bg: '#eab308', icon: '🌾' },
-              'dairy-free': { bg: '#8b5cf6', icon: '🥛' },
-              'no restrictions': { bg: '#6b7280', icon: '🍽️' }
+              'vegetarian': { bg: 'var(--color-dietary-vegetarian)', icon: '🥗' },
+              'vegan': { bg: 'var(--color-dietary-vegan)', icon: '🌱' },
+              'pescetarian': { bg: 'var(--color-dietary-pescetarian)', icon: '🐟' },
+              'ketogenic': { bg: 'var(--color-dietary-ketogenic)', icon: '🥑' },
+              'paleo': { bg: 'var(--color-dietary-paleo)', icon: '🍖' },
+              'gluten-free': { bg: 'var(--color-dietary-glutenfree)', icon: '🌾' },
+              'dairy-free': { bg: 'var(--color-dietary-dairyfree)', icon: '🥛' },
+              'no restrictions': { bg: 'var(--color-dietary-none)', icon: '🍽️' }
             };
             
-            const colors = dietaryColors[normalized] || { bg: '#6b7280', icon: '🍽️' };
+            const colors = dietaryColors[normalized] || { bg: 'var(--color-dietary-none)', icon: '🍽️' };
 
             return (
               <button
                 key={option}
                 onClick={() => toggleDesktopDietary(option)}
-                className="w-full px-3 py-2.5 rounded-lg flex items-center justify-between text-sm font-medium transition-all hover:opacity-90"
+                className="w-full px-3 py-2.5 rounded-full flex items-center justify-between text-sm font-medium transition-all hover:opacity-90"
                 style={{
-                  backgroundColor: isSelected ? colors.bg : `${colors.bg}80`,
+                  backgroundColor: isSelected
+                    ? colors.bg
+                    : `color-mix(in srgb, ${colors.bg} 35%, white)`,
                   color: 'white',
                   border: 'none'
                 }}
@@ -421,17 +423,17 @@ export default function Bites() {
           {/* Search Bar */}
           <section className="px-5 md:px-8 lg:px-12 pt-5 md:pt-6 pb-6 md:pb-8">
             <div className="relative md:max-w-2xl lg:max-w-3xl md:mx-auto">
-              <Search className="absolute left-4 top-3 md:top-4 w-4 h-4 md:w-5 md:h-5 text-[#9CA3AF]" />
+              <Search className="absolute left-4 top-3 md:top-4 w-4 h-4 md:w-5 md:h-5 text-[var(--color-neutral-text-lighter)]" />
               <input
                 type="text"
                 placeholder="Search recipes, ingredients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-14 md:pr-16 rounded-2xl bg-white text-sm md:text-base text-[#6B7280] placeholder:text-[#9CA3AF] border-0 focus:outline-none focus:ring-2 focus:ring-[#FFC909]/20"
+                className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-14 md:pr-16 rounded-2xl bg-[var(--color-accent)] text-sm md:text-base text-[var(--color-neutral-text-light)] placeholder:text-[var(--color-neutral-text-lighter)] border-0 focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-20)]"
               />
               <button
                 onClick={() => setShowFilterDrawer(true)}
-                className="absolute right-2 top-2 w-8 h-8 rounded-xl bg-[#fbd556] flex items-center justify-center hover:bg-[#f0a71b] transition-colors md:hidden"
+                className="absolute right-2 top-2 w-8 h-8 rounded-xl bg-[var(--yellow-secondary)] flex items-center justify-center hover:bg-[var(--yellow-tertiary)] transition-colors md:hidden"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5 text-gray-900" />
               </button>
@@ -441,7 +443,7 @@ export default function Bites() {
           {/* Active Preferences Display - Mobile */}
           {userProfile?.dietary_preferences && userProfile.dietary_preferences.length > 0 && (
             <section className="px-5 md:px-8 lg:px-12 mb-4 md:hidden">
-              <div className="bg-[#fbd556] border border-[#f0a71b] rounded-xl p-3">
+              <div className="bg-[var(--yellow-secondary)] border border-[var(--yellow-tertiary)] rounded-xl p-3">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-semibold text-gray-900">Active Filters:</span>
                   {userProfile.dietary_preferences.map((pref) => (
@@ -460,8 +462,8 @@ export default function Bites() {
           {/* Loading State */}
           {loading && (
             <div className="px-5 md:px-8 lg:px-12 flex flex-col items-center justify-center py-12 md:py-16">
-              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-2 md:border-b-3 border-[#FFC909] mb-4"></div>
-              <p className="text-[#6B7280] text-sm md:text-base">Loading delicious recipes...</p>
+              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-2 md:border-b-3 border-[var(--yellow-primary)] mb-4"></div>
+              <p className="text-[var(--color-neutral-text-light)] text-sm md:text-base">Loading delicious recipes...</p>
             </div>
           )}
 
@@ -472,10 +474,10 @@ export default function Bites() {
                 <span className="text-3xl md:text-4xl">😕</span>
               </div>
               <p className="text-red-600 font-bold text-base md:text-lg mb-1">Failed to load recipes</p>
-              <p className="text-[#6B7280] text-sm md:text-base mb-4">{error}</p>
+              <p className="text-[var(--color-neutral-text-light)] text-sm md:text-base mb-4">{error}</p>
               <button
                 onClick={() => loadRecipes("popular recipes")}
-                className="px-6 md:px-8 py-2 md:py-3 rounded-xl bg-[#FFC909] text-gray-900 font-semibold text-sm md:text-base"
+                className="px-6 md:px-8 py-2 md:py-3 rounded-xl bg-[var(--color-primary)] text-gray-900 font-semibold text-sm md:text-base"
               >
                 Try Again
               </button>
@@ -485,11 +487,11 @@ export default function Bites() {
           {/* Empty State */}
           {filteredRecipes.length === 0 && !loading && !error && !loadingFallback && (
             <div className="px-5 text-center py-12">
-              <div className="w-16 h-16 rounded-full bg-[#F3F4F6] flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-[var(--color-neutral-bg)] flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">🔍</span>
               </div>
-              <p className="text-[#6B7280] text-sm mb-2">No recipes found matching your criteria.</p>
-              <p className="text-[#9CA3AF] text-xs">Try adjusting your filters or search terms.</p>
+              <p className="text-[var(--color-neutral-text-light)] text-sm mb-2">No recipes found matching your criteria.</p>
+              <p className="text-[var(--color-neutral-text-lighter)] text-xs">Try adjusting your filters or search terms.</p>
             </div>
           )}
 

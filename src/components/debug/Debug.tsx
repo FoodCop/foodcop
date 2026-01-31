@@ -188,7 +188,7 @@ export default function DebugApp() {
   }
 
   return (
-    <div className="min-h-screen bg-page-profile p-4">
+    <div className="min-h-screen bg-background p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">

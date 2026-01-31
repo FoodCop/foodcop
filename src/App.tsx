@@ -138,7 +138,7 @@ const NavButton = ({ to, label }: NavButtonProps) => {
       }}
       onMouseEnter={(e) => {
         if (!isActive) {
-          e.currentTarget.style.backgroundColor = '#f8b44a';
+          e.currentTarget.style.backgroundColor = 'var(--color-secondary)';
         }
       }}
       onMouseLeave={(e) => {
@@ -206,8 +206,8 @@ function AppLayout() {
               onClick={openDMChat}
               className="relative px-4 py-2 rounded-full border-2 transition ml-2 hover:bg-orange-50"
               style={{
-                borderColor: '#E5E7EB',
-                backgroundColor: '#FFFFFF',
+                borderColor: 'var(--color-border)',
+                backgroundColor: 'var(--color-accent)',
               }}
               title="Messages"
               aria-label="Messages"
@@ -226,8 +226,8 @@ function AppLayout() {
             onClick={toggleChat}
             className="px-4 py-2 rounded-full transition ml-2"
             style={{
-              backgroundColor: isOpen ? '#951A21' : 'transparent',
-              color: '#FFFFFF'
+              backgroundColor: isOpen ? 'var(--color-secondary)' : 'transparent',
+              color: 'var(--color-accent)'
             }}
             title="AI Assistant"
             aria-label="AI Assistant"
@@ -277,7 +277,7 @@ function AppLayout() {
     <div className="min-h-screen bg-background mobile-app-container">
       {/* Desktop Navigation - Only show on authenticated pages */}
       {showNavigation && (
-        <div className="border-b sticky top-0 z-50 hidden md:block" style={{ backgroundColor: '#fbd556' }}>
+        <div className="border-b sticky top-0 z-50 hidden md:block" style={{ backgroundColor: 'var(--menu-bg)' }}>
           <div className="container mx-auto px-4">
             <Navigation />
           </div>
@@ -399,9 +399,9 @@ function AppLayout() {
           onClick={toggleChat}
           className="md:hidden fixed top-4 right-4 z-40 w-12 h-12 rounded-full shadow-lg transition-all"
           style={{
-            backgroundColor: isOpen ? '#951A21' : '#FFFFFF',
+            backgroundColor: isOpen ? 'var(--color-secondary)' : 'var(--color-accent)',
             border: '2px solid',
-            borderColor: isOpen ? '#951A21' : '#E5E7EB',
+            borderColor: isOpen ? 'var(--color-secondary)' : 'var(--color-border)',
           }}
           aria-label="AI Assistant"
         >

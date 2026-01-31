@@ -1,0 +1,344 @@
+/**
+ * UNIFIED COLOR SYSTEM
+ * 
+ * DEPRECATION NOTICE (Jan 31, 2026):
+ * This file is being refactored. New code should use lean-colors.css instead.
+ * These variables are maintained for backwards compatibility only.
+ * See lean-colors.css for the new 5-color palette system.
+ * 
+ * Migration path: Replace all --[color-*] with --color-[*] equivalents
+ * 
+ * Old naming (DEPRECATED):
+ * --[color-family]-[shade/opacity]
+ * 
+ * New naming (USE THIS):
+ * --color-[purpose]: primary, secondary, success, etc.
+ */
+
+@import './lean-colors.css';
+
+:root {
+  /* ============================================================
+     PRIMARY BRAND COLORS - Yellow Palette
+     ============================================================ */
+  
+  /* Fuzo Yellow - Primary Brand Color */
+  --yellow-primary: #FFC909;                    /* Base yellow - most used */
+  --yellow-primary-10: rgba(255, 201, 9, 0.1); /* Subtle backgrounds */
+  --yellow-primary-15: rgba(255, 201, 9, 0.15);
+  --yellow-primary-20: rgba(255, 201, 9, 0.2);
+  --yellow-primary-25: rgba(255, 201, 9, 0.25);
+  --yellow-primary-30: rgba(255, 201, 9, 0.3); /* Common overlay */
+  --yellow-primary-35: rgba(255, 201, 9, 0.35);
+  --yellow-primary-40: rgba(255, 201, 9, 0.4);
+  --yellow-primary-50: rgba(255, 201, 9, 0.5);
+  --yellow-primary-60: rgba(255, 201, 9, 0.6);
+  
+  /* Yellow Tints & Shades */
+  --yellow-light: #FFF1B7;
+  --yellow-50: #FFFDF0;
+  --yellow-100: #FFF9D6;
+  --yellow-200: #FFF3AD;
+  --yellow-300: #FFEC85;
+  --yellow-400: #FFE45C;
+  --yellow-500: #FFC909;                       /* Same as primary */
+  --yellow-600: #E6B508;
+  --yellow-700: #CC9F07;
+  --yellow-800: #997706;
+  --yellow-900: #665005;
+  
+  /* Secondary Yellow Variants for Feed */
+  --yellow-secondary: #fbd556;                 /* Secondary highlight */
+  --yellow-tertiary: #f8b44a;                  /* Tertiary accent */
+  --yellow-golden: #f8b44a;                    /* Golden yellow alternate */
+  
+  /* Menu/Navigation Background */
+  --menu-bg: #ffe838;                          /* Navigation bar and menu backgrounds */
+  
+  /* Sidebar Background */
+  --sidebar-bg: #fff1b7;                       /* Sidebar panels background */
+  
+  /* Button Styles */
+  --button-bg-default: #ffe838;                /* Default button background (banana yellow - same as nav) */
+  --button-bg-hover: #e89f3c;                  /* Button hover background (orange) */
+  --button-bg-active: #ffffff;                 /* Button active state (white) */
+  --button-text: #1f2937;                      /* Button text color (gray-900) */
+  
+  /* Special Yellow Variants */
+  --yellow-feed: #ffe838;                      /* Feed page special color */
+  --yellow-feed-alternate: #ffd600;            /* Feed page alternate */
+  --yellow-gamboge: #E8B935;
+  
+  /* ============================================================
+     ORANGE PALETTE - Secondary Brand Colors
+     ============================================================ */
+  
+  --orange-apricot: #E47A24;
+  --orange-apricot-light: #F5C89A;
+  --orange-apricot-bg: #F5C89A;
+  --orange-dark-mango: #D55123;
+  --orange-blood: #BF2C20;
+  --orange-candy-apple: #951A21;
+  --orange-dark-pineapple: #eda600;
+  --orange-chocolate: #6B4423;
+  --orange-seal-brown: #4A3728;
+  --orange-gargoyle-gas: #F5E6D3;
+  
+  /* Page backgrounds - now unified with main background */
+  /* All pages use --background: #fbd556 (banana yellow) */
+  
+  /* ============================================================
+     NEUTRAL PALETTE - Grays & Whites
+     ============================================================ */
+  
+  /* Grays */
+  --gray-50: #FAFAFA;
+  --gray-100: #F5F5F5;
+  --gray-200: #E5E5E5;
+  --gray-300: #D4D4D4;
+  --gray-400: #A3A3A3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #262626;
+  --gray-900: #171717;
+  --gray-950: #0A0A0A;
+  
+  /* Light Grays - Backgrounds */
+  --gray-light: #F3F4F6;
+  --gray-light-100: #F8F9FA;
+  --gray-light-200: #E9ECEF;
+  --gray-light-300: #E5E7EB;
+  --gray-light-400: #F0F0F0;
+  --gray-light-warm: #F3F3F5;
+  --gray-light-cool: #F1F5F9;
+  
+  /* Blacks & Whites */
+  --white: #FFFFFF;
+  --black: #000000;
+  --black-primary: #0A0A0A;
+  --black-secondary: #171717;
+  --black-tertiary: #262626;
+  --black-dark: #030213;
+  --black-dark-deep: #0F172A;
+  --black-dark-slate: #1E293B;
+  
+  /* Dark backgrounds */
+  --surface-primary: #0A0A0A;
+  --surface-secondary: #171717;
+  --surface-tertiary: #262626;
+  --surface-elevated: #1A1A1A;
+  
+  /* ============================================================
+     SEMANTIC COLORS - Status & State
+     ============================================================ */
+  
+  /* Error / Red */
+  --red: #EF4444;
+  --red-dark: #DC2626;
+  --red-light: #FCA5A5;
+  --red-deep: #8b0000;
+  --red-error: #d4183d;
+  
+  /* Success / Green */
+  --green: #22C55E;
+  --green-dark: #16A34A;
+  --green-light: #86EFAC;
+  --green-bright: #4ade80;
+  --green-teal: #10b981;
+  
+  /* Warning / Amber */
+  --amber: #F59E0B;
+  --amber-dark: #D97706;
+  --amber-light: #FCD34D;
+  
+  /* Info / Blue */
+  --blue: #3B82F6;
+  --blue-dark: #2563EB;
+  --blue-light: #93C5FD;
+  
+  /* ============================================================
+     PLATFORM COLORS
+     ============================================================ */
+  
+  --platform-fuzo: #FFC909;      /* Fuzo brand */
+  --platform-google: #4285F4;    /* Google */
+  --platform-youtube: #FF0000;   /* YouTube */
+  --platform-spoonacular: #4CAF50; /* Spoonacular */
+  
+  /* ============================================================
+     PINK PALETTE
+     ============================================================ */
+  
+  --pink-50: #FFF1F2;
+  --pink-100: #FFE4E6;
+  --pink-200: #FECDD3;
+  --pink-300: #FDA4AF;
+  --pink-400: #FB7185;
+  --pink-500: #F6339A;
+  --pink-600: #E11D48;
+  --pink-700: #BE123C;
+  --pink-800: #9F1239;
+  --pink-900: #881337;
+  
+  /* ============================================================
+     PURPLE PALETTE
+     ============================================================ */
+  
+  --purple-50: #FAF5FF;
+  --purple-100: #F3E8FF;
+  --purple-200: #E9D5FF;
+  --purple-300: #D8B4FE;
+  --purple-400: #C084FC;
+  --purple-500: #AD46FF;
+  --purple-600: #9333EA;
+  --purple-700: #7E22CE;
+  --purple-800: #6B21A8;
+  --purple-900: #581C87;
+  
+  /* ============================================================
+     TEXT COLORS
+     ============================================================ */
+  
+  /* Light mode text (used on dark backgrounds) */
+  --text-primary: #FAFAFA;       /* Primary text on dark */
+  --text-secondary: #D4D4D4;     /* Secondary text */
+  --text-tertiary: #A3A3A3;      /* Tertiary text */
+  --text-disabled: #525252;      /* Disabled state */
+  --text-inverse: #0A0A0A;       /* Inverse text (on light bg) */
+  --text-brand: #FFC909;         /* Brand colored text */
+  
+  /* Mobile text (dark mode on light backgrounds) */
+  --mobile-text-primary: #111827;   /* Gray-900 */
+  --mobile-text-secondary: #374151; /* Gray-700 */
+  --mobile-text-tertiary: #4b5563;  /* Gray-600 */
+  
+  /* ============================================================
+     BORDER & DIVIDER COLORS
+     ============================================================ */
+  
+  --border-primary: rgba(255, 201, 9, 0.3);    /* Yellow borders */
+  --border-secondary: rgba(255, 201, 9, 0.2);  /* Subtle yellow borders */
+  --border-focus: #FFC909;                      /* Focus state */
+  --border-error: #EF4444;                      /* Error state */
+  --border-light: #E5B88A;                      /* Light border */
+  
+  /* ============================================================
+     OVERLAY & BACKGROUND OVERLAYS
+     ============================================================ */
+  
+  --overlay-light: rgba(0, 0, 0, 0.05);
+  --overlay-sm: rgba(0, 0, 0, 0.02);
+  --overlay-base: rgba(0, 0, 0, 0.1);
+  --overlay-medium: rgba(0, 0, 0, 0.2);
+  --overlay-strong: rgba(0, 0, 0, 0.3);
+  --overlay-heavy: rgba(0, 0, 0, 0.5);
+  --overlay-darker: rgba(0, 0, 0, 0.6);
+  --overlay-dark: rgba(0, 0, 0, 0.8);
+  --overlay-very-dark: rgba(0, 0, 0, 0.9);
+  
+  --overlay-white-light: rgba(255, 255, 255, 0.06);
+  --overlay-white-sm: rgba(255, 255, 255, 0.1);
+  --overlay-white-base: rgba(255, 255, 255, 0.2);
+  --overlay-white-medium: rgba(255, 255, 255, 0.3);
+  --overlay-white-strong: rgba(255, 255, 255, 0.8);
+  
+  /* Special overlays for shadows */
+  --overlay-brown-light: rgba(107, 68, 35, 0.08);
+  --overlay-brown-sm: rgba(107, 68, 35, 0.12);
+  --overlay-brown-base: rgba(107, 68, 35, 0.15);
+  --overlay-brown-medium: rgba(107, 68, 35, 0.2);
+  --overlay-brown-strong: rgba(107, 68, 35, 0.4);
+  --overlay-brown-heavy: rgba(107, 68, 35, 0.7);
+  
+  --overlay-apricot-light: rgba(245, 200, 154, 0.05);
+  --overlay-apricot-sm: rgba(245, 200, 154, 0.1);
+  --overlay-apricot-base: rgba(245, 200, 154, 0.15);
+  --overlay-apricot-medium: rgba(245, 200, 154, 0.2);
+  --overlay-apricot-strong: rgba(245, 200, 154, 0.3);
+  
+  --overlay-gargoyle-base: rgba(245, 230, 211, 0.2);
+  --overlay-gargoyle-strong: rgba(245, 230, 211, 0.25);
+  
+  /* ============================================================
+     SHADOW RING & FOCUS COLORS
+     ============================================================ */
+  
+  --focus-ring-color: rgba(255, 201, 9, 0.4);
+  --slider-range-bg: #FFC909;
+  --slider-thumb-bg: #FFC909;
+  --slider-thumb-border: #ffffff;
+  --slider-track-bg: #f3f4f6;
+  
+  /* ============================================================
+     COMPONENT-SPECIFIC COLORS
+     ============================================================ */
+  
+  /* Input backgrounds */
+  --input-background: #f3f3f5;
+  --input-background-alt: #f3f4f6;
+  
+  /* Switch */
+  --switch-background: #cbced4;
+  
+  /* Feed specific */
+  --feed-overlay-light: rgba(0, 0, 0, 0.2);
+  --feed-overlay-dark: rgba(0, 0, 0, 0.8);
+  
+  /* Utility colors */
+  --utility-bg: #7A6B5E;
+  --landing-bg-default: #7A6B5E;
+  
+  /* ============================================================
+     DEPRECATED - Kept for backwards compatibility
+     (These should be migrated to new naming)
+     ============================================================ */
+  
+  --color-fuzo-yellow: #FFC909;
+  --color-pineapple: #eda600;
+  --color-apricot: #E47A24;
+  --color-dark-mango: #D55123;
+  --color-blood-orange: #BF2C20;
+  --color-candy-apple: #951A21;
+  --color-chocolate: #6B4423;
+  --color-seal-brown: #4A3728;
+  --color-gamboge: #E8B935;
+  --color-apricot-bg: #F5C89A;
+  --color-gargoyle-gas: #F5E6D3;
+  --color-error: #EF4444;
+  --color-error-dark: #DC2626;
+  --color-error-light: #FCA5A5;
+  --color-success: #22C55E;
+  --color-success-dark: #16A34A;
+  --color-success-light: #86EFAC;
+  --color-warning: #F59E0B;
+  --color-warning-dark: #D97706;
+  --color-warning-light: #FCD34D;
+  --color-info: #3B82F6;
+  --color-info-dark: #2563EB;
+  --color-info-light: #93C5FD;
+  
+  /* Mobile colors - deprecated naming */
+  --mobile-primary-yellow: #fbd556;
+  --mobile-golden-yellow: #f8b44a;
+  --mobile-accent-yellow: #FFC909;
+  --mobile-light-cream: #fff1b7;
+  --mobile-text-primary: #111827;
+  --mobile-text-secondary: #374151;
+  --mobile-text-tertiary: #4b5563;
+  --mobile-border-light: #E5B88A;
+  --mobile-bg-light: #FAFAFA;
+  
+  /* Neutral colors - deprecated naming */
+  --neutral-50: #FAFAFA;
+  --neutral-100: #F5F5F5;
+  --neutral-200: #E5E5E5;
+  --neutral-300: #D4D4D4;
+  --neutral-400: #A3A3A3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0A0A0A;
+}

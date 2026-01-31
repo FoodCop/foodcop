@@ -409,7 +409,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
   };
 
   return (
-    <div className="min-h-screen bg-page-profile">
+    <div className="min-h-screen bg-background">
       {showPreferencesHint && (
         <PreferencesHintModal
           onClose={() => setShowPreferencesHint(false)}
@@ -421,7 +421,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
       )}
       <main className="max-w-full mx-auto">
         {/* Profile Header */}
-        <section className="px-5 py-6" style={{ backgroundColor: '#fbd556' }}>
+        <section className="px-5 py-6" style={{ backgroundColor: 'var(--yellow-secondary)' }}>
           <div className="flex flex-col items-center gap-4 text-center">
             {/* User Name */}
             <div className="flex items-center gap-2 justify-center">
@@ -475,18 +475,18 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
 
           {/* Stats Row */}
           <div className="flex items-center gap-2 py-4 px-2">
-            <button className="flex-1 flex flex-col items-center py-4 bg-fuzo-orange-50 rounded-xl hover:opacity-80 transition-opacity">
+            <button className="flex-1 flex flex-col items-center py-4 bg-[var(--button-bg-default)] rounded-full hover:bg-[var(--button-bg-hover)] transition-colors">
               <span className="text-xl md:text-2xl font-bold text-neutral-900">{userPoints.toLocaleString()}</span>
               <span className="text-xs mt-1 text-neutral-400">Points</span>
             </button>
             <button 
               onClick={() => setSelectedTab('posts')}
-              className="flex-1 flex flex-col items-center py-4 bg-fuzo-orange-50 rounded-xl hover:opacity-80 transition-opacity"
+              className="flex-1 flex flex-col items-center py-4 bg-[var(--button-bg-default)] rounded-full hover:bg-[var(--button-bg-hover)] transition-colors"
             >
               <span className="text-xl md:text-2xl font-bold text-neutral-900">{savedItems.length}</span>
               <span className="text-xs mt-1 text-neutral-400">Saved</span>
             </button>
-            <button className="flex-1 flex flex-col items-center py-4 bg-fuzo-orange-50 rounded-xl hover:opacity-80 transition-opacity">
+            <button className="flex-1 flex flex-col items-center py-4 bg-[var(--button-bg-default)] rounded-full hover:bg-[var(--button-bg-hover)] transition-colors">
               <span className="text-xl md:text-2xl font-bold text-neutral-900">{userRewards}</span>
               <span className="text-xs mt-1 text-neutral-400">Rewards</span>
             </button>
@@ -511,7 +511,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
             </div>
             <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-[#fbd556] to-[#f8b44a] rounded-full transition-all duration-500"
+                className="h-full bg-gradient-to-r from-[var(--yellow-secondary)] to-[var(--yellow-tertiary)] rounded-full transition-all duration-500"
                 style={{ width: `${userLevel.progressPercent}%` }}
               />
             </div>
@@ -519,7 +519,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
         </section>
 
         {/* Tab Navigation */}
-        <nav className="bg-[#fbd556] sticky top-14 z-40 mt-2 p-2">
+        <nav className="bg-[var(--yellow-secondary)] sticky top-14 z-40 mt-2 p-2">
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
             <button 
               type="button"
@@ -530,7 +530,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
               }}
               className={`flex-shrink-0 py-2.5 px-3 text-xs font-medium transition-all rounded-lg flex items-center gap-1.5 ${
                 selectedTab === 'places' 
-                  ? 'bg-[#ffe838] text-gray-900' 
+                  ? 'bg-[var(--yellow-feed)] text-gray-900' 
                   : 'bg-white/30 text-gray-800'
               }`}
             >

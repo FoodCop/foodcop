@@ -390,12 +390,12 @@ export default function ScoutNew() {
 
   // Mobile version below
   return (
-    <div className="min-h-screen bg-page-profile">
+    <div className="min-h-screen bg-background">
       {/* Mobile Container - Max width for mobile view */}
-      <div className="max-w-md mx-auto bg-page-profile min-h-screen md:max-w-full">
+      <div className="max-w-md mx-auto bg-background min-h-screen md:max-w-full">
 
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200 bg-page-profile px-4 pt-2">
+        <div className="border-b border-gray-200 bg-background px-4 pt-2">
           <div className="inline-flex rounded-full p-1">
             <button
               type="button"
@@ -406,7 +406,7 @@ export default function ScoutNew() {
                   : 'text-gray-600 hover:text-gray-900'
               }`}
               style={{
-                backgroundColor: activeTab === 'discover' ? '#f8b44a' : 'transparent'
+                backgroundColor: activeTab === 'discover' ? 'var(--yellow-tertiary)' : 'transparent'
               }}
             >
               Discover
@@ -420,7 +420,7 @@ export default function ScoutNew() {
                   : 'text-gray-600 hover:text-gray-900'
               }`}
               style={{
-                backgroundColor: activeTab === 'my-map' ? '#f8b44a' : 'transparent'
+                backgroundColor: activeTab === 'my-map' ? 'var(--yellow-tertiary)' : 'transparent'
               }}
             >
               My Map
@@ -431,7 +431,7 @@ export default function ScoutNew() {
         {/* Discover Tab Content */}
         {activeTab === 'discover' && (<>
         {/* Distance Control */}
-        <section className="px-5 py-4" style={{ backgroundColor: '#fff1b7' }}>
+        <section className="px-5 py-4" style={{ backgroundColor: 'var(--sidebar-bg)' }}>
           <div className="flex items-center justify-between mb-3">
             <i className="fa-solid fa-person-walking text-gray-700" style={{ fontSize: '10pt' }} aria-label="Distance"></i>
             <span className="text-sm font-bold text-gray-900">{radiusKm} km</span>
@@ -446,7 +446,7 @@ export default function ScoutNew() {
               onChange={(e) => setRadiusKm(Number.parseFloat(e.target.value))}
               className="scout-distance-slider w-full h-2 rounded-full appearance-none cursor-pointer"
               style={{
-                background: `linear-gradient(to right, #374151 0%, #374151 ${((radiusKm - 0.5) / (10 - 0.5)) * 100}%, #D1D5DB ${((radiusKm - 0.5) / (10 - 0.5)) * 100}%, #D1D5DB 100%)`
+                background: `linear-gradient(to right, var(--gray-700) 0%, var(--gray-700) ${((radiusKm - 0.5) / (10 - 0.5)) * 100}%, var(--gray-300) ${((radiusKm - 0.5) / (10 - 0.5)) * 100}%, var(--gray-300) 100%)`
               }}
             />
             {/* Tick marks */}
@@ -1050,7 +1050,7 @@ function FeaturedRestaurantCard({ restaurant, onClick, onNavigate }: Readonly<{ 
             onClick={handleSaveToPlate}
             disabled={saving}
             className="flex-1 h-12 text-black rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ backgroundColor: '#ffe838' }}
+            style={{ backgroundColor: 'var(--yellow-feed)' }}
           >
             <span>💾</span>
             <span>{saving ? 'Saving...' : 'Save to Plate'}</span>

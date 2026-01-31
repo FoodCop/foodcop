@@ -76,7 +76,7 @@ export function NoConversationsEmptyState({
         onStartChat && (
           <button
             onClick={onStartChat}
-            className="px-4 py-2 bg-fuzo-orange-500 text-white rounded-lg hover:bg-fuzo-orange-600 transition-colors font-medium text-sm"
+            className="px-4 py-2 bg-[var(--button-bg-default)] text-[var(--button-text)] rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors font-medium text-sm"
             aria-label="Start a new conversation"
           >
             Start Chatting

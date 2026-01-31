@@ -201,13 +201,18 @@ export function Snap() {
     
     if (ctx) {
       const gradient = ctx.createLinearGradient(0, 0, 800, 600);
-      gradient.addColorStop(0, '#FFC909');
-      gradient.addColorStop(0.5, '#FFE66D');
-      gradient.addColorStop(1, '#4ECDC4');
+      const computedStyle = getComputedStyle(document.documentElement);
+      const primaryColor = computedStyle.getPropertyValue('--color-primary').trim();
+      const secondaryColor = computedStyle.getPropertyValue('--color-secondary').trim();
+      const accentColor = computedStyle.getPropertyValue('--color-accent').trim();
+      
+      gradient.addColorStop(0, primaryColor || '#ffe838');
+      gradient.addColorStop(0.5, secondaryColor || '#e89f3c');
+      gradient.addColorStop(1, accentColor || '#ffffff');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, 800, 600);
       
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#000000';
       ctx.font = 'bold 48px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -336,7 +341,7 @@ export function Snap() {
         <div className="px-5 py-8">
           <div className="bg-white rounded-2xl shadow-[0_2px_8px_0_rgba(0,0,0,0.1)] p-6 space-y-6">
             <div className="text-center mb-6">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#FFC909] to-[#E6B508] flex items-center justify-center">
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] flex items-center justify-center">
                 <Camera className="w-12 h-12 text-white" />
               </div>
               <h2 className="font-[Poppins] font-bold text-xl text-gray-900 mb-2">Welcome to SNAP!</h2>
@@ -381,7 +386,7 @@ export function Snap() {
 
             <button
               onClick={handleDisclaimerContinue}
-              className="w-full h-12 bg-gradient-to-r from-[#FFC909] to-[#E6B508] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+              className="w-full h-12 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
             >
               Continue to Camera
             </button>
@@ -437,7 +442,7 @@ export function Snap() {
               onClick={handleCameraCapture}
               className="w-16 h-16 rounded-full bg-white hover:bg-gray-100 transition-colors flex items-center justify-center shadow-lg"
             >
-              <Camera className="w-8 h-8 text-[#FFC909]" />
+              <Camera className="w-8 h-8 text-[var(--color-primary)]" />
             </button>
 
             <div className="w-12 h-12" /> {/* Spacer for centering */}
@@ -459,7 +464,7 @@ export function Snap() {
             </div>
             <h2 className="font-[Poppins] font-bold text-2xl text-gray-900 mb-2">Saved! 🎉</h2>
             <p className="text-gray-600">Your food photo is now in your Plate</p>
-            <div className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#FFC909] to-[#E6B508] text-white rounded-full font-semibold">
+            <div className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white rounded-full font-semibold">
               <span>+10 Points</span>
             </div>
           </div>
@@ -507,7 +512,7 @@ export function Snap() {
                 value={restaurantName}
                 onChange={(e) => setRestaurantName(e.target.value)}
                 placeholder="e.g. Joe's Pizza"
-                className="w-full h-12 px-4 bg-[#F5F5F5] border-none rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FFC909]"
+                className="w-full h-12 px-4 bg-[var(--color-neutral-bg)] border-none rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
               />
             </div>
 
@@ -523,8 +528,8 @@ export function Snap() {
                     onClick={() => setCuisine(type.label)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                       cuisine === type.label
-                        ? 'bg-[#FFC909] text-gray-900 shadow-md'
-                        : 'bg-[#F5F5F5] text-gray-700 hover:bg-gray-200'
+                        ? 'bg-[var(--color-primary)] text-gray-900 shadow-md'
+                        : 'bg-[var(--color-neutral-bg)] text-gray-700 hover:bg-gray-200'
                     }`}
                   >
                     <i className={type.icon} style={{ fontSize: '10pt' }}></i>
@@ -565,7 +570,7 @@ export function Snap() {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Tell us about your experience..."
                 rows={4}
-                className="w-full px-4 py-3 bg-[#F5F5F5] border-none rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FFC909] resize-none"
+                className="w-full px-4 py-3 bg-[var(--color-neutral-bg)] border-none rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] resize-none"
               />
             </div>
           </div>
@@ -598,7 +603,7 @@ export function Snap() {
             <button
               onClick={handleTaggingSubmit}
               disabled={saving || !user}
-              className="flex-1 h-12 bg-gradient-to-r from-[#FFC909] to-[#E6B508] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 h-12 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? 'Saving...' : 'Save to Plate'}
             </button>
@@ -610,7 +615,7 @@ export function Snap() {
 
   // Default State - Loading for mobile, start button for desktop
   return (
-    <div className="w-full max-w-[375px] mx-auto bg-page-profile min-h-screen flex flex-col" style={{ fontSize: '10pt' }}>
+    <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex flex-col" style={{ fontSize: '10pt' }}>
       <MinimalHeader showLogo={true} logoPosition="left" />
       <div className="flex-1 flex items-center justify-center">
       <div className="text-center px-8">
@@ -627,7 +632,7 @@ export function Snap() {
             <p className="text-gray-600 mb-6">Capture and share your food moments</p>
             <button
               onClick={() => setShowDisclaimer(true)}
-              className="px-8 py-3 bg-gradient-to-r from-[#FFC909] to-[#E6B508] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+              className="px-8 py-3 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
             >
               Start Camera
             </button>

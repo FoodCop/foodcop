@@ -362,8 +362,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
-          <h1 className="text-xl font-bold mb-2 text-[#8B0000]">Sign In Required</h1>
-          <p style={{ color: '#808080' }}>Please sign in to view your Plate</p>
+          <h1 className="text-xl font-bold mb-2 text-[var(--red-deep)]">Sign In Required</h1>
+          <p style={{ color: 'var(--gray-500)' }}>Please sign in to view your Plate</p>
         </div>
       </div>
     );
@@ -424,7 +424,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
   };
 
   return (
-    <div className="min-h-screen bg-page-profile flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {showPreferencesHint && (
         <PreferencesHintModal
           onClose={() => setShowPreferencesHint(false)}
@@ -440,11 +440,11 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
         <main className="min-w-0 px-8 py-6 overflow-y-auto">
           <div className="max-w-3xl mx-auto">
             {/* Profile Header */}
-            <section className="rounded-xl shadow-sm px-8 py-6 mb-6" style={{ backgroundColor: '#fbd556' }}>
+            <section className="rounded-xl shadow-sm px-8 py-6 mb-6" style={{ backgroundColor: 'var(--yellow-secondary)' }}>
               <div className="flex flex-col items-center gap-6 mb-6 text-center">
                 {/* User Name */}
                 <div className="flex items-center gap-2 justify-center">
-                  <h1 className="text-xl font-bold text-[#8B0000]">{getUserDisplayName()}</h1>
+                  <h1 className="text-xl font-bold text-[var(--red-deep)]">{getUserDisplayName()}</h1>
                   <div className="w-6 h-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
                     <Crown className="w-3 h-3 text-white fill-white" />
                   </div>
@@ -452,7 +452,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
 
                 {/* Avatar */}
                 <div className="relative">
-                  <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-[#FFC909] bg-gray-200">
+                  <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-[var(--yellow-primary)] bg-gray-200">
                     <img
                       src={user?.user_metadata?.avatar_url || user?.user_metadata?.picture ||
                         'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg'}
@@ -471,18 +471,18 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                         }
                       }}
                     />
-                    <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-[#FFC909] to-[#E6B508] text-white font-bold text-2xl">
+                    <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--yellow-primary)] to-[var(--yellow-600)] text-white font-bold text-2xl">
                       {getUserDisplayName().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
                     </div>
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-9 h-9 bg-gradient-to-br from-yellow-400 to-[#FFC909] rounded-full flex items-center justify-center border-2 border-white">
+                  <div className="absolute -bottom-1 -right-1 w-9 h-9 bg-gradient-to-br from-yellow-400 to-[var(--yellow-primary)] rounded-full flex items-center justify-center border-2 border-white">
                     <Star className="w-4 h-4 text-white fill-white" />
                   </div>
                 </div>
 
                 {/* Profile Info */}
                 <div className="flex flex-col items-center">
-                  <p className="mb-4 text-center" style={{ color: '#808080' }}>{getUserBio()}</p>
+                  <p className="mb-4 text-center" style={{ color: 'var(--gray-500)' }}>{getUserBio()}</p>
                   <div className="mb-3">
                     <PreferencesChips
                       userProfile={userProfile}
@@ -494,8 +494,8 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
 
               {/* Stats Row */}
               <div className="flex items-center gap-3 py-4">
-                <button className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity">
-                  <span className="text-2xl font-bold text-[#1A1A1A]">{userPoints.toLocaleString()}</span>
+                <button className="flex-1 flex flex-col items-center py-4 bg-[var(--button-bg-default)] rounded-full hover:bg-[var(--button-bg-hover)] transition-opacity">
+                  <span className="text-2xl font-bold text-[var(--surface-elevated)]">{userPoints.toLocaleString()}</span>
                   <span className="text-xs mt-1" style={{ color: '#808080' }}>Points</span>
                 </button>
                 <button
@@ -505,7 +505,7 @@ export default function PlateDesktop({ userId: propUserId, currentUser }: PlateD
                   <span className="text-2xl font-bold text-[#1A1A1A]">{savedItems.length}</span>
                   <span className="text-xs mt-1" style={{ color: '#808080' }}>Saved</span>
                 </button>
-                <button className="flex-1 flex flex-col items-center py-4 bg-[#FFF8F0] rounded-xl hover:opacity-80 transition-opacity">
+                <button className="flex-1 flex flex-col items-center py-4 bg-[var(--button-bg-default)] rounded-full hover:bg-[var(--button-bg-hover)] transition-opacity">
                   <span className="text-2xl font-bold text-[#1A1A1A]">{userRewards}</span>
                   <span className="text-xs mt-1" style={{ color: '#808080' }}>Rewards</span>
                 </button>

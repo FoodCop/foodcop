@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "./styles/lean-colors.css";
+@import "./styles/unified-colors.css";
 @import "./styles/design-tokens.css";
 
 /* Masonry Grid Styles */
@@ -35,26 +37,26 @@
 
 :root {
   --font-size: 16px;
-  --background: #fbd556;
+  --background: var(--color-accent);
   --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
+  --card: var(--color-accent);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
+  --primary: var(--color-neutral-text);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
+  --secondary-foreground: var(--color-neutral-text);
+  --muted: var(--color-neutral-bg);
+  --muted-foreground: var(--color-neutral-text-light);
+  --accent: var(--color-accent-gray);
+  --accent-foreground: var(--color-neutral-text);
+  --destructive: var(--color-danger);
+  --destructive-foreground: var(--color-accent);
+  --border: var(--color-border);
   --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
+  --input-background: var(--color-neutral-bg);
+  --switch-background: var(--color-neutral-bg-dark);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --ring: oklch(0.708 0 0);
@@ -64,14 +66,6 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
   /* Mobile helper utilities (added per Mobile Transformation Plan) */
   --safe-area-inset-top: env(safe-area-inset-top, 0px);
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
@@ -104,14 +98,6 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
 }
 
 /* Removed @theme directive - using direct CSS variables instead */
@@ -182,8 +168,7 @@ p {
       /* Reduced from text-2xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
-      color: #8B0000;
-      /* Deep red for page headings */
+      color: var(--color-neutral-text);
     }
 
     h2 {
@@ -192,7 +177,7 @@ p {
       /* Reduced from text-xl */
       font-weight: var(--font-weight-medium);
       line-height: 1.5;
-      color: #1A1A1A;
+      color: var(--color-neutral-text);
     }
 
     h3:not([class*="text-card-heading"]):not([style*="font-family"]) {
@@ -214,7 +199,7 @@ p {
       font-size: var(--text-base);
       font-weight: var(--font-weight-normal);
       line-height: 1.5;
-      color: #1A1A1A;
+      color: var(--color-neutral-text);
     }
 
     label {
@@ -292,7 +277,7 @@ h2.text-lg {
   height: 300px;
   /* fixed hero height for mobile */
   object-fit: cover;
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  background: linear-gradient(135deg, var(--color-neutral-bg-light), var(--color-neutral-bg));
 }
 
 .touch-target {

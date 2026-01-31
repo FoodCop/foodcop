@@ -73,7 +73,7 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
   return (
     <Card
       className="overflow-hidden cursor-pointer transition-all hover:shadow-lg w-full"
-      style={{ backgroundColor: "#fbd556", borderColor: "#f8b44a", borderWidth: "2px", borderStyle: "solid" }}
+      style={{ backgroundColor: "var(--color-primary)", borderColor: "var(--color-secondary)", borderWidth: "2px", borderStyle: "solid" }}
       onClick={onClick}
     >
       <div className={`${imageClass} w-full overflow-hidden bg-gray-100`}>
@@ -90,7 +90,7 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
 
         {/* Source Attribution with Avatar */}
         <div className="flex items-center gap-2 mt-3">
-          <div className="w-6 h-6 rounded-full bg-[#8DC63F] flex items-center justify-center text-white text-xs font-bold">
+          <div className="w-6 h-6 rounded-full bg-[var(--color-success)] flex items-center justify-center text-white text-xs font-bold">
             S
           </div>
           <span className="text-xs text-black">Spoonacular</span>

@@ -84,7 +84,7 @@ function DealCard({ card, index }: DealCardProps) {
           className="absolute inset-0 w-full h-full backface-hidden rounded-xl shadow-xl overflow-hidden border-4 border-white"
           style={{
             backfaceVisibility: "hidden",
-            backgroundColor: "#ffe838"
+            backgroundColor: "var(--yellow-feed)"
           }}
         >
           <div className="flex items-center justify-center h-full">
@@ -307,7 +307,7 @@ export function FeedDesktop() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-page-profile overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-background overflow-hidden">
       <div className="flex-1 flex flex-col items-center justify-center py-12">
 
         {/* Table / Card Area */}
@@ -331,9 +331,9 @@ export function FeedDesktop() {
           <motion.button
             onClick={dealNextHand}
             className="flex items-center gap-2 px-8 py-4 text-gray-900 rounded-full font-bold text-lg shadow-lg transition-colors"
-            style={{ backgroundColor: "#ffe838" }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#ffd600"}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#ffe838"}
+            style={{ backgroundColor: "var(--yellow-feed)" }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--yellow-feed-alternate)"}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--yellow-feed)"}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

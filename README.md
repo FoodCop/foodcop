@@ -2,9 +2,36 @@
 
 A comprehensive food application built with Vite + React + TypeScript featuring a unique **seed-based content delivery system** that provides diverse, engaging content through multiple APIs and services.
 
-## Recent Updates (Jan 26, 2026)
+## Recent Updates (Jan 30, 2026)
 
-### 🎨 Design System Overhaul
+### 🎯 Complete Button System Unification
+- **Pill-Shaped Buttons**: All interactive buttons updated to `rounded-full` (previously mixed rounded-lg/xl/md/2xl)
+- **Unified Color Palette**: Implemented 4-color system via CSS variables:
+  - `--button-bg-default`: #ffe838 (Banana Yellow)
+  - `--button-bg-hover`: #e89f3c (Orange)
+  - `--button-bg-active`: #ffffff (White)
+  - `--button-text`: #1f2937 (Gray-900)
+- **Consistent Styling Applied To**:
+  - Scout page buttons (Directions, Call, Website, Save to Plate, Share to Chat, Google Maps)
+  - Map controls (Zoom in/out, Center location)
+  - Plate page stat buttons (Points, Saved, Rewards)
+  - Recipe viewers and detail views (Save, Share, Start Cooking)
+  - Preferences modals (Save, Skip, Update)
+  - Dietary preference chips (all filters)
+  - Modal action buttons (Cancel, Confirm, Send)
+  - Chat buttons (Start Chatting, Share to Friend)
+  - Recipe cards (Send to Friend, Save to Plate)
+  - All viewers (Universal, Photo, Video, Recipe, Restaurant)
+  - Bites/Trims components (Retry, Share, Save)
+- **Semantic HTML**: Replaced clickable `<div>` elements with proper `<button>` tags for accessibility
+
+### 🎨 Background & Navigation Unification (Jan 26-29, 2026)
+- **Page Backgrounds**: All pages now use single `--background` variable (#ffffff) instead of page-specific tokens
+- **Navigation Bar**: Unified to `--menu-bg` (#ffe838) across all pages
+- **Sidebar Panels**: Unified to `--sidebar-bg` (#fff1b7) for consistency
+- **Removed Unused Tokens**: Cleaned up 30+ unused bg-page-* variables
+
+### 📋 Previous Updates (Jan 26, 2026)
 - **Unified Color Theme**: Standardized all pages to use `bg-page-profile` (#951A21) for easy future theme changes
 - **Navigation Styling**: Menu bar updated to golden yellow (#f8b44a) with profile red hover states
 - **Scout Sidebar**: Changed to vibrant pink (#ac0039) for better visual hierarchy

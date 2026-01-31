@@ -9,7 +9,7 @@ export default function AllAlerts() {
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-page-utility p-8">
+    <div className="min-h-screen bg-background p-8">
       <h1 className="text-3xl font-bold mb-8 text-gray-900">All Alerts & Notifications</h1>
 
       {/* Gamified Toasts Section */}

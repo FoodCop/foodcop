@@ -210,26 +210,26 @@ export function RecipeDetailDialog({
 
               <div className="flex items-center gap-2 flex-wrap">
                 {/* Save to Plate */}
-                <div
+                <button
                   onClick={handleSaveToPlate}
-                  className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-[#F3F4F6] text-gray-900 rounded-lg hover:bg-[#E5E7EB] transition-colors cursor-pointer"
+                  className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-[var(--button-bg-active)] text-[var(--button-text)] rounded-full hover:bg-[var(--button-bg-hover)] transition-colors cursor-pointer font-medium"
                 >
                   <Heart size={14} />
-                  <span className="font-medium text-sm whitespace-nowrap">
+                  <span className="text-sm whitespace-nowrap">
                     Save to Plate
                   </span>
-                </div>
+                </button>
 
                 {/* Share with Friend */}
-                <div
+                <button
                   onClick={handleShareWithFriend}
-                  className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-[#D55123] text-white rounded-lg hover:bg-[#BF2C20] transition-colors cursor-pointer"
+                  className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-[var(--button-bg-default)] text-[var(--button-text)] rounded-full hover:bg-[var(--button-bg-hover)] transition-colors cursor-pointer font-medium"
                 >
                   <Share2 className="w-4 h-4" />
-                  <span className="font-medium text-sm whitespace-nowrap">
+                  <span className="text-sm whitespace-nowrap">
                     Share with Friend
                   </span>
-                </div>
+                </button>
               </div>
 
             </div>

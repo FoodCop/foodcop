@@ -231,7 +231,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
             </div>
           </div>
           
-          <button className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors">
+          <button className="w-11 h-11 bg-[var(--button-bg-active)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--button-bg-hover)] transition-colors">
             <MoreVertical className="text-gray-900" />
           </button>
         </div>
@@ -267,13 +267,13 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
 
       {/* Map Controls */}
       <div className="absolute right-5 top-1/2 -translate-y-1/2 z-10 flex flex-col gap-2">
-        <button className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors">
+        <button className="w-11 h-11 bg-[var(--button-bg-active)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--button-bg-hover)] transition-colors">
           <Plus className="text-gray-900" />
         </button>
-        <button className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors">
+        <button className="w-11 h-11 bg-[var(--button-bg-active)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--button-bg-hover)] transition-colors">
           <Minus className="text-gray-900" />
         </button>
-        <button className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors mt-2">
+        <button className="w-11 h-11 bg-[var(--button-bg-active)] rounded-full flex items-center justify-center shadow-lg hover:bg-[var(--button-bg-hover)] transition-colors mt-2">
           <Crosshair className="text-orange-500" />
         </button>
       </div>
@@ -433,7 +433,7 @@ export function MapView({ restaurant, open, onClose }: Readonly<MapViewProps>) {
           {/* Send to Google Maps Button */}
           <button
             onClick={handleSendToGoogleMaps}
-            className="w-full bg-white border-2 border-gray-300 text-gray-900 font-semibold py-4 rounded-2xl hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 mt-3"
+            className="w-full bg-[var(--button-bg-default)] text-[var(--button-text)] font-semibold py-4 rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors flex items-center justify-center gap-2 mt-3"
           >
             <MapPin className="w-5 h-5" />
             Send to Google Maps

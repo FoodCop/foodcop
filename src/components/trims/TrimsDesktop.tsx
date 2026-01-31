@@ -134,11 +134,11 @@ export default function TrimsDesktop() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-page-profile justify-center">
+    <div className="flex h-screen overflow-hidden bg-background justify-center">
       {/* Main Content Area - Centered Feed with Search */}
-      <div className="h-screen w-full md:max-w-[450px] overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative bg-page-profile">
+      <div className="h-screen w-full md:max-w-[450px] overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative bg-background">
         {/* Search Bar */}
-        <div className="sticky top-0 z-10 bg-page-profile px-4 py-4">
+        <div className="sticky top-0 z-10 bg-background px-4 py-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
@@ -152,7 +152,7 @@ export default function TrimsDesktop() {
                   loadVideos(searchQuery.trim());
                 }
               }}
-              className="w-full h-11 pl-10 pr-4 rounded-full bg-white text-sm text-[#6B7280] placeholder:text-[#9CA3AF] border-none focus:outline-none focus:ring-2 focus:ring-[#FFC909]/20"
+              className="w-full h-11 pl-10 pr-4 rounded-full bg-white text-sm text-[var(--gray-600)] placeholder:text-[var(--gray-400)] border-none focus:outline-none focus:ring-2 focus:ring-[var(--yellow-primary)]/20"
             />
           </div>
         </div>
@@ -166,7 +166,7 @@ export default function TrimsDesktop() {
           {/* Loading State */}
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-12 h-12 border-4 border-[#FFC909] border-t-transparent rounded-full animate-spin" />
+              <div className="w-12 h-12 border-4 border-[var(--yellow-primary)] border-t-transparent rounded-full animate-spin" />
               <p className="mt-4 text-gray-400 text-sm">Finding best content...</p>
             </div>
           )}
@@ -182,7 +182,7 @@ export default function TrimsDesktop() {
               <button
                 type="button"
                 onClick={() => loadVideos('cooking shorts')}
-                className="px-6 py-3 bg-[#FFC909] text-gray-900 rounded-xl font-medium"
+                className="px-6 py-3 bg-[var(--yellow-primary)] text-gray-900 rounded-xl font-medium"
               >
                 Try Again
               </button>
@@ -240,7 +240,7 @@ function VideoCard({
     <Card
       className="overflow-hidden cursor-pointer snap-start transition-all hover:shadow-xl w-full group shadow-lg"
       onClick={() => onVideoClick(video)}
-      style={{ borderColor: '#ffe838', borderWidth: '2px' }}
+      style={{ borderColor: 'var(--yellow-feed)', borderWidth: '2px' }}
     >
       {/* Video Content Area */}
       <div className="relative aspect-[9/16] w-full overflow-hidden bg-gray-50">

@@ -18,7 +18,7 @@ const OnboardingFlowContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-page-profile">
+    <div className="min-h-screen bg-background">
       {renderStep()}
     </div>
   );

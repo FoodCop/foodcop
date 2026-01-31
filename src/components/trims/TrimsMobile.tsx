@@ -130,9 +130,9 @@ export default function TrimsMobile() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-page-profile">
+    <div className="flex flex-col h-screen bg-background">
       {/* Search/Filter Header for Mobile */}
-      <header className="px-4 py-3 bg-[#fbd556] backdrop-blur-md sticky top-0 z-50 flex items-center gap-3 border-b border-[#E5B88A]">
+      <header className="px-4 py-3 bg-[var(--yellow-secondary)] backdrop-blur-md sticky top-0 z-50 flex items-center gap-3 border-b border-[var(--border-light)]">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-2.5 w-4 h-4 text-[#9CA3AF]" />
           <input
@@ -141,7 +141,7 @@ export default function TrimsMobile() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && loadVideos(`${searchQuery} shorts`)}
-            className="w-full h-9 pl-9 pr-4 rounded-full bg-white text-sm text-[#6B7280] placeholder:text-[#9CA3AF] border-none focus:outline-none focus:ring-1 focus:ring-[#fbd556]/30"
+            className="w-full h-9 pl-9 pr-4 rounded-full bg-white text-sm text-[var(--gray-600)] placeholder:text-[var(--gray-400)] border-none focus:outline-none focus:ring-1 focus:ring-[var(--yellow-secondary)]/30"
           />
         </div>
       </header>
@@ -155,7 +155,7 @@ export default function TrimsMobile() {
         {/* Loading State */}
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-10 h-10 border-4 border-[#FFC909] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-[var(--yellow-primary)] border-t-transparent rounded-full animate-spin" />
             <p className="mt-4 text-gray-500 text-xs text-center font-medium">Baking fresh Trims...</p>
           </div>
         )}
@@ -170,7 +170,7 @@ export default function TrimsMobile() {
             <p className="text-gray-500 text-xs text-center mb-6">{error}</p>
             <button
               onClick={() => loadVideos('cooking shorts')}
-              className="px-5 py-2.5 bg-[#FFC909] text-gray-900 rounded-lg text-sm font-medium"
+              className="px-5 py-2.5 bg-[var(--button-bg-default)] text-[var(--button-text)] rounded-full text-sm font-medium hover:bg-[var(--button-bg-hover)] transition-colors"
             >
               Try Again
             </button>
@@ -238,7 +238,7 @@ function VideoCard({
     <Card
       className="overflow-hidden cursor-pointer snap-start shadow-md"
       onClick={() => onVideoClick(video)}
-      style={{ borderColor: '#ffe838', borderWidth: '2px' }}
+      style={{ borderColor: 'var(--yellow-feed)', borderWidth: '2px' }}
     >
       {/* Video Content Area */}
       <div className="relative aspect-[9/16] w-full overflow-hidden bg-gray-50">
@@ -254,13 +254,13 @@ function VideoCard({
         {/* Play Button - Center */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-14 h-14 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-            <Play className="w-6 h-6 text-[#FFC909] fill-[#FFC909] ml-1" />
+            <Play className="w-6 h-6 text-[var(--yellow-primary)] fill-[var(--yellow-primary)] ml-1" />
           </div>
         </div>
       </div>
 
       {/* Info Section - Just Title */}
-      <div className="p-5" style={{ backgroundColor: '#fff1b7' }}>
+      <div className="p-5" style={{ backgroundColor: 'var(--sidebar-bg)' }}>
         <CardHeading
           variant="accent"
           size="md"
