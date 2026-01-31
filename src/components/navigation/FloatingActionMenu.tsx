@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { 
   Rss, 
   Search, 
-  Camera, 
-  Pizza, 
-  Scissors, 
-  Utensils, 
+  CameraAlt, 
+  LocalPizza, 
+  ContentCut, 
+  Restaurant, 
   Send,
-  X
-} from 'lucide-react';
+  Close
+} from '@mui/icons-material';
 import { useDMChatStore } from '../../stores/chatStore';
 
 interface FloatingActionMenuProps {

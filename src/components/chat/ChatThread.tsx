@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Send, ArrowLeft, Loader2 } from 'lucide-react';
+import { Send, ArrowBack, Loop } from '@mui/icons-material';
 import { useDMChatStore } from '../../stores/chatStore';
 import { useAuthStore } from '../../stores/authStore';
 import { DMConversation, SharedItem } from '../../services/dmChatService';

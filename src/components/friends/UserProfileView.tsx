@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, MessageCircle, UserPlus, MapPin, Calendar, Loader2 } from 'lucide-react';
+import { ArrowBack, Message, PersonAdd, Place, CalendarMonth, Loop } from '@mui/icons-material';
 import { useAuthStore } from '../../stores/authStore';
 import { FriendService } from '../../services/friendService';
 import { ProfileService } from '../../services/profileService';

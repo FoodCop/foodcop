@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Masonry from 'react-masonry-css';
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, Tune } from "@mui/icons-material";
 import type { Recipe } from "./components/RecipeCard";
 import { RecipeCard } from "./components/RecipeCard";
 import { AdCard } from "./components/AdCard";

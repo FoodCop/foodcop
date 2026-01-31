@@ -1,4 +1,4 @@
-import { Check, CheckCheck, Loader2, AlertCircle } from 'lucide-react';
+import { Check, DoneAll, Loop, ErrorOutline } from '@mui/icons-material';
 import { cn } from '../ui/utils';
 
 export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'read' | 'failed';

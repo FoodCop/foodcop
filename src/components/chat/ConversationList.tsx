@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { MessageCircle, Loader2 } from 'lucide-react';
+import { Message, Loop } from '@mui/icons-material';
 import { ConversationSkeleton } from './ConversationSkeleton';
 import { NoConversationsEmptyState } from './EmptyState';
 import { useDMChatStore } from '../../stores/chatStore';

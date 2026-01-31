@@ -1,4 +1,4 @@
-import { Info } from 'lucide-react';
+import { Info } from '@mui/icons-material';
 import { Alert, AlertDescription } from '../ui/alert';
 
 /**

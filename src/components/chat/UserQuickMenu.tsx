@@ -1,4 +1,4 @@
-import { MessageCircle, User, X } from 'lucide-react';
+import { Message, Person, Close } from '@mui/icons-material';
 import { useEffect, useRef } from 'react';
 import { cn } from '../ui/utils';
 
@@ -105,7 +105,7 @@ export function UserQuickMenu({
                             className="shrink-0 p-1 hover:bg-gray-200 rounded transition-colors"
                             aria-label="Close menu"
                         >
-                            <X className="h-3 w-3 text-gray-500" />
+                            <Close sx={{ fontSize: 12, color: '#6B7280' }} />
                         </button>
                     </div>
                 </div>

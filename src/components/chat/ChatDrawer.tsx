@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, MessageCircle, UserPlus, Users } from 'lucide-react';
+import { Close, Message, PersonAdd, Group } from '@mui/icons-material';
 import {
   Drawer,
   DrawerContent,

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, X, Loader2, MapPin } from 'lucide-react';
+import { Search, Close, Loop, Place } from '@mui/icons-material';
 import {
     Dialog,
     DialogContent,

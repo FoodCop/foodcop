@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Masonry from 'react-masonry-css';
 import { 
   Search, 
-  Clock, 
+  Schedule, 
   Star, 
-  Share2, 
-  Bookmark,
-  ChevronDown
-} from 'lucide-react';
+  Share, 
+  BookmarkBorder,
+  ExpandMore
+} from '@mui/icons-material';
 import { SpoonacularService } from '../../services/spoonacular';
 import type { Recipe } from './components/RecipeCard';
 import { AdCard } from './components/AdCard';

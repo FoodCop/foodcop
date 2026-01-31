@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, UserPlus, Check, X, Loader2, Users } from 'lucide-react';
+import { Search, PersonAdd, Check, Close, Loop, Group } from '@mui/icons-material';
 import { useAuthStore } from '../../stores/authStore';
 import { FriendService, type FriendData } from '../../services/friendService';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';

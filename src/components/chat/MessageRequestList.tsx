@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MessageCircle, Check, X, Loader2 } from 'lucide-react';
+import { Message, Check, Close, Loop } from '@mui/icons-material';
 import { useDMChatStore } from '../../stores/chatStore';
 import { useAuthStore } from '../../stores/authStore';
 import { DMConversation, DMChatService } from '../../services/dmChatService';
