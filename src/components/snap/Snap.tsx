@@ -207,6 +207,7 @@ export function Snap() {
       const primaryColor = computedStyle.getPropertyValue('--color-primary').trim();
       const secondaryColor = computedStyle.getPropertyValue('--color-secondary').trim();
       const accentColor = computedStyle.getPropertyValue('--color-accent').trim();
+      const neutralText = computedStyle.getPropertyValue('--color-neutral-text').trim();
       
       gradient.addColorStop(0, primaryColor || '#ffe838');
       gradient.addColorStop(0.5, secondaryColor || '#e89f3c');
@@ -214,7 +215,7 @@ export function Snap() {
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, 800, 600);
       
-      ctx.fillStyle = '#000000';
+      ctx.fillStyle = neutralText || '#1f2937';
       ctx.font = 'bold 48px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -406,7 +407,7 @@ export function Snap() {
           {MOCK_CAMERA_MODE ? (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
               <div className="text-center space-y-6 p-8">
-                <CameraAlt sx={{ fontSize: 128, color: 'rgba(255, 255, 255, 0.3)' }} className="mx-auto" />
+                <CameraAlt sx={{ fontSize: 128, color: 'var(--color-accent)', opacity: 0.3 }} className="mx-auto" />
                 <div className="space-y-2">
                   <h2 className="text-white text-xl font-semibold">Mock Camera Mode</h2>
                   <p className="text-white/60">Click capture button below</p>
@@ -437,7 +438,7 @@ export function Snap() {
               onClick={handleCancel}
               className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
             >
-              <Close sx={{ fontSize: 24, color: 'white' }} />
+              <Close sx={{ fontSize: 24, color: 'var(--color-accent)' }} />
             </button>
             
             <button
@@ -462,7 +463,7 @@ export function Snap() {
         <div className="w-full max-w-[375px] mx-auto bg-background min-h-screen flex items-center justify-center">
           <div className="text-center px-8">
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center animate-bounce">
-              <Favorite sx={{ fontSize: 48, color: 'white' }} />
+              <Favorite sx={{ fontSize: 48, color: 'var(--color-accent)' }} />
             </div>
             <h2 className="font-[Poppins] font-bold text-2xl text-gray-900 mb-2">Saved! 🎉</h2>
             <p className="text-gray-600">Your food photo is now in your Plate</p>

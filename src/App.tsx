@@ -212,7 +212,7 @@ function AppLayout() {
               title="Messages"
               aria-label="Messages"
             >
-              <Message sx={{ fontSize: 16, color: '#374151' }} />
+              <Message sx={{ fontSize: 16, color: 'var(--color-neutral-text)' }} />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center bg-orange-500 text-white text-xs font-bold rounded-full">
                   {unreadCount > 9 ? '9+' : unreadCount}
@@ -232,7 +232,7 @@ function AppLayout() {
             title="AI Assistant"
             aria-label="AI Assistant"
           >
-            <SmartToy sx={{ fontSize: 18, color: isOpen ? 'white' : '#374151' }} />
+            <SmartToy sx={{ fontSize: 18, color: isOpen ? 'var(--color-accent)' : 'var(--color-neutral-text)' }} />
           </button>
 
 
@@ -405,7 +405,7 @@ function AppLayout() {
           }}
           aria-label="AI Assistant"
         >
-          <SmartToy sx={{ fontSize: 20, color: isOpen ? 'white' : '#374151', m: 'auto' }} />
+          <SmartToy sx={{ fontSize: 20, color: isOpen ? 'var(--color-accent)' : 'var(--color-neutral-text)', m: 'auto' }} />
         </button>
       )}
 

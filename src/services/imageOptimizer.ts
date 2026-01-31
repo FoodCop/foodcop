@@ -276,7 +276,7 @@ class ImageOptimizationService {
         </defs>
         <rect width="100%" height="100%" fill="url(#placeholder)" />
         <text x="50%" y="50%" text-anchor="middle" dy=".3em" 
-              font-family="Arial, sans-serif" font-size="14" fill="#9ca3af">
+              font-family="Arial, sans-serif" font-size="14" fill="#d1d5db">
           Loading...
         </text>
       </svg>

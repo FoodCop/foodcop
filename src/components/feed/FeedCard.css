@@ -5,8 +5,6 @@
  * Uses design tokens from design-tokens.css
  */
 
-@import '../../styles/unified-colors.css';
-
 /* Feed Card Typography */
 .feed-card-title {
   color: var(--text-inverse);

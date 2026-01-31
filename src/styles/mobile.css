@@ -3,9 +3,6 @@
    iOS & Android App Optimization
    ======================================== */
 
-/* Import unified color system first */
-@import url('./unified-colors.css');
-
 /* Import Design System Variables */
 @import url('./design-tokens.css');
 

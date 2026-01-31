@@ -1,8 +1,6 @@
 /* Scout Slider Yellow Color Fix */
 /* This addresses the Radix UI Slider color visibility issue */
 
-@import '../../styles/unified-colors.css';
-
 .scout-slider {
   /* Force yellow colors for the scout distance slider */
   --slider-track-bg: var(--gray-light);

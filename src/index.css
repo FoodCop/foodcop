@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import "./styles/lean-colors.css";
-@import "./styles/unified-colors.css";
 @import "./styles/design-tokens.css";
 
 /* Masonry Grid Styles */

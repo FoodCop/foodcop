@@ -5,7 +5,7 @@
 
 import React, { createContext, useState, useEffect, useCallback, useMemo } from 'react';
 import type { Theme, ThemeContextState, ThemePreferences, ThemeColors } from '../types/theme';
-import { PRESET_THEMES, DEFAULT_THEME } from '../config/themes';
+import { ALL_THEMES, DEFAULT_THEME } from '../config/themes-lean';
 import { applyThemeToDOM, validateThemeAccessibility } from '../utils/themeUtils';
 
 // Storage keys
@@ -69,7 +69,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   // Get all available themes (preset + custom)
   const allThemes = useMemo(() => {
-    return [...PRESET_THEMES, ...customThemes];
+    return [...ALL_THEMES, ...customThemes];
   }, [customThemes]);
 
   // Get current active theme
