@@ -1,5 +1,6 @@
 import { projectId, publicAnonKey } from './supabase/info';
 import { createClient } from './supabase/client';
+import { supabase } from '../../../services/supabase';
 
 interface PhotoMetadata {
   latitude: number | null;
@@ -21,12 +22,76 @@ interface SavePhotoParams {
   restaurant: RestaurantData;
 }
 
+interface UploadImageResult {
+  success: boolean;
+  imageUrl?: string;
+  error?: string;
+}
+
 // Mock mode flag - set to false when ready to use real Supabase
-const MOCK_MODE = true;
+const MOCK_MODE = false;
+
+/**
+ * Uploads image to Supabase Storage
+ * Handles both base64 (from camera) and File objects (from upload)
+ */
+export async function uploadImage(imageData: string | File, fileName?: string): Promise<UploadImageResult> {
+  try {
+    // Generate unique file name if not provided
+    const uniqueFileName = fileName || `snap-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`;
+    
+    let blob: Blob;
+    let contentType = 'image/jpeg';
+
+    // Handle base64 string (from camera)
+    if (typeof imageData === 'string') {
+      const base64Data = imageData.includes(',') ? imageData.split(',')[1] : imageData;
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      blob = new Blob([byteArray], { type: contentType });
+    } else {
+      // Handle File object (from file input)
+      blob = imageData;
+      contentType = imageData.type || 'image/jpeg';
+    }
+
+    // Upload to Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('snap-photos')
+      .upload(uniqueFileName, blob, {
+        contentType,
+        cacheControl: '3600',
+      });
+
+    if (uploadError) {
+      throw new Error(`Upload error: ${uploadError.message}`);
+    }
+
+    // Get public URL
+    const { data } = supabase.storage
+      .from('snap-photos')
+      .getPublicUrl(uniqueFileName);
+
+    return {
+      success: true,
+      imageUrl: data.publicUrl
+    };
+  } catch (error) {
+    console.error('❌ Image upload error:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to upload image'
+    };
+  }
+}
 
 /**
  * Saves a photo with restaurant data and geolocation to Supabase
- * Currently in MOCK mode - logs data to console
+ * Properly uploads image to Storage and saves metadata to database
  */
 export async function savePhoto(params: SavePhotoParams) {
   const { imageData, metadata, restaurant } = params;
@@ -48,52 +113,44 @@ export async function savePhoto(params: SavePhotoParams) {
     };
   }
 
-  // Real Supabase implementation (ready for when you switch MOCK_MODE to false)
   try {
-    const supabase = createClient();
-
-    // 1. Convert base64 to blob
-    const base64Data = imageData.split(',')[1];
-    const byteCharacters = atob(base64Data);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: 'image/jpeg' });
-
-    // 2. Upload to Supabase Storage
-    const fileName = `snap-${Date.now()}.jpg`;
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('snap-photos') // Make sure this bucket exists
-      .upload(fileName, blob, {
-        contentType: 'image/jpeg',
-        cacheControl: '3600',
-      });
-
-    if (uploadError) {
-      throw new Error(`Upload error: ${uploadError.message}`);
+    // Step 1: Upload image to Supabase Storage
+    console.log('📸 Uploading image to Supabase Storage...');
+    const uploadResult = await uploadImage(imageData);
+    
+    if (!uploadResult.success || !uploadResult.imageUrl) {
+      throw new Error(uploadResult.error || 'Failed to upload image');
     }
 
-    // 3. Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('snap-photos')
-      .getPublicUrl(fileName);
+    console.log('✅ Image uploaded successfully:', uploadResult.imageUrl);
 
-    // 4. Save metadata to database
-    // Adjust table name and columns to match your schema
+    // Step 2: Get user ID
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+
+    // Step 3: Save metadata to saved_items table
+    console.log('💾 Saving snap metadata to database...');
+    const snapMetadata = {
+      image_url: uploadResult.imageUrl,
+      restaurant_name: restaurant.name,
+      cuisine_type: restaurant.cuisine,
+      rating: restaurant.rating,
+      description: restaurant.description,
+      latitude: metadata.latitude,
+      longitude: metadata.longitude,
+      location_accuracy: metadata.accuracy,
+      timestamp: metadata.timestamp.toISOString()
+    };
+
     const { data: dbData, error: dbError } = await supabase
-      .from('photos') // Adjust table name
+      .from('saved_items')
       .insert({
-        image_url: publicUrl,
-        restaurant_name: restaurant.name,
-        cuisine_type: restaurant.cuisine,
-        rating: restaurant.rating,
-        description: restaurant.description,
-        latitude: metadata.latitude,
-        longitude: metadata.longitude,
-        location_accuracy: metadata.accuracy,
-        captured_at: metadata.timestamp.toISOString(),
+        user_id: user.id,
+        item_id: `snap-${Date.now()}`,
+        item_type: 'photo',
+        metadata: snapMetadata
       })
       .select()
       .single();
@@ -102,6 +159,8 @@ export async function savePhoto(params: SavePhotoParams) {
       throw new Error(`Database error: ${dbError.message}`);
     }
 
+    console.log('✅ Snap saved successfully:', dbData);
+
     return {
       success: true,
       photoId: dbData.id,
@@ -109,7 +168,7 @@ export async function savePhoto(params: SavePhotoParams) {
     };
 
   } catch (error) {
-    console.error('Error saving photo:', error);
+    console.error('❌ Error saving photo:', error);
     return {
       success: false,
       photoId: null,

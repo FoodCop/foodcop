@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
-import { CameraAlt, Close, Star, Place, Schedule, Favorite } from '@mui/icons-material';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { CameraAlt, Close, Star, Upload, LocalPizza, RamenDining, SetMeal, Whatshot, RiceBowl, BakeryDining, Fastfood, Restaurant, Favorite, Place, Schedule } from '@mui/icons-material';
 import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { useAuth } from '../auth/AuthProvider';
 import { SavedItemsService } from '../../services/savedItemsService';
 import { MinimalHeader } from '../common/MinimalHeader';
+import { uploadImage } from './utils/snap-api';
 
 // Mock mode - set to true to bypass camera and use mock photo
 const MOCK_CAMERA_MODE = false;
@@ -20,8 +21,6 @@ interface CapturedPhoto {
   imageData: string;
   metadata: PhotoMetadata;
 }
-
-import { LocalPizza, RamenDining, SetMeal, Whatshot, RiceBowl, BakeryDining, Fastfood, Restaurant } from '@mui/icons-material';
 
 const cuisineTypes = [
   { icon: LocalPizza, label: 'Italian' },
@@ -61,6 +60,7 @@ export function Snap() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -70,6 +70,28 @@ export function Snap() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  const startCamera = useCallback(async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { 
+          facingMode: isMobile ? 'environment' : 'user',
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        },
+        audio: false
+      });
+      
+      setStream(mediaStream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+      }
+      setShowCamera(true);
+    } catch (error) {
+      toast.error('Unable to access camera');
+      console.error('Camera access error:', error);
+    }
+  }, [isMobile]);
 
   // Auto-start camera on mobile
   useEffect(() => {
@@ -81,7 +103,7 @@ export function Snap() {
         startCamera();
       }
     }
-  }, [isMobile, cameraStarted]);
+  }, [isMobile, cameraStarted, startCamera]);
 
   // Cleanup stream on unmount
   useEffect(() => {
@@ -133,28 +155,6 @@ export function Snap() {
         }
       );
     });
-  };
-
-  const startCamera = async () => {
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { 
-          facingMode: isMobile ? 'environment' : 'user',
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        },
-        audio: false
-      });
-      
-      setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
-      setShowCamera(true);
-    } catch (error) {
-      toast.error('Unable to access camera');
-      console.error('Camera access error:', error);
-    }
   };
 
   const capturePhoto = async () => {
@@ -249,6 +249,40 @@ export function Snap() {
     }
   };
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select a valid image file');
+      return;
+    }
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Image must be smaller than 10MB');
+      return;
+    }
+
+    // Convert File to data URL for preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imageData = e.target?.result as string;
+      toast.info('Capturing location...');
+      getGeolocation().then((metadata) => {
+        setCapturedPhoto({ imageData, metadata });
+        setShowCamera(false);
+        setShowTagging(true);
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const openFileUpload = () => {
+    fileInputRef.current?.click();
+  };
+
   const handleTaggingSubmit = async () => {
     if (!user) {
       toast.error('Please sign in to save photos');
@@ -272,41 +306,57 @@ export function Snap() {
     try {
       setSaving(true);
       
+      // Step 1: Upload image to Supabase Storage
+      console.log('📸 Uploading image...');
+      const uploadResult = await uploadImage(capturedPhoto.imageData);
+      
+      if (!uploadResult.success || !uploadResult.imageUrl) {
+        toast.error(uploadResult.error || 'Failed to upload image');
+        return;
+      }
+
+      console.log('✅ Image uploaded:', uploadResult.imageUrl);
+
+      // Step 2: Save to saved_items with metadata
       const photoMetadata = {
+        image_url: uploadResult.imageUrl,
         restaurant_name: restaurantName,
         cuisine_type: cuisine,
         rating: rating,
         description: description,
-        image_data: capturedPhoto.imageData,
         latitude: capturedPhoto.metadata.latitude,
         longitude: capturedPhoto.metadata.longitude,
         timestamp: capturedPhoto.metadata.timestamp.toISOString(),
         accuracy: capturedPhoto.metadata.accuracy,
-        content_type: 'photo'
+        content_type: 'snap'
       };
 
       const savedItemsService = new SavedItemsService();
       const result = await savedItemsService.saveItem({
-        itemId: `photo-${Date.now()}`,
+        itemId: `snap-${Date.now()}`,
         itemType: 'photo',
         metadata: photoMetadata
       });
 
       if (result.success) {
         setShowSuccess(true);
-        toastHelpers.saved('Photo');
+        toastHelpers.saved('Snap');
         
         setTimeout(() => {
           resetForm();
           setShowSuccess(false);
           setShowTagging(false);
+          // Reset back to initial state on mobile
+          if (isMobile) {
+            setShowDisclaimer(true);
+          }
         }, 2000);
       } else {
-        toast.error(result.error || 'Failed to save photo');
+        toast.error(result.error || 'Failed to save snap');
       }
     } catch (error) {
-      console.error('Error submitting photo:', error);
-      toast.error('Failed to save photo');
+      console.error('❌ Error submitting snap:', error);
+      toast.error('Failed to save snap');
     } finally {
       setSaving(false);
     }
@@ -448,8 +498,23 @@ export function Snap() {
               <CameraAlt sx={{ fontSize: 32, color: 'var(--color-primary)' }} />
             </button>
 
-            <div className="w-12 h-12" /> {/* Spacer for centering */}
+            <button
+              onClick={openFileUpload}
+              className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
+              title="Upload from gallery"
+            >
+              <Upload sx={{ fontSize: 24, color: 'var(--color-accent)' }} />
+            </button>
           </div>
+          
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
         </div>
       </div>
     );
