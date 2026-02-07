@@ -5,7 +5,7 @@ import { ErrorBoundary, PageErrorBoundary } from './components/common/ErrorBound
 import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { PageLoader } from './components/common/PageLoader'
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar'
-import { Logout, Message, SmartToy, Brightness4, Brightness7 } from '@mui/icons-material'
+import { Logout, Message, SmartToy } from '@mui/icons-material'
 import { useDMChatStore } from './stores/chatStore'
 import { toastHelpers } from './utils/toastHelpers'
 import config from './config/config'
@@ -22,7 +22,6 @@ import './styles/mobile.css'
 
 //to directly toggle to the chat interface
 import { useTakoAIStore } from './stores/takoAIStore'
-import { useTheme } from './hooks/useTheme'
 
 
 // Eager load critical components
@@ -153,30 +152,6 @@ const NavButton = ({ to, label }: NavButtonProps) => {
   );
 };
 
-const DarkModeToggle = () => {
-  const { darkModeEnabled, toggleDarkMode } = useTheme();
-
-  return (
-    <button
-      onClick={toggleDarkMode}
-      className="px-3 py-2 rounded-full transition ml-2 border"
-      style={{
-        borderColor: 'var(--color-border)',
-        backgroundColor: darkModeEnabled ? 'var(--color-secondary)' : 'var(--color-accent)',
-        color: 'var(--color-neutral-text)',
-      }}
-      title={darkModeEnabled ? 'Switch to light mode' : 'Switch to dark mode'}
-      aria-label={darkModeEnabled ? 'Switch to light mode' : 'Switch to dark mode'}
-    >
-      {darkModeEnabled ? (
-        <Brightness7 sx={{ fontSize: 18, color: 'var(--color-neutral-text)' }} />
-      ) : (
-        <Brightness4 sx={{ fontSize: 18, color: 'var(--color-neutral-text)' }} />
-      )}
-    </button>
-  );
-};
-
 // Main App Layout Component
 function AppLayout() {
   const location = useLocation()
@@ -258,9 +233,6 @@ function AppLayout() {
             aria-label="AI Assistant"
           >
             <SmartToy sx={{ fontSize: 18, color: isOpen ? 'var(--color-accent)' : 'var(--color-neutral-text)' }} />
-
-                    {/* Dark Mode Toggle Button */}
-                    <DarkModeToggle />
           </button>
 
 

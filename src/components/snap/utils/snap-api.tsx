@@ -1,5 +1,3 @@
-import { projectId, publicAnonKey } from './supabase/info';
-import { createClient } from './supabase/client';
 import { supabase } from '../../../services/supabase';
 
 interface PhotoMetadata {
@@ -174,47 +172,5 @@ export async function savePhoto(params: SavePhotoParams) {
       photoId: null,
       message: error instanceof Error ? error.message : 'Failed to save photo'
     };
-  }
-}
-
-/**
- * Fetches user's photo stats for gamification
- * Currently in MOCK mode
- */
-export async function getUserStats(userId?: string) {
-  if (MOCK_MODE) {
-    console.log('MOCK: Fetching user stats...');
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    return {
-      totalPhotos: 42,
-      points: 420,
-      level: 5,
-      restaurantsVisited: 28
-    };
-  }
-
-  // Real implementation
-  try {
-    const response = await fetch(
-      `https://${projectId}.supabase.co/functions/v1/make-server-906257ef/user-stats`,
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${publicAnonKey}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching user stats:', error);
-    return null;
   }
 }
