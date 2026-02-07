@@ -462,14 +462,14 @@ export function ScoutDesktop() {
 
       <div className="flex flex-1">
         {/* Left Sidebar - Apricot Theme */}
-        <aside className="w-[380px] border-r flex flex-col overflow-hidden" style={{ backgroundColor: 'var(--sidebar-bg)', borderColor: 'var(--border-light)' }}>
+        <aside className="w-[380px] border-r flex flex-col overflow-hidden text-[13px]" style={{ backgroundColor: 'var(--sidebar-bg)', borderColor: 'var(--border-light)' }}>
           {/* Header */}
           <div className="p-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
             {/* User Location */}
             <div className="flex items-center gap-2 mb-4 p-2">
               <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-700 truncate">
+                <p className="text-xs text-gray-700 truncate">
                   {userLocation[0].toFixed(4)}, {userLocation[1].toFixed(4)}
                 </p>
               </div>
@@ -496,7 +496,7 @@ export function ScoutDesktop() {
                       sx={{ fontSize: 14, color: 'var(--gray-700)' }}
                       aria-label="Distance"
                     />
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-xs font-semibold text-gray-900">
                       {formatDistance(distance)}
                     </span>
                   </div>
@@ -511,8 +511,8 @@ export function ScoutDesktop() {
                     style={{ accentColor: '#F4E3B2' }}
                   />
                   <div className="flex justify-between text-xs text-gray-700 mt-1">
-                    <span>0.5km</span>
-                    <span>10km</span>
+                    <span className="text-[11px]">0.5km</span>
+                    <span className="text-[11px]">10km</span>
                   </div>
                 </div>
 
@@ -520,9 +520,9 @@ export function ScoutDesktop() {
             ) : (
               <>
                 <div className="flex items-center justify-between mb-2">
-                  <h2 className="text-sm font-semibold text-gray-800">My Saved Places</h2>
+                  <h2 className="text-xs font-semibold text-gray-800">My Saved Places</h2>
                   {!user && (
-                    <span className="text-[11px] text-gray-600">
+                    <span className="text-[10px] text-gray-600">
                       Sign in to see your saved restaurants
                     </span>
                   )}
@@ -596,7 +596,7 @@ export function ScoutDesktop() {
                         }`}
                     >
                       <div className="flex gap-3">
-                        <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                        <div className="w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-gray-200">
                           {restaurant.image ? (
                             <img
                               src={restaurant.image}
@@ -617,7 +617,7 @@ export function ScoutDesktop() {
                           </div>
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
+                          <h3 className="text-sm font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
                           <div className="flex items-center gap-1 mb-1">
                             <div className="flex text-[#F4E3B2] text-xs">
                               {[...Array(5)].map((_, i) => (
@@ -628,14 +628,14 @@ export function ScoutDesktop() {
                                 />
                               ))}
                             </div>
-                            <span className="text-sm font-medium text-gray-900">
+                            <span className="text-xs font-medium text-gray-900">
                               {restaurant.rating}
                             </span>
-                            <span className="text-xs text-gray-700">
+                            <span className="text-[10px] text-gray-700">
                               ({restaurant.userRatingsTotal})
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-gray-700 mb-1">
+                          <div className="flex items-center gap-2 text-[11px] text-gray-700 mb-1">
                             <span>{restaurant.cuisine}</span>
                             <span className="text-gray-400">·</span>
                             <span>
@@ -643,11 +643,11 @@ export function ScoutDesktop() {
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-700">
+                            <span className="text-[11px] text-gray-700">
                               {formatDistance(restaurant.distance)}
                             </span>
                             <span
-                              className={`px-2 py-0.5 text-xs font-medium rounded ${restaurant.opening_hours?.open_now
+                              className={`px-2 py-0.5 text-[10px] font-medium rounded ${restaurant.opening_hours?.open_now
                                 ? 'bg-green-100 text-green-700'
                                 : 'bg-red-100 text-red-700'
                                 }`}
@@ -698,7 +698,7 @@ export function ScoutDesktop() {
                         }`}
                     >
                       <div className="flex gap-3">
-                        <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                        <div className="w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-gray-200">
                           {restaurant.image ? (
                             <img
                               src={restaurant.image}
@@ -719,7 +719,7 @@ export function ScoutDesktop() {
                           </div>
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
+                          <h3 className="text-sm font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
                           <div className="flex items-center gap-1 mb-1">
                             <div className="flex text-[#F4E3B2] text-xs">
                               {[...Array(5)].map((_, i) => (
@@ -730,11 +730,11 @@ export function ScoutDesktop() {
                                 />
                               ))}
                             </div>
-                            <span className="text-sm font-medium text-gray-900">
+                            <span className="text-xs font-medium text-gray-900">
                               {restaurant.rating}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-gray-700 mb-1">
+                          <div className="flex items-center gap-2 text-[11px] text-gray-700 mb-1">
                             <span>{restaurant.cuisine}</span>
                             {restaurant.price_level && (
                               <>
@@ -745,7 +745,7 @@ export function ScoutDesktop() {
                           </div>
                           {restaurant.distance && (
                             <div className="flex items-center gap-2">
-                              <span className="text-xs text-gray-700">
+                              <span className="text-[11px] text-gray-700">
                                 {formatDistance(restaurant.distance)}
                               </span>
                             </div>
@@ -829,7 +829,7 @@ export function ScoutDesktop() {
 
         {/* Right Panel - Apricot Theme */}
         {selectedRestaurant && (
-          <aside className="w-[420px] border-l flex flex-col overflow-hidden" style={{ backgroundColor: 'var(--sidebar-bg)', borderColor: '#E5B88A' }}>
+          <aside className="w-[420px] border-l flex flex-col overflow-hidden text-[13px]" style={{ backgroundColor: 'var(--sidebar-bg)', borderColor: '#E5B88A' }}>
             <div className="flex-1 overflow-y-auto">
               {/* Hero Image */}
               <div className="h-64 overflow-hidden bg-gray-200">
@@ -854,7 +854,7 @@ export function ScoutDesktop() {
                 {/* Restaurant Name & Rating */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedRestaurant.name}</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">{selectedRestaurant.name}</h2>
                     <div className="flex items-center gap-2">
                       <div className="flex text-[#F4E3B2]">
                         {[...Array(5)].map((_, i) => (
@@ -865,8 +865,8 @@ export function ScoutDesktop() {
                           />
                         ))}
                       </div>
-                      <span className="text-lg font-semibold text-gray-900">{selectedRestaurant.rating}</span>
-                      <span className="text-gray-700">({selectedRestaurant.userRatingsTotal} reviews)</span>
+                      <span className="text-base font-semibold text-gray-900">{selectedRestaurant.rating}</span>
+                      <span className="text-sm text-gray-700">({selectedRestaurant.userRatingsTotal} reviews)</span>
                     </div>
                   </div>
                 </div>
@@ -875,17 +875,17 @@ export function ScoutDesktop() {
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   <button
                     onClick={handleGetDirections}
-                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] text-sm font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                   >
-                    <Navigation style={{ fontSize: 18 }} className="text-gray-800" />
+                    <Navigation style={{ fontSize: 16 }} className="text-gray-800" />
                     Directions
                   </button>
                   {selectedRestaurant.phone && (
                     <a
                       href={`tel:${selectedRestaurant.phone}`}
-                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
+                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] text-sm font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                     >
-                      <Phone style={{ fontSize: 18 }} className="text-gray-800" />
+                      <Phone style={{ fontSize: 16 }} className="text-gray-800" />
                       Call
                     </a>
                   )}
@@ -894,20 +894,20 @@ export function ScoutDesktop() {
                       href={selectedRestaurant.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
+                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] text-sm font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                     >
-                      <Language style={{ fontSize: 18 }} className="text-gray-800" />
+                      <Language style={{ fontSize: 16 }} className="text-gray-800" />
                       Website
                     </a>
                   )}
                   <button
                     onClick={handleSaveToPlate}
-                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] text-sm font-medium rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors"
                   >
-                    <Favorite style={{ fontSize: 18 }} className="text-gray-800" />
+                    <Favorite style={{ fontSize: 16 }} className="text-gray-800" />
                     Save to Plate
                   </button>
-                  <div className="flex items-center justify-center px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors">
+                  <div className="flex items-center justify-center px-4 py-3 bg-[var(--button-bg-default)] text-[var(--button-text)] text-sm rounded-full hover:bg-[var(--button-bg-hover)] active:bg-[var(--button-bg-active)] transition-colors">
                     <SharePostButton
                       cardId={selectedRestaurant.id}
                       title={selectedRestaurant.name}
@@ -917,18 +917,18 @@ export function ScoutDesktop() {
                       variant="light"
                       className="!text-gray-800 hover:!bg-transparent"
                     />
-                    <span className="pr-4 text-gray-800 font-medium text-sm">Share to Chat</span>
+                    <span className="pr-4 text-gray-800 font-medium text-xs">Share to Chat</span>
                   </div>
                 </div>
 
                 {/* Stats */}
-                <div className="flex items-center justify-center gap-4 mb-6 pb-6 border-b border-[#4d382a]">
+                <div className="flex items-center justify-start gap-4 mb-6 pb-6 border-b border-[#4d382a]">
                   <div className="flex items-center gap-2 px-6 py-4 bg-[#fbd556] rounded-xl">
-                    <span className="text-4xl">⭐</span>
-                    <span className="text-5xl font-bold text-gray-900">{selectedRestaurant.rating}</span>
+                    <span className="text-lg">⭐</span>
+                    <span className="text-xl font-bold text-gray-900">{selectedRestaurant.rating}</span>
                   </div>
                   <div className="px-6 py-4 bg-[#fbd556] rounded-xl">
-                    <span className="text-5xl font-bold text-gray-900">{formatDistance(selectedRestaurant.distance)}</span>
+                    <span className="text-xl font-bold text-gray-900">{formatDistance(selectedRestaurant.distance)}</span>
                   </div>
                 </div>
 
@@ -938,7 +938,7 @@ export function ScoutDesktop() {
                     <div className="flex gap-4 mb-6 border-b border-gray-400">
                       <button
                         onClick={() => setDetailTab('overview')}
-                        className={`pb-3 px-1 font-semibold ${detailTab === 'overview'
+                        className={`pb-3 px-1 text-sm font-semibold ${detailTab === 'overview'
                           ? 'text-[#F4E3B2] border-b-2 border-[#F4E3B2]'
                           : 'text-gray-700 hover:text-gray-900'
                           }`}
@@ -947,7 +947,7 @@ export function ScoutDesktop() {
                       </button>
                       <button
                         onClick={() => setDetailTab('reviews')}
-                        className={`pb-3 px-1 font-medium ${detailTab === 'reviews'
+                        className={`pb-3 px-1 text-sm font-medium ${detailTab === 'reviews'
                           ? 'text-[#F4E3B2] border-b-2 border-[#F4E3B2]'
                           : 'text-gray-700 hover:text-gray-900'
                           }`}
@@ -956,7 +956,7 @@ export function ScoutDesktop() {
                       </button>
                       <button
                         onClick={() => setDetailTab('photos')}
-                        className={`pb-3 px-1 font-medium ${detailTab === 'photos'
+                        className={`pb-3 px-1 text-sm font-medium ${detailTab === 'photos'
                           ? 'text-[#F4E3B2] border-b-2 border-[#F4E3B2]'
                           : 'text-gray-700 hover:text-gray-900'
                           }`}
@@ -965,7 +965,7 @@ export function ScoutDesktop() {
                       </button>
                       <button
                         onClick={() => setDetailTab('menu')}
-                        className={`pb-3 px-1 font-medium ${detailTab === 'menu'
+                        className={`pb-3 px-1 text-sm font-medium ${detailTab === 'menu'
                           ? 'text-[#F4E3B2] border-b-2 border-[#F4E3B2]'
                           : 'text-gray-700 hover:text-gray-900'
                           }`}
@@ -980,14 +980,14 @@ export function ScoutDesktop() {
                         {/* About */}
                         {selectedRestaurant.description && (
                           <div className="mb-6">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-3">About</h3>
-                            <p className="text-gray-700 leading-relaxed mb-3">{selectedRestaurant.description}</p>
+                            <h3 className="text-base font-semibold text-gray-900 mb-3">About</h3>
+                            <p className="text-gray-700 leading-relaxed mb-3 text-sm">{selectedRestaurant.description}</p>
                             <div className="flex flex-wrap gap-2">
                               {(typeof selectedRestaurant.cuisine === 'string'
                                 ? selectedRestaurant.cuisine.split('·').map((c) => c.trim())
                                 : selectedRestaurant.cuisine || []
                               ).map((tag) => (
-                                <span key={tag} className="px-3 py-1 bg-orange-50 text-orange-700 text-sm rounded-full">
+                                <span key={tag} className="px-3 py-1 bg-orange-50 text-orange-700 text-xs rounded-full">
                                   {tag}
                                 </span>
                               ))}
@@ -998,15 +998,15 @@ export function ScoutDesktop() {
 
                         {/* Location & Hours */}
                         <div className="mb-6 pb-6 border-b border-gray-400">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-3">Location & Hours</h3>
+                          <h3 className="text-base font-semibold text-gray-900 mb-3">Location & Hours</h3>
                           <div className="flex items-start gap-3 mb-3">
-                            <Place className="text-[#F4E3B2] mt-1" style={{ fontSize: 20 }} />
+                            <Place className="text-[#F4E3B2] mt-1" style={{ fontSize: 16 }} />
                             <div>
                               <div className="text-gray-900">{selectedRestaurant.address}</div>
                             </div>
                           </div>
                           <div className="flex items-start gap-3">
-                            <Schedule className="text-[#F4E3B2] mt-1" style={{ fontSize: 20 }} />
+                            <Schedule className="text-[#F4E3B2] mt-1" style={{ fontSize: 16 }} />
                             <div>
                               <div
                                 className={`font-medium ${selectedRestaurant.opening_hours?.open_now ? 'text-green-600' : 'text-red-600'
@@ -1014,7 +1014,7 @@ export function ScoutDesktop() {
                               >
                                 {selectedRestaurant.opening_hours?.open_now ? 'Open now' : 'Closed'}
                               </div>
-                              <div className="text-gray-700 text-sm">11:00 AM - 10:00 PM</div>
+                              <div className="text-gray-700 text-xs">11:00 AM - 10:00 PM</div>
                             </div>
                           </div>
                         </div>

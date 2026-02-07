@@ -8,11 +8,15 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Place, Refresh } from '@mui/icons-material';
+import { Place, Refresh, BookmarkBorder } from '@mui/icons-material';
 import { dealCardsWithSeed, generateSeed, isAd, isTrivia, type DealerContent } from '../../utils/seedDealer';
 import { FeedService } from '../../services/feedService';
 import { GeocodingService } from '../../services/geocodingService';
 import type { RestaurantCard } from './data/feed-content';
+import { SharePostButton } from './SharePostButton';
+import { savedItemsService } from '../../services/savedItemsService';
+import { toastHelpers } from '../../utils/toastHelpers';
+import { toast } from 'sonner';
 
 // --- DealCard Component ---
 
@@ -23,6 +27,44 @@ interface DealCardProps {
 
 function DealCard({ card, index }: DealCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleSaveCard = async (cardToSave: DealerContent, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const itemType = cardToSave.type === 'restaurant'
+        ? 'restaurant'
+        : cardToSave.type === 'recipe'
+          ? 'recipe'
+          : cardToSave.type === 'video'
+            ? 'video'
+            : 'other';
+
+      const metadata = {
+        title: (cardToSave as any).title || (cardToSave as any).name || (cardToSave as any).caption,
+        imageUrl: (cardToSave as any).imageUrl || (cardToSave as any).thumbnailUrl,
+        subtitle: (cardToSave as any).author || (cardToSave as any).creator || (cardToSave as any).cuisine,
+        description: (cardToSave as any).description,
+        saveCategory: (cardToSave as any).saveCategory,
+      };
+
+      const result = await savedItemsService.saveItem({
+        itemId: String(cardToSave.id),
+        itemType,
+        metadata,
+      });
+
+      if (result.success) {
+        toastHelpers.saved(metadata.title || 'Item');
+      } else if (result.error === 'Item already saved') {
+        toastHelpers.info('Already saved');
+      } else {
+        toast.error(result.error || 'Failed to save item');
+      }
+    } catch (error) {
+      console.error('Error saving feed card:', error);
+      toast.error('Failed to save item');
+    }
+  };
 
   const handleFlip = () => {
     if (!isFlipped) {
@@ -145,7 +187,7 @@ function DealCard({ card, index }: DealCardProps) {
               </div>
 
               {/* Details */}
-              <div className="p-4 h-[40%] flex flex-col justify-between">
+              <div className="p-4 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center text-gray-600 mb-2 text-sm">
                     <Place className="w-4 h-4 mr-1 flex-shrink-0" />
@@ -166,6 +208,30 @@ function DealCard({ card, index }: DealCardProps) {
                     {(card as any).description}
                   </p>
                 </div>
+
+                {/* Actions */}
+                {!isAd(card) && !isTrivia(card) && (
+                  <div className="flex items-center gap-2 mt-3">
+                    <div onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
+                      <SharePostButton
+                        cardId={card.id}
+                        title={(card as any).title || (card as any).name || (card as any).caption}
+                        imageUrl={(card as any).imageUrl || (card as any).thumbnailUrl}
+                        type={card.type === 'restaurant' ? 'RESTAURANT' : card.type === 'recipe' ? 'RECIPE' : card.type === 'video' ? 'VIDEO' : 'POST'}
+                        subtitle={(card as any).author || (card as any).creator || (card as any).cuisine}
+                        variant="light"
+                      />
+                    </div>
+                    <button
+                      onClick={(e) => handleSaveCard(card, e)}
+                      onPointerDown={(e) => e.stopPropagation()}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--button-bg-default)] text-[var(--button-text)] text-xs font-medium"
+                    >
+                      <BookmarkBorder className="w-4 h-4" />
+                      Save to Plate
+                    </button>
+                  </div>
+                )}
 
                 {/* Source Badge */}
                 <div className="flex items-center gap-2 mt-2 pt-3 border-t border-gray-100">

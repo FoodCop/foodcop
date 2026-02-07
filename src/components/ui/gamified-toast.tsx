@@ -37,9 +37,9 @@ const colorMap = {
     defaultTitle: 'Success',
   },
   error: {
-    bg: '#ffe838', // Pineapple yellow
+    bg: '#f5d772', // Menu yellow
     text: '#111827',
-    border: '#ffd600',
+    border: '#f5d772',
     icon: Cancel,
     defaultTitle: 'Error',
   },

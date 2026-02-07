@@ -76,7 +76,7 @@ const BitesApp = lazyWithRetry(() => import('./components/bites/Bites'))
 const TrimsApp = lazyWithRetry(() => import('./components/trims/Trims'))
 // Dashboard merged into Plate - keeping import for backward compatibility but redirecting to /plate
 const DashApp = lazyWithRetry(() => import('./components/plate/Plate'))
-const SnapApp = lazyWithRetry(() => import('./components/snap').then(module => ({ default: module.SnapContainer })))
+const SnapApp = lazyWithRetry(() => import('./components/snap/Snap').then(module => ({ default: module.Snap })))
 const PlateApp: React.ComponentType<{ userId?: string; currentUser?: unknown }> = lazyWithRetry(() => import('./components/plate/Plate'))
 
 // Helper component for navigation button
@@ -186,7 +186,10 @@ function AppLayout() {
     };
 
     return (
-      <div className="flex items-center justify-between h-16 safe-area-top px-4">
+      <div
+        className="flex items-center justify-between h-16 safe-area-top px-4"
+        style={{ backgroundColor: 'var(--menu-bg)' }}
+      >
         {/* Logo */}
         <Link to="/feed" className="flex items-center">
           <img src="/logo_mobile.png" alt="FUZO" className="h-8" />
@@ -199,7 +202,6 @@ function AppLayout() {
           <NavButton to="/bites" label="Bites" />
           <NavButton to="/trims" label="Trims" />
           <NavButton to="/plate" label="Plate" />
-          <NavButton to="/snap" label="Snap" />
 
           {/* DM Chat Button */}
           {config.app.features.chatEnabled && (

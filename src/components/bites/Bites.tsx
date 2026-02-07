@@ -12,6 +12,8 @@ import { ProfileService } from "../../services/profileService";
 import { PreferencesFilterDrawer } from "../common/PreferencesFilterDrawer";
 import type { UserProfile } from "../../types/profile";
 import { toast } from "sonner";
+import { savedItemsService } from "../../services/savedItemsService";
+import { toastHelpers } from "../../utils/toastHelpers";
 import { DIETARY_OPTIONS } from "../../types/onboarding";
 import { SidebarPanel, SidebarSection } from "../common/SidebarPanel";
 import { mixRecipesWithAds, isAd, type BitesContent } from '../../utils/contentMixer';
@@ -314,6 +316,39 @@ export default function Bites() {
     setDialogOpen(true);
   };
 
+  const handleSaveRecipe = async (recipe: Recipe, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      toast.warning("Please sign in to save recipes");
+      return;
+    }
+
+    try {
+      await savedItemsService.saveItem({
+        itemId: `spoonacular_${recipe.id}`,
+        itemType: "recipe",
+        metadata: {
+          title: recipe.title,
+          image: recipe.image,
+          readyInMinutes: recipe.readyInMinutes,
+          servings: recipe.servings,
+          healthScore: recipe.healthScore,
+          cuisines: recipe.cuisines,
+          diets: recipe.diets,
+        },
+      });
+      toastHelpers.saved(recipe.title);
+    } catch (err) {
+      toast.error("Failed to save recipe");
+      console.error("Error saving recipe:", err);
+    }
+  };
+
+  const handleShareRecipe = (recipe: Recipe, e: React.MouseEvent) => {
+    e.stopPropagation();
+    toastHelpers.comingSoon("Share feature");
+  };
+
   const filteredRecipes = recipes.filter((recipe) => {
     const matchesSearch = recipe.title
       .toLowerCase()
@@ -515,6 +550,8 @@ export default function Bites() {
                         key={item.id}
                         recipe={item}
                         onClick={() => handleRecipeClick(item)}
+                        onSave={(e) => handleSaveRecipe(item, e)}
+                        onShare={(e) => handleShareRecipe(item, e)}
                       />
                     )
                   ))}
@@ -543,6 +580,8 @@ export default function Bites() {
                         key={item.id}
                         recipe={item}
                         onClick={() => handleRecipeClick(item)}
+                        onSave={(e) => handleSaveRecipe(item, e)}
+                        onShare={(e) => handleShareRecipe(item, e)}
                       />
                     )
                   ))}
@@ -579,6 +618,8 @@ export default function Bites() {
                         key={item.id}
                         recipe={item}
                         onClick={() => handleRecipeClick(item)}
+                        onSave={(e) => handleSaveRecipe(item, e)}
+                        onShare={(e) => handleShareRecipe(item, e)}
                       />
                     )
                   ))}

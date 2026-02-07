@@ -15,6 +15,10 @@ import type { FeedCard } from './data/feed-content';
 import { dealCardsWithSeed, generateSeed, isAd, isTrivia, type DealerContent } from '../../utils/seedDealer';
 import { AdCard } from './AdCard';
 import { TriviaCard } from './TriviaCard';
+import { SharePostButton } from './SharePostButton';
+import { savedItemsService } from '../../services/savedItemsService';
+import { toastHelpers } from '../../utils/toastHelpers';
+import { toast } from 'sonner';
 
 type SwipeDirection = 'left' | 'right' | 'up' | 'down';
 
@@ -123,6 +127,43 @@ function FeedCardWrapper({
   opacity,
   exitDirection
 }: SwipeableCardProps) {
+  const handleSaveCard = async (cardToSave: DealerContent, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const itemType = cardToSave.type === 'restaurant'
+        ? 'restaurant'
+        : cardToSave.type === 'recipe'
+          ? 'recipe'
+          : cardToSave.type === 'video'
+            ? 'video'
+            : 'other';
+
+      const metadata = {
+        title: (cardToSave as any).title || (cardToSave as any).name || (cardToSave as any).caption,
+        imageUrl: (cardToSave as any).imageUrl || (cardToSave as any).thumbnailUrl,
+        subtitle: (cardToSave as any).author || (cardToSave as any).creator || (cardToSave as any).cuisine,
+        description: (cardToSave as any).description,
+        saveCategory: (cardToSave as any).saveCategory,
+      };
+
+      const result = await savedItemsService.saveItem({
+        itemId: String(cardToSave.id),
+        itemType,
+        metadata,
+      });
+
+      if (result.success) {
+        toastHelpers.saved(metadata.title || 'Item');
+      } else if (result.error === 'Item already saved') {
+        toastHelpers.info('Already saved');
+      } else {
+        toast.error(result.error || 'Failed to save item');
+      }
+    } catch (error) {
+      console.error('Error saving feed card:', error);
+      toast.error('Failed to save item');
+    }
+  };
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   
@@ -365,10 +406,33 @@ function FeedCardWrapper({
                       {feedCard.location} • {feedCard.distance}
                     </p>
                     {feedCard.description && (
-                      <p className="feed-card-description line-clamp-2 mb-16">
+                      <p className="feed-card-description line-clamp-2 mb-4">
                         {feedCard.description}
                       </p>
                     )}
+                    <div className="flex items-center gap-2">
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
+                      >
+                        <SharePostButton
+                          cardId={feedCard.id}
+                          title={feedCard.name}
+                          imageUrl={feedCard.imageUrl}
+                          type="RESTAURANT"
+                          subtitle={feedCard.cuisine}
+                          variant="light"
+                        />
+                      </div>
+                      <button
+                        onClick={(e) => handleSaveCard(feedCard, e)}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--button-bg-default)] text-[var(--button-text)] text-xs font-medium"
+                      >
+                        <BookmarkBorder className="w-4 h-4" />
+                        Save to Plate
+                      </button>
+                    </div>
                   </>
                 )}
                 {feedCard.type === 'recipe' && (
@@ -378,10 +442,33 @@ function FeedCardWrapper({
                     <p className="feed-card-description line-clamp-2 mb-3">
                       {(feedCard as any).description}
                     </p>
-                    <div className="feed-card-meta flex gap-3 mb-16">
+                    <div className="feed-card-meta flex gap-3 mb-3">
                       <span>⏱️ {(feedCard as any).prepTime}</span>
                       <span>🔥 {(feedCard as any).difficulty}</span>
                       <span>🍽️ {(feedCard as any).servings} servings</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
+                      >
+                        <SharePostButton
+                          cardId={feedCard.id}
+                          title={(feedCard as any).title}
+                          imageUrl={(feedCard as any).imageUrl}
+                          type="RECIPE"
+                          subtitle={(feedCard as any).author}
+                          variant="light"
+                        />
+                      </div>
+                      <button
+                        onClick={(e) => handleSaveCard(feedCard, e)}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--button-bg-default)] text-[var(--button-text)] text-xs font-medium"
+                      >
+                        <BookmarkBorder className="w-4 h-4" />
+                        Save to Plate
+                      </button>
                     </div>
                   </>
                 )}
@@ -392,9 +479,32 @@ function FeedCardWrapper({
                     <p className="feed-card-description line-clamp-2 mb-3">
                       {(feedCard as any).description}
                     </p>
-                    <div className="feed-card-meta flex gap-3 mb-16">
+                    <div className="feed-card-meta flex gap-3 mb-3">
                       <span>⏱️ {(feedCard as any).duration}</span>
                       <span>👁️ {(feedCard as any).views.toLocaleString()} views</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
+                      >
+                        <SharePostButton
+                          cardId={feedCard.id}
+                          title={(feedCard as any).title}
+                          imageUrl={(feedCard as any).thumbnailUrl}
+                          type="VIDEO"
+                          subtitle={(feedCard as any).creator}
+                          variant="light"
+                        />
+                      </div>
+                      <button
+                        onClick={(e) => handleSaveCard(feedCard, e)}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--button-bg-default)] text-[var(--button-text)] text-xs font-medium"
+                      >
+                        <BookmarkBorder className="w-4 h-4" />
+                        Save to Plate
+                      </button>
                     </div>
                   </>
                 )}
@@ -416,9 +526,32 @@ function FeedCardWrapper({
                     <p className="feed-card-subtitle">
                       {(feedCard as any).caption}
                     </p>
-                    <div className="feed-card-meta flex items-center gap-2 mb-16">
+                    <div className="feed-card-meta flex items-center gap-2 mb-3">
                       <Favorite className="w-4 h-4" />
                       <span>{(feedCard as any).likes.toLocaleString()} likes</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
+                      >
+                        <SharePostButton
+                          cardId={feedCard.id}
+                          title={(feedCard as any).caption}
+                          imageUrl={(feedCard as any).imageUrl}
+                          type="POST"
+                          subtitle={(feedCard as any).username}
+                          variant="light"
+                        />
+                      </div>
+                      <button
+                        onClick={(e) => handleSaveCard(feedCard, e)}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--button-bg-default)] text-[var(--button-text)] text-xs font-medium"
+                      >
+                        <BookmarkBorder className="w-4 h-4" />
+                        Save to Plate
+                      </button>
                     </div>
                   </>
                 )}
