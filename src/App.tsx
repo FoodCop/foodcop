@@ -199,6 +199,7 @@ function AppLayout() {
           <NavButton to="/bites" label="Bites" />
           <NavButton to="/trims" label="Trims" />
           <NavButton to="/plate" label="Plate" />
+          <NavButton to="/snap" label="Snap" />
 
           {/* DM Chat Button */}
           {config.app.features.chatEnabled && (
