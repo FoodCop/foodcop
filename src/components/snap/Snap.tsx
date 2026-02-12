@@ -340,6 +340,8 @@ export function Snap() {
           user_id: user.id,
           content: contentParts.join('\n'),
           image_url: uploadResult.imageUrl,
+          latitude: capturedPhoto.metadata.latitude,
+          longitude: capturedPhoto.metadata.longitude,
           created_at: new Date().toISOString(),
         });
 

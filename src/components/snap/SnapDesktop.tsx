@@ -201,6 +201,8 @@ export function SnapDesktop() {
           user_id: user.id,
           content: contentParts.join('\n'),
           image_url: uploadResult.imageUrl,
+          latitude: uploadedPhoto.metadata.latitude,
+          longitude: uploadedPhoto.metadata.longitude,
           created_at: new Date().toISOString(),
         });
 
