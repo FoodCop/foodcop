@@ -59,7 +59,7 @@ export async function uploadImage(imageData: string | File, fileName?: string): 
 
     // Upload to Supabase Storage
     const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('user-assets')
+      .from('posts')
       .upload(uniqueFileName, blob, {
         contentType,
         cacheControl: '3600',
@@ -71,7 +71,7 @@ export async function uploadImage(imageData: string | File, fileName?: string): 
 
     // Get public URL
     const { data } = supabase.storage
-      .from('user-assets')
+      .from('posts')
       .getPublicUrl(uniqueFileName);
 
     return {
