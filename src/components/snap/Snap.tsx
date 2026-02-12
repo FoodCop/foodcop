@@ -105,6 +105,13 @@ export function Snap() {
     }
   }, [isMobile, cameraStarted, startCamera]);
 
+  // Assign stream to video element when both are available
+  useEffect(() => {
+    if (stream && videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream, showCamera]);
+
   // Cleanup stream on unmount
   useEffect(() => {
     return () => {
@@ -165,6 +172,11 @@ export function Snap() {
     const context = canvas.getContext('2d');
 
     if (!context) return;
+
+    if (video.videoWidth === 0 || video.videoHeight === 0) {
+      toast.error('Camera not ready yet. Please wait a moment and try again.');
+      return;
+    }
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -475,6 +487,7 @@ export function Snap() {
               ref={videoRef}
               autoPlay
               playsInline
+              muted
               className="w-full h-full object-cover"
             />
           )}
