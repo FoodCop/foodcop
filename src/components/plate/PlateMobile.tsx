@@ -25,6 +25,7 @@ import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { RecentChats } from './RecentChats';
 import { useDMChatStore } from '../../stores/chatStore';
+import { GoogleMapView } from '../maps/GoogleMapView';
 
 type TabType = 'places' | 'recipes' | 'videos' | 'crew' | 'posts';
 
@@ -33,6 +34,8 @@ interface Post {
   user_id: string;
   content: string;
   image_url?: string;
+  latitude?: number;
+  longitude?: number;
   created_at: string;
 }
 
@@ -88,6 +91,7 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
   const [selectedTab, setSelectedTab] = useState<TabType>('places');
   const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [dashboardData, setDashboardData] = useState<DashboardData>({
@@ -918,21 +922,120 @@ export default function PlateMobile({ userId: propUserId, currentUser }: PlateMo
       }
 
       return (
-        <section className="p-4 space-y-4">
-          {posts.map((post) => (
-            <div key={post.id} className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
-              {post.image_url && (
-                <img src={post.image_url} alt="Post" className="w-full h-64 object-cover" />
-              )}
-              <div className="p-4">
-                <p className="text-neutral-900 mb-2">{post.content}</p>
-                <span className="text-sm text-neutral-400">
-                  {new Date(post.created_at).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-          ))}
-        </section>
+        <>
+          <section className="p-4 space-y-4">
+            {posts.map((post) => (
+              <button
+                key={post.id}
+                type="button"
+                onClick={() => setSelectedPost(post)}
+                className="w-full text-left bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                {post.image_url && (
+                  <img src={post.image_url} alt="Post" className="w-full h-64 object-cover" />
+                )}
+                <div className="p-4">
+                  <p className="text-neutral-900 mb-2">{post.content}</p>
+                  <div className="flex items-center gap-2 text-sm text-neutral-400">
+                    <Schedule className="w-3.5 h-3.5" />
+                    {new Date(post.created_at).toLocaleDateString()}
+                    {post.latitude && post.longitude && (
+                      <>
+                        <Place className="w-3.5 h-3.5 ml-2" />
+                        <span>Location saved</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </section>
+
+          {/* Post Detail Dialog */}
+          <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
+            <DialogContent className="max-w-[375px] max-h-[90vh] overflow-y-auto p-0">
+              {selectedPost && (() => {
+                const lines = selectedPost.content.split('\n');
+                const [restaurantName, cuisineType] = (lines[0] || '').split(' - ');
+                const details = lines.slice(1);
+                const hasLocation = selectedPost.latitude && selectedPost.longitude;
+
+                return (
+                  <>
+                    <DialogHeader className="p-4 pb-0">
+                      <DialogTitle>Post Details</DialogTitle>
+                    </DialogHeader>
+
+                    {selectedPost.image_url && (
+                      <img src={selectedPost.image_url} alt="Post" className="w-full h-56 object-cover" />
+                    )}
+
+                    <div className="p-4 space-y-4">
+                      {/* Restaurant info */}
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <Place className="w-5 h-5 text-[var(--color-primary)]" />
+                          <h3 className="font-semibold text-lg text-neutral-900">{restaurantName}</h3>
+                        </div>
+                        {cuisineType && (
+                          <span className="text-sm text-neutral-500 ml-7">{cuisineType}</span>
+                        )}
+                      </div>
+
+                      {/* Description & Rating */}
+                      {details.length > 0 && (
+                        <div className="space-y-1">
+                          {details.map((line, i) => (
+                            <p key={i} className="text-neutral-700 text-sm">{line}</p>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Date */}
+                      <div className="flex items-center gap-2 text-sm text-neutral-400">
+                        <Schedule className="w-4 h-4" />
+                        {new Date(selectedPost.created_at).toLocaleDateString('en-US', {
+                          year: 'numeric', month: 'long', day: 'numeric'
+                        })}
+                      </div>
+
+                      {/* Map */}
+                      {hasLocation && (
+                        <div className="rounded-xl overflow-hidden border border-gray-200">
+                          <div className="h-48">
+                            <GoogleMapView
+                              center={{ lat: selectedPost.latitude!, lng: selectedPost.longitude! }}
+                              zoom={15}
+                              markers={[{
+                                id: selectedPost.id,
+                                position: { lat: selectedPost.latitude!, lng: selectedPost.longitude! },
+                                title: restaurantName || 'Snap Location',
+                              }]}
+                              height="100%"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Get Directions */}
+                      {hasLocation && (
+                        <a
+                          href={`https://www.google.com/maps/dir/?api=1&destination=${selectedPost.latitude},${selectedPost.longitude}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-2 w-full h-12 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+                        >
+                          <Navigation className="w-5 h-5" />
+                          Get Directions
+                        </a>
+                      )}
+                    </div>
+                  </>
+                );
+              })()}
+            </DialogContent>
+          </Dialog>
+        </>
       );
     }
 
