@@ -36,7 +36,7 @@ const MOCK_MODE = false;
 export async function uploadImage(imageData: string | File, fileName?: string): Promise<UploadImageResult> {
   try {
     // Generate unique file name if not provided
-    const uniqueFileName = fileName || `snap-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`;
+    const uniqueFileName = fileName || `snaps/snap-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`;
     
     let blob: Blob;
     let contentType = 'image/jpeg';
@@ -59,7 +59,7 @@ export async function uploadImage(imageData: string | File, fileName?: string): 
 
     // Upload to Supabase Storage
     const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('snap-photos')
+      .from('user-assets')
       .upload(uniqueFileName, blob, {
         contentType,
         cacheControl: '3600',
@@ -71,7 +71,7 @@ export async function uploadImage(imageData: string | File, fileName?: string): 
 
     // Get public URL
     const { data } = supabase.storage
-      .from('snap-photos')
+      .from('user-assets')
       .getPublicUrl(uniqueFileName);
 
     return {

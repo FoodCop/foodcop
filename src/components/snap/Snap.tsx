@@ -3,9 +3,9 @@ import { CameraAlt, Close, Star, Upload, LocalPizza, RamenDining, SetMeal, Whats
 import { toast } from 'sonner';
 import { toastHelpers } from '../../utils/toastHelpers';
 import { useAuth } from '../auth/AuthProvider';
-import { SavedItemsService } from '../../services/savedItemsService';
 import { MinimalHeader } from '../common/MinimalHeader';
 import { uploadImage } from './utils/snap-api';
+import { supabase } from '../../services/supabase';
 
 // Mock mode - set to true to bypass camera and use mock photo
 const MOCK_CAMERA_MODE = false;
@@ -329,28 +329,21 @@ export function Snap() {
 
       console.log('✅ Image uploaded:', uploadResult.imageUrl);
 
-      // Step 2: Save to saved_items with metadata
-      const photoMetadata = {
-        image_url: uploadResult.imageUrl,
-        restaurant_name: restaurantName,
-        cuisine_type: cuisine,
-        rating: rating,
-        description: description,
-        latitude: capturedPhoto.metadata.latitude,
-        longitude: capturedPhoto.metadata.longitude,
-        timestamp: capturedPhoto.metadata.timestamp.toISOString(),
-        accuracy: capturedPhoto.metadata.accuracy,
-        content_type: 'snap'
-      };
+      // Step 2: Save to posts table
+      const contentParts = [`${restaurantName} - ${cuisine}`];
+      if (description) contentParts.push(description);
+      if (rating > 0) contentParts.push(`Rating: ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}`);
 
-      const savedItemsService = new SavedItemsService();
-      const result = await savedItemsService.saveItem({
-        itemId: `snap-${Date.now()}`,
-        itemType: 'photo',
-        metadata: photoMetadata
-      });
+      const { error: postError } = await supabase
+        .from('posts')
+        .insert({
+          user_id: user.id,
+          content: contentParts.join('\n'),
+          image_url: uploadResult.imageUrl,
+          created_at: new Date().toISOString(),
+        });
 
-      if (result.success) {
+      if (!postError) {
         setShowSuccess(true);
         toastHelpers.saved('Snap');
         
@@ -364,7 +357,7 @@ export function Snap() {
           }
         }, 2000);
       } else {
-        toast.error(result.error || 'Failed to save snap');
+        toast.error(postError.message || 'Failed to save snap');
       }
     } catch (error) {
       console.error('❌ Error submitting snap:', error);
