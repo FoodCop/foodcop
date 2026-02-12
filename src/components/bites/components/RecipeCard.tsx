@@ -55,8 +55,8 @@ export interface Recipe {
 interface RecipeCardProps {
   recipe: Recipe;
   onClick: () => void;
-  onSave: (e: React.MouseEvent) => void;
-  onShare: (e: React.MouseEvent) => void;
+  onSave?: (e: React.MouseEvent) => void;
+  onShare?: (e: React.MouseEvent) => void;
 }
 
 export function RecipeCard({ recipe, onClick, onSave, onShare }: RecipeCardProps) {
@@ -100,22 +100,28 @@ export function RecipeCard({ recipe, onClick, onSave, onShare }: RecipeCardProps
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 mt-4">
-          <button
-            onClick={onShare}
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[var(--button-bg-active)] hover:bg-[var(--button-bg-hover)] text-[var(--button-text)] rounded-full transition-colors"
-          >
-            <Share className="w-4 h-4" />
-            <span className="text-xs font-medium">Share</span>
-          </button>
-          <button
-            onClick={onSave}
-            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[var(--button-bg-default)] hover:bg-[var(--button-bg-hover)] text-[var(--button-text)] rounded-full transition-colors"
-          >
-            <BookmarkBorder className="w-4 h-4" />
-            <span className="text-xs font-medium">Save to Plate</span>
-          </button>
-        </div>
+        {(onShare || onSave) && (
+          <div className="flex items-center gap-2 mt-4">
+            {onShare && (
+              <button
+                onClick={onShare}
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[var(--button-bg-active)] hover:bg-[var(--button-bg-hover)] text-[var(--button-text)] rounded-full transition-colors"
+              >
+                <Share className="w-4 h-4" />
+                <span className="text-xs font-medium">Share</span>
+              </button>
+            )}
+            {onSave && (
+              <button
+                onClick={onSave}
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[var(--button-bg-default)] hover:bg-[var(--button-bg-hover)] text-[var(--button-text)] rounded-full transition-colors"
+              >
+                <BookmarkBorder className="w-4 h-4" />
+                <span className="text-xs font-medium">Save to Plate</span>
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </Card>
   );
