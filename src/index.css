@@ -355,4 +355,10 @@ h2.text-lg {
 [data-sonner-toast] [data-toast-center="true"] * {
   animation: none !important;
 }
+
+.adsbygoogle,
+ins.adsbygoogle,
+div.adsbygoogle {
+  display: none !important;
+}
 }

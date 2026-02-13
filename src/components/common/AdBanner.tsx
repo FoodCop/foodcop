@@ -34,7 +34,11 @@ const AdBanner = ({
   className = '',
   style = {}
 }: AdBannerProps) => {
+  const isAdSenseEnabled = import.meta.env.VITE_ENABLE_ADSENSE === 'true';
+
   useEffect(() => {
+    if (!isAdSenseEnabled) return;
+
     try {
       // Push ad to adsbygoogle array
       if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
@@ -43,7 +47,11 @@ const AdBanner = ({
     } catch (err) {
       console.error('AdSense error:', err);
     }
-  }, []);
+  }, [isAdSenseEnabled]);
+
+  if (!isAdSenseEnabled) {
+    return null;
+  }
 
   return (
     <div className={`ad-banner-container ${className}`} style={style}>
