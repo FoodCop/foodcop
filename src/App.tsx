@@ -17,7 +17,6 @@ import { UniversalViewerProvider, useUniversalViewer } from './contexts/Universa
 import { UniversalViewer } from './components/ui/universal-viewer/UniversalViewer'
 import { ChatDrawer } from './components/chat'
 import { useChatNotifications } from './hooks/useChatNotifications'
-import BottomAdBanner from './components/common/BottomAdBanner' 
 import './styles/mobile.css'
 
 //to directly toggle to the chat interface
@@ -76,7 +75,7 @@ const BitesApp = lazyWithRetry(() => import('./components/bites/Bites'))
 const TrimsApp = lazyWithRetry(() => import('./components/trims/Trims'))
 // Dashboard merged into Plate - keeping import for backward compatibility but redirecting to /plate
 const DashApp = lazyWithRetry(() => import('./components/plate/Plate'))
-const SnapApp = lazyWithRetry(() => import('./components/snap/Snap').then(module => ({ default: module.Snap })))
+const SnapApp = lazyWithRetry(() => import('./components/snap').then(module => ({ default: module.SnapContainer })))
 const PlateApp: React.ComponentType<{ userId?: string; currentUser?: unknown }> = lazyWithRetry(() => import('./components/plate/Plate'))
 
 // Helper component for navigation button
@@ -199,6 +198,7 @@ function AppLayout() {
         <div className="hidden md:flex items-center space-x-2">
           <NavButton to="/feed" label="Feed" />
           <NavButton to="/scout" label="Scout" />
+          <NavButton to="/snap" label="Snap" />
           <NavButton to="/bites" label="Bites" />
           <NavButton to="/trims" label="Trims" />
           <NavButton to="/plate" label="Plate" />
@@ -432,14 +432,6 @@ function AppLayout() {
 
       {/* DM Chat Drawer - Only show if chat is enabled */}
       {config.app.features.chatEnabled && <ChatDrawer />}
-
-      {/* Bottom Ad Banner - Show on all authenticated pages */}
-      {showNavigation && (
-        <BottomAdBanner 
-          adSlot={import.meta.env.VITE_ADSENSE_SLOT_BOTTOM_BANNER}
-          bannerImage="/ads/ad-banner.png"
-        />
-      )}
     </div>
   );
 }
