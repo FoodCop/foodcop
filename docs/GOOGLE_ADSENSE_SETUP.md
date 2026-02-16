@@ -13,13 +13,15 @@ As of February 13, 2026, AdSense is intentionally hidden site-wide.
 Current temporary disable changes:
 - `index.html` AdSense script include is removed (script no longer loads)
 - `src/components/common/AdBanner.tsx` is gated by `VITE_ENABLE_ADSENSE === 'true'`
+- `src/components/common/AdBanner.tsx` reads `VITE_ADSENSE_CLIENT_ID` (no hardcoded client ID)
 - `src/index.css` includes a safety hide rule for `.adsbygoogle`
 
 To re-enable later:
 1. Re-add the AdSense script to `index.html`
 2. Set `VITE_ENABLE_ADSENSE=true` in your environment
-3. Remove the temporary `.adsbygoogle` hide rule from `src/index.css`
-4. Verify ads render in production
+3. Set `VITE_ADSENSE_CLIENT_ID` and `VITE_ADSENSE_SLOT_BOTTOM_BANNER` to real values
+4. Remove the temporary `.adsbygoogle` hide rule from `src/index.css`
+5. Verify ads render in production
 
 ## 📋 Setup Steps
 
@@ -48,6 +50,7 @@ Update your `.env.local` file (create if doesn't exist):
 
 ```env
 # Google AdSense Configuration
+VITE_ENABLE_ADSENSE="true"                     # Enable banner rendering
 VITE_ADSENSE_CLIENT_ID="ca-pub-XXXXXXXXXXXXXXXX"  # Your Publisher ID
 VITE_ADSENSE_SLOT_BOTTOM_BANNER="1234567890"      # Your Ad Slot ID
 ```
@@ -80,7 +83,7 @@ data-ad-client="ca-pub-1234567890123456"  // Your actual Publisher ID
 - This guide
 
 ### Modified Files:
-- [index.html](../index.html) - Added AdSense script
+- [index.html](../index.html) - AdSense script currently removed while disabled
 - [src/App.tsx](../src/App.tsx) - Integrated bottom banner
 - [.env.example](../.env.example) - Added AdSense config
 
@@ -208,8 +211,9 @@ Add bottom padding to your main content to prevent overlap:
 - [ ] Create ad unit and get Publisher ID
 - [ ] Get Ad Slot ID for bottom banner
 - [ ] Update `.env.local` with your IDs
+- [ ] Set `VITE_ENABLE_ADSENSE=true` when ready to go live
 - [ ] Update `index.html` with Publisher ID
-- [ ] Update `AdBanner.tsx` with Publisher ID
+- [ ] Confirm `VITE_ADSENSE_CLIENT_ID` is set (component reads env value)
 - [ ] Test in development
 - [ ] Deploy to production
 - [ ] Verify ads appear after deployment

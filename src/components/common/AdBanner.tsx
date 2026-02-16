@@ -35,9 +35,11 @@ const AdBanner = ({
   style = {}
 }: AdBannerProps) => {
   const isAdSenseEnabled = import.meta.env.VITE_ENABLE_ADSENSE === 'true';
+  const adClientId = import.meta.env.VITE_ADSENSE_CLIENT_ID;
+  const isAdSenseConfigured = typeof adClientId === 'string' && adClientId.startsWith('ca-pub-');
 
   useEffect(() => {
-    if (!isAdSenseEnabled) return;
+    if (!isAdSenseEnabled || !isAdSenseConfigured) return;
 
     try {
       // Push ad to adsbygoogle array
@@ -47,9 +49,9 @@ const AdBanner = ({
     } catch (err) {
       console.error('AdSense error:', err);
     }
-  }, [isAdSenseEnabled]);
+  }, [isAdSenseEnabled, isAdSenseConfigured]);
 
-  if (!isAdSenseEnabled) {
+  if (!isAdSenseEnabled || !isAdSenseConfigured) {
     return null;
   }
 
@@ -61,7 +63,7 @@ const AdBanner = ({
           display: 'block',
           ...style
         }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-client={adClientId}
         data-ad-slot={dataAdSlot}
         data-ad-format={dataAdFormat}
         data-full-width-responsive={dataFullWidthResponsive.toString()}
