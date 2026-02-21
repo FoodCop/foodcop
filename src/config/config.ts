@@ -53,7 +53,8 @@ export const config = {
     url: import.meta.env.DEV 
       ? (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')
       : (import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')),
-    newUiUrl: import.meta.env.VITE_NEW_UI_URL || (import.meta.env.DEV ? 'http://localhost:3000/' : '/new_UI/index.html'),
+    newUiUrl: import.meta.env.VITE_NEW_UI_URL || (import.meta.env.DEV ? 'http://localhost:3000/' : ''),
+    newUiEnabled: Boolean(import.meta.env.VITE_NEW_UI_URL) || import.meta.env.DEV,
     // Feature Flags
     features: {
       // Chat functionality - disabled until proper integration is complete

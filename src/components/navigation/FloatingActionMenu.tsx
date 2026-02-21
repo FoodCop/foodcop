@@ -31,6 +31,10 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
       return;
     }
     if (route === 'new-ui') {
+      if (!config.app.newUiEnabled || !config.app.newUiUrl) {
+        setIsOpen(false);
+        return;
+      }
       globalThis.location.assign(config.app.newUiUrl);
       setIsOpen(false);
       return;
@@ -93,7 +97,9 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
   ];
 
   // Reverse for upward stacking (last item appears first from bottom)
-  const displayItems = [...menuItems].reverse();
+  const displayItems = [...menuItems]
+    .filter((item) => item.route !== 'new-ui' || config.app.newUiEnabled)
+    .reverse();
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
