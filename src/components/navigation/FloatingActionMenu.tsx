@@ -31,7 +31,7 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
       return;
     }
     if (route === 'new-ui') {
-      globalThis.location.href = config.app.newUiUrl;
+      globalThis.location.assign(config.app.newUiUrl);
       setIsOpen(false);
       return;
     }
