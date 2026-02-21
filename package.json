@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:new-ui": "npm --prefix new_UI install && npm --prefix new_UI run build && node scripts/copy-new-ui-dist.mjs",
+    "build:vercel": "npm run build:new-ui && npm run build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
