@@ -7,9 +7,11 @@ import {
   ContentCut,
   Restaurant,
   Send,
-  Close
+  Close,
+  RocketLaunch
 } from '@mui/icons-material';
 import { useDMChatStore } from '../../stores/chatStore';
+import config from '../../config/config';
 
 interface FloatingActionMenuProps {
   currentPage: string;
@@ -25,6 +27,11 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
     if (route === 'messages') {
       console.log('🔵 Opening DM Chat');
       openChat();
+      setIsOpen(false);
+      return;
+    }
+    if (route === 'new-ui') {
+      globalThis.location.href = config.app.newUiUrl;
       setIsOpen(false);
       return;
     }
@@ -76,6 +83,12 @@ export const FloatingActionMenu = ({ currentPage, onNavigate }: FloatingActionMe
       color: 'var(--color-menu-chat)',
       showBadge: unreadCount > 0,
       badgeCount: unreadCount
+    },
+    {
+      label: 'New UI',
+      route: 'new-ui',
+      icon: <RocketLaunch style={{ fontSize: 20 }} />,
+      color: 'var(--color-menu-plate)'
     },
   ];
 

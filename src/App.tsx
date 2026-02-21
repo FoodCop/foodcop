@@ -202,6 +202,21 @@ function AppLayout() {
           <NavButton to="/bites" label="Bites" />
           <NavButton to="/trims" label="Trims" />
           <NavButton to="/plate" label="Plate" />
+          <a
+            href={config.app.newUiUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="px-4 py-2 rounded-full text-sm font-medium transition-colors text-gray-900 hover:text-gray-900"
+            style={{ backgroundColor: 'transparent' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-secondary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
+          >
+            New UI
+          </a>
 
           {/* DM Chat Button */}
           {config.app.features.chatEnabled && (
