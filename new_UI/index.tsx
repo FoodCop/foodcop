@@ -1453,7 +1453,10 @@ const App = () => {
       </main>
 
       {/* Mobile Bottom Navigation - Restructured */}
-      <nav className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-2xl border-t border-stone-100 px-8 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex justify-between items-center md:hidden z-1000 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+      <nav
+        className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-2xl border-t border-stone-100 px-8 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex justify-between items-center md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.05)]"
+        style={{ zIndex: 1000 }}
+      >
         <NavIcon icon={LayoutGrid} active={tab === 'home'} onClick={() => setTab('home')} label="Feed" />
         <NavIcon icon={ChefHat} active={tab === 'bites'} onClick={() => setTab('bites')} label="Bites" />
         
