@@ -6,11 +6,19 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/new_UI",
-      "destination": "/new_UI/index.html"
+      "source": "/new-ui",
+      "destination": "/new-ui/index.html"
     },
     {
-      "source": "/((?!new_UI/).*)",
+      "source": "/new_UI",
+      "destination": "/new-ui/index.html"
+    },
+    {
+      "source": "/new_UI/(.*)",
+      "destination": "/new-ui/$1"
+    },
+    {
+      "source": "/((?!new-ui/|new_UI/).*)",
       "destination": "/index.html"
     }
   ],
