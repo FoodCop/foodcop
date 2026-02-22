@@ -1,0 +1,9 @@
+{
+  "requestFramePermissions": [
+    "geolocation",
+    "camera",
+    "microphone"
+  ],
+  "name": "FUZO_FINAL",
+  "description": "AAA High-Fidelity Culinary Discovery"
+}
