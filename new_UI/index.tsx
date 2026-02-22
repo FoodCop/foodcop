@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import { 
-  Search, ChefHat, MapPin, User, Heart, Clock, Zap, MessageSquare,
+  Search, ChefHat, MapPin, User, Heart, Clock, Zap, MessageSquare, Star, Info,
   ChevronRight, PlayCircle, Camera, X, Share2, Send,
   Bookmark, ChevronLeft, Settings, Map as MapIcon, RefreshCw, LayoutGrid, Sparkles, Bot,
   List, PieChart, CheckCircle2, Menu, SlidersHorizontal, Music2
@@ -822,12 +822,85 @@ const ChatView = ({ friends, messagesByFriend }: { friends: any[], messagesByFri
   );
 };
 
-const ScoutView = () => {
+type ScoutPhotoItem = {
+  id: string;
+  url: string;
+};
+
+const getScoutPlaceCoords = (place: any) => {
+  const lat = place?.geometry?.location?.lat;
+  const lng = place?.geometry?.location?.lng;
+
+  if (typeof lat === 'number' && typeof lng === 'number') {
+    return { lat, lng };
+  }
+
+  return null;
+};
+
+const getScoutPlaceAddress = (place: any) => place?.vicinity || place?.formatted_address || 'Address unavailable';
+
+const getScoutPlaceImage = (place: any, mapsKey: string) => {
+  const photoReference = place?.photos?.[0]?.photo_reference;
+  if (photoReference && mapsKey) {
+    return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1200&photo_reference=${encodeURIComponent(photoReference)}&key=${encodeURIComponent(mapsKey)}`;
+  }
+
+  return 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80';
+};
+
+const getScoutOpenStatus = (place: any) => {
+  if (place?.opening_hours?.open_now === true) {
+    return 'Open now';
+  }
+  if (place?.opening_hours?.open_now === false) {
+    return 'Currently closed';
+  }
+  return 'Opening hours unavailable';
+};
+
+const getScoutPhotoItems = (place: any, mapsKey: string): ScoutPhotoItem[] => {
+  if (!place) {
+    return [];
+  }
+
+  if (!Array.isArray(place.photos) || place.photos.length === 0) {
+    const fallbackImage = getScoutPlaceImage(place, mapsKey);
+    return [
+      { id: 'fallback-photo-primary', url: fallbackImage },
+      { id: 'fallback-photo-secondary', url: fallbackImage },
+    ];
+  }
+
+  return place.photos.slice(0, 4).map((photo: any) => {
+    const photoReference = String(photo?.photo_reference || '');
+    const fallbackImage = getScoutPlaceImage(place, mapsKey);
+    const photoId = photoReference || String(photo?.html_attributions?.[0] || fallbackImage);
+    let photoUrl = fallbackImage;
+
+    if (mapsKey && photoReference) {
+      photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${encodeURIComponent(photoReference)}&key=${encodeURIComponent(mapsKey)}`;
+    }
+
+    return {
+      id: photoId,
+      url: photoUrl,
+    };
+  });
+};
+
+const ScoutView = ({ onSave, onShareRequest }: { onSave: (item: any) => void, onShareRequest: (item: any) => void }) => {
+  const REVIEW_PREVIEW_LIMIT = 180;
   const [coords, setCoords] = useState({ lat: 43.65, lng: -79.38 });
   const [places, setPlaces] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<any>(null);
+  const [selectedPlaceDetails, setSelectedPlaceDetails] = useState<any>(null);
+  const [selectedPlaceLoading, setSelectedPlaceLoading] = useState(false);
+  const [expandedReviews, setExpandedReviews] = useState<Record<string, boolean>>({});
+  const [modalTab, setModalTab] = useState<'overview' | 'timings' | 'reviews' | 'photos'>('overview');
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<any>(null);
   const mapMarkersRef = useRef<any[]>([]);
@@ -847,7 +920,7 @@ const ScoutView = () => {
       const result = await PlacesService.searchNearby(coords.lat, coords.lng, 5000);
 
       if (result.success && result.data?.results) {
-        setPlaces(result.data.results.slice(0, 6));
+        setPlaces(result.data.results.slice(0, 8));
       } else {
         setError(result.error || 'Could not load nearby restaurants');
         setPlaces([]);
@@ -915,27 +988,93 @@ const ScoutView = () => {
     mapMarkersRef.current = [];
 
     places.forEach((place) => {
-      const lat = place?.geometry?.location?.lat;
-      const lng = place?.geometry?.location?.lng;
+      const placeCoords = getScoutPlaceCoords(place);
 
-      if (typeof lat !== 'number' || typeof lng !== 'number') {
+      if (!placeCoords) {
         return;
       }
 
       const marker = new googleMaps.Marker({
-        position: { lat, lng },
+        position: placeCoords,
         map,
         title: place.name,
       });
+
+      if (marker.addListener) {
+        marker.addListener('click', () => {
+          openPlaceDetails(place);
+        });
+      }
 
       mapMarkersRef.current.push(marker);
     });
   }, [places]);
 
+  const openPlaceDetails = async (place: any) => {
+    setSelectedPlace(place);
+    setSelectedPlaceDetails(null);
+    setSelectedPlaceLoading(true);
+    setExpandedReviews({});
+    setModalTab('overview');
+
+    const placeId = String(place?.place_id || place?.id || '');
+    if (!placeId) {
+      setSelectedPlaceLoading(false);
+      return;
+    }
+
+    const detailsResult = await PlacesService.getPlaceDetails(placeId);
+    if (detailsResult.success && detailsResult.data?.result) {
+      setSelectedPlaceDetails(detailsResult.data.result);
+    }
+
+    setSelectedPlaceLoading(false);
+  };
+
+  const activePlace = selectedPlaceDetails ? { ...selectedPlace, ...selectedPlaceDetails } : selectedPlace;
+  const selectedPlaceCoords = activePlace ? getScoutPlaceCoords(activePlace) : null;
+  const selectedPlaceDirectionsUrl = selectedPlaceCoords
+    ? `https://www.google.com/maps/dir/?api=1&destination=${selectedPlaceCoords.lat},${selectedPlaceCoords.lng}`
+    : null;
+  const selectedPlaceOpenStatus = getScoutOpenStatus(activePlace);
+  const selectedPlacePhotoItems = getScoutPhotoItems(activePlace, API_KEYS.MAPS);
+
+  const getReviewKey = (review: any) => `${String(review.author_name || 'guest')}-${String(review.time || review.relative_time_description || review.text || 'review')}`;
+
+  const toggleReviewExpanded = (reviewKey: string) => {
+    setExpandedReviews(prev => ({
+      ...prev,
+      [reviewKey]: !prev[reviewKey],
+    }));
+  };
+
+  const handlePlaceAction = (place: any, action: 'save' | 'share') => {
+    const formattedItem = {
+      id: `place-${place.place_id || place.id || place.name || Date.now()}`,
+      name: place.name || 'Restaurant',
+      cat: 'Saved Place',
+      img: getScoutPlaceImage(place, API_KEYS.MAPS),
+    };
+
+    if (action === 'save') {
+      onSave(formattedItem);
+      setSelectedPlace(null);
+      setSelectedPlaceDetails(null);
+      setModalTab('overview');
+      return;
+    }
+
+    onShareRequest(formattedItem);
+    setSelectedPlace(null);
+    setSelectedPlaceDetails(null);
+    setModalTab('overview');
+  };
+
   return (
     <div className="space-y-8 px-4 animate-in fade-in">
       <header className="hidden md:block"><Badge color="emerald">Scout v2.5</Badge><h2 className="text-4xl font-black uppercase tracking-tighter mt-1">Nearby Discovery</h2></header>
-      <div className="aspect-video w-full max-w-5xl mx-auto rounded-[3.5rem] overflow-hidden border-12 border-white shadow-2xl bg-stone-100">
+
+      <div className="aspect-video w-full max-w-5xl mx-auto rounded-[3.5rem] overflow-hidden border-12 border-white shadow-2xl bg-stone-100 relative">
         {API_KEYS.MAPS && !mapError ? (
           <div ref={mapRef} className="w-full h-full" aria-label="Nearby restaurants map" />
         ) : (
@@ -952,6 +1091,7 @@ const ScoutView = () => {
           </div>
         )}
       </div>
+
       <div className="max-w-5xl mx-auto space-y-3">
         <h4 className="text-[10px] font-black uppercase tracking-widest text-stone-400 px-2">Nearby from Services</h4>
         {loading && <div className="text-[10px] font-black uppercase tracking-widest text-stone-300 px-2">Loading nearby places...</div>}
@@ -959,16 +1099,196 @@ const ScoutView = () => {
         {!loading && !error && places.length === 0 && (
           <div className="text-[10px] font-black uppercase tracking-widest text-stone-300 px-2">No nearby results</div>
         )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {places.map((place, idx) => (
-            <div key={place.place_id || place.id || idx} className="bg-white rounded-4xl p-5 shadow-sm border border-stone-100">
+            <button
+              type="button"
+              key={place.place_id || place.id || idx}
+              onClick={() => openPlaceDetails(place)}
+              className="bg-white rounded-4xl p-5 shadow-sm border border-stone-100 text-left hover:bg-stone-50 transition-colors"
+            >
               <p className="font-black uppercase text-xs tracking-widest text-stone-900 leading-tight">{place.name}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-stone-400 mt-2">{place.vicinity || place.formatted_address || 'Address unavailable'}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-stone-400 mt-2">{getScoutPlaceAddress(place)}</p>
               <p className="text-[10px] font-black uppercase tracking-widest text-yellow-600 mt-2">⭐ {place.rating ?? 'N/A'}</p>
-            </div>
+            </button>
           ))}
         </div>
       </div>
+
+      {selectedPlace && (
+        <div className="fixed inset-0 z-110 bg-stone-900/60 backdrop-blur-xl flex items-center justify-center p-4 md:p-10 overflow-y-auto">
+          <div className="bg-white w-full max-w-4xl max-h-[85vh] md:max-h-[90vh] rounded-[4rem] shadow-2xl overflow-hidden flex flex-col md:flex-row relative animate-in zoom-in duration-300">
+            <button
+              onClick={() => {
+                setSelectedPlace(null);
+                setSelectedPlaceDetails(null);
+                setModalTab('overview');
+              }}
+              className="absolute top-6 right-6 z-20 p-4 bg-stone-900 text-white rounded-3xl active:scale-90 transition-transform"
+            >
+              <X size={24} />
+            </button>
+
+            <div className="w-full md:w-1/2 h-64 md:h-full overflow-hidden relative">
+              <img src={getScoutPlaceImage(activePlace, API_KEYS.MAPS)} alt={activePlace.name} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent md:hidden" />
+              <div className="absolute bottom-6 left-8 md:hidden text-white">
+                <Badge color="yellow">Restaurant</Badge>
+                <h2 className="text-3xl font-black uppercase tracking-tighter mt-2">{activePlace.name}</h2>
+              </div>
+            </div>
+
+            <div className="w-full md:w-1/2 flex-1 min-h-0 p-8 md:p-14 overflow-y-auto hide-scrollbar flex flex-col gap-6">
+              {selectedPlaceLoading && (
+                <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Loading place details...</p>
+              )}
+              <header className="space-y-4">
+                <div className="hidden md:block">
+                  <Badge color="yellow">Restaurant</Badge>
+                  <h2 className="text-4xl font-black uppercase tracking-tighter mt-2 leading-none">{activePlace.name}</h2>
+                </div>
+
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <div className="flex text-yellow-400">
+                      {[1, 2, 3, 4, 5].map(i => (
+                        <Star key={i} size={16} fill={i <= Math.floor(Number(activePlace.rating || 0)) ? 'currentColor' : 'none'} />
+                      ))}
+                    </div>
+                    <span className="text-xs font-black">{activePlace.rating ?? 'N/A'}</span>
+                    {typeof activePlace.user_ratings_total === 'number' && (
+                      <span className="text-[10px] font-bold text-stone-300 uppercase tracking-widest">({activePlace.user_ratings_total} Reviews)</span>
+                    )}
+                  </div>
+                </div>
+              </header>
+
+              <div className="flex border-b border-stone-100 overflow-x-auto hide-scrollbar">
+                {[
+                  { id: 'overview', icon: Info },
+                  { id: 'timings', icon: Clock },
+                  { id: 'reviews', icon: Star },
+                  { id: 'photos', icon: LayoutGrid },
+                ].map(t => (
+                  <button
+                    key={t.id}
+                    onClick={() => setModalTab(t.id as 'overview' | 'timings' | 'reviews' | 'photos')}
+                    className={`flex-1 min-w-15 flex items-center justify-center py-5 transition-all border-b-2 ${modalTab === t.id ? 'border-yellow-400 text-stone-900' : 'border-transparent text-stone-300 hover:text-stone-500'}`}
+                  >
+                    <t.icon size={20} strokeWidth={modalTab === t.id ? 3 : 2} />
+                  </button>
+                ))}
+              </div>
+
+              <div className="grow">
+                {modalTab === 'overview' && (
+                  <div className="space-y-6 animate-in fade-in duration-300">
+                    <div className="flex items-start gap-4 text-stone-600">
+                      <MapPin size={20} className="shrink-0 mt-0.5 text-stone-400" />
+                      <p className="text-sm font-bold leading-relaxed">{getScoutPlaceAddress(activePlace)}</p>
+                    </div>
+                    <div className="flex items-center gap-4 text-stone-600">
+                      <Clock size={20} className="shrink-0 text-stone-400" />
+                      <p className="text-sm font-bold">{selectedPlaceOpenStatus}</p>
+                    </div>
+                    {selectedPlaceDirectionsUrl && (
+                      <div className="flex items-center gap-4 text-stone-600">
+                        <Zap size={20} className="shrink-0 text-stone-400" />
+                        <a href={selectedPlaceDirectionsUrl} target="_blank" rel="noreferrer" className="text-sm font-bold text-blue-500 hover:underline">
+                          Get directions
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {modalTab === 'timings' && (
+                  <div className="space-y-4 animate-in fade-in duration-300">
+                    <h4 className="font-black uppercase text-[10px] tracking-[0.2em] text-stone-300 px-2">Opening Hours</h4>
+                    <div className="bg-stone-50 p-8 rounded-[3rem] border border-stone-100 space-y-3">
+                      {Array.isArray(activePlace.opening_hours?.weekday_text) && activePlace.opening_hours.weekday_text.length > 0 ? (
+                        activePlace.opening_hours.weekday_text.map((entry: string) => (
+                          <p key={entry} className="text-xs font-bold text-stone-900">{entry}</p>
+                        ))
+                      ) : (
+                        <p className="text-xs font-bold text-stone-400">No timing details available from this result.</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {modalTab === 'reviews' && (
+                  <div className="space-y-6 animate-in fade-in duration-300">
+                    <h4 className="font-black uppercase text-[10px] tracking-[0.2em] text-stone-300 px-2">User Reviews</h4>
+                    {Array.isArray(activePlace.reviews) && activePlace.reviews.length > 0 ? (
+                      activePlace.reviews.slice(0, 3).map((review: any) => {
+                        const reviewKey = getReviewKey(review);
+                        const reviewText = String(review.text || 'No review body available.');
+                        const isExpanded = !!expandedReviews[reviewKey];
+                        const shouldTruncate = reviewText.length > REVIEW_PREVIEW_LIMIT;
+                        const visibleText = shouldTruncate && !isExpanded
+                          ? `${reviewText.slice(0, REVIEW_PREVIEW_LIMIT)}...`
+                          : reviewText;
+
+                        return (
+                        <div key={reviewKey} className="bg-stone-50 p-8 rounded-[3rem] border border-stone-100 space-y-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-black uppercase tracking-widest">{review.author_name || 'Guest'}</span>
+                            <div className="flex text-yellow-400">
+                              {[1, 2, 3, 4, 5].map(star => <Star key={star} size={12} fill={star <= Number(review.rating || 0) ? 'currentColor' : 'none'} />)}
+                            </div>
+                          </div>
+                          <p className="text-sm font-bold text-stone-500 leading-relaxed italic wrap-break-word">{visibleText}</p>
+                          {shouldTruncate && (
+                            <button
+                              type="button"
+                              onClick={() => toggleReviewExpanded(reviewKey)}
+                              className="text-[10px] font-black uppercase tracking-widest text-blue-500 hover:underline"
+                            >
+                              {isExpanded ? 'Show less' : 'Read more'}
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })
+                    ) : (
+                      <div className="bg-stone-50 p-8 rounded-[3rem] border border-stone-100">
+                        <p className="text-xs font-bold text-stone-400">No review content available in this nearby response.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {modalTab === 'photos' && (
+                  <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+                    {selectedPlacePhotoItems.map((photoItem: ScoutPhotoItem) => (
+                      <div key={photoItem.id} className="aspect-square rounded-[2.5rem] overflow-hidden border-4 border-stone-50 shadow-sm">
+                        <img src={photoItem.url} alt={activePlace.name} className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <footer className="pt-4 flex gap-4 sticky bottom-0 bg-white/90 backdrop-blur-md pb-2">
+                <button
+                  onClick={() => handlePlaceAction(activePlace, 'save')}
+                  className="grow py-5 bg-stone-900 text-white rounded-4xl flex items-center justify-center gap-3 active:scale-95 transition-all shadow-xl"
+                >
+                  <Bookmark size={22} />
+                </button>
+                <button
+                  onClick={() => handlePlaceAction(activePlace, 'share')}
+                  className="py-5 px-10 bg-yellow-400 text-stone-900 rounded-4xl flex items-center justify-center active:scale-95 transition-all shadow-xl"
+                >
+                  <Share2 size={22} />
+                </button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -1380,7 +1700,7 @@ const App = () => {
     trims: <TrimsView onSave={handleSave} />,
     chef: <ChefAIView />,
     chat: <ChatView friends={friends} messagesByFriend={messagesByFriend} />,
-    scout: <ScoutView />,
+    scout: <ScoutView onSave={handleSave} onShareRequest={(item) => setActiveShareItem(item)} />,
     profile: <ProfileView savedItems={savedItems} profileName={authDisplayName} profileAvatar={authAvatarUrl} />,
     settings: settingsView,
   };

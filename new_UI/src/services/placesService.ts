@@ -24,7 +24,25 @@ export interface ScoutPlace {
   name: string;
   vicinity?: string;
   formatted_address?: string;
+  formatted_phone_number?: string;
+  international_phone_number?: string;
+  website?: string;
   rating?: number;
+  reviews?: Array<{
+    author_name?: string;
+    rating?: number;
+    text?: string;
+    time?: number;
+    relative_time_description?: string;
+  }>;
+  photos?: Array<{
+    photo_reference?: string;
+    html_attributions?: string[];
+  }>;
+  opening_hours?: {
+    open_now?: boolean;
+    weekday_text?: string[];
+  };
   user_ratings_total?: number;
   geometry?: {
     location?: {
@@ -86,6 +104,12 @@ export const PlacesService = {
       query,
       location: { lat: latitude, lng: longitude },
       radius: 50000,
+    });
+  },
+
+  async getPlaceDetails(placeId: string): Promise<ServiceResult<{ result?: ScoutPlace; status?: string }>> {
+    return makeRequest<{ result?: ScoutPlace; status?: string }>('/places/details', {
+      place_id: placeId,
     });
   },
 };
