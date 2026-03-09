@@ -20,6 +20,23 @@ interface ServiceResult<T = unknown> {
   error?: string;
 }
 
+interface LocalizedTrimsRequest {
+  userHash: string;
+  location?: string;
+  cuisine?: string;
+  diet?: string;
+  regionCode?: string;
+  queries?: string[];
+  maxResultsPerQuery?: number;
+}
+
+interface LocalizedTrimsResponse {
+  items: YouTubeSearchItem[];
+  source?: 'live' | 'cache' | 'fallback';
+  reason?: string;
+  queryCount?: number;
+}
+
 interface YouTubeSearchItem {
   id?: { videoId?: string };
   snippet?: {
@@ -58,6 +75,44 @@ export const YouTubeService = {
 
       if (!response.data?.success) {
         return { success: false, error: response.data?.error || 'YouTube proxy request failed' };
+      }
+
+      return { success: true, data: response.data.data };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message,
+        };
+      }
+
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Network error',
+      };
+    }
+  },
+
+  async getLocalizedTrimsFeed(payload: LocalizedTrimsRequest): Promise<ServiceResult<LocalizedTrimsResponse>> {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      return {
+        success: false,
+        error: 'Supabase env vars missing: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY',
+      };
+    }
+
+    try {
+      const response = await axios.post(`${YOUTUBE_PROXY_URL}?action=personalized-trims`, payload, {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        timeout: 10000,
+      });
+
+      if (!response.data?.success) {
+        return { success: false, error: response.data?.error || 'YouTube personalized trims request failed' };
       }
 
       return { success: true, data: response.data.data };

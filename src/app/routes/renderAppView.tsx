@@ -59,7 +59,7 @@ export const renderAppView = ({
     case 'bites':
       return <BitesView onSave={handleSave} onShareRequest={(item: any) => setActiveShareItem(item)} />;
     case 'trims':
-      return <TrimsView onSave={handleSave} onShareRequest={(item: any) => setActiveShareItem(item)} />;
+      return <TrimsView onSave={handleSave} onShareRequest={(item: any) => setActiveShareItem(item)} authUser={authUser} />;
     case 'chef':
       return <ChefAIView />;
     case 'chat':

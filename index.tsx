@@ -43,6 +43,7 @@ import { buildPhotoUrl, deriveCategory, mapWeekdayTextToTimings } from './src/fe
 import { persistSnapData } from './src/features/snap/services/snapPersistence';
 import { SettingsService } from './src/features/settings/services/settingsService';
 import { TRIMS_FALLBACK_VIDEOS } from './src/features/trims/constants/fallbackVideos';
+import { buildTrimQueries } from './src/features/trims/lib/buildTrimQueries';
 import { API_KEYS } from './src/shared/constants/apiKeys';
 import type { SettingsProfile } from './src/features/settings/types/settings';
 import { GeminiService } from './src/services/geminiService';
@@ -1639,10 +1640,12 @@ Context: ${description}`;
   );
 };
 
-const TrimsView = ({ onSave, onShareRequest }: { onSave: (item: any) => void; onShareRequest: (item: any) => void; }) => {
+const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: any) => void; onShareRequest: (item: any) => void; authUser: AuthUser | null; }) => {
   const [videos, setVideos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [serviceError, setServiceError] = useState('');
+  const [feedSource, setFeedSource] = useState<'live' | 'cache' | 'fallback'>('fallback');
+  const [locationLabel, setLocationLabel] = useState('Localized');
   const [showAIStudio, setShowAIStudio] = useState(false);
   const trimsMountedRef = useRef(true);
 
@@ -1658,12 +1661,41 @@ const TrimsView = ({ onSave, onShareRequest }: { onSave: (item: any) => void; on
       setServiceError('');
 
       try {
-        const response = await YouTubeService.searchVideos('cooking recipes chef techniques', 10);
+        const settings = await SettingsService.getUserSettings(authUser);
+        const profileLocation = settings.success ? settings.data?.location : '';
+        const profileCuisine = settings.success ? settings.data?.cuisine : '';
+        const profileDiet = settings.success ? settings.data?.diet : '';
+
+        const geo = await getUserFeedLocation();
+        const locationText = profileLocation?.trim() || (geo ? `near ${geo.lat.toFixed(2)},${geo.lng.toFixed(2)}` : 'local');
+        const regionCode = globalThis.navigator.language?.split('-')[1]?.toUpperCase() || undefined;
+
+        setLocationLabel(locationText);
+
+        const userHash = authUser?.id || authUser?.email || 'guest';
+        const queries = buildTrimQueries({
+          location: locationText,
+          cuisine: profileCuisine,
+          diet: profileDiet,
+        });
+
+        const response = await YouTubeService.getLocalizedTrimsFeed({
+          userHash,
+          location: locationText,
+          cuisine: profileCuisine,
+          diet: profileDiet,
+          regionCode,
+          queries,
+          maxResultsPerQuery: 8,
+        });
+
         const items = response.data?.items || [];
+        setFeedSource(response.data?.source || 'fallback');
 
         if (!response.success || !Array.isArray(items) || items.length === 0) {
           if (trimsMountedRef.current) {
             setVideos(TRIMS_FALLBACK_VIDEOS);
+            setFeedSource('fallback');
             if (response.error) setServiceError(response.error);
           }
         } else {
@@ -1689,6 +1721,7 @@ const TrimsView = ({ onSave, onShareRequest }: { onSave: (item: any) => void; on
       } catch {
         if (trimsMountedRef.current) {
           setVideos(TRIMS_FALLBACK_VIDEOS);
+          setFeedSource('fallback');
           setServiceError('Unable to load live trims. Showing curated fallback videos.');
         }
       } finally {
@@ -1699,7 +1732,7 @@ const TrimsView = ({ onSave, onShareRequest }: { onSave: (item: any) => void; on
     };
 
     fetchTrims();
-  }, []);
+  }, [authUser]);
 
   const toTrimActionItem = (v: any) => ({
       id: `video-${v.videoId || v.id}`,
@@ -1743,6 +1776,10 @@ const TrimsView = ({ onSave, onShareRequest }: { onSave: (item: any) => void; on
       >
         <Sparkles size={16} /> AI Trim Studio
       </button>
+
+      <div className="absolute top-6 right-6 z-30 px-4 py-2 bg-black/35 border border-white/20 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest backdrop-blur-md">
+        {feedSource === 'live' ? 'Live' : feedSource === 'cache' ? 'Cached' : 'Fallback'} · {locationLabel}
+      </div>
 
       <div className="h-full w-full relative snap-y snap-mandatory overflow-y-auto hide-scrollbar rounded-[3.5rem] bg-stone-900 shadow-2xl border-4 border-white">
       {serviceError && (
