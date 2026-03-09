@@ -183,10 +183,11 @@ serve(async (req) => {
 
       const maxResultsPerQuery = Math.min(Math.max(Number(body?.maxResultsPerQuery || MAX_RESULTS_PER_QUERY), 1), MAX_RESULTS_PER_QUERY);
       const regionCode = typeof body?.regionCode === 'string' ? body.regionCode : null;
+      const normalizedRegionCode = typeof regionCode === 'string' && regionCode.length === 2 ? regionCode.toUpperCase() : '';
       const location = typeof body?.location === 'string' ? body.location : '';
       const cuisine = typeof body?.cuisine === 'string' ? body.cuisine : '';
       const diet = typeof body?.diet === 'string' ? body.diet : '';
-      const profileHash = hashText(`${normalizeLocation(location)}|${cuisine}|${diet}`);
+      const profileHash = hashText(`${normalizeLocation(location)}|${cuisine}|${diet}|${normalizedRegionCode}`);
       const cacheKey = `trims:${userHash}:${profileHash}:${hashText(queries.join('|'))}`;
 
       pruneExpiredCache();

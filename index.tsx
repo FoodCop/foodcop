@@ -1633,6 +1633,37 @@ Context: ${description}`;
 };
 
 const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppItem) => void; onShareRequest: (item: AppItem) => void; authUser: AuthUser | null; }) => {
+  const resolveRegionCode = useCallback((): string | undefined => {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timezoneToRegion: Record<string, string> = {
+      'Asia/Kolkata': 'IN',
+      'Asia/Calcutta': 'IN',
+      'Asia/Dubai': 'AE',
+      'Europe/London': 'GB',
+      'America/Toronto': 'CA',
+      'America/New_York': 'US',
+    };
+
+    if (timezone && timezoneToRegion[timezone]) {
+      return timezoneToRegion[timezone];
+    }
+
+    const localeCandidates = [
+      ...(Array.isArray(globalThis.navigator.languages) ? globalThis.navigator.languages : []),
+      globalThis.navigator.language,
+    ].filter((value): value is string => typeof value === 'string' && value.length > 0);
+
+    for (const locale of localeCandidates) {
+      const parts = locale.split('-').map((entry) => entry.trim()).filter(Boolean);
+      const region = parts.reverse().find((part) => /^[A-Za-z]{2}$/.test(part));
+      if (region) {
+        return region.toUpperCase();
+      }
+    }
+
+    return undefined;
+  }, []);
+
   const [videos, setVideos] = useState<TrimVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [serviceError, setServiceError] = useState('');
@@ -1659,8 +1690,10 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
         const profileDiet = settings.success ? settings.data?.diet : '';
 
         const geo = await getUserFeedLocation();
-        const locationText = profileLocation?.trim() || (geo ? `near ${geo.lat.toFixed(2)},${geo.lng.toFixed(2)}` : 'local');
-        const regionCode = globalThis.navigator.language?.split('-')[1]?.toUpperCase() || undefined;
+        const locationText = geo
+          ? `near ${geo.lat.toFixed(2)},${geo.lng.toFixed(2)}`
+          : (profileLocation?.trim() || 'local');
+        const regionCode = resolveRegionCode();
 
         setLocationLabel(locationText);
 
@@ -1724,7 +1757,7 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
     };
 
     fetchTrims();
-  }, [authUser]);
+  }, [authUser, resolveRegionCode]);
 
   const toTrimActionItem = (v: TrimVideo): AppItem => ({
       id: `video-${v.videoId || v.id}`,

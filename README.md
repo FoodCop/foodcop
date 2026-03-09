@@ -13,11 +13,15 @@ This repository now runs from the **root** (not `new_UI/`).
 
 ## Latest Updates (2026-03-09)
 
-- Auth onboarding flow now respects real onboarding completion state and no longer auto-skips for new users.
-- Added a full user/data reset utility: `scripts/purgeAllUsers.ts`.
-- Added profile bootstrap to ensure authenticated users are mirrored into `public.users` for chat/points/leaderboard consistency.
-- Added DB migration `019_allow_users_self_insert.sql` to allow authenticated users to insert their own profile row under RLS.
-- Supabase user data was purged and reseeded for validation of fresh-start flows.
+- Added password auth end-to-end:
+  - email/password sign-in flow
+  - auth-screen `Forgot Password?`
+  - settings actions for `Change Password` and `Send Password Reset Email`
+- Completed a large type-safety hardening pass across app, services, scripts, and edge proxies.
+- Reduced monolith risk by extracting shared/auth/scout UI and type primitives from `index.tsx`.
+- Replaced dynamic Tailwind color templates with typed static class maps in key UI blocks.
+- Removed broad `any` usage from app-owned TypeScript codepaths (remaining matches are plain-English text only).
+- Production build validated successfully (`npm run build`).
 
 ## Immediate Priorities (Before New Feature Work)
 
@@ -43,8 +47,14 @@ This repository now runs from the **root** (not `new_UI/`).
 
 ## Next Session Focus
 
-- Implement password sign-in for users (email/password auth flow end-to-end).
-- Run the 48-hour Trims rollout audit and tune safeguards (`live/cache/fallback` mix, caps, and latency).
+- Run and document the 48-hour Trims rollout audit (`live/cache/fallback` mix, caps, latency, failover paths).
+- Continue incremental extraction from `index.tsx` into `src/features/*`, `src/shared/*`, and `src/app/*` with compile-green checkpoints.
+- Add lightweight smoke tests for auth reset flow, feed normalization, and scout map marker sync.
+
+## Skills Pack
+
+- Operational project skills are documented in `SKILLS.md`.
+- This file is intended to speed up future sessions and preserve architecture/debug knowledge in-repo.
 
 ## Tech Stack
 
