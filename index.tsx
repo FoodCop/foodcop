@@ -21,6 +21,7 @@ import { SpoonacularService } from './src/services/spoonacularService';
 import { YouTubeService } from './src/services/youtubeService';
 import { PlateService } from './src/services/plateService';
 import { hasSupabaseConfig, supabase } from './src/services/supabaseClient';
+import { UserProfileService } from './src/services/userProfileService';
 import { FEED_COMPARE_WITH_LOCAL, FEED_USE_SERVICE } from './src/features/feed/constants/config';
 import { LOCAL_CURATED_FEED_ITEMS } from './src/features/feed/constants/curatedFeed';
 import { ensureAdTriviaPresence, logFeedParity, normalizeFeedServiceToCards } from './src/features/feed/lib/feedNormalization';
@@ -4359,6 +4360,7 @@ const App = () => {
   const [showAuth, setShowAuth] = useState(false);
   const [authBooting, setAuthBooting] = useState(true);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [profileReady, setProfileReady] = useState(false);
 
   const [points, setPoints] = useState(0);
   const [level, setLevel] = useState(1);
@@ -4458,7 +4460,39 @@ const App = () => {
   useEffect(() => {
     let cancelled = false;
 
+    const ensureProfile = async () => {
+      if (!isAuthenticated || !authUser?.id || !hasSupabaseConfig) {
+        setProfileReady(true);
+        return;
+      }
+
+      setProfileReady(false);
+
+      const result = await UserProfileService.ensureCurrentUserProfile(authUser);
+      if (!cancelled && !result.success) {
+        console.warn('Failed to ensure user profile row:', result.error);
+      }
+
+      if (!cancelled) {
+        setProfileReady(true);
+      }
+    };
+
+    ensureProfile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser, isAuthenticated]);
+
+  useEffect(() => {
+    let cancelled = false;
+
     const loadContacts = async () => {
+      if (!profileReady) {
+        return;
+      }
+
       if (!authUser?.id || !hasSupabaseConfig) {
         setFriends(DEFAULT_FRIENDS);
         return;
@@ -4484,12 +4518,16 @@ const App = () => {
     return () => {
       cancelled = true;
     };
-  }, [authUser?.id]);
+  }, [authUser?.id, profileReady]);
 
   useEffect(() => {
     let cancelled = false;
 
     const loadPoints = async () => {
+      if (!profileReady) {
+        return;
+      }
+
       if (!isAuthenticated || !hasSupabaseConfig) {
         setPoints(0);
         setLevel(1);
@@ -4508,12 +4546,16 @@ const App = () => {
     return () => {
       cancelled = true;
     };
-  }, [isAuthenticated, authUser?.id]);
+  }, [authUser?.id, isAuthenticated, profileReady]);
 
   useEffect(() => {
     let cancelled = false;
 
     const loadLeaderboard = async () => {
+      if (!profileReady) {
+        return;
+      }
+
       if (!hasSupabaseConfig) {
         setLeaderboardUsers([]);
         return;
@@ -4529,7 +4571,7 @@ const App = () => {
     return () => {
       cancelled = true;
     };
-  }, [authUser?.id, points]);
+  }, [authUser?.id, points, profileReady]);
 
   const awardPointsForAction = useCallback(async (
     actionType: 'save_item' | 'share_item' | 'snap_post',
