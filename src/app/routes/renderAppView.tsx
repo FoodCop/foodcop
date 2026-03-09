@@ -12,6 +12,7 @@ export const renderAppView = ({
   level,
   leaderboardUsers,
   handleSignOut,
+  handleConversationOpened,
   components,
 }: {
   tab: string;
@@ -25,6 +26,7 @@ export const renderAppView = ({
   level: number;
   leaderboardUsers: any[];
   handleSignOut: () => Promise<void>;
+  handleConversationOpened: (friendId: string) => void;
   components: {
     FeedView: any;
     BitesView: any;
@@ -61,7 +63,7 @@ export const renderAppView = ({
     case 'chef':
       return <ChefAIView />;
     case 'chat':
-      return <ChatView friends={friends} authUser={authUser} onSave={handleSave} onShareRequest={(item: any) => setActiveShareItem(item)} setTab={setTab} />;
+      return <ChatView friends={friends} authUser={authUser} onSave={handleSave} onShareRequest={(item: any) => setActiveShareItem(item)} setTab={setTab} onConversationOpened={handleConversationOpened} />;
     case 'scout':
       return <ScoutView onSave={handleSave} onShareRequest={(item: any) => setActiveShareItem(item)} savedItems={savedItems} />;
     case 'profile':

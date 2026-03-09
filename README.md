@@ -11,7 +11,27 @@ This repository now runs from the **root** (not `new_UI/`).
 - Legacy `new_UI/` wrapper structure has been removed
 - `public/References` has been removed
 
-## Latest Updates (2026-03-04)
+## Latest Updates (2026-03-09)
+
+- Auth onboarding flow now respects real onboarding completion state and no longer auto-skips for new users.
+- Added a full user/data reset utility: `scripts/purgeAllUsers.ts`.
+- Added profile bootstrap to ensure authenticated users are mirrored into `public.users` for chat/points/leaderboard consistency.
+- Added DB migration `019_allow_users_self_insert.sql` to allow authenticated users to insert their own profile row under RLS.
+- Supabase user data was purged and reseeded for validation of fresh-start flows.
+
+## Immediate Priorities (Before New Feature Work)
+
+1. Audit unnecessary files
+- Inventory non-runtime assets/scripts/docs and classify as `keep`, `archive`, or `delete`.
+- Produce a deletion-safe report before removing anything.
+- Remove dead files in controlled commits.
+
+2. Write app skills (operational knowledge pack)
+- Define app skills that describe architecture, data flow, auth/onboarding behavior, and Supabase contracts.
+- Add a repeatable "how to debug" skill for points/chat/leaderboard issues.
+- Keep skills versioned in-repo so future sessions can recover context quickly.
+
+## Previous Updates (2026-03-04)
 
 - Scout now includes a `My Map` tab that renders user-saved places with coordinates.
 - Saved Scout places now persist map coordinates (`lat`, `lng`) so they can reappear on `My Map`.
@@ -23,10 +43,9 @@ This repository now runs from the **root** (not `new_UI/`).
 
 ## Next Session Focus
 
-- Activate `Trims` AI flow in parity with `Bites` AI flow (generation, save/share card behavior).
-- Add `Trims` personalization pipeline using YouTube taste signals to serve user-matched trims.
-- Transplant social media profile link support from `public/UPDATE/` into live profile/settings flows.
-- Execute implementation plan in `docs/plans/TOMORROW_TRIMS_AI_SOCIAL_PLAN.md`.
+- Run and complete the file audit (priority 1 above).
+- Write and commit app skills documentation pack (priority 2 above).
+- Then resume product feature work (Trims parity, personalization, and profile social links).
 
 ## Tech Stack
 

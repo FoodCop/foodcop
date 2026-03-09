@@ -29,6 +29,17 @@ interface ChatResult<T> {
   error?: string;
 }
 
+interface ChatConversationParticipants {
+  id: string;
+  participant1: string;
+  participant2: string;
+}
+
+interface ChatIncomingMessageNotice {
+  message: ChatMessage;
+  otherUserId: string;
+}
+
 export const ChatService = {
   async listContacts(currentUserId: string): Promise<ChatResult<ChatContact[]>> {
     const client = supabase;
@@ -121,6 +132,30 @@ export const ChatService = {
         sharedItem: row.shared_item || null,
         createdAt: row.created_at,
       })),
+    };
+  },
+
+  async getConversationParticipants(conversationId: string): Promise<ChatResult<ChatConversationParticipants>> {
+    const client = supabase;
+    if (!client) return { success: false, error: 'Supabase is not configured' };
+
+    const { data, error } = await client
+      .from('dm_conversations')
+      .select('id, participant_1, participant_2')
+      .eq('id', conversationId)
+      .maybeSingle();
+
+    if (error || !data) {
+      return { success: false, error: error?.message || 'Conversation not found' };
+    }
+
+    return {
+      success: true,
+      data: {
+        id: data.id,
+        participant1: data.participant_1,
+        participant2: data.participant_2,
+      },
     };
   },
 
@@ -217,6 +252,50 @@ export const ChatService = {
           content: row.content || '',
           sharedItem: row.shared_item || null,
           createdAt: row.created_at,
+        });
+      })
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  },
+
+  subscribeToIncomingMessages(currentUserId: string, onIncoming: (notice: ChatIncomingMessageNotice) => void) {
+    const client = supabase;
+    if (!client) {
+      return () => undefined;
+    }
+
+    const channel = client
+      .channel(`dm_messages:user:${currentUserId}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'dm_messages',
+      }, async (payload: any) => {
+        const row = payload.new || {};
+        if (!row.id || !row.conversation_id || !row.sender_id) return;
+        if (row.sender_id === currentUserId) return;
+
+        const conversation = await ChatService.getConversationParticipants(row.conversation_id);
+        if (!conversation.success || !conversation.data) return;
+
+        const { participant1, participant2 } = conversation.data;
+        if (participant1 !== currentUserId && participant2 !== currentUserId) return;
+
+        const otherUserId = participant1 === currentUserId ? participant2 : participant1;
+
+        onIncoming({
+          otherUserId,
+          message: {
+            id: row.id,
+            conversationId: row.conversation_id,
+            senderId: row.sender_id,
+            content: row.content || '',
+            sharedItem: row.shared_item || null,
+            createdAt: row.created_at,
+          },
         });
       })
       .subscribe();

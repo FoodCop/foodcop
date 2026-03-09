@@ -1865,12 +1865,14 @@ const ChatView = ({
   onSave,
   onShareRequest,
   setTab,
+  onConversationOpened,
 }: {
   friends: any[];
   authUser: AuthUser | null;
   onSave: (item: any) => void;
   onShareRequest: (item: any) => void;
   setTab: (tab: string) => void;
+  onConversationOpened: (friendId: string) => void;
 }) => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
@@ -1893,7 +1895,10 @@ const ChatView = ({
       if (prev.some((entry) => entry.id === message.id)) return prev;
       return [...prev, mapMessageToUi(message)];
     });
-  }, [mapMessageToUi]);
+    if (message.senderId !== authUser?.id && activeId) {
+      onConversationOpened(activeId);
+    }
+  }, [activeId, authUser?.id, mapMessageToUi, onConversationOpened]);
 
   useEffect(() => {
     setActiveId(null);
@@ -1946,6 +1951,7 @@ const ChatView = ({
     }
 
     setActiveId(friendId);
+    onConversationOpened(friendId);
     const conversation = await ChatService.getOrCreateConversation(authUser.id, friendId);
     if (!conversation.success || !conversation.data) {
       return;
@@ -4373,13 +4379,41 @@ const App = () => {
   const [savedItems, setSavedItems] = useState<any[]>(FALLBACK_SAVED_ITEMS);
   const [activeShareItem, setActiveShareItem] = useState<any>(null);
 
-  const [friends, setFriends] = useState(DEFAULT_FRIENDS);
+  const [friends, setFriends] = useState<any[]>(DEFAULT_FRIENDS as any[]);
+  const totalUnread = useMemo(() => friends.reduce((sum, friend) => sum + (friend.unreadCount || 0), 0), [friends]);
+  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | 'unsupported'>(() => {
+    if (typeof globalThis.Notification === 'undefined') {
+      return 'unsupported';
+    }
+
+    return globalThis.Notification.permission;
+  });
+  const notificationPromptedRef = useRef(false);
   const pathname = globalThis.location.pathname;
   const viewParam = new URLSearchParams(globalThis.location.search).get('view');
   const hasViewParam = !!viewParam;
   const isHomeView = viewParam === 'home';
   const appRoute = isAppPath(pathname);
   const authCallbackRoute = isAuthCallbackPath(pathname);
+
+  const requestNotificationPermission = useCallback(async () => {
+    if (typeof globalThis.Notification === 'undefined') {
+      setNotificationPermission('unsupported');
+      return;
+    }
+
+    if (globalThis.Notification.permission !== 'default') {
+      setNotificationPermission(globalThis.Notification.permission);
+      return;
+    }
+
+    try {
+      const permission = await globalThis.Notification.requestPermission();
+      setNotificationPermission(permission);
+    } catch (error) {
+      console.warn('Notification permission request failed:', error);
+    }
+  }, []);
 
   useAuthSessionSync({
     setAuthBooting,
@@ -4519,6 +4553,99 @@ const App = () => {
       cancelled = true;
     };
   }, [authUser?.id, profileReady]);
+
+  useEffect(() => {
+    if (typeof globalThis.Notification === 'undefined') {
+      setNotificationPermission('unsupported');
+      return;
+    }
+
+    const syncPermission = () => {
+      setNotificationPermission(globalThis.Notification.permission);
+    };
+
+    syncPermission();
+    globalThis.document.addEventListener('visibilitychange', syncPermission);
+
+    return () => {
+      globalThis.document.removeEventListener('visibilitychange', syncPermission);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated || notificationPermission !== 'default' || notificationPromptedRef.current) {
+      return;
+    }
+
+    notificationPromptedRef.current = true;
+    requestNotificationPermission().catch((error) => {
+      console.warn('Notification permission bootstrap failed:', error);
+    });
+  }, [isAuthenticated, notificationPermission, requestNotificationPermission]);
+
+  useEffect(() => {
+    if (!authUser?.id || !hasSupabaseConfig) {
+      return;
+    }
+
+    const unsubscribe = ChatService.subscribeToIncomingMessages(authUser.id, ({ otherUserId, message }) => {
+      let senderName = 'Studio Contact';
+
+      setFriends(prev => {
+        let found = false;
+        const next = prev.map((friend) => {
+          if (String(friend.id) !== String(otherUserId)) return friend;
+          found = true;
+          senderName = friend.name || friend.username || senderName;
+          return {
+            ...friend,
+            unreadCount: (friend.unreadCount || 0) + 1,
+            time: 'now',
+          };
+        });
+
+        if (found) return next;
+        return next;
+      });
+
+      if (notificationPermission !== 'granted' || typeof globalThis.Notification === 'undefined') {
+        return;
+      }
+
+      const isHidden = globalThis.document.visibilityState !== 'visible' || !globalThis.document.hasFocus();
+      if (!isHidden) {
+        return;
+      }
+
+      const body = message.sharedItem
+        ? `Shared: ${message.sharedItem?.name || 'an item'}`
+        : (message.content || 'You received a new message.');
+
+      const toast = new globalThis.Notification(`${senderName} sent a message`, {
+        body,
+        icon: '/favicon.png',
+        tag: `fuzo-chat-${otherUserId}`,
+      });
+
+      toast.onclick = () => {
+        globalThis.focus();
+        setTab('chat');
+        toast.close();
+      };
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [authUser?.id, notificationPermission]);
+
+  const handleConversationOpened = useCallback((friendId: string) => {
+    setFriends(prev => prev.map((friend) => (
+      String(friend.id) === String(friendId)
+        ? { ...friend, unreadCount: 0 }
+        : friend
+    )));
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -4743,6 +4870,7 @@ const App = () => {
     level,
     leaderboardUsers,
     handleSignOut,
+    handleConversationOpened,
     components: {
       FeedView,
       BitesView,
@@ -4842,10 +4970,25 @@ const App = () => {
             {DRAWER_NAV_ITEMS.map(item => (
               <button 
                 key={item.id}
-                onClick={() => { setTab(item.id); setSidebarOpen(false); }}
+                onClick={() => {
+                  if (item.id === 'chat') {
+                    requestNotificationPermission().catch((error) => {
+                      console.warn('Notification permission request failed:', error);
+                    });
+                  }
+                  setTab(item.id);
+                  setSidebarOpen(false);
+                }}
                 className={`w-full flex items-center justify-center py-5 rounded-[1.5rem] transition-all ${tab === item.id ? 'bg-stone-900 text-white shadow-xl' : 'text-stone-300 hover:bg-stone-50'}`}
               >
-                <item.icon size={28} strokeWidth={tab === item.id ? 3 : 2} />
+                <div className="relative">
+                  <item.icon size={28} strokeWidth={tab === item.id ? 3 : 2} />
+                  {item.id === 'chat' && totalUnread > 0 && (
+                    <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-yellow-400 text-stone-900 text-[10px] font-black flex items-center justify-center">
+                      {totalUnread > 99 ? '99+' : totalUnread}
+                    </span>
+                  )}
+                </div>
               </button>
             ))}
           </nav>
