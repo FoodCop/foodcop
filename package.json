@@ -1,0 +1,39 @@
+{
+  "name": "fuzo_final",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx server.ts",
+    "build": "vite build",
+    "lint": "tsc --noEmit",
+    "preview": "vite preview",
+    "guardrails:phase1": "node scripts/phase1-guardrails.mjs",
+    "check:no-regression": "npm run lint && npm run build && npm run guardrails:phase1"
+  },
+  "dependencies": {
+    "@google/genai": "^1.40.0",
+    "@googlemaps/js-api-loader": "^1.16.8",
+    "@supabase/supabase-js": "^2.48.1",
+    "axios": "^1.13.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "framer-motion": "^12.34.3",
+    "lucide-react": "^0.563.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tsx": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

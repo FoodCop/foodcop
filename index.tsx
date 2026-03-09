@@ -1,0 +1,4795 @@
+
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import './src/styles/tailwind.css';
+import { mountApp } from './src/app/bootstrap/mountApp';
+import { 
+  Search, ChefHat, MapPin, User, Heart, Star, Clock, Zap, MessageSquare, 
+  ChevronRight, PlayCircle, Camera, X, Check, Flame, Share2, Loader2, Send, 
+  Bookmark, ChevronLeft, RefreshCw, LayoutGrid, Sparkles, Bot,
+  Info, List, PieChart, CheckCircle2, SlidersHorizontal, Music2, Eye,
+  Mail, Phone, Bell, Shield, LogOut, Trophy, Gift, Image as ImageIcon, CheckCheck, AlertCircle,
+  Instagram, Facebook, Pin
+} from 'lucide-react';
+import { Loader } from '@googlemaps/js-api-loader';
+import { BOTTOM_NAV_ITEMS, DRAWER_NAV_ITEMS, resolveInitialTab, TAB_IDS } from './src/app/layout/navItems';
+import { useAuthSessionSync } from './src/app/hooks/useAuthSessionSync';
+import { useSavedItemsOnAuth } from './src/app/hooks/useSavedItemsOnAuth';
+import { useTabUrlSync } from './src/app/hooks/useTabUrlSync';
+import { renderAppView } from './src/app/routes/renderAppView';
+import { PlacesService } from './src/services/placesService';
+import { SpoonacularService } from './src/services/spoonacularService';
+import { YouTubeService } from './src/services/youtubeService';
+import { PlateService } from './src/services/plateService';
+import { hasSupabaseConfig, supabase } from './src/services/supabaseClient';
+import { FEED_COMPARE_WITH_LOCAL, FEED_USE_SERVICE } from './src/features/feed/constants/config';
+import { LOCAL_CURATED_FEED_ITEMS } from './src/features/feed/constants/curatedFeed';
+import { ensureAdTriviaPresence, logFeedParity, normalizeFeedServiceToCards } from './src/features/feed/lib/feedNormalization';
+import type { FeedUiItem } from './src/features/feed/types/feedUi';
+import { getUserFeedLocation } from './src/features/feed/services/feedLocation';
+import { FeedService } from './src/features/feed/services/feedService';
+import { AUTH_ONBOARDING_DATA } from './src/features/auth/constants/onboardingData';
+import { BITE_CUISINES, BITE_DIETS } from './src/features/bites/constants/filters';
+import { BITE_FALLBACK_RECIPES } from './src/features/bites/constants/fallbackRecipes';
+import { createBiteRecipeActions, getBiteKeyNutrients, normalizeRecipeList } from './src/features/bites/lib/bitesHelpers';
+import type { BiteActionItem, BiteRecipe, BiteRecipeInput } from './src/features/bites/types/bites';
+import { DEFAULT_FRIENDS } from './src/features/chat/constants/chatSeeds';
+import { ChatService } from './src/features/chat/services/chatService';
+import { FALLBACK_SAVED_ITEMS } from './src/features/plate/constants/fallbackSavedItems';
+import { inferItemTypeFromId, normalizeItemForPlateSave, normalizeSavedItemForUI } from './src/features/plate/lib/savedItems';
+import { PointsService } from './src/features/points/services/pointsService';
+import type { LeaderboardEntry } from './src/features/points/services/pointsService';
+import { buildPhotoUrl, deriveCategory, mapWeekdayTextToTimings } from './src/features/scout/lib/scoutUtils';
+import { persistSnapData } from './src/features/snap/services/snapPersistence';
+import { SettingsService } from './src/features/settings/services/settingsService';
+import { TRIMS_FALLBACK_VIDEOS } from './src/features/trims/constants/fallbackVideos';
+import { API_KEYS } from './src/shared/constants/apiKeys';
+import type { SettingsProfile } from './src/features/settings/types/settings';
+import { GeminiService } from './src/services/geminiService';
+
+type LightweightMotionProps = {
+  children?: React.ReactNode;
+  [key: string]: unknown;
+};
+
+const MotionDiv = ({
+  children,
+  initial: _initial,
+  animate: _animate,
+  exit: _exit,
+  transition: _transition,
+  whileHover: _whileHover,
+  whileTap: _whileTap,
+  whileInView: _whileInView,
+  viewport: _viewport,
+  variants: _variants,
+  custom: _custom,
+  ...rest
+}: LightweightMotionProps) => <div {...(rest as React.HTMLAttributes<HTMLDivElement>)}>{children}</div>;
+
+const motion = { div: MotionDiv };
+const AnimatePresence = ({ children, mode: _mode }: { children?: React.ReactNode; mode?: string }) => <>{children}</>;
+
+const readImageFileAsDataUrl = (file: File): Promise<string> => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onloadend = () => resolve(reader.result as string);
+  reader.onerror = () => reject(new Error('Failed to read file'));
+  reader.readAsDataURL(file);
+});
+
+const loadUploadedImage = async (
+  file: File,
+  setCapturedImage: React.Dispatch<React.SetStateAction<string | null>>,
+  onTagged: () => void,
+) => {
+  const imageData = await readImageFileAsDataUrl(file);
+  setCapturedImage(imageData);
+  onTagged();
+};
+
+const SettingsSection = ({ title, children }: { title: string, children: React.ReactNode }) => (
+  <div className="space-y-4">
+    <h4 className="px-6 text-[10px] font-black uppercase tracking-[0.3em] text-stone-300">{title}</h4>
+    <div className="bg-white rounded-[2.5rem] border-4 border-white overflow-hidden divide-y shadow-xl">
+      {children}
+    </div>
+  </div>
+);
+
+const SettingsItem = ({ icon: Icon, label, value, onClick, color = 'stone' }: any) => (
+  <button
+    onClick={onClick}
+    className="w-full p-8 flex items-center justify-between hover:bg-stone-50 transition-colors group text-left"
+  >
+    <div className="flex items-center gap-6">
+      <div className={`p-4 bg-${color}-100 rounded-2xl text-${color}-900 group-hover:scale-110 transition-transform`}>
+        <Icon size={20} />
+      </div>
+      <div>
+        <p className="font-black uppercase text-[10px] tracking-widest text-stone-400 leading-none mb-1.5">{label}</p>
+        <p className="font-bold text-sm text-stone-900">{value}</p>
+      </div>
+    </div>
+    <ChevronRight size={20} className="text-stone-200 group-hover:text-stone-400 transition-colors" />
+  </button>
+);
+
+type AuthUser = {
+  id?: string;
+  email?: string;
+  user_metadata?: Record<string, unknown>;
+};
+
+const getMetadataString = (metadata: Record<string, unknown> | undefined, ...keys: string[]) => {
+  for (const key of keys) {
+    const value = metadata?.[key];
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value;
+    }
+  }
+  return '';
+};
+
+const parseAiJson = (raw: string | undefined | null) => {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    const extracted = /\{[\s\S]*\}/.exec(raw)?.[0];
+    if (!extracted) return null;
+    try {
+      return JSON.parse(extracted);
+    } catch {
+      return null;
+    }
+  }
+};
+
+const APP_PATH = '/app';
+const LANDING_PATH = '/landing';
+const AUTH_CALLBACK_PATH = '/auth/callback';
+const HOME_ENTRY_URL = '/?view=home';
+
+const isAppPath = (pathname: string) => pathname === APP_PATH || pathname.startsWith(`${APP_PATH}/`);
+const isAuthCallbackPath = (pathname: string) => pathname === AUTH_CALLBACK_PATH || pathname.startsWith(`${AUTH_CALLBACK_PATH}/`);
+
+const normalizeAppUrl = (value: string | undefined) => {
+  if (!value) return '';
+  const trimmed = value.trim();
+  const unquoted = (trimmed.startsWith('"') || trimmed.startsWith("'")) ? trimmed.slice(1) : trimmed;
+  const clean = (unquoted.endsWith('"') || unquoted.endsWith("'")) ? unquoted.slice(0, -1) : unquoted;
+  return clean.replace(/\/+$/, '');
+};
+
+const getOAuthRedirectUrl = () => {
+  const { origin, hostname } = globalThis.location;
+  const isLocalDevHost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '0.0.0.0';
+
+  // Force local OAuth returns to stay local and avoid any production fallback.
+  if (isLocalDevHost) {
+    return `${origin}${AUTH_CALLBACK_PATH}`;
+  }
+
+  const configuredAppUrl = normalizeAppUrl(import.meta.env.VITE_AUTH_REDIRECT_URL)
+    || normalizeAppUrl(import.meta.env.VITE_APP_URL);
+
+  return configuredAppUrl ? `${configuredAppUrl}${AUTH_CALLBACK_PATH}` : `${origin}${AUTH_CALLBACK_PATH}`;
+};
+
+// --- SHARED UI COMPONENTS ---
+
+const Badge = ({ children, color = 'yellow' }: { children: React.ReactNode, color?: string }) => (
+  <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-${color}-100 text-${color}-800 whitespace-nowrap`}>
+    {children}
+  </span>
+);
+
+const NavIcon = ({ icon: Icon, active, onClick, label }: any) => (
+  <button 
+    onClick={onClick} 
+    className={`flex flex-col items-center gap-1 transition-all duration-300 ${active ? 'text-stone-900' : 'text-stone-300 hover:text-stone-500'}`}
+  >
+    <div className={`p-3 rounded-2xl transition-all ${active ? 'bg-yellow-400 shadow-lg' : ''}`}>
+      <Icon size={28} strokeWidth={active ? 3 : 2} />
+    </div>
+  </button>
+);
+
+// --- TINDER SWIPE ENGINE ---
+
+const SwipeCard = ({ children, onSwipe, active }: any) => {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [isSwiping, setIsSwiping] = useState(false);
+  const startPos = useRef({ x: 0, y: 0 });
+
+  const handleStart = (e: any) => {
+    if (!active) return;
+    const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+    startPos.current = { x: clientX, y: clientY };
+    setIsSwiping(true);
+  };
+
+  const handleMove = (e: any) => {
+    if (!isSwiping || !active) return;
+    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+    setOffset({ x: clientX - startPos.current.x, y: clientY - startPos.current.y });
+  };
+
+  const handleEnd = () => {
+    if (!isSwiping || !active) return;
+    const threshold = 120;
+    if (Math.abs(offset.x) > threshold) onSwipe(offset.x > 0 ? 'right' : 'left');
+    else if (Math.abs(offset.y) > threshold) onSwipe(offset.y > 0 ? 'down' : 'up');
+    else setOffset({ x: 0, y: 0 });
+    setIsSwiping(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (!active) return;
+    if (e.key === 'ArrowRight') onSwipe('right');
+    if (e.key === 'ArrowLeft') onSwipe('left');
+    if (e.key === 'ArrowUp') onSwipe('up');
+    if (e.key === 'ArrowDown') onSwipe('down');
+  };
+
+  const rotation = offset.x * 0.05;
+  const opacity = Math.min(Math.max(Math.abs(offset.x), Math.abs(offset.y)) / 150, 0.6);
+
+  return (
+    <button
+      type="button"
+      className={`absolute inset-0 w-full h-full rounded-[3.5rem] border-4 border-white shadow-2xl overflow-hidden transition-transform duration-300 ${isSwiping ? 'ease-none' : 'ease-out'}`}
+      style={{ 
+        transform: `translate(${offset.x}px, ${offset.y}px) rotate(${rotation}deg)`,
+        zIndex: active ? 10 : 1,
+        touchAction: 'none'
+      }}
+      tabIndex={active ? 0 : -1}
+      aria-label="Swipe discovery card"
+      onKeyDown={handleKeyDown}
+      onMouseDown={handleStart} onMouseMove={handleMove} onMouseUp={handleEnd} onMouseLeave={handleEnd}
+      onTouchStart={handleStart} onTouchMove={handleMove} onTouchEnd={handleEnd}
+    >
+      {offset.x > 50 && <div className="absolute inset-0 bg-emerald-500 z-20 flex items-center justify-center pointer-events-none" style={{ opacity }}><Check size={120} strokeWidth={4} className="text-white" /></div>}
+      {offset.x < -50 && <div className="absolute inset-0 bg-red-500 z-20 flex items-center justify-center pointer-events-none" style={{ opacity }}><X size={120} strokeWidth={4} className="text-white" /></div>}
+      {offset.y < -50 && <div className="absolute inset-0 bg-yellow-400 z-20 flex items-center justify-center pointer-events-none" style={{ opacity }}><Share2 size={120} strokeWidth={4} className="text-stone-900" /></div>}
+      {offset.y > 50 && <div className="absolute inset-0 bg-blue-500 z-20 flex items-center justify-center pointer-events-none" style={{ opacity }}><Bookmark size={120} strokeWidth={4} className="text-white" /></div>}
+      {children}
+    </button>
+  );
+};
+
+// --- SHARE MODAL ---
+
+const ShareModal = ({ item, friends, onShare, onClose }: { item: any, friends: any[], onShare: (friendId: number, item: any) => void, onClose: () => void }) => {
+  const [sentTo, setSentTo] = useState<number[]>([]);
+
+  const handleShareClick = (friendId: number) => {
+    if (sentTo.includes(friendId)) return;
+    onShare(friendId, item);
+    setSentTo(prev => [...prev, friendId]);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[120] bg-stone-900/60 backdrop-blur-xl flex items-end md:items-center justify-center p-0 md:p-10 animate-in fade-in duration-300">
+      <div className="bg-white w-full max-w-lg rounded-t-[4rem] md:rounded-[4rem] shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-20 duration-500">
+        <header className="p-10 border-b flex justify-between items-center bg-stone-50">
+          <div>
+            <Badge color="yellow">Studio Share</Badge>
+            <h3 className="text-3xl font-black uppercase tracking-tighter mt-1">Send to Friend</h3>
+          </div>
+          <button onClick={onClose} className="p-4 bg-white rounded-3xl shadow-sm hover:scale-105 transition-transform"><X size={24} /></button>
+        </header>
+
+        <div className="p-10 flex items-center gap-6 border-b">
+          <div className="w-24 h-24 rounded-3xl overflow-hidden shadow-lg shrink-0">
+            <img src={item.img} alt={item.name || 'Shared item'} className="w-full h-full object-cover" />
+          </div>
+          <div>
+            <h4 className="font-black uppercase text-xl leading-none">{item.name}</h4>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mt-2">{item.cat}</p>
+          </div>
+        </div>
+
+        <div className="p-8 max-h-[50vh] overflow-y-auto space-y-4">
+          <h5 className="px-2 text-[10px] font-black uppercase tracking-widest text-stone-300">Active Contacts</h5>
+          {friends.map(friend => (
+            <button
+              type="button"
+              key={friend.id} 
+              onClick={() => handleShareClick(friend.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleShareClick(friend.id);
+                }
+              }}
+              tabIndex={0}
+              className="flex items-center justify-between p-4 rounded-[2rem] hover:bg-stone-50 cursor-pointer transition-colors group"
+            >
+              <div className="flex items-center gap-4">
+                <img src={friend.avatar} alt={friend.name || 'Friend avatar'} className="w-12 h-12 rounded-full border-2 border-stone-100" />
+                <span className="font-black uppercase text-xs tracking-widest">{friend.name}</span>
+              </div>
+              {sentTo.includes(friend.id) ? (
+                <div className="flex items-center gap-2 text-emerald-500">
+                  <CheckCircle2 size={24} strokeWidth={3} />
+                </div>
+              ) : (
+                <div className="p-3 bg-stone-100 rounded-2xl group-hover:bg-yellow-400 transition-colors">
+                  <Send size={18} />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+        
+        <footer className="p-10 bg-stone-50 text-center">
+          <button 
+            onClick={onClose}
+            className="w-full py-5 bg-stone-900 text-white rounded-[2rem] flex items-center justify-center shadow-xl active:scale-95 transition-transform"
+          >
+            <Check size={24} strokeWidth={3} />
+          </button>
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+const useIsDesktop = () => {
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1024);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  return isDesktop;
+};
+
+const DealCard = ({ item, index, onAction }: { item: any, index: number, onAction: (action: string, item: any) => void }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isEntered, setIsEntered] = useState(false);
+  const isAdOrTrivia = item.itemType === 'ad' || item.itemType === 'trivia' || item.type === 'ad' || item.type === 'trivia';
+
+  useEffect(() => {
+    setIsEntered(false);
+    const frameId = requestAnimationFrame(() => setIsEntered(true));
+    return () => cancelAnimationFrame(frameId);
+  }, [item.id, index]);
+
+  const entryDelay = index * 80;
+  const initialTilt = index % 2 === 0 ? -6 : 6;
+
+  return (
+    <div
+      className="relative w-[300px] h-[500px] cursor-pointer"
+      style={{
+        opacity: isEntered ? 1 : 0,
+        transform: `translateY(${isEntered ? 0 : -80}px) rotate(${isEntered ? 0 : initialTilt}deg) scale(1)`,
+        transition: `opacity 500ms ease ${entryDelay}ms, transform 700ms cubic-bezier(0.22, 1, 0.36, 1) ${entryDelay}ms`,
+      }}
+    >
+      <div
+        className="w-full h-full relative transition-transform duration-500 ease-out hover:scale-[1.02]"
+        style={{
+          transformStyle: 'preserve-3d',
+          transform: `rotateY(${isFlipped ? 180 : 0}deg)`,
+        }}
+      >
+        {/* Front */}
+        <button
+          type="button"
+          onClick={() => setIsFlipped(true)}
+          aria-label={`Reveal ${item.name}`}
+          className="absolute inset-0 w-full h-full rounded-[3rem] border-8 border-white shadow-2xl bg-yellow-400 flex flex-col items-center justify-center gap-6"
+          style={{ backfaceVisibility: 'hidden' }}
+        >
+          <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-white">
+            <Eye size={48} strokeWidth={3} />
+          </div>
+          <p className="font-black uppercase tracking-[0.3em] text-white text-xs">Reveal Bite</p>
+        </button>
+
+        {/* Back */}
+        <div 
+          className="absolute inset-0 w-full h-full rounded-[3rem] border-8 border-white shadow-2xl bg-white overflow-hidden"
+          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+        >
+          <img src={item.img} alt={item.name || 'Deal item'} className="w-full h-full object-cover" />
+
+          {!isAdOrTrivia && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 text-white">
+                <h3 className="text-2xl font-black uppercase tracking-tighter leading-none mb-2">{item.name}</h3>
+                <Badge color="yellow">{item.cat}</Badge>
+
+                <p className="text-xs font-bold text-white/80 leading-relaxed mt-4 mb-4">
+                  Experience the finest {String(item.cat || 'discoveries').toLowerCase()} in the city. Hand-picked for your Studio collection.
+                </p>
+
+                <div className="grid grid-cols-4 gap-2">
+                  <button onClick={(e) => { e.stopPropagation(); onAction('pass', item); }} className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl text-red-200 hover:bg-red-500/20 transition-colors flex items-center justify-center"><X size={20} strokeWidth={3} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); onAction('like', item); }} className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl text-emerald-200 hover:bg-emerald-500/20 transition-colors flex items-center justify-center"><Heart size={20} strokeWidth={3} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); onAction('share', item); }} className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl text-yellow-200 hover:bg-yellow-500/20 transition-colors flex items-center justify-center"><Share2 size={20} strokeWidth={3} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); onAction('save', item); }} className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl text-blue-200 hover:bg-blue-500/20 transition-colors flex items-center justify-center"><Bookmark size={20} strokeWidth={3} /></button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {isAdOrTrivia && (
+            <div className="absolute inset-0" aria-hidden="true" />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- VIEWS ---
+
+const shouldApplyLatestRequest = (
+  mountedRef: { current: boolean },
+  requestSeq: number,
+  sequenceRef: { current: number }
+) => mountedRef.current && requestSeq === sequenceRef.current;
+
+const useBitesFeed = () => {
+  const [recipes, setRecipes] = useState<BiteRecipe[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [serviceError, setServiceError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeDiet, setActiveDiet] = useState<string | null>(null);
+  const [activeCuisine, setActiveCuisine] = useState<string | null>(null);
+  const bitesRequestSeqRef = useRef(0);
+  const bitesDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bitesMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      bitesMountedRef.current = false;
+      if (bitesDebounceRef.current) {
+        clearTimeout(bitesDebounceRef.current);
+      }
+    };
+  }, []);
+
+  const fetchBites = useCallback(async (_isRefresh = false, queryOverride?: string) => {
+    const requestSeq = ++bitesRequestSeqRef.current;
+    setLoading(true);
+    setServiceError('');
+    const effectiveQuery = (queryOverride ?? searchQuery).trim();
+
+    try {
+      const response = await SpoonacularService.searchRecipes({
+        query: effectiveQuery || undefined,
+        diet: activeDiet || undefined,
+        cuisine: activeCuisine || undefined,
+        number: 12,
+      });
+
+      const payload = response.data;
+      const resultList = (payload?.results || payload?.data?.results || []) as BiteRecipeInput[];
+      const isLatestRequest = shouldApplyLatestRequest(bitesMountedRef, requestSeq, bitesRequestSeqRef);
+
+      if (!response.success || !Array.isArray(resultList) || resultList.length === 0) {
+        if (isLatestRequest) {
+          setRecipes(BITE_FALLBACK_RECIPES);
+          if (response.error) setServiceError(response.error);
+        }
+      } else {
+        const normalized = normalizeRecipeList(resultList);
+        if (isLatestRequest) {
+          setRecipes(normalized);
+        }
+      }
+    } catch {
+      if (shouldApplyLatestRequest(bitesMountedRef, requestSeq, bitesRequestSeqRef)) {
+        setRecipes(BITE_FALLBACK_RECIPES);
+        setServiceError('Unable to load live bites. Showing curated fallback recipes.');
+      }
+    }
+
+    if (shouldApplyLatestRequest(bitesMountedRef, requestSeq, bitesRequestSeqRef)) {
+      setLoading(false);
+    }
+  }, [activeCuisine, activeDiet, searchQuery]);
+
+  useEffect(() => {
+    if (bitesDebounceRef.current) {
+      clearTimeout(bitesDebounceRef.current);
+    }
+
+    bitesDebounceRef.current = setTimeout(() => {
+      fetchBites(false, searchQuery);
+    }, 350);
+
+    return () => {
+      if (bitesDebounceRef.current) {
+        clearTimeout(bitesDebounceRef.current);
+      }
+    };
+  }, [searchQuery, fetchBites]);
+
+  const filteredRecipes = useMemo(() => {
+    if (!searchQuery.trim()) return recipes;
+    return recipes.filter((r) => r.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  }, [recipes, searchQuery]);
+
+  return {
+    loading,
+    serviceError,
+    searchQuery,
+    activeDiet,
+    activeCuisine,
+    filteredRecipes,
+    setSearchQuery,
+    setActiveDiet,
+    setActiveCuisine,
+    fetchBites,
+  };
+};
+
+const BitesGrid = ({
+  loading,
+  filteredRecipes,
+  onSelectRecipe,
+  onReset,
+}: {
+  loading: boolean;
+  filteredRecipes: BiteRecipe[];
+  onSelectRecipe: (recipe: BiteRecipe) => void;
+  onReset: () => void;
+}) => {
+  if (loading) {
+    return <div className="py-20 text-center animate-pulse font-black uppercase text-stone-200 tracking-widest">Compiling Pack...</div>;
+  }
+
+  if (filteredRecipes.length === 0) {
+    return (
+      <div className="py-20 text-center space-y-6">
+        <Search size={48} className="mx-auto text-stone-200" />
+        <p className="font-black uppercase text-xs tracking-widest text-stone-400">No matches in current pack</p>
+        <button onClick={onReset} className="px-8 py-4 bg-stone-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest">Refresh Feed</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {filteredRecipes.map((recipe) => (
+        <button
+          type="button"
+          key={recipe.id}
+          onClick={() => onSelectRecipe(recipe)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onSelectRecipe(recipe);
+            }
+          }}
+          tabIndex={0}
+          className="group cursor-pointer text-left w-full"
+        >
+          <div className="relative aspect-[4/5] rounded-[3.5rem] border-4 border-white shadow-xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
+            <img src={recipe.image} alt={recipe.title || 'Recipe'} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent" />
+            <div className="absolute bottom-10 left-10 right-10 text-white">
+              <h3 className="text-2xl font-black uppercase tracking-tighter mb-2 leading-none">{recipe.title}</h3>
+              <div className="flex gap-2 items-center text-[10px] font-bold uppercase tracking-widest opacity-80">
+                <Clock size={14} /> {recipe.readyInMinutes} Min
+              </div>
+            </div>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+};
+
+const BitesRecipeModal = ({
+  selectedRecipe,
+  onClose,
+  onSaveRecipe,
+  onShareRecipe,
+}: {
+  selectedRecipe: BiteRecipe | null;
+  onClose: () => void;
+  onSaveRecipe: (recipe: BiteRecipe) => void;
+  onShareRecipe: (recipe: BiteRecipe) => void;
+}) => {
+  if (!selectedRecipe) return null;
+
+  return (
+    <div className="fixed inset-0 z-[110] bg-stone-900/60 backdrop-blur-xl flex items-center justify-center p-4 md:p-10 overflow-y-auto">
+      <div className="bg-white w-full max-w-4xl rounded-[4rem] shadow-2xl overflow-hidden flex flex-col md:flex-row relative animate-in zoom-in duration-300">
+        <button onClick={onClose} className="absolute top-6 right-6 z-20 p-4 bg-stone-900 text-white rounded-3xl active:scale-90 transition-transform"><X size={24} /></button>
+        <div className="w-full md:w-1/2 h-64 md:h-auto overflow-hidden"><img src={selectedRecipe.image} alt={selectedRecipe.title || 'Selected recipe'} className="w-full h-full object-cover" /></div>
+        <div className="w-full md:w-1/2 p-8 md:p-14 overflow-y-auto hide-scrollbar flex flex-col gap-10">
+          <header className="space-y-4">
+            <div className="flex justify-between items-start">
+              <div>
+                <Badge color="yellow">Studio Pack #{selectedRecipe.id}</Badge>
+                <h2 className="text-4xl font-black uppercase tracking-tighter mt-2 leading-none">{selectedRecipe.title}</h2>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <button
+                  onClick={() => onSaveRecipe(selectedRecipe)}
+                  className="p-4 bg-stone-50 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition-all active:scale-95 shadow-sm"
+                >
+                  <Bookmark size={22} />
+                </button>
+                <button
+                  onClick={() => onShareRecipe(selectedRecipe)}
+                  className="p-4 bg-stone-50 rounded-2xl hover:bg-yellow-100 hover:text-stone-900 transition-all active:scale-95 shadow-sm"
+                >
+                  <Share2 size={22} />
+                </button>
+              </div>
+            </div>
+            <div className="flex gap-6">
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-stone-400"><Clock size={16} /> {selectedRecipe.readyInMinutes} Mins</div>
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-stone-400"><User size={16} /> {selectedRecipe.servings} Serves</div>
+            </div>
+          </header>
+          <section className="space-y-4">
+            <div className="flex items-center gap-4 text-stone-900"><PieChart size={20} /><h4 className="font-black uppercase text-xs tracking-widest">Nutritional Data</h4></div>
+            <div className="grid grid-cols-2 gap-4">
+              {getBiteKeyNutrients(selectedRecipe).map((n) => (
+                <div key={n.name} className="bg-stone-50 p-6 rounded-[2rem] border border-stone-100 flex flex-col justify-center">
+                  <p className="text-xl font-black">{Math.round(n.amount)} <span className="text-[10px] text-stone-400 font-bold">{n.unit}</span></p>
+                  <p className="text-[8px] font-black uppercase tracking-widest text-stone-400 mt-1 truncate">{n.name}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+          <section className="space-y-4">
+            <div className="flex items-center gap-4 text-stone-900"><List size={20} /><h4 className="font-black uppercase text-xs tracking-widest">Ingredients</h4></div>
+            <ul className="space-y-3">
+              {selectedRecipe.extendedIngredients?.map((ing) => (
+                <li key={String(ing.original)} className="flex gap-3 text-sm font-bold text-stone-500"><div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mt-1.5 shrink-0" /> {ing.original}</li>
+              ))}
+            </ul>
+          </section>
+          <section className="space-y-4 pb-10">
+            <div className="flex items-center gap-4 text-stone-900"><ChefHat size={20} /><h4 className="font-black uppercase text-xs tracking-widest">Instructions</h4></div>
+            <div className="text-sm font-bold text-stone-500 leading-relaxed whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: selectedRecipe.instructions || 'Consult Chef FUZO for detailed steps.' }} />
+          </section>
+
+          <div className="sticky bottom-0 inset-x-0 md:hidden pt-4 pb-2 bg-white/90 backdrop-blur-md flex gap-4 border-t border-stone-100">
+            <button
+              onClick={() => onSaveRecipe(selectedRecipe)}
+              className="flex-grow py-5 bg-stone-900 text-white rounded-[2rem] flex items-center justify-center active:scale-95 transition-all shadow-xl"
+            >
+              <Bookmark size={22} />
+            </button>
+            <button
+              onClick={() => onShareRecipe(selectedRecipe)}
+              className="py-5 px-10 bg-yellow-400 text-stone-900 rounded-[2rem] flex items-center justify-center active:scale-95 transition-all shadow-xl"
+            >
+              <Share2 size={22} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const BitesControls = ({
+  loading,
+  searchQuery,
+  activeDiet,
+  activeCuisine,
+  showFilters,
+  onOpenAIStudio,
+  onSearchQueryChange,
+  onSearchSubmit,
+  onRefresh,
+  onToggleFilters,
+  onToggleDiet,
+  onToggleCuisine,
+}: {
+  loading: boolean;
+  searchQuery: string;
+  activeDiet: string | null;
+  activeCuisine: string | null;
+  showFilters: boolean;
+  onOpenAIStudio: () => void;
+  onSearchQueryChange: (value: string) => void;
+  onSearchSubmit: () => void;
+  onRefresh: () => void;
+  onToggleFilters: () => void;
+  onToggleDiet: (diet: string) => void;
+  onToggleCuisine: (cuisine: string) => void;
+}) => {
+  return (
+    <div className="space-y-6">
+      <header className="hidden md:flex justify-between items-end">
+        <div><Badge color="yellow">Daily Bites</Badge><h2 className="text-4xl font-black uppercase tracking-tighter mt-1">Recipe Packs</h2></div>
+        <div className="flex gap-3">
+          <button
+            onClick={onOpenAIStudio}
+            className="px-6 py-4 bg-stone-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center gap-2 hover:scale-105 transition-transform shadow-xl"
+          >
+            <Sparkles size={16} /> AI Studio
+          </button>
+          <button onClick={onRefresh} className="p-4 bg-white rounded-2xl shadow-sm hover:scale-105 transition-transform"><RefreshCw size={24} className={loading ? 'animate-spin' : ''} /></button>
+        </div>
+      </header>
+
+      <button
+        onClick={onOpenAIStudio}
+        className="md:hidden w-full py-5 bg-stone-900 text-white rounded-[2rem] font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 shadow-xl"
+      >
+        <Sparkles size={18} /> Launch AI Recipe Studio
+      </button>
+
+      <div className="flex flex-row gap-3 items-center">
+        <div className="relative flex-grow">
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-stone-300" size={20} />
+          <input
+            value={searchQuery}
+            onChange={(e) => onSearchQueryChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                onSearchSubmit();
+              }
+            }}
+            placeholder="Search specific tastes..."
+            className="w-full bg-white pl-14 pr-16 py-5 rounded-[2rem] font-black text-xs uppercase outline-none focus:ring-4 focus:ring-yellow-400/10 transition-all shadow-sm border border-stone-100"
+          />
+          <button
+            onClick={onSearchSubmit}
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-2xl bg-stone-50 text-stone-900 hover:bg-stone-100 transition-all"
+            aria-label="Search bites"
+          >
+            <Search size={20} strokeWidth={3} />
+          </button>
+        </div>
+        <button
+          onClick={onToggleFilters}
+          className={`relative p-5 rounded-[2rem] flex items-center justify-center transition-all shrink-0 ${showFilters ? 'bg-stone-900 text-white shadow-xl' : 'bg-white text-stone-900 shadow-sm border'}`}
+        >
+          <SlidersHorizontal size={24} strokeWidth={3} />
+          {(activeDiet || activeCuisine) && <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-yellow-400 border-2 border-white" />}
+        </button>
+      </div>
+
+      {showFilters && (
+        <div className="bg-white p-10 rounded-[3rem] shadow-2xl border-4 border-white space-y-8 animate-in slide-in-from-top-4 duration-500">
+          <div className="space-y-4">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-300 px-2">Dietary Preferences</h4>
+            <div className="flex flex-wrap gap-3">
+              {BITE_DIETS.map((diet) => (
+                <button
+                  key={diet}
+                  onClick={() => onToggleDiet(diet)}
+                  className={`px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeDiet === diet ? 'bg-yellow-400 text-stone-900 shadow-lg' : 'bg-stone-50 text-stone-400 hover:bg-stone-100'}`}
+                >
+                  {diet}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-4">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-300 px-2">Global Cuisines</h4>
+            <div className="flex flex-wrap gap-3">
+              {BITE_CUISINES.map((cuisine) => (
+                <button
+                  key={cuisine}
+                  onClick={() => onToggleCuisine(cuisine)}
+                  className={`px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeCuisine === cuisine ? 'bg-yellow-400 text-stone-900 shadow-lg' : 'bg-stone-50 text-stone-400 hover:bg-stone-100'}`}
+                >
+                  {cuisine}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const AIRecipeStudio = ({
+  onSave,
+  onShareRequest,
+  onClose,
+}: {
+  onSave: (item: BiteActionItem) => void;
+  onShareRequest: (item: BiteActionItem) => void;
+  onClose: () => void;
+}) => {
+  const [image, setImage] = useState<string | null>(null);
+  const [imageMimeType, setImageMimeType] = useState('image/jpeg');
+  const [description, setDescription] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedRecipe, setGeneratedRecipe] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const imageData = await readImageFileAsDataUrl(file);
+      setImage(imageData);
+      setImageMimeType(file.type || 'image/jpeg');
+      setError(null);
+    } catch {
+      setError('Failed to read image. Please try another file.');
+    }
+  };
+
+  const handleGenerate = async () => {
+    if (!description.trim()) return;
+
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      const prompt = `You are an expert chef and nutrition analyst. Build one clean JSON object for a recipe card.
+Fields required: title, category, readyInMinutes, servings, ingredients (array of strings), instructions (string), nutrition { calories, protein, fat, carbs }.
+Use the user description and optional image context. Keep response as raw JSON only.
+User description: ${description}`;
+
+      const parts: any[] = [{ text: prompt }];
+      if (image?.includes(',')) {
+        parts.push({
+          inlineData: {
+            mimeType: imageMimeType,
+            data: image.split(',')[1],
+          },
+        });
+      }
+
+      const response = await GeminiService.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [{ role: 'user', parts }],
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: 'object',
+            properties: {
+              title: { type: 'string' },
+              category: { type: 'string' },
+              readyInMinutes: { type: 'number' },
+              servings: { type: 'number' },
+              ingredients: { type: 'array', items: { type: 'string' } },
+              instructions: { type: 'string' },
+              nutrition: {
+                type: 'object',
+                properties: {
+                  calories: { type: 'number' },
+                  protein: { type: 'number' },
+                  fat: { type: 'number' },
+                  carbs: { type: 'number' },
+                },
+                required: ['calories', 'protein', 'fat', 'carbs'],
+              },
+            },
+            required: ['title', 'readyInMinutes', 'servings', 'ingredients', 'instructions', 'nutrition'],
+          },
+        },
+      });
+
+      if (!response.success || !response.data?.text) {
+        throw new Error(response.error || 'Gemini generation failed');
+      }
+
+      const parsed = parseAiJson(response.data.text);
+      if (!parsed?.title) {
+        throw new Error('Invalid AI response format');
+      }
+
+      setGeneratedRecipe(parsed);
+    } catch {
+      setError('Failed to generate recipe card. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const buildActionItem = (): BiteActionItem | null => {
+    if (!generatedRecipe) return null;
+    return {
+      id: `recipe-ai-${Date.now()}`,
+      name: generatedRecipe.title || 'AI Recipe',
+      cat: generatedRecipe.category || 'AI Recipe',
+      img: image || 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=400',
+      metadata: {
+        title: generatedRecipe.title || 'AI Recipe',
+        name: generatedRecipe.title || 'AI Recipe',
+        cat: generatedRecipe.category || 'AI Recipe',
+        image: image || 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=400',
+        generatedRecipe,
+      },
+    };
+  };
+
+  const handleSave = () => {
+    const item = buildActionItem();
+    if (!item) return;
+    onSave(item);
+    onClose();
+  };
+
+  const handleShare = () => {
+    const item = buildActionItem();
+    if (!item) return;
+    onShareRequest(item);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-[200] bg-stone-950 text-white flex flex-col overflow-hidden">
+      <button
+        onClick={onClose}
+        className="absolute top-8 right-8 z-30 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center transition-colors shadow-2xl"
+      >
+        <X size={24} />
+      </button>
+
+      <div className="flex-grow overflow-y-auto p-8 md:p-24 pt-24 md:pt-32">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <label htmlFor="ai-recipe-image" className="text-[10px] font-black uppercase tracking-widest text-stone-500">Upload Image (Optional)</label>
+              <div className="relative aspect-video bg-stone-900 rounded-[2.5rem] border-4 border-dashed border-stone-800 overflow-hidden group hover:border-yellow-400/50 transition-all">
+                {image ? (
+                  <>
+                    <img src={image} alt="Uploaded context" className="w-full h-full object-cover" />
+                    <button onClick={() => setImage(null)} className="absolute top-4 right-4 p-2 bg-black/60 rounded-full hover:bg-red-500 transition-colors"><X size={16} /></button>
+                  </>
+                ) : (
+                  <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer">
+                    <ImageIcon size={48} className="text-stone-700 group-hover:text-yellow-400 transition-colors mb-4" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-stone-600">Upload Dish Image</span>
+                    <input id="ai-recipe-image" type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                  </label>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <label htmlFor="ai-recipe-description" className="text-[10px] font-black uppercase tracking-widest text-stone-500">Recipe Description</label>
+              <textarea
+                id="ai-recipe-description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe your recipe in a few lines..."
+                className="w-full h-64 bg-stone-900 border-4 border-stone-800 rounded-[2.5rem] p-8 font-bold text-sm outline-none focus:border-yellow-400 transition-all resize-none"
+              />
+            </div>
+
+            <button
+              onClick={handleGenerate}
+              disabled={isGenerating || !description.trim()}
+              className="w-full py-6 bg-white text-stone-950 rounded-[2rem] font-black uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-4"
+            >
+              {isGenerating ? <Loader2 className="animate-spin" /> : <Sparkles size={24} />}
+              {isGenerating ? 'Generating...' : 'Generate Card'}
+            </button>
+            {error && <p className="text-red-500 text-center text-xs font-bold uppercase tracking-widest">{error}</p>}
+          </div>
+
+          <div className="relative">
+            {generatedRecipe ? (
+              <div className="bg-white text-stone-950 rounded-[3.5rem] p-10 shadow-2xl space-y-8 h-fit sticky top-0">
+                <header className="space-y-2">
+                  <Badge color="yellow">AI Generated</Badge>
+                  <h3 className="text-4xl font-black uppercase tracking-tighter leading-none">{generatedRecipe.title}</h3>
+                  <div className="flex gap-4 text-[10px] font-black uppercase tracking-widest text-stone-400">
+                    <span>{generatedRecipe.readyInMinutes || 20} Mins</span>
+                    <span>•</span>
+                    <span>{generatedRecipe.servings || 2} Servings</span>
+                  </div>
+                </header>
+
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-stone-400">Ingredients</h4>
+                  <ul className="space-y-2">
+                    {(generatedRecipe.ingredients || []).slice(0, 6).map((ing: string) => (
+                      <li key={ing} className="text-xs font-bold text-stone-600 flex gap-2">
+                        <div className="w-1 h-1 bg-yellow-400 rounded-full mt-1.5 shrink-0" />
+                        {ing}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <button
+                    onClick={handleSave}
+                    className="flex-grow py-5 bg-stone-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 hover:scale-105 transition-transform"
+                  >
+                    <Bookmark size={16} /> Save to Plate
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    className="p-5 bg-stone-100 text-stone-900 rounded-2xl hover:bg-yellow-400 transition-colors"
+                  >
+                    <Share2 size={20} />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="h-full min-h-[400px] bg-stone-900/50 rounded-[3.5rem] border-4 border-dashed border-stone-800 flex flex-col items-center justify-center text-center p-12 space-y-6">
+                <div className="w-20 h-20 bg-stone-800 rounded-3xl flex items-center justify-center text-stone-700">
+                  <ChefHat size={40} />
+                </div>
+                <div>
+                  <h4 className="text-xl font-black uppercase tracking-tighter text-stone-600">AI Recipe Studio</h4>
+                  <p className="text-[10px] font-bold text-stone-700 uppercase tracking-widest mt-2">Generated recipe card appears here</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FeedView = ({ onSave, onShareRequest }: { onSave: (item: any) => void, onShareRequest: (item: any) => void }) => {
+  const [items, setItems] = useState<FeedUiItem[]>([...LOCAL_CURATED_FEED_ITEMS]);
+  const [feedSource, setFeedSource] = useState<'local' | 'feedService'>('local');
+  const [feedLoading, setFeedLoading] = useState(false);
+  const [feedError, setFeedError] = useState<string>('');
+
+  const [batchIndex, setBatchIndex] = useState(0);
+  const [batchVisible, setBatchVisible] = useState(false);
+  const isDesktop = useIsDesktop();
+  const feedRequestSeqRef = useRef(0);
+  const feedRetryDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const feedMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      feedMountedRef.current = false;
+      if (feedRetryDebounceRef.current) {
+        clearTimeout(feedRetryDebounceRef.current);
+      }
+    };
+  }, []);
+
+  const fetchFromFeedService = async (isRetry = false) => {
+    const shouldFetch = FEED_COMPARE_WITH_LOCAL || FEED_USE_SERVICE;
+    if (!shouldFetch) return;
+
+    if (FEED_USE_SERVICE || isRetry) {
+      setFeedLoading(true);
+      setFeedError('');
+    }
+
+    const requestSeq = ++feedRequestSeqRef.current;
+
+    try {
+      const userLocation = await getUserFeedLocation();
+      const feedCards = await FeedService.generateFeed({
+        pageSize: Math.max(LOCAL_CURATED_FEED_ITEMS.length, 12),
+        userLocation,
+      });
+
+      const adaptedCards = ensureAdTriviaPresence(normalizeFeedServiceToCards(feedCards), LOCAL_CURATED_FEED_ITEMS);
+
+      if (FEED_COMPARE_WITH_LOCAL) {
+        logFeedParity(LOCAL_CURATED_FEED_ITEMS, adaptedCards);
+      }
+
+      const isLatestRequest = shouldApplyLatestRequest(feedMountedRef, requestSeq, feedRequestSeqRef);
+
+      if ((FEED_USE_SERVICE || isRetry) && isLatestRequest) {
+        if (adaptedCards.length > 0) {
+          setItems(adaptedCards);
+          setBatchIndex(0);
+          setFeedSource('feedService');
+          setFeedError('');
+        } else {
+          setItems([...LOCAL_CURATED_FEED_ITEMS]);
+          setBatchIndex(0);
+          setFeedSource('local');
+          setFeedError('Feed returned no results. Using curated feed.');
+        }
+      }
+    } catch (error) {
+      console.error('FeedService fetch failed, falling back to curated feed:', error);
+      const isLatestRequest = shouldApplyLatestRequest(feedMountedRef, requestSeq, feedRequestSeqRef);
+      if ((FEED_USE_SERVICE || isRetry) && isLatestRequest) {
+        setItems([...LOCAL_CURATED_FEED_ITEMS]);
+        setBatchIndex(0);
+        setFeedSource('local');
+        setFeedError('Feed unavailable. Using curated feed.');
+      }
+    } finally {
+      const isLatestRequest = shouldApplyLatestRequest(feedMountedRef, requestSeq, feedRequestSeqRef);
+      if ((FEED_USE_SERVICE || isRetry) && isLatestRequest) {
+        setFeedLoading(false);
+      }
+    }
+  };
+
+  const handleRetryFeed = () => {
+    if (feedRetryDebounceRef.current) {
+      clearTimeout(feedRetryDebounceRef.current);
+    }
+    feedRetryDebounceRef.current = setTimeout(() => {
+      fetchFromFeedService(true);
+    }, 300);
+  };
+
+  useEffect(() => {
+    fetchFromFeedService();
+  }, []);
+
+  useEffect(() => {
+    setBatchVisible(false);
+    const frameId = requestAnimationFrame(() => setBatchVisible(true));
+    return () => cancelAnimationFrame(frameId);
+  }, [batchIndex]);
+
+  const BATCH_SIZE = 3;
+
+  const currentBatch = useMemo(() => {
+    if (items.length === 0) return [];
+    const size = Math.min(BATCH_SIZE, items.length);
+    return Array.from({ length: size }, (_, offset) => items[(batchIndex + offset) % items.length]);
+  }, [items, batchIndex]);
+
+  const renderDesktopFeedContent = () => {
+    if (feedLoading) {
+      return (
+        <div className="min-h-[550px] w-full flex flex-col items-center justify-center gap-4 text-stone-400">
+          <Loader2 size={40} className="animate-spin" />
+          <p className="font-black uppercase tracking-widest text-xs">Loading Discovery Feed</p>
+        </div>
+      );
+    }
+
+    if (items.length === 0) {
+      return (
+        <div className="min-h-[550px] w-full flex flex-col items-center justify-center gap-4 text-stone-300">
+          <p className="font-black uppercase tracking-widest text-xs">No discovery cards available</p>
+          <button onClick={handleRetryFeed} className="px-8 py-4 bg-stone-900 text-white rounded-[2rem] font-black uppercase tracking-widest text-[10px]">Retry Feed</button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex gap-8 items-center justify-center min-h-[550px]">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={batchIndex}
+            className="flex gap-8"
+            style={{
+              opacity: batchVisible ? 1 : 0,
+              transform: `translateY(${batchVisible ? 0 : 18}px) scale(${batchVisible ? 1 : 0.98})`,
+              transition: 'opacity 280ms ease, transform 420ms cubic-bezier(0.22, 1, 0.36, 1)',
+            }}
+          >
+            {currentBatch.map((item, i) => (
+              <div key={item.id}>
+                <DealCard item={item} index={i} onAction={handleAction} />
+              </div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    );
+  };
+
+  const renderMobileFeedContent = () => {
+    if (feedLoading) {
+      return (
+        <div className="h-full flex flex-col items-center justify-center text-stone-300 gap-4">
+          <Loader2 size={48} className="animate-spin" />
+          <p className="font-black uppercase tracking-widest text-xs">Loading Discovery Feed</p>
+        </div>
+      );
+    }
+
+    if (items.length === 0) {
+      return (
+        <div className="h-full flex flex-col items-center justify-center text-stone-200 gap-4">
+           <RefreshCw size={48} className="animate-spin-slow opacity-20" />
+           <p className="font-black uppercase tracking-widest text-xs">End of the discovery</p>
+           <button onClick={handleRetryFeed} className="px-6 py-3 bg-stone-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest">Retry Feed</button>
+        </div>
+      );
+    }
+
+    return items.map((item, i) => {
+      const isAdOrTrivia = item.itemType === 'ad' || item.itemType === 'trivia';
+
+      return (
+        <SwipeCard key={item.id} active={i === 0} onSwipe={handleSwipe}>
+          <img src={item.img} alt={item.name || 'Feed item'} className="w-full h-full object-cover" />
+          {!isAdOrTrivia && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent" />
+              <div className="absolute bottom-10 left-10 right-10 text-white">
+                <h3 className="text-4xl font-black uppercase tracking-tighter mb-2 leading-none">{item.name}</h3>
+                <Badge color="yellow">{item.cat}</Badge>
+              </div>
+            </>
+          )}
+        </SwipeCard>
+      );
+    });
+  };
+
+  const handleAction = (action: string, item: any) => {
+    if (item?.itemType === 'ad' || item?.itemType === 'trivia') {
+      return;
+    }
+
+    if (action === 'save') onSave(item);
+    if (action === 'share') onShareRequest(item);
+    if (action === 'like' || action === 'pass') {
+      // For now, just a visual feedback or move to next
+    }
+  };
+
+  const dealNext = () => {
+    if (items.length === 0) return;
+    setBatchIndex(prev => (prev + BATCH_SIZE) % items.length);
+  };
+
+  const handleSwipe = (dir: string) => {
+    if (items.length === 0) return;
+    const currentItem = items[0];
+    if (dir === 'up') {
+      if (currentItem?.itemType !== 'ad' && currentItem?.itemType !== 'trivia') {
+        onShareRequest(currentItem);
+      }
+    } else if (dir === 'down') {
+      if (currentItem?.itemType !== 'ad' && currentItem?.itemType !== 'trivia') {
+        onSave(currentItem);
+      }
+    }
+    setItems(prev => prev.slice(1));
+  };
+
+  if (isDesktop) {
+    return (
+      <div className="flex flex-col items-center gap-12 animate-in fade-in py-10 w-full max-w-6xl mx-auto">
+        <header className="text-center space-y-2">
+          <Badge color="yellow">Studio Dealer</Badge>
+          <h2 className="text-6xl font-black uppercase tracking-tighter leading-none">Discovery Hand</h2>
+          {feedSource === 'local' && FEED_USE_SERVICE && (
+            <p className="text-[10px] font-black uppercase tracking-widest text-stone-400 mt-2">Curated Feed Fallback Active</p>
+          )}
+        </header>
+
+        {renderDesktopFeedContent()}
+
+        <button 
+          onClick={dealNext}
+          disabled={items.length === 0 || feedLoading}
+          className="px-12 py-6 bg-stone-900 text-white rounded-[2.5rem] font-black uppercase tracking-widest flex items-center gap-4 hover:scale-105 transition-transform shadow-2xl active:scale-95"
+        >
+          <RefreshCw size={24} /> Deal Next Hand
+        </button>
+        {!!feedError && (
+          <div className="text-[10px] font-black uppercase tracking-widest text-red-500">{feedError}</div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-6 animate-in fade-in py-2">
+      <div className="w-full max-w-sm px-4 hidden md:block">
+        <Badge color="yellow">Studio Stack</Badge>
+        <h2 className="text-4xl font-black uppercase tracking-tighter mt-1">Discovery</h2>
+        {feedSource === 'local' && FEED_USE_SERVICE && (
+          <p className="text-[10px] font-black uppercase tracking-widest text-stone-300 mt-2">Curated Feed Fallback Active</p>
+        )}
+      </div>
+      <div className="relative w-full max-w-[400px] aspect-[3/4.6]">
+        {renderMobileFeedContent()}
+      </div>
+      {!!feedError && (
+        <div className="text-[10px] font-black uppercase tracking-widest text-red-500 px-4 text-center">{feedError}</div>
+      )}
+    </div>
+  );
+};
+
+const BitesView = ({ onSave, onShareRequest }: { onSave: (item: BiteActionItem) => void, onShareRequest: (item: BiteActionItem) => void }) => {
+  const [selectedRecipe, setSelectedRecipe] = useState<BiteRecipe | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [showAIStudio, setShowAIStudio] = useState(false);
+  const {
+    loading,
+    serviceError,
+    searchQuery,
+    activeDiet,
+    activeCuisine,
+    filteredRecipes,
+    setSearchQuery,
+    setActiveDiet,
+    setActiveCuisine,
+    fetchBites,
+  } = useBitesFeed();
+
+  const handleSearchSubmit = () => {
+    fetchBites(true, searchQuery);
+  };
+
+  const handleResetGrid = () => {
+    setSearchQuery('');
+    fetchBites();
+  };
+
+  const { handleSaveRecipe, handleShareRecipe } = createBiteRecipeActions(onSave, onShareRequest);
+
+  return (
+    <div className="space-y-8 animate-in fade-in pb-24 px-4">
+      <BitesControls
+        loading={loading}
+        searchQuery={searchQuery}
+        activeDiet={activeDiet}
+        activeCuisine={activeCuisine}
+        showFilters={showFilters}
+        onOpenAIStudio={() => setShowAIStudio(true)}
+        onSearchQueryChange={setSearchQuery}
+        onSearchSubmit={handleSearchSubmit}
+        onRefresh={() => fetchBites(true)}
+        onToggleFilters={() => setShowFilters((prev) => !prev)}
+        onToggleDiet={(diet) => setActiveDiet(activeDiet === diet ? null : diet)}
+        onToggleCuisine={(cuisine) => setActiveCuisine(activeCuisine === cuisine ? null : cuisine)}
+      />
+
+      {serviceError && (
+        <div className="px-6 py-4 bg-yellow-50 border border-yellow-100 rounded-2xl text-[11px] font-bold text-yellow-800">
+          {serviceError}
+        </div>
+      )}
+      <BitesGrid loading={loading} filteredRecipes={filteredRecipes} onSelectRecipe={setSelectedRecipe} onReset={handleResetGrid} />
+
+      <BitesRecipeModal
+        selectedRecipe={selectedRecipe}
+        onClose={() => setSelectedRecipe(null)}
+        onSaveRecipe={handleSaveRecipe}
+        onShareRecipe={handleShareRecipe}
+      />
+
+      {showAIStudio && (
+        <AIRecipeStudio
+          onSave={onSave}
+          onShareRequest={onShareRequest}
+          onClose={() => setShowAIStudio(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+const AITrimStudio = ({
+  onSave,
+  onShareRequest,
+  onClose,
+}: {
+  onSave: (item: any) => void;
+  onShareRequest: (item: any) => void;
+  onClose: () => void;
+}) => {
+  const [video, setVideo] = useState<string | null>(null);
+  const [videoMimeType, setVideoMimeType] = useState('video/mp4');
+  const [description, setDescription] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedTrim, setGeneratedTrim] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const trimDraftIdRef = useRef<string | null>(null);
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 50 * 1024 * 1024) {
+      setError('Video too large. Max 50MB.');
+      return;
+    }
+
+    try {
+      const videoData = await readImageFileAsDataUrl(file);
+      setVideo(videoData);
+      setVideoMimeType(file.type || 'video/mp4');
+      setError(null);
+    } catch {
+      setError('Failed to read video file.');
+    }
+  };
+
+  const handleGenerate = async () => {
+    if (!description.trim()) return;
+
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      const isMockSmokeTest = /#mock\b/i.test(description);
+      if (isMockSmokeTest) {
+        const normalizedDescription = description.split(/#mock\b/gi).join('').trim();
+        trimDraftIdRef.current = String(Date.now());
+        setGeneratedTrim({
+          title: normalizedDescription || 'Mock Smoke Test Trim',
+          author: 'FUZO QA Mock Studio',
+          caption: normalizedDescription
+            ? `${normalizedDescription} (mock smoke test card)`
+            : 'Mock smoke test card generated from uploaded video context.',
+          likes: '1.2k',
+          nutrition: {
+            calories: 320,
+            protein: 18,
+            fat: 11,
+            carbs: 28,
+          },
+        });
+        return;
+      }
+
+      const prompt = `You are a culinary video editor assistant. Build one clean JSON object for a vertical trim card.
+Required fields: title, author, caption, likes, nutrition { calories, protein, fat, carbs }.
+Keep response as raw JSON only.
+Context: ${description}`;
+
+      const parts: any[] = [{ text: prompt }];
+      if (video?.includes(',')) {
+        parts.push({
+          inlineData: {
+            mimeType: videoMimeType,
+            data: video.split(',')[1],
+          },
+        });
+      }
+
+      const response = await GeminiService.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [{ role: 'user', parts }],
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: 'object',
+            properties: {
+              title: { type: 'string' },
+              author: { type: 'string' },
+              caption: { type: 'string' },
+              likes: { type: 'string' },
+              nutrition: {
+                type: 'object',
+                properties: {
+                  calories: { type: 'number' },
+                  protein: { type: 'number' },
+                  fat: { type: 'number' },
+                  carbs: { type: 'number' },
+                },
+                required: ['calories', 'protein', 'fat', 'carbs'],
+              },
+            },
+            required: ['title', 'author', 'caption', 'likes', 'nutrition'],
+          },
+        },
+      });
+
+      if (!response.success || !response.data?.text) {
+        throw new Error(response.error || 'Gemini generation failed');
+      }
+
+      const parsed = parseAiJson(response.data.text);
+      if (!parsed?.title) {
+        throw new Error('Invalid AI response format');
+      }
+
+      trimDraftIdRef.current = String(Date.now());
+      setGeneratedTrim(parsed);
+    } catch {
+      setError('Failed to generate trim card. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const buildTrimItem = () => {
+    if (!generatedTrim) return null;
+    const draftId = trimDraftIdRef.current || String(Date.now());
+    const fallbackImage = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=400';
+    return {
+      id: `video-ai-${draftId}`,
+      itemType: 'video',
+      itemId: `ai-${draftId}`,
+      name: generatedTrim.title || 'AI Studio Trim',
+      cat: 'Studio Trim',
+      img: fallbackImage,
+      video,
+      metadata: {
+        title: generatedTrim.title || 'AI Studio Trim',
+        name: generatedTrim.title || 'AI Studio Trim',
+        image: fallbackImage,
+        cat: 'Studio Trim',
+        caption: generatedTrim.caption || 'AI generated Studio trim card ready to post.',
+        likes: generatedTrim.likes || '0',
+        nutrition: generatedTrim.nutrition,
+        channelTitle: generatedTrim.author || 'FUZO AI Studio',
+        generatedTrim,
+      },
+      ...generatedTrim,
+    };
+  };
+
+  const handleSave = () => {
+    const item = buildTrimItem();
+    if (!item) return;
+    onSave(item);
+    onClose();
+  };
+
+  const handleShare = () => {
+    const item = buildTrimItem();
+    if (!item) return;
+    onShareRequest(item);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-[200] bg-stone-950 text-white flex flex-col overflow-hidden">
+      <button
+        onClick={onClose}
+        className="absolute top-8 right-8 z-30 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center transition-colors shadow-2xl"
+      >
+        <X size={24} />
+      </button>
+
+      <div className="flex-grow overflow-y-auto p-8 md:p-24 pt-24 md:pt-32">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <label htmlFor="ai-trim-video" className="text-[10px] font-black uppercase tracking-widest text-stone-500">Upload Video (Optional)</label>
+              <div className="relative aspect-[9/16] bg-stone-900 rounded-[2.5rem] border-4 border-dashed border-stone-800 overflow-hidden group hover:border-emerald-400/50 transition-all">
+                {video ? (
+                  <>
+                    <video src={video} className="w-full h-full object-cover" autoPlay loop muted />
+                    <button onClick={() => setVideo(null)} className="absolute top-4 right-4 p-2 bg-black/60 rounded-full hover:bg-red-500 transition-colors"><X size={16} /></button>
+                  </>
+                ) : (
+                  <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer">
+                    <PlayCircle size={48} className="text-stone-700 group-hover:text-emerald-400 transition-colors mb-4" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-stone-600 px-8 text-center">Upload Vertical Trim</span>
+                    <input id="ai-trim-video" type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
+                  </label>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <label htmlFor="ai-trim-description" className="text-[10px] font-black uppercase tracking-widest text-stone-500">Trim Description</label>
+              <textarea
+                id="ai-trim-description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe the video and recipe context... Add #mock for local smoke test."
+                className="w-full h-64 bg-stone-900 border-4 border-stone-800 rounded-[2.5rem] p-8 font-bold text-sm outline-none focus:border-emerald-400 transition-all resize-none"
+              />
+            </div>
+
+            <button
+              onClick={handleGenerate}
+              disabled={isGenerating || !description.trim()}
+              className="w-full py-6 bg-white text-stone-950 rounded-[2rem] font-black uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-4"
+            >
+              {isGenerating ? <Loader2 className="animate-spin" /> : <Sparkles size={24} />}
+              {isGenerating ? 'Generating...' : 'Generate Trim Card'}
+            </button>
+            {error && <p className="text-red-500 text-center text-xs font-bold uppercase tracking-widest">{error}</p>}
+          </div>
+
+          <div className="relative">
+            {generatedTrim ? (
+              <div className="h-fit sticky top-0 space-y-4">
+                <div className="relative aspect-[9/16] rounded-[3.5rem] overflow-hidden bg-stone-900 shadow-2xl border-4 border-white">
+                  {video ? (
+                    <video src={video} className="w-full h-full object-cover" autoPlay loop muted />
+                  ) : (
+                    <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=800" alt="AI trim preview" className="w-full h-full object-cover" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+
+                  <div className="absolute top-6 left-6 z-20">
+                    <Badge color="yellow">AI Trim Ready</Badge>
+                  </div>
+
+                  <div className="absolute bottom-12 left-8 right-24 text-white space-y-3 z-20">
+                    <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight">{generatedTrim.title}</h3>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-white/80">@{generatedTrim.author || 'FUZO AI Studio'}</p>
+                    <p className="text-xs font-bold text-white/90 line-clamp-3">{generatedTrim.caption || 'AI generated Studio trim card ready to post.'}</p>
+                  </div>
+
+                  <div className="absolute right-6 bottom-28 flex flex-col gap-7 text-white items-center z-20">
+                    <button onClick={handleSave} className="flex flex-col items-center gap-1 hover:scale-110 transition-transform">
+                      <Heart size={28} className="fill-white" />
+                      <span className="text-[10px] font-black">{generatedTrim.likes || '1k'}</span>
+                    </button>
+                    <button onClick={handleShare} className="flex flex-col items-center gap-1">
+                      <Share2 size={28} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleSave}
+                    className="flex-grow py-5 bg-stone-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 hover:scale-105 transition-transform"
+                  >
+                    <Bookmark size={16} /> Save to Plate
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    className="p-5 bg-stone-100 text-stone-900 rounded-2xl hover:bg-yellow-400 transition-colors"
+                  >
+                    <Share2 size={20} />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="h-full min-h-[400px] bg-stone-900/50 rounded-[3.5rem] border-4 border-dashed border-stone-800 flex flex-col items-center justify-center text-center p-12 space-y-6">
+                <div className="w-20 h-20 bg-stone-800 rounded-3xl flex items-center justify-center text-stone-700">
+                  <PlayCircle size={40} />
+                </div>
+                <div>
+                  <h4 className="text-xl font-black uppercase tracking-tighter text-stone-600">AI Trim Studio</h4>
+                  <p className="text-[10px] font-bold text-stone-700 uppercase tracking-widest mt-2">Generated trim card appears here</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TrimsView = ({ onSave, onShareRequest }: { onSave: (item: any) => void; onShareRequest: (item: any) => void; }) => {
+  const [videos, setVideos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [serviceError, setServiceError] = useState('');
+  const [showAIStudio, setShowAIStudio] = useState(false);
+  const trimsMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      trimsMountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchTrims = async () => {
+      setLoading(true);
+      setServiceError('');
+
+      try {
+        const response = await YouTubeService.searchVideos('cooking recipes chef techniques', 10);
+        const items = response.data?.items || [];
+
+        if (!response.success || !Array.isArray(items) || items.length === 0) {
+          if (trimsMountedRef.current) {
+            setVideos(TRIMS_FALLBACK_VIDEOS);
+            if (response.error) setServiceError(response.error);
+          }
+        } else {
+          const normalized = items.map((video: any, index: number) => {
+            const videoId = video?.id?.videoId || `video-${index + 1}`;
+            const thumbnail = video?.snippet?.thumbnails?.high?.url
+              || video?.snippet?.thumbnails?.medium?.url
+              || TRIMS_FALLBACK_VIDEOS[index % TRIMS_FALLBACK_VIDEOS.length].img;
+
+            return {
+              id: videoId,
+              videoId,
+              title: video?.snippet?.title || `Studio Trim ${index + 1}`,
+              author: video?.snippet?.channelTitle || 'FUZO Studio',
+              likes: `${Math.max(1, 25 - index)}k`,
+              img: thumbnail,
+            };
+          });
+          if (trimsMountedRef.current) {
+            setVideos(normalized);
+          }
+        }
+      } catch {
+        if (trimsMountedRef.current) {
+          setVideos(TRIMS_FALLBACK_VIDEOS);
+          setServiceError('Unable to load live trims. Showing curated fallback videos.');
+        }
+      } finally {
+        if (trimsMountedRef.current) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchTrims();
+  }, []);
+
+  const toTrimActionItem = (v: any) => ({
+      id: `video-${v.videoId || v.id}`,
+      itemType: 'video',
+      itemId: String(v.videoId || v.id),
+      name: v.title,
+      cat: 'Studio Trim',
+      img: v.img,
+      metadata: {
+        title: v.title,
+        name: v.title,
+        image: v.img,
+        cat: 'Studio Trim',
+        videoId: String(v.videoId || v.id),
+        likes: v.likes,
+        channelTitle: v.author,
+      },
+    });
+
+  const handleSaveVideo = (v: any) => {
+    onSave(toTrimActionItem(v));
+  };
+
+  const handleShareVideo = (v: any) => {
+    onShareRequest(toTrimActionItem(v));
+  };
+
+  if (loading) {
+    return (
+      <div className="h-[80vh] w-full max-w-md mx-auto rounded-[3.5rem] bg-stone-900 shadow-2xl border-4 border-white flex items-center justify-center text-white font-black uppercase tracking-widest text-xs">
+        Loading Trims...
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-[80vh] w-full max-w-md mx-auto relative">
+      <button
+        onClick={() => setShowAIStudio(true)}
+        className="absolute top-6 left-6 z-30 px-6 py-3 bg-white/20 backdrop-blur-xl border border-white/30 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center gap-2 hover:bg-white/40 transition-all shadow-2xl"
+      >
+        <Sparkles size={16} /> AI Trim Studio
+      </button>
+
+      <div className="h-full w-full relative snap-y snap-mandatory overflow-y-auto hide-scrollbar rounded-[3.5rem] bg-stone-900 shadow-2xl border-4 border-white">
+      {serviceError && (
+        <div className="absolute top-4 left-4 right-4 z-30 px-4 py-3 bg-yellow-50/95 border border-yellow-100 rounded-2xl text-[10px] font-bold text-yellow-800 backdrop-blur-sm">
+          {serviceError}
+        </div>
+      )}
+      {videos.map(v => (
+        <div key={v.id} className="h-full w-full snap-start relative">
+          <img src={v.img} alt={v.title || 'Trim video'} className="w-full h-full object-cover opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent" />
+          <div className="absolute bottom-12 left-8 right-8 text-white space-y-4">
+             <Badge color="yellow">Studio Trim #{v.id}</Badge>
+             <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight">{v.title}</h3>
+             <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md" />
+                <p className="text-[10px] font-black uppercase tracking-widest">@{v.author}</p>
+             </div>
+          </div>
+          <div className="absolute right-6 bottom-32 flex flex-col gap-8 text-white items-center">
+            <button onClick={() => handleSaveVideo(v)} className="flex flex-col items-center gap-1 hover:scale-110 transition-transform">
+              <Heart size={28} className="fill-white" />
+              <span className="text-[10px] font-black">{v.likes}</span>
+            </button>
+            <button className="flex flex-col items-center gap-1"><MessageSquare size={28} /><span className="text-[10px] font-black">2k</span></button>
+            <button onClick={() => handleShareVideo(v)} className="flex flex-col items-center gap-1"><Share2 size={28} /></button>
+            <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center animate-spin-slow"><Music2 size={20} /></div>
+          </div>
+        </div>
+      ))}
+      </div>
+
+      {showAIStudio && (
+        <AITrimStudio
+          onSave={onSave}
+          onShareRequest={onShareRequest}
+          onClose={() => setShowAIStudio(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+const ChefAIView = () => {
+  const [messages, setMessages] = useState([{ role: 'ai', text: 'Chef FUZO here. What culinary secrets shall we unlock?' }]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const endRef = useRef<HTMLDivElement>(null);
+
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+    const txt = input; setInput("");
+    setMessages(prev => [...prev, { role: 'user', text: txt }]);
+    setLoading(true);
+    
+    try {
+      const res = await GeminiService.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: txt,
+        config: { systemInstruction: "You are Chef FUZO, an elite AAA culinary expert. Be bold, concise, and professional." },
+      });
+
+      if (res.success && res.data?.text) {
+        setMessages(prev => [...prev, { role: 'ai', text: res.data?.text || 'Chef FUZO is thinking. Try again.' }]);
+      } else {
+        throw new Error(res.error || 'Gemini unavailable');
+      }
+    } catch {
+      setMessages(prev => [...prev, { role: 'ai', text: 'Studio signal weak. Check connection.' }]);
+    }
+    finally { setLoading(false); }
+  };
+
+  useEffect(() => endRef.current?.scrollIntoView({ behavior: 'smooth' }), [messages]);
+
+  return (
+    <div className="max-w-2xl mx-auto h-[75vh] flex flex-col bg-white rounded-[3.5rem] shadow-2xl border-4 border-white overflow-hidden">
+      <header className="p-8 border-b bg-stone-50 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-stone-900 rounded-2xl flex items-center justify-center text-yellow-400 shadow-xl"><Bot size={24} /></div>
+          <div><h4 className="font-black text-xs uppercase tracking-widest">Chef FUZO AI</h4><p className="text-[8px] text-emerald-500 font-bold uppercase tracking-widest">Online</p></div>
+        </div>
+      </header>
+      <div className="flex-grow p-8 overflow-y-auto hide-scrollbar space-y-6">
+        {messages.map((m) => (
+          <div key={`${m.role}-${m.text}`} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[85%] p-6 rounded-[2.5rem] font-bold text-sm shadow-sm ${m.role === 'user' ? 'bg-stone-900 text-white' : 'bg-stone-50 text-stone-900'}`}>{m.text}</div>
+          </div>
+        ))}
+        {loading && <div className="flex gap-2 p-6"><div className="w-2 h-2 bg-stone-200 rounded-full animate-bounce" /><div className="w-2 h-2 bg-stone-200 rounded-full animate-bounce delay-100" /></div>}
+        <div ref={endRef} />
+      </div>
+      <footer className="p-6 border-t flex gap-3 bg-white">
+        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendMessage()} placeholder="Consult the Chef..." className="flex-grow bg-stone-50 px-8 py-5 rounded-[2rem] font-black text-xs uppercase outline-none focus:ring-4 focus:ring-yellow-400/10 transition-all" />
+        <button onClick={sendMessage} className="w-16 h-16 bg-yellow-400 rounded-3xl flex items-center justify-center shadow-xl active:scale-95 transition-transform"><Send size={24} /></button>
+      </footer>
+    </div>
+  );
+};
+
+const ChatView = ({
+  friends,
+  authUser,
+  onSave,
+  onShareRequest,
+  setTab,
+}: {
+  friends: any[];
+  authUser: AuthUser | null;
+  onSave: (item: any) => void;
+  onShareRequest: (item: any) => void;
+  setTab: (tab: string) => void;
+}) => {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [draft, setDraft] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+
+  const active = friends.find(f => String(f.id) === activeId);
+
+  const mapMessageToUi = useCallback((message: any) => ({
+    id: message.id,
+    role: message.senderId === authUser?.id ? 'user' : 'ai',
+    type: message.sharedItem ? 'share' : 'text',
+    text: message.content,
+    item: message.sharedItem,
+  }), [authUser?.id]);
+
+  const appendIncomingMessage = useCallback((message: any) => {
+    setMessages(prev => {
+      if (prev.some((entry) => entry.id === message.id)) return prev;
+      return [...prev, mapMessageToUi(message)];
+    });
+  }, [mapMessageToUi]);
+
+  useEffect(() => {
+    setActiveId(null);
+    setConversationId(null);
+    setMessages([]);
+  }, [authUser?.id]);
+
+  useEffect(() => {
+    if (!conversationId) return;
+
+    const unsubscribe = ChatService.subscribeToConversationMessages(conversationId, (message) => {
+      appendIncomingMessage(message);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [conversationId, appendIncomingMessage]);
+
+  useEffect(() => {
+    if (!activeId) return;
+    const typingStartTimer = setTimeout(() => setIsTyping(true), 1200);
+    const typingStopTimer = setTimeout(() => setIsTyping(false), 3200);
+    return () => {
+      clearTimeout(typingStartTimer);
+      clearTimeout(typingStopTimer);
+    };
+  }, [activeId, messages.length]);
+
+  const formatFriendTime = (friend: any) => {
+    if (friend?.time) return friend.time;
+    if (friend?.isOnline) return 'now';
+    if (friend?.lastSeen) return 'recent';
+    return '—';
+  };
+
+  const getMessageStatusIcon = (status?: string) => {
+    if (!status || status === 'sent') return <Check size={10} className="text-stone-400" />;
+    if (status === 'sending') return <Clock size={10} className="text-stone-400 animate-pulse" />;
+    if (status === 'read') return <CheckCheck size={10} className="text-yellow-500" />;
+    if (status === 'error') return <AlertCircle size={10} className="text-red-500" />;
+    return <Check size={10} className="text-stone-400" />;
+  };
+
+  const openConversation = async (friendId: string) => {
+    if (!authUser?.id || !hasSupabaseConfig) {
+      setActiveId(friendId);
+      setMessages([]);
+      return;
+    }
+
+    setActiveId(friendId);
+    const conversation = await ChatService.getOrCreateConversation(authUser.id, friendId);
+    if (!conversation.success || !conversation.data) {
+      return;
+    }
+
+    setConversationId(conversation.data.id);
+    const result = await ChatService.listMessages(conversation.data.id);
+    if (!result.success || !result.data) {
+      setMessages([]);
+      return;
+    }
+
+    setMessages(result.data.map((message) => ({
+      id: message.id,
+      role: message.senderId === authUser?.id ? 'user' : 'ai',
+      type: message.sharedItem ? 'share' : 'text',
+      text: message.content,
+      item: message.sharedItem,
+      status: message.senderId === authUser?.id ? 'sent' : undefined,
+    })));
+  };
+
+  const sendMessage = async () => {
+    const content = draft.trim();
+    if (!content || !conversationId || !authUser?.id) return;
+
+    setDraft('');
+    const optimisticId = `local-${Date.now()}`;
+    setMessages(prev => ([...prev, {
+      id: optimisticId,
+      role: 'user',
+      type: 'text',
+      text: content,
+      status: 'sending',
+    }]));
+
+    const sent = await ChatService.sendTextMessage({
+      conversationId,
+      senderId: authUser.id,
+      content,
+    });
+
+    if (!sent.success || !sent.data) {
+      setMessages(prev => prev.map((message) => message.id === optimisticId ? { ...message, status: 'error' } : message));
+      setDraft(content);
+      return;
+    }
+
+    setMessages(prev => prev
+      .filter((message) => message.id !== optimisticId)
+      .concat([{ ...mapMessageToUi(sent.data), status: 'sent' }]));
+  };
+
+  if (activeId && active) return (
+    <div className="max-w-2xl mx-auto h-[75vh] flex flex-col bg-white rounded-[3.5rem] shadow-2xl border-4 border-white overflow-hidden animate-in slide-in-from-right duration-300">
+      <header className="p-8 border-b flex items-center justify-between bg-stone-50/50">
+        <button onClick={() => setActiveId(null)} className="p-2 hover:bg-stone-50 rounded-xl transition-colors"><ChevronLeft size={28} /></button>
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <img src={active.avatar} alt={active.name || 'Active friend'} className="w-10 h-10 rounded-full border-2 border-yellow-400" />
+            {active.isOnline && <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />}
+          </div>
+          <div>
+            <h4 className="font-black text-xs uppercase tracking-widest">{active.name}</h4>
+            <p className="text-[8px] font-bold text-stone-400 uppercase tracking-widest">{active.isOnline ? 'Online' : 'Offline'}</p>
+          </div>
+        </div>
+        <div className="w-10" />
+      </header>
+
+      {active.requestStatus === 'pending' && (
+        <div className="p-6 bg-yellow-50 border-b flex flex-col items-center gap-4 text-center">
+          <p className="text-xs font-bold text-stone-600 uppercase tracking-widest">Message Request</p>
+          <p className="text-sm font-bold text-stone-900">{active.name} wants to connect with you.</p>
+          <div className="flex gap-3 w-full">
+            <button
+              onClick={() => {}}
+              className="flex-grow py-3 bg-stone-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest"
+            >
+              Accept
+            </button>
+            <button
+              onClick={() => setActiveId(null)}
+              className="flex-grow py-3 bg-stone-100 text-stone-900 rounded-2xl font-black uppercase text-[10px] tracking-widest"
+            >
+              Decline
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="flex-grow p-10 space-y-6 overflow-y-auto hide-scrollbar">
+        {messages.map((m) => (
+          <div key={`${m.id || ''}-${m.role}-${m.type || 'text'}-${m.text || ''}-${m.item?.id || ''}`} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+            <div className={`max-w-[85%] p-6 rounded-[2.5rem] font-bold text-sm shadow-sm ${m.role === 'user' ? 'bg-stone-900 text-white' : 'bg-stone-50 text-stone-900'}`}>
+              {m.type === 'share' ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <p className="opacity-60 text-[10px] uppercase font-black tracking-widest">Shared Studio Item</p>
+                    <Badge color="yellow">{m.item?.cat || 'Item'}</Badge>
+                  </div>
+                  <div className="rounded-2xl overflow-hidden shadow-md aspect-video relative group">
+                    <img src={m.item?.img} alt={m.item?.name || 'Shared item'} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <button
+                        onClick={() => {
+                          if (m.item?.id?.startsWith('recipe')) setTab('bites');
+                          else if (m.item?.id?.startsWith('video')) setTab('trims');
+                          else setTab('scout');
+                        }}
+                        className="p-3 bg-white text-stone-900 rounded-full shadow-xl hover:scale-110 transition-transform"
+                      >
+                        <Eye size={20} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="font-black uppercase tracking-tighter text-lg">{m.item?.name}</p>
+                    <p className="text-[10px] opacity-50 font-bold uppercase tracking-widest">Sent via FUZO Studio</p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 pt-2">
+                    <button
+                      onClick={() => {
+                        if (m.item?.id?.startsWith('recipe')) setTab('bites');
+                        else if (m.item?.id?.startsWith('video')) setTab('trims');
+                        else setTab('scout');
+                      }}
+                      className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-stone-100 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-stone-600"><Eye size={16} /></div>
+                      <span className="text-[8px] font-black uppercase tracking-widest">View</span>
+                    </button>
+                    <button
+                      onClick={() => onSave(m.item)}
+                      className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-stone-100 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-stone-600"><Bookmark size={16} /></div>
+                      <span className="text-[8px] font-black uppercase tracking-widest">Save</span>
+                    </button>
+                    <button
+                      onClick={() => onShareRequest(m.item)}
+                      className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-stone-100 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-stone-600"><Share2 size={16} /></div>
+                      <span className="text-[8px] font-black uppercase tracking-widest">Share</span>
+                    </button>
+                  </div>
+                </div>
+              ) : m.text}
+            </div>
+            {m.role === 'user' && (
+              <div className="flex items-center gap-1 mt-2 px-4">
+                {getMessageStatusIcon(m.status)}
+              </div>
+            )}
+          </div>
+        ))}
+        {isTyping && (
+          <div className="flex items-center gap-2 bg-stone-50 p-4 rounded-2xl w-fit">
+            <div className="flex gap-1">
+              <div className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+              <div className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <div className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Typing...</span>
+          </div>
+        )}
+      </div>
+      <footer className="p-6 border-t flex gap-3 bg-white">
+        <input
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+          placeholder={active.requestStatus === 'pending' ? 'Accept request to reply' : 'Message...'}
+          disabled={active.requestStatus === 'pending'}
+          className="flex-grow bg-stone-50 px-8 py-5 rounded-[2rem] font-bold outline-none focus:bg-stone-100 transition-colors disabled:opacity-50"
+        />
+        <button
+          onClick={sendMessage}
+          disabled={active.requestStatus === 'pending' || !draft.trim()}
+          className="w-16 h-16 bg-yellow-400 text-stone-900 rounded-3xl flex items-center justify-center shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:grayscale"
+        >
+          <Send size={24} />
+        </button>
+      </footer>
+    </div>
+  );
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6 px-4 animate-in fade-in">
+      <header className="hidden md:flex justify-between items-end">
+        <h2 className="text-4xl font-black uppercase tracking-tighter">Studio Inbox</h2>
+        <div className="flex items-center gap-2 px-4 py-2 bg-yellow-400 rounded-full">
+          <div className="w-2 h-2 bg-stone-900 rounded-full animate-pulse" />
+          <span className="text-[10px] font-black uppercase tracking-widest">Live</span>
+        </div>
+      </header>
+      <div className="space-y-4">
+        {friends.map(c => (
+          <button key={c.id} onClick={() => openConversation(String(c.id))} className="w-full bg-white p-6 rounded-[3rem] flex items-center gap-5 border shadow-sm cursor-pointer hover:bg-stone-50 transition-all hover:scale-[1.01] relative group text-left">
+            <div className="relative">
+              <img src={c.avatar} alt={c.name || 'Friend'} className="w-16 h-16 rounded-3xl border-2 border-yellow-400 shadow-md" />
+              {c.isOnline && <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />}
+            </div>
+            <div className="flex-grow">
+              <div className="flex justify-between mb-1"><h4 className="font-black text-sm uppercase tracking-widest">{c.name}</h4><span className="text-[10px] text-stone-300 font-bold">{formatFriendTime(c)}</span></div>
+              <div className="flex items-center justify-between">
+                <p className={`text-xs font-bold truncate ${c.unreadCount > 0 ? 'text-stone-900' : 'text-stone-400'}`}>
+                  {c.requestStatus === 'pending' ? 'New Message Request' : 'Open to chat...'}
+                </p>
+                {c.unreadCount > 0 && (
+                  <div className="bg-yellow-400 text-stone-900 text-[10px] font-black px-2 py-1 rounded-full shadow-sm">
+                    {c.unreadCount}
+                  </div>
+                )}
+              </div>
+            </div>
+            <ChevronRight className="text-stone-200 group-hover:text-stone-400 transition-colors" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any) => void, onShareRequest: (item: any) => void, savedItems: any[] }) => {
+  const [coords, setCoords] = useState({ lat: 43.65, lng: -79.38 });
+  const [selectedPlace, setSelectedPlace] = useState<any>(null);
+  const [modalTab, setModalTab] = useState('overview');
+  const [scoutTab, setScoutTab] = useState<'nearby' | 'saved'>('nearby');
+  const [isLoadingPlaces, setIsLoadingPlaces] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const scoutPlacesRequestSeqRef = useRef(0);
+  const scoutDetailsRequestSeqRef = useRef(0);
+  const scoutMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      scoutMountedRef.current = false;
+    };
+  }, []);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+  const [placesError, setPlacesError] = useState('');
+  const [mapError, setMapError] = useState('');
+  const [isMapReady, setIsMapReady] = useState(false);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const mapMarkersRef = useRef<any[]>([]);
+  const userMarkerRef = useRef<any>(null);
+  
+  const fallbackPlaces = [
+    { 
+      id: 'p1', 
+      name: "Oretta Toronto", 
+      cat: "High Italian", 
+      rating: 4.8, 
+      reviews: 1240,
+      address: "633 King St W, Toronto, ON",
+      phone: "+1 416-944-1932",
+      website: "oretta.to",
+      vibe: ["Chic", "Lively", "Art Deco"],
+      img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80",
+      lat: 43.644, lng: -79.4,
+      timings: {
+        mon: "11:30 AM - 10:00 PM",
+        tue: "11:30 AM - 10:00 PM",
+        wed: "11:30 AM - 10:00 PM",
+        thu: "11:30 AM - 11:00 PM",
+        fri: "11:30 AM - 11:00 PM",
+        sat: "10:00 AM - 11:00 PM",
+        sun: "10:00 AM - 10:00 PM"
+      },
+      menu: [
+        { section: "Antipasti", items: ["Burrata - $22", "Calamari Fritti - $19", "Polpette - $18"] },
+        { section: "Primi", items: ["Rigatoni alla Norma - $26", "Spaghetti Carbonara - $28", "Lasagna Bianca - $30"] }
+      ],
+      userReviews: [
+        { user: "Alex R.", rating: 5, text: "Incredible atmosphere and even better food. The rigatoni is a must-try!" },
+        { user: "Jamie L.", rating: 4, text: "Great for a night out. A bit loud but the service was top-notch." }
+      ],
+      photos: [
+        "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=400",
+        "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=400",
+        "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400"
+      ]
+    },
+    { 
+      id: 'p2', 
+      name: "Kōjin Steak", 
+      cat: "Fire Hearth", 
+      rating: 4.6, 
+      reviews: 850,
+      address: "190 University Ave, Toronto, ON",
+      phone: "+1 647-253-8000",
+      website: "kojin.momofuku.com",
+      vibe: ["Rustic", "Upscale", "Smoky"],
+      img: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=800&q=80",
+      lat: 43.649, lng: -79.385,
+      timings: {
+        mon: "5:00 PM - 10:00 PM",
+        tue: "5:00 PM - 10:00 PM",
+        wed: "5:00 PM - 10:00 PM",
+        thu: "5:00 PM - 11:00 PM",
+        fri: "5:00 PM - 11:00 PM",
+        sat: "5:00 PM - 11:00 PM",
+        sun: "Closed"
+      },
+      menu: [
+        { section: "From the Hearth", items: ["Prime Rib - $65", "Whole Trout - $48", "Roasted Squash - $24"] }
+      ],
+      userReviews: [
+        { user: "Sarah M.", rating: 5, text: "The smoky flavor in everything is just perfect. Best steak in the city." }
+      ],
+      photos: [
+        "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400",
+        "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=400"
+      ]
+    },
+    { 
+      id: 'p3', 
+      name: "Zen Garden", 
+      cat: "Botanical Bar", 
+      rating: 4.9, 
+      reviews: 2100,
+      address: "123 Queen St W, Toronto, ON",
+      phone: "+1 416-555-0199",
+      website: "zengarden.to",
+      vibe: ["Serene", "Organic", "Minimalist"],
+      img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
+      lat: 43.651, lng: -79.383,
+      timings: {
+        mon: "10:00 AM - 8:00 PM",
+        tue: "10:00 AM - 8:00 PM",
+        wed: "10:00 AM - 8:00 PM",
+        thu: "10:00 AM - 10:00 PM",
+        fri: "10:00 AM - 10:00 PM",
+        sat: "9:00 AM - 10:00 PM",
+        sun: "9:00 AM - 8:00 PM"
+      },
+      menu: [
+        { section: "Botanical Cocktails", items: ["Lavender Gin Fizz - $16", "Rosemary Old Fashioned - $18"] },
+        { section: "Small Plates", items: ["Truffle Edamame - $12", "Miso Glazed Carrots - $14"] }
+      ],
+      userReviews: [
+        { user: "Michael K.", rating: 5, text: "A literal oasis in the middle of downtown. The cocktails are works of art." }
+      ],
+      photos: [
+        "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400"
+      ]
+    },
+  ];
+
+  const [places, setPlaces] = useState<any[]>(fallbackPlaces);
+
+  const savedPlaces = useMemo(() => {
+    return savedItems
+      .filter((item) => Number.isFinite(Number(item?.lat)) && Number.isFinite(Number(item?.lng)))
+      .map((item, index) => {
+        const fallback = fallbackPlaces[index % fallbackPlaces.length];
+        return {
+          id: item.id || `saved-place-${index}`,
+          placeId: item.placeId,
+          name: item.name || fallback.name,
+          cat: item.cat || 'Saved Place',
+          rating: Number.isFinite(Number(item.rating)) ? Number(item.rating) : fallback.rating,
+          reviews: Number.isFinite(Number(item.reviews)) ? Number(item.reviews) : fallback.reviews,
+          address: item.address || fallback.address,
+          phone: item.phone || fallback.phone,
+          website: item.website || fallback.website,
+          vibe: Array.isArray(item.vibe) && item.vibe.length > 0 ? item.vibe : fallback.vibe,
+          img: item.img || fallback.img,
+          lat: Number(item.lat),
+          lng: Number(item.lng),
+          timings: item.timings || fallback.timings,
+          menu: item.menu || fallback.menu,
+          userReviews: item.userReviews || fallback.userReviews,
+          photos: item.photos || fallback.photos,
+        };
+      });
+  }, [savedItems]);
+
+  const displayPlaces = scoutTab === 'nearby' ? places : savedPlaces;
+
+  const clearMapMarkers = () => {
+    mapMarkersRef.current.forEach((marker) => marker.setMap(null));
+    mapMarkersRef.current = [];
+    if (userMarkerRef.current) {
+      userMarkerRef.current.setMap(null);
+      userMarkerRef.current = null;
+    }
+  };
+
+  const syncMapMarkers = () => {
+    if (!mapInstanceRef.current || !(globalThis as any).google?.maps) return;
+    const googleMaps = (globalThis as any).google.maps;
+    clearMapMarkers();
+
+    const bounds = new googleMaps.LatLngBounds();
+
+    displayPlaces.forEach((place) => {
+      const lat = Number(place.lat);
+      const lng = Number(place.lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+      const marker = new googleMaps.Marker({
+        map: mapInstanceRef.current,
+        position: { lat, lng },
+        title: place.name,
+      });
+
+      marker.addListener('click', () => {
+        openPlace(place);
+      });
+
+      mapMarkersRef.current.push(marker);
+      bounds.extend({ lat, lng });
+    });
+
+    const userPosition = { lat: Number(coords.lat), lng: Number(coords.lng) };
+    if (Number.isFinite(userPosition.lat) && Number.isFinite(userPosition.lng)) {
+      userMarkerRef.current = new googleMaps.Marker({
+        map: mapInstanceRef.current,
+        position: userPosition,
+        title: 'You are here',
+        icon: {
+          path: googleMaps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: '#3b82f6',
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 3,
+        },
+      });
+      bounds.extend(userPosition);
+    }
+
+    if (!bounds.isEmpty()) {
+      mapInstanceRef.current.fitBounds(bounds, 60);
+    }
+  };
+
+  const toScoutPlace = (place: any, index: number) => {
+    const fallback = fallbackPlaces[index % fallbackPlaces.length];
+    const coverImage = buildPhotoUrl(API_KEYS.MAPS, place.photos?.[0]?.photo_reference) || fallback.img;
+    const photoUrls = (place.photos || [])
+      .slice(0, 6)
+      .map((photo: any) => buildPhotoUrl(API_KEYS.MAPS, photo.photo_reference))
+      .filter(Boolean);
+
+    return {
+      id: place.place_id || fallback.id,
+      placeId: place.place_id,
+      name: place.name || fallback.name,
+      cat: deriveCategory(place.types) || fallback.cat,
+      rating: place.rating ?? fallback.rating,
+      reviews: place.user_ratings_total ?? fallback.reviews,
+      address: place.vicinity || place.formatted_address || fallback.address,
+      phone: place.formatted_phone_number || place.international_phone_number || fallback.phone,
+      website: place.website || fallback.website,
+      vibe: (place.types || []).slice(0, 3).map((type: string) => type.replaceAll('_', ' ')) || fallback.vibe,
+      img: coverImage,
+      lat: place.geometry?.location?.lat ?? fallback.lat,
+      lng: place.geometry?.location?.lng ?? fallback.lng,
+      timings: mapWeekdayTextToTimings(place.opening_hours?.weekday_text) || fallback.timings,
+      menu: fallback.menu,
+      userReviews: (place.reviews || []).slice(0, 5).map((review: any) => ({
+        user: review.author_name || 'Guest',
+        rating: review.rating || 5,
+        text: review.text || 'Great spot.',
+      })) || fallback.userReviews,
+      photos: photoUrls.length > 0 ? photoUrls : fallback.photos,
+    };
+  };
+
+  const canApplyScoutRequest = (requestSeq: number) => {
+    return shouldApplyLatestRequest(scoutMountedRef, requestSeq, scoutPlacesRequestSeqRef);
+  };
+
+  const setScoutLoadingState = (manualRefresh: boolean, loading: boolean) => {
+    setIsLoadingPlaces(loading);
+    if (manualRefresh) setIsRefreshing(loading);
+  };
+
+  const setScoutFallbackState = (errorMessage?: string) => {
+    setPlaces(fallbackPlaces);
+    if (errorMessage) setPlacesError(errorMessage);
+  };
+
+  const fetchNearbyPlaces = async (targetCoords = coords, manualRefresh = false) => {
+    const requestSeq = ++scoutPlacesRequestSeqRef.current;
+    setScoutLoadingState(manualRefresh, true);
+    setPlacesError('');
+
+    try {
+      const nearby = await PlacesService.searchNearby(targetCoords.lat, targetCoords.lng, 5000);
+      const results = nearby.data?.results || [];
+      const canApply = canApplyScoutRequest(requestSeq);
+
+      if (!nearby.success || results.length === 0) {
+        if (canApply) setScoutFallbackState(nearby.error);
+        return;
+      }
+
+      const normalized = results.slice(0, 12).map((place: any, index: number) => toScoutPlace(place, index));
+      if (canApply) {
+        setPlaces(normalized);
+      }
+    } catch {
+      if (canApplyScoutRequest(requestSeq)) {
+        setScoutFallbackState('Unable to load live places right now.');
+      }
+    } finally {
+      if (canApplyScoutRequest(requestSeq)) {
+        setScoutLoadingState(manualRefresh, false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    let disposed = false;
+
+    const bootMap = async () => {
+      if (!API_KEYS.MAPS) {
+        setMapError('Google Maps API key missing. Showing fallback map view.');
+        setIsMapReady(false);
+        return;
+      }
+
+      if (!mapContainerRef.current) return;
+
+      try {
+        const loader = new Loader({
+          apiKey: API_KEYS.MAPS,
+          version: 'weekly',
+        });
+        await loader.importLibrary('maps');
+
+        if (disposed || !mapContainerRef.current) return;
+
+        const googleMaps = (globalThis as any).google.maps;
+        mapInstanceRef.current = new googleMaps.Map(mapContainerRef.current, {
+          center: { lat: coords.lat, lng: coords.lng },
+          zoom: 13,
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
+        });
+
+        setMapError('');
+        setIsMapReady(true);
+      } catch {
+        setMapError('Unable to load Google Maps. Showing fallback map view.');
+        setIsMapReady(false);
+      }
+    };
+
+    bootMap();
+
+    return () => {
+      disposed = true;
+      clearMapMarkers();
+      mapInstanceRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mapInstanceRef.current || !isMapReady) return;
+    mapInstanceRef.current.setCenter({ lat: coords.lat, lng: coords.lng });
+    syncMapMarkers();
+  }, [coords, displayPlaces, isMapReady]);
+
+  const openPlace = async (place: any) => {
+    setSelectedPlace(place);
+    setModalTab('overview');
+    if (!place.placeId) return;
+
+    const requestSeq = ++scoutDetailsRequestSeqRef.current;
+    setIsLoadingDetails(true);
+    try {
+      const details = await PlacesService.getPlaceDetails(place.placeId);
+      const placeDetails = details.data?.result;
+
+      if (scoutMountedRef.current && requestSeq === scoutDetailsRequestSeqRef.current && details.success && placeDetails) {
+        const merged = {
+          ...place,
+          ...toScoutPlace(placeDetails, 0),
+          id: place.id,
+          placeId: place.placeId,
+        };
+        setSelectedPlace(merged);
+        setPlaces((prev) => prev.map((p) => (p.id === place.id ? { ...p, ...merged } : p)));
+      }
+    } catch {
+      if (scoutMountedRef.current && requestSeq === scoutDetailsRequestSeqRef.current) {
+        setPlacesError('Unable to load place details right now.');
+      }
+    } finally {
+      if (scoutMountedRef.current && requestSeq === scoutDetailsRequestSeqRef.current) {
+        setIsLoadingDetails(false);
+      }
+    }
+  };
+
+  useEffect(() => { 
+    let disposed = false;
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        if (disposed) return;
+        const nextCoords = { lat: p.coords.latitude, lng: p.coords.longitude };
+        setCoords(nextCoords);
+        fetchNearbyPlaces(nextCoords);
+      },
+      () => {
+        if (disposed) return;
+        fetchNearbyPlaces(coords);
+      }
+    ); 
+
+    return () => {
+      disposed = true;
+    };
+  }, []);
+
+  const handlePlaceAction = (place: any, action: 'save' | 'share') => {
+    const formattedItem = {
+      id: place.id,
+      name: place.name,
+      cat: place.cat,
+      img: place.img,
+      lat: place.lat,
+      lng: place.lng,
+    };
+    if (action === 'save') onSave(formattedItem);
+    else onShareRequest(formattedItem);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPlace(null);
+    setModalTab('overview');
+  };
+
+  let scoutHeadline = `${displayPlaces.length} Saved Places Mapped`;
+  if (scoutTab === 'nearby') {
+    scoutHeadline = isLoadingPlaces ? 'Scanning Nearby...' : `${displayPlaces.length} AAA Gems Found`;
+  }
+
+  return (
+    <div className="flex flex-col h-[calc(100vh-120px)] md:h-auto space-y-0 md:space-y-8 md:px-4 animate-in fade-in pb-24 md:pb-24 -mx-6 md:mx-0">
+      <header className="hidden md:flex justify-between items-end px-4">
+        <div>
+          <Badge color="emerald">Scout v2.5</Badge>
+          <h2 className="text-4xl font-black uppercase tracking-tighter mt-1">Nearby Discovery</h2>
+        </div>
+        <div className="flex bg-stone-100 p-1.5 rounded-2xl">
+          <button 
+            onClick={() => setScoutTab('nearby')}
+            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${scoutTab === 'nearby' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}
+          >
+            Nearby
+          </button>
+          <button 
+            onClick={() => setScoutTab('saved')}
+            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${scoutTab === 'saved' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}
+          >
+            My Map
+          </button>
+        </div>
+      </header>
+
+      <div className="flex md:hidden bg-white border-b border-stone-100 sticky top-0 z-30">
+        <button 
+          onClick={() => setScoutTab('nearby')}
+          className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest border-b-2 transition-all ${scoutTab === 'nearby' ? 'border-yellow-400 text-stone-900' : 'border-transparent text-stone-400'}`}
+        >
+          Nearby
+        </button>
+        <button 
+          onClick={() => setScoutTab('saved')}
+          className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest border-b-2 transition-all ${scoutTab === 'saved' ? 'border-yellow-400 text-stone-900' : 'border-transparent text-stone-400'}`}
+        >
+          My Map
+        </button>
+      </div>
+
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-0 md:gap-8 flex-grow">
+        {/* Map Area */}
+        <div className="lg:col-span-2 h-[60vh] md:h-[50vh] lg:h-[75vh] rounded-none md:rounded-[3.5rem] overflow-hidden border-0 md:border-[12px] border-white shadow-2xl bg-stone-100 relative group">
+          <div ref={mapContainerRef} className="absolute inset-0" />
+          {!isMapReady && (
+            <div className="absolute inset-0 bg-[#f8f5f0]">
+              <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+              {displayPlaces.map(place => {
+                const latOffset = place.lat - coords.lat;
+                const lngOffset = place.lng - coords.lng;
+                const left = Math.min(92, Math.max(8, 50 + (lngOffset / 0.06) * 100));
+                const top = Math.min(92, Math.max(8, 50 - (latOffset / 0.06) * 100));
+
+                return (
+                <button 
+                  key={place.id}
+                  onClick={() => openPlace(place)}
+                  className="absolute transition-transform hover:scale-110 active:scale-95 z-10"
+                  style={{ 
+                    left: `${left}%`, 
+                    top: `${top}%` 
+                  }}
+                >
+                  <div className="relative group/marker">
+                    <div className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shadow-xl border-2 border-white transform -rotate-12 group-hover/marker:rotate-0 transition-transform ${scoutTab === 'saved' ? 'bg-emerald-500 text-white' : 'bg-stone-900 text-yellow-400'}`}>
+                      <MapPin size={20} />
+                    </div>
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white px-3 py-1 rounded-full shadow-lg border border-stone-100 opacity-0 group-hover/marker:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                      <span className="text-[8px] font-black uppercase tracking-widest">{place.name}</span>
+                    </div>
+                  </div>
+                </button>
+                );
+              })}
+
+              <div 
+                className="absolute w-6 h-6 bg-blue-500 rounded-full border-4 border-white shadow-lg animate-pulse z-0"
+                style={{ left: '50%', top: '50%' }}
+              />
+            </div>
+          )}
+
+          {/* Map Controls Overlay */}
+          <div className="absolute top-6 right-6 md:top-8 md:right-8 flex flex-col gap-3">
+            <button onClick={() => fetchNearbyPlaces(coords, true)} className="p-3 md:p-4 bg-white rounded-2xl shadow-xl hover:bg-stone-50 transition-colors"><RefreshCw size={20} className={isRefreshing ? 'animate-spin' : ''} /></button>
+            <button className="p-3 md:p-4 bg-white rounded-2xl shadow-xl hover:bg-stone-50 transition-colors"><LayoutGrid size={20} /></button>
+          </div>
+          
+          <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:left-8 md:right-8 bg-white/90 backdrop-blur-md p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border border-white/50 shadow-xl flex items-center justify-between">
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600"><Sparkles size={18} className="md:hidden" /><Sparkles size={20} className="hidden md:block" /></div>
+              <div>
+                <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-stone-400 leading-none">Scout Active</p>
+                <h4 className="font-black uppercase text-xs md:text-sm tracking-tighter mt-1">{scoutHeadline}</h4>
+              </div>
+            </div>
+            <button className="px-4 py-2 md:px-6 md:py-3 bg-stone-900 text-white rounded-xl md:rounded-2xl font-black uppercase text-[8px] md:text-[10px] tracking-widest">Expand</button>
+          </div>
+        </div>
+
+        {/* List Sidebar */}
+        <div className="space-y-6 p-6 md:p-0 bg-white md:bg-transparent rounded-t-[3rem] -mt-12 md:mt-0 relative z-20 shadow-[0_-20px_40px_rgba(0,0,0,0.05)] md:shadow-none">
+          <div className="w-12 h-1.5 bg-stone-100 rounded-full mx-auto mb-6 md:hidden" />
+          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-300 px-4">{scoutTab === 'nearby' ? 'Trending Nearby' : 'Your Saved Places'}</h3>
+          <div className="space-y-4 max-h-[40vh] md:max-h-none overflow-y-auto hide-scrollbar">
+            {displayPlaces.map(place => (
+              <button 
+                key={place.id} 
+                onClick={() => openPlace(place)}
+                className="w-full bg-white p-5 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border border-stone-100 shadow-sm hover:shadow-md transition-all cursor-pointer group flex items-center gap-4 md:gap-5 text-left"
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg shrink-0 group-hover:scale-105 transition-transform">
+                  <img src={place.img} alt={place.name || 'Place'} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-grow">
+                  <div className="flex justify-between items-start">
+                    <h4 className="font-black uppercase text-xs md:text-sm tracking-tighter leading-tight">{place.name}</h4>
+                    <div className="flex items-center gap-1 text-yellow-500 font-black text-[10px]">
+                      <Star size={12} fill="currentColor" /> {place.rating}
+                    </div>
+                  </div>
+                  <p className="text-[8px] md:text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-1">{place.cat}</p>
+                </div>
+              </button>
+            ))}
+            {displayPlaces.length === 0 && (
+              <div className="p-8 text-center bg-stone-50 rounded-[2rem] border border-stone-100">
+                <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">
+                  {scoutTab === 'saved' ? 'Save places from Scout to build your map.' : 'No nearby places found right now.'}
+                </p>
+              </div>
+            )}
+          </div>
+          {mapError && <p className="text-[10px] px-4 font-bold text-amber-600 uppercase tracking-widest">{mapError}</p>}
+          {placesError && <p className="text-[10px] px-4 font-bold text-amber-600 uppercase tracking-widest">{placesError}</p>}
+        </div>
+      </div>
+
+      {/* Place Details Modal */}
+      {selectedPlace && (
+        <div className="fixed inset-0 z-[110] bg-stone-900/60 backdrop-blur-xl flex items-center justify-center p-4 md:p-10 overflow-y-auto">
+          <div className="bg-white w-full max-w-4xl rounded-[4rem] shadow-2xl overflow-hidden flex flex-col md:flex-row relative animate-in zoom-in duration-300">
+            <button 
+              onClick={handleCloseModal} 
+              className="absolute top-6 right-6 z-20 p-4 bg-stone-900 text-white rounded-3xl active:scale-90 transition-transform"
+            >
+              <X size={24} />
+            </button>
+            
+            <div className="w-full md:w-1/2 h-64 md:h-auto overflow-hidden relative">
+              <img src={selectedPlace.img} alt={selectedPlace.name || 'Selected place'} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent md:hidden" />
+              <div className="absolute bottom-6 left-8 md:hidden text-white">
+                <Badge color="yellow">{selectedPlace.cat}</Badge>
+                <h2 className="text-3xl font-black uppercase tracking-tighter mt-2">{selectedPlace.name}</h2>
+              </div>
+            </div>
+
+            <div className="w-full md:w-1/2 p-8 md:p-14 overflow-y-auto hide-scrollbar flex flex-col gap-6">
+              <header className="space-y-4">
+                <div className="hidden md:block">
+                  <Badge color="yellow">{selectedPlace.cat}</Badge>
+                  <h2 className="text-4xl font-black uppercase tracking-tighter mt-2 leading-none">{selectedPlace.name}</h2>
+                </div>
+                {isLoadingDetails && <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Loading live details...</p>}
+                
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <div className="flex text-yellow-400">
+                      {[1,2,3,4,5].map(i => <Star key={i} size={16} fill={i <= Math.floor(selectedPlace.rating) ? "currentColor" : "none"} />)}
+                    </div>
+                    <span className="text-xs font-black">{selectedPlace.rating}</span>
+                    <span className="text-[10px] font-bold text-stone-300 uppercase tracking-widest">({selectedPlace.reviews} Reviews)</span>
+                  </div>
+                </div>
+              </header>
+
+              {/* Tabs Bar */}
+              <div className="flex border-b border-stone-100 overflow-x-auto hide-scrollbar">
+                {[
+                  { id: 'overview', icon: Info },
+                  { id: 'timings', icon: Clock },
+                  { id: 'menu', icon: List },
+                  { id: 'reviews', icon: Star },
+                  { id: 'photos', icon: LayoutGrid }
+                ].map(t => (
+                  <button
+                    key={t.id}
+                    onClick={() => setModalTab(t.id)}
+                    className={`flex-1 min-w-[60px] flex items-center justify-center py-5 transition-all border-b-2 ${modalTab === t.id ? 'border-yellow-400 text-stone-900' : 'border-transparent text-stone-300 hover:text-stone-500'}`}
+                  >
+                    <t.icon size={20} strokeWidth={modalTab === t.id ? 3 : 2} />
+                  </button>
+                ))}
+              </div>
+
+              {/* Tab Content */}
+              <div className="flex-grow">
+                {modalTab === 'overview' && (
+                  <div className="space-y-8 animate-in fade-in duration-300">
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-4 text-stone-600">
+                        <MapPin size={20} className="shrink-0 mt-0.5 text-stone-400" />
+                        <p className="text-sm font-bold leading-relaxed">{selectedPlace.address}</p>
+                      </div>
+                      <div className="flex items-center gap-4 text-stone-600">
+                        <Clock size={20} className="shrink-0 text-stone-400" />
+                        <p className="text-sm font-bold">Open now: {selectedPlace.timings[new Date().toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase()]}</p>
+                      </div>
+                      <div className="flex items-center gap-4 text-stone-600">
+                        <Zap size={20} className="shrink-0 text-stone-400" />
+                        <p className="text-sm font-bold">{selectedPlace.phone}</p>
+                      </div>
+                      <div className="flex items-center gap-4 text-stone-600">
+                        <PlayCircle size={20} className="shrink-0 text-stone-400" />
+                        <a href={selectedPlace.website?.startsWith('http') ? selectedPlace.website : `https://${selectedPlace.website}`} target="_blank" rel="noreferrer" className="text-sm font-bold text-blue-500 hover:underline">{selectedPlace.website}</a>
+                      </div>
+                    </div>
+
+                    <section className="space-y-4">
+                      <h4 className="font-black uppercase text-[10px] tracking-[0.2em] text-stone-300 px-2">The Vibe</h4>
+                      <div className="flex flex-wrap gap-3">
+                        {(selectedPlace.vibe || []).map((v: string) => (
+                          <div key={v} className="px-6 py-3 bg-stone-50 rounded-full text-[10px] font-black uppercase tracking-widest text-stone-900 border border-stone-100">
+                            {v}
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  </div>
+                )}
+
+                {modalTab === 'timings' && (
+                  <div className="space-y-4 animate-in fade-in duration-300">
+                    <h4 className="font-black uppercase text-[10px] tracking-[0.2em] text-stone-300 px-2">Opening Hours</h4>
+                    <div className="bg-stone-50 p-8 rounded-[3rem] border border-stone-100 space-y-3">
+                      {Object.entries(selectedPlace.timings || {}).map(([day, hours]: [string, any]) => (
+                        <div key={day} className="flex justify-between items-center">
+                          <span className="text-xs font-black uppercase tracking-widest text-stone-400">{day}</span>
+                          <span className="text-xs font-bold text-stone-900">{hours}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {modalTab === 'menu' && (
+                  <div className="space-y-8 animate-in fade-in duration-300">
+                    {(selectedPlace.menu || []).map((section: any) => (
+                      <div key={String(section.section)} className="space-y-4">
+                        <h4 className="font-black uppercase text-[10px] tracking-[0.2em] text-stone-300 px-2">{section.section}</h4>
+                        <div className="bg-stone-50 p-8 rounded-[3rem] border border-stone-100 space-y-3">
+                          {section.items.map((item: string) => (
+                            <div key={`${section.section}-${item}`} className="flex justify-between items-center border-b border-stone-100/50 pb-2 last:border-0 last:pb-0">
+                              <span className="text-xs font-bold text-stone-900">{item.split(' - ')[0]}</span>
+                              <span className="text-xs font-black text-stone-400">{item.split(' - ')[1]}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    <button className="w-full py-5 border-4 border-stone-100 rounded-[2rem] font-black uppercase text-[10px] tracking-widest text-stone-400 hover:bg-stone-50 transition-colors">View Full Menu</button>
+                  </div>
+                )}
+
+                {modalTab === 'reviews' && (
+                  <div className="space-y-6 animate-in fade-in duration-300">
+                    <div className="flex items-center justify-between px-2">
+                      <h4 className="font-black uppercase text-[10px] tracking-[0.2em] text-stone-300">User Reviews</h4>
+                      <button className="text-[10px] font-black uppercase tracking-widest text-blue-500">Write Review</button>
+                    </div>
+                    {(selectedPlace.userReviews || []).map((review: any) => (
+                      <div key={`${review.user}-${review.text}`} className="bg-stone-50 p-8 rounded-[3rem] border border-stone-100 space-y-4">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-stone-200 rounded-full" />
+                            <span className="text-xs font-black uppercase tracking-widest">{review.user}</span>
+                          </div>
+                          <div className="flex text-yellow-400">
+                            {[1,2,3,4,5].map(star => <Star key={star} size={12} fill={star <= review.rating ? "currentColor" : "none"} />)}
+                          </div>
+                        </div>
+                        <p className="text-sm font-bold text-stone-500 leading-relaxed italic">"{review.text}"</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {modalTab === 'photos' && (
+                  <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+                    {(selectedPlace.photos || []).map((photo: string) => (
+                      <div key={photo} className="aspect-square rounded-[2.5rem] overflow-hidden border-4 border-stone-50 shadow-sm">
+                        <img src={photo} alt={selectedPlace.name || 'Place'} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <footer className="pt-4 flex gap-4 sticky bottom-0 bg-white/90 backdrop-blur-md pb-2">
+                <button 
+                  onClick={() => handlePlaceAction(selectedPlace, 'save')}
+                  className="flex-grow py-5 bg-stone-900 text-white rounded-[2rem] flex items-center justify-center gap-3 active:scale-95 transition-all shadow-xl"
+                >
+                  <Bookmark size={22} />
+                </button>
+                <button 
+                  onClick={() => handlePlaceAction(selectedPlace, 'share')}
+                  className="py-5 px-10 bg-yellow-400 text-stone-900 rounded-[2rem] flex items-center justify-center active:scale-95 transition-all shadow-xl"
+                >
+                  <Share2 size={22} />
+                </button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ProfileView = ({ savedItems, authUser, friends }: { savedItems: any[], authUser: any, friends: any[] }) => {
+  const [activeTab, setActiveTab] = useState('places');
+  const [persistedProfile, setPersistedProfile] = useState<SettingsProfile | null>(null);
+
+  const normalizeExternalUrl = (value: string | undefined, baseUrl: string) => {
+    if (!value) return baseUrl;
+    const trimmed = value.trim();
+    if (!trimmed) return baseUrl;
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+    if (trimmed.startsWith('@')) return `${baseUrl}/${trimmed.slice(1)}`;
+    if (trimmed.includes('.')) return `https://${trimmed}`;
+    return `${baseUrl}/${trimmed}`;
+  };
+
+  const profileDisplay = useMemo(() => {
+    const metadata = authUser?.user_metadata || {};
+    const email = authUser?.email || '';
+    const emailName = email.includes('@') ? email.split('@')[0] : 'Chef Studio';
+    const persisted = persistedProfile;
+
+    return {
+      name: persisted?.name || metadata.full_name || metadata.name || 'Chef Studio',
+      username: persisted?.username || metadata.username || metadata.user_name || emailName,
+      bio: persisted?.bio || metadata.bio || 'Discovery engine architect. Exploring the world of fine dining and culinary hacks.',
+      avatar: metadata.avatar_url || `https://i.pravatar.cc/150?u=${email || 'me'}`,
+    };
+  }, [authUser, persistedProfile]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadPersistedProfile = async () => {
+      if (!authUser?.id) {
+        setPersistedProfile(null);
+        return;
+      }
+
+      const result = await SettingsService.getUserSettings(authUser);
+      if (cancelled) return;
+
+      if (result.success && result.data) {
+        setPersistedProfile(result.data);
+      }
+    };
+
+    loadPersistedProfile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser]);
+
+  const socialLinks = useMemo(() => {
+    const metadata = authUser?.user_metadata || {};
+    const persisted = persistedProfile;
+
+    return {
+      instagram: normalizeExternalUrl(persisted?.instagram || metadata.instagram_url || metadata.instagram || metadata.ig, 'https://instagram.com'),
+      facebook: normalizeExternalUrl(persisted?.facebook || metadata.facebook_url || metadata.facebook || metadata.fb, 'https://facebook.com'),
+      tiktok: normalizeExternalUrl(persisted?.tiktok || metadata.tiktok_url || metadata.tiktok, 'https://tiktok.com'),
+      pinterest: normalizeExternalUrl(persisted?.pinterest || metadata.pinterest_url || metadata.pinterest, 'https://pinterest.com'),
+    };
+  }, [authUser, persistedProfile]);
+
+  const tabs = [
+    { id: 'places', label: 'Saved Places', icon: MapPin },
+    { id: 'recipes', label: 'Recipes', icon: ChefHat },
+    { id: 'videos', label: 'Videos', icon: PlayCircle },
+    { id: 'crew', label: 'Crew', icon: User },
+    { id: 'posts', label: 'Posts', icon: LayoutGrid },
+  ];
+
+  const filteredItems = useMemo(() => {
+    if (activeTab === 'places') return savedItems.filter(i => !i.id.startsWith('recipe-') && !i.id.startsWith('video-') && !i.id.startsWith('post-'));
+    if (activeTab === 'recipes') return savedItems.filter(i => i.id.startsWith('recipe-'));
+    if (activeTab === 'videos') return savedItems.filter(i => i.id.startsWith('video-'));
+    if (activeTab === 'posts') return savedItems.filter(i => i.id.startsWith('post-'));
+    return [];
+  }, [savedItems, activeTab]);
+
+  const activeCount = activeTab === 'crew' ? friends.length : filteredItems.length;
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in pb-20">
+      <div className="relative h-64 bg-stone-900 rounded-[4rem] overflow-hidden shadow-2xl">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80" alt="Profile cover" className="w-full h-full object-cover opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent" />
+        <div className="absolute -bottom-2 right-12"><div className="w-28 h-28 rounded-[2.5rem] border-8 border-white bg-white shadow-2xl overflow-hidden"><img src={profileDisplay.avatar} alt={`${profileDisplay.name} avatar`} /></div></div>
+      </div>
+      <div className="px-8 space-y-4">
+        <h2 className="text-5xl font-black uppercase tracking-tighter">{profileDisplay.name}</h2>
+        <p className="text-stone-400 font-bold text-xs uppercase tracking-widest">@{profileDisplay.username}</p>
+        <p className="text-stone-500 font-bold max-w-md">{profileDisplay.bio}</p>
+        <div className="flex items-center gap-4 pt-4">
+          <div className="text-center"><p className="text-2xl font-black">{savedItems.length}</p><p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Saves</p></div>
+          <div className="w-px h-10 bg-stone-100" />
+          <div className="text-center"><p className="text-2xl font-black">42</p><p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Reviews</p></div>
+          <div className="w-px h-10 bg-stone-100" />
+          <div className="flex items-center gap-2">
+            <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="Instagram profile">
+              <Instagram size={18} />
+            </a>
+            <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="Facebook profile">
+              <Facebook size={18} />
+            </a>
+            <a href={socialLinks.tiktok} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="TikTok profile">
+              <Music2 size={18} />
+            </a>
+            <a href={socialLinks.pinterest} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="Pinterest profile">
+              <Pin size={18} />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="px-8">
+        <div className="flex bg-stone-100 p-2 rounded-[2.5rem] gap-1">
+          {tabs.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setActiveTab(t.id)}
+              className={`flex-1 flex items-center justify-center py-5 rounded-[2rem] transition-all ${activeTab === t.id ? 'bg-white shadow-md text-stone-900' : 'text-stone-300 hover:text-stone-600'}`}
+            >
+              <t.icon size={22} strokeWidth={activeTab === t.id ? 3 : 2} />
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <div className="px-8 space-y-6">
+        <div className="flex justify-between items-center">
+          <h4 className="font-black uppercase text-xs tracking-widest text-stone-900">
+            {tabs.find(t => t.id === activeTab)?.label}
+          </h4>
+          <Badge color="yellow">{activeCount} Items</Badge>
+        </div>
+
+        {activeTab === 'crew' ? (
+          <div className="space-y-4">
+            {friends.length === 0 ? (
+              <div className="p-12 bg-stone-100 rounded-[3rem] text-center text-stone-300 font-black uppercase text-[10px] tracking-widest">
+                No crew connections yet
+              </div>
+            ) : (
+              friends.map((friend) => (
+                <div key={friend.id} className="bg-white p-6 rounded-[2.5rem] border border-stone-100 shadow-sm flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <img src={friend.avatar} alt={friend.name || 'Crew member'} className="w-14 h-14 rounded-2xl object-cover border-2 border-stone-100" />
+                    <div>
+                      <p className="font-black uppercase tracking-widest text-xs text-stone-900">{friend.name}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Last active {friend.time}</p>
+                    </div>
+                  </div>
+                  <button className="px-4 py-2 rounded-xl bg-stone-900 text-white text-[10px] font-black uppercase tracking-widest">View</button>
+                </div>
+              ))
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-6">
+            {filteredItems.length === 0 ? (
+              <div className="col-span-2 p-12 bg-stone-100 rounded-[3rem] text-center text-stone-300 font-black uppercase text-[10px] tracking-widest">
+                No {activeTab} saved yet
+              </div>
+            ) : (
+              filteredItems.map((item) => (
+                <div key={item.id || `${item.name}-${item.cat}`} className="aspect-square bg-stone-100 rounded-[3rem] border-4 border-white shadow-md overflow-hidden relative group">
+                  <img src={item.img} alt={item.name || 'Saved item'} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-4 text-center">
+                    <p className="font-black uppercase text-[10px] tracking-tighter leading-tight mb-2">{item.name}</p>
+                    <Badge color="yellow">{item.cat}</Badge>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const SettingsView = ({ onSignOut, authUser }: { onSignOut: () => Promise<void>, authUser: any }) => {
+  const defaults = useMemo<SettingsProfile>(() => {
+    const metadata = authUser?.user_metadata || {};
+    const email = authUser?.email || '';
+    const emailName = email.includes('@') ? email.split('@')[0] : 'chef_studio_lab';
+
+    return {
+      name: metadata.full_name || metadata.name || 'Chef Studio',
+      username: metadata.username || metadata.user_name || emailName,
+      bio: metadata.bio || 'Discovery engine architect. Exploring the world of fine dining and culinary hacks.',
+      email: email || 'chef@fuzo.studio',
+      phone: metadata.phone || '+1 (555) 0123-4567',
+      location: metadata.location || 'Toronto, ON',
+      diet: 'None',
+      cuisine: 'Italian, Japanese',
+      instagram: metadata.instagram_url || metadata.instagram || metadata.ig || '',
+      facebook: metadata.facebook_url || metadata.facebook || metadata.fb || '',
+      tiktok: metadata.tiktok_url || metadata.tiktok || '',
+      pinterest: metadata.pinterest_url || metadata.pinterest || '',
+    };
+  }, [authUser]);
+
+  const [profile, setProfile] = useState<SettingsProfile>(defaults);
+  const [notifications, setNotifications] = useState(true);
+  const [signingOut, setSigningOut] = useState(false);
+  const [loadingSettings, setLoadingSettings] = useState(false);
+  const [savingSettings, setSavingSettings] = useState(false);
+  const [settingsError, setSettingsError] = useState('');
+  const [settingsMessage, setSettingsMessage] = useState('');
+  const [isDirty, setIsDirty] = useState(false);
+
+  useEffect(() => {
+    setProfile(defaults);
+    setIsDirty(false);
+  }, [defaults]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadSettings = async () => {
+      if (!authUser?.id) {
+        setProfile(defaults);
+        return;
+      }
+
+      setLoadingSettings(true);
+      setSettingsError('');
+
+      const result = await SettingsService.getUserSettings(authUser);
+      if (cancelled) return;
+
+      if (!result.success || !result.data) {
+        setProfile(defaults);
+        setSettingsError(result.error || 'Unable to load saved settings.');
+      } else {
+        setProfile({
+          ...defaults,
+          ...result.data,
+          email: defaults.email,
+        });
+      }
+
+      setLoadingSettings(false);
+      setIsDirty(false);
+    };
+
+    loadSettings();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser, defaults]);
+
+  const handleSignOutClick = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    await onSignOut();
+    setSigningOut(false);
+  };
+
+  const updateProfileField = (field: keyof SettingsProfile, nextValue: string) => {
+    setProfile(prev => ({ ...prev, [field]: nextValue }));
+    setIsDirty(true);
+    setSettingsMessage('');
+  };
+
+  const editField = (field: keyof SettingsProfile, label: string, options?: { readOnly?: boolean }) => {
+    if (options?.readOnly) {
+      setSettingsMessage(`${label} is managed by your account and cannot be edited here.`);
+      return;
+    }
+
+    const currentValue = profile[field] || '';
+    const nextValue = globalThis.prompt(`Update ${label}`, currentValue);
+    if (nextValue === null) return;
+    updateProfileField(field, nextValue.trim());
+  };
+
+  const handleSaveSettings = async () => {
+    if (!authUser?.id || !isDirty || savingSettings) return;
+
+    setSavingSettings(true);
+    setSettingsError('');
+    setSettingsMessage('');
+
+    const result = await SettingsService.updateUserSettings(authUser, profile);
+
+    if (!result.success || !result.data) {
+      setSettingsError(result.error || 'Unable to save settings right now.');
+      setSavingSettings(false);
+      return;
+    }
+
+    setProfile(prev => ({
+      ...prev,
+      ...result.data,
+      email: prev.email,
+    }));
+    setIsDirty(false);
+    setSavingSettings(false);
+    setSettingsMessage('Settings saved.');
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in pb-32 px-4">
+      <header className="flex flex-col items-center text-center space-y-6 py-8">
+        <div className="relative group">
+          <div className="w-32 h-32 rounded-[3rem] border-8 border-white bg-white shadow-2xl overflow-hidden">
+            <img src="https://i.pravatar.cc/150?u=me" alt="Settings avatar" className="w-full h-full object-cover" />
+          </div>
+          <button className="absolute bottom-0 right-0 p-3 bg-stone-900 text-white rounded-2xl shadow-xl hover:scale-110 transition-transform">
+            <Camera size={16} />
+          </button>
+        </div>
+        <div>
+          <h2 className="text-4xl font-black uppercase tracking-tighter leading-none">{profile.name}</h2>
+          <p className="text-stone-400 font-bold mt-2">@{profile.username}</p>
+        </div>
+        <div className="flex flex-col items-center gap-3 pt-2">
+          <button
+            onClick={handleSaveSettings}
+            disabled={!authUser?.id || !isDirty || savingSettings || loadingSettings}
+            className="px-8 py-3 bg-stone-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {savingSettings ? 'Saving...' : 'Save Settings'}
+          </button>
+          {loadingSettings && <p className="text-[10px] font-black uppercase tracking-widest text-stone-300">Loading saved settings...</p>}
+          {settingsError && <p className="text-[10px] font-black uppercase tracking-widest text-red-500">{settingsError}</p>}
+          {settingsMessage && !settingsError && <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">{settingsMessage}</p>}
+        </div>
+      </header>
+
+      <SettingsSection title="Personal Profile">
+        <SettingsItem
+          icon={User} 
+          label="Display Name" 
+          value={profile.name} 
+          onClick={() => editField('name', 'Display Name')} 
+        />
+        <SettingsItem
+          icon={Bot} 
+          label="Bio" 
+          value={profile.bio} 
+          onClick={() => editField('bio', 'Bio')} 
+        />
+        <SettingsItem
+          icon={MapPin} 
+          label="Location" 
+          value={profile.location} 
+          onClick={() => editField('location', 'Location')} 
+        />
+      </SettingsSection>
+
+      <SettingsSection title="Account Settings">
+        <SettingsItem
+          icon={Mail} 
+          label="Email Address" 
+          value={profile.email} 
+          onClick={() => editField('email', 'Email Address', { readOnly: true })} 
+        />
+        <SettingsItem
+          icon={Phone} 
+          label="Phone Number" 
+          value={profile.phone} 
+          onClick={() => editField('phone', 'Phone Number')} 
+        />
+      </SettingsSection>
+
+      <SettingsSection title="Social Links">
+        <SettingsItem
+          icon={Instagram}
+          label="Instagram"
+          value={profile.instagram || 'Not set'}
+          onClick={() => editField('instagram', 'Instagram')}
+        />
+        <SettingsItem
+          icon={Facebook}
+          label="Facebook"
+          value={profile.facebook || 'Not set'}
+          onClick={() => editField('facebook', 'Facebook')}
+        />
+        <SettingsItem
+          icon={Music2}
+          label="TikTok"
+          value={profile.tiktok || 'Not set'}
+          onClick={() => editField('tiktok', 'TikTok')}
+        />
+        <SettingsItem
+          icon={Pin}
+          label="Pinterest"
+          value={profile.pinterest || 'Not set'}
+          onClick={() => editField('pinterest', 'Pinterest')}
+        />
+      </SettingsSection>
+
+      <SettingsSection title="Discovery Preferences">
+        <SettingsItem
+          icon={ChefHat} 
+          label="Dietary Focus" 
+          value={profile.diet} 
+          onClick={() => editField('diet', 'Dietary Focus')} 
+          color="emerald"
+        />
+        <SettingsItem
+          icon={Flame} 
+          label="Favorite Cuisines" 
+          value={profile.cuisine} 
+          onClick={() => editField('cuisine', 'Favorite Cuisines')} 
+          color="orange"
+        />
+      </SettingsSection>
+
+      <SettingsSection title="App Settings">
+        <div className="p-8 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div className="p-4 bg-blue-100 rounded-2xl text-blue-900">
+              <Bell size={20} />
+            </div>
+            <div>
+              <p className="font-black uppercase text-[10px] tracking-widest text-stone-400 leading-none mb-1.5">Notifications</p>
+              <p className="font-bold text-sm text-stone-900">Push & Email</p>
+            </div>
+          </div>
+          <button 
+            onClick={() => setNotifications(!notifications)}
+            className={`w-14 h-8 rounded-full transition-colors relative ${notifications ? 'bg-emerald-500' : 'bg-stone-200'}`}
+          >
+            <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${notifications ? 'left-7' : 'left-1'}`} />
+          </button>
+        </div>
+        <SettingsItem
+          icon={Shield} 
+          label="Privacy & Security" 
+          value="Standard Protection" 
+          onClick={() => {}} 
+          color="indigo"
+        />
+      </SettingsSection>
+
+      <div className="pt-4">
+        <button
+          onClick={handleSignOutClick}
+          disabled={signingOut}
+          className="w-full p-8 bg-red-50 text-red-600 rounded-[2.5rem] font-black uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-red-100 transition-colors disabled:opacity-60"
+        >
+          <LogOut size={20} /> {signingOut ? 'Signing Out...' : 'Sign Out of Studio'}
+        </button>
+      </div>
+
+      <div className="text-center space-y-2 pt-8">
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-stone-200">FUZO Studio v2.5.0</p>
+        <div className="flex justify-center gap-4 text-[10px] font-bold text-stone-300 uppercase tracking-widest">
+          <button className="hover:text-stone-500">Terms</button>
+          <span>&bull;</span>
+          <button className="hover:text-stone-500">Privacy</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PhoneMockup = ({ image, className = "" }: { image: string, className?: string }) => (
+  <div className={`relative w-64 h-[520px] bg-stone-950 rounded-[3rem] p-3 shadow-2xl border-4 border-stone-800/50 overflow-hidden ${className}`}>
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-stone-950 rounded-b-3xl z-20" />
+    <div className="w-full h-full rounded-[2.2rem] overflow-hidden bg-stone-900">
+      <img src={image} alt="Phone mockup" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+    </div>
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-24 h-1 bg-white/20 rounded-full" />
+  </div>
+);
+
+const FeatureFold = ({
+  title,
+  subtitle,
+  description,
+  image,
+  reverse = false,
+  color = "stone",
+  icon: Icon
+}: {
+  title: string,
+  subtitle: string,
+  description: string,
+  image: string,
+  reverse?: boolean,
+  color?: string,
+  icon: any
+}) => (
+  <section className={`py-32 px-6 ${reverse ? 'bg-white' : 'bg-[#fbd556]'} overflow-hidden`}>
+    <div className={`max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center ${reverse ? 'lg:flex-row-reverse' : ''}`}>
+      <motion.div
+        initial={{ opacity: 0, x: reverse ? 50 : -50 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        className={`space-y-8 ${reverse ? 'lg:order-2' : ''}`}
+      >
+        <div className="space-y-4">
+          <div className={`inline-flex items-center gap-3 px-4 py-2 ${reverse ? 'bg-stone-100 text-stone-900' : 'bg-stone-900 text-yellow-400'} rounded-full`}>
+            <Icon size={18} />
+            <span className="text-[10px] font-black uppercase tracking-widest">{subtitle}</span>
+          </div>
+          <h2 className="text-6xl md:text-7xl font-black uppercase tracking-tighter leading-[0.85] text-stone-900">
+            {(() => {
+              const seenWords: Record<string, number> = {};
+              return title.split(' ').map((word, i) => {
+                seenWords[word] = (seenWords[word] || 0) + 1;
+                return (
+                  <span key={`${title}-${word}-${seenWords[word]}`} className={i === 1 ? 'italic opacity-70' : ''}>
+                    {word}{' '}
+                    {i === 1 && <br />}
+                  </span>
+                );
+              });
+            })()}
+          </h2>
+        </div>
+        <p className={`text-xl font-bold leading-relaxed max-w-xl ${reverse ? 'text-stone-500' : 'text-stone-800'}`}>
+          {description}
+        </p>
+        <div className="flex items-center gap-6 pt-4">
+          <div className="flex -space-x-3">
+            {[1, 2, 3].map(i => (
+              <div key={i} className={`w-10 h-10 rounded-full border-2 ${reverse ? 'border-white' : 'border-[#fbd556]'} overflow-hidden`}>
+                <img src={`https://i.pravatar.cc/100?u=${title}${i}`} alt="Community member avatar" className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+          <p className={`text-[10px] font-black uppercase tracking-widest ${reverse ? 'text-stone-400' : 'text-stone-900/60'}`}>Joined by 12k+ members</p>
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, rotate: reverse ? -5 : 5 }}
+        whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+        viewport={{ once: true }}
+        className={`relative flex justify-center ${reverse ? 'lg:order-1' : ''}`}
+      >
+        <div className={`absolute inset-0 ${reverse ? 'bg-stone-200' : 'bg-stone-900/10'} blur-[120px] rounded-full opacity-30`} />
+        <PhoneMockup image={image} className="relative z-10 border-stone-900/10 shadow-2xl" />
+        <div className={`absolute -bottom-10 ${reverse ? '-right-10' : '-left-10'} p-8 bg-stone-900 text-white rounded-[3rem] shadow-2xl hidden md:block max-w-[200px] rotate-6`}>
+          <p className="font-black uppercase text-xs tracking-widest leading-tight">
+            "The most intuitive culinary interface I've ever used."
+          </p>
+          <p className="text-[8px] font-bold text-stone-400 mt-4 uppercase tracking-widest">— Chef Marcus</p>
+        </div>
+      </motion.div>
+    </div>
+  </section>
+);
+
+const LandingPage = ({ onStart }: { onStart: () => void }) => {
+  return (
+    <div className="min-h-screen bg-[#fbd556] text-stone-900 overflow-x-hidden selection:bg-stone-900 selection:text-white">
+      {/* Hero Section */}
+      <section className="relative h-screen flex flex-col items-center justify-center p-6 text-center overflow-hidden">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#fff_0%,transparent_70%)]" />
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(rgba(0,0,0,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 space-y-12 max-w-6xl w-full mx-auto"
+        >
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-20 h-20 bg-stone-900 rounded-[2.5rem] flex items-center justify-center text-yellow-400 shadow-2xl rotate-6">
+              <ChefHat size={44} strokeWidth={2.5} />
+            </div>
+          </div>
+
+          <h1 className="landing-hero-title text-[14vw] md:text-[10vw] font-black uppercase tracking-tighter leading-[0.8] italic text-stone-900 text-center mx-auto w-full">
+            THE <br /> <span className="not-italic">UNDISCOVERED</span> <br /> GASTRONOMY
+          </h1>
+
+          <p className="text-xl md:text-3xl font-bold text-stone-800 max-w-3xl mx-auto leading-tight">
+            The world's first AI-native discovery engine for fine dining, recipe architecture, and culinary networks.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-12">
+            <button
+              onClick={onStart}
+              className="group relative px-16 py-8 bg-stone-900 text-white rounded-[3rem] font-black uppercase tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl"
+            >
+              <span className="relative z-10 flex items-center gap-3 text-lg">Enter FUZO <ChevronRight size={24} /></span>
+              <div className="absolute inset-0 bg-stone-800 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            </button>
+          </div>
+        </motion.div>
+
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce opacity-20">
+          <ChevronRight size={32} className="rotate-90" />
+        </div>
+      </section>
+
+      {/* Feature Folds */}
+      <FeatureFold
+        subtitle="Discovery"
+        title="The Pulse of Taste"
+        description="Experience a living feed of culinary innovation. Our engine curates the world's most striking dishes, techniques, and trends specifically for your palate."
+        image="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80"
+        icon={Sparkles}
+        color="stone"
+      />
+
+      <FeatureFold
+        subtitle="Studio Bites"
+        title="Architectural Recipes"
+        description="Access a library of high-fidelity recipe packs. From molecular gastronomy to heritage classics, every bite is broken down into its core components."
+        image="https://images.unsplash.com/photo-1550317138-10000687ad32?auto=format&fit=crop&w=800&q=80"
+        icon={ChefHat}
+        color="stone"
+        reverse
+      />
+
+      <FeatureFold
+        subtitle="Scout Maps"
+        title="Hyper-local Scouting"
+        description="Uncover hidden culinary gems with our hyper-local discovery engine. Real-time ratings, vibe analysis, and recommendations for the global diner."
+        image="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80"
+        icon={MapPin}
+        color="stone"
+      />
+
+      <FeatureFold
+        subtitle="Fuzo Trims"
+        title="Cinematic Culinary"
+        description="Short-form cinematic education. Watch top-tier creators break down complex techniques in high-definition, vertical-first video trims."
+        image="https://images.unsplash.com/photo-1577308856961-8e9ec50d0c67?auto=format&fit=crop&w=800&q=80"
+        icon={PlayCircle}
+        color="stone"
+        reverse
+      />
+
+      <FeatureFold
+        subtitle="Fuzo Elite"
+        title="Rise to the Top"
+        description="Join the global leaderboard. Earn points for every snap, save, and share. Compete with the world's most dedicated foodies for the title of Studio Elite."
+        image="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80"
+        icon={Trophy}
+        color="stone"
+      />
+
+      <FeatureFold
+        subtitle="Studio Rewards"
+        title="Exclusive Access"
+        description="Redeem your points for exclusive rewards. From filter packs to private chef consultations, your engagement unlocks the studio's inner circle."
+        image="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=80"
+        icon={Gift}
+        color="stone"
+        reverse
+      />
+
+      <FeatureFold
+        subtitle="Chef AI"
+        title="Sous-Chef"
+        description="Consult our proprietary LLM for recipe architecture, ingredient pairing, and culinary troubleshooting. Your 24/7 kitchen companion."
+        image="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"
+        icon={Bot}
+        color="stone"
+      />
+
+      {/* Final CTA */}
+      <section className="py-40 bg-stone-900 text-white text-center">
+        <div className="max-w-4xl mx-auto px-6 space-y-12">
+          <h2 className="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-[0.8] italic">Ready to <br /> <span className="not-italic text-yellow-400">Evolve?</span></h2>
+          <p className="text-2xl font-bold text-stone-400 max-w-2xl mx-auto">
+            Join the world's most advanced culinary community and redefine your relationship with taste.
+          </p>
+          <button
+            onClick={onStart}
+            className="px-16 py-8 bg-yellow-400 text-stone-900 rounded-[3rem] font-black uppercase tracking-widest text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl"
+          >
+            Get Started Now
+          </button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-20 px-6 border-t border-stone-900/10 text-center space-y-8 bg-[#fbd556]">
+        <div className="flex items-center justify-center gap-4">
+          <div className="w-10 h-10 bg-stone-900 rounded-2xl flex items-center justify-center text-yellow-400"><ChefHat size={20} /></div>
+          <h1 className="text-xl font-black uppercase tracking-[0.4em]">FUZO</h1>
+        </div>
+        <div className="flex justify-center gap-8 text-[10px] font-black uppercase tracking-widest text-stone-500">
+          <a href="#" className="hover:text-stone-900 transition-colors">Privacy</a>
+          <a href="#" className="hover:text-stone-900 transition-colors">Terms</a>
+          <a href="#" className="hover:text-stone-900 transition-colors">Contact</a>
+        </div>
+        <p className="text-stone-400 font-bold uppercase tracking-widest text-[10px]">© 2026 FUZO. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+};
+
+const AuthView = ({ onComplete }: { onComplete: () => void }) => {
+  const [step, setStep] = useState<'signin' | 'signup' | 'onboarding'>('signin');
+  const [onboardingStep, setOnboardingStep] = useState(0);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [authMessage, setAuthMessage] = useState('');
+
+  const handleGoogleSignIn = async () => {
+    if (!supabase) {
+      setAuthError('Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
+      return;
+    }
+
+    setAuthError('');
+    setAuthMessage('');
+    setAuthLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: getOAuthRedirectUrl(),
+      },
+    });
+
+    if (error) {
+      setAuthError(error.message);
+      setAuthLoading(false);
+    }
+  };
+
+  const handleEmailAuth = async () => {
+    if (!supabase) {
+      setAuthError('Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
+      return;
+    }
+
+    if (!email || !password) {
+      setAuthError('Please enter email and password.');
+      return;
+    }
+
+    if (step === 'signup' && !name.trim()) {
+      setAuthError('Please enter your display name.');
+      return;
+    }
+
+    setAuthError('');
+    setAuthMessage('');
+    setAuthLoading(true);
+
+    try {
+      if (step === 'signin') {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          setAuthError(error.message);
+        } else if (data.session) {
+          setStep('onboarding');
+        }
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              name: name.trim(),
+              full_name: name.trim(),
+            },
+          },
+        });
+
+        if (error) {
+          setAuthError(error.message);
+        } else if (data.session) {
+          setStep('onboarding');
+        } else {
+          setAuthMessage('Account created. Please verify your email, then sign in.');
+          setStep('signin');
+        }
+      }
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  if (step === 'onboarding') {
+    const current = AUTH_ONBOARDING_DATA[onboardingStep];
+    return (
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center p-6">
+        <motion.div 
+          key={onboardingStep}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="w-full max-w-xl bg-white p-12 md:p-16 rounded-[4rem] shadow-2xl border-4 border-white space-y-10"
+        >
+          <div className="flex justify-between items-center">
+            <Badge color="yellow">Step {onboardingStep + 1} of 3</Badge>
+            <div className="flex gap-1">
+              {[0,1,2].map(i => <div key={i} className={`w-8 h-1.5 rounded-full ${i <= onboardingStep ? 'bg-yellow-400' : 'bg-stone-100'}`} />)}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-5xl font-black uppercase tracking-tighter leading-none">{current.title}</h2>
+            <p className="text-stone-400 font-bold text-lg">{current.desc}</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {current.options.map(opt => (
+              <button 
+                key={opt}
+                onClick={() => {
+                  if (onboardingStep < 2) setOnboardingStep(onboardingStep + 1);
+                  else onComplete();
+                }}
+                className="p-8 bg-stone-50 rounded-[2.5rem] border-2 border-transparent hover:border-yellow-400 hover:bg-white transition-all text-left group"
+              >
+                <div className="flex justify-between items-center">
+                  <span className="font-black uppercase tracking-widest text-sm">{opt}</span>
+                  <ChevronRight size={20} className="text-stone-200 group-hover:text-yellow-400 group-hover:translate-x-1 transition-all" />
+                </div>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-stone-900 flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#facc15_0%,transparent_70%)]" />
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-md bg-white p-12 rounded-[4rem] shadow-2xl relative z-10 space-y-10"
+      >
+        <div className="text-center space-y-4">
+          <div className="w-20 h-20 bg-stone-900 rounded-3xl flex items-center justify-center text-yellow-400 shadow-xl mx-auto mb-8 rotate-3">
+            <ChefHat size={40} />
+          </div>
+          <h2 className="text-4xl font-black uppercase tracking-tighter leading-none">
+            {step === 'signin' ? 'Welcome Back' : 'Create Account'}
+          </h2>
+          <p className="text-stone-400 font-bold">Access your neural culinary studio.</p>
+        </div>
+
+        <div className="space-y-4">
+          <button 
+            onClick={handleGoogleSignIn}
+            disabled={authLoading}
+            className="w-full py-5 bg-white border-2 border-stone-100 rounded-[2rem] flex items-center justify-center gap-4 hover:bg-stone-50 transition-colors group"
+          >
+            <svg className="w-6 h-6" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+            </svg>
+            <span className="font-black uppercase tracking-widest text-xs">Sign in with Google</span>
+          </button>
+
+          <div className="flex items-center gap-4 py-4">
+            <div className="flex-grow h-px bg-stone-100" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-stone-300">or</span>
+            <div className="flex-grow h-px bg-stone-100" />
+          </div>
+
+          <div className="space-y-4">
+            {step === 'signup' && (
+              <input
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="Display Name"
+                className="w-full bg-stone-50 px-8 py-5 rounded-[2rem] font-bold outline-none border-2 border-transparent focus:border-yellow-400 transition-all"
+              />
+            )}
+            <input 
+              type="email" 
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="Email Address" 
+              className="w-full bg-stone-50 px-8 py-5 rounded-[2rem] font-bold outline-none border-2 border-transparent focus:border-yellow-400 transition-all" 
+            />
+            <input 
+              type="password" 
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Password" 
+              className="w-full bg-stone-50 px-8 py-5 rounded-[2rem] font-bold outline-none border-2 border-transparent focus:border-yellow-400 transition-all" 
+            />
+          </div>
+
+          {authError && (
+            <div className="px-6 py-4 bg-red-50 border border-red-100 rounded-2xl text-xs font-bold text-red-700">
+              {authError}
+            </div>
+          )}
+
+          {authMessage && (
+            <div className="px-6 py-4 bg-emerald-50 border border-emerald-100 rounded-2xl text-xs font-bold text-emerald-700">
+              {authMessage}
+            </div>
+          )}
+
+          <button 
+            onClick={handleEmailAuth}
+            disabled={authLoading}
+            className="w-full py-6 bg-stone-900 text-white rounded-[2rem] font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
+          >
+            {(() => {
+              if (authLoading) return 'Processing...';
+              if (step === 'signin') return 'Sign In';
+              return 'Sign Up';
+            })()}
+          </button>
+        </div>
+
+        <div className="text-center">
+          <button 
+            onClick={() => {
+              setStep(step === 'signin' ? 'signup' : 'signin');
+              setAuthError('');
+              setAuthMessage('');
+            }}
+            className="text-[10px] font-black uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors"
+          >
+            {step === 'signin' ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+const LeaderboardView = ({ userPoints, userLevel, leaderboardUsers }: { userPoints: number, userLevel: number, leaderboardUsers: LeaderboardEntry[] }) => {
+  const medalClassByRank = (rank: number) => {
+    if (rank === 1) return 'text-yellow-500';
+    if (rank === 2) return 'text-stone-400';
+    return 'text-orange-400';
+  };
+
+  const medalLabelByRank = (rank: number) => {
+    if (rank === 1) return '🥇';
+    if (rank === 2) return '🥈';
+    return '🥉';
+  };
+
+  const leaders = leaderboardUsers.slice(0, 25).map((leader, index) => ({
+    id: leader.id,
+    name: leader.displayName,
+    username: leader.username,
+    points: leader.pointsTotal,
+    level: leader.pointsLevel,
+    avatar: `https://i.pravatar.cc/150?u=${leader.id}`,
+    rank: index + 1,
+  }));
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in pb-32">
+      <header className="text-center space-y-4 py-8">
+        <div className="inline-flex p-4 bg-yellow-400 rounded-3xl text-stone-900 shadow-2xl rotate-3 mb-4">
+          <Trophy size={32} strokeWidth={2.5} />
+        </div>
+        <h2 className="text-5xl font-black uppercase tracking-tighter leading-none">Studio Elite</h2>
+        <p className="text-stone-400 font-bold uppercase tracking-widest text-[10px]">Global Leaderboard</p>
+      </header>
+
+      <div className="bg-white rounded-[3rem] border-4 border-white shadow-2xl overflow-hidden divide-y">
+        {leaders.map((leader) => (
+          <div key={leader.id} className="p-8 flex items-center justify-between hover:bg-stone-50 transition-colors">
+            <div className="flex items-center gap-6">
+              <div className="w-10 text-center">
+                {leader.rank <= 3 ? (
+                  <span className={`text-2xl ${medalClassByRank(leader.rank)}`}>
+                    {medalLabelByRank(leader.rank)}
+                  </span>
+                ) : (
+                  <span className="text-lg font-black text-stone-200">#{leader.rank}</span>
+                )}
+              </div>
+              <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-stone-100">
+                <img src={leader.avatar} alt={`${leader.name} avatar`} className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <p className="font-black uppercase text-sm tracking-tighter text-stone-900">{leader.name}</p>
+                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">@{leader.username} • Level {leader.level}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-xl font-black text-stone-900">{leader.points.toLocaleString()}</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-stone-300">Points</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-stone-900 rounded-[3rem] p-10 text-white flex items-center justify-between shadow-2xl">
+        <div className="flex items-center gap-6">
+          <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/20">
+            <img src="https://i.pravatar.cc/150?u=me" alt="Your avatar" className="w-full h-full object-cover" />
+          </div>
+          <div>
+            <p className="font-black uppercase text-sm tracking-tighter">Your Rank</p>
+            <p className="text-stone-400 text-[10px] font-bold uppercase tracking-widest">Studio Apprentice</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-2xl font-black text-yellow-400">{userPoints.toLocaleString()}</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Level {userLevel}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RewardsView = () => {
+  const rewards = [
+    { id: 1, title: "Studio Pro Badge", desc: "Unlock exclusive profile flair", cost: 5000, icon: Star, color: "yellow" },
+    { id: 2, title: "Neural Filter Pack", desc: "New AI styles for your snaps", cost: 12000, icon: Sparkles, color: "indigo" },
+    { id: 3, title: "Chef Consultation", desc: "1-on-1 session with Chef AI Pro", cost: 25000, icon: Bot, color: "emerald" },
+    { id: 4, title: "Priority Scouting", desc: "Early access to hidden gems", cost: 40000, icon: MapPin, color: "blue" },
+  ];
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in pb-32">
+      <header className="text-center space-y-4 py-8">
+        <div className="inline-flex p-4 bg-emerald-500 rounded-3xl text-white shadow-2xl -rotate-3 mb-4">
+          <Gift size={32} strokeWidth={2.5} />
+        </div>
+        <h2 className="text-5xl font-black uppercase tracking-tighter leading-none">Studio Rewards</h2>
+        <p className="text-stone-400 font-bold uppercase tracking-widest text-[10px]">Redeem your culinary points</p>
+      </header>
+
+      <div className="grid grid-cols-1 gap-6 px-4">
+        {rewards.map((reward) => (
+          <div key={reward.id} className="bg-white rounded-[3rem] p-8 border-4 border-white shadow-xl flex items-center justify-between group hover:shadow-2xl transition-all">
+            <div className="flex items-center gap-6">
+              <div className={`p-5 bg-${reward.color}-100 rounded-[2rem] text-${reward.color}-600 group-hover:scale-110 transition-transform`}>
+                <reward.icon size={32} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black uppercase tracking-tighter text-stone-900">{reward.title}</h3>
+                <p className="text-stone-400 font-bold text-sm">{reward.desc}</p>
+              </div>
+            </div>
+            <button className="px-8 py-4 bg-stone-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-stone-800 transition-colors">
+              {reward.cost.toLocaleString()} Pts
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const TaggingForm = ({
+  image,
+  location,
+  onBack,
+  onSave,
+  isUploading
+}: {
+  image: string;
+  location?: { lat: number; lng: number } | null;
+  onBack: () => void;
+  onSave: (data: any) => void;
+  isUploading: boolean;
+}) => {
+  const [restaurant, setRestaurant] = useState('');
+  const [cuisine, setCuisine] = useState('');
+  const [rating, setRating] = useState(5);
+  const [description, setDescription] = useState('');
+
+  const isValid = restaurant.trim() !== '' && cuisine.trim() !== '';
+
+  return (
+    <div className="fixed inset-0 z-[200] bg-stone-50 flex flex-col md:flex-row overflow-hidden">
+      <div className="h-1/2 md:h-full md:w-1/2 relative bg-black">
+        <img src={image} alt="Snap preview" className="w-full h-full object-cover" />
+        <button onClick={onBack} className="absolute top-8 left-8 w-14 h-14 bg-black/20 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white"><X size={28} /></button>
+        {location && (
+          <div className="absolute bottom-8 left-8 flex items-center gap-2 px-4 py-2 bg-black/40 backdrop-blur-xl rounded-full text-white text-[10px] font-black uppercase tracking-widest">
+            <MapPin size={12} /> {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
+          </div>
+        )}
+      </div>
+
+      <div className="flex-grow p-8 md:p-16 overflow-y-auto bg-white">
+        <div className="max-w-md mx-auto space-y-10">
+          <header>
+            <h2 className="text-4xl font-black uppercase tracking-tighter italic">Tag Your Snap</h2>
+            <p className="text-stone-400 font-bold uppercase tracking-widest text-[10px]">Neural Metadata Entry</p>
+          </header>
+
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <label htmlFor="snap-restaurant" className="text-[10px] font-black uppercase tracking-widest text-stone-400">Restaurant Name *</label>
+              <input
+                id="snap-restaurant"
+                value={restaurant}
+                onChange={(e) => setRestaurant(e.target.value)}
+                placeholder="Where are you?"
+                className="w-full bg-stone-50 px-8 py-5 rounded-[2rem] font-bold outline-none border-2 border-transparent focus:border-yellow-400 transition-all"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="snap-cuisine" className="text-[10px] font-black uppercase tracking-widest text-stone-400">Cuisine Type *</label>
+              <input
+                id="snap-cuisine"
+                value={cuisine}
+                onChange={(e) => setCuisine(e.target.value)}
+                placeholder="e.g. Modern Italian"
+                className="w-full bg-stone-50 px-8 py-5 rounded-[2rem] font-bold outline-none border-2 border-transparent focus:border-yellow-400 transition-all"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="snap-rating" className="text-[10px] font-black uppercase tracking-widest text-stone-400">Rating</label>
+              <div id="snap-rating" className="sr-only">Snap rating controls</div>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <button
+                    key={star}
+                    onClick={() => setRating(star)}
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${rating >= star ? 'bg-yellow-400 text-stone-900 shadow-lg' : 'bg-stone-50 text-stone-300'}`}
+                  >
+                    <Star size={20} fill={rating >= star ? 'currentColor' : 'none'} />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="snap-description" className="text-[10px] font-black uppercase tracking-widest text-stone-400">Description</label>
+              <textarea
+                id="snap-description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Neural impressions..."
+                rows={3}
+                className="w-full bg-stone-50 px-8 py-5 rounded-[2rem] font-bold outline-none border-2 border-transparent focus:border-yellow-400 transition-all resize-none"
+              />
+            </div>
+          </div>
+
+          <button
+            disabled={!isValid || isUploading}
+            onClick={() => onSave({ restaurant, cuisine, rating, description })}
+            className={`w-full py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-2xl flex items-center justify-center gap-4 transition-all ${isValid && !isUploading ? 'bg-stone-900 text-white hover:scale-105 active:scale-95' : 'bg-stone-100 text-stone-300 cursor-not-allowed'}`}
+          >
+            {isUploading ? <Loader2 className="animate-spin" /> : <Check size={24} />}
+            {isUploading ? 'Processing...' : 'Save to Studio'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SnapMobile = ({ onPost, onClose }: { onPost: (item: any) => void, onClose: () => void }) => {
+  const [step, setStep] = useState<'disclaimer' | 'capture' | 'tagging' | 'success'>('disclaimer');
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1080 }, height: { ideal: 1920 } }
+      });
+      if (videoRef.current) videoRef.current.srcObject = stream;
+      streamRef.current = stream;
+    } catch (err) {
+      console.error('Camera error:', err);
+    }
+  };
+
+  const stopCamera = () => {
+    streamRef.current?.getTracks().forEach(track => track.stop());
+    streamRef.current = null;
+  };
+
+  useEffect(() => {
+    if (step === 'capture') {
+      startCamera();
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        (err) => console.warn('Location error:', err),
+        { enableHighAccuracy: true }
+      );
+    } else {
+      stopCamera();
+    }
+    return () => stopCamera();
+  }, [step]);
+
+  const handleCapture = () => {
+    if (!videoRef.current) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.drawImage(videoRef.current, 0, 0);
+      setCapturedImage(canvas.toDataURL('image/jpeg', 0.85));
+      setStep('tagging');
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        await loadUploadedImage(file, setCapturedImage, () => setStep('tagging'));
+      } catch (error) {
+        console.warn('Failed to read uploaded image', error);
+      }
+    }
+  };
+
+  if (step === 'disclaimer') {
+    return (
+      <div className="fixed inset-0 z-[200] bg-stone-950 text-white p-10 flex flex-col justify-center items-center text-center space-y-8">
+        <div className="w-24 h-24 bg-yellow-400 rounded-[2rem] flex items-center justify-center text-stone-950 shadow-2xl rotate-6">
+          <Info size={48} strokeWidth={2.5} />
+        </div>
+        <h2 className="text-4xl font-black uppercase tracking-tighter italic">Studio Protocol</h2>
+        <p className="text-stone-400 font-bold leading-relaxed max-w-xs">
+          By entering the capture studio, you agree to share high-fidelity culinary data with the FUZO network.
+        </p>
+        <button
+          onClick={() => setStep('capture')}
+          className="w-full py-6 bg-white text-stone-900 rounded-[2rem] font-black uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all"
+        >
+          I Understand
+        </button>
+        <button onClick={onClose} className="text-stone-500 font-bold uppercase tracking-widest text-xs">Cancel</button>
+      </div>
+    );
+  }
+
+  if (step === 'tagging' && capturedImage) {
+    return (
+      <TaggingForm
+        image={capturedImage}
+        location={location}
+        onBack={() => setStep('capture')}
+        onSave={async (data) => {
+          setIsUploading(true);
+          const snapId = `snap-${Date.now()}`;
+          const snapItem = await persistSnapData({
+            snapId,
+            imageData: capturedImage,
+            restaurant: data.restaurant,
+            cuisine: data.cuisine,
+            rating: data.rating,
+            description: data.description,
+            location,
+          });
+          onPost(snapItem);
+          setStep('success');
+          setIsUploading(false);
+        }}
+        isUploading={isUploading}
+      />
+    );
+  }
+
+  if (step === 'success') {
+    return (
+      <div className="fixed inset-0 z-[200] bg-emerald-500 text-white flex flex-col items-center justify-center p-10 text-center space-y-8">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="w-32 h-32 bg-white rounded-full flex items-center justify-center text-emerald-500 shadow-2xl"
+        >
+          <Check size={64} strokeWidth={4} />
+        </motion.div>
+        <h2 className="text-5xl font-black uppercase tracking-tighter italic">Snap Saved</h2>
+        <p className="text-emerald-100 font-bold uppercase tracking-widest text-xs">Data Persisted</p>
+        <button
+          onClick={onClose}
+          className="w-full py-6 bg-stone-900 text-white rounded-[2rem] font-black uppercase tracking-widest shadow-2xl"
+        >
+          Return to Feed
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-[200] bg-black flex flex-col overflow-hidden">
+      <header className="absolute top-0 inset-x-0 p-8 flex justify-between items-center z-20">
+        <button onClick={onClose} className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white"><X size={28} /></button>
+        <button className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white"><Zap size={24} /></button>
+      </header>
+
+      <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover">
+        <track kind="captions" />
+      </video>
+
+      <footer className="absolute bottom-12 inset-x-0 flex justify-around items-center z-20 px-8">
+        <label className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white cursor-pointer">
+          <ImageIcon size={24} />
+          <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+        </label>
+
+        <button
+          onClick={handleCapture}
+          className="w-28 h-28 rounded-full border-[8px] border-white bg-white/20 shadow-2xl backdrop-blur-sm active:scale-90 transition-transform flex items-center justify-center"
+        >
+          <div className="w-20 h-20 bg-white rounded-full" />
+        </button>
+
+        <button className="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white"><RefreshCw size={24} /></button>
+      </footer>
+    </div>
+  );
+};
+
+const SnapDesktop = ({ onPost, onClose }: { onPost: (item: any) => void, onClose: () => void }) => {
+  const [step, setStep] = useState<'upload' | 'tagging' | 'success'>('upload');
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  if (step === 'tagging' && capturedImage) {
+    return (
+      <TaggingForm
+        image={capturedImage}
+        onBack={() => setStep('upload')}
+        onSave={async (data) => {
+          setIsUploading(true);
+          const snapId = `snap-${Date.now()}`;
+          const snapItem = await persistSnapData({
+            snapId,
+            imageData: capturedImage,
+            restaurant: data.restaurant,
+            cuisine: data.cuisine,
+            rating: data.rating,
+            description: data.description,
+            location: null,
+          });
+          onPost(snapItem);
+          setStep('success');
+          setIsUploading(false);
+        }}
+        isUploading={isUploading}
+      />
+    );
+  }
+
+  if (step === 'success') {
+    return (
+      <div className="fixed inset-0 z-[200] bg-emerald-500 text-white flex flex-col items-center justify-center p-10 text-center">
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-32 h-32 bg-white rounded-full flex items-center justify-center text-emerald-500 shadow-2xl mb-8">
+          <Check size={64} strokeWidth={4} />
+        </motion.div>
+        <h2 className="text-5xl font-black uppercase tracking-tighter italic mb-4">Snap Saved</h2>
+        <button onClick={onClose} className="px-12 py-6 bg-stone-900 text-white rounded-[2rem] font-black uppercase tracking-widest shadow-2xl">Return to Feed</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-[200] bg-stone-950 flex items-center justify-center p-10">
+      <button onClick={onClose} className="absolute top-10 right-10 w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center text-white hover:bg-white/20 transition-colors"><X size={32} /></button>
+
+      <div className="max-w-2xl w-full aspect-video bg-stone-900 rounded-[3rem] border-4 border-dashed border-stone-800 flex flex-col items-center justify-center space-y-6 text-center p-12 group hover:border-yellow-400/50 transition-colors relative">
+        <div className="w-24 h-24 bg-stone-800 rounded-3xl flex items-center justify-center text-stone-600 group-hover:text-yellow-400 transition-colors">
+          <ImageIcon size={48} />
+        </div>
+        <div>
+          <h3 className="text-2xl font-black uppercase tracking-tighter text-white">Upload Culinary Data</h3>
+          <p className="text-stone-500 font-bold uppercase tracking-widest text-[10px] mt-2">Max file size: 10MB (JPEG, PNG)</p>
+        </div>
+        <label className="px-10 py-5 bg-white text-stone-900 rounded-[2rem] font-black uppercase tracking-widest cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-2xl">
+          <span>Choose File</span>
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              try {
+                await loadUploadedImage(file, setCapturedImage, () => setStep('tagging'));
+              } catch (error) {
+                console.warn('Failed to read uploaded image', error);
+              }
+            }}
+          />
+        </label>
+      </div>
+    </div>
+  );
+};
+
+const SnapView = ({ onPost, onClose }: { onPost: (item: any) => void, onClose: () => void }) => {
+  const isDesktop = useIsDesktop();
+
+  if (isDesktop) {
+    return <SnapDesktop onPost={onPost} onClose={onClose} />;
+  }
+  return <SnapMobile onPost={onPost} onClose={onClose} />;
+};
+
+// --- MAIN APP ---
+
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+  const [authBooting, setAuthBooting] = useState(true);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+
+  const [points, setPoints] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [leaderboardUsers, setLeaderboardUsers] = useState<LeaderboardEntry[]>([]);
+
+  const tabIds = useMemo(() => new Set(TAB_IDS), []);
+  const [tab, setTab] = useState(() => resolveInitialTab(globalThis.location.search, tabIds));
+  const [showSnap, setShowSnap] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [savedItems, setSavedItems] = useState<any[]>(FALLBACK_SAVED_ITEMS);
+  const [activeShareItem, setActiveShareItem] = useState<any>(null);
+
+  const [friends, setFriends] = useState(DEFAULT_FRIENDS);
+  const pathname = globalThis.location.pathname;
+  const viewParam = new URLSearchParams(globalThis.location.search).get('view');
+  const hasViewParam = !!viewParam;
+  const isHomeView = viewParam === 'home';
+  const appRoute = isAppPath(pathname);
+  const authCallbackRoute = isAuthCallbackPath(pathname);
+
+  useAuthSessionSync({
+    setAuthBooting,
+    setIsAuthenticated,
+    setAuthUser,
+    setShowAuth,
+    setHasCompletedOnboarding,
+  });
+
+  useSavedItemsOnAuth({
+    isAuthenticated,
+    setSavedItems,
+    fallbackSavedItems: FALLBACK_SAVED_ITEMS,
+    normalizeSavedItemForUI,
+  });
+
+  useTabUrlSync(tab, appRoute);
+
+  useEffect(() => {
+    const currentPath = globalThis.location.pathname;
+    const currentSearch = globalThis.location.search;
+    const currentHash = globalThis.location.hash;
+
+    if (currentPath === LANDING_PATH || currentPath === '/landing/') {
+      globalThis.history.replaceState(null, '', `${HOME_ENTRY_URL}${currentHash}`);
+      return;
+    }
+
+    if (currentPath === '/home' || currentPath.startsWith('/home/')) {
+      globalThis.history.replaceState(null, '', `${HOME_ENTRY_URL}${currentHash}`);
+      return;
+    }
+
+    if (currentPath === '/') {
+      const params = new URLSearchParams(currentSearch);
+      const legacyView = params.get('view');
+
+      if (!legacyView) {
+        globalThis.history.replaceState(null, '', `${HOME_ENTRY_URL}${currentHash}`);
+        return;
+      }
+
+      if (legacyView === 'home') {
+        return;
+      }
+
+      params.set('view', legacyView);
+      const nextQuery = params.toString();
+      const queryPart = nextQuery ? ('?' + nextQuery) : '';
+      const nextUrl = `${APP_PATH}${queryPart}${currentHash}`;
+      globalThis.history.replaceState(null, '', nextUrl);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated || !appRoute || showAuth) {
+      return;
+    }
+
+    setShowAuth(true);
+  }, [appRoute, isAuthenticated, showAuth]);
+
+  useEffect(() => {
+    if (authBooting || !authCallbackRoute) {
+      return;
+    }
+
+    if (isAuthenticated) {
+      setTab('feed');
+      globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
+      return;
+    }
+
+    setShowAuth(true);
+    globalThis.history.replaceState(null, '', HOME_ENTRY_URL);
+  }, [authBooting, authCallbackRoute, isAuthenticated]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadContacts = async () => {
+      if (!authUser?.id || !hasSupabaseConfig) {
+        setFriends(DEFAULT_FRIENDS);
+        return;
+      }
+
+      const contacts = await ChatService.listContacts(authUser.id);
+      if (cancelled || !contacts.success || !contacts.data) {
+        setFriends(DEFAULT_FRIENDS);
+        return;
+      }
+
+      setFriends(contacts.data.map((contact: any) => ({
+        ...contact,
+        online: contact.isOnline,
+        time: contact.isOnline ? 'now' : 'recent',
+        unreadCount: 0,
+        requestStatus: 'accepted',
+      })) as any);
+    };
+
+    loadContacts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser?.id]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadPoints = async () => {
+      if (!isAuthenticated || !hasSupabaseConfig) {
+        setPoints(0);
+        setLevel(1);
+        return;
+      }
+
+      const result = await PointsService.getCurrentUserPoints();
+      if (cancelled || !result.success || !result.data) return;
+
+      setPoints(result.data.total);
+      setLevel(result.data.level);
+    };
+
+    loadPoints();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated, authUser?.id]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadLeaderboard = async () => {
+      if (!hasSupabaseConfig) {
+        setLeaderboardUsers([]);
+        return;
+      }
+
+      const result = await PointsService.getLeaderboard(50);
+      if (cancelled || !result.success || !result.data) return;
+      setLeaderboardUsers(result.data);
+    };
+
+    loadLeaderboard();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser?.id, points]);
+
+  const awardPointsForAction = useCallback(async (
+    actionType: 'save_item' | 'share_item' | 'snap_post',
+    sourceEntityType: string,
+    sourceEntityId: string,
+    metadata?: Record<string, unknown>,
+  ) => {
+    if (!isAuthenticated || !hasSupabaseConfig) {
+      setPoints(prev => prev + 50);
+      return;
+    }
+
+    const result = await PointsService.awardActionPoints({
+      actionType,
+      sourceEntityType,
+      sourceEntityId,
+      metadata,
+    });
+
+    if (!result.success || !result.data) {
+      console.warn('Points award failed:', result.error);
+      return;
+    }
+
+    const awardedPoints = result.data;
+
+    setPoints(awardedPoints.total);
+    setLevel(awardedPoints.level);
+    setLeaderboardUsers(prev => {
+      const currentUserId = authUser?.id;
+      if (!currentUserId) return prev;
+      const rest = prev.filter(entry => entry.id !== currentUserId);
+      const metadata = authUser?.user_metadata;
+      const displayName = getMetadataString(metadata, 'full_name', 'name') || 'Chef Studio';
+      const username = getMetadataString(metadata, 'username', 'user_name') || (authUser?.email?.split('@')[0] ?? 'fuzo_user');
+      const updated: LeaderboardEntry = {
+        id: currentUserId,
+        displayName,
+        username,
+        pointsTotal: awardedPoints.total,
+        pointsLevel: awardedPoints.level,
+      };
+
+      return [updated, ...rest]
+        .sort((a, b) => (b.pointsTotal - a.pointsTotal) || (b.pointsLevel - a.pointsLevel));
+    });
+  }, [isAuthenticated]);
+
+  const handleSave = async (item: any) => {
+    const normalized = normalizeItemForPlateSave(item);
+    let isNewSave = false;
+
+    setSavedItems(prev => {
+      if (prev.some(i => i.id === normalized.id)) return prev;
+      isNewSave = true;
+      return [normalized, ...prev];
+    });
+
+    if (isNewSave) {
+      await awardPointsForAction('save_item', normalized.itemType, normalized.itemId, {
+        source: 'handleSave',
+      });
+    }
+
+    if (!hasSupabaseConfig) return;
+
+    const result = await PlateService.saveToPlate({
+      itemId: normalized.itemId,
+      itemType: normalized.itemType,
+      metadata: normalized.metadata,
+    });
+
+    if (!result.success) {
+      console.warn('Plate save failed:', result.error);
+    }
+  };
+
+  const handleSnap = (item: any) => {
+    setSavedItems(prev => [item, ...prev]);
+    awardPointsForAction('snap_post', inferItemTypeFromId(item.id), String(item.id), {
+      source: 'handleSnap',
+    }).catch((error) => {
+      console.warn('Snap points award failed:', error);
+    });
+  };
+
+  const handleShare = async (friendId: string | number, item: any) => {
+    const targetFriendId = String(friendId);
+
+    if (authUser?.id && hasSupabaseConfig) {
+      const conversation = await ChatService.getOrCreateConversation(authUser.id, targetFriendId);
+      if (conversation.success && conversation.data) {
+        const sent = await ChatService.sendSharedItemMessage({
+          conversationId: conversation.data.id,
+          senderId: authUser.id,
+          item,
+        });
+
+        if (!sent.success) {
+          console.warn('Share message send failed:', sent.error);
+        }
+      }
+    }
+
+    awardPointsForAction('share_item', inferItemTypeFromId(item.id), String(item.id), {
+      source: 'handleShare',
+      friendId: targetFriendId,
+    }).catch((error) => {
+      console.warn('Share points award failed:', error);
+    });
+  };
+
+  const handleSignOut = async () => {
+    try {
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
+    } finally {
+      setIsAuthenticated(false);
+      setAuthUser(null);
+      setShowAuth(false);
+      setPoints(0);
+      setLevel(1);
+      setTab('feed');
+      setSidebarOpen(false);
+      setShowSnap(false);
+      setActiveShareItem(null);
+      setSavedItems(FALLBACK_SAVED_ITEMS);
+      globalThis.history.replaceState(null, '', HOME_ENTRY_URL);
+    }
+  };
+
+  const renderView = () => renderAppView({
+    tab,
+    setTab,
+    handleSave: (item: any) => {
+      handleSave(item).catch((error) => {
+        console.warn('Save failed:', error);
+      });
+    },
+    setActiveShareItem,
+    friends,
+    savedItems,
+    authUser,
+    points,
+    level,
+    leaderboardUsers,
+    handleSignOut,
+    components: {
+      FeedView,
+      BitesView,
+      TrimsView,
+      ChefAIView,
+      ChatView,
+      ScoutView,
+      ProfileView,
+      LeaderboardView,
+      RewardsView,
+      SettingsView,
+    },
+  });
+
+  if (authBooting) {
+    return (
+      <div className="min-h-screen bg-stone-900 text-white flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-3xl bg-white/10 border border-white/20 animate-pulse" />
+          <p className="font-black uppercase tracking-widest text-xs text-white/60">Initializing Auth...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!appRoute && (!hasViewParam || isHomeView) && !showAuth && !authCallbackRoute) {
+    return (
+      <LandingPage
+        onStart={() => {
+          setTab('feed');
+          globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
+          setShowAuth(true);
+        }}
+      />
+    );
+  }
+
+  if (showAuth && !hasCompletedOnboarding) {
+    return <AuthView onComplete={() => {
+      setIsAuthenticated(true);
+      setHasCompletedOnboarding(true);
+      setShowAuth(false);
+      setTab('feed');
+      globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
+    }} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-stone-50 flex flex-col md:flex-row pb-[env(safe-area-inset-bottom)] overflow-x-hidden">
+      {showSnap && <SnapView onPost={handleSnap} onClose={() => setShowSnap(false)} />}
+      {activeShareItem && (
+        <ShareModal 
+          item={activeShareItem} 
+          friends={friends} 
+          onShare={handleShare} 
+          onClose={() => setActiveShareItem(null)} 
+        />
+      )}
+      
+      <aside className={`fixed inset-y-0 left-0 z-[200] w-28 bg-white border-r border-stone-100 transform ${sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'} md:translate-x-0 md:static transition-all duration-500 ease-in-out`}>
+        <div className="flex flex-col h-full p-4 overflow-y-auto hide-scrollbar items-center">
+          <header className="flex flex-col items-center justify-center mb-12 md:mb-16 mt-4 gap-6">
+            <div className="w-14 h-14 bg-stone-900 rounded-3xl items-center justify-center text-yellow-400 shadow-2xl rotate-3 shrink-0 hidden md:flex"><ChefHat size={32} /></div>
+            <button 
+              onClick={() => { setTab('leaderboard'); setSidebarOpen(false); }}
+              className="flex flex-col items-center gap-1 group"
+            >
+              <div className="px-3 py-1 bg-yellow-400 rounded-full text-[10px] font-black text-stone-900 shadow-lg group-hover:scale-110 transition-transform">
+                {points.toLocaleString()}
+              </div>
+              <span className="text-[8px] font-black uppercase tracking-widest text-stone-300">Pts</span>
+            </button>
+            <button onClick={() => setSidebarOpen(false)} className="md:hidden p-4 bg-stone-50 rounded-2xl"><X size={20} /></button>
+          </header>
+          
+          <nav className="space-y-4 flex-grow w-full">
+            {BOTTOM_NAV_ITEMS.filter(item => item.id !== 'snap').map(item => (
+              <button 
+                key={item.id}
+                onClick={() => { setTab(item.id); setSidebarOpen(false); }}
+                className={`w-full flex items-center justify-center py-5 rounded-[1.5rem] transition-all ${tab === item.id ? 'bg-yellow-400 text-stone-900 shadow-xl' : 'text-stone-300 hover:bg-stone-50'}`}
+              >
+                <item.icon size={28} strokeWidth={tab === item.id ? 3 : 2} />
+              </button>
+            ))}
+
+            <div className="my-8 h-px bg-stone-50 w-1/2 mx-auto" />
+            
+            {DRAWER_NAV_ITEMS.map(item => (
+              <button 
+                key={item.id}
+                onClick={() => { setTab(item.id); setSidebarOpen(false); }}
+                className={`w-full flex items-center justify-center py-5 rounded-[1.5rem] transition-all ${tab === item.id ? 'bg-stone-900 text-white shadow-xl' : 'text-stone-300 hover:bg-stone-50'}`}
+              >
+                <item.icon size={28} strokeWidth={tab === item.id ? 3 : 2} />
+              </button>
+            ))}
+          </nav>
+        </div>
+      </aside>
+
+      <main className="flex-grow max-w-6xl mx-auto w-full px-6 md:px-12 relative pt-8 pb-32 md:pb-12">
+        <header className="flex items-center justify-between mb-8 md:hidden px-2">
+          <button onClick={() => setSidebarOpen(true)} className="p-2 bg-stone-900 text-yellow-400 rounded-2xl shadow-lg active:scale-90 transition-transform rotate-3">
+            <ChefHat size={24} strokeWidth={2.5} />
+          </button>
+          <button 
+            onClick={() => setTab('leaderboard')}
+            className="flex items-center gap-3 bg-white px-4 py-2 rounded-2xl shadow-sm border border-stone-100 active:scale-95 transition-all"
+          >
+            <Trophy size={16} className="text-yellow-500" />
+            <span className="text-xs font-black tracking-tighter">{points.toLocaleString()}</span>
+          </button>
+        </header>
+
+        {renderView()}
+      </main>
+
+      <nav className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-2xl border-t border-stone-100 px-8 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex justify-between items-center md:hidden z-[60] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+        <NavIcon icon={LayoutGrid} active={tab === 'feed'} onClick={() => setTab('feed')} label="Feed" />
+        <NavIcon icon={ChefHat} active={tab === 'bites'} onClick={() => setTab('bites')} label="Bites" />
+        
+        <button 
+          onClick={() => setShowSnap(true)} 
+          className="w-20 h-20 -mt-16 bg-stone-900 rounded-[2.5rem] flex items-center justify-center text-yellow-400 shadow-[0_20px_40px_rgba(0,0,0,0.3)] border-4 border-white active:scale-90 transition-transform"
+        >
+          <Camera size={32} strokeWidth={3} />
+        </button>
+
+        <NavIcon icon={PlayCircle} active={tab === 'trims'} onClick={() => setTab('trims')} label="Trims" />
+        <NavIcon icon={MapPin} active={tab === 'scout'} onClick={() => setTab('scout')} label="Scout" />
+      </nav>
+
+      {sidebarOpen && <button type="button" aria-label="Close sidebar" className="fixed inset-0 bg-stone-900/40 backdrop-blur-xl z-[190] md:hidden" onClick={() => setSidebarOpen(false)} />}
+    </div>
+  );
+};
+
+mountApp(App);

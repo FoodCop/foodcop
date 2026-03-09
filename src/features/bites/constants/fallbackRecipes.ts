@@ -1,0 +1,60 @@
+import type { BiteRecipe } from '../types/bites';
+
+export const BITE_FALLBACK_RECIPES: BiteRecipe[] = [
+  {
+    id: 1, title: 'Wagyu Truffle Burger',
+    image: 'https://images.unsplash.com/photo-1550317138-10000687ad32?auto=format&fit=crop&w=400',
+    readyInMinutes: 20, servings: 2,
+    dishTypes: ['Main Course'],
+    extendedIngredients: [{ original: 'Wagyu Beef' }, { original: 'Black Truffle' }, { original: 'Brioche Bun' }],
+    instructions: '1. Sear the wagyu. 2. Shave truffles. 3. Assemble and enjoy.',
+    nutrition: { nutrients: [
+      { name: 'Calories', amount: 850, unit: 'kcal' },
+      { name: 'Protein', amount: 42, unit: 'g' },
+      { name: 'Fat', amount: 58, unit: 'g' },
+      { name: 'Carbohydrates', amount: 32, unit: 'g' },
+    ] },
+  },
+  {
+    id: 2, title: 'Blueberry Matcha Bowl',
+    image: 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?auto=format&fit=crop&w=400',
+    readyInMinutes: 10, servings: 1,
+    dishTypes: ['Breakfast'],
+    extendedIngredients: [{ original: 'Matcha Powder' }, { original: 'Frozen Berries' }, { original: 'Greek Yogurt' }],
+    instructions: '1. Blend matcha and berries. 2. Top with nuts. 3. Serve cold.',
+    nutrition: { nutrients: [
+      { name: 'Calories', amount: 320, unit: 'kcal' },
+      { name: 'Protein', amount: 18, unit: 'g' },
+      { name: 'Fat', amount: 8, unit: 'g' },
+      { name: 'Carbohydrates', amount: 45, unit: 'g' },
+    ] },
+  },
+  {
+    id: 3, title: 'Spicy Ahi Poke',
+    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400',
+    readyInMinutes: 15, servings: 1,
+    dishTypes: ['Lunch'],
+    extendedIngredients: [{ original: 'Ahi Tuna' }, { original: 'Spicy Mayo' }, { original: 'Seaweed' }],
+    instructions: '1. Cube tuna. 2. Mix with sauce. 3. Serve over rice.',
+    nutrition: { nutrients: [
+      { name: 'Calories', amount: 450, unit: 'kcal' },
+      { name: 'Protein', amount: 35, unit: 'g' },
+      { name: 'Fat', amount: 12, unit: 'g' },
+      { name: 'Carbohydrates', amount: 50, unit: 'g' },
+    ] },
+  },
+  {
+    id: 4, title: 'Truffle Mushroom Risotto',
+    image: 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=400',
+    readyInMinutes: 35, servings: 4,
+    dishTypes: ['Dinner'],
+    extendedIngredients: [{ original: 'Arborio Rice' }, { original: 'Wild Mushrooms' }, { original: 'Truffle Oil' }],
+    instructions: '1. Sauté mushrooms. 2. Gradually add broth to rice. 3. Finish with oil.',
+    nutrition: { nutrients: [
+      { name: 'Calories', amount: 580, unit: 'kcal' },
+      { name: 'Protein', amount: 12, unit: 'g' },
+      { name: 'Fat', amount: 22, unit: 'g' },
+      { name: 'Carbohydrates', amount: 75, unit: 'g' },
+    ] },
+  },
+];

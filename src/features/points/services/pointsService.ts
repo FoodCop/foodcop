@@ -1,0 +1,143 @@
+import { supabase } from '../../../services/supabaseClient';
+
+export type PointsActionType = 'save_item' | 'share_item' | 'snap_post';
+
+export interface LeaderboardEntry {
+  id: string;
+  displayName: string;
+  username: string;
+  pointsTotal: number;
+  pointsLevel: number;
+}
+
+interface PointsSummary {
+  total: number;
+  level: number;
+}
+
+interface AwardPointsResult extends PointsSummary {
+  pointsAwarded: number;
+  wasDuplicate: boolean;
+}
+
+interface PointsServiceResult<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
+
+type AwardRpcRow = {
+  points_awarded: number;
+  points_total: number;
+  points_level: number;
+  was_duplicate: boolean;
+};
+
+export const PointsService = {
+  async getLeaderboard(limit = 50): Promise<PointsServiceResult<LeaderboardEntry[]>> {
+    if (!supabase) {
+      return { success: false, error: 'Supabase is not configured' };
+    }
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, display_name, username, points_total, points_level')
+      .order('points_total', { ascending: false })
+      .order('points_level', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    const rows = (data || []) as Array<{
+      id: string;
+      display_name: string | null;
+      username: string | null;
+      points_total: number | null;
+      points_level: number | null;
+    }>;
+
+    return {
+      success: true,
+      data: rows.map(row => ({
+        id: row.id,
+        displayName: row.display_name || 'Chef Studio',
+        username: row.username || 'fuzo_user',
+        pointsTotal: row.points_total ?? 0,
+        pointsLevel: row.points_level ?? 1,
+      })),
+    };
+  },
+
+  async getCurrentUserPoints(): Promise<PointsServiceResult<PointsSummary>> {
+    if (!supabase) {
+      return { success: false, error: 'Supabase is not configured' };
+    }
+
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError) {
+      return { success: false, error: authError.message };
+    }
+
+    const user = authData?.user;
+    if (!user) {
+      return { success: false, error: 'User not authenticated' };
+    }
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('points_total, points_level')
+      .eq('id', user.id)
+      .maybeSingle<{ points_total: number | null; points_level: number | null }>();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return {
+      success: true,
+      data: {
+        total: data?.points_total ?? 0,
+        level: data?.points_level ?? 1,
+      },
+    };
+  },
+
+  async awardActionPoints(params: {
+    actionType: PointsActionType;
+    sourceEntityType?: string;
+    sourceEntityId?: string;
+    metadata?: Record<string, unknown>;
+  }): Promise<PointsServiceResult<AwardPointsResult>> {
+    if (!supabase) {
+      return { success: false, error: 'Supabase is not configured' };
+    }
+
+    const { data, error } = await supabase.rpc('award_user_points', {
+      p_action_type: params.actionType,
+      p_source_entity_type: params.sourceEntityType || null,
+      p_source_entity_id: params.sourceEntityId || null,
+      p_metadata: params.metadata || {},
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    const row = (Array.isArray(data) ? data[0] : data) as AwardRpcRow | null;
+    if (!row) {
+      return { success: false, error: 'No points result returned' };
+    }
+
+    return {
+      success: true,
+      data: {
+        pointsAwarded: row.points_awarded ?? 0,
+        total: row.points_total ?? 0,
+        level: row.points_level ?? 1,
+        wasDuplicate: Boolean(row.was_duplicate),
+      },
+    };
+  },
+};
