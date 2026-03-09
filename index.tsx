@@ -612,25 +612,9 @@ const BitesRecipeModal = ({
         <div className="w-full md:w-1/2 h-64 md:h-auto overflow-hidden"><img src={selectedRecipe.image} alt={selectedRecipe.title || 'Selected recipe'} className="w-full h-full object-cover" /></div>
         <div className="w-full md:w-1/2 p-8 md:p-14 overflow-y-auto hide-scrollbar flex flex-col gap-10">
           <header className="space-y-4">
-            <div className="flex justify-between items-start">
-              <div>
-                <Badge color="yellow">Studio Pack #{selectedRecipe.id}</Badge>
-                <h2 className="text-4xl font-black uppercase tracking-tighter mt-2 leading-none">{selectedRecipe.title}</h2>
-              </div>
-              <div className="flex gap-2 shrink-0">
-                <button
-                  onClick={() => onSaveRecipe(selectedRecipe)}
-                  className="p-4 bg-stone-50 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition-all active:scale-95 shadow-sm"
-                >
-                  <Bookmark size={22} />
-                </button>
-                <button
-                  onClick={() => onShareRecipe(selectedRecipe)}
-                  className="p-4 bg-stone-50 rounded-2xl hover:bg-yellow-100 hover:text-stone-900 transition-all active:scale-95 shadow-sm"
-                >
-                  <Share2 size={22} />
-                </button>
-              </div>
+            <div>
+              <Badge color="yellow">Studio Pack #{selectedRecipe.id}</Badge>
+              <h2 className="text-4xl font-black uppercase tracking-tighter mt-2 leading-none">{selectedRecipe.title}</h2>
             </div>
             <div className="flex gap-6">
               <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-stone-400"><Clock size={16} /> {selectedRecipe.readyInMinutes} Mins</div>
@@ -661,7 +645,7 @@ const BitesRecipeModal = ({
             <div className="text-sm font-bold text-stone-500 leading-relaxed whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: selectedRecipe.instructions || 'Consult Chef FUZO for detailed steps.' }} />
           </section>
 
-          <div className="sticky bottom-0 inset-x-0 md:hidden pt-4 pb-2 bg-white/90 backdrop-blur-md flex gap-4 border-t border-stone-100">
+          <footer className="pt-4 flex gap-4 sticky bottom-0 bg-white/90 backdrop-blur-md pb-2">
             <button
               onClick={() => onSaveRecipe(selectedRecipe)}
               className="flex-grow py-5 bg-stone-900 text-white rounded-[2rem] flex items-center justify-center active:scale-95 transition-all shadow-xl"
@@ -674,7 +658,7 @@ const BitesRecipeModal = ({
             >
               <Share2 size={22} />
             </button>
-          </div>
+          </footer>
         </div>
       </div>
     </div>
