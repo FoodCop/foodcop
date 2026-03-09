@@ -3610,8 +3610,14 @@ const LandingPage = ({ onStart }: { onStart: () => void }) => {
   );
 };
 
-const AuthView = ({ onComplete }: { onComplete: () => void }) => {
-  const [step, setStep] = useState<'signin' | 'signup' | 'onboarding'>('signin');
+const AuthView = ({
+  onComplete,
+  initialStep = 'signin',
+}: {
+  onComplete: () => void;
+  initialStep?: 'signin' | 'signup' | 'onboarding';
+}) => {
+  const [step, setStep] = useState<'signin' | 'signup' | 'onboarding'>(initialStep);
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -3619,6 +3625,20 @@ const AuthView = ({ onComplete }: { onComplete: () => void }) => {
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState('');
   const [authMessage, setAuthMessage] = useState('');
+
+  useEffect(() => {
+    setStep(initialStep);
+  }, [initialStep]);
+
+  const userNeedsOnboarding = (user: { user_metadata?: Record<string, unknown> } | null | undefined): boolean => {
+    const metadata = user?.user_metadata;
+    if (!metadata || typeof metadata !== 'object') {
+      return true;
+    }
+
+    const isCompleted = Boolean(metadata.onboarding_completed || metadata.has_completed_onboarding);
+    return !isCompleted;
+  };
 
   const handleGoogleSignIn = async () => {
     if (!supabase) {
@@ -3669,7 +3689,11 @@ const AuthView = ({ onComplete }: { onComplete: () => void }) => {
         if (error) {
           setAuthError(error.message);
         } else if (data.session) {
-          setStep('onboarding');
+          if (userNeedsOnboarding(data.session.user as { user_metadata?: Record<string, unknown> })) {
+            setStep('onboarding');
+          } else {
+            onComplete();
+          }
         }
       } else {
         const { data, error } = await supabase.auth.signUp({
@@ -4638,6 +4662,29 @@ const App = () => {
     }
   };
 
+  const handleOnboardingComplete = async () => {
+    if (supabase) {
+      const { data, error } = await supabase.auth.updateUser({
+        data: {
+          onboarding_completed: true,
+          has_completed_onboarding: true,
+        },
+      });
+
+      if (error) {
+        console.warn('Failed to persist onboarding completion:', error.message);
+      } else if (data.user) {
+        setAuthUser(data.user as AuthUser);
+      }
+    }
+
+    setIsAuthenticated(true);
+    setHasCompletedOnboarding(true);
+    setShowAuth(false);
+    setTab('feed');
+    globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
+  };
+
   const renderView = () => renderAppView({
     tab,
     setTab,
@@ -4692,13 +4739,21 @@ const App = () => {
   }
 
   if (showAuth && !hasCompletedOnboarding) {
-    return <AuthView onComplete={() => {
-      setIsAuthenticated(true);
-      setHasCompletedOnboarding(true);
-      setShowAuth(false);
-      setTab('feed');
-      globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
-    }} />;
+    return (
+      <AuthView
+        initialStep={isAuthenticated ? 'onboarding' : 'signin'}
+        onComplete={() => {
+          handleOnboardingComplete().catch((error) => {
+            console.warn('Onboarding completion failed:', error);
+            setIsAuthenticated(true);
+            setHasCompletedOnboarding(true);
+            setShowAuth(false);
+            setTab('feed');
+            globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
+          });
+        }}
+      />
+    );
   }
 
   return (

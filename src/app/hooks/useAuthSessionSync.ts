@@ -1,6 +1,18 @@
 import { useEffect } from 'react';
 import { supabase } from '../../services/supabaseClient';
 
+const isOnboardingCompleted = (user: any): boolean => {
+  const metadata = user?.user_metadata;
+  if (!metadata || typeof metadata !== 'object') {
+    return false;
+  }
+
+  return Boolean(
+    (metadata as Record<string, unknown>).onboarding_completed
+    || (metadata as Record<string, unknown>).has_completed_onboarding,
+  );
+};
+
 export const useAuthSessionSync = ({
   setAuthBooting,
   setIsAuthenticated,
@@ -25,12 +37,11 @@ export const useAuthSessionSync = ({
     supabase.auth.getSession().then(({ data }) => {
       if (!active) return;
       const hasSession = !!data.session;
+      const completedOnboarding = isOnboardingCompleted(data.session?.user);
       setIsAuthenticated(hasSession);
       setAuthUser(data.session?.user ?? null);
-      if (hasSession) {
-        setShowAuth(false);
-        setHasCompletedOnboarding(true);
-      }
+      setHasCompletedOnboarding(hasSession && completedOnboarding);
+      setShowAuth(hasSession && !completedOnboarding);
       setAuthBooting(false);
     });
 
@@ -38,12 +49,11 @@ export const useAuthSessionSync = ({
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       const hasSession = !!session;
+      const completedOnboarding = isOnboardingCompleted(session?.user);
       setIsAuthenticated(hasSession);
       setAuthUser(session?.user ?? null);
-      if (hasSession) {
-        setShowAuth(false);
-        setHasCompletedOnboarding(true);
-      }
+      setHasCompletedOnboarding(hasSession && completedOnboarding);
+      setShowAuth(hasSession && !completedOnboarding);
     });
 
     return () => {
