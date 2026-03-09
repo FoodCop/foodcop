@@ -9,8 +9,8 @@ const isOnboardingCompleted = (user: AuthUser | null | undefined): boolean => {
   }
 
   return Boolean(
-    (metadata as Record<string, unknown>).onboarding_completed
-    || (metadata as Record<string, unknown>).has_completed_onboarding,
+    metadata.onboarding_completed
+    || metadata.has_completed_onboarding,
   );
 };
 

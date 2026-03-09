@@ -16,7 +16,7 @@ const getMetadataString = (metadata: Record<string, unknown>, ...keys: string[])
 };
 
 export const buildDefaultSettingsProfile = (authUser: AuthContextUser | null | undefined): SettingsProfile => {
-  const metadata = (authUser?.user_metadata || {}) as Record<string, unknown>;
+  const metadata = authUser?.user_metadata || {};
   const email = authUser?.email || '';
   const emailName = email.includes('@') ? email.split('@')[0] : 'chef_studio_lab';
 

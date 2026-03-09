@@ -74,9 +74,12 @@ const extractGeminiText = (payload: unknown): string => {
 
   const directCandidates = asRecord(payloadRecord).candidates;
   const nestedCandidates = asRecord(payloadRecord.data).candidates;
-  const candidates = Array.isArray(directCandidates)
-    ? directCandidates
-    : (Array.isArray(nestedCandidates) ? nestedCandidates : []);
+  let candidates: unknown[] = [];
+  if (Array.isArray(directCandidates)) {
+    candidates = directCandidates;
+  } else if (Array.isArray(nestedCandidates)) {
+    candidates = nestedCandidates;
+  }
 
   const firstCandidate = candidates.length > 0 ? asRecord(candidates[0]) : {};
   const parts = asRecord(asRecord(firstCandidate.content)).parts;

@@ -8,7 +8,7 @@ import {
   Bookmark, ChevronLeft, RefreshCw, LayoutGrid, Sparkles, Bot,
   Info, List, PieChart, CheckCircle2, SlidersHorizontal, Music2, Eye,
   Mail, Phone, Bell, Shield, LogOut, Trophy, Gift, Image as ImageIcon, CheckCheck, AlertCircle,
-  Instagram, Facebook, Pin
+  Pin
 } from 'lucide-react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { BOTTOM_NAV_ITEMS, DRAWER_NAV_ITEMS, resolveInitialTab, TAB_IDS } from './src/app/layout/navItems';
@@ -45,7 +45,7 @@ import { PointsService } from './src/features/points/services/pointsService';
 import type { LeaderboardEntry } from './src/features/points/services/pointsService';
 import { buildPhotoUrl, deriveCategory, mapWeekdayTextToTimings } from './src/features/scout/lib/scoutUtils';
 import { getGoogleMaps } from './src/features/scout/types/scoutUi';
-import type { GooglePlacePhoto, GooglePlaceResult, GooglePlaceReview, MapLike, MarkerLike, ScoutPlace } from './src/features/scout/types/scoutUi';
+import type { GooglePlacePhoto, GooglePlaceResult, GooglePlaceReview, MapLike, MarkerLike, ScoutMenuSection, ScoutPlace, ScoutTimings, ScoutUserReview } from './src/features/scout/types/scoutUi';
 import { persistSnapData } from './src/features/snap/services/snapPersistence';
 import { SettingsService } from './src/features/settings/services/settingsService';
 import { TRIMS_FALLBACK_VIDEOS } from './src/features/trims/constants/fallbackVideos';
@@ -141,6 +141,20 @@ const Badge = ({ children, color = 'yellow' }: { children: React.ReactNode; colo
   <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap ${BADGE_COLOR_CLASSES[color]}`}>
     {children}
   </span>
+);
+
+const InstagramMark: IconComponent = ({ size = 18, className }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37a4 4 0 1 1-2.76-2.76A4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
+
+const FacebookMark: IconComponent = ({ size = 18, className }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
 );
 
 // --- TINDER SWIPE ENGINE ---
@@ -1655,7 +1669,8 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
 
     for (const locale of localeCandidates) {
       const parts = locale.split('-').map((entry) => entry.trim()).filter(Boolean);
-      const region = parts.reverse().find((part) => /^[A-Za-z]{2}$/.test(part));
+      const reversedParts = [...parts].reverse();
+      const region = reversedParts.find((part) => /^[A-Za-z]{2}$/.test(part));
       if (region) {
         return region.toUpperCase();
       }
@@ -1671,6 +1686,46 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
   const [locationLabel, setLocationLabel] = useState('Localized');
   const [showAIStudio, setShowAIStudio] = useState(false);
   const trimsMountedRef = useRef(true);
+
+  const applyTrimsFallback = useCallback((message?: string) => {
+    if (!trimsMountedRef.current) return;
+    setVideos(TRIMS_FALLBACK_VIDEOS);
+    setFeedSource('fallback');
+    if (message) setServiceError(message);
+  }, []);
+
+  const normalizeTrimVideos = useCallback((items: YouTubeSearchItem[]): TrimVideo[] => {
+    return items.map((video, index: number) => {
+      const videoId = video?.id?.videoId || `video-${index + 1}`;
+      const thumbnail = video?.snippet?.thumbnails?.high?.url
+        || video?.snippet?.thumbnails?.medium?.url
+        || TRIMS_FALLBACK_VIDEOS[index % TRIMS_FALLBACK_VIDEOS.length].img;
+
+      return {
+        id: videoId,
+        videoId,
+        title: video?.snippet?.title || `Studio Trim ${index + 1}`,
+        author: video?.snippet?.channelTitle || 'FUZO Studio',
+        likes: `${Math.max(1, 25 - index)}k`,
+        img: thumbnail,
+      };
+    });
+  }, []);
+
+  const applyTrimsResponse = useCallback((response: Awaited<ReturnType<typeof YouTubeService.getLocalizedTrimsFeed>>) => {
+    const items = response.data?.items || [];
+    setFeedSource(response.data?.source || 'fallback');
+
+    if (!response.success || !Array.isArray(items) || items.length === 0) {
+      applyTrimsFallback(response.error);
+      return;
+    }
+
+    const normalized = normalizeTrimVideos(items as YouTubeSearchItem[]);
+    if (trimsMountedRef.current) {
+      setVideos(normalized);
+    }
+  }, [applyTrimsFallback, normalizeTrimVideos]);
 
   useEffect(() => {
     return () => {
@@ -1713,42 +1768,9 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
           queries,
           maxResultsPerQuery: 8,
         });
-
-        const items = response.data?.items || [];
-        setFeedSource(response.data?.source || 'fallback');
-
-        if (!response.success || !Array.isArray(items) || items.length === 0) {
-          if (trimsMountedRef.current) {
-            setVideos(TRIMS_FALLBACK_VIDEOS);
-            setFeedSource('fallback');
-            if (response.error) setServiceError(response.error);
-          }
-        } else {
-          const normalized: TrimVideo[] = (items as YouTubeSearchItem[]).map((video, index: number) => {
-            const videoId = video?.id?.videoId || `video-${index + 1}`;
-            const thumbnail = video?.snippet?.thumbnails?.high?.url
-              || video?.snippet?.thumbnails?.medium?.url
-              || TRIMS_FALLBACK_VIDEOS[index % TRIMS_FALLBACK_VIDEOS.length].img;
-
-            return {
-              id: videoId,
-              videoId,
-              title: video?.snippet?.title || `Studio Trim ${index + 1}`,
-              author: video?.snippet?.channelTitle || 'FUZO Studio',
-              likes: `${Math.max(1, 25 - index)}k`,
-              img: thumbnail,
-            };
-          });
-          if (trimsMountedRef.current) {
-            setVideos(normalized);
-          }
-        }
+        applyTrimsResponse(response);
       } catch {
-        if (trimsMountedRef.current) {
-          setVideos(TRIMS_FALLBACK_VIDEOS);
-          setFeedSource('fallback');
-          setServiceError('Unable to load live trims. Showing curated fallback videos.');
-        }
+        applyTrimsFallback('Unable to load live trims. Showing curated fallback videos.');
       } finally {
         if (trimsMountedRef.current) {
           setLoading(false);
@@ -1757,7 +1779,7 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
     };
 
     fetchTrims();
-  }, [authUser, resolveRegionCode]);
+  }, [authUser, applyTrimsFallback, applyTrimsResponse, resolveRegionCode]);
 
   const toTrimActionItem = (v: TrimVideo): AppItem => ({
       id: `video-${v.videoId || v.id}`,
@@ -1785,6 +1807,13 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
     onShareRequest(toTrimActionItem(v));
   };
 
+  let feedSourceLabel = 'Fallback';
+  if (feedSource === 'live') {
+    feedSourceLabel = 'Live';
+  } else if (feedSource === 'cache') {
+    feedSourceLabel = 'Cached';
+  }
+
   if (loading) {
     return (
       <div className="h-[80vh] w-full max-w-md mx-auto rounded-[3.5rem] bg-stone-900 shadow-2xl border-4 border-white flex items-center justify-center text-white font-black uppercase tracking-widest text-xs">
@@ -1803,7 +1832,7 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
       </button>
 
       <div className="absolute top-6 right-6 z-30 px-4 py-2 bg-black/35 border border-white/20 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest backdrop-blur-md">
-        {feedSource === 'live' ? 'Live' : feedSource === 'cache' ? 'Cached' : 'Fallback'} · {locationLabel}
+        {feedSourceLabel} · {locationLabel}
       </div>
 
       <div className="h-full w-full relative snap-y snap-mandatory overflow-y-auto hide-scrollbar rounded-[3.5rem] bg-stone-900 shadow-2xl border-4 border-white">
@@ -2046,9 +2075,10 @@ const ChatView = ({
       return;
     }
 
+    const sentMessage = sent.data;
     setMessages(prev => prev
       .filter((message) => message.id !== optimisticId)
-      .concat([{ ...mapMessageToUi(sent.data), status: 'sent' }]));
+      .concat([{ ...mapMessageToUi(sentMessage), status: 'sent' }]));
   };
 
   if (activeId && active) return (
@@ -2131,14 +2161,18 @@ const ChatView = ({
                       <span className="text-[8px] font-black uppercase tracking-widest">View</span>
                     </button>
                     <button
-                      onClick={() => onSave(m.item)}
+                      onClick={() => {
+                        if (m.item) onSave(m.item);
+                      }}
                       className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-stone-100 transition-colors"
                     >
                       <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-stone-600"><Bookmark size={16} /></div>
                       <span className="text-[8px] font-black uppercase tracking-widest">Save</span>
                     </button>
                     <button
-                      onClick={() => onShareRequest(m.item)}
+                      onClick={() => {
+                        if (m.item) onShareRequest(m.item);
+                      }}
                       className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-stone-100 transition-colors"
                     >
                       <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-stone-600"><Share2 size={16} /></div>
@@ -2205,10 +2239,10 @@ const ChatView = ({
             <div className="flex-grow">
               <div className="flex justify-between mb-1"><h4 className="font-black text-sm uppercase tracking-widest">{c.name}</h4><span className="text-[10px] text-stone-300 font-bold">{formatFriendTime(c)}</span></div>
               <div className="flex items-center justify-between">
-                <p className={`text-xs font-bold truncate ${c.unreadCount > 0 ? 'text-stone-900' : 'text-stone-400'}`}>
+                <p className={`text-xs font-bold truncate ${(c.unreadCount ?? 0) > 0 ? 'text-stone-900' : 'text-stone-400'}`}>
                   {c.requestStatus === 'pending' ? 'New Message Request' : 'Open to chat...'}
                 </p>
-                {c.unreadCount > 0 && (
+                {(c.unreadCount ?? 0) > 0 && (
                   <div className="bg-yellow-400 text-stone-900 text-[10px] font-black px-2 py-1 rounded-full shadow-sm">
                     {c.unreadCount}
                   </div>
@@ -2353,38 +2387,73 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppI
 
   const [places, setPlaces] = useState<ScoutPlace[]>(fallbackPlaces);
 
+  const toStringOr = useCallback((value: unknown, fallback: string) => {
+    return typeof value === 'string' ? value : fallback;
+  }, []);
+
+  const toNumberOr = useCallback((value: unknown, fallback: number) => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }, []);
+
+  const sanitizeStringArray = useCallback((value: unknown): string[] => {
+    if (!Array.isArray(value)) return [];
+    return value.filter((entry): entry is string => typeof entry === 'string');
+  }, []);
+
+  const toOptionalString = useCallback((value: unknown) => {
+    return typeof value === 'string' ? value : undefined;
+  }, []);
+
+  const toTimingsOr = useCallback((value: unknown, fallback: ScoutTimings): ScoutTimings => {
+    return value && typeof value === 'object' ? (value as ScoutTimings) : fallback;
+  }, []);
+
+  const toMenuOr = useCallback((value: unknown, fallback: ScoutMenuSection[]): ScoutMenuSection[] => {
+    return Array.isArray(value) ? (value as ScoutMenuSection[]) : fallback;
+  }, []);
+
+  const toUserReviewsOr = useCallback((value: unknown, fallback: ScoutUserReview[]): ScoutUserReview[] => {
+    return Array.isArray(value) ? (value as ScoutUserReview[]) : fallback;
+  }, []);
+
+  const toNonEmptyStringArrayOr = useCallback((value: unknown, fallback: string[]) => {
+    const normalized = sanitizeStringArray(value);
+    return normalized.length > 0 ? normalized : fallback;
+  }, [sanitizeStringArray]);
+
+  const toSavedScoutPlace = useCallback((item: AppItem, index: number): ScoutPlace => {
+    const fallback = fallbackPlaces[index % fallbackPlaces.length];
+    const timings = toTimingsOr(item.timings, fallback.timings);
+    const menu = toMenuOr(item.menu, fallback.menu);
+    const userReviews = toUserReviewsOr(item.userReviews, fallback.userReviews);
+
+    return {
+      id: toStringOr(item.id, `saved-place-${index}`),
+      placeId: toOptionalString(item.placeId),
+      name: toStringOr(item.name, fallback.name),
+      cat: toStringOr(item.cat, 'Saved Place'),
+      rating: toNumberOr(item.rating, fallback.rating),
+      reviews: toNumberOr(item.reviews, fallback.reviews),
+      address: toStringOr(item.address, fallback.address),
+      phone: toStringOr(item.phone, fallback.phone),
+      website: toStringOr(item.website, fallback.website),
+      vibe: toNonEmptyStringArrayOr(item.vibe, fallback.vibe),
+      img: toStringOr(item.img, fallback.img),
+      lat: Number(item.lat),
+      lng: Number(item.lng),
+      timings,
+      menu,
+      userReviews,
+      photos: toNonEmptyStringArrayOr(item.photos, fallback.photos),
+    };
+  }, [fallbackPlaces, toMenuOr, toNonEmptyStringArrayOr, toNumberOr, toOptionalString, toStringOr, toTimingsOr, toUserReviewsOr]);
+
   const savedPlaces = useMemo<ScoutPlace[]>(() => {
     return savedItems
       .filter((item) => Number.isFinite(Number(item?.lat)) && Number.isFinite(Number(item?.lng)))
-      .map((item, index) => {
-        const fallback = fallbackPlaces[index % fallbackPlaces.length];
-        const vibe = Array.isArray(item.vibe) ? item.vibe.filter((entry): entry is string => typeof entry === 'string') : [];
-        const photos = Array.isArray(item.photos) ? item.photos.filter((entry): entry is string => typeof entry === 'string') : [];
-        const timings = (item.timings && typeof item.timings === 'object') ? item.timings : fallback.timings;
-        const menu = Array.isArray(item.menu) ? item.menu : fallback.menu;
-        const userReviews = Array.isArray(item.userReviews) ? item.userReviews : fallback.userReviews;
-
-        return {
-          id: typeof item.id === 'string' ? item.id : `saved-place-${index}`,
-          placeId: typeof item.placeId === 'string' ? item.placeId : undefined,
-          name: typeof item.name === 'string' ? item.name : fallback.name,
-          cat: typeof item.cat === 'string' ? item.cat : 'Saved Place',
-          rating: Number.isFinite(Number(item.rating)) ? Number(item.rating) : fallback.rating,
-          reviews: Number.isFinite(Number(item.reviews)) ? Number(item.reviews) : fallback.reviews,
-          address: typeof item.address === 'string' ? item.address : fallback.address,
-          phone: typeof item.phone === 'string' ? item.phone : fallback.phone,
-          website: typeof item.website === 'string' ? item.website : fallback.website,
-          vibe: vibe.length > 0 ? vibe : fallback.vibe,
-          img: typeof item.img === 'string' ? item.img : fallback.img,
-          lat: Number(item.lat),
-          lng: Number(item.lng),
-          timings: timings as ScoutPlace['timings'],
-          menu: menu as ScoutPlace['menu'],
-          userReviews: userReviews as ScoutPlace['userReviews'],
-          photos: photos.length > 0 ? photos : fallback.photos,
-        };
-      });
-  }, [savedItems]);
+      .map((item, index) => toSavedScoutPlace(item, index));
+  }, [savedItems, toSavedScoutPlace]);
 
   const displayPlaces = scoutTab === 'nearby' ? places : savedPlaces;
 
@@ -2400,6 +2469,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppI
   const syncMapMarkers = () => {
     const googleMaps = getGoogleMaps();
     if (!mapInstanceRef.current || !googleMaps) return;
+    const map = mapInstanceRef.current;
     clearMapMarkers();
 
     const bounds = new googleMaps.LatLngBounds();
@@ -2410,7 +2480,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppI
       if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
 
       const marker = new googleMaps.Marker({
-        map: mapInstanceRef.current,
+        map,
         position: { lat, lng },
         title: place.name,
       });
@@ -2426,7 +2496,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppI
     const userPosition = { lat: Number(coords.lat), lng: Number(coords.lng) };
     if (Number.isFinite(userPosition.lat) && Number.isFinite(userPosition.lng)) {
       userMarkerRef.current = new googleMaps.Marker({
-        map: mapInstanceRef.current,
+        map,
         position: userPosition,
         title: 'You are here',
         icon: {
@@ -2442,7 +2512,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppI
     }
 
     if (!bounds.isEmpty()) {
-      mapInstanceRef.current.fitBounds(bounds, 60);
+      map.fitBounds(bounds, 60);
     }
   };
 
@@ -3075,10 +3145,10 @@ const ProfileView = ({ savedItems, authUser, friends }: { savedItems: AppItem[];
           <div className="w-px h-10 bg-stone-100" />
           <div className="flex items-center gap-2">
             <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="Instagram profile">
-              <Instagram size={18} />
+              <InstagramMark size={18} />
             </a>
             <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="Facebook profile">
-              <Facebook size={18} />
+              <FacebookMark size={18} />
             </a>
             <a href={socialLinks.tiktok} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="TikTok profile">
               <Music2 size={18} />
@@ -3440,13 +3510,13 @@ const SettingsView = ({ onSignOut, authUser }: { onSignOut: () => Promise<void>;
 
       <SettingsSection title="Social Links">
         <SettingsItem
-          icon={Instagram}
+          icon={InstagramMark}
           label="Instagram"
           value={profile.instagram || 'Not set'}
           onClick={() => editField('instagram', 'Instagram')}
         />
         <SettingsItem
-          icon={Facebook}
+          icon={FacebookMark}
           label="Facebook"
           value={profile.facebook || 'Not set'}
           onClick={() => editField('facebook', 'Facebook')}
@@ -3819,6 +3889,50 @@ const AuthView = ({
     }
   };
 
+  const completeSignin = async () => {
+    if (!supabase) return;
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setAuthError(error.message);
+      return;
+    }
+
+    if (data.session) {
+      if (userNeedsOnboarding(data.session.user as { user_metadata?: Record<string, unknown> })) {
+        setStep('onboarding');
+      } else {
+        onComplete();
+      }
+    }
+  };
+
+  const completeSignup = async () => {
+    if (!supabase) return;
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: name.trim(),
+          full_name: name.trim(),
+        },
+      },
+    });
+
+    if (error) {
+      setAuthError(error.message);
+      return;
+    }
+
+    if (data.session) {
+      setStep('onboarding');
+      return;
+    }
+
+    setAuthMessage('Account created. Please verify your email, then sign in.');
+    setStep('signin');
+  };
+
   const handleEmailAuth = async () => {
     if (!supabase) {
       setAuthError('Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
@@ -3841,36 +3955,9 @@ const AuthView = ({
 
     try {
       if (step === 'signin') {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-          setAuthError(error.message);
-        } else if (data.session) {
-          if (userNeedsOnboarding(data.session.user as { user_metadata?: Record<string, unknown> })) {
-            setStep('onboarding');
-          } else {
-            onComplete();
-          }
-        }
+        await completeSignin();
       } else {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              name: name.trim(),
-              full_name: name.trim(),
-            },
-          },
-        });
-
-        if (error) {
-          setAuthError(error.message);
-        } else if (data.session) {
-          setStep('onboarding');
-        } else {
-          setAuthMessage('Account created. Please verify your email, then sign in.');
-          setStep('signin');
-        }
+        await completeSignup();
       }
     } finally {
       setAuthLoading(false);
@@ -4588,10 +4675,10 @@ const App = () => {
   const [savedItems, setSavedItems] = useState<AppItem[]>(FALLBACK_SAVED_ITEMS);
   const [activeShareItem, setActiveShareItem] = useState<AppItem | null>(null);
 
-  const [friends, setFriends] = useState<ChatFriend[]>(DEFAULT_FRIENDS as ChatFriend[]);
+  const [friends, setFriends] = useState<ChatFriend[]>(DEFAULT_FRIENDS);
   const totalUnread = useMemo(() => friends.reduce((sum, friend) => sum + (friend.unreadCount || 0), 0), [friends]);
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | 'unsupported'>(() => {
-    if (typeof globalThis.Notification === 'undefined') {
+    if (globalThis.Notification === undefined) {
       return 'unsupported';
     }
 
@@ -4606,7 +4693,7 @@ const App = () => {
   const authCallbackRoute = isAuthCallbackPath(pathname);
 
   const requestNotificationPermission = useCallback(async () => {
-    if (typeof globalThis.Notification === 'undefined') {
+    if (globalThis.Notification === undefined) {
       setNotificationPermission('unsupported');
       return;
     }
@@ -4622,6 +4709,23 @@ const App = () => {
     } catch (error) {
       console.warn('Notification permission request failed:', error);
     }
+  }, []);
+
+  const getFriendDisplayName = useCallback((friendId: string) => {
+    const match = friends.find((friend) => String(friend.id) === String(friendId));
+    if (!match) return 'Studio Contact';
+    return match.name || match.username || 'Studio Contact';
+  }, [friends]);
+
+  const incrementUnreadForFriend = useCallback((friendId: string) => {
+    setFriends((prev) => prev.map((friend) => {
+      if (String(friend.id) !== String(friendId)) return friend;
+      return {
+        ...friend,
+        unreadCount: (friend.unreadCount || 0) + 1,
+        time: 'now',
+      };
+    }));
   }, []);
 
   useAuthSessionSync({
@@ -4764,7 +4868,7 @@ const App = () => {
   }, [authUser?.id, profileReady]);
 
   useEffect(() => {
-    if (typeof globalThis.Notification === 'undefined') {
+    if (globalThis.Notification === undefined) {
       setNotificationPermission('unsupported');
       return;
     }
@@ -4798,26 +4902,10 @@ const App = () => {
     }
 
     const unsubscribe = ChatService.subscribeToIncomingMessages(authUser.id, ({ otherUserId, message }) => {
-      let senderName = 'Studio Contact';
+      const senderName = getFriendDisplayName(otherUserId);
+      incrementUnreadForFriend(otherUserId);
 
-      setFriends(prev => {
-        let found = false;
-        const next = prev.map((friend) => {
-          if (String(friend.id) !== String(otherUserId)) return friend;
-          found = true;
-          senderName = friend.name || friend.username || senderName;
-          return {
-            ...friend,
-            unreadCount: (friend.unreadCount || 0) + 1,
-            time: 'now',
-          };
-        });
-
-        if (found) return next;
-        return next;
-      });
-
-      if (notificationPermission !== 'granted' || typeof globalThis.Notification === 'undefined') {
+      if (notificationPermission !== 'granted' || globalThis.Notification === undefined) {
         return;
       }
 
@@ -4846,7 +4934,7 @@ const App = () => {
     return () => {
       unsubscribe();
     };
-  }, [authUser?.id, notificationPermission]);
+  }, [authUser?.id, getFriendDisplayName, incrementUnreadForFriend, notificationPermission]);
 
   const handleConversationOpened = useCallback((friendId: string) => {
     setFriends(prev => prev.map((friend) => (
@@ -4986,8 +5074,9 @@ const App = () => {
   };
 
   const handleSnap = (item: AppItem) => {
+    const itemId = String(item.id || '');
     setSavedItems(prev => [item, ...prev]);
-    awardPointsForAction('snap_post', inferItemTypeFromId(item.id), String(item.id), {
+    awardPointsForAction('snap_post', inferItemTypeFromId(itemId), itemId, {
       source: 'handleSnap',
     }).catch((error) => {
       console.warn('Snap points award failed:', error);
@@ -4996,6 +5085,7 @@ const App = () => {
 
   const handleShare = async (friendId: string | number, item: AppItem) => {
     const targetFriendId = String(friendId);
+    const itemId = String(item.id || '');
 
     if (authUser?.id && hasSupabaseConfig) {
       const conversation = await ChatService.getOrCreateConversation(authUser.id, targetFriendId);
@@ -5012,7 +5102,7 @@ const App = () => {
       }
     }
 
-    awardPointsForAction('share_item', inferItemTypeFromId(item.id), String(item.id), {
+    awardPointsForAction('share_item', inferItemTypeFromId(itemId), itemId, {
       source: 'handleShare',
       friendId: targetFriendId,
     }).catch((error) => {

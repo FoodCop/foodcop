@@ -3,7 +3,7 @@ import { resolvePublicAssetPath } from '../../../shared/lib/resolvePublicAssetPa
 import type { DealerContent, FeedCard } from '../../../shared/types/feed';
 import type { FeedUiItem, FeedUiItemType } from '../types/feedUi';
 
-const TARGET_FEED_TYPES: FeedUiItemType[] = ['ad', 'trivia', 'recipe', 'video'];
+const TARGET_FEED_TYPES = new Set<FeedUiItemType>(['ad', 'trivia', 'recipe', 'video']);
 
 type FeedParityItem = Pick<FeedUiItem, 'id' | 'itemType' | 'itemId' | 'name' | 'cat' | 'img'>;
 
@@ -15,7 +15,7 @@ const buildStableUiId = (itemType: FeedUiItemType, itemId: string) => `${itemTyp
 
 const normalizeFeedImagePathForType = (itemType: FeedUiItemType, imagePath: string) => {
   if (!imagePath) return imagePath;
-  const normalized = imagePath.replace(/\\/g, '/');
+  const normalized = imagePath.replaceAll('\\', '/');
   if (itemType === 'ad') {
     return normalized.replace(/(^|\/)ads\/vertical\//i, '$1ads/Vertical/');
   }
@@ -25,12 +25,33 @@ const normalizeFeedImagePathForType = (itemType: FeedUiItemType, imagePath: stri
   return normalized;
 };
 
+const getNormalizedName = (itemType: FeedUiItemType, record: Record<string, unknown>) => {
+  if (itemType === 'recipe') return String(record.title || 'Recipe');
+  if (itemType === 'video') return String(record.title || 'Video');
+  if (itemType === 'ad') return String(record.brandName || record.headline || 'Sponsored');
+  return String(record.title || record.question || 'Food Trivia');
+};
+
+const getNormalizedCategory = (itemType: FeedUiItemType) => {
+  if (itemType === 'recipe') return 'Recipe';
+  if (itemType === 'video') return 'Studio Trim';
+  if (itemType === 'ad') return 'Ad';
+  return 'Trivia';
+};
+
+const getRawImage = (itemType: FeedUiItemType, record: Record<string, unknown>) => {
+  if (itemType === 'video') {
+    return String(record.thumbnailUrl || '');
+  }
+  return String(record.imageUrl || '');
+};
+
 export const normalizeDealerContentToCards = (dealerCards: DealerContent[]): FeedUiItem[] => {
   const normalized = dealerCards
     .map((entry) => {
       const record = asRecord(entry);
       const sourceType = String(record.type || '').toLowerCase();
-      if (!TARGET_FEED_TYPES.includes(sourceType as FeedUiItemType)) return null;
+      if (!TARGET_FEED_TYPES.has(sourceType as FeedUiItemType)) return null;
 
       const rawId = String(record.id || '').trim();
       if (!rawId) return null;
@@ -39,25 +60,9 @@ export const normalizeDealerContentToCards = (dealerCards: DealerContent[]): Fee
       const itemId = rawId.replace(new RegExp(`^${itemType}-`), '') || rawId;
       const id = buildStableUiId(itemType, itemId);
 
-      const name = itemType === 'recipe'
-        ? String(record.title || 'Recipe')
-        : itemType === 'video'
-          ? String(record.title || 'Video')
-          : itemType === 'ad'
-            ? String(record.brandName || record.headline || 'Sponsored')
-            : String(record.title || record.question || 'Food Trivia');
-
-      const cat = itemType === 'recipe'
-        ? 'Recipe'
-        : itemType === 'video'
-          ? 'Studio Trim'
-          : itemType === 'ad'
-            ? 'Ad'
-            : 'Trivia';
-
-      const rawImage = itemType === 'video'
-        ? String(record.thumbnailUrl || '')
-        : String(record.imageUrl || '');
+      const name = getNormalizedName(itemType, record);
+      const cat = getNormalizedCategory(itemType);
+      const rawImage = getRawImage(itemType, record);
 
       const normalizedImage = normalizeFeedImagePathForType(itemType, rawImage);
 

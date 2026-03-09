@@ -57,6 +57,16 @@ export const normalizeSavedItemForUI = (savedItem: unknown): AppItem => {
 
   const lat = metadata.lat ?? metadata.latitude ?? saved.lat;
   const lng = metadata.lng ?? metadata.longitude ?? saved.lng;
+  const ratingFromMetadata = Number.isFinite(Number(metadata.rating)) ? Number(metadata.rating) : undefined;
+  const ratingFromSaved = Number.isFinite(Number(saved.rating)) ? Number(saved.rating) : undefined;
+  const reviewsFromMetadata = Number.isFinite(Number(metadata.reviews)) ? Number(metadata.reviews) : undefined;
+  const reviewsFromSaved = Number.isFinite(Number(saved.reviews)) ? Number(saved.reviews) : undefined;
+  const vibeFromMetadata = Array.isArray(metadata.vibe)
+    ? metadata.vibe.filter((entry): entry is string => typeof entry === 'string')
+    : undefined;
+  const vibeFromSaved = Array.isArray(saved.vibe)
+    ? saved.vibe.filter((entry): entry is string => typeof entry === 'string')
+    : undefined;
 
   return {
     id: uiId,
@@ -69,13 +79,11 @@ export const normalizeSavedItemForUI = (savedItem: unknown): AppItem => {
     lat: Number.isFinite(Number(lat)) ? Number(lat) : undefined,
     lng: Number.isFinite(Number(lng)) ? Number(lng) : undefined,
     address: typeof (metadata.address || saved.address) === 'string' ? String(metadata.address || saved.address) : undefined,
-    rating: Number.isFinite(Number(metadata.rating)) ? Number(metadata.rating) : (Number.isFinite(Number(saved.rating)) ? Number(saved.rating) : undefined),
-    reviews: Number.isFinite(Number(metadata.reviews)) ? Number(metadata.reviews) : (Number.isFinite(Number(saved.reviews)) ? Number(saved.reviews) : undefined),
+    rating: ratingFromMetadata ?? ratingFromSaved,
+    reviews: reviewsFromMetadata ?? reviewsFromSaved,
     phone: typeof (metadata.phone || saved.phone) === 'string' ? String(metadata.phone || saved.phone) : undefined,
     website: typeof (metadata.website || saved.website) === 'string' ? String(metadata.website || saved.website) : undefined,
-    vibe: Array.isArray(metadata.vibe)
-      ? metadata.vibe.filter((entry): entry is string => typeof entry === 'string')
-      : (Array.isArray(saved.vibe) ? saved.vibe.filter((entry): entry is string => typeof entry === 'string') : undefined),
+    vibe: vibeFromMetadata ?? vibeFromSaved,
     metadata,
   };
 };
