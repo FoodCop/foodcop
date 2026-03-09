@@ -43,9 +43,8 @@ This repository now runs from the **root** (not `new_UI/`).
 
 ## Next Session Focus
 
-- Run and complete the file audit (priority 1 above).
-- Write and commit app skills documentation pack (priority 2 above).
-- Then resume product feature work (Trims parity, personalization, and profile social links).
+- Implement password sign-in for users (email/password auth flow end-to-end).
+- Run the 48-hour Trims rollout audit and tune safeguards (`live/cache/fallback` mix, caps, and latency).
 
 ## Tech Stack
 

@@ -112,7 +112,7 @@ serve(async (req) => {
 
     // Forward request to OpenAI API
     const openaiUrl = `${OPENAI_BASE_URL}/chat/completions`;
-    const openaiBody: any = {
+    const openaiBody: Record<string, unknown> = {
       model,
       messages,
       max_tokens,

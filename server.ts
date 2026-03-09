@@ -82,11 +82,20 @@ async function startServer() {
 
   const getGeminiApiKey = () => cleanEnv(process.env.GEMINI_API_KEY);
 
-  const extractGeminiText = (payload: any): string => {
-    const candidates = payload?.candidates;
-    const parts = candidates?.[0]?.content?.parts;
+  const asRecord = (value: unknown): Record<string, unknown> => {
+    return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+  };
+
+  const extractGeminiText = (payload: unknown): string => {
+    const payloadRecord = asRecord(payload);
+    const candidates = Array.isArray(payloadRecord.candidates) ? payloadRecord.candidates : [];
+    const firstCandidate = candidates.length > 0 ? asRecord(candidates[0]) : {};
+    const parts = asRecord(asRecord(firstCandidate.content)).parts;
     if (!Array.isArray(parts)) return '';
-    return parts.map((part: any) => part?.text || '').join('').trim();
+    return parts.map((part) => {
+      const partRecord = asRecord(part);
+      return typeof partRecord.text === 'string' ? partRecord.text : '';
+    }).join('').trim();
   };
 
   app.get('/api/gemini-proxy/health', async (_req, res) => {
@@ -202,7 +211,7 @@ async function startServer() {
   }
 
   // Generic Spoonacular Proxy Handler
-  const handleSpoonacularRequest = async (endpoint: string, method: string, params: any, res: express.Response) => {
+  const handleSpoonacularRequest = async (endpoint: string, method: string, params: Record<string, unknown>, res: express.Response) => {
     const rawKey = process.env.SPOONACULAR_API_KEY || process.env.VITE_SPOONACULAR_API_KEY;
     const apiKey = cleanEnv(rawKey);
     

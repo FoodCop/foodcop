@@ -31,5 +31,5 @@ export interface UserSettingsRow {
 export interface AuthContextUser {
   id?: string;
   email?: string;
-  user_metadata?: Record<string, any>;
+  user_metadata?: Record<string, unknown>;
 }

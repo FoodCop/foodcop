@@ -1,3 +1,6 @@
+import type { AppItem } from '../../../shared/types/appItem';
+import type { PlateItemType } from '../../../services/plateService';
+
 const getSavedUiId = (itemType: string, itemId: string) => {
   const prefixByType: Record<string, string> = {
     recipe: 'recipe',
@@ -26,37 +29,58 @@ export const inferItemTypeFromId = (idValue: string) => {
   return 'restaurant';
 };
 
-export const normalizeSavedItemForUI = (savedItem: any) => {
-  const metadata = (savedItem?.metadata || {}) as Record<string, any>;
-  const itemType = savedItem?.item_type || savedItem?.itemType || 'other';
-  const itemId = String(savedItem?.item_id || savedItem?.itemId || savedItem?.id || Date.now());
+const toPlateItemType = (value: string): PlateItemType => {
+  if (value === 'restaurant') return 'restaurant';
+  if (value === 'recipe') return 'recipe';
+  if (value === 'photo') return 'photo';
+  if (value === 'video') return 'video';
+  return 'other';
+};
+
+export type NormalizedPlateItem = AppItem & {
+  itemType: PlateItemType;
+  itemId: string;
+  metadata: Record<string, unknown>;
+};
+
+const asRecord = (value: unknown): Record<string, unknown> => {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+};
+
+export const normalizeSavedItemForUI = (savedItem: unknown): AppItem => {
+  const saved = asRecord(savedItem);
+  const metadata = asRecord(saved.metadata);
+  const itemType = String(saved.item_type || saved.itemType || 'other');
+  const itemId = String(saved.item_id || saved.itemId || saved.id || Date.now());
   const uiId = getSavedUiId(itemType, itemId);
   const fallbackCategory = getSavedItemCategory(itemType);
 
-  const lat = metadata.lat ?? metadata.latitude ?? savedItem?.lat;
-  const lng = metadata.lng ?? metadata.longitude ?? savedItem?.lng;
+  const lat = metadata.lat ?? metadata.latitude ?? saved.lat;
+  const lng = metadata.lng ?? metadata.longitude ?? saved.lng;
 
   return {
     id: uiId,
     itemType,
     itemId,
-    placeId: metadata.placeId || savedItem?.placeId,
-    name: metadata.title || metadata.name || savedItem?.name || `Saved ${itemType}`,
-    cat: metadata.cat || metadata.category || fallbackCategory,
-    img: metadata.image || metadata.img || metadata.image_url || savedItem?.img || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400',
+    placeId: typeof (metadata.placeId || saved.placeId) === 'string' ? String(metadata.placeId || saved.placeId) : undefined,
+    name: String(metadata.title || metadata.name || saved.name || `Saved ${itemType}`),
+    cat: String(metadata.cat || metadata.category || fallbackCategory),
+    img: String(metadata.image || metadata.img || metadata.image_url || saved.img || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400'),
     lat: Number.isFinite(Number(lat)) ? Number(lat) : undefined,
     lng: Number.isFinite(Number(lng)) ? Number(lng) : undefined,
-    address: metadata.address || savedItem?.address,
-    rating: Number.isFinite(Number(metadata.rating)) ? Number(metadata.rating) : savedItem?.rating,
-    reviews: Number.isFinite(Number(metadata.reviews)) ? Number(metadata.reviews) : savedItem?.reviews,
-    phone: metadata.phone || savedItem?.phone,
-    website: metadata.website || savedItem?.website,
-    vibe: Array.isArray(metadata.vibe) ? metadata.vibe : savedItem?.vibe,
+    address: typeof (metadata.address || saved.address) === 'string' ? String(metadata.address || saved.address) : undefined,
+    rating: Number.isFinite(Number(metadata.rating)) ? Number(metadata.rating) : (Number.isFinite(Number(saved.rating)) ? Number(saved.rating) : undefined),
+    reviews: Number.isFinite(Number(metadata.reviews)) ? Number(metadata.reviews) : (Number.isFinite(Number(saved.reviews)) ? Number(saved.reviews) : undefined),
+    phone: typeof (metadata.phone || saved.phone) === 'string' ? String(metadata.phone || saved.phone) : undefined,
+    website: typeof (metadata.website || saved.website) === 'string' ? String(metadata.website || saved.website) : undefined,
+    vibe: Array.isArray(metadata.vibe)
+      ? metadata.vibe.filter((entry): entry is string => typeof entry === 'string')
+      : (Array.isArray(saved.vibe) ? saved.vibe.filter((entry): entry is string => typeof entry === 'string') : undefined),
     metadata,
   };
 };
 
-export const normalizeItemForPlateSave = (item: any) => {
+export const normalizeItemForPlateSave = (item: AppItem): NormalizedPlateItem => {
   const itemIdValue = String(item.id || '');
 
   // Keep Scout map fields in metadata so they survive round-trips through PlateService.
@@ -79,8 +103,8 @@ export const normalizeItemForPlateSave = (item: any) => {
 
   return {
     ...item,
-    itemType: item.itemType || inferItemTypeFromId(itemIdValue),
-    itemId: item.itemId || itemIdValue.replace(/^recipe-/, '').replace(/^video-/, '').replace(/^post-/, ''),
+    itemType: toPlateItemType(String(item.itemType || inferItemTypeFromId(itemIdValue))),
+    itemId: String(item.itemId || itemIdValue.replace(/^recipe-/, '').replace(/^video-/, '').replace(/^post-/, '')),
     metadata,
   };
 };

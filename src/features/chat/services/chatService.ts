@@ -1,9 +1,7 @@
 import { supabase } from '../../../services/supabaseClient';
+import type { AppItem } from '../../../shared/types/appItem';
 
-type ChatSharedItem = {
-  name?: string;
-  [key: string]: unknown;
-};
+type ChatSharedItem = AppItem;
 
 export interface ChatContact {
   id: string;
@@ -40,6 +38,45 @@ interface ChatIncomingMessageNotice {
   otherUserId: string;
 }
 
+type SupabaseRealtimePayload = {
+  new?: unknown;
+};
+
+const asRecord = (value: unknown): Record<string, unknown> => {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+};
+
+const toChatMessage = (value: unknown): ChatMessage => {
+  const row = asRecord(value);
+  return {
+    id: String(row.id || ''),
+    conversationId: String(row.conversation_id || ''),
+    senderId: String(row.sender_id || ''),
+    content: typeof row.content === 'string' ? row.content : '',
+    sharedItem: (row.shared_item && typeof row.shared_item === 'object') ? (row.shared_item as ChatSharedItem) : null,
+    createdAt: String(row.created_at || ''),
+  };
+};
+
+const toChatContact = (value: unknown): ChatContact => {
+  const row = asRecord(value);
+  const id = String(row.id || '');
+  const username = typeof row.username === 'string' ? row.username : 'fuzo_user';
+
+  return {
+    id,
+    name: typeof row.display_name === 'string' && row.display_name.trim().length > 0
+      ? row.display_name
+      : username || 'User',
+    username,
+    avatar: typeof row.avatar_url === 'string' && row.avatar_url.trim().length > 0
+      ? row.avatar_url
+      : `https://i.pravatar.cc/150?u=${id}`,
+    isOnline: Boolean(row.is_online),
+    lastSeen: typeof row.last_seen === 'string' ? row.last_seen : null,
+  };
+};
+
 export const ChatService = {
   async listContacts(currentUserId: string): Promise<ChatResult<ChatContact[]>> {
     const client = supabase;
@@ -57,14 +94,7 @@ export const ChatService = {
       return { success: false, error: error.message };
     }
 
-    const contacts = (data || []).map((row: any) => ({
-      id: row.id,
-      name: row.display_name || row.username || 'User',
-      username: row.username || 'fuzo_user',
-      avatar: row.avatar_url || `https://i.pravatar.cc/150?u=${row.id}`,
-      isOnline: Boolean(row.is_online),
-      lastSeen: row.last_seen || null,
-    }));
+    const contacts = (data || []).map((row) => toChatContact(row));
 
     return { success: true, data: contacts };
   },
@@ -124,14 +154,7 @@ export const ChatService = {
 
     return {
       success: true,
-      data: (data || []).map((row: any) => ({
-        id: row.id,
-        conversationId: row.conversation_id,
-        senderId: row.sender_id,
-        content: row.content || '',
-        sharedItem: row.shared_item || null,
-        createdAt: row.created_at,
-      })),
+      data: (data || []).map((row) => toChatMessage(row)),
     };
   },
 
@@ -183,14 +206,7 @@ export const ChatService = {
 
     return {
       success: true,
-      data: {
-        id: data.id,
-        conversationId: data.conversation_id,
-        senderId: data.sender_id,
-        content: data.content || '',
-        sharedItem: data.shared_item || null,
-        createdAt: data.created_at,
-      },
+      data: toChatMessage(data),
     };
   },
 
@@ -219,14 +235,7 @@ export const ChatService = {
 
     return {
       success: true,
-      data: {
-        id: data.id,
-        conversationId: data.conversation_id,
-        senderId: data.sender_id,
-        content: data.content || '',
-        sharedItem: data.shared_item || null,
-        createdAt: data.created_at,
-      },
+      data: toChatMessage(data),
     };
   },
 
@@ -243,16 +252,10 @@ export const ChatService = {
         schema: 'public',
         table: 'dm_messages',
         filter: `conversation_id=eq.${conversationId}`,
-      }, (payload: any) => {
-        const row = payload.new || {};
-        onMessage({
-          id: row.id,
-          conversationId: row.conversation_id,
-          senderId: row.sender_id,
-          content: row.content || '',
-          sharedItem: row.shared_item || null,
-          createdAt: row.created_at,
-        });
+      }, (payload: SupabaseRealtimePayload) => {
+        const message = toChatMessage(payload.new);
+        if (!message.id || !message.conversationId || !message.senderId) return;
+        onMessage(message);
       })
       .subscribe();
 
@@ -273,12 +276,12 @@ export const ChatService = {
         event: 'INSERT',
         schema: 'public',
         table: 'dm_messages',
-      }, async (payload: any) => {
-        const row = payload.new || {};
-        if (!row.id || !row.conversation_id || !row.sender_id) return;
-        if (row.sender_id === currentUserId) return;
+      }, async (payload: SupabaseRealtimePayload) => {
+        const message = toChatMessage(payload.new);
+        if (!message.id || !message.conversationId || !message.senderId) return;
+        if (message.senderId === currentUserId) return;
 
-        const conversation = await ChatService.getConversationParticipants(row.conversation_id);
+        const conversation = await ChatService.getConversationParticipants(message.conversationId);
         if (!conversation.success || !conversation.data) return;
 
         const { participant1, participant2 } = conversation.data;
@@ -288,14 +291,7 @@ export const ChatService = {
 
         onIncoming({
           otherUserId,
-          message: {
-            id: row.id,
-            conversationId: row.conversation_id,
-            senderId: row.sender_id,
-            content: row.content || '',
-            sharedItem: row.shared_item || null,
-            createdAt: row.created_at,
-          },
+          message,
         });
       })
       .subscribe();

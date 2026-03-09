@@ -31,8 +31,7 @@ const SCREENSHOTS_DIR = join(process.cwd(), 'screenshots');
 async function captureScreenshot(
   page: Page,
   config: ScreenshotConfig,
-  viewport: typeof viewports.desktop,
-  browser: any
+  viewport: typeof viewports.desktop
 ) {
   const url = `${BASE_URL}${config.path}`;
   console.log(`📸 Capturing ${config.name} (${viewport.name})...`);
@@ -122,7 +121,7 @@ async function main() {
     // Capture screenshots for each page in both viewports
     for (const pageConfig of pages) {
       for (const viewport of Object.values(viewports)) {
-        await captureScreenshot(page, pageConfig, viewport, browser);
+        await captureScreenshot(page, pageConfig, viewport);
       }
       console.log(''); // Empty line between pages
     }

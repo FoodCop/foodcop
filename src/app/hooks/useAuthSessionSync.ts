@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { supabase } from '../../services/supabaseClient';
+import type { AuthUser } from '../../features/auth/types/auth';
 
-const isOnboardingCompleted = (user: any): boolean => {
+const isOnboardingCompleted = (user: AuthUser | null | undefined): boolean => {
   const metadata = user?.user_metadata;
   if (!metadata || typeof metadata !== 'object') {
     return false;
@@ -22,7 +23,7 @@ export const useAuthSessionSync = ({
 }: {
   setAuthBooting: (value: boolean) => void;
   setIsAuthenticated: (value: boolean) => void;
-  setAuthUser: (value: any) => void;
+  setAuthUser: (value: AuthUser | null) => void;
   setShowAuth: (value: boolean) => void;
   setHasCompletedOnboarding: (value: boolean) => void;
 }) => {

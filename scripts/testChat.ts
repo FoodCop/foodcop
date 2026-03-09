@@ -27,6 +27,23 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+interface ConversationRow {
+    id: string;
+}
+
+interface UserRow {
+    id: string;
+    display_name: string;
+    username: string;
+}
+
+interface MessageRow {
+    id: string;
+    sender_id: string;
+    content: string;
+    created_at: string;
+}
+
 // Chat service functions
 async function getOrCreateConversation(userId: string, otherUserId: string) {
     const [p1, p2] = [userId, otherUserId].sort();
@@ -91,7 +108,7 @@ async function fetchMessages(conversationId: string) {
     return { success: true, data };
 }
 
-function subscribeToMessages(conversationId: string, onMessage: (message: any) => void) {
+function subscribeToMessages(conversationId: string, onMessage: (message: MessageRow) => void) {
     const channel = supabase
         .channel(`dm_messages:${conversationId}`)
         .on(
@@ -102,8 +119,15 @@ function subscribeToMessages(conversationId: string, onMessage: (message: any) =
                 table: 'dm_messages',
                 filter: `conversation_id=eq.${conversationId}`,
             },
-            (payload) => {
-                onMessage(payload.new);
+            (payload: { new: unknown }) => {
+                const row = payload.new as Partial<MessageRow>;
+                if (!row?.id || !row?.sender_id) return;
+                onMessage({
+                    id: row.id,
+                    sender_id: row.sender_id,
+                    content: typeof row.content === 'string' ? row.content : '',
+                    created_at: typeof row.created_at === 'string' ? row.created_at : new Date().toISOString(),
+                });
             }
         )
         .subscribe();
@@ -129,7 +153,7 @@ async function main() {
         process.exit(1);
     }
 
-    const [user1, user2] = users;
+    const [user1, user2] = users as UserRow[];
     console.log(`✅ Found users:`);
     console.log(`   User 1: ${user1.display_name} (@${user1.username}) - ${user1.id.slice(0, 8)}...`);
     console.log(`   User 2: ${user2.display_name} (@${user2.username}) - ${user2.id.slice(0, 8)}...`);
@@ -144,13 +168,13 @@ async function main() {
         process.exit(1);
     }
 
-    const conversationId = convResult.data.id;
+    const conversationId = (convResult.data as ConversationRow).id;
     console.log(`✅ Conversation ID: ${conversationId.slice(0, 8)}...`);
     console.log('');
 
     // Step 3: Subscribe User 2 to receive messages
     console.log('🔌 Subscribing User 2 to realtime messages...');
-    let receivedMessages: any[] = [];
+    let receivedMessages: MessageRow[] = [];
 
     const unsubscribe = subscribeToMessages(conversationId, (message) => {
         receivedMessages.push(message);
@@ -214,7 +238,7 @@ async function main() {
         console.log(`✅ Found ${fetchResult.data.length} messages in database`);
         console.log('');
         console.log('📝 Conversation history:');
-        fetchResult.data.forEach((msg: any, index: number) => {
+        (fetchResult.data as MessageRow[]).forEach((msg, index: number) => {
             const sender = msg.sender_id === user1.id ? user1.display_name : user2.display_name;
             console.log(`   ${index + 1}. [${sender}]: ${msg.content}`);
         });

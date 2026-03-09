@@ -5,6 +5,12 @@ import type { FeedUiItem, FeedUiItemType } from '../types/feedUi';
 
 const TARGET_FEED_TYPES: FeedUiItemType[] = ['ad', 'trivia', 'recipe', 'video'];
 
+type FeedParityItem = Pick<FeedUiItem, 'id' | 'itemType' | 'itemId' | 'name' | 'cat' | 'img'>;
+
+const asRecord = (value: unknown): Record<string, unknown> => {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+};
+
 const buildStableUiId = (itemType: FeedUiItemType, itemId: string) => `${itemType}-${itemId}`;
 
 const normalizeFeedImagePathForType = (itemType: FeedUiItemType, imagePath: string) => {
@@ -22,10 +28,11 @@ const normalizeFeedImagePathForType = (itemType: FeedUiItemType, imagePath: stri
 export const normalizeDealerContentToCards = (dealerCards: DealerContent[]): FeedUiItem[] => {
   const normalized = dealerCards
     .map((entry) => {
-      const sourceType = String((entry as any).type || '').toLowerCase();
+      const record = asRecord(entry);
+      const sourceType = String(record.type || '').toLowerCase();
       if (!TARGET_FEED_TYPES.includes(sourceType as FeedUiItemType)) return null;
 
-      const rawId = String((entry as any).id || '').trim();
+      const rawId = String(record.id || '').trim();
       if (!rawId) return null;
 
       const itemType = sourceType as FeedUiItemType;
@@ -33,12 +40,12 @@ export const normalizeDealerContentToCards = (dealerCards: DealerContent[]): Fee
       const id = buildStableUiId(itemType, itemId);
 
       const name = itemType === 'recipe'
-        ? String((entry as any).title || 'Recipe')
+        ? String(record.title || 'Recipe')
         : itemType === 'video'
-          ? String((entry as any).title || 'Video')
+          ? String(record.title || 'Video')
           : itemType === 'ad'
-            ? String((entry as any).brandName || (entry as any).headline || 'Sponsored')
-            : String((entry as any).title || (entry as any).question || 'Food Trivia');
+            ? String(record.brandName || record.headline || 'Sponsored')
+            : String(record.title || record.question || 'Food Trivia');
 
       const cat = itemType === 'recipe'
         ? 'Recipe'
@@ -49,8 +56,8 @@ export const normalizeDealerContentToCards = (dealerCards: DealerContent[]): Fee
             : 'Trivia';
 
       const rawImage = itemType === 'video'
-        ? String((entry as any).thumbnailUrl || '')
-        : String((entry as any).imageUrl || '');
+        ? String(record.thumbnailUrl || '')
+        : String(record.imageUrl || '');
 
       const normalizedImage = normalizeFeedImagePathForType(itemType, rawImage);
 
@@ -93,7 +100,7 @@ export const normalizeFeedServiceToCards = (feedCards: FeedCard[]) => {
   return normalizeDealerContentToCards(dealtCards);
 };
 
-const getMissingFieldNames = (item: any) => {
+const getMissingFieldNames = (item: FeedParityItem) => {
   const missing: string[] = [];
   if (!item.id) missing.push('id');
   if (!item.itemType) missing.push('itemType');
@@ -141,7 +148,7 @@ export const ensureAdTriviaPresence = (
   ];
 };
 
-export const logFeedParity = (localItems: readonly any[], serviceItems: readonly any[]) => {
+export const logFeedParity = (localItems: readonly FeedParityItem[], serviceItems: readonly FeedParityItem[]) => {
   const localMissing = localItems.map((item) => ({ id: item.id, missing: getMissingFieldNames(item) })).filter((row) => row.missing.length > 0);
   const serviceMissing = serviceItems.map((item) => ({ id: item.id, missing: getMissingFieldNames(item) })).filter((row) => row.missing.length > 0);
   const localInvalidImages = localItems.filter((item) => !isValidImageUrl(item.img)).map((item) => item.id);

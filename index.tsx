@@ -29,22 +29,33 @@ import type { FeedUiItem } from './src/features/feed/types/feedUi';
 import { getUserFeedLocation } from './src/features/feed/services/feedLocation';
 import { FeedService } from './src/features/feed/services/feedService';
 import { AUTH_ONBOARDING_DATA } from './src/features/auth/constants/onboardingData';
+import { APP_PATH, HOME_ENTRY_URL, LANDING_PATH, getOAuthRedirectUrl, isAppPath, isAuthCallbackPath } from './src/features/auth/lib/oauthRedirect';
+import type { AuthUser } from './src/features/auth/types/auth';
 import { BITE_CUISINES, BITE_DIETS } from './src/features/bites/constants/filters';
 import { BITE_FALLBACK_RECIPES } from './src/features/bites/constants/fallbackRecipes';
 import { createBiteRecipeActions, getBiteKeyNutrients, normalizeRecipeList } from './src/features/bites/lib/bitesHelpers';
 import type { BiteActionItem, BiteRecipe, BiteRecipeInput } from './src/features/bites/types/bites';
 import { DEFAULT_FRIENDS } from './src/features/chat/constants/chatSeeds';
 import { ChatService } from './src/features/chat/services/chatService';
+import type { ChatContact, ChatMessage } from './src/features/chat/services/chatService';
+import type { ChatFriend, ChatUiMessage } from './src/features/chat/types/chatUi';
 import { FALLBACK_SAVED_ITEMS } from './src/features/plate/constants/fallbackSavedItems';
 import { inferItemTypeFromId, normalizeItemForPlateSave, normalizeSavedItemForUI } from './src/features/plate/lib/savedItems';
 import { PointsService } from './src/features/points/services/pointsService';
 import type { LeaderboardEntry } from './src/features/points/services/pointsService';
 import { buildPhotoUrl, deriveCategory, mapWeekdayTextToTimings } from './src/features/scout/lib/scoutUtils';
+import { getGoogleMaps } from './src/features/scout/types/scoutUi';
+import type { GooglePlacePhoto, GooglePlaceResult, GooglePlaceReview, MapLike, MarkerLike, ScoutPlace } from './src/features/scout/types/scoutUi';
 import { persistSnapData } from './src/features/snap/services/snapPersistence';
 import { SettingsService } from './src/features/settings/services/settingsService';
 import { TRIMS_FALLBACK_VIDEOS } from './src/features/trims/constants/fallbackVideos';
 import { buildTrimQueries } from './src/features/trims/lib/buildTrimQueries';
+import type { TrimVideo } from './src/features/trims/types/trimsUi';
 import { API_KEYS } from './src/shared/constants/apiKeys';
+import type { AppItem } from './src/shared/types/appItem';
+import type { IconComponent } from './src/shared/types/ui';
+import { NavIcon } from './src/shared/ui/navIcon';
+import { SettingsItem, SettingsSection } from './src/shared/ui/settingsPrimitives';
 import type { SettingsProfile } from './src/features/settings/types/settings';
 import { GeminiService } from './src/services/geminiService';
 
@@ -88,39 +99,6 @@ const loadUploadedImage = async (
   onTagged();
 };
 
-const SettingsSection = ({ title, children }: { title: string, children: React.ReactNode }) => (
-  <div className="space-y-4">
-    <h4 className="px-6 text-[10px] font-black uppercase tracking-[0.3em] text-stone-300">{title}</h4>
-    <div className="bg-white rounded-[2.5rem] border-4 border-white overflow-hidden divide-y shadow-xl">
-      {children}
-    </div>
-  </div>
-);
-
-const SettingsItem = ({ icon: Icon, label, value, onClick, color = 'stone' }: any) => (
-  <button
-    onClick={onClick}
-    className="w-full p-8 flex items-center justify-between hover:bg-stone-50 transition-colors group text-left"
-  >
-    <div className="flex items-center gap-6">
-      <div className={`p-4 bg-${color}-100 rounded-2xl text-${color}-900 group-hover:scale-110 transition-transform`}>
-        <Icon size={20} />
-      </div>
-      <div>
-        <p className="font-black uppercase text-[10px] tracking-widest text-stone-400 leading-none mb-1.5">{label}</p>
-        <p className="font-bold text-sm text-stone-900">{value}</p>
-      </div>
-    </div>
-    <ChevronRight size={20} className="text-stone-200 group-hover:text-stone-400 transition-colors" />
-  </button>
-);
-
-type AuthUser = {
-  id?: string;
-  email?: string;
-  user_metadata?: Record<string, unknown>;
-};
-
 const getMetadataString = (metadata: Record<string, unknown> | undefined, ...keys: string[]) => {
   for (const key of keys) {
     const value = metadata?.[key];
@@ -146,75 +124,61 @@ const parseAiJson = (raw: string | undefined | null) => {
   }
 };
 
-const APP_PATH = '/app';
-const LANDING_PATH = '/landing';
-const AUTH_CALLBACK_PATH = '/auth/callback';
-const HOME_ENTRY_URL = '/?view=home';
-
-const isAppPath = (pathname: string) => pathname === APP_PATH || pathname.startsWith(`${APP_PATH}/`);
-const isAuthCallbackPath = (pathname: string) => pathname === AUTH_CALLBACK_PATH || pathname.startsWith(`${AUTH_CALLBACK_PATH}/`);
-
-const normalizeAppUrl = (value: string | undefined) => {
-  if (!value) return '';
-  const trimmed = value.trim();
-  const unquoted = (trimmed.startsWith('"') || trimmed.startsWith("'")) ? trimmed.slice(1) : trimmed;
-  const clean = (unquoted.endsWith('"') || unquoted.endsWith("'")) ? unquoted.slice(0, -1) : unquoted;
-  return clean.replace(/\/+$/, '');
-};
-
-const getOAuthRedirectUrl = () => {
-  const { origin, hostname } = globalThis.location;
-  const isLocalDevHost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '0.0.0.0';
-
-  // Force local OAuth returns to stay local and avoid any production fallback.
-  if (isLocalDevHost) {
-    return `${origin}${AUTH_CALLBACK_PATH}`;
-  }
-
-  const configuredAppUrl = normalizeAppUrl(import.meta.env.VITE_AUTH_REDIRECT_URL)
-    || normalizeAppUrl(import.meta.env.VITE_APP_URL);
-
-  return configuredAppUrl ? `${configuredAppUrl}${AUTH_CALLBACK_PATH}` : `${origin}${AUTH_CALLBACK_PATH}`;
-};
-
 // --- SHARED UI COMPONENTS ---
 
-const Badge = ({ children, color = 'yellow' }: { children: React.ReactNode, color?: string }) => (
-  <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-${color}-100 text-${color}-800 whitespace-nowrap`}>
+type BadgeColor = 'yellow' | 'stone' | 'blue' | 'emerald' | 'indigo' | 'red';
+
+const BADGE_COLOR_CLASSES: Record<BadgeColor, string> = {
+  yellow: 'bg-yellow-100 text-yellow-800',
+  stone: 'bg-stone-100 text-stone-800',
+  blue: 'bg-blue-100 text-blue-800',
+  emerald: 'bg-emerald-100 text-emerald-800',
+  indigo: 'bg-indigo-100 text-indigo-800',
+  red: 'bg-red-100 text-red-800',
+};
+
+const Badge = ({ children, color = 'yellow' }: { children: React.ReactNode; color?: BadgeColor }) => (
+  <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap ${BADGE_COLOR_CLASSES[color]}`}>
     {children}
   </span>
 );
 
-const NavIcon = ({ icon: Icon, active, onClick, label }: any) => (
-  <button 
-    onClick={onClick} 
-    className={`flex flex-col items-center gap-1 transition-all duration-300 ${active ? 'text-stone-900' : 'text-stone-300 hover:text-stone-500'}`}
-  >
-    <div className={`p-3 rounded-2xl transition-all ${active ? 'bg-yellow-400 shadow-lg' : ''}`}>
-      <Icon size={28} strokeWidth={active ? 3 : 2} />
-    </div>
-  </button>
-);
-
 // --- TINDER SWIPE ENGINE ---
 
-const SwipeCard = ({ children, onSwipe, active }: any) => {
+type SwipeDirection = 'left' | 'right' | 'up' | 'down';
+type SwipePointerEvent = React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>;
+
+type YouTubeSearchItem = {
+  id?: { videoId?: string };
+  snippet?: {
+    title?: string;
+    channelTitle?: string;
+    thumbnails?: {
+      high?: { url?: string };
+      medium?: { url?: string };
+    };
+  };
+};
+
+const SwipeCard = ({ children, onSwipe, active }: { children: React.ReactNode; onSwipe: (dir: SwipeDirection) => void; active: boolean }) => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isSwiping, setIsSwiping] = useState(false);
   const startPos = useRef({ x: 0, y: 0 });
 
-  const handleStart = (e: any) => {
+  const handleStart = (e: SwipePointerEvent) => {
     if (!active) return;
-    const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-    const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+    const isTouch = e.type === 'touchstart';
+    const clientX = isTouch ? (e as React.TouchEvent<HTMLButtonElement>).touches[0].clientX : (e as React.MouseEvent<HTMLButtonElement>).clientX;
+    const clientY = isTouch ? (e as React.TouchEvent<HTMLButtonElement>).touches[0].clientY : (e as React.MouseEvent<HTMLButtonElement>).clientY;
     startPos.current = { x: clientX, y: clientY };
     setIsSwiping(true);
   };
 
-  const handleMove = (e: any) => {
+  const handleMove = (e: SwipePointerEvent) => {
     if (!isSwiping || !active) return;
-    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+    const isTouch = e.type === 'touchmove';
+    const clientX = isTouch ? (e as React.TouchEvent<HTMLButtonElement>).touches[0].clientX : (e as React.MouseEvent<HTMLButtonElement>).clientX;
+    const clientY = isTouch ? (e as React.TouchEvent<HTMLButtonElement>).touches[0].clientY : (e as React.MouseEvent<HTMLButtonElement>).clientY;
     setOffset({ x: clientX - startPos.current.x, y: clientY - startPos.current.y });
   };
 
@@ -264,10 +228,10 @@ const SwipeCard = ({ children, onSwipe, active }: any) => {
 
 // --- SHARE MODAL ---
 
-const ShareModal = ({ item, friends, onShare, onClose }: { item: any, friends: any[], onShare: (friendId: number, item: any) => void, onClose: () => void }) => {
-  const [sentTo, setSentTo] = useState<number[]>([]);
+const ShareModal = ({ item, friends, onShare, onClose }: { item: AppItem, friends: ChatFriend[], onShare: (friendId: string | number, item: AppItem) => void, onClose: () => void }) => {
+  const [sentTo, setSentTo] = useState<Array<string | number>>([]);
 
-  const handleShareClick = (friendId: number) => {
+  const handleShareClick = (friendId: string | number) => {
     if (sentTo.includes(friendId)) return;
     onShare(friendId, item);
     setSentTo(prev => [...prev, friendId]);
@@ -351,7 +315,7 @@ const useIsDesktop = () => {
   return isDesktop;
 };
 
-const DealCard = ({ item, index, onAction }: { item: any, index: number, onAction: (action: string, item: any) => void }) => {
+const DealCard = ({ item, index, onAction }: { item: AppItem, index: number, onAction: (action: string, item: AppItem) => void }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEntered, setIsEntered] = useState(false);
   const isAdOrTrivia = item.itemType === 'ad' || item.itemType === 'trivia' || item.type === 'ad' || item.type === 'trivia';
@@ -792,11 +756,26 @@ const AIRecipeStudio = ({
   onShareRequest: (item: BiteActionItem) => void;
   onClose: () => void;
 }) => {
+  type GeneratedRecipeCard = {
+    title?: string;
+    category?: string;
+    readyInMinutes?: number;
+    servings?: number;
+    ingredients?: string[];
+    instructions?: string;
+    nutrition?: {
+      calories?: number;
+      protein?: number;
+      fat?: number;
+      carbs?: number;
+    };
+  };
+
   const [image, setImage] = useState<string | null>(null);
   const [imageMimeType, setImageMimeType] = useState('image/jpeg');
   const [description, setDescription] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedRecipe, setGeneratedRecipe] = useState<any>(null);
+  const [generatedRecipe, setGeneratedRecipe] = useState<GeneratedRecipeCard | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -825,7 +804,7 @@ Fields required: title, category, readyInMinutes, servings, ingredients (array o
 Use the user description and optional image context. Keep response as raw JSON only.
 User description: ${description}`;
 
-      const parts: any[] = [{ text: prompt }];
+      const parts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [{ text: prompt }];
       if (image?.includes(',')) {
         parts.push({
           inlineData: {
@@ -1023,7 +1002,7 @@ User description: ${description}`;
   );
 };
 
-const FeedView = ({ onSave, onShareRequest }: { onSave: (item: any) => void, onShareRequest: (item: any) => void }) => {
+const FeedView = ({ onSave, onShareRequest }: { onSave: (item: AppItem) => void, onShareRequest: (item: AppItem) => void }) => {
   const [items, setItems] = useState<FeedUiItem[]>([...LOCAL_CURATED_FEED_ITEMS]);
   const [feedSource, setFeedSource] = useState<'local' | 'feedService'>('local');
   const [feedLoading, setFeedLoading] = useState(false);
@@ -1210,7 +1189,7 @@ const FeedView = ({ onSave, onShareRequest }: { onSave: (item: any) => void, onS
     });
   };
 
-  const handleAction = (action: string, item: any) => {
+  const handleAction = (action: string, item: AppItem) => {
     if (item?.itemType === 'ad' || item?.itemType === 'trivia') {
       return;
     }
@@ -1363,15 +1342,28 @@ const AITrimStudio = ({
   onShareRequest,
   onClose,
 }: {
-  onSave: (item: any) => void;
-  onShareRequest: (item: any) => void;
+  onSave: (item: AppItem) => void;
+  onShareRequest: (item: AppItem) => void;
   onClose: () => void;
 }) => {
+  type GeneratedTrimCard = {
+    title?: string;
+    author?: string;
+    caption?: string;
+    likes?: string;
+    nutrition?: {
+      calories?: number;
+      protein?: number;
+      fat?: number;
+      carbs?: number;
+    };
+  };
+
   const [video, setVideo] = useState<string | null>(null);
   const [videoMimeType, setVideoMimeType] = useState('video/mp4');
   const [description, setDescription] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedTrim, setGeneratedTrim] = useState<any>(null);
+  const [generatedTrim, setGeneratedTrim] = useState<GeneratedTrimCard | null>(null);
   const [error, setError] = useState<string | null>(null);
   const trimDraftIdRef = useRef<string | null>(null);
 
@@ -1426,7 +1418,7 @@ Required fields: title, author, caption, likes, nutrition { calories, protein, f
 Keep response as raw JSON only.
 Context: ${description}`;
 
-      const parts: any[] = [{ text: prompt }];
+      const parts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [{ text: prompt }];
       if (video?.includes(',')) {
         parts.push({
           inlineData: {
@@ -1640,8 +1632,8 @@ Context: ${description}`;
   );
 };
 
-const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: any) => void; onShareRequest: (item: any) => void; authUser: AuthUser | null; }) => {
-  const [videos, setVideos] = useState<any[]>([]);
+const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppItem) => void; onShareRequest: (item: AppItem) => void; authUser: AuthUser | null; }) => {
+  const [videos, setVideos] = useState<TrimVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [serviceError, setServiceError] = useState('');
   const [feedSource, setFeedSource] = useState<'live' | 'cache' | 'fallback'>('fallback');
@@ -1699,7 +1691,7 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: any) =
             if (response.error) setServiceError(response.error);
           }
         } else {
-          const normalized = items.map((video: any, index: number) => {
+          const normalized: TrimVideo[] = (items as YouTubeSearchItem[]).map((video, index: number) => {
             const videoId = video?.id?.videoId || `video-${index + 1}`;
             const thumbnail = video?.snippet?.thumbnails?.high?.url
               || video?.snippet?.thumbnails?.medium?.url
@@ -1734,7 +1726,7 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: any) =
     fetchTrims();
   }, [authUser]);
 
-  const toTrimActionItem = (v: any) => ({
+  const toTrimActionItem = (v: TrimVideo): AppItem => ({
       id: `video-${v.videoId || v.id}`,
       itemType: 'video',
       itemId: String(v.videoId || v.id),
@@ -1752,11 +1744,11 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: any) =
       },
     });
 
-  const handleSaveVideo = (v: any) => {
+  const handleSaveVideo = (v: TrimVideo) => {
     onSave(toTrimActionItem(v));
   };
 
-  const handleShareVideo = (v: any) => {
+  const handleShareVideo = (v: TrimVideo) => {
     onShareRequest(toTrimActionItem(v));
   };
 
@@ -1888,22 +1880,22 @@ const ChatView = ({
   setTab,
   onConversationOpened,
 }: {
-  friends: any[];
+  friends: ChatFriend[];
   authUser: AuthUser | null;
-  onSave: (item: any) => void;
-  onShareRequest: (item: any) => void;
+  onSave: (item: AppItem) => void;
+  onShareRequest: (item: AppItem) => void;
   setTab: (tab: string) => void;
   onConversationOpened: (friendId: string) => void;
 }) => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<ChatUiMessage[]>([]);
   const [draft, setDraft] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
   const active = friends.find(f => String(f.id) === activeId);
 
-  const mapMessageToUi = useCallback((message: any) => ({
+  const mapMessageToUi = useCallback((message: ChatMessage): ChatUiMessage => ({
     id: message.id,
     role: message.senderId === authUser?.id ? 'user' : 'ai',
     type: message.sharedItem ? 'share' : 'text',
@@ -1911,7 +1903,7 @@ const ChatView = ({
     item: message.sharedItem,
   }), [authUser?.id]);
 
-  const appendIncomingMessage = useCallback((message: any) => {
+  const appendIncomingMessage = useCallback((message: ChatMessage) => {
     setMessages(prev => {
       if (prev.some((entry) => entry.id === message.id)) return prev;
       return [...prev, mapMessageToUi(message)];
@@ -1949,7 +1941,7 @@ const ChatView = ({
     };
   }, [activeId, messages.length]);
 
-  const formatFriendTime = (friend: any) => {
+  const formatFriendTime = (friend: ChatFriend) => {
     if (friend?.time) return friend.time;
     if (friend?.isOnline) return 'now';
     if (friend?.lastSeen) return 'recent';
@@ -2198,9 +2190,9 @@ const ChatView = ({
   );
 };
 
-const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any) => void, onShareRequest: (item: any) => void, savedItems: any[] }) => {
+const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppItem) => void; onShareRequest: (item: AppItem) => void; savedItems: AppItem[] }) => {
   const [coords, setCoords] = useState({ lat: 43.65, lng: -79.38 });
-  const [selectedPlace, setSelectedPlace] = useState<any>(null);
+  const [selectedPlace, setSelectedPlace] = useState<ScoutPlace | null>(null);
   const [modalTab, setModalTab] = useState('overview');
   const [scoutTab, setScoutTab] = useState<'nearby' | 'saved'>('nearby');
   const [isLoadingPlaces, setIsLoadingPlaces] = useState(false);
@@ -2219,11 +2211,11 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
   const [mapError, setMapError] = useState('');
   const [isMapReady, setIsMapReady] = useState(false);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const mapMarkersRef = useRef<any[]>([]);
-  const userMarkerRef = useRef<any>(null);
+  const mapInstanceRef = useRef<MapLike | null>(null);
+  const mapMarkersRef = useRef<MarkerLike[]>([]);
+  const userMarkerRef = useRef<MarkerLike | null>(null);
   
-  const fallbackPlaces = [
+  const fallbackPlaces: ScoutPlace[] = [
     { 
       id: 'p1', 
       name: "Oretta Toronto", 
@@ -2326,31 +2318,37 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
     },
   ];
 
-  const [places, setPlaces] = useState<any[]>(fallbackPlaces);
+  const [places, setPlaces] = useState<ScoutPlace[]>(fallbackPlaces);
 
-  const savedPlaces = useMemo(() => {
+  const savedPlaces = useMemo<ScoutPlace[]>(() => {
     return savedItems
       .filter((item) => Number.isFinite(Number(item?.lat)) && Number.isFinite(Number(item?.lng)))
       .map((item, index) => {
         const fallback = fallbackPlaces[index % fallbackPlaces.length];
+        const vibe = Array.isArray(item.vibe) ? item.vibe.filter((entry): entry is string => typeof entry === 'string') : [];
+        const photos = Array.isArray(item.photos) ? item.photos.filter((entry): entry is string => typeof entry === 'string') : [];
+        const timings = (item.timings && typeof item.timings === 'object') ? item.timings : fallback.timings;
+        const menu = Array.isArray(item.menu) ? item.menu : fallback.menu;
+        const userReviews = Array.isArray(item.userReviews) ? item.userReviews : fallback.userReviews;
+
         return {
-          id: item.id || `saved-place-${index}`,
-          placeId: item.placeId,
-          name: item.name || fallback.name,
-          cat: item.cat || 'Saved Place',
+          id: typeof item.id === 'string' ? item.id : `saved-place-${index}`,
+          placeId: typeof item.placeId === 'string' ? item.placeId : undefined,
+          name: typeof item.name === 'string' ? item.name : fallback.name,
+          cat: typeof item.cat === 'string' ? item.cat : 'Saved Place',
           rating: Number.isFinite(Number(item.rating)) ? Number(item.rating) : fallback.rating,
           reviews: Number.isFinite(Number(item.reviews)) ? Number(item.reviews) : fallback.reviews,
-          address: item.address || fallback.address,
-          phone: item.phone || fallback.phone,
-          website: item.website || fallback.website,
-          vibe: Array.isArray(item.vibe) && item.vibe.length > 0 ? item.vibe : fallback.vibe,
-          img: item.img || fallback.img,
+          address: typeof item.address === 'string' ? item.address : fallback.address,
+          phone: typeof item.phone === 'string' ? item.phone : fallback.phone,
+          website: typeof item.website === 'string' ? item.website : fallback.website,
+          vibe: vibe.length > 0 ? vibe : fallback.vibe,
+          img: typeof item.img === 'string' ? item.img : fallback.img,
           lat: Number(item.lat),
           lng: Number(item.lng),
-          timings: item.timings || fallback.timings,
-          menu: item.menu || fallback.menu,
-          userReviews: item.userReviews || fallback.userReviews,
-          photos: item.photos || fallback.photos,
+          timings: timings as ScoutPlace['timings'],
+          menu: menu as ScoutPlace['menu'],
+          userReviews: userReviews as ScoutPlace['userReviews'],
+          photos: photos.length > 0 ? photos : fallback.photos,
         };
       });
   }, [savedItems]);
@@ -2367,8 +2365,8 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
   };
 
   const syncMapMarkers = () => {
-    if (!mapInstanceRef.current || !(globalThis as any).google?.maps) return;
-    const googleMaps = (globalThis as any).google.maps;
+    const googleMaps = getGoogleMaps();
+    if (!mapInstanceRef.current || !googleMaps) return;
     clearMapMarkers();
 
     const bounds = new googleMaps.LatLngBounds();
@@ -2415,12 +2413,12 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
     }
   };
 
-  const toScoutPlace = (place: any, index: number) => {
+  const toScoutPlace = (place: GooglePlaceResult, index: number): ScoutPlace => {
     const fallback = fallbackPlaces[index % fallbackPlaces.length];
     const coverImage = buildPhotoUrl(API_KEYS.MAPS, place.photos?.[0]?.photo_reference) || fallback.img;
     const photoUrls = (place.photos || [])
       .slice(0, 6)
-      .map((photo: any) => buildPhotoUrl(API_KEYS.MAPS, photo.photo_reference))
+      .map((photo: GooglePlacePhoto) => buildPhotoUrl(API_KEYS.MAPS, photo.photo_reference))
       .filter(Boolean);
 
     return {
@@ -2439,7 +2437,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
       lng: place.geometry?.location?.lng ?? fallback.lng,
       timings: mapWeekdayTextToTimings(place.opening_hours?.weekday_text) || fallback.timings,
       menu: fallback.menu,
-      userReviews: (place.reviews || []).slice(0, 5).map((review: any) => ({
+      userReviews: (place.reviews || []).slice(0, 5).map((review: GooglePlaceReview) => ({
         user: review.author_name || 'Guest',
         rating: review.rating || 5,
         text: review.text || 'Great spot.',
@@ -2477,7 +2475,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
         return;
       }
 
-      const normalized = results.slice(0, 12).map((place: any, index: number) => toScoutPlace(place, index));
+      const normalized: ScoutPlace[] = (results as GooglePlaceResult[]).slice(0, 12).map((place, index: number) => toScoutPlace(place, index));
       if (canApply) {
         setPlaces(normalized);
       }
@@ -2513,7 +2511,8 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
 
         if (disposed || !mapContainerRef.current) return;
 
-        const googleMaps = (globalThis as any).google.maps;
+        const googleMaps = getGoogleMaps();
+        if (!googleMaps) throw new Error('Google Maps runtime not available');
         mapInstanceRef.current = new googleMaps.Map(mapContainerRef.current, {
           center: { lat: coords.lat, lng: coords.lng },
           zoom: 13,
@@ -2545,7 +2544,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
     syncMapMarkers();
   }, [coords, displayPlaces, isMapReady]);
 
-  const openPlace = async (place: any) => {
+  const openPlace = async (place: ScoutPlace) => {
     setSelectedPlace(place);
     setModalTab('overview');
     if (!place.placeId) return;
@@ -2597,7 +2596,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
     };
   }, []);
 
-  const handlePlaceAction = (place: any, action: 'save' | 'share') => {
+  const handlePlaceAction = (place: ScoutPlace, action: 'save' | 'share') => {
     const formattedItem = {
       id: place.id,
       name: place.name,
@@ -2854,7 +2853,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
                   <div className="space-y-4 animate-in fade-in duration-300">
                     <h4 className="font-black uppercase text-[10px] tracking-[0.2em] text-stone-300 px-2">Opening Hours</h4>
                     <div className="bg-stone-50 p-8 rounded-[3rem] border border-stone-100 space-y-3">
-                      {Object.entries(selectedPlace.timings || {}).map(([day, hours]: [string, any]) => (
+                      {Object.entries(selectedPlace.timings || {}).map(([day, hours]: [string, string]) => (
                         <div key={day} className="flex justify-between items-center">
                           <span className="text-xs font-black uppercase tracking-widest text-stone-400">{day}</span>
                           <span className="text-xs font-bold text-stone-900">{hours}</span>
@@ -2866,7 +2865,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
 
                 {modalTab === 'menu' && (
                   <div className="space-y-8 animate-in fade-in duration-300">
-                    {(selectedPlace.menu || []).map((section: any) => (
+                    {(selectedPlace.menu || []).map((section) => (
                       <div key={String(section.section)} className="space-y-4">
                         <h4 className="font-black uppercase text-[10px] tracking-[0.2em] text-stone-300 px-2">{section.section}</h4>
                         <div className="bg-stone-50 p-8 rounded-[3rem] border border-stone-100 space-y-3">
@@ -2889,7 +2888,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
                       <h4 className="font-black uppercase text-[10px] tracking-[0.2em] text-stone-300">User Reviews</h4>
                       <button className="text-[10px] font-black uppercase tracking-widest text-blue-500">Write Review</button>
                     </div>
-                    {(selectedPlace.userReviews || []).map((review: any) => (
+                    {(selectedPlace.userReviews || []).map((review) => (
                       <div key={`${review.user}-${review.text}`} className="bg-stone-50 p-8 rounded-[3rem] border border-stone-100 space-y-4">
                         <div className="flex justify-between items-center">
                           <div className="flex items-center gap-3">
@@ -2939,9 +2938,13 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: any)
   );
 };
 
-const ProfileView = ({ savedItems, authUser, friends }: { savedItems: any[], authUser: any, friends: any[] }) => {
+const ProfileView = ({ savedItems, authUser, friends }: { savedItems: AppItem[]; authUser: AuthUser | null; friends: ChatFriend[] }) => {
   const [activeTab, setActiveTab] = useState('places');
   const [persistedProfile, setPersistedProfile] = useState<SettingsProfile | null>(null);
+
+  const hasIdPrefix = useCallback((item: AppItem, prefix: string) => {
+    return typeof item.id === 'string' && item.id.startsWith(prefix);
+  }, []);
 
   const normalizeExternalUrl = (value: string | undefined, baseUrl: string) => {
     if (!value) return baseUrl;
@@ -2954,7 +2957,7 @@ const ProfileView = ({ savedItems, authUser, friends }: { savedItems: any[], aut
   };
 
   const profileDisplay = useMemo(() => {
-    const metadata = authUser?.user_metadata || {};
+    const metadata = (authUser?.user_metadata || {}) as Record<string, string | undefined>;
     const email = authUser?.email || '';
     const emailName = email.includes('@') ? email.split('@')[0] : 'Chef Studio';
     const persisted = persistedProfile;
@@ -2992,7 +2995,7 @@ const ProfileView = ({ savedItems, authUser, friends }: { savedItems: any[], aut
   }, [authUser]);
 
   const socialLinks = useMemo(() => {
-    const metadata = authUser?.user_metadata || {};
+    const metadata = (authUser?.user_metadata || {}) as Record<string, string | undefined>;
     const persisted = persistedProfile;
 
     return {
@@ -3012,12 +3015,12 @@ const ProfileView = ({ savedItems, authUser, friends }: { savedItems: any[], aut
   ];
 
   const filteredItems = useMemo(() => {
-    if (activeTab === 'places') return savedItems.filter(i => !i.id.startsWith('recipe-') && !i.id.startsWith('video-') && !i.id.startsWith('post-'));
-    if (activeTab === 'recipes') return savedItems.filter(i => i.id.startsWith('recipe-'));
-    if (activeTab === 'videos') return savedItems.filter(i => i.id.startsWith('video-'));
-    if (activeTab === 'posts') return savedItems.filter(i => i.id.startsWith('post-'));
+    if (activeTab === 'places') return savedItems.filter(i => !hasIdPrefix(i, 'recipe-') && !hasIdPrefix(i, 'video-') && !hasIdPrefix(i, 'post-'));
+    if (activeTab === 'recipes') return savedItems.filter(i => hasIdPrefix(i, 'recipe-'));
+    if (activeTab === 'videos') return savedItems.filter(i => hasIdPrefix(i, 'video-'));
+    if (activeTab === 'posts') return savedItems.filter(i => hasIdPrefix(i, 'post-'));
     return [];
-  }, [savedItems, activeTab]);
+  }, [savedItems, activeTab, hasIdPrefix]);
 
   const activeCount = activeTab === 'crew' ? friends.length : filteredItems.length;
 
@@ -3122,9 +3125,9 @@ const ProfileView = ({ savedItems, authUser, friends }: { savedItems: any[], aut
   );
 };
 
-const SettingsView = ({ onSignOut, authUser }: { onSignOut: () => Promise<void>, authUser: any }) => {
+const SettingsView = ({ onSignOut, authUser }: { onSignOut: () => Promise<void>; authUser: AuthUser | null }) => {
   const defaults = useMemo<SettingsProfile>(() => {
-    const metadata = authUser?.user_metadata || {};
+    const metadata = (authUser?.user_metadata || {}) as Record<string, string | undefined>;
     const email = authUser?.email || '';
     const emailName = email.includes('@') ? email.split('@')[0] : 'chef_studio_lab';
 
@@ -3149,6 +3152,8 @@ const SettingsView = ({ onSignOut, authUser }: { onSignOut: () => Promise<void>,
   const [signingOut, setSigningOut] = useState(false);
   const [loadingSettings, setLoadingSettings] = useState(false);
   const [savingSettings, setSavingSettings] = useState(false);
+  const [updatingPassword, setUpdatingPassword] = useState(false);
+  const [sendingResetEmail, setSendingResetEmail] = useState(false);
   const [settingsError, setSettingsError] = useState('');
   const [settingsMessage, setSettingsMessage] = useState('');
   const [isDirty, setIsDirty] = useState(false);
@@ -3245,6 +3250,72 @@ const SettingsView = ({ onSignOut, authUser }: { onSignOut: () => Promise<void>,
     setSettingsMessage('Settings saved.');
   };
 
+  const handleChangePassword = async () => {
+    if (!supabase || updatingPassword) {
+      return;
+    }
+
+    const nextPassword = globalThis.prompt('Enter a new password (minimum 8 characters)');
+    if (nextPassword === null) return;
+
+    const trimmedPassword = nextPassword.trim();
+    if (trimmedPassword.length < 8) {
+      setSettingsError('Password must be at least 8 characters.');
+      setSettingsMessage('');
+      return;
+    }
+
+    const confirmPassword = globalThis.prompt('Confirm your new password');
+    if (confirmPassword === null) return;
+
+    if (trimmedPassword !== confirmPassword.trim()) {
+      setSettingsError('Password confirmation does not match.');
+      setSettingsMessage('');
+      return;
+    }
+
+    setUpdatingPassword(true);
+    setSettingsError('');
+    setSettingsMessage('');
+
+    const { error } = await supabase.auth.updateUser({ password: trimmedPassword });
+    if (error) {
+      setSettingsError(error.message);
+    } else {
+      setSettingsMessage('Password updated successfully.');
+    }
+
+    setUpdatingPassword(false);
+  };
+
+  const handleSendPasswordReset = async () => {
+    if (!supabase || sendingResetEmail) {
+      return;
+    }
+
+    if (!profile.email) {
+      setSettingsError('No account email is available for password reset.');
+      setSettingsMessage('');
+      return;
+    }
+
+    setSendingResetEmail(true);
+    setSettingsError('');
+    setSettingsMessage('');
+
+    const { error } = await supabase.auth.resetPasswordForEmail(profile.email, {
+      redirectTo: getOAuthRedirectUrl(),
+    });
+
+    if (error) {
+      setSettingsError(error.message);
+    } else {
+      setSettingsMessage('Password reset email sent. Check your inbox.');
+    }
+
+    setSendingResetEmail(false);
+  };
+
   return (
     <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in pb-32 px-4">
       <header className="flex flex-col items-center text-center space-y-6 py-8">
@@ -3301,6 +3372,30 @@ const SettingsView = ({ onSignOut, authUser }: { onSignOut: () => Promise<void>,
           label="Email Address" 
           value={profile.email} 
           onClick={() => editField('email', 'Email Address', { readOnly: true })} 
+        />
+        <SettingsItem
+          icon={Shield}
+          label="Password"
+          value={updatingPassword ? 'Updating...' : 'Change Password'}
+          onClick={() => {
+            handleChangePassword().catch((error) => {
+              console.warn('Password update failed:', error);
+              setSettingsError('Unable to update password right now.');
+            });
+          }}
+          color="indigo"
+        />
+        <SettingsItem
+          icon={AlertCircle}
+          label="Password Reset"
+          value={sendingResetEmail ? 'Sending reset email...' : 'Send reset email'}
+          onClick={() => {
+            handleSendPasswordReset().catch((error) => {
+              console.warn('Password reset email failed:', error);
+              setSettingsError('Unable to send password reset email right now.');
+            });
+          }}
+          color="blue"
         />
         <SettingsItem
           icon={Phone} 
@@ -3428,7 +3523,7 @@ const FeatureFold = ({
   image: string,
   reverse?: boolean,
   color?: string,
-  icon: any
+  icon: IconComponent
 }) => (
   <section className={`py-32 px-6 ${reverse ? 'bg-white' : 'bg-[#fbd556]'} overflow-hidden`}>
     <div className={`max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center ${reverse ? 'lg:flex-row-reverse' : ''}`}>
@@ -3749,6 +3844,36 @@ const AuthView = ({
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!supabase) {
+      setAuthError('Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
+      return;
+    }
+
+    if (!email.trim()) {
+      setAuthError('Enter your email to receive a password reset link.');
+      return;
+    }
+
+    setAuthError('');
+    setAuthMessage('');
+    setAuthLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: getOAuthRedirectUrl(),
+      });
+
+      if (error) {
+        setAuthError(error.message);
+      } else {
+        setAuthMessage('Password reset link sent. Check your inbox.');
+      }
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
   if (step === 'onboarding') {
     const current = AUTH_ONBOARDING_DATA[onboardingStep];
     return (
@@ -3884,6 +4009,21 @@ const AuthView = ({
               return 'Sign Up';
             })()}
           </button>
+
+          {step === 'signin' && (
+            <button
+              onClick={() => {
+                handleForgotPassword().catch((error) => {
+                  console.warn('Password reset request failed:', error);
+                  setAuthError('Unable to send password reset right now.');
+                });
+              }}
+              disabled={authLoading}
+              className="w-full text-center text-[10px] font-black uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors disabled:opacity-50"
+            >
+              Forgot Password?
+            </button>
+          )}
         </div>
 
         <div className="text-center">
@@ -3985,12 +4125,27 @@ const LeaderboardView = ({ userPoints, userLevel, leaderboardUsers }: { userPoin
 };
 
 const RewardsView = () => {
+  type RewardColor = 'yellow' | 'indigo' | 'emerald' | 'blue';
+  const REWARD_COLOR_CLASSES: Record<RewardColor, string> = {
+    yellow: 'bg-yellow-100 text-yellow-600',
+    indigo: 'bg-indigo-100 text-indigo-600',
+    emerald: 'bg-emerald-100 text-emerald-600',
+    blue: 'bg-blue-100 text-blue-600',
+  };
+
   const rewards = [
     { id: 1, title: "Studio Pro Badge", desc: "Unlock exclusive profile flair", cost: 5000, icon: Star, color: "yellow" },
     { id: 2, title: "Neural Filter Pack", desc: "New AI styles for your snaps", cost: 12000, icon: Sparkles, color: "indigo" },
     { id: 3, title: "Chef Consultation", desc: "1-on-1 session with Chef AI Pro", cost: 25000, icon: Bot, color: "emerald" },
     { id: 4, title: "Priority Scouting", desc: "Early access to hidden gems", cost: 40000, icon: MapPin, color: "blue" },
-  ];
+  ] as const satisfies ReadonlyArray<{
+    id: number;
+    title: string;
+    desc: string;
+    cost: number;
+    icon: IconComponent;
+    color: RewardColor;
+  }>;
 
   return (
     <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in pb-32">
@@ -4006,7 +4161,7 @@ const RewardsView = () => {
         {rewards.map((reward) => (
           <div key={reward.id} className="bg-white rounded-[3rem] p-8 border-4 border-white shadow-xl flex items-center justify-between group hover:shadow-2xl transition-all">
             <div className="flex items-center gap-6">
-              <div className={`p-5 bg-${reward.color}-100 rounded-[2rem] text-${reward.color}-600 group-hover:scale-110 transition-transform`}>
+              <div className={`p-5 rounded-[2rem] group-hover:scale-110 transition-transform ${REWARD_COLOR_CLASSES[reward.color]}`}>
                 <reward.icon size={32} />
               </div>
               <div>
@@ -4034,7 +4189,7 @@ const TaggingForm = ({
   image: string;
   location?: { lat: number; lng: number } | null;
   onBack: () => void;
-  onSave: (data: any) => void;
+  onSave: (data: { restaurant: string; cuisine: string; rating: number; description: string }) => void;
   isUploading: boolean;
 }) => {
   const [restaurant, setRestaurant] = useState('');
@@ -4129,7 +4284,7 @@ const TaggingForm = ({
   );
 };
 
-const SnapMobile = ({ onPost, onClose }: { onPost: (item: any) => void, onClose: () => void }) => {
+const SnapMobile = ({ onPost, onClose }: { onPost: (item: AppItem) => void, onClose: () => void }) => {
   const [step, setStep] = useState<'disclaimer' | 'capture' | 'tagging' | 'success'>('disclaimer');
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -4293,7 +4448,7 @@ const SnapMobile = ({ onPost, onClose }: { onPost: (item: any) => void, onClose:
   );
 };
 
-const SnapDesktop = ({ onPost, onClose }: { onPost: (item: any) => void, onClose: () => void }) => {
+const SnapDesktop = ({ onPost, onClose }: { onPost: (item: AppItem) => void, onClose: () => void }) => {
   const [step, setStep] = useState<'upload' | 'tagging' | 'success'>('upload');
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -4370,7 +4525,7 @@ const SnapDesktop = ({ onPost, onClose }: { onPost: (item: any) => void, onClose
   );
 };
 
-const SnapView = ({ onPost, onClose }: { onPost: (item: any) => void, onClose: () => void }) => {
+const SnapView = ({ onPost, onClose }: { onPost: (item: AppItem) => void, onClose: () => void }) => {
   const isDesktop = useIsDesktop();
 
   if (isDesktop) {
@@ -4397,10 +4552,10 @@ const App = () => {
   const [tab, setTab] = useState(() => resolveInitialTab(globalThis.location.search, tabIds));
   const [showSnap, setShowSnap] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [savedItems, setSavedItems] = useState<any[]>(FALLBACK_SAVED_ITEMS);
-  const [activeShareItem, setActiveShareItem] = useState<any>(null);
+  const [savedItems, setSavedItems] = useState<AppItem[]>(FALLBACK_SAVED_ITEMS);
+  const [activeShareItem, setActiveShareItem] = useState<AppItem | null>(null);
 
-  const [friends, setFriends] = useState<any[]>(DEFAULT_FRIENDS as any[]);
+  const [friends, setFriends] = useState<ChatFriend[]>(DEFAULT_FRIENDS as ChatFriend[]);
   const totalUnread = useMemo(() => friends.reduce((sum, friend) => sum + (friend.unreadCount || 0), 0), [friends]);
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | 'unsupported'>(() => {
     if (typeof globalThis.Notification === 'undefined') {
@@ -4559,13 +4714,13 @@ const App = () => {
         return;
       }
 
-      setFriends(contacts.data.map((contact: any) => ({
+      setFriends(contacts.data.map((contact: ChatContact) => ({
         ...contact,
         online: contact.isOnline,
         time: contact.isOnline ? 'now' : 'recent',
         unreadCount: 0,
         requestStatus: 'accepted',
-      })) as any);
+      })));
     };
 
     loadContacts();
@@ -4768,7 +4923,7 @@ const App = () => {
     });
   }, [isAuthenticated]);
 
-  const handleSave = async (item: any) => {
+  const handleSave = async (item: AppItem) => {
     const normalized = normalizeItemForPlateSave(item);
     let isNewSave = false;
 
@@ -4797,7 +4952,7 @@ const App = () => {
     }
   };
 
-  const handleSnap = (item: any) => {
+  const handleSnap = (item: AppItem) => {
     setSavedItems(prev => [item, ...prev]);
     awardPointsForAction('snap_post', inferItemTypeFromId(item.id), String(item.id), {
       source: 'handleSnap',
@@ -4806,7 +4961,7 @@ const App = () => {
     });
   };
 
-  const handleShare = async (friendId: string | number, item: any) => {
+  const handleShare = async (friendId: string | number, item: AppItem) => {
     const targetFriendId = String(friendId);
 
     if (authUser?.id && hasSupabaseConfig) {
@@ -4878,7 +5033,7 @@ const App = () => {
   const renderView = () => renderAppView({
     tab,
     setTab,
-    handleSave: (item: any) => {
+    handleSave: (item: AppItem) => {
       handleSave(item).catch((error) => {
         console.warn('Save failed:', error);
       });

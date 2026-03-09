@@ -55,21 +55,37 @@ const normalizeContents = (contents: GeminiGenerateRequest['contents']) => {
   return [contents];
 };
 
-const extractGeminiText = (payload: any): string => {
+const asRecord = (value: unknown): Record<string, unknown> => {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+};
+
+const extractGeminiText = (payload: unknown): string => {
   if (!payload) return '';
 
-  if (typeof payload.text === 'string' && payload.text.length > 0) {
-    return payload.text;
+  const payloadRecord = asRecord(payload);
+
+  if (typeof payloadRecord.text === 'string' && payloadRecord.text.length > 0) {
+    return payloadRecord.text;
   }
 
-  if (typeof payload.output_text === 'string' && payload.output_text.length > 0) {
-    return payload.output_text;
+  if (typeof payloadRecord.output_text === 'string' && payloadRecord.output_text.length > 0) {
+    return payloadRecord.output_text;
   }
 
-  const candidates = payload.candidates || payload.data?.candidates;
-  const parts = candidates?.[0]?.content?.parts;
+  const directCandidates = asRecord(payloadRecord).candidates;
+  const nestedCandidates = asRecord(payloadRecord.data).candidates;
+  const candidates = Array.isArray(directCandidates)
+    ? directCandidates
+    : (Array.isArray(nestedCandidates) ? nestedCandidates : []);
+
+  const firstCandidate = candidates.length > 0 ? asRecord(candidates[0]) : {};
+  const parts = asRecord(asRecord(firstCandidate.content)).parts;
+
   if (Array.isArray(parts)) {
-    const joined = parts.map((part: any) => part?.text || '').join('').trim();
+    const joined = parts.map((part) => {
+      const partRecord = asRecord(part);
+      return typeof partRecord.text === 'string' ? partRecord.text : '';
+    }).join('').trim();
     if (joined.length > 0) {
       return joined;
     }

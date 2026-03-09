@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { PlateService } from '../../services/plateService';
 import { hasSupabaseConfig } from '../../services/supabaseClient';
+import type { AppItem } from '../../shared/types/appItem';
 
 export const useSavedItemsOnAuth = ({
   isAuthenticated,
@@ -9,9 +10,9 @@ export const useSavedItemsOnAuth = ({
   normalizeSavedItemForUI,
 }: {
   isAuthenticated: boolean;
-  setSavedItems: (value: any[] | ((prev: any[]) => any[])) => void;
-  fallbackSavedItems: any[];
-  normalizeSavedItemForUI: (value: any) => any;
+  setSavedItems: (value: AppItem[] | ((prev: AppItem[]) => AppItem[])) => void;
+  fallbackSavedItems: AppItem[];
+  normalizeSavedItemForUI: (value: unknown) => AppItem;
 }) => {
   useEffect(() => {
     if (!isAuthenticated) return;

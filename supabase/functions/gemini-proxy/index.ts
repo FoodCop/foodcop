@@ -12,11 +12,30 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const extractGeminiText = (payload: any): string => {
-  const candidates = payload?.candidates;
-  const parts = candidates?.[0]?.content?.parts;
+const asRecord = (value: unknown): Record<string, unknown> => {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+};
+
+type GeminiConfigInput = {
+  temperature?: number;
+  topP?: number;
+  topK?: number;
+  maxOutputTokens?: number;
+  responseMimeType?: string;
+  responseSchema?: Record<string, unknown>;
+  systemInstruction?: string;
+};
+
+const extractGeminiText = (payload: unknown): string => {
+  const payloadRecord = asRecord(payload);
+  const candidates = Array.isArray(payloadRecord.candidates) ? payloadRecord.candidates : [];
+  const firstCandidate = candidates.length > 0 ? asRecord(candidates[0]) : {};
+  const parts = asRecord(asRecord(firstCandidate.content)).parts;
   if (!Array.isArray(parts)) return '';
-  return parts.map((part: any) => part?.text || '').join('').trim();
+  return parts.map((part) => {
+    const partRecord = asRecord(part);
+    return typeof partRecord.text === 'string' ? partRecord.text : '';
+  }).join('').trim();
 };
 
 const jsonResponse = (status: number, body: Record<string, unknown>) => new Response(
@@ -24,7 +43,7 @@ const jsonResponse = (status: number, body: Record<string, unknown>) => new Resp
   { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
 );
 
-const buildGenerationPayload = (contents: unknown, config: any) => {
+const buildGenerationPayload = (contents: unknown, config: GeminiConfigInput) => {
   const payload: Record<string, unknown> = { contents };
   const generationConfig: Record<string, unknown> = {};
 
@@ -87,7 +106,7 @@ const handleRequest = async (req: Request): Promise<Response> => {
     const body = await req.json();
     const model = String(body?.model || 'gemini-2.5-flash');
     const contents = body?.contents;
-    const config = body?.config || {};
+    const config = (body?.config || {}) as GeminiConfigInput;
 
     if (!contents) {
       return jsonResponse(400, { success: false, error: 'contents is required' });

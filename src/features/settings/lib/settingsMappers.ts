@@ -5,24 +5,34 @@ const toTitleCase = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1);
 };
 
+const getMetadataString = (metadata: Record<string, unknown>, ...keys: string[]) => {
+  for (const key of keys) {
+    const value = metadata[key];
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value;
+    }
+  }
+  return '';
+};
+
 export const buildDefaultSettingsProfile = (authUser: AuthContextUser | null | undefined): SettingsProfile => {
-  const metadata = authUser?.user_metadata || {};
+  const metadata = (authUser?.user_metadata || {}) as Record<string, unknown>;
   const email = authUser?.email || '';
   const emailName = email.includes('@') ? email.split('@')[0] : 'chef_studio_lab';
 
   return {
-    name: metadata.full_name || metadata.name || 'Chef Studio',
-    username: metadata.username || metadata.user_name || emailName,
-    bio: metadata.bio || 'Discovery engine architect. Exploring the world of fine dining and culinary hacks.',
+    name: getMetadataString(metadata, 'full_name', 'name') || 'Chef Studio',
+    username: getMetadataString(metadata, 'username', 'user_name') || emailName,
+    bio: getMetadataString(metadata, 'bio') || 'Discovery engine architect. Exploring the world of fine dining and culinary hacks.',
     email: email || 'chef@fuzo.studio',
-    phone: metadata.phone || '+1 (555) 0123-4567',
-    location: metadata.location || 'Toronto, ON',
+    phone: getMetadataString(metadata, 'phone') || '+1 (555) 0123-4567',
+    location: getMetadataString(metadata, 'location') || 'Toronto, ON',
     diet: 'None',
     cuisine: 'Italian, Japanese',
-    instagram: metadata.instagram_url || metadata.instagram || metadata.ig || '',
-    facebook: metadata.facebook_url || metadata.facebook || metadata.fb || '',
-    tiktok: metadata.tiktok_url || metadata.tiktok || '',
-    pinterest: metadata.pinterest_url || metadata.pinterest || '',
+    instagram: getMetadataString(metadata, 'instagram_url', 'instagram', 'ig'),
+    facebook: getMetadataString(metadata, 'facebook_url', 'facebook', 'fb'),
+    tiktok: getMetadataString(metadata, 'tiktok_url', 'tiktok'),
+    pinterest: getMetadataString(metadata, 'pinterest_url', 'pinterest'),
   };
 };
 
