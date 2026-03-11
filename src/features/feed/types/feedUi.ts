@@ -7,5 +7,7 @@ export type FeedUiItem = {
   name: string;
   cat: string;
   img: string;
+  author?: string;
+  authorUserId?: string;
   metadata: Record<string, unknown>;
 };

@@ -57,6 +57,33 @@ export const PlateService = {
     };
   },
 
+  async listSavedItemsByUserId(userId: string): Promise<PlateServiceResult<SavedPlateItem[]>> {
+    const client = supabase;
+    if (!client) {
+      return { success: false, error: 'Supabase is not configured' };
+    }
+
+    const trimmedUserId = userId.trim();
+    if (!trimmedUserId) {
+      return { success: false, error: 'User id is required' };
+    }
+
+    const { data, error } = await client
+      .from('saved_items')
+      .select('*')
+      .eq('user_id', trimmedUserId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return {
+      success: true,
+      data: (data || []) as SavedPlateItem[],
+    };
+  },
+
   async saveToPlate(params: SavePlateParams): Promise<PlateServiceResult<SavedPlateItem>> {
     const client = supabase;
     if (!client) {

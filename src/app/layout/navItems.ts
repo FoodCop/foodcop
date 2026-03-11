@@ -1,6 +1,6 @@
 import { Bot, Camera, ChefHat, Gift, LayoutGrid, MapPin, MessageSquare, PlayCircle, Settings, Trophy, User } from 'lucide-react';
 
-export const TAB_IDS = ['feed', 'bites', 'trims', 'chef', 'chat', 'scout', 'profile', 'leaderboard', 'rewards', 'settings'] as const;
+export const TAB_IDS = ['feed', 'bites', 'trims', 'chef', 'chat', 'scout', 'profile', 'user-profile', 'leaderboard', 'rewards', 'settings'] as const;
 
 export const BOTTOM_NAV_ITEMS = [
   { id: 'feed', icon: LayoutGrid },

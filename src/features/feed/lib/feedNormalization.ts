@@ -46,6 +46,16 @@ const getRawImage = (itemType: FeedUiItemType, record: Record<string, unknown>) 
   return String(record.imageUrl || '');
 };
 
+const getOptionalString = (record: Record<string, unknown>, keys: string[]) => {
+  for (const key of keys) {
+    const value = record[key];
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value.trim();
+    }
+  }
+  return '';
+};
+
 export const normalizeDealerContentToCards = (dealerCards: DealerContent[]): FeedUiItem[] => {
   const normalized = dealerCards
     .map((entry) => {
@@ -67,6 +77,8 @@ export const normalizeDealerContentToCards = (dealerCards: DealerContent[]): Fee
       const normalizedImage = normalizeFeedImagePathForType(itemType, rawImage);
 
       const img = resolvePublicAssetPath(normalizedImage);
+      const author = getOptionalString(record, ['author', 'authorName', 'creatorName', 'username', 'channelTitle']);
+      const authorUserId = getOptionalString(record, ['authorUserId', 'author_id', 'userId', 'user_id', 'creatorId']);
 
       if (!name || !img) return null;
 
@@ -77,11 +89,15 @@ export const normalizeDealerContentToCards = (dealerCards: DealerContent[]): Fee
         name,
         cat,
         img,
+        ...(author ? { author } : {}),
+        ...(authorUserId ? { authorUserId } : {}),
         metadata: {
           title: name,
           name,
           cat,
           image: img,
+          ...(author ? { author } : {}),
+          ...(authorUserId ? { authorUserId, userId: authorUserId, author_id: authorUserId } : {}),
           sourceType,
           sourceId: rawId,
         },

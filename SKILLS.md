@@ -79,7 +79,29 @@ Keep saved items consistent between UI model and persistence model.
 - Keep location/metadata preservation for Scout round-trips.
 - Never remove fallback-safe defaults in UI normalization.
 
-## 6. Proxy + Edge Function Skill
+## 6. Public Profile Viewing Skill
+
+### Purpose
+Support safe viewing of other users' profiles without regressing own-profile edit flows.
+
+### Key Files
+- Route wiring: `src/app/routes/renderAppView.tsx`
+- URL sync: `src/app/hooks/useTabUrlSync.ts`
+- Tab ids: `src/app/layout/navItems.ts`
+- Public profile UI + entry points: `index.tsx`
+- Public profile reads: `src/features/settings/services/settingsService.ts`
+- Public saved items reads: `src/services/plateService.ts`
+- Feed author identity normalization: `src/features/feed/lib/feedNormalization.ts`
+- DB policy migration: `supabase/migrations/020_allow_authenticated_read_saved_items.sql`
+
+### Guardrails
+- Canonical target identifier is user UUID (`userId` query param).
+- If `targetUserId === authUser.id`, route to own profile tab, not public-profile mode.
+- Keep public mode read-only; do not expose settings mutations.
+- Keep limited-shell fallback when target profile is missing/restricted.
+- Preserve one-time telemetry logging for missing feed author IDs (avoid noisy repeated logs).
+
+## 7. Proxy + Edge Function Skill
 
 ### Purpose
 Keep AI proxy layers robust and typed while preserving API compatibility.
@@ -95,7 +117,7 @@ Keep AI proxy layers robust and typed while preserving API compatibility.
 - Keep response parsing null-safe for provider schema drift.
 - Preserve legacy fields if existing clients depend on them.
 
-## 7. UI Styling Skill (Tailwind Safety)
+## 8. UI Styling Skill (Tailwind Safety)
 
 ### Purpose
 Prevent production CSS purge regressions and keep style behavior deterministic.
@@ -105,7 +127,7 @@ Prevent production CSS purge regressions and keep style behavior deterministic.
 - If dynamic styling is unavoidable, add explicit safelist coverage in `tailwind.config.cjs`.
 - Re-run build after style-system edits to catch purge issues early.
 
-## 8. Refactor Execution Skill
+## 9. Refactor Execution Skill
 
 ### Purpose
 Ship low-risk refactors without behavior regression.
@@ -117,16 +139,17 @@ Ship low-risk refactors without behavior regression.
 4. Keep fallbacks and error messages intact.
 5. Push only when build + lint are both green.
 
-## 9. Release Readiness Checklist
+## 10. Release Readiness Checklist
 
 Before push/deploy:
 - `npm run lint` passes.
 - `npm run build` passes.
+- SonarQube-reported issues for touched files are reviewed/resolved.
 - No new secrets in tracked files.
 - README reflects major behavior changes.
 - If contracts changed, verify both frontend and edge proxy callers.
 
-## 10. Current Active Priorities
+## 11. Current Active Priorities
 
 - Complete and document 48-hour Trims rollout audit.
 - Continue extracting large feature blocks out of `index.tsx`.

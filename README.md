@@ -11,7 +11,22 @@ This repository now runs from the **root** (not `new_UI/`).
 - Legacy `new_UI/` wrapper structure has been removed
 - `public/References` has been removed
 
-## Latest Updates (2026-03-09)
+## Latest Updates (2026-03-11)
+
+- Added public profile viewing for other users:
+  - new route mode: `view=user-profile&userId=<uuid>`
+  - entry points from leaderboard rows, chat contacts, and feed author surfaces
+  - dedicated read-only profile view with limited-shell fallback state
+- Added service-layer support for public profile reads:
+  - `SettingsService.getPublicUserProfile(userId)`
+  - `PlateService.listSavedItemsByUserId(userId)`
+- Added migration `020_allow_authenticated_read_saved_items.sql` to allow authenticated users to view saved items for public profiles.
+- Added feed author telemetry for missing author IDs to measure payload coverage gaps safely (one-time per item log).
+- Quality checks re-validated after implementation:
+  - `npm run lint` passes
+  - `npm run build` passes
+
+## Previous Updates (2026-03-09)
 
 - Added password auth end-to-end:
   - email/password sign-in flow
@@ -23,19 +38,19 @@ This repository now runs from the **root** (not `new_UI/`).
 - Removed broad `any` usage from app-owned TypeScript codepaths (remaining matches are plain-English text only).
 - Production build validated successfully (`npm run build`).
 
-## Immediate Priorities (Before New Feature Work)
+## Immediate Priorities
 
 1. Audit unnecessary files
 - Inventory non-runtime assets/scripts/docs and classify as `keep`, `archive`, or `delete`.
 - Produce a deletion-safe report before removing anything.
 - Remove dead files in controlled commits.
 
-2. Write app skills (operational knowledge pack)
+2. Continue app skills hardening (operational knowledge pack)
 - Define app skills that describe architecture, data flow, auth/onboarding behavior, and Supabase contracts.
 - Add a repeatable "how to debug" skill for points/chat/leaderboard issues.
 - Keep skills versioned in-repo so future sessions can recover context quickly.
 
-## Previous Updates (2026-03-04)
+## Earlier Updates (2026-03-04)
 
 - Scout now includes a `My Map` tab that renders user-saved places with coordinates.
 - Saved Scout places now persist map coordinates (`lat`, `lng`) so they can reappear on `My Map`.

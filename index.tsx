@@ -56,7 +56,7 @@ import type { AppItem } from './src/shared/types/appItem';
 import type { IconComponent } from './src/shared/types/ui';
 import { NavIcon } from './src/shared/ui/navIcon';
 import { SettingsItem, SettingsSection } from './src/shared/ui/settingsPrimitives';
-import type { SettingsProfile } from './src/features/settings/types/settings';
+import type { PublicUserProfile, SettingsProfile } from './src/features/settings/types/settings';
 import { GeminiService } from './src/services/geminiService';
 
 type LightweightMotionProps = {
@@ -107,6 +107,16 @@ const getMetadataString = (metadata: Record<string, unknown> | undefined, ...key
     }
   }
   return '';
+};
+
+const normalizeExternalUrl = (value: string | undefined, baseUrl: string) => {
+  if (!value) return baseUrl;
+  const trimmed = value.trim();
+  if (!trimmed) return baseUrl;
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+  if (trimmed.startsWith('@')) return `${baseUrl}/${trimmed.slice(1)}`;
+  if (trimmed.includes('.')) return `https://${trimmed}`;
+  return `${baseUrl}/${trimmed}`;
 };
 
 const parseAiJson = (raw: string | undefined | null) => {
@@ -329,7 +339,7 @@ const useIsDesktop = () => {
   return isDesktop;
 };
 
-const DealCard = ({ item, index, onAction }: { item: AppItem, index: number, onAction: (action: string, item: AppItem) => void }) => {
+const DealCard = ({ item, index, onAction, onAuthorClick }: { item: AppItem, index: number, onAction: (action: string, item: AppItem) => void, onAuthorClick?: (item: AppItem) => void }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEntered, setIsEntered] = useState(false);
   const isAdOrTrivia = item.itemType === 'ad' || item.itemType === 'trivia' || item.type === 'ad' || item.type === 'trivia';
@@ -390,6 +400,19 @@ const DealCard = ({ item, index, onAction }: { item: AppItem, index: number, onA
                 <p className="text-xs font-bold text-white/80 leading-relaxed mt-4 mb-4">
                   Experience the finest {String(item.cat || 'discoveries').toLowerCase()} in the city. Hand-picked for your Studio collection.
                 </p>
+
+                {item.author && onAuthorClick && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAuthorClick(item);
+                    }}
+                    className="text-[10px] font-black uppercase tracking-widest text-yellow-300 hover:text-yellow-100 transition-colors"
+                  >
+                    By @{item.author}
+                  </button>
+                )}
 
                 <div className="grid grid-cols-4 gap-2">
                   <button onClick={(e) => { e.stopPropagation(); onAction('pass', item); }} className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl text-red-200 hover:bg-red-500/20 transition-colors flex items-center justify-center"><X size={20} strokeWidth={3} /></button>
@@ -1016,7 +1039,7 @@ User description: ${description}`;
   );
 };
 
-const FeedView = ({ onSave, onShareRequest }: { onSave: (item: AppItem) => void, onShareRequest: (item: AppItem) => void }) => {
+const FeedView = ({ onSave, onShareRequest, onOpenUserProfile }: { onSave: (item: AppItem) => void, onShareRequest: (item: AppItem) => void, onOpenUserProfile: (userId: string) => void }) => {
   const [items, setItems] = useState<FeedUiItem[]>([...LOCAL_CURATED_FEED_ITEMS]);
   const [feedSource, setFeedSource] = useState<'local' | 'feedService'>('local');
   const [feedLoading, setFeedLoading] = useState(false);
@@ -1028,6 +1051,7 @@ const FeedView = ({ onSave, onShareRequest }: { onSave: (item: AppItem) => void,
   const feedRequestSeqRef = useRef(0);
   const feedRetryDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const feedMountedRef = useRef(true);
+  const missingAuthorTelemetryRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     return () => {
@@ -1115,6 +1139,47 @@ const FeedView = ({ onSave, onShareRequest }: { onSave: (item: AppItem) => void,
 
   const BATCH_SIZE = 3;
 
+  const resolveItemUserId = useCallback((item: AppItem) => {
+    const directAuthorUserId = typeof (item as { authorUserId?: unknown }).authorUserId === 'string'
+      ? ((item as { authorUserId?: string }).authorUserId || '').trim()
+      : '';
+    if (directAuthorUserId) {
+      return directAuthorUserId;
+    }
+
+    const metadata = item.metadata && typeof item.metadata === 'object' ? item.metadata : null;
+    const candidates = [
+      metadata?.authorUserId,
+      metadata?.userId,
+      metadata?.user_id,
+      metadata?.authorId,
+      metadata?.author_id,
+    ];
+    const value = candidates.find((candidate) => typeof candidate === 'string' && candidate.trim().length > 0);
+    return typeof value === 'string' ? value.trim() : '';
+  }, []);
+
+  const handleOpenFeedAuthor = useCallback((item: AppItem) => {
+    const authorId = resolveItemUserId(item);
+    if (!authorId) {
+      const telemetryId = String(item.id || item.itemId || item.name || 'unknown-feed-item');
+      if (!missingAuthorTelemetryRef.current.has(telemetryId)) {
+        missingAuthorTelemetryRef.current.add(telemetryId);
+        console.info('[FeedAuthorProfile] Missing author user id; skipping profile navigation', {
+          telemetryId,
+          itemType: item.itemType,
+          itemId: item.itemId,
+          author: item.author,
+          metadataKeys: item.metadata && typeof item.metadata === 'object'
+            ? Object.keys(item.metadata)
+            : [],
+        });
+      }
+      return;
+    }
+    onOpenUserProfile(authorId);
+  }, [onOpenUserProfile, resolveItemUserId]);
+
   const currentBatch = useMemo(() => {
     if (items.length === 0) return [];
     const size = Math.min(BATCH_SIZE, items.length);
@@ -1154,7 +1219,7 @@ const FeedView = ({ onSave, onShareRequest }: { onSave: (item: AppItem) => void,
           >
             {currentBatch.map((item, i) => (
               <div key={item.id}>
-                <DealCard item={item} index={i} onAction={handleAction} />
+                <DealCard item={item} index={i} onAction={handleAction} onAuthorClick={handleOpenFeedAuthor} />
               </div>
             ))}
           </motion.div>
@@ -1941,6 +2006,7 @@ const ChatView = ({
   onShareRequest,
   setTab,
   onConversationOpened,
+  onOpenUserProfile,
 }: {
   friends: ChatFriend[];
   authUser: AuthUser | null;
@@ -1948,6 +2014,7 @@ const ChatView = ({
   onShareRequest: (item: AppItem) => void;
   setTab: (tab: string) => void;
   onConversationOpened: (friendId: string) => void;
+  onOpenUserProfile: (userId: string) => void;
 }) => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
@@ -2086,10 +2153,14 @@ const ChatView = ({
       <header className="p-8 border-b flex items-center justify-between bg-stone-50/50">
         <button onClick={() => setActiveId(null)} className="p-2 hover:bg-stone-50 rounded-xl transition-colors"><ChevronLeft size={28} /></button>
         <div className="flex items-center gap-3">
-          <div className="relative">
+          <button
+            type="button"
+            onClick={() => onOpenUserProfile(String(active.id))}
+            className="relative"
+          >
             <img src={active.avatar} alt={active.name || 'Active friend'} className="w-10 h-10 rounded-full border-2 border-yellow-400" />
             {active.isOnline && <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />}
-          </div>
+          </button>
           <div>
             <h4 className="font-black text-xs uppercase tracking-widest">{active.name}</h4>
             <p className="text-[8px] font-bold text-stone-400 uppercase tracking-widest">{active.isOnline ? 'Online' : 'Offline'}</p>
@@ -2231,26 +2302,43 @@ const ChatView = ({
       </header>
       <div className="space-y-4">
         {friends.map(c => (
-          <button key={c.id} onClick={() => openConversation(String(c.id))} className="w-full bg-white p-6 rounded-[3rem] flex items-center gap-5 border shadow-sm cursor-pointer hover:bg-stone-50 transition-all hover:scale-[1.01] relative group text-left">
-            <div className="relative">
-              <img src={c.avatar} alt={c.name || 'Friend'} className="w-16 h-16 rounded-3xl border-2 border-yellow-400 shadow-md" />
-              {c.isOnline && <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />}
-            </div>
-            <div className="flex-grow">
-              <div className="flex justify-between mb-1"><h4 className="font-black text-sm uppercase tracking-widest">{c.name}</h4><span className="text-[10px] text-stone-300 font-bold">{formatFriendTime(c)}</span></div>
-              <div className="flex items-center justify-between">
-                <p className={`text-xs font-bold truncate ${(c.unreadCount ?? 0) > 0 ? 'text-stone-900' : 'text-stone-400'}`}>
-                  {c.requestStatus === 'pending' ? 'New Message Request' : 'Open to chat...'}
-                </p>
-                {(c.unreadCount ?? 0) > 0 && (
-                  <div className="bg-yellow-400 text-stone-900 text-[10px] font-black px-2 py-1 rounded-full shadow-sm">
-                    {c.unreadCount}
-                  </div>
-                )}
+          <div key={c.id} className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+              openConversation(String(c.id)).catch((error) => {
+                console.warn('Failed to open conversation:', error);
+              });
+              }}
+              className="w-full bg-white p-6 rounded-[3rem] flex items-center gap-5 border shadow-sm cursor-pointer hover:bg-stone-50 transition-all hover:scale-[1.01] relative group text-left"
+            >
+              <div className="relative">
+                <img src={c.avatar} alt={c.name || 'Friend'} className="w-16 h-16 rounded-3xl border-2 border-yellow-400 shadow-md" />
+                {c.isOnline && <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />}
               </div>
-            </div>
-            <ChevronRight className="text-stone-200 group-hover:text-stone-400 transition-colors" />
-          </button>
+              <div className="flex-grow">
+                <div className="flex justify-between mb-1"><h4 className="font-black text-sm uppercase tracking-widest">{c.name}</h4><span className="text-[10px] text-stone-300 font-bold">{formatFriendTime(c)}</span></div>
+                <div className="flex items-center justify-between">
+                  <p className={`text-xs font-bold truncate ${(c.unreadCount ?? 0) > 0 ? 'text-stone-900' : 'text-stone-400'}`}>
+                    {c.requestStatus === 'pending' ? 'New Message Request' : 'Open to chat...'}
+                  </p>
+                  {(c.unreadCount ?? 0) > 0 && (
+                    <div className="bg-yellow-400 text-stone-900 text-[10px] font-black px-2 py-1 rounded-full shadow-sm">
+                      {c.unreadCount}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <ChevronRight className="text-stone-200 group-hover:text-stone-400 transition-colors" />
+            </button>
+            <button
+              type="button"
+              onClick={() => onOpenUserProfile(String(c.id))}
+              className="px-3 py-2 rounded-xl bg-stone-900 text-white text-[10px] font-black uppercase tracking-widest"
+            >
+              Profile
+            </button>
+          </div>
         ))}
       </div>
     </div>
@@ -3048,16 +3136,6 @@ const ProfileView = ({ savedItems, authUser, friends }: { savedItems: AppItem[];
   const hasIdPrefix = useCallback((item: AppItem, prefix: string) => {
     return typeof item.id === 'string' && item.id.startsWith(prefix);
   }, []);
-
-  const normalizeExternalUrl = (value: string | undefined, baseUrl: string) => {
-    if (!value) return baseUrl;
-    const trimmed = value.trim();
-    if (!trimmed) return baseUrl;
-    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
-    if (trimmed.startsWith('@')) return `${baseUrl}/${trimmed.slice(1)}`;
-    if (trimmed.includes('.')) return `https://${trimmed}`;
-    return `${baseUrl}/${trimmed}`;
-  };
 
   const profileDisplay = useMemo(() => {
     const metadata = (authUser?.user_metadata || {}) as Record<string, string | undefined>;
@@ -4163,7 +4241,7 @@ const AuthView = ({
   );
 };
 
-const LeaderboardView = ({ userPoints, userLevel, leaderboardUsers }: { userPoints: number, userLevel: number, leaderboardUsers: LeaderboardEntry[] }) => {
+const LeaderboardView = ({ userPoints, userLevel, leaderboardUsers, onOpenUserProfile }: { userPoints: number, userLevel: number, leaderboardUsers: LeaderboardEntry[]; onOpenUserProfile: (userId: string) => void }) => {
   const medalClassByRank = (rank: number) => {
     if (rank === 1) return 'text-yellow-500';
     if (rank === 2) return 'text-stone-400';
@@ -4198,7 +4276,7 @@ const LeaderboardView = ({ userPoints, userLevel, leaderboardUsers }: { userPoin
 
       <div className="bg-white rounded-[3rem] border-4 border-white shadow-2xl overflow-hidden divide-y">
         {leaders.map((leader) => (
-          <div key={leader.id} className="p-8 flex items-center justify-between hover:bg-stone-50 transition-colors">
+          <button key={leader.id} onClick={() => onOpenUserProfile(leader.id)} className="w-full p-8 flex items-center justify-between hover:bg-stone-50 transition-colors text-left">
             <div className="flex items-center gap-6">
               <div className="w-10 text-center">
                 {leader.rank <= 3 ? (
@@ -4221,7 +4299,7 @@ const LeaderboardView = ({ userPoints, userLevel, leaderboardUsers }: { userPoin
               <p className="text-xl font-black text-stone-900">{leader.points.toLocaleString()}</p>
               <p className="text-[10px] font-black uppercase tracking-widest text-stone-300">Points</p>
             </div>
-          </div>
+          </button>
         ))}
       </div>
 
@@ -4240,6 +4318,241 @@ const LeaderboardView = ({ userPoints, userLevel, leaderboardUsers }: { userPoin
           <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Level {userLevel}</p>
         </div>
       </div>
+    </div>
+  );
+};
+
+const PublicProfileView = ({ targetUserId, authUser, currentUserSavedItems, friends, onBackToOwnProfile }: { targetUserId: string; authUser: AuthUser | null; currentUserSavedItems: AppItem[]; friends: ChatFriend[]; onBackToOwnProfile: () => void }) => {
+  const [activeTab, setActiveTab] = useState('places');
+  const [profile, setProfile] = useState<PublicUserProfile | null>(null);
+  const [savedItems, setSavedItems] = useState<AppItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const hasIdPrefix = useCallback((item: AppItem, prefix: string) => {
+    return typeof item.id === 'string' && item.id.startsWith(prefix);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadProfile = async () => {
+      setIsLoading(true);
+
+      if (!targetUserId) {
+        setProfile(null);
+        setSavedItems([]);
+        setIsLoading(false);
+        return;
+      }
+
+      const profileResult = await SettingsService.getPublicUserProfile(targetUserId);
+      if (cancelled) return;
+
+      if (!profileResult.success || !profileResult.data) {
+        setProfile(null);
+        setSavedItems([]);
+        setIsLoading(false);
+        return;
+      }
+
+      setProfile(profileResult.data);
+
+      const savedResult = await PlateService.listSavedItemsByUserId(targetUserId);
+      if (cancelled) return;
+
+      if (!savedResult.success || !savedResult.data) {
+        setSavedItems([]);
+      } else {
+        setSavedItems(savedResult.data.map(normalizeSavedItemForUI));
+      }
+
+      setIsLoading(false);
+    };
+
+    loadProfile().catch((error) => {
+      if (!cancelled) {
+        console.warn('Failed to load public profile:', error);
+        setProfile(null);
+        setSavedItems([]);
+        setIsLoading(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [targetUserId]);
+
+  const profileDisplay = useMemo(() => {
+    if (profile) {
+      return {
+        name: profile.name,
+        username: profile.username,
+        bio: profile.bio,
+        avatar: profile.avatarUrl,
+        location: profile.location,
+        pointsTotal: profile.pointsTotal,
+        pointsLevel: profile.pointsLevel,
+      };
+    }
+
+    const isSelfFallback = authUser?.id === targetUserId;
+    const metadata = (authUser?.user_metadata || {}) as Record<string, string | undefined>;
+    const email = authUser?.email || '';
+    const emailName = email.includes('@') ? email.split('@')[0] : 'Chef Studio';
+    const name = metadata.full_name || metadata.name || (isSelfFallback ? 'Your Profile' : 'Chef Studio');
+
+    return {
+      name,
+      username: metadata.username || metadata.user_name || emailName,
+      bio: isSelfFallback ? 'This profile is currently unavailable. Try again in a moment.' : 'This profile is currently limited.',
+      avatar: metadata.avatar_url || `https://i.pravatar.cc/150?u=${targetUserId || 'limited-profile'}`,
+      location: 'Location hidden',
+      pointsTotal: 0,
+      pointsLevel: 1,
+    };
+  }, [authUser, profile, targetUserId]);
+
+  const tabs = [
+    { id: 'places', label: 'Saved Places', icon: MapPin },
+    { id: 'recipes', label: 'Recipes', icon: ChefHat },
+    { id: 'videos', label: 'Videos', icon: PlayCircle },
+    { id: 'crew', label: 'Crew', icon: User },
+    { id: 'posts', label: 'Posts', icon: LayoutGrid },
+  ];
+
+  const filteredItems = useMemo(() => {
+    if (activeTab === 'places') return savedItems.filter(i => !hasIdPrefix(i, 'recipe-') && !hasIdPrefix(i, 'video-') && !hasIdPrefix(i, 'post-'));
+    if (activeTab === 'recipes') return savedItems.filter(i => hasIdPrefix(i, 'recipe-'));
+    if (activeTab === 'videos') return savedItems.filter(i => hasIdPrefix(i, 'video-'));
+    if (activeTab === 'posts') return savedItems.filter(i => hasIdPrefix(i, 'post-'));
+    return [];
+  }, [activeTab, hasIdPrefix, savedItems]);
+
+  const activeCount = activeTab === 'crew' ? friends.length : filteredItems.length;
+  const socialLinks = {
+    instagram: normalizeExternalUrl(profile?.instagram, 'https://instagram.com'),
+    facebook: normalizeExternalUrl(profile?.facebook, 'https://facebook.com'),
+    tiktok: normalizeExternalUrl(profile?.tiktok, 'https://tiktok.com'),
+    pinterest: normalizeExternalUrl(profile?.pinterest, 'https://pinterest.com'),
+  };
+
+  const showLimitedShell = !isLoading && !profile;
+  const visibleSavedItems = showLimitedShell ? [] : savedItems;
+  const canReturnToOwnProfile = Boolean(authUser?.id) && authUser?.id !== targetUserId;
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in pb-20">
+      <div className="relative h-64 bg-stone-900 rounded-[4rem] overflow-hidden shadow-2xl">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80" alt="Profile cover" className="w-full h-full object-cover opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent" />
+        <div className="absolute -bottom-2 right-12"><div className="w-28 h-28 rounded-[2.5rem] border-8 border-white bg-white shadow-2xl overflow-hidden"><img src={profileDisplay.avatar} alt={`${profileDisplay.name} avatar`} /></div></div>
+      </div>
+
+      <div className="px-8 space-y-4">
+        {canReturnToOwnProfile && (
+          <button
+            type="button"
+            onClick={onBackToOwnProfile}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-stone-900 text-white text-[10px] font-black uppercase tracking-widest"
+          >
+            <ChevronLeft size={14} />
+            Back To My Profile
+          </button>
+        )}
+        <h2 className="text-5xl font-black uppercase tracking-tighter">{profileDisplay.name}</h2>
+        <p className="text-stone-400 font-bold text-xs uppercase tracking-widest">@{profileDisplay.username}</p>
+        <p className="text-stone-500 font-bold max-w-md">{profileDisplay.bio}</p>
+        <div className="flex items-center gap-4 pt-4">
+          <div className="text-center"><p className="text-2xl font-black">{visibleSavedItems.length}</p><p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Saves</p></div>
+          <div className="w-px h-10 bg-stone-100" />
+          <div className="text-center"><p className="text-2xl font-black">{profileDisplay.pointsTotal.toLocaleString()}</p><p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Points</p></div>
+          <div className="w-px h-10 bg-stone-100" />
+          <div className="text-center"><p className="text-2xl font-black">L{profileDisplay.pointsLevel}</p><p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Level</p></div>
+          <div className="w-px h-10 bg-stone-100" />
+          <div className="flex items-center gap-2">
+            <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="Instagram profile">
+              <InstagramMark size={18} />
+            </a>
+            <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="Facebook profile">
+              <FacebookMark size={18} />
+            </a>
+            <a href={socialLinks.tiktok} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="TikTok profile">
+              <Music2 size={18} />
+            </a>
+            <a href={socialLinks.pinterest} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-stone-50 rounded-xl text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-all active:scale-90" aria-label="Pinterest profile">
+              <Pin size={18} />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {isLoading && (
+        <div className="px-8">
+          <div className="p-12 bg-stone-100 rounded-[3rem] text-center text-stone-500 font-black uppercase text-[10px] tracking-widest">
+            Loading profile...
+          </div>
+        </div>
+      )}
+
+      {showLimitedShell && (
+        <div className="px-8">
+          <div className="p-12 bg-stone-100 rounded-[3rem] text-center text-stone-500 font-black uppercase text-[10px] tracking-widest">
+            Limited profile view
+          </div>
+        </div>
+      )}
+
+      {!isLoading && (
+        <>
+          <div className="px-8">
+            <div className="flex bg-stone-100 p-2 rounded-[2.5rem] gap-1">
+              {tabs.map(t => (
+                <button
+                  key={t.id}
+                  onClick={() => setActiveTab(t.id)}
+                  className={`flex-1 flex items-center justify-center py-5 rounded-[2rem] transition-all ${activeTab === t.id ? 'bg-white shadow-md text-stone-900' : 'text-stone-300 hover:text-stone-600'}`}
+                >
+                  <t.icon size={22} strokeWidth={activeTab === t.id ? 3 : 2} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="px-8 space-y-6">
+            <div className="flex justify-between items-center">
+              <h4 className="font-black uppercase text-xs tracking-widest text-stone-900">
+                {tabs.find(t => t.id === activeTab)?.label}
+              </h4>
+              <Badge color="yellow">{activeCount} Items</Badge>
+            </div>
+
+            {activeTab === 'crew' ? (
+              <div className="p-12 bg-stone-100 rounded-[3rem] text-center text-stone-300 font-black uppercase text-[10px] tracking-widest">
+                Crew list is private
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-6">
+                {filteredItems.length === 0 ? (
+                  <div className="col-span-2 p-12 bg-stone-100 rounded-[3rem] text-center text-stone-300 font-black uppercase text-[10px] tracking-widest">
+                    No {activeTab} saved yet
+                  </div>
+                ) : (
+                  filteredItems.map((item) => (
+                    <div key={item.id || `${item.name}-${item.cat}`} className="aspect-square bg-stone-100 rounded-[3rem] border-4 border-white shadow-md overflow-hidden relative group">
+                      <img src={item.img} alt={item.name || 'Saved item'} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-4 text-center">
+                        <p className="font-black uppercase text-[10px] tracking-tighter leading-tight mb-2">{item.name}</p>
+                        <Badge color="yellow">{item.cat}</Badge>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -4670,6 +4983,7 @@ const App = () => {
 
   const tabIds = useMemo(() => new Set(TAB_IDS), []);
   const [tab, setTab] = useState(() => resolveInitialTab(globalThis.location.search, tabIds));
+  const [publicProfileUserId, setPublicProfileUserId] = useState(() => new URLSearchParams(globalThis.location.search).get('userId') || '');
   const [showSnap, setShowSnap] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [savedItems, setSavedItems] = useState<AppItem[]>(FALLBACK_SAVED_ITEMS);
@@ -4743,7 +5057,44 @@ const App = () => {
     normalizeSavedItemForUI,
   });
 
-  useTabUrlSync(tab, appRoute);
+  useTabUrlSync(tab, appRoute, publicProfileUserId);
+
+  const handleOpenUserProfile = useCallback((userId: string) => {
+    const trimmedUserId = userId.trim();
+    if (!trimmedUserId) {
+      return;
+    }
+
+    if (authUser?.id && trimmedUserId === authUser.id) {
+      setPublicProfileUserId('');
+      setTab('profile');
+      return;
+    }
+
+    setPublicProfileUserId(trimmedUserId);
+    setTab('user-profile');
+  }, [authUser?.id]);
+
+  const handleBackToOwnProfile = useCallback(() => {
+    setPublicProfileUserId('');
+    setTab('profile');
+  }, []);
+
+  useEffect(() => {
+    if (tab !== 'user-profile') {
+      return;
+    }
+
+    if (!publicProfileUserId && authUser?.id) {
+      setTab('profile');
+      return;
+    }
+
+    if (authUser?.id && publicProfileUserId === authUser.id) {
+      setPublicProfileUserId('');
+      setTab('profile');
+    }
+  }, [authUser?.id, publicProfileUserId, tab]);
 
   useEffect(() => {
     const currentPath = globalThis.location.pathname;
@@ -5122,6 +5473,7 @@ const App = () => {
       setPoints(0);
       setLevel(1);
       setTab('feed');
+      setPublicProfileUserId('');
       setSidebarOpen(false);
       setShowSnap(false);
       setActiveShareItem(null);
@@ -5168,8 +5520,11 @@ const App = () => {
     points,
     level,
     leaderboardUsers,
+    profileUserId: publicProfileUserId,
     handleSignOut,
     handleConversationOpened,
+    handleOpenUserProfile,
+    handleBackToOwnProfile,
     components: {
       FeedView,
       BitesView,
@@ -5178,6 +5533,7 @@ const App = () => {
       ChatView,
       ScoutView,
       ProfileView,
+      PublicProfileView,
       LeaderboardView,
       RewardsView,
       SettingsView,

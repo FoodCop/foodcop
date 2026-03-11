@@ -1,6 +1,6 @@
 import { supabase } from '../../../services/supabaseClient';
 import { buildDefaultSettingsProfile, mapProfileToSettingsUpdate, mergeSettingsFromRow } from '../lib/settingsMappers';
-import type { AuthContextUser, SettingsProfile, UserSettingsRow } from '../types/settings';
+import type { AuthContextUser, PublicUserProfile, PublicUserRow, SettingsProfile, UserSettingsRow } from '../types/settings';
 
 interface SettingsServiceResult<T> {
   success: boolean;
@@ -33,6 +33,50 @@ export const SettingsService = {
     return {
       success: true,
       data: mergeSettingsFromRow(defaults, data || null),
+    };
+  },
+
+  async getPublicUserProfile(userId: string): Promise<SettingsServiceResult<PublicUserProfile | null>> {
+    const trimmedUserId = userId.trim();
+    if (!trimmedUserId) {
+      return { success: false, error: 'User id is required' };
+    }
+
+    const client = supabase;
+    if (!client) {
+      return { success: false, error: 'Supabase is not configured' };
+    }
+
+    const { data, error } = await client
+      .from('users')
+      .select('id, display_name, username, bio, location, avatar_url, points_total, points_level, instagram_url, facebook_url, tiktok_url, pinterest_url')
+      .eq('id', trimmedUserId)
+      .maybeSingle<PublicUserRow>();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    if (!data) {
+      return { success: true, data: null };
+    }
+
+    return {
+      success: true,
+      data: {
+        id: data.id,
+        name: data.display_name || 'Chef Studio',
+        username: data.username || 'fuzo_user',
+        bio: data.bio || 'This chef has not added a bio yet.',
+        location: data.location || 'Location hidden',
+        avatarUrl: data.avatar_url || `https://i.pravatar.cc/150?u=${data.id}`,
+        pointsTotal: data.points_total ?? 0,
+        pointsLevel: data.points_level ?? 1,
+        instagram: data.instagram_url || '',
+        facebook: data.facebook_url || '',
+        tiktok: data.tiktok_url || '',
+        pinterest: data.pinterest_url || '',
+      },
     };
   },
 
