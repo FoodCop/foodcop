@@ -29,8 +29,10 @@ import type { FeedUiItem } from './src/features/feed/types/feedUi';
 import { getUserFeedLocation } from './src/features/feed/services/feedLocation';
 import { FeedService } from './src/features/feed/services/feedService';
 import { AUTH_ONBOARDING_DATA } from './src/features/auth/constants/onboardingData';
+import OnboardingV2Flow from './src/features/auth/components/OnboardingV2Flow';
 import { APP_PATH, HOME_ENTRY_URL, LANDING_PATH, getOAuthRedirectUrl, isAppPath, isAuthCallbackPath } from './src/features/auth/lib/oauthRedirect';
 import type { AuthUser } from './src/features/auth/types/auth';
+import type { OnboardingV2Payload } from './src/features/auth/types/onboarding';
 import { BITE_CUISINES, BITE_DIETS } from './src/features/bites/constants/filters';
 import { BITE_FALLBACK_RECIPES } from './src/features/bites/constants/fallbackRecipes';
 import { createBiteRecipeActions, getBiteKeyNutrients, normalizeRecipeList } from './src/features/bites/lib/bitesHelpers';
@@ -133,6 +135,8 @@ const parseAiJson = (raw: string | undefined | null) => {
     }
   }
 };
+
+const ONBOARDING_V2_ENABLED = String(import.meta.env.VITE_ONBOARDING_V2_ENABLED || '').toLowerCase() === 'true';
 
 // --- SHARED UI COMPONENTS ---
 
@@ -3917,9 +3921,11 @@ const LandingPage = ({ onStart }: { onStart: () => void }) => {
 const AuthView = ({
   onComplete,
   initialStep = 'signin',
+  useOnboardingV2 = false,
 }: {
-  onComplete: () => void;
+  onComplete: (payload?: OnboardingV2Payload) => void;
   initialStep?: 'signin' | 'signup' | 'onboarding';
+  useOnboardingV2?: boolean;
 }) => {
   const [step, setStep] = useState<'signin' | 'signup' | 'onboarding'>(initialStep);
   const [onboardingStep, setOnboardingStep] = useState(0);
@@ -4073,6 +4079,10 @@ const AuthView = ({
   };
 
   if (step === 'onboarding') {
+    if (useOnboardingV2) {
+      return <OnboardingV2Flow onComplete={onComplete} />;
+    }
+
     const current = AUTH_ONBOARDING_DATA[onboardingStep];
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center p-6">
@@ -5003,6 +5013,8 @@ const App = () => {
   const viewParam = new URLSearchParams(globalThis.location.search).get('view');
   const hasViewParam = !!viewParam;
   const isHomeView = viewParam === 'home';
+  const isOnboardingDemoView = viewParam === 'onboarding-demo';
+  const [onboardingDemoPayload, setOnboardingDemoPayload] = useState<OnboardingV2Payload | null>(null);
   const appRoute = isAppPath(pathname);
   const authCallbackRoute = isAuthCallbackPath(pathname);
 
@@ -5482,13 +5494,23 @@ const App = () => {
     }
   };
 
-  const handleOnboardingComplete = async () => {
+  const handleOnboardingComplete = async (payload?: OnboardingV2Payload) => {
     if (supabase) {
+      const metadataUpdate: Record<string, unknown> = {
+        onboarding_completed: true,
+        has_completed_onboarding: true,
+      };
+
+      if (payload) {
+        metadataUpdate.onboarding_v2 = true;
+        metadataUpdate.onboarding_v2_answers = payload.answers;
+        metadataUpdate.phone = payload.phone || null;
+        metadataUpdate.location = payload.locationLabel || null;
+        metadataUpdate.onboarding_location = payload.location;
+      }
+
       const { data, error } = await supabase.auth.updateUser({
-        data: {
-          onboarding_completed: true,
-          has_completed_onboarding: true,
-        },
+        data: metadataUpdate,
       });
 
       if (error) {
@@ -5551,6 +5573,48 @@ const App = () => {
     );
   }
 
+  if (isOnboardingDemoView) {
+    return (
+      <div className="min-h-screen bg-stone-50">
+        <div className="max-w-6xl mx-auto px-6 pt-10 pb-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Client Preview</p>
+              <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-stone-900">Onboarding V2 Demo</h1>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setOnboardingDemoPayload(null);
+                setTab('feed');
+                globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
+              }}
+              className="px-4 py-2 rounded-2xl bg-stone-900 text-white text-[10px] font-black uppercase tracking-widest"
+            >
+              Exit Demo
+            </button>
+          </div>
+        </div>
+
+        <OnboardingV2Flow
+          mode="demo"
+          onComplete={(payload) => {
+            setOnboardingDemoPayload(payload);
+          }}
+        />
+
+        {onboardingDemoPayload && (
+          <div className="max-w-3xl mx-auto px-6 pb-12">
+            <div className="bg-white border border-stone-100 rounded-3xl p-6 shadow-sm">
+              <p className="text-[10px] font-black uppercase tracking-widest text-stone-400 mb-3">Latest Demo Submission</p>
+              <pre className="text-xs text-stone-700 overflow-x-auto whitespace-pre-wrap">{JSON.stringify(onboardingDemoPayload, null, 2)}</pre>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (!appRoute && (!hasViewParam || isHomeView) && !showAuth && !authCallbackRoute) {
     return (
       <LandingPage
@@ -5567,8 +5631,9 @@ const App = () => {
     return (
       <AuthView
         initialStep={isAuthenticated ? 'onboarding' : 'signin'}
-        onComplete={() => {
-          handleOnboardingComplete().catch((error) => {
+        useOnboardingV2={ONBOARDING_V2_ENABLED}
+        onComplete={(payload) => {
+          handleOnboardingComplete(payload).catch((error) => {
             console.warn('Onboarding completion failed:', error);
             setIsAuthenticated(true);
             setHasCompletedOnboarding(true);
