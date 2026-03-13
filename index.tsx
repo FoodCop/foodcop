@@ -1716,6 +1716,11 @@ Context: ${description}`;
 };
 
 const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppItem) => void; onShareRequest: (item: AppItem) => void; authUser: AuthUser | null; }) => {
+  const isEmbeddableYouTubeId = (videoId: string) => /^[a-zA-Z0-9_-]{11}$/.test(videoId);
+  const buildTrimEmbedUrl = (videoId: string, autoplay: boolean) => (
+    `https://www.youtube.com/embed/${videoId}?autoplay=${autoplay ? 1 : 0}&mute=1&playsinline=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1`
+  );
+
   const resolveRegionCode = useCallback((): string | undefined => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const timezoneToRegion: Record<string, string> = {
@@ -1755,6 +1760,9 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
   const [locationLabel, setLocationLabel] = useState('Localized');
   const [showAIStudio, setShowAIStudio] = useState(false);
   const trimsMountedRef = useRef(true);
+  const trimsScrollRootRef = useRef<HTMLDivElement | null>(null);
+  const trimCardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [activeTrimId, setActiveTrimId] = useState('');
 
   const applyTrimsFallback = useCallback((message?: string) => {
     if (!trimsMountedRef.current) return;
@@ -1801,6 +1809,55 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
       trimsMountedRef.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (!videos.length) {
+      setActiveTrimId('');
+      return;
+    }
+
+    setActiveTrimId((prev) => {
+      if (prev && videos.some((video) => video.id === prev)) {
+        return prev;
+      }
+      return videos[0].id;
+    });
+  }, [videos]);
+
+  useEffect(() => {
+    const root = trimsScrollRootRef.current;
+    if (!root || videos.length === 0) {
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+      const next = visible[0];
+      if (!next) return;
+
+      const nextId = (next.target as HTMLElement).dataset.trimId;
+      if (nextId) {
+        setActiveTrimId(nextId);
+      }
+    }, {
+      root,
+      threshold: [0.6, 0.75, 0.9],
+    });
+
+    videos.forEach((video) => {
+      const element = trimCardRefs.current[video.id];
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [videos]);
 
   useEffect(() => {
     const fetchTrims = async () => {
@@ -1904,15 +1961,41 @@ const TrimsView = ({ onSave, onShareRequest, authUser }: { onSave: (item: AppIte
         {feedSourceLabel} · {locationLabel}
       </div>
 
-      <div className="h-full w-full relative snap-y snap-mandatory overflow-y-auto hide-scrollbar rounded-[3.5rem] bg-stone-900 shadow-2xl border-4 border-white">
+      <div ref={trimsScrollRootRef} className="h-full w-full relative snap-y snap-mandatory overflow-y-auto hide-scrollbar rounded-[3.5rem] bg-stone-900 shadow-2xl border-4 border-white">
       {serviceError && (
         <div className="absolute top-4 left-4 right-4 z-30 px-4 py-3 bg-yellow-50/95 border border-yellow-100 rounded-2xl text-[10px] font-bold text-yellow-800 backdrop-blur-sm">
           {serviceError}
         </div>
       )}
       {videos.map(v => (
-        <div key={v.id} className="h-full w-full snap-start relative">
-          <img src={v.img} alt={v.title || 'Trim video'} className="w-full h-full object-cover opacity-80" />
+        <div
+          key={v.id}
+          data-trim-id={v.id}
+          ref={(element) => {
+            trimCardRefs.current[v.id] = element;
+          }}
+          className="h-full w-full snap-start relative"
+        >
+          {(() => {
+            const videoId = String(v.videoId || '');
+            const isActiveTrim = activeTrimId === v.id;
+            const canEmbed = isEmbeddableYouTubeId(videoId);
+
+            if (canEmbed && isActiveTrim) {
+              return (
+                <iframe
+                  src={buildTrimEmbedUrl(videoId, true)}
+                  title={v.title || 'Trim video'}
+                  className="w-full h-full object-cover"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              );
+            }
+
+            return <img src={v.img} alt={v.title || 'Trim video'} className="w-full h-full object-cover opacity-80" />;
+          })()}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent" />
           <div className="absolute bottom-12 left-8 right-8 text-white space-y-4">
              <Badge color="yellow">Studio Trim #{v.id}</Badge>
