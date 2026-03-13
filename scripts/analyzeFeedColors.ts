@@ -66,7 +66,7 @@ async function analyzeFeedPageColors() {
   console.log('🎯 FEED PAGE DETAILED COLOR ANALYSIS\n');
   console.log('='.repeat(100) + '\n');
 
-  const feedDir = path.join(process.cwd(), 'src/components/feed');
+  const feedDir = path.join(process.cwd(), 'src/features/feed');
   const styleDir = path.join(process.cwd(), 'src/styles');
 
   // Components to analyze

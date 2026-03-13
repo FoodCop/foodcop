@@ -11,13 +11,13 @@ interface ScreenshotConfig {
 }
 
 const pages: ScreenshotConfig[] = [
-  { name: 'landing', path: '/', waitFor: '.new-landing-page', delay: 1000 },
-  { name: 'feed', path: '/feed', waitFor: '.masonry-grid', delay: 2000 },
-  { name: 'scout', path: '/scout', waitFor: '[role="main"]', delay: 2000 },
-  { name: 'bites', path: '/bites', waitFor: '.masonry-grid', delay: 2000 },
-  { name: 'trims', path: '/trims', waitFor: '[role="main"]', delay: 2000 },
-  { name: 'plate', path: '/plate', waitFor: '[role="main"]', delay: 1000 },
-  { name: 'dash', path: '/dash', waitFor: '[role="main"]', delay: 1000 },
+  { name: 'feed', path: '/app?view=feed', waitFor: '.masonry-grid', delay: 2000 },
+  { name: 'scout', path: '/app?view=scout', waitFor: '[role="main"]', delay: 2000 },
+  { name: 'bites', path: '/app?view=bites', waitFor: '.masonry-grid', delay: 2000 },
+  { name: 'trims', path: '/app?view=trims', waitFor: '[role="main"]', delay: 2000 },
+  { name: 'chat', path: '/app?view=chat', waitFor: '[role="main"]', delay: 1200 },
+  { name: 'leaderboard', path: '/app?view=leaderboard', waitFor: '[role="main"]', delay: 1200 },
+  { name: 'profile', path: '/app?view=profile', waitFor: '[role="main"]', delay: 1200 },
 ];
 
 const viewports = {

@@ -2,13 +2,10 @@
 
 FUZO is a food discovery and social platform built with Vite + React + TypeScript and Supabase-backed services.
 
-This repository now runs from the **root** (not `new_UI/`).
-
 ## Current Status
 
 - Production app entry is root-level `index.tsx`
 - Build and deploy are root-level (`npm run build`, `vercel.json`)
-- Legacy `new_UI/` wrapper structure has been removed
 - `public/References` has been removed
 
 ## Latest Updates (2026-03-11)
@@ -58,7 +55,7 @@ This repository now runs from the **root** (not `new_UI/`).
 - Landing hero heading (`THE UNDISCOVERED GASTRONOMY`) received an ultra-wide screen fix for better centering on 2160px+ displays.
 - Gemini is now proxy-only in production through same-origin `api/gemini-proxy`.
 - Gemini production health and generation checks were validated live on `www.fuzo.app`.
-- Entry page is `/?view=home` (Undiscovered Gastronomy), and discovery app feed is `/?view=feed`.
+- Canonical app entry is `/app?view=feed`.
 
 ## Next Session Focus
 

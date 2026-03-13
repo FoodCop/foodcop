@@ -5111,11 +5111,6 @@ const App = () => {
     const currentSearch = globalThis.location.search;
     const currentHash = globalThis.location.hash;
 
-    if (currentPath === '/landing' || currentPath === '/landing/' || currentPath === '/home' || currentPath.startsWith('/home/')) {
-      globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
-      return;
-    }
-
     if (currentPath === '/') {
       const params = new URLSearchParams(currentSearch);
       const legacyView = params.get('view');
@@ -5135,6 +5130,11 @@ const App = () => {
       const queryPart = nextQuery ? ('?' + nextQuery) : '';
       const nextUrl = `${APP_PATH}${queryPart}${currentHash}`;
       globalThis.history.replaceState(null, '', nextUrl);
+      return;
+    }
+
+    if (currentPath !== APP_PATH && !currentPath.startsWith('/api/')) {
+      globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
     }
   }, []);
 

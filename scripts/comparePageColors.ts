@@ -97,15 +97,15 @@ async function comparePageColors() {
   console.log('='.repeat(90) + '\n');
 
   const pages = [
-    { name: 'FEED', desktop: 'src/components/feed', mobile: 'src/components/feed' },
-    { name: 'SCOUT', desktop: 'src/components/scout', mobile: 'src/components/scout' },
-    { name: 'PLATE', desktop: 'src/components/plate', mobile: 'src/components/plate' },
-    { name: 'BITES', desktop: 'src/components/bites', mobile: 'src/components/bites' },
-    { name: 'TRIMS', desktop: 'src/components/trims', mobile: 'src/components/trims' },
+    { name: 'FEED', desktop: 'src/features/feed', mobile: 'src/features/feed' },
+    { name: 'SCOUT', desktop: 'src/features/scout', mobile: 'src/features/scout' },
+    { name: 'PLATE', desktop: 'src/features/plate', mobile: 'src/features/plate' },
+    { name: 'BITES', desktop: 'src/features/bites', mobile: 'src/features/bites' },
+    { name: 'TRIMS', desktop: 'src/features/trims', mobile: 'src/features/trims' },
   ];
 
   // Analyze Feed in detail since it uses component-specific CSS
-  const feedDir = path.join(process.cwd(), 'src/components/feed');
+  const feedDir = path.join(process.cwd(), 'src/features/feed');
   if (fs.existsSync(feedDir)) {
     console.log('📱 FEED PAGE ANALYSIS\n');
     console.log('-'.repeat(90));
