@@ -2606,6 +2606,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppI
     return {
       id: toStringOr(item.id, `saved-place-${index}`),
       placeId: toOptionalString(item.placeId),
+      markerSource: 'fuzo',
       name: toStringOr(item.name, fallback.name),
       cat: toStringOr(item.cat, 'Saved Place'),
       rating: toNumberOr(item.rating, fallback.rating),
@@ -2654,10 +2655,22 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppI
       const lng = Number(place.lng);
       if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
 
+      const markerIcon = place.markerSource === 'fuzo'
+        ? {
+            path: googleMaps.SymbolPath.CIRCLE,
+            scale: 10,
+            fillColor: '#facc15',
+            fillOpacity: 1,
+            strokeColor: '#ffffff',
+            strokeWeight: 3,
+          }
+        : undefined;
+
       const marker = new googleMaps.Marker({
         map,
         position: { lat, lng },
         title: place.name,
+        icon: markerIcon,
       });
 
       marker.addListener('click', () => {
@@ -2702,6 +2715,7 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppI
     return {
       id: place.place_id || fallback.id,
       placeId: place.place_id,
+      markerSource: 'google',
       name: place.name || fallback.name,
       cat: deriveCategory(place.types) || fallback.cat,
       rating: place.rating ?? fallback.rating,

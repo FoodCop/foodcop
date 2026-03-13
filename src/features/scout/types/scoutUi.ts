@@ -14,6 +14,7 @@ export type ScoutTimings = Record<string, string>;
 export interface ScoutPlace {
   id: string;
   placeId?: string;
+  markerSource?: 'fuzo' | 'google';
   name: string;
   cat: string;
   rating: number;
