@@ -14,7 +14,12 @@ const normalizeAppUrl = (value: string | undefined) => {
   const trimmed = value.trim();
   const unquoted = (trimmed.startsWith('"') || trimmed.startsWith("'")) ? trimmed.slice(1) : trimmed;
   const clean = (unquoted.endsWith('"') || unquoted.endsWith("'")) ? unquoted.slice(0, -1) : unquoted;
-  return clean.replace(/\/+$/, '');
+  try {
+    const parsed = new URL(clean);
+    return parsed.origin;
+  } catch {
+    return clean.replace(/\/+$/, '');
+  }
 };
 
 export const getOAuthRedirectUrl = () => {
