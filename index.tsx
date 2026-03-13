@@ -30,7 +30,7 @@ import { getUserFeedLocation } from './src/features/feed/services/feedLocation';
 import { FeedService } from './src/features/feed/services/feedService';
 import { AUTH_ONBOARDING_DATA } from './src/features/auth/constants/onboardingData';
 import OnboardingV2Flow from './src/features/auth/components/OnboardingV2Flow';
-import { APP_PATH, HOME_ENTRY_URL, getOAuthRedirectUrl, isAppPath, isAuthCallbackPath } from './src/features/auth/lib/oauthRedirect';
+import { APP_PATH, HOME_ENTRY_URL, authDebugLog, getOAuthRedirectUrl, isAppPath, isAuthCallbackPath } from './src/features/auth/lib/oauthRedirect';
 import type { AuthUser } from './src/features/auth/types/auth';
 import type { OnboardingV2Payload } from './src/features/auth/types/onboarding';
 import { BITE_CUISINES, BITE_DIETS } from './src/features/bites/constants/filters';
@@ -3960,10 +3960,17 @@ const AuthView = ({
     setAuthMessage('');
     setAuthLoading(true);
 
+    const redirectTo = getOAuthRedirectUrl();
+    authDebugLog('google_signin_start', {
+      path: globalThis.location.pathname,
+      search: globalThis.location.search,
+      redirectTo,
+    });
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: getOAuthRedirectUrl(),
+        redirectTo,
       },
     });
 
@@ -4064,8 +4071,16 @@ const AuthView = ({
     setAuthLoading(true);
 
     try {
+      const redirectTo = getOAuthRedirectUrl();
+      authDebugLog('forgot_password_start', {
+        email: email.trim(),
+        redirectTo,
+        path: globalThis.location.pathname,
+        search: globalThis.location.search,
+      });
+
       const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: getOAuthRedirectUrl(),
+        redirectTo,
       });
 
       if (error) {
@@ -5110,17 +5125,26 @@ const App = () => {
     const currentPath = globalThis.location.pathname;
     const currentSearch = globalThis.location.search;
     const currentHash = globalThis.location.hash;
+    authDebugLog('path_normalization_start', { currentPath, currentSearch, currentHash });
 
     if (currentPath === '/') {
       const params = new URLSearchParams(currentSearch);
       const legacyView = params.get('view');
 
       if (!legacyView) {
+        authDebugLog('path_normalization_redirect', {
+          reason: 'root_without_view',
+          to: `${APP_PATH}?view=feed${currentHash}`,
+        });
         globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
         return;
       }
 
       if (legacyView === 'home') {
+        authDebugLog('path_normalization_redirect', {
+          reason: 'root_legacy_home_view',
+          to: `${APP_PATH}?view=feed${currentHash}`,
+        });
         globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
         return;
       }
@@ -5129,13 +5153,26 @@ const App = () => {
       const nextQuery = params.toString();
       const queryPart = nextQuery ? ('?' + nextQuery) : '';
       const nextUrl = `${APP_PATH}${queryPart}${currentHash}`;
+      authDebugLog('path_normalization_redirect', {
+        reason: 'root_with_legacy_view',
+        legacyView,
+        to: nextUrl,
+      });
       globalThis.history.replaceState(null, '', nextUrl);
       return;
     }
 
     if (currentPath !== APP_PATH && !currentPath.startsWith('/api/')) {
+      authDebugLog('path_normalization_redirect', {
+        reason: 'non_app_non_api_path',
+        from: currentPath,
+        to: `${APP_PATH}?view=feed${currentHash}`,
+      });
       globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
+      return;
     }
+
+    authDebugLog('path_normalization_noop', { currentPath });
   }, []);
 
   useEffect(() => {
@@ -5151,13 +5188,24 @@ const App = () => {
       return;
     }
 
+    authDebugLog('auth_callback_route_detected', {
+      isAuthenticated,
+      authCallbackRoute,
+      path: globalThis.location.pathname,
+      search: globalThis.location.search,
+    });
+
     if (isAuthenticated) {
       setTab('feed');
+      authDebugLog('auth_callback_route_authenticated_redirect', {
+        to: `${APP_PATH}?view=feed`,
+      });
       globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
       return;
     }
 
     setShowAuth(true);
+    authDebugLog('auth_callback_route_unauthenticated_redirect', { to: HOME_ENTRY_URL });
     globalThis.history.replaceState(null, '', HOME_ENTRY_URL);
   }, [authBooting, authCallbackRoute, isAuthenticated]);
 
