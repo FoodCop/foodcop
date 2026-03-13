@@ -5011,8 +5011,6 @@ const App = () => {
   const notificationPromptedRef = useRef(false);
   const pathname = globalThis.location.pathname;
   const viewParam = new URLSearchParams(globalThis.location.search).get('view');
-  const hasViewParam = !!viewParam;
-  const isHomeView = viewParam === 'home';
   const isOnboardingDemoView = viewParam === 'onboarding-demo';
   const [onboardingDemoPayload, setOnboardingDemoPayload] = useState<OnboardingV2Payload | null>(null);
   const appRoute = isAppPath(pathname);
@@ -5133,6 +5131,7 @@ const App = () => {
       }
 
       if (legacyView === 'home') {
+        globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
         return;
       }
 
@@ -5615,16 +5614,8 @@ const App = () => {
     );
   }
 
-  if (!appRoute && (!hasViewParam || isHomeView) && !showAuth && !authCallbackRoute) {
-    return (
-      <LandingPage
-        onStart={() => {
-          setTab('feed');
-          globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
-          setShowAuth(true);
-        }}
-      />
-    );
+  if (!appRoute && !authCallbackRoute && !isOnboardingDemoView) {
+    return null;
   }
 
   if (showAuth && !hasCompletedOnboarding) {
