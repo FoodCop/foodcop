@@ -30,7 +30,7 @@ import { getUserFeedLocation } from './src/features/feed/services/feedLocation';
 import { FeedService } from './src/features/feed/services/feedService';
 import { AUTH_ONBOARDING_DATA } from './src/features/auth/constants/onboardingData';
 import OnboardingV2Flow from './src/features/auth/components/OnboardingV2Flow';
-import { APP_PATH, HOME_ENTRY_URL, LANDING_PATH, getOAuthRedirectUrl, isAppPath, isAuthCallbackPath } from './src/features/auth/lib/oauthRedirect';
+import { APP_PATH, HOME_ENTRY_URL, getOAuthRedirectUrl, isAppPath, isAuthCallbackPath } from './src/features/auth/lib/oauthRedirect';
 import type { AuthUser } from './src/features/auth/types/auth';
 import type { OnboardingV2Payload } from './src/features/auth/types/onboarding';
 import { BITE_CUISINES, BITE_DIETS } from './src/features/bites/constants/filters';
@@ -5011,8 +5011,6 @@ const App = () => {
   const notificationPromptedRef = useRef(false);
   const pathname = globalThis.location.pathname;
   const viewParam = new URLSearchParams(globalThis.location.search).get('view');
-  const hasViewParam = !!viewParam;
-  const isHomeView = viewParam === 'home';
   const isOnboardingDemoView = viewParam === 'onboarding-demo';
   const [onboardingDemoPayload, setOnboardingDemoPayload] = useState<OnboardingV2Payload | null>(null);
   const appRoute = isAppPath(pathname);
@@ -5113,13 +5111,8 @@ const App = () => {
     const currentSearch = globalThis.location.search;
     const currentHash = globalThis.location.hash;
 
-    if (currentPath === LANDING_PATH || currentPath === '/landing/') {
-      globalThis.history.replaceState(null, '', `${HOME_ENTRY_URL}${currentHash}`);
-      return;
-    }
-
-    if (currentPath === '/home' || currentPath.startsWith('/home/')) {
-      globalThis.history.replaceState(null, '', `${HOME_ENTRY_URL}${currentHash}`);
+    if (currentPath === '/landing' || currentPath === '/landing/' || currentPath === '/home' || currentPath.startsWith('/home/')) {
+      globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
       return;
     }
 
@@ -5128,11 +5121,12 @@ const App = () => {
       const legacyView = params.get('view');
 
       if (!legacyView) {
-        globalThis.history.replaceState(null, '', `${HOME_ENTRY_URL}${currentHash}`);
+        globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
         return;
       }
 
       if (legacyView === 'home') {
+        globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
         return;
       }
 
@@ -5615,16 +5609,8 @@ const App = () => {
     );
   }
 
-  if (!appRoute && (!hasViewParam || isHomeView) && !showAuth && !authCallbackRoute) {
-    return (
-      <LandingPage
-        onStart={() => {
-          setTab('feed');
-          globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed`);
-          setShowAuth(true);
-        }}
-      />
-    );
+  if (!appRoute && !authCallbackRoute && !isOnboardingDemoView) {
+    return null;
   }
 
   if (showAuth && !hasCompletedOnboarding) {

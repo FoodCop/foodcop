@@ -1,8 +1,7 @@
 const AUTH_CALLBACK_PATH = '/auth/callback';
 
 export const APP_PATH = '/app';
-export const LANDING_PATH = '/landing';
-export const HOME_ENTRY_URL = '/?view=home';
+export const HOME_ENTRY_URL = '/app?view=feed';
 
 export const isAppPath = (pathname: string) => pathname === APP_PATH || pathname.startsWith(`${APP_PATH}/`);
 
