@@ -2992,6 +2992,19 @@ const ScoutView = ({ onSave, onShareRequest, savedItems }: { onSave: (item: AppI
           )}
 
           {/* Map Controls Overlay */}
+          <div className="absolute top-6 left-6 md:top-8 md:left-8 bg-white/90 backdrop-blur-md rounded-2xl border border-white/50 shadow-lg px-3 py-2.5">
+            <div className="flex items-center gap-4 text-[8px] md:text-[9px] font-black uppercase tracking-widest text-stone-500">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-white" />
+                <span>FUZO Saved</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-stone-900 border border-white" />
+                <span>Google Nearby</span>
+              </div>
+            </div>
+          </div>
+
           <div className="absolute top-6 right-6 md:top-8 md:right-8 flex flex-col gap-3">
             <button onClick={() => fetchNearbyPlaces(coords, true)} className="p-3 md:p-4 bg-white rounded-2xl shadow-xl hover:bg-stone-50 transition-colors"><RefreshCw size={20} className={isRefreshing ? 'animate-spin' : ''} /></button>
             <button className="p-3 md:p-4 bg-white rounded-2xl shadow-xl hover:bg-stone-50 transition-colors"><LayoutGrid size={20} /></button>
