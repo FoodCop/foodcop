@@ -7,27 +7,22 @@
   "redirects": [
     {
       "source": "/landing",
-      "destination": "/app?view=feed",
+      "destination": "/?view=home",
       "permanent": false
     },
     {
       "source": "/landing/:path*",
-      "destination": "/app?view=feed",
+      "destination": "/?view=home",
       "permanent": false
     },
     {
       "source": "/home",
-      "destination": "/app?view=feed",
+      "destination": "/?view=home",
       "permanent": false
     },
     {
       "source": "/home/:path*",
-      "destination": "/app?view=feed",
-      "permanent": false
-    },
-    {
-      "source": "/",
-      "destination": "/app?view=feed",
+      "destination": "/?view=home",
       "permanent": false
     }
   ],

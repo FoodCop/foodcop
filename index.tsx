@@ -5026,6 +5026,7 @@ const App = () => {
   const notificationPromptedRef = useRef(false);
   const pathname = globalThis.location.pathname;
   const viewParam = new URLSearchParams(globalThis.location.search).get('view');
+  const homeRoute = pathname === '/' && (viewParam === null || viewParam === 'home');
   const isOnboardingDemoView = viewParam === 'onboarding-demo';
   const [onboardingDemoPayload, setOnboardingDemoPayload] = useState<OnboardingV2Payload | null>(null);
   const appRoute = isAppPath(pathname);
@@ -5132,20 +5133,21 @@ const App = () => {
       const legacyView = params.get('view');
 
       if (!legacyView) {
+        const nextUrl = `${HOME_ENTRY_URL}${currentHash}`;
         authDebugLog('path_normalization_redirect', {
           reason: 'root_without_view',
-          to: `${APP_PATH}?view=feed${currentHash}`,
+          to: nextUrl,
         });
-        globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
+        globalThis.history.replaceState(null, '', nextUrl);
         return;
       }
 
       if (legacyView === 'home') {
-        authDebugLog('path_normalization_redirect', {
-          reason: 'root_legacy_home_view',
-          to: `${APP_PATH}?view=feed${currentHash}`,
+        authDebugLog('path_normalization_noop', {
+          reason: 'root_home_view',
+          currentPath,
+          currentSearch,
         });
-        globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
         return;
       }
 
@@ -5162,13 +5164,24 @@ const App = () => {
       return;
     }
 
-    if (currentPath !== APP_PATH && !currentPath.startsWith('/api/')) {
+    if (currentPath === '/landing' || currentPath === '/landing/' || currentPath === '/home' || currentPath.startsWith('/home/')) {
+      const nextUrl = `${HOME_ENTRY_URL}${currentHash}`;
+      authDebugLog('path_normalization_redirect', {
+        reason: 'legacy_home_or_landing_path',
+        from: currentPath,
+        to: nextUrl,
+      });
+      globalThis.history.replaceState(null, '', nextUrl);
+      return;
+    }
+
+    if (currentPath !== APP_PATH && !currentPath.startsWith('/api/') && !isAuthCallbackPath(currentPath)) {
       authDebugLog('path_normalization_redirect', {
         reason: 'non_app_non_api_path',
         from: currentPath,
-        to: `${APP_PATH}?view=feed${currentHash}`,
+        to: `${HOME_ENTRY_URL}${currentHash}`,
       });
-      globalThis.history.replaceState(null, '', `${APP_PATH}?view=feed${currentHash}`);
+      globalThis.history.replaceState(null, '', `${HOME_ENTRY_URL}${currentHash}`);
       return;
     }
 
@@ -5657,7 +5670,11 @@ const App = () => {
     );
   }
 
-  if (!appRoute && !authCallbackRoute && !isOnboardingDemoView) {
+  if (homeRoute && !showAuth) {
+    return <LandingPage onStart={() => setShowAuth(true)} />;
+  }
+
+  if (!appRoute && !authCallbackRoute && !isOnboardingDemoView && !homeRoute) {
     return null;
   }
 

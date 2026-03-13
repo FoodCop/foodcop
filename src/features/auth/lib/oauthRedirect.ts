@@ -1,7 +1,7 @@
 const AUTH_CALLBACK_PATH = '/auth/callback';
 
 export const APP_PATH = '/app';
-export const HOME_ENTRY_URL = '/app?view=feed';
+export const HOME_ENTRY_URL = '/?view=home';
 
 const isDebugFlagTrue = (value: string | undefined) => value === '1' || value === 'true';
 
