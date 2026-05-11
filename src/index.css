@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  background-color: #0c0a09;
+}
+
+@layer base {
+  *:focus-visible {
+    outline: 3px solid #facc15;
+    outline-offset: 2px;
+    border-radius: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (min-width: 2160px) {
+  .landing-hero-title {
+    font-size: clamp(9rem, 8.2vw, 11rem) !important;
+    line-height: 0.82 !important;
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
