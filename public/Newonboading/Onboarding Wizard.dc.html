@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;family=Karla:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: oklch(99% 0.003 60); font-family: 'Karla', sans-serif; }
+    a { color: oklch(60% 0.17 40); text-decoration: none; }
+    * { box-sizing: border-box; }
+    ::placeholder { color: oklch(58% 0.01 60); }
+  </style>
+</helmet>
+
+<div style="width:100%; min-height:100vh; overflow-x:hidden; color: oklch(18% 0.01 40); display:flex; justify-content:center; padding:56px 24px 80px;">
+  <div style="width:100%; max-width:640px;">
+
+    <!--=== Bot header ===-->
+    <div style="text-align:center; margin-bottom:28px;">
+      <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(160deg, oklch(75% 0.17 45), oklch(62% 0.18 35)); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:22px; box-shadow: 0 8px 18px oklch(65% 0.17 40 / 0.35);">🤖</div>
+      <div style="font-family:'Nunito',sans-serif; font-weight:800; font-size:14px; color:oklch(55% 0.02 40); text-transform:uppercase; letter-spacing:0.5px;">{{ stepLabel }}</div>
+    </div>
+
+    <!--=== Progress bar ===-->
+    <div style="width:100%; height:8px; border-radius:999px; background:oklch(93% 0.005 60); margin-bottom:36px; overflow:hidden;">
+      <div style="height:100%; border-radius:999px; background:linear-gradient(90deg, oklch(70% 0.17 40), oklch(62% 0.18 35)); width: {{ pctStr }}; transition: width .3s ease;"></div>
+    </div>
+
+    <!--=== Card container ===-->
+    <div style="background:oklch(97% 0.005 60); border:1px solid oklch(90% 0.005 60); border-radius:24px; padding:32px;">
+
+      <!-- PATH_SELECT -->
+      <sc-if value="{{ isPathSelect }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 8px;">How would you like to use Fuzo?</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:15px; margin:0 0 24px;">Pick the path that fits you best — you can explore the others later.</p>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <sc-for list="{{ pathOptions }}" as="o" hint-placeholder-count="3">
+            <button onClick="{{ o.select }}" style="display:flex; align-items:flex-start; gap:16px; text-align:left; padding:18px 20px; border-radius:18px; border: 2px solid {{ o.borderColor }}; background:{{ o.bg }}; cursor:pointer;">
+              <span style="font-size:26px;">{{ o.emoji }}</span>
+              <span>
+                <span style="display:block; font-family:'Nunito',sans-serif; font-weight:800; font-size:16px; margin-bottom:4px;">{{ o.title }}</span>
+                <span style="display:block; font-size:14px; color:oklch(45% 0.02 40);">{{ o.desc }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- A_TYPE -->
+      <sc-if value="{{ isATYPE }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 20px;">What describes you best?</h1>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <sc-for list="{{ aTypeOptions }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.select }}" style="display:flex; align-items:flex-start; gap:16px; text-align:left; padding:18px 20px; border-radius:18px; border: 2px solid {{ o.borderColor }}; background:{{ o.bg }}; cursor:pointer;">
+              <span style="font-size:24px;">{{ o.emoji }}</span>
+              <span style="font-family:'Nunito',sans-serif; font-weight:800; font-size:16px;">{{ o.title }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- A_FLAVORS -->
+      <sc-if value="{{ isAFLAVORS }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">What flavors do you enjoy?</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Select up to 5.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+          <sc-for list="{{ flavorChips }}" as="c" hint-placeholder-count="8">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer; opacity:{{ c.opacity }};">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <p style="font-size:13px; color:oklch(50% 0.02 40);">{{ flavorCount }} / 5 selected</p>
+      </sc-if>
+
+      <!-- A_CUISINES -->
+      <sc-if value="{{ isACUISINES }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Which cuisines do you enjoy?</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Select up to 10.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+          <sc-for list="{{ cuisineChips }}" as="c" hint-placeholder-count="10">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer; opacity:{{ c.opacity }};">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <p style="font-size:13px; color:oklch(50% 0.02 40);">{{ cuisineCount }} / 10 selected</p>
+      </sc-if>
+
+      <!-- A_DIETARY -->
+      <sc-if value="{{ isADIETARY }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Dietary preferences</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Optional — select any that apply, or skip.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <sc-for list="{{ dietaryChips }}" as="c" hint-placeholder-count="8">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer;">{{ c.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- A_QUIZ -->
+      <sc-if value="{{ isAQUIZ }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Food personality quiz</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Four quick questions — answer how you actually eat.</p>
+        <sc-for list="{{ quizQuestions }}" as="q" hint-placeholder-count="4">
+          <div style="margin-bottom:22px;">
+            <h2 style="font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; margin:0 0 10px;">{{ q.label }}</h2>
+            <div style="display:flex; flex-wrap:wrap; gap:10px;">
+              <sc-for list="{{ q.opts }}" as="o" hint-placeholder-count="3">
+                <button onClick="{{ o.select }}" style="padding:9px 16px; border-radius:999px; border: 1.5px solid {{ o.borderColor }}; background:{{ o.bg }}; color:{{ o.color }}; font-weight:700; font-size:13.5px; cursor:pointer;">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <!-- A_RESULT -->
+      <sc-if value="{{ isARESULT }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Your food personality</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Here's your taste snapshot, based on what you told us.</p>
+        <div style="text-align:center; padding:24px 0;">
+          <div style="font-size:48px;">{{ resultEmoji }}</div>
+          <h2 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:20px; margin:8px 0 4px;">{{ resultTitle }}</h2>
+          <p style="color:oklch(45% 0.02 40); font-size:14.5px; max-width:420px; margin:0 auto;">{{ resultDesc }}</p>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid oklch(90% 0.005 60);">
+          <span style="font-weight:700; font-size:14px;">Top flavors</span>
+          <span style="font-size:14px; color:oklch(45% 0.02 40); text-align:right;">{{ resultFlavors }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:12px 0;">
+          <span style="font-weight:700; font-size:14px;">Top cuisines</span>
+          <span style="font-size:14px; color:oklch(45% 0.02 40); text-align:right;">{{ resultCuisines }}</span>
+        </div>
+      </sc-if>
+
+      <!-- B_TYPE -->
+      <sc-if value="{{ isBTYPE }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 20px;">What best describes you?</h1>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <sc-for list="{{ bTypeOptions }}" as="o" hint-placeholder-count="4">
+            <button onClick="{{ o.select }}" style="display:flex; align-items:flex-start; gap:16px; text-align:left; padding:18px 20px; border-radius:18px; border: 2px solid {{ o.borderColor }}; background:{{ o.bg }}; cursor:pointer;">
+              <span style="font-size:24px;">{{ o.emoji }}</span>
+              <span style="font-family:'Nunito',sans-serif; font-weight:800; font-size:16px;">{{ o.title }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- B_PROFILE -->
+      <sc-if value="{{ isBPROFILE }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Creator profile</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">This is how food lovers will find and recognize you.</p>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px;">Creator name</label>
+            <input type="text" value="{{ bName }}" onChange="{{ setBName }}" placeholder="e.g. Spice Trail Maya" style="width:100%; padding:14px 16px; border-radius:14px; border:1px solid oklch(88% 0.005 60); background:oklch(99% 0.003 60); font-size:15px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px;">Bio</label>
+            <input type="text" value="{{ bBio }}" onChange="{{ setBBio }}" placeholder="Tell food lovers what you're about…" style="width:100%; padding:14px 16px; border-radius:14px; border:1px solid oklch(88% 0.005 60); background:oklch(99% 0.003 60); font-size:15px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px;">Location</label>
+            <input type="text" value="{{ bLocation }}" onChange="{{ setBLocation }}" placeholder="Toronto, ON" style="width:100%; padding:14px 16px; border-radius:14px; border:1px solid oklch(88% 0.005 60); background:oklch(99% 0.003 60); font-size:15px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px;">Website (optional)</label>
+            <input type="text" value="{{ bWebsite }}" onChange="{{ setBWebsite }}" placeholder="yourwebsite.com" style="width:100%; padding:14px 16px; border-radius:14px; border:1px solid oklch(88% 0.005 60); background:oklch(99% 0.003 60); font-size:15px;" />
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- B_SPECIALTY -->
+      <sc-if value="{{ isBSPECIALTY }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Your specialty</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">For {{ bTypeLabel }}.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <sc-for list="{{ specialtyChips }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer;">{{ c.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- B_PORTFOLIO -->
+      <sc-if value="{{ isBPORTFOLIO }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Content &amp; portfolio</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Optional — add a few samples so people know what to expect.</p>
+        <sc-for list="{{ bPortfolioZones }}" as="z" hint-placeholder-count="5">
+          <div style="margin-bottom:18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-family:'Nunito',sans-serif; font-weight:800; font-size:14px;">{{ z.label }}</span>
+              <button onClick="{{ z.add }}" style="padding:7px 14px; border-radius:999px; border:1px solid oklch(85% 0.02 40); background:oklch(93% 0.05 40); color:oklch(45% 0.15 40); font-weight:700; font-size:12.5px; cursor:pointer;">+ Add sample</button>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+              <sc-for list="{{ z.files }}" as="f" hint-placeholder-count="0">
+                <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px; background:oklch(93% 0.005 60); border:1px solid oklch(87% 0.005 60); font-size:12.5px;">{{ f.name }}
+                  <button onClick="{{ f.remove }}" style="border:none; background:none; cursor:pointer; color:oklch(50% 0.02 40); font-size:13px;">×</button>
+                </span>
+              </sc-for>
+              <sc-if value="{{ z.empty }}"><span style="font-size:12.5px; color:oklch(55% 0.02 40);">No files yet — placeholder only for this demo.</span></sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <!-- B_AUDIENCE -->
+      <sc-if value="{{ isBAUDIENCE }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Audience focus</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Who do you create for?</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <sc-for list="{{ audienceChips }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer;">{{ c.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- B_PREVIEW -->
+      <sc-if value="{{ isBPREVIEW }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Profile preview</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">See how your profile will appear on Fuzo.</p>
+        <sc-for list="{{ bPreviewRows }}" as="r" hint-placeholder-count="5">
+          <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid oklch(90% 0.005 60);">
+            <span style="font-weight:700; font-size:14px;">{{ r.label }}</span>
+            <span style="font-size:14px; color:oklch(45% 0.02 40); text-align:right;">{{ r.value }}</span>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <!-- C_TYPE -->
+      <sc-if value="{{ isCTYPE }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 20px;">What type of business do you operate?</h1>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <sc-for list="{{ cTypeOptions }}" as="o" hint-placeholder-count="6">
+            <button onClick="{{ o.select }}" style="display:flex; align-items:flex-start; gap:16px; text-align:left; padding:18px 20px; border-radius:18px; border: 2px solid {{ o.borderColor }}; background:{{ o.bg }}; cursor:pointer;">
+              <span style="font-size:24px;">{{ o.emoji }}</span>
+              <span style="font-family:'Nunito',sans-serif; font-weight:800; font-size:16px;">{{ o.title }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- C_PROFILE -->
+      <sc-if value="{{ isCPROFILE }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Business profile</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">The basics food lovers and Fuzo will use to reach you.</p>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px;">Business name</label>
+            <input type="text" value="{{ cBusinessName }}" onChange="{{ setCBusinessName }}" placeholder="e.g. Maya's Spice Trail Kitchen" style="width:100%; padding:14px 16px; border-radius:14px; border:1px solid oklch(88% 0.005 60); background:oklch(99% 0.003 60); font-size:15px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px;">Owner / contact name</label>
+            <input type="text" value="{{ cContact }}" onChange="{{ setCContact }}" placeholder="Maya Singh" style="width:100%; padding:14px 16px; border-radius:14px; border:1px solid oklch(88% 0.005 60); background:oklch(99% 0.003 60); font-size:15px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px;">Phone</label>
+            <input type="text" value="{{ cPhone }}" onChange="{{ setCPhone }}" placeholder="(416) 555-0123" style="width:100%; padding:14px 16px; border-radius:14px; border:1px solid oklch(88% 0.005 60); background:oklch(99% 0.003 60); font-size:15px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px;">Email</label>
+            <input type="text" value="{{ cEmail }}" onChange="{{ setCEmail }}" placeholder="hello@business.com" style="width:100%; padding:14px 16px; border-radius:14px; border:1px solid oklch(88% 0.005 60); background:oklch(99% 0.003 60); font-size:15px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px;">Address</label>
+            <input type="text" value="{{ cAddress }}" onChange="{{ setCAddress }}" placeholder="123 Queen St W, Toronto, ON" style="width:100%; padding:14px 16px; border-radius:14px; border:1px solid oklch(88% 0.005 60); background:oklch(99% 0.003 60); font-size:15px;" />
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- C_CUISINE -->
+      <sc-if value="{{ isCCUISINE }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Cuisine &amp; offerings</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Tell us what you serve and when.</p>
+        <p style="font-family:'Nunito',sans-serif; font-weight:800; font-size:14px; margin:0 0 10px;">Cuisine type</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+          <sc-for list="{{ cCuisineChips }}" as="c" hint-placeholder-count="8">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer;">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <p style="font-family:'Nunito',sans-serif; font-weight:800; font-size:14px; margin:0 0 10px;">Food categories</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <sc-for list="{{ cCategoryChips }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer;">{{ c.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- C_MEDIA -->
+      <sc-if value="{{ isCMEDIA }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Menu &amp; media</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Optional — add a few samples so customers know what to expect.</p>
+        <sc-for list="{{ cMediaZones }}" as="z" hint-placeholder-count="3">
+          <div style="margin-bottom:18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-family:'Nunito',sans-serif; font-weight:800; font-size:14px;">{{ z.label }}</span>
+              <button onClick="{{ z.add }}" style="padding:7px 14px; border-radius:999px; border:1px solid oklch(85% 0.02 40); background:oklch(93% 0.05 40); color:oklch(45% 0.15 40); font-weight:700; font-size:12.5px; cursor:pointer;">+ Add sample</button>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+              <sc-for list="{{ z.files }}" as="f" hint-placeholder-count="0">
+                <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px; background:oklch(93% 0.005 60); border:1px solid oklch(87% 0.005 60); font-size:12.5px;">{{ f.name }}
+                  <button onClick="{{ f.remove }}" style="border:none; background:none; cursor:pointer; color:oklch(50% 0.02 40); font-size:13px;">×</button>
+                </span>
+              </sc-for>
+              <sc-if value="{{ z.empty }}"><span style="font-size:12.5px; color:oklch(55% 0.02 40);">No files yet — placeholder only for this demo.</span></sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <!-- C_IDENTITY -->
+      <sc-if value="{{ isCIDENTITY }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Business identity</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">What best describes your business? Select all that apply.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <sc-for list="{{ identityChips }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer;">{{ c.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- C_FEATURES -->
+      <sc-if value="{{ isCFEATURES }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Business features</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Turn on what you offer, and connect any tools you already use.</p>
+        <div style="display:flex; flex-direction:column; gap:2px; margin-bottom:22px;">
+          <sc-for list="{{ featureSwitches }}" as="s" hint-placeholder-count="6">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid oklch(91% 0.005 60);">
+              <span style="font-size:14.5px; font-weight:600;">{{ s.label }}</span>
+              <button onClick="{{ s.toggle }}" style="width:46px; height:26px; border-radius:999px; border:none; background:{{ s.trackColor }}; position:relative; cursor:pointer; padding:0;">
+                <span style="position:absolute; top:3px; left:{{ s.thumbLeft }}; width:20px; height:20px; border-radius:50%; background:#fff; box-shadow:0 1px 3px oklch(0% 0 0 / 0.25); transition:left .15s ease;"></span>
+              </button>
+            </div>
+          </sc-for>
+        </div>
+        <p style="font-family:'Nunito',sans-serif; font-weight:800; font-size:14px; margin:0 0 10px;">Integrations</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <sc-for list="{{ integrationChips }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer;">{{ c.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- C_MATCHING -->
+      <sc-if value="{{ isCMATCHING }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Customer matching</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Who should discover you?</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <sc-for list="{{ matchingChips }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.toggle }}" style="padding:10px 18px; border-radius:999px; border: 1.5px solid {{ c.borderColor }}; background:{{ c.bg }}; color:{{ c.color }}; font-weight:700; font-size:14.5px; cursor:pointer;">{{ c.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- C_PREVIEW -->
+      <sc-if value="{{ isCPREVIEW }}">
+        <h1 style="font-family:'Nunito',sans-serif; font-weight:900; font-size:24px; margin:0 0 4px;">Business preview</h1>
+        <p style="color:oklch(45% 0.02 40); font-size:14px; margin:0 0 20px;">Preview your public profile.</p>
+        <sc-for list="{{ cPreviewRows }}" as="r" hint-placeholder-count="6">
+          <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid oklch(90% 0.005 60);">
+            <span style="font-weight:700; font-size:14px;">{{ r.label }}</span>
+            <span style="font-size:14px; color:oklch(45% 0.02 40); text-align:right;">{{ r.value }}</span>
+          </div>
+        </sc-for>
+      </sc-if>
+
+    </div>
+
+    <!--=== Footer nav ===-->
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:28px 4px 0;">
+      <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goBack }}" style="padding:14px 26px; border-radius:999px; border:1.5px solid oklch(85% 0.005 60); background:transparent; color:oklch(30% 0.02 40); font-weight:700; font-size:15px; cursor:pointer;">Back</button>
+      </sc-if>
+      <sc-if value="{{ !showBack }}" hint-placeholder-val="{{ true }}"><span></span></sc-if>
+      <button onClick="{{ handleNext }}" disabled="{{ nextDisabled }}" style="padding:14px 32px; border-radius:999px; border:none; background: oklch(60% 0.17 40); color:#fff; font-weight:800; font-size:15px; cursor:pointer; opacity:{{ nextOpacity }}; box-shadow: 0 8px 18px oklch(60% 0.17 40 / 0.35);">{{ nextLabel }}</button>
+    </div>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const FLAVORS = ['Spicy','Sweet','Savory','Umami','Sour','Smoky','Tangy','Herby'];
+const CUISINES = ['Italian','Japanese','Mexican','Indian','Thai','Korean','Mediterranean','French','Chinese','American'];
+const DIETARY = ['No Restrictions','Vegetarian','Vegan','Gluten-Free','Halal','Kosher','Dairy-Free','Keto'];
+const FOOD_CATEGORIES = ['Breakfast','Lunch','Dinner','Dessert','Drinks','Late Night'];
+const AUDIENCE = ['Home Cooks','Foodies','Health-Conscious Eaters','Budget Diners','Families','Fine Dining Fans'];
+const CUSTOMER_MATCH = ['Nearby Locals','Tourists','Students','Families','Foodie Influencers','Corporate Groups'];
+const BUSINESS_IDENTITY = ['Family-Owned','Women-Owned','BIPOC-Owned','Sustainable','New Business','Award-Winning'];
+const INTEGRATIONS = ['DoorDash','Uber Eats','OpenTable','Square','Toast','Instagram'];
+
+const A_TYPE_OPTS = [
+  { v: 'Casual Foodie', emoji: '🍔' },
+  { v: 'Adventurous Eater', emoji: '🌶️' },
+  { v: 'Home Cook Explorer', emoji: '🍳' },
+  { v: 'Fine Dining Regular', emoji: '🥂' },
+];
+const B_TYPE_OPTS = [
+  { v: 'Recipe Creator', emoji: '📖' },
+  { v: 'Food Photographer', emoji: '📷' },
+  { v: 'Trims Creator', emoji: '🎬' },
+  { v: 'Restaurant Reviewer', emoji: '📝' },
+];
+const C_TYPE_OPTS = [
+  { v: 'Restaurant', emoji: '🍽️' },
+  { v: 'Cafe', emoji: '☕' },
+  { v: 'Food Truck', emoji: '🚚' },
+  { v: 'Bakery', emoji: '🥐' },
+  { v: 'Catering', emoji: '🍱' },
+  { v: 'Ghost Kitchen', emoji: '👻' },
+];
+const SPECIALTY_MAP = {
+  'Recipe Creator': ['Baking','Quick Meals','Meal Prep','Family Recipes','Vegan','Desserts'],
+  'Food Photographer': ['Studio Shots','Restaurant Shoots','Product Photography','Editorial'],
+  'Trims Creator': ['Street Food','Recipe Videos','Restaurant Reviews','ASMR Cooking'],
+  'Restaurant Reviewer': ['Fine Dining','Street Food','Hidden Gems','Budget Eats'],
+};
+const QUIZ_QUESTIONS = [
+  { key: 'q1', q: 'When trying new food, you...', opts: ['Always order the special', 'Stick to a favorite', 'Ask the table what\u2019s good'] },
+  { key: 'q2', q: 'Your ideal Friday night meal is...', opts: ['Cooked at home', 'Delivery', 'Out at a restaurant'] },
+  { key: 'q3', q: 'Spice level, honestly?', opts: ['Mild', 'Medium', 'Bring the heat'] },
+  { key: 'q4', q: 'You save recipes mostly to...', opts: ['Actually cook them', 'Dream about them', 'Show friends'] },
+];
+const FEATURES_LIST = [
+  { k: 'ordering', label: 'Online Ordering' },
+  { k: 'delivery', label: 'Delivery' },
+  { k: 'reservations', label: 'Reservations' },
+  { k: 'loyalty', label: 'Loyalty Program' },
+  { k: 'giftcards', label: 'Gift Cards' },
+  { k: 'catering', label: 'Catering Services' },
+];
+
+const orderA = ['PATH_SELECT','A_TYPE','A_FLAVORS','A_CUISINES','A_DIETARY','A_QUIZ','A_RESULT'];
+const orderB = ['PATH_SELECT','B_TYPE','B_PROFILE','B_SPECIALTY','B_PORTFOLIO','B_AUDIENCE','B_PREVIEW'];
+const orderC = ['PATH_SELECT','C_TYPE','C_PROFILE','C_CUISINE','C_MEDIA','C_IDENTITY','C_FEATURES','C_MATCHING','C_PREVIEW'];
+
+const RESULTS = {
+  Spicy: { emoji: '🌶️', title: 'The Heat Seeker', desc: 'You chase bold, fiery flavors and never back down from a challenge on the menu.' },
+  Sweet: { emoji: '🍰', title: 'The Dessert Devotee', desc: 'Life\u2019s too short to skip dessert \u2014 you savor every sweet moment.' },
+  Savory: { emoji: '🍖', title: 'The Comfort Craver', desc: 'Rich, hearty, satisfying \u2014 that\u2019s exactly how you like your plate.' },
+  Umami: { emoji: '🍄', title: 'The Depth Seeker', desc: 'You\u2019re drawn to layered, savory complexity in every bite.' },
+  default: { emoji: '🍜', title: 'The Curious Palate', desc: 'You keep an open mind at the table and love discovering something new.' },
+};
+
+function toggleArr(arr, value, max) {
+  if (arr.includes(value)) return arr.filter((v) => v !== value);
+  if (max && arr.length >= max) return arr;
+  return [...arr, value];
+}
+
+class Component extends DCLogic {
+  state = {
+    screen: 'PATH_SELECT',
+    history: [],
+    pathChoice: null,
+    a: { type: '', flavors: [], cuisines: [], dietary: [], quiz: {} },
+    b: {
+      type: '',
+      profile: { name: '', bio: '', location: '', website: '' },
+      specialty: [],
+      portfolio: { photos: [], videos: [], recipes: [], menus: [], serviceImages: [] },
+      audience: [],
+    },
+    c: {
+      type: '',
+      profile: { businessName: '', contact: '', phone: '', email: '', address: '' },
+      cuisine: [],
+      categories: [],
+      media: { menu: [], photos: [], dishes: [] },
+      identity: [],
+      features: { ordering: false, delivery: false, reservations: false, loyalty: false, giftcards: false, catering: false },
+      integrations: [],
+      matching: [],
+    },
+  };
+
+  goTo(next) {
+    this.setState((s) => ({ ...s, history: [...s.history, s.screen], screen: next }));
+  }
+  goBack() {
+    this.setState((s) => {
+      if (s.history.length === 0) return s;
+      const h = [...s.history];
+      const prev = h.pop();
+      return { ...s, history: h, screen: prev };
+    });
+  }
+
+  getOrder(state) {
+    if (state.pathChoice === 'A') return orderA;
+    if (state.pathChoice === 'B') return orderB;
+    if (state.pathChoice === 'C') return orderC;
+    return ['PATH_SELECT'];
+  }
+
+  canContinue(s) {
+    switch (s.screen) {
+      case 'PATH_SELECT': return !!s.pathChoice;
+      case 'A_TYPE': return !!s.a.type;
+      case 'A_FLAVORS': return s.a.flavors.length > 0;
+      case 'A_CUISINES': return s.a.cuisines.length > 0;
+      case 'A_QUIZ': return QUIZ_QUESTIONS.every((q) => !!s.a.quiz[q.key]);
+      case 'B_TYPE': return !!s.b.type;
+      case 'B_PROFILE': return !!s.b.profile.name;
+      case 'B_AUDIENCE': return s.b.audience.length > 0;
+      case 'C_TYPE': return !!s.c.type;
+      case 'C_PROFILE': return !!s.c.profile.businessName;
+      case 'C_CUISINE': return s.c.cuisine.length > 0;
+      case 'C_MATCHING': return s.c.matching.length > 0;
+      default: return true;
+    }
+  }
+
+  nextScreenFor(s) {
+    const order = this.getOrder(s);
+    const i = order.indexOf(s.screen);
+    if (i === -1 || i === order.length - 1) return 'DONE';
+    return order[i + 1];
+  }
+
+  handleNext() {
+    const s = this.state;
+    if (!this.canContinue(s)) return;
+    const next = this.nextScreenFor(s);
+    if (next === 'DONE') {
+      this.setState((s) => ({ ...s, screen: 'DONE' }));
+      return;
+    }
+    this.goTo(next);
+  }
+
+  computeResult(s) {
+    const key = s.a.flavors[0];
+    return RESULTS[key] || RESULTS.default;
+  }
+
+  chip(list, selected, val, max, onToggle) {
+    const on = selected.includes(val);
+    const atMax = !!(max && selected.length >= max);
+    return {
+      label: val,
+      bg: on ? 'oklch(60% 0.17 40)' : 'oklch(99% 0.003 60)',
+      color: on ? '#fff' : 'oklch(25% 0.02 40)',
+      borderColor: on ? 'oklch(60% 0.17 40)' : 'oklch(88% 0.005 60)',
+      opacity: !on && atMax ? '0.4' : '1',
+      toggle: () => onToggle(val),
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const order = this.getOrder(s);
+    const idx = order.indexOf(s.screen) + 1;
+    const total = order.length;
+    const pct = total ? Math.round((Math.max(idx, 1) / total) * 100) : 0;
+
+    const set = (fn) => this.setState(fn);
+
+    const pathOptions = [
+      { v: 'A', emoji: '🍽️', title: 'Discover Food', desc: 'Explore restaurants, dishes, reviews and food experiences.' },
+      { v: 'B', emoji: '👨\u200d🍳', title: 'Create & Inspire', desc: 'Share your culinary expertise, recipes, and food content.' },
+      { v: 'C', emoji: '🏪', title: 'Grow My Food Business', desc: 'Promote your food business and connect with food lovers.' },
+    ].map((o) => ({
+      ...o,
+      bg: s.pathChoice === o.v ? 'oklch(93% 0.05 40)' : 'oklch(99% 0.003 60)',
+      borderColor: s.pathChoice === o.v ? 'oklch(60% 0.17 40)' : 'oklch(90% 0.005 60)',
+      select: () => set((st) => ({ ...st, pathChoice: o.v })),
+    }));
+
+    const cardOpts = (list, current, onSelect) =>
+      list.map((o) => ({
+        v: o.v, emoji: o.emoji, title: o.v,
+        bg: current === o.v ? 'oklch(93% 0.05 40)' : 'oklch(99% 0.003 60)',
+        borderColor: current === o.v ? 'oklch(60% 0.17 40)' : 'oklch(90% 0.005 60)',
+        select: () => onSelect(o.v),
+      }));
+
+    const flavorChips = FLAVORS.map((v) => this.chip(FLAVORS, s.a.flavors, v, 5, (val) =>
+      set((st) => ({ ...st, a: { ...st.a, flavors: toggleArr(st.a.flavors, val, 5) } }))));
+    const cuisineChips = CUISINES.map((v) => this.chip(CUISINES, s.a.cuisines, v, 10, (val) =>
+      set((st) => ({ ...st, a: { ...st.a, cuisines: toggleArr(st.a.cuisines, val, 10) } }))));
+    const dietaryChips = DIETARY.map((v) => this.chip(DIETARY, s.a.dietary, v, null, (val) =>
+      set((st) => {
+        let arr = st.a.dietary;
+        if (arr.includes(val)) arr = arr.filter((x) => x !== val);
+        else if (val === 'No Restrictions') arr = ['No Restrictions'];
+        else arr = [...arr.filter((x) => x !== 'No Restrictions'), val];
+        return { ...st, a: { ...st.a, dietary: arr } };
+      })));
+
+    const quizQuestions = QUIZ_QUESTIONS.map((q, i) => ({
+      label: `${i + 1}. ${q.q}`,
+      opts: q.opts.map((opt) => ({
+        label: opt,
+        bg: s.a.quiz[q.key] === opt ? 'oklch(60% 0.17 40)' : 'oklch(99% 0.003 60)',
+        color: s.a.quiz[q.key] === opt ? '#fff' : 'oklch(25% 0.02 40)',
+        borderColor: s.a.quiz[q.key] === opt ? 'oklch(60% 0.17 40)' : 'oklch(88% 0.005 60)',
+        select: () => set((st) => ({ ...st, a: { ...st.a, quiz: { ...st.a.quiz, [q.key]: opt } } })),
+      })),
+    }));
+
+    const result = this.computeResult(s);
+
+    const specialtyList = SPECIALTY_MAP[s.b.type] || [];
+    const specialtyChips = specialtyList.map((v) => this.chip(specialtyList, s.b.specialty, v, null, (val) =>
+      set((st) => ({ ...st, b: { ...st.b, specialty: toggleArr(st.b.specialty, val) } }))));
+    const audienceChips = AUDIENCE.map((v) => this.chip(AUDIENCE, s.b.audience, v, null, (val) =>
+      set((st) => ({ ...st, b: { ...st.b, audience: toggleArr(st.b.audience, val) } }))));
+
+    const portfolioLabels = { photos: 'Photos', videos: 'Videos', recipes: 'Recipes', menus: 'Menus', serviceImages: 'Service Images' };
+    const bPortfolioZones = Object.keys(portfolioLabels).map((k) => ({
+      label: portfolioLabels[k],
+      files: s.b.portfolio[k].map((name, i) => ({
+        name,
+        remove: () => set((st) => ({ ...st, b: { ...st.b, portfolio: { ...st.b.portfolio, [k]: st.b.portfolio[k].filter((_, idx) => idx !== i) } } })),
+      })),
+      empty: s.b.portfolio[k].length === 0,
+      add: () => set((st) => ({ ...st, b: { ...st.b, portfolio: { ...st.b.portfolio, [k]: [...st.b.portfolio[k], `${k}_${st.b.portfolio[k].length + 1}.jpg`] } } })),
+    }));
+
+    const mediaLabels = { menu: 'Menu', photos: 'Photos', dishes: 'Dishes' };
+    const cMediaZones = Object.keys(mediaLabels).map((k) => ({
+      label: mediaLabels[k],
+      files: s.c.media[k].map((name, i) => ({
+        name,
+        remove: () => set((st) => ({ ...st, c: { ...st.c, media: { ...st.c.media, [k]: st.c.media[k].filter((_, idx) => idx !== i) } } })),
+      })),
+      empty: s.c.media[k].length === 0,
+      add: () => set((st) => ({ ...st, c: { ...st.c, media: { ...st.c.media, [k]: [...st.c.media[k], `${k}_${st.c.media[k].length + 1}.jpg`] } } })),
+    }));
+
+    const cCuisineChips = CUISINES.map((v) => this.chip(CUISINES, s.c.cuisine, v, null, (val) =>
+      set((st) => ({ ...st, c: { ...st.c, cuisine: toggleArr(st.c.cuisine, val) } }))));
+    const cCategoryChips = FOOD_CATEGORIES.map((v) => this.chip(FOOD_CATEGORIES, s.c.categories, v, null, (val) =>
+      set((st) => ({ ...st, c: { ...st.c, categories: toggleArr(st.c.categories, val) } }))));
+    const identityChips = BUSINESS_IDENTITY.map((v) => this.chip(BUSINESS_IDENTITY, s.c.identity, v, null, (val) =>
+      set((st) => ({ ...st, c: { ...st.c, identity: toggleArr(st.c.identity, val) } }))));
+    const integrationChips = INTEGRATIONS.map((v) => this.chip(INTEGRATIONS, s.c.integrations, v, null, (val) =>
+      set((st) => ({ ...st, c: { ...st.c, integrations: toggleArr(st.c.integrations, val) } }))));
+    const matchingChips = CUSTOMER_MATCH.map((v) => this.chip(CUSTOMER_MATCH, s.c.matching, v, null, (val) =>
+      set((st) => ({ ...st, c: { ...st.c, matching: toggleArr(st.c.matching, val) } }))));
+
+    const featureSwitches = FEATURES_LIST.map((f) => ({
+      label: f.label,
+      trackColor: s.c.features[f.k] ? 'oklch(60% 0.17 40)' : 'oklch(88% 0.005 60)',
+      thumbLeft: s.c.features[f.k] ? '23px' : '3px',
+      toggle: () => set((st) => ({ ...st, c: { ...st.c, features: { ...st.c.features, [f.k]: !st.c.features[f.k] } } })),
+    }));
+
+    const screen = s.screen === 'DONE' ? '' : s.screen;
+
+    return {
+      stepLabel: screen ? `Step ${idx} of ${total}` : 'All set!',
+      pctStr: `${screen ? pct : 100}%`,
+      showBack: s.history.length > 0 && screen !== '',
+      goBack: () => this.goBack(),
+      handleNext: () => this.handleNext(),
+      nextLabel: idx === total ? 'Finish' : 'Continue',
+      nextDisabled: !this.canContinue(s),
+      nextOpacity: this.canContinue(s) ? '1' : '0.5',
+
+      isPathSelect: screen === 'PATH_SELECT',
+      pathOptions,
+
+      isATYPE: screen === 'A_TYPE',
+      aTypeOptions: cardOpts(A_TYPE_OPTS, s.a.type, (v) => set((st) => ({ ...st, a: { ...st.a, type: v } }))),
+      isAFLAVORS: screen === 'A_FLAVORS', flavorChips, flavorCount: s.a.flavors.length,
+      isACUISINES: screen === 'A_CUISINES', cuisineChips, cuisineCount: s.a.cuisines.length,
+      isADIETARY: screen === 'A_DIETARY', dietaryChips,
+      isAQUIZ: screen === 'A_QUIZ', quizQuestions,
+      isARESULT: screen === 'A_RESULT',
+      resultEmoji: result.emoji, resultTitle: result.title, resultDesc: result.desc,
+      resultFlavors: s.a.flavors.join(' · ') || '—',
+      resultCuisines: s.a.cuisines.join(' · ') || '—',
+
+      isBTYPE: screen === 'B_TYPE',
+      bTypeOptions: cardOpts(B_TYPE_OPTS, s.b.type, (v) => set((st) => ({ ...st, b: { ...st.b, type: v } }))),
+      isBPROFILE: screen === 'B_PROFILE',
+      bName: s.b.profile.name, setBName: (e) => set((st) => ({ ...st, b: { ...st.b, profile: { ...st.b.profile, name: e.target.value } } })),
+      bBio: s.b.profile.bio, setBBio: (e) => set((st) => ({ ...st, b: { ...st.b, profile: { ...st.b.profile, bio: e.target.value } } })),
+      bLocation: s.b.profile.location, setBLocation: (e) => set((st) => ({ ...st, b: { ...st.b, profile: { ...st.b.profile, location: e.target.value } } })),
+      bWebsite: s.b.profile.website, setBWebsite: (e) => set((st) => ({ ...st, b: { ...st.b, profile: { ...st.b.profile, website: e.target.value } } })),
+      isBSPECIALTY: screen === 'B_SPECIALTY', specialtyChips, bTypeLabel: s.b.type || 'your creator type',
+      isBPORTFOLIO: screen === 'B_PORTFOLIO', bPortfolioZones,
+      isBAUDIENCE: screen === 'B_AUDIENCE', audienceChips,
+      isBPREVIEW: screen === 'B_PREVIEW',
+      bPreviewRows: [
+        { label: 'Creator name', value: s.b.profile.name || '—' },
+        { label: 'Type', value: s.b.type || '—' },
+        { label: 'Location', value: s.b.profile.location || '—' },
+        { label: 'Specialty', value: s.b.specialty.join(' · ') || '—' },
+        { label: 'Audience', value: s.b.audience.join(' · ') || '—' },
+      ],
+
+      isCTYPE: screen === 'C_TYPE',
+      cTypeOptions: cardOpts(C_TYPE_OPTS, s.c.type, (v) => set((st) => ({ ...st, c: { ...st.c, type: v } }))),
+      isCPROFILE: screen === 'C_PROFILE',
+      cBusinessName: s.c.profile.businessName, setCBusinessName: (e) => set((st) => ({ ...st, c: { ...st.c, profile: { ...st.c.profile, businessName: e.target.value } } })),
+      cContact: s.c.profile.contact, setCContact: (e) => set((st) => ({ ...st, c: { ...st.c, profile: { ...st.c.profile, contact: e.target.value } } })),
+      cPhone: s.c.profile.phone, setCPhone: (e) => set((st) => ({ ...st, c: { ...st.c, profile: { ...st.c.profile, phone: e.target.value } } })),
+      cEmail: s.c.profile.email, setCEmail: (e) => set((st) => ({ ...st, c: { ...st.c, profile: { ...st.c.profile, email: e.target.value } } })),
+      cAddress: s.c.profile.address, setCAddress: (e) => set((st) => ({ ...st, c: { ...st.c, profile: { ...st.c.profile, address: e.target.value } } })),
+      isCCUISINE: screen === 'C_CUISINE', cCuisineChips, cCategoryChips,
+      isCMEDIA: screen === 'C_MEDIA', cMediaZones,
+      isCIDENTITY: screen === 'C_IDENTITY', identityChips,
+      isCFEATURES: screen === 'C_FEATURES', featureSwitches, integrationChips,
+      isCMATCHING: screen === 'C_MATCHING', matchingChips,
+      isCPREVIEW: screen === 'C_PREVIEW',
+      cPreviewRows: [
+        { label: 'Business name', value: s.c.profile.businessName || '—' },
+        { label: 'Type', value: s.c.type || '—' },
+        { label: 'Address', value: s.c.profile.address || '—' },
+        { label: 'Cuisine', value: s.c.cuisine.join(' · ') || '—' },
+        { label: 'Categories', value: s.c.categories.join(' · ') || '—' },
+        { label: 'Identity', value: s.c.identity.join(' · ') || '—' },
+      ],
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,469 @@
+// Food DNA chart styling (dna.html port), hand-ported from the old app's
+// taste-profile-screen.css - trimmed to only the rules FoodDnaSection.tsx
+// actually uses (header/topnav/bottom-nav rules dropped, since Bootstrap's
+// ProfileHeader/ProfileHero already cover that chrome).
+
+.section {
+  background: #fff;
+  border-radius: 20px;
+  margin: 12px 0;
+  padding: 18px 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #1a1025;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+// Flags sections that are still hardcoded showcase content (no real user
+// data source yet - visit/review counts, badges, DNA-axis scoring) so it
+// reads honestly instead of implying it's the signed-in user's real stats.
+.demo-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9b8eaa;
+  background: #f3effa;
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+// Real "Your Food Personality" + Dietary blocks, sourced from the
+// onboarding quiz result / taste_profiles row.
+.personality-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+}
+.personality-card__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f3effa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 48px;
+
+  img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+  }
+}
+.personality-card__title {
+  font-size: 15px;
+  font-weight: 900;
+  color: #1a1025;
+}
+.personality-card__desc {
+  font-size: 12px;
+  color: #7c6d8a;
+  margin-top: 2px;
+}
+
+.dietary-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.dietary-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f3effa;
+  color: #4a3060;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.score-icon {
+  font-size: 22px;
+}
+.score-num {
+  font-weight: 900;
+  color: #1a1025;
+  line-height: 1;
+}
+.score-label {
+  font-size: 10.5px;
+  color: #9b8eaa;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+// Food DNA bars
+.dna-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+}
+.dna-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dna-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d2040;
+  .icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex: 0 0 24px;
+  }
+}
+.dna-track {
+  height: 6px;
+  border-radius: 4px;
+  background: #ede8f5;
+  position: relative;
+  overflow: hidden;
+}
+.dna-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dna-pct {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #7c6d8a;
+  text-align: right;
+}
+
+// Fingerprint
+.fp-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 440/560;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fp-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.fp-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.fp-foods {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.food-item {
+  position: absolute;
+  line-height: 1;
+  text-align: center;
+  transform-origin: center center;
+  transition:
+    opacity 0.25s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: default;
+  user-select: none;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));
+  &:hover {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+    z-index: 10;
+  }
+}
+
+// Two-col: Fingerprint + Flavor DNA/Cuisines
+.two-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+.half-section {
+  background: #fff;
+  border-radius: 20px;
+  padding: 14px 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+.half-title {
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #1a1025;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.flavor-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.flavor-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__name {
+    font-size: 12px;
+    font-weight: 800;
+    color: #7c6d8a;
+  }
+  &__val {
+    font-size: 12px;
+    font-weight: 900;
+  }
+}
+.flavor-track {
+  height: 6px;
+  border-radius: 4px;
+  background: #ede8f5;
+  overflow: hidden;
+}
+.flavor-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.view-all {
+  font-size: 11px;
+  font-weight: 800;
+  color: $chili;
+  cursor: pointer;
+}
+
+.cuisine-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+.cuisine-rank {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ede8f5;
+  font-size: 9.5px;
+  font-weight: 900;
+  color: #7c6d8a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 18px;
+}
+.cuisine-flag {
+  font-size: 16px;
+  flex: 0 0 22px;
+}
+.cuisine-info {
+  flex: 1;
+  min-width: 0;
+}
+.cuisine-name {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #1a1025;
+}
+.cuisine-bar-wrap {
+  height: 4px;
+  border-radius: 3px;
+  background: #ede8f5;
+  margin-top: 2px;
+  overflow: hidden;
+}
+.cuisine-bar {
+  height: 100%;
+  border-radius: 3px;
+}
+.cuisine-pct {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #7c6d8a;
+  white-space: nowrap;
+}
+
+// Food Stats
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.stat-item {
+  text-align: center;
+}
+.stat-icon {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.stat-num {
+  font-size: 22px;
+  font-weight: 900;
+  color: #1a1025;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 10px;
+  color: #9b8eaa;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 3px;
+}
+
+// Match card
+.match-card {
+  background: linear-gradient(135deg, #3b1f7a 0%, #5b2d9e 100%);
+  border-radius: 20px;
+  margin: 12px 0;
+  padding: 18px;
+  box-shadow: 0 4px 20px rgba(60, 30, 130, 0.35);
+}
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.match-title {
+  font-size: 13px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.03em;
+}
+.match-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 2px;
+}
+.best-match {
+  text-align: right;
+}
+.best-match-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.55);
+}
+.best-match-pct {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+}
+.match-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.match-thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8b4513, #c4661a);
+  flex: 0 0 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+.match-info {
+  flex: 1;
+}
+.match-name {
+  font-size: 15px;
+  font-weight: 900;
+  color: #fff;
+}
+.match-meta {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 2px 0;
+}
+.match-tag {
+  background: rgba(100, 220, 100, 0.2);
+  border: 1px solid rgba(100, 220, 100, 0.4);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #7fe87f;
+  display: inline-block;
+  margin-top: 4px;
+}
+.view-rest-btn {
+  background: #fff;
+  color: #3b1f7a;
+  border: none;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+// Badges
+.badges-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.badges-row {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.badge-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+.badge-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #4a3060;
+  text-align: center;
+  max-width: 56px;
+  line-height: 1.3;
+}

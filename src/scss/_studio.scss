@@ -1,0 +1,917 @@
+// Create Card studios: the master "+" type picker (CreateCardModal) and the
+// three non-Restaurant family wizards (RecipeCardStudio/VideoCardStudio/
+// DiscoveryCardStudio), plus their shared primitives (StudioStepper,
+// NeuralReveal, FlavorSliders, TagChips). These were originally built with
+// Tailwind utility classNames (copying legacy SnapStudio's approach) - this
+// app has no Tailwind, so none of it rendered. Hand-ported here onto FUZO's
+// flat, brand-accented light look (same family as `_scout.scss`/`_bites.scss`/
+// `_dashboard.scss` - see `_dna.scss`'s comment on why claymorphism/dark
+// "studio" surfaces were dropped project-wide) rather than the dark theme
+// this was first ported with.
+// FlavorSliders/TagChips are shared with `.scout-wizard` (Restaurant family,
+// also light-themed - see the "Add-pin wizard" section of `_scout.scss`), so
+// their classes here need to read fine in both contexts.
+
+$studio-ink: #1c1917;
+$studio-ink-soft: #57534e;
+$studio-muted: #78716c;
+$studio-muted-dim: #a8a29e;
+$studio-border: #ece9e6;
+$studio-border-soft: #f0efed;
+$studio-surface: #f7f6f4;
+$studio-accent: $turmeric;
+$studio-accent-ink: #1c1917;
+$studio-success: $lime;
+$studio-danger: $rose;
+
+$studio-radius-xl: 2rem;
+$studio-radius-pill: 3rem;
+// Above Bootstrap's entire z-index scale (max is $zindex-toast: 1090) - this
+// is a full-screen dialog portaled to <body>, it must win over the sticky
+// navbar ($zindex-sticky: 1020) unconditionally, not just be positioned
+// correctly against the viewport.
+$studio-z: 1100;
+
+// ---------------------------------------------------------------------------
+// Modal shell + header (CreateCardModal, RecipeCardStudio, VideoCardStudio,
+// DiscoveryCardStudio all share this root)
+// ---------------------------------------------------------------------------
+
+.studio-modal {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  z-index: $studio-z;
+  background: #fff;
+  color: $studio-ink;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.studio-header {
+  padding: 2rem;
+  border-bottom: 1px solid $studio-border;
+  background: #fff;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  z-index: 30;
+}
+
+.studio-header__eyebrow {
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: $studio-muted-dim;
+}
+
+.studio-header__title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  font-style: italic;
+  line-height: 1;
+  margin-top: 0.25rem;
+}
+
+.studio-close {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  background: $studio-border-soft;
+  border-radius: 1rem;
+  border: 0;
+  color: $studio-ink;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: $studio-border;
+  }
+}
+
+.studio-body {
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.studio-body--scroll {
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+// ---------------------------------------------------------------------------
+// StudioStepper (src/components/ui/StudioStepper.tsx)
+// ---------------------------------------------------------------------------
+
+.studio-stepper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.studio-stepper__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.studio-stepper__dot {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 900;
+  border: 2px solid $studio-border;
+  background: $studio-surface;
+  color: $studio-muted-dim;
+  transition: all 0.3s ease;
+
+  &.is-active {
+    background: $studio-ink;
+    border-color: $studio-ink;
+    color: #fff;
+    transform: scale(1.1);
+  }
+
+  &.is-done {
+    background: $studio-success;
+    border-color: $studio-success;
+    color: #000;
+  }
+}
+
+.studio-stepper__label {
+  position: absolute;
+  top: 100%;
+  margin-top: 0.5rem;
+  white-space: nowrap;
+  font-size: 0.5625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: $studio-muted-dim;
+  transition: color 0.3s ease;
+
+  &.is-active {
+    color: $studio-ink;
+  }
+}
+
+.studio-stepper__connector {
+  flex-grow: 1;
+  margin: 0 1rem;
+  height: 2px;
+  border-radius: 9999px;
+  background: $studio-border;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: $studio-success;
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+  }
+
+  &.is-done::after {
+    transform: translateX(0);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// NeuralReveal (src/components/ui/NeuralReveal.tsx)
+// ---------------------------------------------------------------------------
+
+.studio-reveal {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  gap: 2rem;
+}
+
+.studio-reveal__icon {
+  color: $studio-accent;
+  animation: studio-pulse-fade 1.4s ease-in-out infinite;
+}
+
+.studio-reveal__title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  font-style: italic;
+  line-height: 1;
+  color: $studio-ink;
+
+  @include media-breakpoint-up(md) {
+    font-size: 3rem;
+  }
+}
+
+.studio-reveal__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.studio-reveal__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.studio-reveal__dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: $studio-accent;
+  animation: studio-bounce 1s infinite;
+
+  &:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+}
+
+.studio-reveal__subtitle {
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: $studio-muted-dim;
+}
+
+@keyframes studio-pulse-fade {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes studio-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.375rem);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Generic step panel (identity/story/review content)
+// ---------------------------------------------------------------------------
+
+.studio-panel {
+  position: absolute;
+  inset: 0;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.studio-panel--scroll {
+  position: absolute;
+  inset: 0;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.studio-panel__inner {
+  max-width: 32rem;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.studio-panel__inner--wide {
+  max-width: 36rem;
+}
+
+.studio-panel__inner--center {
+  text-align: center;
+}
+
+.studio-panel__group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.studio-panel__head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.studio-heading {
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  font-style: italic;
+  line-height: 1;
+  color: $studio-ink;
+}
+
+.studio-sub {
+  font-size: 0.8125rem;
+  color: $studio-muted;
+}
+
+// ---------------------------------------------------------------------------
+// Fields, buttons, chips
+// ---------------------------------------------------------------------------
+
+.studio-field-label {
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: $studio-muted-dim;
+}
+
+.studio-input {
+  width: 100%;
+  background: $studio-surface;
+  border: 2px solid $studio-border;
+  padding: 1.25rem 1.5rem;
+  border-radius: $studio-radius-xl;
+  font-weight: 900;
+  font-size: 1rem;
+  color: $studio-ink;
+  outline: none;
+  transition: border-color 0.15s ease;
+
+  &::placeholder {
+    color: $studio-muted-dim;
+  }
+
+  &:focus {
+    border-color: $studio-accent;
+  }
+}
+
+.studio-textarea {
+  @extend .studio-input;
+  font-weight: 600;
+  height: 8rem;
+  resize: none;
+}
+
+.studio-cta {
+  width: 100%;
+  padding: 1.5rem 0;
+  border-radius: $studio-radius-pill;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8125rem;
+  border: 0;
+  background: $studio-accent;
+  color: $studio-accent-ink;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+
+  &:hover:not(:disabled) {
+    transform: scale(1.01);
+  }
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  &:disabled {
+    background: $studio-border-soft;
+    color: $studio-muted-dim;
+  }
+}
+
+.studio-cta--ghost {
+  background: $studio-border-soft;
+  color: $studio-ink;
+
+  &:hover:not(:disabled) {
+    background: $studio-border;
+  }
+}
+
+.studio-btn-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.studio-btn-row .studio-cta {
+  flex: 1;
+}
+
+.studio-error-text {
+  font-size: 0.75rem;
+  color: $studio-danger;
+}
+
+.studio-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: $studio-muted-dim;
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: $studio-border;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Photo upload square
+// ---------------------------------------------------------------------------
+
+.studio-photo-square {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: $studio-radius-xl;
+  overflow: hidden;
+  border: 4px solid $studio-border;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.studio-photo-square__remove {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  border: 0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.studio-dropzone {
+  aspect-ratio: 1;
+  border-radius: $studio-radius-xl;
+  border: 2px dashed $studio-border;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  color: $studio-muted-dim;
+  background: $studio-border-soft;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+
+  input {
+    display: none;
+  }
+
+  &.is-dragging {
+    border-color: $studio-accent;
+    background: rgba($turmeric, 0.08);
+    color: $studio-ink;
+  }
+}
+
+.studio-dropzone--video {
+  aspect-ratio: 16 / 9;
+}
+
+.studio-dropzone__label {
+  font-size: 0.6875rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.studio-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: $border-radius-lg;
+  border: 2px solid $studio-border;
+}
+
+// ---------------------------------------------------------------------------
+// Cuisine / chip grids
+// ---------------------------------------------------------------------------
+
+.studio-chip-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  max-height: 30dvh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.studio-chip {
+  padding: 1rem 0;
+  border-radius: 1rem;
+  font-size: 0.6875rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 2px solid $studio-border;
+  background: $studio-surface;
+  color: $studio-muted;
+  text-align: center;
+  transition: all 0.15s ease;
+
+  &.is-selected {
+    background: $studio-accent;
+    color: $studio-accent-ink;
+    border-color: $studio-accent;
+  }
+}
+
+// Flat wrapping chip row (tags, meal type, diet) — distinct from the 2-col
+// cuisine grid above, matches fuzo-food-card-demo.html's chip treatment.
+.studio-tag-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.studio-tag-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.studio-tag-section__label {
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: $studio-muted-dim;
+}
+
+.studio-tag-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.studio-tag-chip {
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.6875rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid $studio-border;
+  background: $studio-surface;
+  color: $studio-muted;
+  transition: all 0.15s ease;
+
+  &.is-selected {
+    background: $studio-accent;
+    color: $studio-accent-ink;
+    border-color: $studio-accent;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Rating stars
+// ---------------------------------------------------------------------------
+
+.studio-rating {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.studio-rating__star {
+  background: transparent;
+  border: 0;
+  padding: 0.25rem;
+  transition: transform 0.1s ease;
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Ingredients (RecipeCardStudio)
+// ---------------------------------------------------------------------------
+
+.studio-ingredient-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.studio-ingredient-row__name {
+  flex: 1;
+  background: $studio-surface;
+  border: 2px solid $studio-border;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  color: $studio-ink;
+  outline: none;
+
+  &:focus {
+    border-color: $studio-accent;
+  }
+}
+
+.studio-ingredient-row__qty {
+  @extend .studio-ingredient-row__name;
+  flex: none;
+  width: 4rem;
+}
+
+.studio-ingredient-row__unit {
+  @extend .studio-ingredient-row__name;
+  flex: none;
+  width: 4rem;
+}
+
+.studio-ingredient-row__remove {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: $studio-border-soft;
+  border: 0;
+  color: $studio-ink;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: $studio-border;
+  }
+}
+
+.studio-add-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: $studio-muted;
+  background: transparent;
+  border: 0;
+  align-self: flex-start;
+}
+
+.studio-nutrition-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.studio-nutrition-item {
+  text-align: center;
+  background: $studio-surface;
+  border-radius: 1rem;
+  padding: 0.75rem 0;
+}
+
+.studio-nutrition-item__val {
+  font-size: 1.125rem;
+  font-weight: 900;
+  color: $studio-ink;
+}
+
+.studio-nutrition-item__label {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: $studio-muted-dim;
+  margin-top: 0.125rem;
+}
+
+.studio-ingredient-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.studio-ingredient-list__item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed $studio-border;
+  color: $studio-ink;
+}
+
+.studio-ingredient-list__qty {
+  font-weight: 700;
+  color: $studio-muted;
+}
+
+// ---------------------------------------------------------------------------
+// FlavorSliders (src/components/create/shared/FlavorSliders.tsx) — also used
+// inside .scout-wizard__panel for the Restaurant family, so it needs to read
+// fine against both `.studio-panel` and `.scout-wizard__panel`'s backgrounds.
+// ---------------------------------------------------------------------------
+
+.studio-flavor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.5rem;
+}
+
+.studio-flavor-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.studio-flavor-row__head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $studio-muted;
+}
+
+.studio-flavor-row__value {
+  color: $studio-ink;
+}
+
+.studio-flavor-row__slider {
+  width: 100%;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: $studio-border;
+  appearance: none;
+  cursor: pointer;
+  accent-color: $studio-accent;
+}
+
+// ---------------------------------------------------------------------------
+// Success screen
+// ---------------------------------------------------------------------------
+
+.studio-success {
+  position: fixed;
+  inset: 0;
+  z-index: $studio-z + 50;
+  background: $studio-success;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  gap: 2rem;
+}
+
+.studio-success__icon {
+  width: 10rem;
+  height: 10rem;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $studio-success;
+}
+
+.studio-success__heading {
+  font-size: 3.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  font-style: italic;
+  color: #fff;
+  line-height: 1;
+}
+
+.studio-success__btn {
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.5rem 0;
+  background: #fff;
+  color: darken($studio-success, 15%);
+  border-radius: $studio-radius-pill;
+  border: 0;
+  font-weight: 900;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+// ---------------------------------------------------------------------------
+// CreateCardModal type-picker grid
+// ---------------------------------------------------------------------------
+
+.studio-type-groups {
+  max-width: 48rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.studio-type-group__label {
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: $studio-muted-dim;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.studio-type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  @include media-breakpoint-up(sm) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @include media-breakpoint-up(md) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.studio-type-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  aspect-ratio: 1;
+  border-radius: $studio-radius-xl;
+  border: 2px solid $studio-border;
+  background: $studio-surface;
+  padding: 1rem;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: $studio-accent;
+  }
+}
+
+.studio-type-card__emoji {
+  font-size: 2.25rem;
+}
+
+.studio-type-card__label {
+  font-size: 0.6875rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  color: $studio-ink-soft;
+}

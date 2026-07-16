@@ -1,0 +1,662 @@
+// Tako / Chef AI: floating FAB + assistant overlay, combining FUZO_V3/js/
+// tako.js's landing screen (greeting, search, moods, quick discovery) with
+// legacy React's structured chat engine (legacy/fuzoapp/src/features/chef).
+// Light theme, consistent with the rest of the app's flat white-surface look
+// (Scout/Rewards) rather than tako.css's dark immersive treatment.
+
+$tako-bg: #fdfbf7;
+$tako-surface: #f7f4ef;
+$tako-surface-2: #f0ece4;
+$tako-border: #ece7dd;
+$tako-ink: #1c1917;
+$tako-muted: #57534e;
+$tako-faint: #a8a29e;
+
+// ---------------------------------------------------------------------------
+// FAB
+// ---------------------------------------------------------------------------
+
+.tako-fab {
+  position: fixed;
+  bottom: 85px;
+  right: 18px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $turmeric, $chili);
+  box-shadow: 0 4px 16px rgba($chili, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  z-index: 1000;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba($chili, 0.6);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Shell (overlay + page variants)
+// ---------------------------------------------------------------------------
+
+.tako-shell {
+  display: flex;
+  flex-direction: column;
+  color: $tako-ink;
+  background: $tako-bg;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  overflow: hidden;
+}
+
+.tako-shell--overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(253, 251, 247, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  &.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.tako-shell--page {
+  position: fixed;
+  inset: 0;
+  top: 56px;
+}
+
+.tako-shell__header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 1.125rem 0;
+  flex-shrink: 0;
+}
+
+.tako-close {
+  background: $tako-surface;
+  border: 1px solid $tako-border;
+  border-radius: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $tako-ink;
+
+  &:hover {
+    background: $tako-surface-2;
+  }
+}
+
+.tako-body {
+  flex: 1;
+  // Flex items default to min-width: auto, which lets wide unbreakable
+  // content grow this wider than the shell instead of wrapping within it -
+  // since the shell clips instead of scrolling, that overflow reads as
+  // content getting cut off at the edge rather than a page scrollbar.
+  min-width: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 1rem 0 3rem;
+  // Centered column with real margins on wide viewports, matching the
+  // reference design's breathing room instead of stretching edge-to-edge.
+  max-width: 42rem;
+  margin: 0 auto;
+  width: 100%;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Landing: greeting + search
+// ---------------------------------------------------------------------------
+
+.tako-greeting {
+  padding: 2rem 1.5rem 2rem;
+  text-align: center;
+}
+
+.tako-greeting__icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $turmeric, $chili);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba($chili, 0.25);
+}
+
+.tako-greeting__title {
+  font-size: 1.625rem;
+  font-weight: 900;
+  color: $chili;
+  line-height: 1.3;
+}
+
+.tako-greeting__sub {
+  font-size: 1.625rem;
+  font-weight: 900;
+  color: $tako-ink;
+  line-height: 1.3;
+}
+
+.tako-search-wrap {
+  padding: 0 1.5rem 2.25rem;
+}
+
+.tako-search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: $tako-surface;
+  border: 1px solid $tako-border;
+  border-radius: 1.5rem;
+  padding: 1.125rem 1.375rem;
+  color: $tako-faint;
+}
+
+.tako-search__input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: $tako-ink;
+  font-size: 0.9375rem;
+
+  &::placeholder {
+    color: $tako-faint;
+  }
+}
+
+.tako-section-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: $tako-ink;
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+}
+
+// ---------------------------------------------------------------------------
+// Food Moods - wraps instead of horizontal-scrolling, so nothing can end up
+// clipped/inaccessible on narrow viewports.
+// ---------------------------------------------------------------------------
+
+.tako-moods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  padding: 0 1.5rem 2.25rem;
+}
+
+.tako-mood-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: $tako-surface;
+  border: 1px solid $tako-border;
+  padding: 0.625rem 1.125rem;
+  border-radius: 1.25rem;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: $tako-ink;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: rgba($turmeric, 0.12);
+    border-color: rgba($turmeric, 0.4);
+  }
+}
+
+.tako-mood-pill__icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Quick Discovery grid - horizontal icon+label cards, 2 across
+// ---------------------------------------------------------------------------
+
+.tako-quick-grid {
+  display: grid;
+  // minmax(0, 1fr), not bare 1fr - grid tracks otherwise size to their
+  // content's min-content width, so a long label can force a column past
+  // the viewport instead of wrapping within it.
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.875rem;
+  padding: 0 1.5rem 2.25rem;
+}
+
+.tako-quick-card {
+  background: $tako-surface;
+  border: 1px solid $tako-border;
+  border-radius: 1.125rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  text-align: left;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: $tako-surface-2;
+    transform: translateY(-2px);
+  }
+}
+
+.tako-quick-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img {
+    width: 1.375rem;
+    height: 1.375rem;
+    // Force every icon to a clean white silhouette on its solid colour
+    // badge, regardless of the source SVG's own baked-in fill colour.
+    filter: brightness(0) invert(1);
+  }
+}
+
+.tako-quick-label {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: $tako-ink;
+  line-height: 1.3;
+}
+
+// ---------------------------------------------------------------------------
+// Quick Links (was "Based On You") - fixed 3-column grid, icon over label
+// ---------------------------------------------------------------------------
+
+.tako-links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.875rem;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.tako-link-card {
+  background: $tako-surface;
+  border: 1px solid $tako-border;
+  border-radius: 1.125rem;
+  padding: 1.125rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  text-align: center;
+
+  &:hover {
+    background: $tako-surface-2;
+  }
+}
+
+.tako-link-card__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 1.25rem;
+    height: 1.25rem;
+    filter: brightness(0) invert(1);
+  }
+}
+
+.tako-link-card__label {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: $tako-ink;
+}
+
+// ---------------------------------------------------------------------------
+// Chat
+// ---------------------------------------------------------------------------
+
+.tako-chat__back {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1.25rem 1rem;
+  color: $tako-muted;
+  background: transparent;
+  border: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  &:hover {
+    color: $tako-ink;
+  }
+}
+
+.tako-chat__suggested {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.tako-suggested-chip {
+  padding: 0.5rem 1rem;
+  border-radius: 1.25rem;
+  background: $tako-surface;
+  border: 1px solid $tako-border;
+  color: $tako-ink;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &:hover {
+    background: rgba($turmeric, 0.12);
+    border-color: rgba($turmeric, 0.4);
+  }
+}
+
+.tako-msgs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0 1.25rem;
+}
+
+.tako-msg--user {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.tako-msg__bubble {
+  max-width: 85%;
+  padding: 1rem 1.25rem;
+  border-radius: 1.5rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  background: $chili;
+  color: #fff;
+}
+
+.tako-msg--ai .tako-msg__bubble {
+  background: $tako-surface;
+  color: $tako-ink;
+  border: 1px solid $tako-border;
+}
+
+.tako-ai-card {
+  width: 100%;
+  max-width: 92%;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background: #fff;
+  border: 1px solid $tako-border;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tako-ai-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.tako-ai-card__icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.625rem;
+  background: linear-gradient(135deg, $turmeric, $chili);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.tako-ai-card__speech {
+  font-weight: 800;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding-top: 0.125rem;
+  color: $tako-ink;
+}
+
+.tako-ai-card__bullets {
+  padding-left: 2.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tako-ai-card__bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  color: $tako-muted;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.5;
+
+  &::before {
+    content: '';
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: $turmeric;
+    flex-shrink: 0;
+    margin-top: 0.375rem;
+  }
+}
+
+.tako-ai-card__grid {
+  padding-left: 2.75rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+
+  @media (min-width: 480px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.tako-ai-card__option {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 0.875rem;
+  border-radius: 1rem;
+  background: $tako-surface;
+  border: 1px solid $tako-border;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: $turmeric;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.tako-ai-card__option-title {
+  font-weight: 900;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: $tako-ink;
+  margin-bottom: 0.25rem;
+}
+
+.tako-ai-card__option-desc {
+  font-size: 0.6875rem;
+  color: $tako-muted;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.tako-ai-card__option-meta {
+  align-self: flex-start;
+  margin-top: auto;
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 900;
+  background: $tako-surface-2;
+  color: $tako-muted;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.tako-ai-card__actions {
+  padding-left: 2.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tako-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  background: $tako-ink;
+  color: $turmeric;
+  font-size: 0.6875rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &:hover {
+    background: lighten($tako-ink, 10%);
+  }
+}
+
+.tako-ai-card__suggestions {
+  padding-left: 2.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid $tako-border;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tako-suggestion-chip {
+  padding: 0.375rem 0.75rem;
+  border-radius: 1.25rem;
+  border: 1px solid $tako-border;
+  background: transparent;
+  color: $tako-muted;
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &:hover {
+    border-color: $turmeric;
+    color: $tako-ink;
+  }
+}
+
+.tako-typing {
+  display: flex;
+  gap: 0.375rem;
+  padding: 0.5rem 1.25rem;
+}
+
+.tako-typing__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: $tako-faint;
+  animation: tako-bounce 1s infinite;
+
+  &:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+}
+
+@keyframes tako-bounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.tako-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid $tako-border;
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  background: $tako-bg;
+}
+
+.tako-footer__input {
+  flex: 1;
+  background: $tako-surface;
+  border: 1px solid $tako-border;
+  padding: 0.9375rem 1.25rem;
+  border-radius: 1.5rem;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  color: $tako-ink;
+  outline: none;
+
+  &::placeholder {
+    color: $tako-faint;
+  }
+
+  &:focus {
+    border-color: $turmeric;
+  }
+}
+
+.tako-footer__send {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 1.25rem;
+  background: $turmeric;
+  color: $tako-ink;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.1s ease;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}

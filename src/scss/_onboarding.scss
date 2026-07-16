@@ -1,0 +1,460 @@
+// Onboarding wizard: re-skinned from a Claude Design mockup (soft rounded
+// cards, pill chips/buttons) onto this app's actual design system - FUZO
+// brand tokens from _variables.scss and the flat, brand-accented look used
+// by Scout/Rewards, instead of the mockup's generic oklch palette and
+// Nunito/Karla fonts (this app has no Nunito/Karla loaded; see src/lib/font.ts
+// for the real heading/body fonts). Emoji glyphs replaced with real SVG
+// icons from public/SVG/, same approach as _rewards.scss.
+
+$onboarding-ink: #1c1917;
+$onboarding-ink-soft: #57534e;
+$onboarding-ink-faint: #a8a29e;
+$onboarding-border: #f0efed;
+$onboarding-surface-muted: #fafaf9;
+
+$onboarding-radius-pill: 9999px;
+$onboarding-radius-lg: 1.5rem;
+$onboarding-radius-xl: 1.75rem;
+
+.onboarding-page {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 0.5rem 1rem 4rem;
+}
+
+.onboarding-step-label {
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: $onboarding-ink-faint;
+  margin-bottom: 0.5rem;
+}
+
+.onboarding-progress {
+  height: 0.375rem;
+  border-radius: $onboarding-radius-pill;
+  background: $onboarding-border;
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+}
+
+.onboarding-progress__fill {
+  height: 100%;
+  border-radius: $onboarding-radius-pill;
+  background: $chili;
+  transition: width 0.3s ease;
+}
+
+.onboarding-card {
+  background: #fff;
+  border: 1px solid $onboarding-border;
+  border-radius: $onboarding-radius-xl;
+  padding: 1.5rem;
+}
+
+.onboarding-title {
+  font-weight: 800;
+  font-size: 1.375rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: $onboarding-ink;
+  margin: 0 0 0.375rem;
+}
+
+.onboarding-subtitle {
+  color: $onboarding-ink-soft;
+  font-size: 0.875rem;
+  margin: 0 0 1.25rem;
+}
+
+// ---------------------------------------------------------------------------
+// Card picker (path select, *_TYPE screens)
+// ---------------------------------------------------------------------------
+
+.onboarding-option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.onboarding-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  text-align: left;
+  width: 100%;
+  padding: 1rem 1.125rem;
+  border-radius: $onboarding-radius-lg;
+  border: 2px solid $onboarding-border;
+  background: #fff;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: $onboarding-ink-faint;
+  }
+
+  &.is-active {
+    border-color: $chili;
+    background: rgba($chili, 0.06);
+  }
+}
+
+.onboarding-option__icon {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: $onboarding-surface-muted;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 1.375rem;
+    height: 1.375rem;
+    object-fit: contain;
+  }
+
+  .onboarding-option.is-active & {
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.onboarding-option__title {
+  display: block;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  color: $onboarding-ink;
+  margin-bottom: 0.125rem;
+}
+
+.onboarding-option__desc {
+  display: block;
+  font-size: 0.8125rem;
+  color: $onboarding-ink-soft;
+}
+
+// ---------------------------------------------------------------------------
+// Chips (multi-select + quiz)
+// ---------------------------------------------------------------------------
+
+.onboarding-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-bottom: 0.5rem;
+}
+
+.onboarding-chip {
+  padding: 0.5rem 1.125rem;
+  border-radius: $onboarding-radius-pill;
+  border: 1.5px solid $onboarding-border;
+  background: #fff;
+  color: $onboarding-ink;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
+
+  &.is-at-max {
+    opacity: 0.4;
+  }
+
+  &.is-selected {
+    background: $chili;
+    border-color: $chili;
+    color: #fff;
+    opacity: 1;
+  }
+}
+
+.onboarding-chip-count {
+  font-size: 0.8125rem;
+  color: $onboarding-ink-faint;
+  margin: 0;
+}
+
+.onboarding-quiz-q {
+  margin-bottom: 1.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.onboarding-quiz-q__label {
+  font-weight: 800;
+  font-size: 0.9375rem;
+  color: $onboarding-ink;
+  margin: 0 0 0.625rem;
+}
+
+// ---------------------------------------------------------------------------
+// Text fields
+// ---------------------------------------------------------------------------
+
+.onboarding-field {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.onboarding-field__label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: $onboarding-ink;
+  margin-bottom: 0.375rem;
+}
+
+.onboarding-field__input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: $onboarding-radius-lg;
+  border: 1px solid $onboarding-border;
+  background: $onboarding-surface-muted;
+  font-size: 0.9375rem;
+  color: $onboarding-ink;
+
+  &:focus {
+    outline: none;
+    border-color: $chili;
+    background: #fff;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Upload zones
+// ---------------------------------------------------------------------------
+
+.onboarding-upload {
+  margin-bottom: 1.125rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.onboarding-upload__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.onboarding-upload__label {
+  font-weight: 800;
+  font-size: 0.875rem;
+  color: $onboarding-ink;
+}
+
+.onboarding-upload__add {
+  padding: 0.4375rem 0.875rem;
+  border-radius: $onboarding-radius-pill;
+  border: 1px solid rgba($chili, 0.35);
+  background: rgba($chili, 0.08);
+  color: $chili;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.onboarding-upload__files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.625rem;
+}
+
+.onboarding-upload__empty {
+  font-size: 0.75rem;
+  color: $onboarding-ink-faint;
+}
+
+.onboarding-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: $onboarding-radius-pill;
+  background: $onboarding-surface-muted;
+  border: 1px solid $onboarding-border;
+  font-size: 0.75rem;
+  color: $onboarding-ink-soft;
+}
+
+.onboarding-file-chip__remove {
+  border: none;
+  background: none;
+  color: $onboarding-ink-faint;
+  font-size: 0.8125rem;
+  line-height: 1;
+  padding: 0;
+
+  &:hover {
+    color: $onboarding-ink;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Feature switches
+// ---------------------------------------------------------------------------
+
+.onboarding-switch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid $onboarding-border;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.onboarding-switch-row__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: $onboarding-ink;
+}
+
+.onboarding-switch {
+  width: 2.75rem;
+  height: 1.5rem;
+  border-radius: $onboarding-radius-pill;
+  border: none;
+  background: $onboarding-border;
+  position: relative;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+
+  &.is-on {
+    background: $chili;
+  }
+}
+
+.onboarding-switch__thumb {
+  position: absolute;
+  top: 0.1875rem;
+  left: 0.1875rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: left 0.15s ease;
+
+  .onboarding-switch.is-on & {
+    left: 1.4375rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Preview rows + result screen
+// ---------------------------------------------------------------------------
+
+.onboarding-preview-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid $onboarding-border;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.onboarding-preview-row__label {
+  font-weight: 700;
+  font-size: 0.8125rem;
+  color: $onboarding-ink;
+  flex-shrink: 0;
+}
+
+.onboarding-preview-row__value {
+  font-size: 0.8125rem;
+  color: $onboarding-ink-soft;
+  text-align: right;
+}
+
+.onboarding-result {
+  text-align: center;
+  padding: 1rem 0 1.5rem;
+}
+
+.onboarding-result__icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: $onboarding-surface-muted;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.75rem;
+
+  img {
+    width: 2.25rem;
+    height: 2.25rem;
+    object-fit: contain;
+  }
+}
+
+.onboarding-result__title {
+  font-weight: 800;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: $onboarding-ink;
+  margin: 0 0 0.375rem;
+}
+
+.onboarding-result__desc {
+  color: $onboarding-ink-soft;
+  font-size: 0.875rem;
+  max-width: 26rem;
+  margin: 0 auto;
+}
+
+// ---------------------------------------------------------------------------
+// Footer nav
+// ---------------------------------------------------------------------------
+
+.onboarding-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.75rem 0.25rem 0;
+}
+
+.onboarding-btn-back {
+  padding: 0.875rem 1.625rem;
+  border-radius: $onboarding-radius-pill;
+  border: 1.5px solid $onboarding-border;
+  background: transparent;
+  color: $onboarding-ink;
+  font-weight: 700;
+  font-size: 0.9375rem;
+
+  &:hover {
+    border-color: $onboarding-ink-faint;
+  }
+}
+
+.onboarding-btn-next {
+  padding: 0.875rem 2rem;
+  border-radius: $onboarding-radius-pill;
+  border: none;
+  background: $chili;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  box-shadow: 0 8px 18px rgba($chili, 0.35);
+
+  &:disabled {
+    opacity: 0.5;
+    box-shadow: none;
+  }
+}

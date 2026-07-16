@@ -1,0 +1,82 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import ProfileHeader from '@/components/profile/ProfileHeader';
+import ProfileHero from '@/components/profile/ProfileHero';
+import ProfileTabs from '@/components/profile/ProfileTabs';
+import { DEMO_PROFILES, type DemoProfile } from '@/components/profile/demoProfile';
+import type { FoodDnaRealData } from '@/components/profile/FoodDnaSection';
+import { createClient } from '@/lib/supabase/client';
+
+// Real signed-in users get their actual users/taste_profiles row (name,
+// role, top cuisines, dietary prefs, quiz personality); the demo
+// person/restaurant toggle below is the design-preview fallback for when
+// there's no session (Supabase not configured, or logged out).
+export default function ProfilePage() {
+  const [demoType, setDemoType] = useState<'person' | 'restaurant'>('person');
+  const [realProfile, setRealProfile] = useState<DemoProfile | null>(null);
+  const [tasteProfile, setTasteProfile] = useState<FoodDnaRealData | undefined>(undefined);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+    (async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: userRow } = await supabase
+        .from('users')
+        .select('display_name, username, profile_type')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (userRow) {
+        setRealProfile({
+          name: userRow.display_name || 'FUZO User',
+          handle: userRow.username || user.email?.split('@')[0] || 'user',
+          role: userRow.profile_type === 'business' ? 'Restaurant' : userRow.profile_type === 'creator' ? 'Creator' : 'Food Explorer',
+          type: userRow.profile_type === 'business' ? 'restaurant' : 'person',
+          followers: 0,
+          following: 0,
+          bites: 0,
+        });
+      }
+
+      const { data: taste } = await supabase
+        .from('taste_profiles')
+        .select('cuisines, dietary, result_emoji, result_title, result_desc')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (taste) {
+        setTasteProfile({
+          cuisines: taste.cuisines ?? undefined,
+          dietary: taste.dietary ?? undefined,
+          personality: taste.result_title ? { icon: taste.result_emoji, title: taste.result_title, desc: taste.result_desc } : null,
+        });
+      }
+    })();
+  }, []);
+
+  const profile = realProfile ?? DEMO_PROFILES[demoType];
+
+  return (
+    <div>
+      <ProfileHeader />
+      <ProfileHero profile={profile} />
+      <ProfileTabs profile={profile} tasteProfile={tasteProfile} />
+
+      {!realProfile && (
+        <div className="container text-center py-3">
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-secondary"
+            onClick={() => setDemoType((t) => (t === 'person' ? 'restaurant' : 'person'))}
+          >
+            Preview as: {demoType === 'person' ? 'Person' : 'Restaurant'} (tap to switch)
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

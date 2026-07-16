@@ -1,0 +1,34 @@
+// FUZO brand tokens (Bootstrap Sass variable overrides). These are FUZO's
+// actual brand hues from the old app's styleguide.html - kept because they're
+// brand identity, not the "claymorphism" surface/shadow styling that was
+// explicitly dropped. Must be set BEFORE `@import "bootstrap/scss/bootstrap"`.
+
+$chili: #e8472b;
+$turmeric: #f2a93b;
+$lime: #8fbb2a;
+$sky: #5b9bd5;
+$rose: #f06292;
+
+$primary: $chili;
+$secondary: $turmeric;
+$success: $lime;
+$info: $sky;
+$warning: $turmeric;
+$danger: #d64545;
+
+$font-family-sans-serif: var(--body-font), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  Helvetica, Arial, sans-serif;
+$headings-font-family: var(--heading-font), $font-family-sans-serif;
+$headings-font-weight: 800;
+
+$border-radius: 0.75rem;
+$border-radius-sm: 0.5rem;
+$border-radius-lg: 1rem;
+
+$enable-shadows: false;
+
+// Offcanvas nav panel - widened + slowed slightly from Bootstrap's default
+// (400px / .3s) to match the slower, roomier slide-in feel of Ekomart's
+// mobile menu (its .side-bar was 465px / 600ms).
+$offcanvas-horizontal-width: 420px;
+$offcanvas-transition-duration: 0.45s;
