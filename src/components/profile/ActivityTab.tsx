@@ -193,7 +193,7 @@ export default function ActivityTab({ userId, isCurrentUser = true }: ActivityTa
                 <button
                   type="button"
                   className="card border-0 shadow-sm rounded-4 overflow-hidden w-100 text-start position-relative h-100"
-                  style={{ aspectRatio: '1/1' }}
+                  style={{ aspectRatio: '3/4' }}
                   onClick={() => setSelectedItem(tile.item)}
                 >
                   <img src={tile.item.img} alt={tile.item.name} className="w-100 h-100 object-fit-cover" />
@@ -225,7 +225,7 @@ export default function ActivityTab({ userId, isCurrentUser = true }: ActivityTa
                     <button
                       type="button"
                       className="card border-0 shadow-sm rounded-4 overflow-hidden w-100 text-start position-relative h-100"
-                      style={{ aspectRatio: '1/1', background: meta.color }}
+                      style={{ aspectRatio: '3/4', background: meta.color }}
                       onClick={() => setSelectedCard(tile.item)}
                     >
                       {tile.item.image_url && (

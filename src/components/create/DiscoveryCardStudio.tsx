@@ -22,9 +22,10 @@ interface DiscoveryCardStudioProps {
   cardType: FoodCardType;
   onClose: () => void;
   onCreated: () => void;
+  onDone: () => void;
 }
 
-export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardType, onClose, onCreated }) => {
+export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardType, onClose, onCreated, onDone }) => {
   const meta = TYPE_META[cardType];
   const [currentStep, setCurrentStep] = useState(0);
   const [image, setImage] = useState<string | null>(null);
@@ -208,7 +209,7 @@ export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardTy
               <Check size={72} strokeWidth={4} />
             </div>
             <h2 className="studio-success__heading">Card Locked</h2>
-            <button onClick={onClose} className="studio-success__btn">
+            <button onClick={onDone} className="studio-success__btn">
               Done
             </button>
           </div>

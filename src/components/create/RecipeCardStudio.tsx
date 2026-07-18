@@ -25,9 +25,10 @@ interface RecipeCardStudioProps {
   cardType: FoodCardType;
   onClose: () => void;
   onCreated: () => void;
+  onDone: () => void;
 }
 
-export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, onClose, onCreated }) => {
+export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, onClose, onCreated, onDone }) => {
   const meta = TYPE_META[cardType];
   const [currentStep, setCurrentStep] = useState(0);
   const [image, setImage] = useState<string | null>(null);
@@ -263,7 +264,7 @@ export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, on
               <Check size={72} strokeWidth={4} />
             </div>
             <h2 className="studio-success__heading">Card Locked</h2>
-            <button onClick={onClose} className="studio-success__btn">Done</button>
+            <button onClick={onDone} className="studio-success__btn">Done</button>
           </div>
         )}
       </div>

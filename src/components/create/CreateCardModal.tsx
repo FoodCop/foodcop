@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import { FOOD_CARD_TYPES, TYPE_META, type FoodCardFamily, type FoodCardType } from '@/lib/types/foodCard';
 import { ScoutAddPinModal } from '@/components/scout/ScoutAddPinModal';
@@ -25,22 +26,28 @@ interface CreateCardModalProps {
 }
 
 export const CreateCardModal: React.FC<CreateCardModalProps> = ({ onClose }) => {
+  const router = useRouter();
   const [cardType, setCardType] = useState<FoodCardType | null>(null);
 
   if (cardType) {
     const family = TYPE_META[cardType].family;
     const onCreated = () => { /* studio shows its own success screen; nothing extra to do here */ };
+    // The success screen's own "Done"/"Back to Scout" button - distinct from
+    // the X close button, which should just cancel out with no navigation.
+    // Closing the modal alone left the user on whatever page they started
+    // from with no way to actually see the card they just made.
+    const onDone = (destination: string) => { onClose(); router.push(destination); };
 
     if (family === 'restaurant') {
-      return <ScoutAddPinModal cardType={cardType} onClose={onClose} onSuccess={() => {}} />;
+      return <ScoutAddPinModal cardType={cardType} onClose={onClose} onSuccess={() => onDone('/scout')} />;
     }
     if (family === 'recipe') {
-      return <RecipeCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} />;
+      return <RecipeCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} onDone={() => onDone('/profile')} />;
     }
     if (family === 'video') {
-      return <VideoCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} />;
+      return <VideoCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} onDone={() => onDone('/profile')} />;
     }
-    return <DiscoveryCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} />;
+    return <DiscoveryCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} onDone={() => onDone('/profile')} />;
   }
 
   return (

@@ -37,9 +37,10 @@ interface VideoCardStudioProps {
   cardType: FoodCardType;
   onClose: () => void;
   onCreated: () => void;
+  onDone: () => void;
 }
 
-export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onClose, onCreated }) => {
+export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onClose, onCreated, onDone }) => {
   const meta = TYPE_META[cardType];
   const [source, setSource] = useState<'upload' | 'youtube' | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
@@ -266,7 +267,7 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
               <Check size={72} strokeWidth={4} />
             </div>
             <h2 className="studio-success__heading">Trim Locked</h2>
-            <button onClick={onClose} className="studio-success__btn">Done</button>
+            <button onClick={onDone} className="studio-success__btn">Done</button>
           </div>
         )}
       </div>
