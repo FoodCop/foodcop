@@ -109,16 +109,16 @@ export default function Footer({ paddingClass = 'pt-120 pb-75' }: FooterProps) {
                       <Link href="/">Home</Link>
                     </li>
                     <li>
-                      <Link href="/about">About Us</Link>
+                      <Link href="/discover">About Us</Link>
                     </li>
                     <li>
-                      <Link href="/menu-v1">Services</Link>
+                      <Link href="/discover">Services</Link>
                     </li>
                     <li>
-                      <Link href="/menu-v3">Our Menu</Link>
+                      <Link href="/discover">Our Menu</Link>
                     </li>
                     <li>
-                      <Link href="/gallery">Gallery</Link>
+                      <Link href="/discover">Gallery</Link>
                     </li>
                   </ul>
                 </div>

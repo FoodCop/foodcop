@@ -44,7 +44,7 @@ export default function CategorySection() {
           </div>
           <div className="col-md-6">
             <div className="category-button float-md-end mb-50 wow fadeInDown">
-              <Link href="/about" className="theme-btn style-two">
+              <Link href="/discover" className="theme-btn style-two">
                 Learn More
               </Link>
             </div>

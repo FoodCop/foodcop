@@ -77,7 +77,7 @@ export default function AboutSection() {
 
               {/*=== Read More Button ===*/}
               <div className="about-button wow fadeInUp" data-wow-delay=".5s">
-                <Link href="/about" className="theme-btn style-one">
+                <Link href="/discover" className="theme-btn style-one">
                   Read More
                 </Link>
               </div>

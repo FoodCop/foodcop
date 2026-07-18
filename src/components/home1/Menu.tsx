@@ -104,7 +104,7 @@ export default function MenuSection() {
                 <div className="menu-content-wrap">
                   <div className="content">
                     <h4 className="title">
-                      <Link href="/bites">{item.title}</Link>
+                      <Link href="/discover">{item.title}</Link>
                     </h4>
                     <p>{item.desc}</p>
                     <small className="text-muted">{item.author}</small>

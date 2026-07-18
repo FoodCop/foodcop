@@ -19,6 +19,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(false);
 
   const afterAuth = async (supabase: NonNullable<ReturnType<typeof createClient>>, userId: string) => {
     await supabase.from('users').upsert(
@@ -53,6 +54,14 @@ export default function LoginPage() {
     setLoading(false);
     if (authError) {
       setError(authError.message);
+      return;
+    }
+    // signUp() still returns a user even when email confirmation is required -
+    // data.session is only populated once the user actually confirms. Writing
+    // to the users table now would just 401 (no auth.uid() yet), so surface a
+    // real "check your email" state instead of silently proceeding.
+    if (mode === 'signup' && data.user && !data.session) {
+      setConfirmationSent(true);
       return;
     }
     if (data.user) await afterAuth(supabase, data.user.id);
@@ -104,6 +113,24 @@ export default function LoginPage() {
             </div>
           )}
 
+          {confirmationSent ? (
+            <div className="alert alert-success small">
+              Almost there — we sent a confirmation link to <strong>{email}</strong>. Click it, then
+              sign in below.
+              <div className="mt-2">
+                <button
+                  type="button"
+                  className="btn btn-link p-0 align-baseline small"
+                  onClick={() => {
+                    setConfirmationSent(false);
+                    setMode('signin');
+                  }}
+                >
+                  Back to sign in
+                </button>
+              </div>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit}>
             {mode === 'signup' && (
               <div className="mb-3">
@@ -200,6 +227,7 @@ export default function LoginPage() {
               </button>
             </div>
           </form>
+          )}
         </div>
       </div>
     </div>
