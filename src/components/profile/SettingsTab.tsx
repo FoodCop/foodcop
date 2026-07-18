@@ -1,13 +1,48 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 export default function SettingsTab() {
+  const router = useRouter();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const showToast = (message: string) => {
     setToastMessage(message);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    const supabase = createClient();
+    await supabase?.auth.signOut();
+    router.push('/login');
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    setDeleteError(null);
+    try {
+      const res = await fetch('/api/account/delete', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setDeleteError(data.error || 'Something went wrong. Please try again.');
+        setIsDeleting(false);
+        return;
+      }
+      const supabase = createClient();
+      await supabase?.auth.signOut();
+      router.push('/login');
+    } catch {
+      setDeleteError('Network error. Please try again.');
+      setIsDeleting(false);
+    }
   };
 
   const SectionTitle = ({ children }: { children: React.ReactNode }) => (
@@ -236,10 +271,21 @@ export default function SettingsTab() {
       {/* ── ACCOUNT ── */}
       <SectionTitle>Account</SectionTitle>
       <div className="list-group shadow-sm rounded-4 border-0 mb-3">
-        <button className="list-group-item list-group-item-action d-flex align-items-center p-3 border-0 border-bottom text-dark fw-bold" onClick={() => showToast('Signing out...')}>
-          <div className="me-3 fs-5">🚪</div> Sign Out
+        <button
+          className="list-group-item list-group-item-action d-flex align-items-center p-3 border-0 border-bottom text-dark fw-bold"
+          onClick={handleSignOut}
+          disabled={isSigningOut}
+        >
+          <div className="me-3 fs-5">🚪</div> {isSigningOut ? 'Signing out…' : 'Sign Out'}
         </button>
-        <button className="list-group-item list-group-item-action d-flex align-items-center p-3 border-0 text-danger fw-bold" onClick={() => showToast('Are you sure?')}>
+        <button
+          className="list-group-item list-group-item-action d-flex align-items-center p-3 border-0 text-danger fw-bold"
+          onClick={() => {
+            setDeleteError(null);
+            setDeleteConfirmText('');
+            setShowDeleteConfirm(true);
+          }}
+        >
           <div className="me-3 fs-5">🗑️</div> Delete Account
         </button>
       </div>
@@ -247,6 +293,53 @@ export default function SettingsTab() {
       <div className="text-center text-muted mt-4" style={{ fontSize: '0.75rem' }}>
         FUZO v3.0.0 (Next.js Port) · Made with ❤️
       </div>
+
+      {showDeleteConfirm && (
+        <div className="modal show d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+              <div className="modal-body p-4">
+                <div className="fs-3 mb-2">🗑️</div>
+                <h5 className="fw-bold mb-2">Delete your account?</h5>
+                <p className="text-muted mb-3">
+                  This permanently deletes your profile, food cards, saved items, chats, and points. This can&rsquo;t be undone.
+                </p>
+                <label className="form-label small fw-bold text-muted" htmlFor="delete-confirm-input">
+                  Type <span className="text-danger">DELETE</span> to confirm
+                </label>
+                <input
+                  id="delete-confirm-input"
+                  type="text"
+                  className="form-control"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  disabled={isDeleting}
+                  autoComplete="off"
+                />
+                {deleteError && <div className="alert alert-danger small mt-3 mb-0">{deleteError}</div>}
+              </div>
+              <div className="modal-footer bg-light border-top-0 p-3 d-flex gap-2">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary flex-fill"
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger flex-fill fw-bold"
+                  onClick={handleDeleteAccount}
+                  disabled={deleteConfirmText !== 'DELETE' || isDeleting}
+                >
+                  {isDeleting ? 'Deleting…' : 'Delete My Account'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -19,6 +19,13 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Search, X, RefreshCw, Navigation, Locate, MapPin } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { PlacesService } from '@/lib/services/placesService';
+import { PlateService } from '@/lib/services/plateService';
+import { ChatService, type ChatContact } from '@/lib/services/chatService';
+import { PointsService } from '@/lib/services/pointsService';
+import { normalizeItemForPlateSave } from '@/lib/services/savedItems';
+import { useAuth } from '../auth/AuthProvider';
+import FriendPickerModal from '../chat/FriendPickerModal';
+import type { AppItem } from '@/types/appItem';
 import type { ScoutPlace, ScoutFilter, MapLike } from '@/types/scout';
 import { getGoogleMaps } from '@/types/scout';
 import {
@@ -42,6 +49,8 @@ import { ScoutAddPinModal } from './ScoutAddPinModal';
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
 
 export default function ScoutView() {
+  const { user } = useAuth();
+
   // --- State ---
   const [mainMapPlaces, setMainMapPlaces] = useState<ScoutPlace[]>([]);
   const [communitySnapPlaces, setCommunitySnapPlaces] = useState<ScoutPlace[]>([]);
@@ -50,6 +59,9 @@ export default function ScoutView() {
   const [modalTab, setModalTab] = useState('overview');
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [isMapReady, setIsMapReady] = useState(false);
+  const [savedPlaceIds, setSavedPlaceIds] = useState<Set<string>>(new Set());
+  const [shareTargetPlace, setShareTargetPlace] = useState<ScoutPlace | null>(null);
+  const [actionToast, setActionToast] = useState<string | null>(null);
 
   const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState(false);
   const [isAddPinModalOpen, setIsAddPinModalOpen] = useState(false);
@@ -342,9 +354,104 @@ export default function ScoutView() {
     if (mapInstanceRef.current) fetchPlaces(mapInstanceRef.current);
   };
 
-  const handleAction = (place: ScoutPlace, action: 'save' | 'share') => {
-    console.log(`Action: ${action} on`, place.name);
-    // TODO: wire to plate/share service
+  const showActionToast = (message: string) => {
+    setActionToast(message);
+    setTimeout(() => setActionToast(null), 3000);
+  };
+
+  // Load which places the signed-in user has already saved, so the modal's
+  // Save button can reflect real state (filled/labeled "Saved") instead of
+  // always looking unsaved.
+  useEffect(() => {
+    if (!user?.id) return;
+    (async () => {
+      const result = await PlateService.listSavedItems();
+      if (result.success && result.data) {
+        const ids = new Set(result.data.filter((i) => i.item_type === 'restaurant').map((i) => i.item_id));
+        setSavedPlaceIds(ids);
+      }
+    })();
+  }, [user?.id]);
+
+  const toAppItem = (place: ScoutPlace): AppItem => ({
+    id: place.id,
+    itemType: 'restaurant',
+    name: place.name,
+    cat: place.cat,
+    img: place.img,
+    lat: place.lat,
+    lng: place.lng,
+    placeId: place.placeId,
+    address: place.address,
+    rating: place.rating,
+    reviews: place.reviews,
+    phone: place.phone,
+    website: place.website,
+    vibe: place.vibe,
+  });
+
+  const handleAction = async (place: ScoutPlace, action: 'save' | 'share') => {
+    if (action === 'share') {
+      setShareTargetPlace(place);
+      return;
+    }
+
+    // Save/unsave, via the same saved_items pipeline the Activity tab's
+    // Places grid already reads from - real persistence, not a console.log.
+    const isSaved = savedPlaceIds.has(place.id);
+    if (isSaved) {
+      const result = await PlateService.removeFromPlate({ itemId: place.id, itemType: 'restaurant' });
+      if (result.success) {
+        setSavedPlaceIds((prev) => {
+          const next = new Set(prev);
+          next.delete(place.id);
+          return next;
+        });
+        showActionToast(`Removed ${place.name} from your saved places`);
+      } else {
+        showActionToast(result.error || 'Could not remove from saved places');
+      }
+      return;
+    }
+
+    const normalized = normalizeItemForPlateSave(toAppItem(place));
+    const result = await PlateService.saveToPlate({
+      itemId: normalized.itemId,
+      itemType: normalized.itemType,
+      metadata: normalized.metadata,
+    });
+    if (result.success) {
+      setSavedPlaceIds((prev) => new Set(prev).add(place.id));
+      showActionToast(`Saved ${place.name} to your places`);
+    } else {
+      showActionToast(result.error === 'User not authenticated' ? 'Sign in to save places' : (result.error || 'Could not save this place'));
+    }
+  };
+
+  const handlePickFriendForShare = async (friend: ChatContact) => {
+    const place = shareTargetPlace;
+    setShareTargetPlace(null);
+    if (!place || !user?.id) return;
+
+    const conversation = await ChatService.getOrCreateConversation(user.id, friend.id);
+    if (!conversation.success || !conversation.data) {
+      showActionToast('Could not start conversation. Please try again.');
+      return;
+    }
+
+    const sent = await ChatService.sendSharedItemMessage({
+      conversationId: conversation.data.id,
+      senderId: user.id,
+      item: toAppItem(place),
+    });
+
+    if (!sent.success || !sent.data) {
+      showActionToast('Could not share this place. Please try again.');
+      return;
+    }
+
+    await PointsService.awardPoints({ actionType: 'share_card', sourceType: 'share', sourceId: sent.data.id });
+    showActionToast(`Shared ${place.name} with ${friend.name}`);
   };
 
   // --- Map Initialization ---
@@ -400,6 +507,25 @@ export default function ScoutView() {
     };
 
     initMap();
+
+    // No cleanup previously existed here at all - navigating away (e.g. to
+    // /discover) left the Maps instance's own listeners and every marker
+    // still alive and still referencing this DOM node after React had
+    // already unmounted it. A later window resize (e.g. toggling a
+    // browser's device-emulation mode) can make the Maps SDK's own internal
+    // resize-repaint logic try to touch that now-detached node, which
+    // surfaces as a generic, hard-to-trace React "Failed to execute
+    // 'removeChild'" error with no application code in the stack (the crash
+    // is inside React-DOM's own reconciler, not this file).
+    return () => {
+      const google = getGoogleMaps();
+      activeMarkersRef.current.forEach((m) => m.setMap(null));
+      activeMarkersRef.current = [];
+      if (mapInstanceRef.current && google?.event) {
+        google.event.clearInstanceListeners(mapInstanceRef.current);
+      }
+      mapInstanceRef.current = null;
+    };
   }, []);
 
   // Re-bind click handler when pinning mode changes
@@ -478,6 +604,10 @@ export default function ScoutView() {
         zIndex: 999
       });
       pinnedMarker.addListener('click', () => setSelectedPlace(pinnedPlace));
+      // Track it alongside the other markers - previously untracked, so it
+      // was never cleared on the next re-render (leaking one stray marker
+      // per pinnedPlace change) or on unmount.
+      activeMarkersRef.current.push(pinnedMarker);
     }
   }, [isMapReady, activePlaces, pinnedPlace, userLocation]);
 
@@ -640,9 +770,24 @@ export default function ScoutView() {
           modalTab={modalTab}
           setModalTab={setModalTab}
           isLoadingDetails={isLoadingDetails}
+          isSaved={savedPlaceIds.has(selectedPlace.id)}
           onClose={() => setSelectedPlace(null)}
           onAction={handleAction}
         />
+      )}
+
+      {shareTargetPlace && user?.id && (
+        <FriendPickerModal
+          currentUserId={user.id}
+          onClose={() => setShareTargetPlace(null)}
+          onPick={handlePickFriendForShare}
+        />
+      )}
+
+      {actionToast && (
+        <div className="toast show position-fixed bottom-0 start-50 translate-middle-x mb-5 bg-dark text-white rounded-pill px-3 py-2 shadow" style={{ zIndex: 1050 }}>
+          {actionToast}
+        </div>
       )}
 
       {isAddPinModalOpen && (

@@ -83,6 +83,15 @@ const asRecord = (value: unknown): Record<string, unknown> => {
   return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
 };
 
+// postgres_changes channels are client-local (the topic string never needs to
+// match anything on another client), so each subscription gets a unique
+// suffix. Without it, React Strict Mode's double-invoked effects call
+// client.channel(sameTopic) before the previous channel's async
+// removeChannel() finishes leaving - supabase-js dedupes by topic and hands
+// back the still-subscribed channel, and .on() on an already-subscribed
+// channel throws "cannot add postgres_changes callbacks ... after subscribe()".
+const uniqueChannelSuffix = () => Math.random().toString(36).slice(2);
+
 const toChatMessage = (value: unknown): ChatMessage => {
   const row = asRecord(value);
   return {
@@ -143,7 +152,6 @@ export const ChatService = {
       .from('users')
       .select('id, display_name, username, email, avatar_url, is_online, last_seen, is_master_bot')
       .neq('id', currentUserId)
-      .eq('is_master_bot', false)
       .order('points_total', { ascending: false })
       .limit(100);
 
@@ -156,7 +164,6 @@ export const ChatService = {
         .from('users')
         .select('id, display_name, username, avatar_url, is_online, last_seen, is_master_bot')
         .neq('id', currentUserId)
-        .eq('is_master_bot', false)
         .order('points_total', { ascending: false })
         .limit(100);
 
@@ -328,7 +335,7 @@ export const ChatService = {
     }
 
     const channel = client
-      .channel(`dm_messages:${conversationId}`)
+      .channel(`dm_messages:${conversationId}:${uniqueChannelSuffix()}`)
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
@@ -357,7 +364,7 @@ export const ChatService = {
     }
 
     const channel = client
-      .channel(`dm_messages:user:${currentUserId}`)
+      .channel(`dm_messages:user:${currentUserId}:${uniqueChannelSuffix()}`)
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
@@ -548,7 +555,7 @@ export const ChatService = {
     if (!client) return () => undefined;
 
     const channel = client
-      .channel(`group_messages:${groupId}`)
+      .channel(`group_messages:${groupId}:${uniqueChannelSuffix()}`)
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',

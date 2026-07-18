@@ -1,0 +1,50 @@
+// Discover's tab switcher (Bites/Feed/Trims) - DiscoverTabs.tsx. Reskinned on
+// request from a real food-delivery-app reference screenshot: the active tab
+// is a white rounded-top card - flat top edge, generously rounded top
+// corners, flat bottom sitting flush in the colored band behind it - rather
+// than a plain underline. Kept separate from _feed.scss, which is
+// specifically the swipe card mechanic used by the Feed tab's own content,
+// not this tab bar.
+//
+// An earlier version of this tried a concave "inverted corner" notch here
+// (a common food-delivery-app tab treatment) but that's not what was asked
+// for - the actual reference shape is simpler: just a rounded-top card, no
+// concave cutout at the base.
+
+.discover-tabband {
+  background: $chili;
+  padding: 0.85rem 1rem 0;
+  display: flex;
+  gap: 0.35rem;
+}
+
+.discover-tab {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.65rem 0.5rem 0.8rem;
+  border: none;
+  background: transparent;
+  border-radius: 1.25rem 1.25rem 0 0;
+  color: rgba(#fff, 0.78);
+  font-size: 0.72rem;
+  font-weight: 700;
+  transition: color 0.15s ease, background-color 0.15s ease;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.discover-tab.is-active {
+  background: #fff;
+  color: $chili;
+  box-shadow: 0 -2px 10px rgba(#000, 0.12);
+}
+
+.discover-tab__label {
+  white-space: nowrap;
+}

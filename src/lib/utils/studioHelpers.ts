@@ -116,6 +116,17 @@ export const extractVideoFrameAsDataUrl = (file: File): Promise<string> => new P
 });
 
 /**
+ * SUB-SECTION: YouTube URL Parsing
+ * Extracts the 11-character video id from a watch/shorts/share/embed URL, or
+ * null if the string isn't a recognizable YouTube link. Shared by
+ * VideoCardStudio (import step) and VideoPlayerModal (playback) so the
+ * pattern only needs to be right in one place.
+ */
+const YOUTUBE_ID_PATTERN = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([\w-]{11})/;
+
+export const getYoutubeVideoId = (url: string): string | null => YOUTUBE_ID_PATTERN.exec(url)?.[1] || null;
+
+/**
  * SUB-SECTION: Neural Response Parsing
  * Safely parses AI-generated JSON responses from the Gemini API.
  * Intelligence: 

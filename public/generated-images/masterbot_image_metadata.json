@@ -1,0 +1,1702 @@
+[
+  {
+    "filename": "anika-kapoor_discovery_1.png",
+    "image_url": "/generated-images/anika-kapoor_discovery_1.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Indian",
+    "dish_name": "Spiced Coconut Curry with Jasmine Rice",
+    "dish_description": "This vibrant curry bursts with the richness of coconut milk, fragrant spices, and a hint of sweetness, perfectly balanced by the delicate jasmine rice.",
+    "ingredients": [
+      "coconut milk",
+      "mixed vegetables",
+      "Thai red curry paste",
+      "jasmine rice",
+      "fresh basil"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 1,
+      "salty": 2,
+      "spicy": 4,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "anika-kapoor_discovery_2.png",
+    "image_url": "/generated-images/anika-kapoor_discovery_2.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Indian",
+    "dish_name": "Spicy Tamarind Coconut Curry",
+    "dish_description": "A vibrant and creamy curry that beautifully balances the tanginess of tamarind with the rich sweetness of coconut, creating a symphony of flavors that dances on your palate.",
+    "ingredients": [
+      "coconut milk",
+      "tamarind paste",
+      "mixed vegetables",
+      "Thai basil",
+      "red chili"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 4,
+      "salty": 2,
+      "spicy": 4,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "aurelia-voss_discovery_1.png",
+    "image_url": "/generated-images/aurelia-voss_discovery_1.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Thai",
+    "dish_name": "Aurelia's Fusion Noodle Bowl",
+    "dish_description": "A delightful blend of rich Thai spices and Chinese noodles, offering a harmonious balance of creamy coconut and zesty lime topped with fresh herbs.",
+    "ingredients": [
+      "rice noodles",
+      "coconut milk",
+      "lemongrass",
+      "ginger",
+      "basil"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 4,
+      "salty": 3,
+      "spicy": 3,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "aurelia-voss_discovery_2.png",
+    "image_url": "/generated-images/aurelia-voss_discovery_2.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Thai",
+    "dish_name": "Aurelia's Spiced Duck Ramen",
+    "dish_description": "Aromatic broth infused with Thai spices, tender duck, and chewy noodles create a harmonious balance of flavor and texture that transports you to the streets of Bangkok.",
+    "ingredients": [
+      "duck breast",
+      "ramen noodles",
+      "Thai spices",
+      "broth",
+      "green onions"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 2,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJ1UDNdACPGGAR2bL-UhQk9O0_v2.png",
+    "image_url": "/generated-images/ChIJ1UDNdACPGGAR2bL-UhQk9O0_v2.png",
+    "persona_name": "Lila Cheng",
+    "persona_slug": "lila-cheng",
+    "source": "RESTAURANT",
+    "restaurant_name": "Vegan Eat Tokyo",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Quinoa Salad",
+    "dish_description": "A vibrant mix of fluffy quinoa, crisp vegetables, and a zesty lemon dressing that bursts with freshness in every bite.",
+    "ingredients": [
+      "quinoa",
+      "cherry tomatoes",
+      "cucumber",
+      "red onion",
+      "lemon dressing"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 1
+    }
+  },
+  {
+    "filename": "ChIJ3ciEyNhx5kcRPVo1NKwoM2k_v2.png",
+    "image_url": "/generated-images/ChIJ3ciEyNhx5kcRPVo1NKwoM2k_v2.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "RESTAURANT",
+    "restaurant_name": "Boutary",
+    "cuisine": "Italian",
+    "dish_name": "Truffle Risotto",
+    "dish_description": "A creamy and luxurious risotto infused with the earthy aroma of truffles, creating a rich and decadent experience with each bite.",
+    "ingredients": [
+      "Arborio rice",
+      "truffle oil",
+      "Parmesan cheese",
+      "chicken broth",
+      "shallots"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJ3WmXS3XzGGAR-36JHz3XliY_v2.png",
+    "image_url": "/generated-images/ChIJ3WmXS3XzGGAR-36JHz3XliY_v2.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "RESTAURANT",
+    "restaurant_name": "MORETHAN BAKERY",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Olive Bread",
+    "dish_description": "This rustic bread features a delightful blend of briny olives and aromatic herbs, creating a chewy texture and savory flavor that transports you to the Mediterranean coast.",
+    "ingredients": [
+      "all-purpose flour",
+      "black olives",
+      "green olives",
+      "fresh rosemary",
+      "yeast"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJ3xyKtKePGGARglfZPr8JVjE_v2.png",
+    "image_url": "/generated-images/ChIJ3xyKtKePGGARglfZPr8JVjE_v2.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "RESTAURANT",
+    "restaurant_name": "VEGAN GYOZA",
+    "cuisine": "Mediterranean",
+    "dish_name": "Vegan Gyoza",
+    "dish_description": "Delicate dumplings filled with a savory mix of vegetables and spices, perfectly pan-fried to achieve a crispy exterior and tender interior.",
+    "ingredients": [
+      "Wonton wrappers",
+      "Shiitake mushrooms",
+      "Cabbage",
+      "Carrots",
+      "Soy sauce"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJ5Y6l4Q0Z2jERYL0KDIjT6v0_v2.png",
+    "image_url": "/generated-images/ChIJ5Y6l4Q0Z2jERYL0KDIjT6v0_v2.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "RESTAURANT",
+    "restaurant_name": "Lau Pa Sat",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A delightful stir-fried noodle dish that marries the sweetness of tamarind with the crunch of peanuts and the zest of lime, delivering a perfect harmony of textures and flavors.",
+    "ingredients": [
+      "rice noodles",
+      "tamarind paste",
+      "shrimp",
+      "egg",
+      "peanuts"
+    ],
+    "flavor_profile": {
+      "sweet": 4,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 1,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJ64SRn-xv5kcRH7AlSsBFASQ_v2.png",
+    "image_url": "/generated-images/ChIJ64SRn-xv5kcRH7AlSsBFASQ_v2.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "RESTAURANT",
+    "restaurant_name": "Restaurant Guy Savoy",
+    "cuisine": "Italian",
+    "dish_name": "Truffle Risotto",
+    "dish_description": "A creamy and luxurious risotto infused with the earthy aroma of truffles, creating an indulgent experience with each velvety bite.",
+    "ingredients": [
+      "Arborio rice",
+      "Black truffles",
+      "Parmesan cheese",
+      "Shallots",
+      "Vegetable broth"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJ7QJJJ-_R5zsRI4gFwe1G0Js_v2.png",
+    "image_url": "/generated-images/ChIJ7QJJJ-_R5zsRI4gFwe1G0Js_v2.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "RESTAURANT",
+    "restaurant_name": "Ziya Restaurant",
+    "cuisine": "Indian",
+    "dish_name": "Butter Chicken",
+    "dish_description": "A rich and creamy tomato-based curry, Butter Chicken offers a perfect balance of spices and velvety texture that envelops tender pieces of chicken.",
+    "ingredients": [
+      "chicken",
+      "tomato puree",
+      "cream",
+      "butter",
+      "garam masala"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 2,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJ8eQ-zqiMGGARLHwGVIXrvXk_v2.png",
+    "image_url": "/generated-images/ChIJ8eQ-zqiMGGARLHwGVIXrvXk_v2.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "RESTAURANT",
+    "restaurant_name": "Luke's Lobster Shibuya Park Street Shop",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Lobster Roll",
+    "dish_description": "A luxurious lobster roll featuring tender chunks of sweet lobster meat, lightly dressed in lemon herb mayo, nestled in a buttery, toasted brioche bun.",
+    "ingredients": [
+      "lobster meat",
+      "buttery brioche bun",
+      "lemon herb mayonnaise",
+      "celery",
+      "chives"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 1,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJ8UVLROWe4jARGpxT2uG81is_v2.png",
+    "image_url": "/generated-images/ChIJ8UVLROWe4jARGpxT2uG81is_v2.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "RESTAURANT",
+    "restaurant_name": "Seoul BBQ โซล บาร์บีคิว",
+    "cuisine": "Thai",
+    "dish_name": "Spicy Thai BBQ Chicken Skewers",
+    "dish_description": "Tender chicken marinated in a spicy Thai blend, grilled to perfection, offering a smoky flavor with a fiery kick and juicy texture.",
+    "ingredients": [
+      "chicken thighs",
+      "Thai chili paste",
+      "coconut milk",
+      "lime juice",
+      "fresh cilantro"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 4,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJ9fcZgFWJGGARba-URZY-YKw_v2.png",
+    "image_url": "/generated-images/ChIJ9fcZgFWJGGARba-URZY-YKw_v2.png",
+    "persona_name": "Jun Tanaka",
+    "persona_slug": "jun-tanaka",
+    "source": "RESTAURANT",
+    "restaurant_name": "Tapas Molecular Bar",
+    "cuisine": "Japanese",
+    "dish_name": "Molecular Sushi Sphere",
+    "dish_description": "A delicate burst of umami and ocean flavors encapsulated in a translucent sphere, offering a playful and textural experience with each bite.",
+    "ingredients": [
+      "sushi rice",
+      "seaweed extract",
+      "tuna",
+      "soy sauce",
+      "avocado"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJ9Z6nGDtu5kcRgc34rnb__eA_v2.png",
+    "image_url": "/generated-images/ChIJ9Z6nGDtu5kcRgc34rnb__eA_v2.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "RESTAURANT",
+    "restaurant_name": "Sushi-B",
+    "cuisine": "Italian",
+    "dish_name": "Mediterranean Sushi Roll",
+    "dish_description": "A delightful fusion of fresh vegetables and savory seafood, wrapped in delicate sushi rice and nori, offering a refreshing crunch with each bite.",
+    "ingredients": [
+      "sushi rice",
+      "nori",
+      "cucumber",
+      "grilled shrimp",
+      "feta cheese"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJaU7vDOjR5zsRXd7WikjgfnE_v2.png",
+    "image_url": "/generated-images/ChIJaU7vDOjR5zsRXd7WikjgfnE_v2.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "RESTAURANT",
+    "restaurant_name": "Relish International Veg Cuisine",
+    "cuisine": "Indian",
+    "dish_name": "Thai Green Curry",
+    "dish_description": "A vibrant and fragrant dish that combines creamy coconut milk with fresh herbs and spices, resulting in a delightful medley of flavors and a satisfying texture.",
+    "ingredients": [
+      "coconut milk",
+      "green curry paste",
+      "mixed vegetables",
+      "tofu",
+      "basil"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 4,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJaWQvzaiNGGARhBHfiQXyKWs_v2.png",
+    "image_url": "/generated-images/ChIJaWQvzaiNGGARhBHfiQXyKWs_v2.png",
+    "persona_name": "Lila Cheng",
+    "persona_slug": "lila-cheng",
+    "source": "RESTAURANT",
+    "restaurant_name": "Vegan Bistro Jangara",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Stuffed Peppers",
+    "dish_description": "Delicious roasted bell peppers filled with a savory mixture of quinoa, chickpeas, and Mediterranean spices, offering a delightful balance of textures and flavors.",
+    "ingredients": [
+      "bell peppers",
+      "quinoa",
+      "chickpeas",
+      "tomatoes",
+      "Mediterranean spices"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJbYao6cif4jARF8mR5mjFcUI_v2.png",
+    "image_url": "/generated-images/ChIJbYao6cif4jARF8mR5mjFcUI_v2.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "RESTAURANT",
+    "restaurant_name": "Central World Square Street Food",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A delightful stir-fried noodle dish that perfectly balances sweet, tangy, and savory flavors, complemented by crunchy peanuts and fresh bean sprouts.",
+    "ingredients": [
+      "rice noodles",
+      "shrimp",
+      "tofu",
+      "peanuts",
+      "bean sprouts"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJbykHRfSf4jARn2JYKm5ZdFM_v2.png",
+    "image_url": "/generated-images/ChIJbykHRfSf4jARn2JYKm5ZdFM_v2.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "RESTAURANT",
+    "restaurant_name": "KBBQ Sukhumvit",
+    "cuisine": "Thai",
+    "dish_name": "Spicy Thai BBQ Pork Skewers",
+    "dish_description": "Succulent pieces of marinated pork grilled to perfection, delivering a burst of spicy and smoky flavors with a tender, juicy texture.",
+    "ingredients": [
+      "pork shoulder",
+      "Thai red curry paste",
+      "coconut milk",
+      "brown sugar",
+      "bamboo skewers"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 4,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJcQq1s_-e4jARN4ySRHpTidY_v2.png",
+    "image_url": "/generated-images/ChIJcQq1s_-e4jARN4ySRHpTidY_v2.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "RESTAURANT",
+    "restaurant_name": "SURA Korean BBQ_by Korean Chef",
+    "cuisine": "Thai",
+    "dish_name": "Galbi Korean BBQ",
+    "dish_description": "Tender and succulent short ribs marinated in a sweet and savory sauce, grilled to perfection for a smoky flavor that melts in your mouth.",
+    "ingredients": [
+      "beef short ribs",
+      "soy sauce",
+      "brown sugar",
+      "garlic",
+      "sesame oil"
+    ],
+    "flavor_profile": {
+      "sweet": 4,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJe2U4L-zI5zsRa6ovuoq6yM0_v2.png",
+    "image_url": "/generated-images/ChIJe2U4L-zI5zsRa6ovuoq6yM0_v2.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "RESTAURANT",
+    "restaurant_name": "Masala Library by Jiggs Kalra",
+    "cuisine": "Indian",
+    "dish_name": "Butter Chicken",
+    "dish_description": "A rich and creamy tomato-based curry, Butter Chicken offers a perfect harmony of spices that envelop tender chicken pieces, creating a comforting and indulgent experience.",
+    "ingredients": [
+      "chicken",
+      "butter",
+      "tomato puree",
+      "cream",
+      "garam masala"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 2,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJE8S0lOSLGGAR84AdzQ71F3I_v2.png",
+    "image_url": "/generated-images/ChIJE8S0lOSLGGAR84AdzQ71F3I_v2.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "RESTAURANT",
+    "restaurant_name": "Centre The Bakery",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Olive Bread",
+    "dish_description": "This rustic Mediterranean Olive Bread combines the rich, savory flavors of olives with a golden, crusty exterior and a soft, airy interior that will transport you straight to the sun-kissed shores of the Mediterranean.",
+    "ingredients": [
+      "all-purpose flour",
+      "black olives",
+      "green olives",
+      "yeast",
+      "olive oil"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJf_-XwIzO5zsRDTUnLL7219A_v2.png",
+    "image_url": "/generated-images/ChIJf_-XwIzO5zsRDTUnLL7219A_v2.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "RESTAURANT",
+    "restaurant_name": "SpiceKlub",
+    "cuisine": "Indian",
+    "dish_name": "Masala Tofu Stir-Fry",
+    "dish_description": "A vibrant medley of crisp vegetables and marinated tofu, tossed in aromatic spices and a hint of lime for a refreshing finish.",
+    "ingredients": [
+      "Tofu",
+      "Bell peppers",
+      "Broccoli",
+      "Soy sauce",
+      "Curry powder"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 3,
+      "salty": 4,
+      "spicy": 2,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJGeYlX_mLGGARwsJahMe-XZg_v2.png",
+    "image_url": "/generated-images/ChIJGeYlX_mLGGARwsJahMe-XZg_v2.png",
+    "persona_name": "Jun Tanaka",
+    "persona_slug": "jun-tanaka",
+    "source": "RESTAURANT",
+    "restaurant_name": "Tokyo Ramen Street",
+    "cuisine": "Japanese",
+    "dish_name": "Shio Ramen",
+    "dish_description": "A delicate bowl of shio ramen featuring a savory chicken and sea salt broth, topped with tender chashu pork, fresh scallions, and a soft-boiled egg for a rich, umami experience.",
+    "ingredients": [
+      "ramen noodles",
+      "chicken broth",
+      "chashu pork",
+      "sea salt",
+      "soft-boiled egg"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJIdQ-0s2e4jAREzCRlcXp3qc_v2.png",
+    "image_url": "/generated-images/ChIJIdQ-0s2e4jAREzCRlcXp3qc_v2.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "RESTAURANT",
+    "restaurant_name": "Sra Bua by Kiin Kiin",
+    "cuisine": "Thai",
+    "dish_name": "Sra Bua's Spicy Tuna Tartare",
+    "dish_description": "A vibrant blend of fresh tuna and zesty herbs, delivering a refreshing crunch with each bite, perfectly balanced by a hint of heat.",
+    "ingredients": [
+      "Fresh tuna",
+      "Chili paste",
+      "Cucumber",
+      "Lime juice",
+      "Sesame oil"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 3,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJIyBI0taLGGARUYBpuXaTx8k_v2.png",
+    "image_url": "/generated-images/ChIJIyBI0taLGGARUYBpuXaTx8k_v2.png",
+    "persona_name": "Lila Cheng",
+    "persona_slug": "lila-cheng",
+    "source": "RESTAURANT",
+    "restaurant_name": "Feel Good Foods",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Quinoa Salad",
+    "dish_description": "A vibrant and refreshing salad bursting with the flavors of fresh herbs, tangy feta, and zesty lemon, all wrapped around fluffy quinoa.",
+    "ingredients": [
+      "quinoa",
+      "cherry tomatoes",
+      "cucumber",
+      "feta cheese",
+      "fresh parsley"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 2
+    }
+  },
+  {
+    "filename": "ChIJJ4ldDwwZ2jER36nRVAyIXc8_v2.png",
+    "image_url": "/generated-images/ChIJJ4ldDwwZ2jER36nRVAyIXc8_v2.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "RESTAURANT",
+    "restaurant_name": "Market Street Hawker Centre",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A vibrant stir-fried noodle dish with a perfect balance of tangy tamarind, savory soy sauce, and a hint of sweetness, crowned with crushed peanuts and fresh lime.",
+    "ingredients": [
+      "rice noodles",
+      "tamarind paste",
+      "shrimp",
+      "bean sprouts",
+      "egg"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 4,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJKWAr1qrP5zsRzgOR_x-m1gw_v2.png",
+    "image_url": "/generated-images/ChIJKWAr1qrP5zsRzgOR_x-m1gw_v2.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "RESTAURANT",
+    "restaurant_name": "Govindas International- The Higher Taste",
+    "cuisine": "Indian",
+    "dish_name": "Paneer Tikka",
+    "dish_description": "Grilled marinated paneer cubes infused with spices, offering a smoky flavor and a delightful chewy texture.",
+    "ingredients": [
+      "Paneer",
+      "Yogurt",
+      "Garam Masala",
+      "Bell Peppers",
+      "Onions"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 4,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJKxOIF5iMGGARiFoVm5Ay8W4_v2.png",
+    "image_url": "/generated-images/ChIJKxOIF5iMGGARiFoVm5Ay8W4_v2.png",
+    "persona_name": "Jun Tanaka",
+    "persona_slug": "jun-tanaka",
+    "source": "RESTAURANT",
+    "restaurant_name": "Den",
+    "cuisine": "Japanese",
+    "dish_name": "Agedashi Tofu",
+    "dish_description": "Crispy on the outside and silky smooth on the inside, this deep-fried tofu is served in a savory dashi broth, topped with green onions and bonito flakes for an umami explosion.",
+    "ingredients": [
+      "Tofu",
+      "Dashi stock",
+      "Soy sauce",
+      "Green onions",
+      "Bonito flakes"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 0,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJlVvipTFu5kcR6VwB1PiwKv8_v2.png",
+    "image_url": "/generated-images/ChIJlVvipTFu5kcR6VwB1PiwKv8_v2.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "RESTAURANT",
+    "restaurant_name": "Pur' - Jean-François Rouquette",
+    "cuisine": "Italian",
+    "dish_name": "Truffle Risotto",
+    "dish_description": "A luxurious and creamy risotto infused with the earthy aroma of black truffles and finished with a sprinkle of Parmigiano-Reggiano for a rich, umami experience.",
+    "ingredients": [
+      "Arborio rice",
+      "Black truffles",
+      "Vegetable broth",
+      "Parmigiano-Reggiano",
+      "Shallots"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJLWlCk9GY4jARpNGpRcq5ABY_v2.png",
+    "image_url": "/generated-images/ChIJLWlCk9GY4jARpNGpRcq5ABY_v2.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "RESTAURANT",
+    "restaurant_name": "Cheaper & Better Street Food",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A tantalizing stir-fried noodle dish bursting with a harmonious blend of sweet, salty, and tangy flavors, topped with crunchy peanuts and fresh lime.",
+    "ingredients": [
+      "rice noodles",
+      "tofu",
+      "peanuts",
+      "bean sprouts",
+      "lime"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 4,
+      "spicy": 1,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJm9eXpcuZ4jAROxvGhh77SsY_v2.png",
+    "image_url": "/generated-images/ChIJm9eXpcuZ4jAROxvGhh77SsY_v2.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "RESTAURANT",
+    "restaurant_name": "Petchaburi Soi 5 Food Street",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A delightful stir-fried noodle dish that combines the savory depth of tamarind with crunchy peanuts and fresh bean sprouts.",
+    "ingredients": [
+      "rice noodles",
+      "tamarind paste",
+      "shrimp",
+      "egg",
+      "peanuts"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 4,
+      "spicy": 2,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJO3Ut0Qf1GGARD337o3ZIUdg_v2.png",
+    "image_url": "/generated-images/ChIJO3Ut0Qf1GGARD337o3ZIUdg_v2.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "RESTAURANT",
+    "restaurant_name": "Saido",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Quinoa Salad",
+    "dish_description": "A vibrant and refreshing salad bursting with the flavors of sun-ripened tomatoes, crisp cucumbers, and fragrant herbs, all harmoniously blended with nutty quinoa.",
+    "ingredients": [
+      "quinoa",
+      "cherry tomatoes",
+      "cucumbers",
+      "red onion",
+      "parsley"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 1
+    }
+  },
+  {
+    "filename": "ChIJoeqsy4Kf4jARol7aevww6OE_v2.png",
+    "image_url": "/generated-images/ChIJoeqsy4Kf4jARol7aevww6OE_v2.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "RESTAURANT",
+    "restaurant_name": "Convent Road Street Food",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A delightful stir-fried noodle dish that perfectly balances sweet, savory, and tangy flavors with a satisfying chewy texture.",
+    "ingredients": [
+      "Rice noodles",
+      "Tamarind paste",
+      "Shrimp",
+      "Bean sprouts",
+      "Peanuts"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 4,
+      "salty": 3,
+      "spicy": 2,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJOVikeYzO5zsRu4uErKD2E4o_v2.png",
+    "image_url": "/generated-images/ChIJOVikeYzO5zsRu4uErKD2E4o_v2.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "RESTAURANT",
+    "restaurant_name": "The Sahib Room & Kipling Bar",
+    "cuisine": "Indian",
+    "dish_name": "Paneer Tikka",
+    "dish_description": "Succulent cubes of marinated paneer grilled to perfection, offering a delightful smoky flavor with a hint of spices.",
+    "ingredients": [
+      "Paneer",
+      "Yogurt",
+      "Bell Peppers",
+      "Garam Masala",
+      "Lemon Juice"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 3,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJoZJ6S72NGGAR0rjOmnbB5LM_v2.png",
+    "image_url": "/generated-images/ChIJoZJ6S72NGGAR0rjOmnbB5LM_v2.png",
+    "persona_name": "Jun Tanaka",
+    "persona_slug": "jun-tanaka",
+    "source": "RESTAURANT",
+    "restaurant_name": "KABUKI Sushi",
+    "cuisine": "Japanese",
+    "dish_name": "Otoro Tuna Nigiri",
+    "dish_description": "Indulge in the rich, buttery flavor of Otoro tuna, perfectly balanced atop a mound of vinegared rice, providing an exquisite melt-in-your-mouth experience.",
+    "ingredients": [
+      "Otoro tuna",
+      "sushi rice",
+      "rice vinegar",
+      "wasabi",
+      "nori"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJQ-V5FQBy5kcRRd_d6D3GQGg_v2.png",
+    "image_url": "/generated-images/ChIJQ-V5FQBy5kcRRd_d6D3GQGg_v2.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "RESTAURANT",
+    "restaurant_name": "Restaurant H",
+    "cuisine": "Italian",
+    "dish_name": "Pistachio Pesto Pasta",
+    "dish_description": "A delightful blend of creamy pistachio and fresh basil, tossed with al dente pasta for a rich and nutty experience.",
+    "ingredients": [
+      "pasta",
+      "pistachios",
+      "fresh basil",
+      "parmesan cheese",
+      "olive oil"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJQ4KWrNSY4jARPQG3HYMqmM8_v2.png",
+    "image_url": "/generated-images/ChIJQ4KWrNSY4jARPQG3HYMqmM8_v2.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "RESTAURANT",
+    "restaurant_name": "The Smokin' Pug",
+    "cuisine": "Thai",
+    "dish_name": "Smoked Thai BBQ Brisket Tacos",
+    "dish_description": "Tender, smoked brisket wrapped in soft corn tortillas, accented with a zesty Thai peanut sauce and fresh cilantro for a bold fusion experience.",
+    "ingredients": [
+      "brisket",
+      "corn tortillas",
+      "Thai peanut sauce",
+      "cilantro",
+      "lime"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 4,
+      "spicy": 3,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJqTQzIehv5kcRaF3hD1SzX5A_v2.png",
+    "image_url": "/generated-images/ChIJqTQzIehv5kcRaF3hD1SzX5A_v2.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "RESTAURANT",
+    "restaurant_name": "Le Cinq",
+    "cuisine": "Italian",
+    "dish_name": "Truffle Risotto",
+    "dish_description": "A creamy, rich risotto infused with the earthy aroma of truffles, perfectly balanced with a hint of Parmesan and fresh herbs.",
+    "ingredients": [
+      "Arborio rice",
+      "truffle oil",
+      "Parmesan cheese",
+      "chicken broth",
+      "fresh parsley"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJR4kFR0xv5kcR-x6duNRh3uE_v2.png",
+    "image_url": "/generated-images/ChIJR4kFR0xv5kcR-x6duNRh3uE_v2.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "RESTAURANT",
+    "restaurant_name": "Sphère",
+    "cuisine": "Italian",
+    "dish_name": "Truffle Risotto",
+    "dish_description": "A creamy and decadent risotto infused with the earthy aroma of truffles, delivering a luxurious mouthfeel with every bite.",
+    "ingredients": [
+      "Arborio rice",
+      "black truffle",
+      "parmesan cheese",
+      "vegetable broth",
+      "white wine"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJrbAVNIOMGGARXNvkApcqvng_v2.png",
+    "image_url": "/generated-images/ChIJrbAVNIOMGGARXNvkApcqvng_v2.png",
+    "persona_name": "Jun Tanaka",
+    "persona_slug": "jun-tanaka",
+    "source": "RESTAURANT",
+    "restaurant_name": "Narisawa",
+    "cuisine": "Japanese",
+    "dish_name": "Kaiseki Seasonal Sashimi Platter",
+    "dish_description": "An exquisite selection of the freshest sashimi, showcasing the delicate flavors and textures of seasonal fish, elegantly presented to enhance your dining experience.",
+    "ingredients": [
+      "Fresh seasonal fish",
+      "Shiso leaves",
+      "Wasabi",
+      "Soy sauce",
+      "Daikon radish"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 0,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJseQsTQ0Z2jERqpBTWF0Zf84_v2.png",
+    "image_url": "/generated-images/ChIJseQsTQ0Z2jERqpBTWF0Zf84_v2.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "RESTAURANT",
+    "restaurant_name": "Maxwell Food Centre",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A classic Thai stir-fried noodle dish that tantalizes the taste buds with its balance of sweet, savory, and tangy flavors, enhanced by crunchy peanuts and fresh bean sprouts.",
+    "ingredients": [
+      "rice noodles",
+      "shrimp",
+      "tofu",
+      "peanuts",
+      "bean sprouts"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJsUJymcwZ2jERaYAaWRthb5s_v2.png",
+    "image_url": "/generated-images/ChIJsUJymcwZ2jERaYAaWRthb5s_v2.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "RESTAURANT",
+    "restaurant_name": "Hawkers' Street @ ION",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A delightful stir-fried noodle dish that balances sweet, tangy, and nutty flavors, with a satisfying chewiness in every bite.",
+    "ingredients": [
+      "rice noodles",
+      "eggs",
+      "tofu",
+      "bean sprouts",
+      "peanuts"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJteJvnl2NGGAR5ffwH6q3ntA_v2.png",
+    "image_url": "/generated-images/ChIJteJvnl2NGGAR5ffwH6q3ntA_v2.png",
+    "persona_name": "Jun Tanaka",
+    "persona_slug": "jun-tanaka",
+    "source": "RESTAURANT",
+    "restaurant_name": "THAI STREET FOOD",
+    "cuisine": "Japanese",
+    "dish_name": "Pad Thai",
+    "dish_description": "Savory stir-fried rice noodles tossed with fresh shrimp, crunchy peanuts, and vibrant vegetables, creating a delightful balance of flavors and textures.",
+    "ingredients": [
+      "rice noodles",
+      "shrimp",
+      "peanuts",
+      "bean sprouts",
+      "tamarind paste"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 4,
+      "spicy": 2,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJtTLL9fuLGGARm6IP54k3xn4_v2.png",
+    "image_url": "/generated-images/ChIJtTLL9fuLGGARm6IP54k3xn4_v2.png",
+    "persona_name": "Lila Cheng",
+    "persona_slug": "lila-cheng",
+    "source": "RESTAURANT",
+    "restaurant_name": "T’s Tantan",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Vegan Tantan",
+    "dish_description": "A delightful fusion of nutty tahini and rich tomato sauce with a hint of spice, served over perfectly cooked noodles for a comforting yet vibrant meal.",
+    "ingredients": [
+      "tahini",
+      "tomato sauce",
+      "noodles",
+      "garlic",
+      "chickpeas"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 3,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJTXKEbk-JGGARC6WA0NQMKR8_v2.png",
+    "image_url": "/generated-images/ChIJTXKEbk-JGGARC6WA0NQMKR8_v2.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "RESTAURANT",
+    "restaurant_name": "Parklet Bakery",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Olive Focaccia",
+    "dish_description": "This fluffy and golden focaccia is infused with fragrant olive oil and studded with briny olives, creating a harmonious blend of savory and earthy flavors.",
+    "ingredients": [
+      "all-purpose flour",
+      "extra virgin olive oil",
+      "fresh rosemary",
+      "black and green olives",
+      "sea salt"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 0,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 2
+    }
+  },
+  {
+    "filename": "ChIJUVvBJZ6LGGARA-kQW4y3epU_v2.png",
+    "image_url": "/generated-images/ChIJUVvBJZ6LGGARA-kQW4y3epU_v2.png",
+    "persona_name": "Lila Cheng",
+    "persona_slug": "lila-cheng",
+    "source": "RESTAURANT",
+    "restaurant_name": "WE ARE THE FARM AZABU",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Quinoa Salad",
+    "dish_description": "A vibrant and refreshing salad combining nutty quinoa with crisp vegetables, tangy feta, and a zesty lemon dressing, perfect for a light meal or side dish.",
+    "ingredients": [
+      "quinoa",
+      "cherry tomatoes",
+      "cucumber",
+      "feta cheese",
+      "lemon juice"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 2
+    }
+  },
+  {
+    "filename": "ChIJV83lo1Kf4jARJ5j8HB2Gnh8_v2.png",
+    "image_url": "/generated-images/ChIJV83lo1Kf4jARJ5j8HB2Gnh8_v2.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "RESTAURANT",
+    "restaurant_name": "Thai Street Food Place",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A vibrant stir-fried noodle dish featuring a perfect balance of sweet, salty, and tangy flavors, topped with crunchy peanuts and fresh lime.",
+    "ingredients": [
+      "Rice noodles",
+      "Shrimp",
+      "Tofu",
+      "Peanuts",
+      "Bean sprouts"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 2,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJVeUHqupv5kcRDHPinmB3LtU_v2.png",
+    "image_url": "/generated-images/ChIJVeUHqupv5kcRDHPinmB3LtU_v2.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "RESTAURANT",
+    "restaurant_name": "Epicure",
+    "cuisine": "Italian",
+    "dish_name": "Truffle Risotto",
+    "dish_description": "A luxurious and creamy risotto infused with earthy truffle oil and adorned with freshly grated Parmigiano-Reggiano, delivering a rich and decadent experience.",
+    "ingredients": [
+      "Arborio rice",
+      "truffle oil",
+      "chicken broth",
+      "Parmigiano-Reggiano",
+      "fresh parsley"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJvTblzBbJ5zsRbAsPsBHgL1A_v2.png",
+    "image_url": "/generated-images/ChIJvTblzBbJ5zsRbAsPsBHgL1A_v2.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "RESTAURANT",
+    "restaurant_name": "Rare Earth Cafe | 100% Pure Veg",
+    "cuisine": "Indian",
+    "dish_name": "Thai Green Curry with Tofu",
+    "dish_description": "A fragrant and spicy green curry featuring silky tofu and vibrant vegetables, delivering a perfect balance of heat and creaminess.",
+    "ingredients": [
+      "tofu",
+      "coconut milk",
+      "green curry paste",
+      "bell peppers",
+      "bamboo shoots"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 1,
+      "salty": 2,
+      "spicy": 4,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJVVXlVe-LGGARYiyj90sLc3g_v2.png",
+    "image_url": "/generated-images/ChIJVVXlVe-LGGARYiyj90sLc3g_v2.png",
+    "persona_name": "Jun Tanaka",
+    "persona_slug": "jun-tanaka",
+    "source": "RESTAURANT",
+    "restaurant_name": "Sushi no Midori",
+    "cuisine": "Japanese",
+    "dish_name": "Otoro Tuna Nigiri",
+    "dish_description": "Indulge in the exquisite melt-in-your-mouth texture of otoro tuna, expertly paired with perfectly seasoned sushi rice and a hint of wasabi for a luxurious dining experience.",
+    "ingredients": [
+      "Otoro tuna",
+      "Sushi rice",
+      "Nori",
+      "Wasabi",
+      "Soy sauce"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 2,
+      "spicy": 1,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "ChIJWccLTKCMGGARwnksq8Pu60Y_v2.png",
+    "image_url": "/generated-images/ChIJWccLTKCMGGARwnksq8Pu60Y_v2.png",
+    "persona_name": "Lila Cheng",
+    "persona_slug": "lila-cheng",
+    "source": "RESTAURANT",
+    "restaurant_name": "Brown Rice Tokyo Omotesando",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Quinoa Salad",
+    "dish_description": "A refreshing and vibrant salad featuring nutty quinoa, crisp vegetables, and a zesty lemon dressing, perfect for a healthy meal.",
+    "ingredients": [
+      "quinoa",
+      "cherry tomatoes",
+      "cucumber",
+      "feta cheese",
+      "lemon"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 2
+    }
+  },
+  {
+    "filename": "ChIJx_3ezKKMGGARQEOKPcBptaE_v2.png",
+    "image_url": "/generated-images/ChIJx_3ezKKMGGARQEOKPcBptaE_v2.png",
+    "persona_name": "Lila Cheng",
+    "persona_slug": "lila-cheng",
+    "source": "RESTAURANT",
+    "restaurant_name": "Mominoki House",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Quinoa Salad",
+    "dish_description": "A vibrant and refreshing salad featuring fluffy quinoa, crisp vegetables, and a zesty lemon vinaigrette that tantalizes the taste buds.",
+    "ingredients": [
+      "quinoa",
+      "cherry tomatoes",
+      "cucumber",
+      "red onion",
+      "feta cheese"
+    ],
+    "flavor_profile": {
+      "sweet": 2,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 1,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJyUynodyMGGARfdwk4A8pub8_v2.png",
+    "image_url": "/generated-images/ChIJyUynodyMGGARfdwk4A8pub8_v2.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "RESTAURANT",
+    "restaurant_name": "Ain Soph. Journey Shinjuku",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Quinoa Salad",
+    "dish_description": "A refreshing mix of fluffy quinoa, vibrant vegetables, and a zesty lemon dressing that dances on your palate.",
+    "ingredients": [
+      "quinoa",
+      "cherry tomatoes",
+      "cucumber",
+      "red onion",
+      "lemons"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 1
+    }
+  },
+  {
+    "filename": "ChIJyY5tL0HI5zsR08QzKHy5nRo_v2.png",
+    "image_url": "/generated-images/ChIJyY5tL0HI5zsR08QzKHy5nRo_v2.png",
+    "persona_name": "Anika Kapoor",
+    "persona_slug": "anika-kapoor",
+    "source": "RESTAURANT",
+    "restaurant_name": "Dakshin Coastal",
+    "cuisine": "Indian",
+    "dish_name": "Kerala Fish Curry",
+    "dish_description": "A fragrant and spicy curry featuring tender fish simmered in a creamy coconut milk sauce, bursting with the flavors of fresh spices and herbs.",
+    "ingredients": [
+      "fish fillets",
+      "coconut milk",
+      "curry leaves",
+      "mustard seeds",
+      "tamarind paste"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 4,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJYZ8284w82jERmqMxhqDAFWQ_v2.png",
+    "image_url": "/generated-images/ChIJYZ8284w82jERmqMxhqDAFWQ_v2.png",
+    "persona_name": "Aurelia \"Nomad\" Voss",
+    "persona_slug": "aurelia-voss",
+    "source": "RESTAURANT",
+    "restaurant_name": "Singapore Food Street",
+    "cuisine": "Thai",
+    "dish_name": "Pad Thai",
+    "dish_description": "A savory and slightly sweet stir-fried noodle dish that combines tender rice noodles with fresh vegetables, shrimp, and a tangy tamarind sauce, creating a delightful balance of flavors and textures.",
+    "ingredients": [
+      "rice noodles",
+      "shrimp",
+      "tamarind paste",
+      "bean sprouts",
+      "peanuts"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "ChIJZbuP9I6LGGARbD3SVlt7rvw_v2.png",
+    "image_url": "/generated-images/ChIJZbuP9I6LGGARbD3SVlt7rvw_v2.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "RESTAURANT",
+    "restaurant_name": "plant-planet Gakugei Daigaku",
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Quinoa Salad",
+    "dish_description": "A vibrant and refreshing salad featuring fluffy quinoa, crisp vegetables, and a zesty lemon dressing, perfect for a healthy meal.",
+    "ingredients": [
+      "quinoa",
+      "cherry tomatoes",
+      "cucumber",
+      "red onion",
+      "feta cheese"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 3,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "ChIJ_fWmjCuf4jAR8ZipWSpaR5A_v2.png",
+    "image_url": "/generated-images/ChIJ_fWmjCuf4jAR8ZipWSpaR5A_v2.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "RESTAURANT",
+    "restaurant_name": "Roadhouse Barbecue",
+    "cuisine": "Thai",
+    "dish_name": "Spicy Thai Barbecue Chicken",
+    "dish_description": "Succulent grilled chicken marinated in a fragrant blend of Thai spices, delivering a perfect balance of smoky, sweet, and spicy notes that will tantalize your taste buds.",
+    "ingredients": [
+      "chicken thighs",
+      "Thai red curry paste",
+      "coconut milk",
+      "lime juice",
+      "fresh cilantro"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 2,
+      "spicy": 4,
+      "umami": 3
+    }
+  },
+  {
+    "filename": "jun-tanaka_discovery_1.png",
+    "image_url": "/generated-images/jun-tanaka_discovery_1.png",
+    "persona_name": "Jun Tanaka",
+    "persona_slug": "jun-tanaka",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Japanese",
+    "dish_name": "Miso Glazed Black Cod",
+    "dish_description": "A luxurious piece of black cod marinated in a rich miso glaze, perfectly broiled to achieve a caramelized exterior while maintaining a buttery, melt-in-your-mouth texture.",
+    "ingredients": [
+      "black cod",
+      "miso paste",
+      "sake",
+      "mirin",
+      "sugar"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 1,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "jun-tanaka_discovery_2.png",
+    "image_url": "/generated-images/jun-tanaka_discovery_2.png",
+    "persona_name": "Jun Tanaka",
+    "persona_slug": "jun-tanaka",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Japanese",
+    "dish_name": "Miso Glazed Black Cod",
+    "dish_description": "This tender black cod is perfectly caramelized with a sweet and savory miso glaze, offering a luxurious melt-in-your-mouth experience.",
+    "ingredients": [
+      "Black cod",
+      "Miso paste",
+      "Sake",
+      "Mirin",
+      "Brown sugar"
+    ],
+    "flavor_profile": {
+      "sweet": 4,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "lila-cheng_discovery_1.png",
+    "image_url": "/generated-images/lila-cheng_discovery_1.png",
+    "persona_name": "Lila Cheng",
+    "persona_slug": "lila-cheng",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Herb-Infused Risotto",
+    "dish_description": "A creamy and luxurious risotto, infused with a medley of fresh Mediterranean herbs and finished with a sprinkle of aged Parmesan for a rich, savory experience.",
+    "ingredients": [
+      "Arborio rice",
+      "Fresh basil",
+      "Parsley",
+      "Parmesan cheese",
+      "Vegetable broth"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 1,
+      "salty": 3,
+      "spicy": 0,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "lila-cheng_discovery_2.png",
+    "image_url": "/generated-images/lila-cheng_discovery_2.png",
+    "persona_name": "Lila Cheng",
+    "persona_slug": "lila-cheng",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Herb-Infused Lamb Chops",
+    "dish_description": "Juicy and tender lamb chops marinated in fragrant Mediterranean herbs, grilled to perfection, offering a delightful balance of savory and aromatic flavors.",
+    "ingredients": [
+      "lamb chops",
+      "garlic",
+      "rosemary",
+      "lemon juice",
+      "olive oil"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "omar-darzi_discovery_1.png",
+    "image_url": "/generated-images/omar-darzi_discovery_1.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Lamb Chops with Herb Couscous",
+    "dish_description": "Succulent lamb chops marinated in aromatic spices, served alongside fluffy herb-infused couscous that complements the dish's rich flavors.",
+    "ingredients": [
+      "lamb chops",
+      "garlic",
+      "rosemary",
+      "couscous",
+      "lemon"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 4
+    }
+  },
+  {
+    "filename": "omar-darzi_discovery_2.png",
+    "image_url": "/generated-images/omar-darzi_discovery_2.png",
+    "persona_name": "Omar Darzi",
+    "persona_slug": "omar-darzi",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Mediterranean",
+    "dish_name": "Mediterranean Herb-Crusted Lamb Chops",
+    "dish_description": "Succulent lamb chops encrusted with a fragrant blend of Mediterranean herbs, delivering a perfect balance of savory richness and aromatic freshness.",
+    "ingredients": [
+      "lamb chops",
+      "fresh rosemary",
+      "garlic",
+      "olive oil",
+      "lemon zest"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 1,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "rafael-mendez_discovery_1.png",
+    "image_url": "/generated-images/rafael-mendez_discovery_1.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Thai",
+    "dish_name": "Fusion Tikka Tacos",
+    "dish_description": "A delightful blend of tender marinated chicken tikka wrapped in warm corn tortillas, topped with zesty mango salsa and creamy cilantro-lime sauce, offering a harmonious explosion of flavors and textures.",
+    "ingredients": [
+      "chicken tikka",
+      "corn tortillas",
+      "mango salsa",
+      "cilantro-lime sauce",
+      "red onion"
+    ],
+    "flavor_profile": {
+      "sweet": 3,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 4,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "rafael-mendez_discovery_2.png",
+    "image_url": "/generated-images/rafael-mendez_discovery_2.png",
+    "persona_name": "Rafael \"Rafa\" Mendez",
+    "persona_slug": "rafael-mendez",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Thai",
+    "dish_name": "Spicy Mango Curry Tacos",
+    "dish_description": "A vibrant fusion of sweet mango and spicy curry enveloped in soft corn tortillas, creating a delightful explosion of flavors and textures with every bite.",
+    "ingredients": [
+      "mango",
+      "curry paste",
+      "corn tortillas",
+      "black beans",
+      "cilantro"
+    ],
+    "flavor_profile": {
+      "sweet": 4,
+      "sour": 2,
+      "salty": 3,
+      "spicy": 3,
+      "umami": 2
+    }
+  },
+  {
+    "filename": "sebastian-leclair_discovery_1.png",
+    "image_url": "/generated-images/sebastian-leclair_discovery_1.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Italian",
+    "dish_name": "Truffle Risotto with Wild Mushrooms",
+    "dish_description": "Decadent and creamy risotto infused with earthy truffle oil and complemented by a medley of sautéed wild mushrooms for an unforgettable umami experience.",
+    "ingredients": [
+      "Arborio rice",
+      "Wild mushrooms",
+      "Truffle oil",
+      "Parmesan cheese",
+      "Vegetable broth"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 0,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 5
+    }
+  },
+  {
+    "filename": "sebastian-leclair_discovery_2.png",
+    "image_url": "/generated-images/sebastian-leclair_discovery_2.png",
+    "persona_name": "Sebastian LeClair",
+    "persona_slug": "sebastian-leclair",
+    "source": "DISCOVERY",
+    "restaurant_name": null,
+    "cuisine": "Italian",
+    "dish_name": "Truffle Risotto with Wild Mushrooms",
+    "dish_description": "A luxurious and creamy risotto infused with the earthiness of truffles and the rich umami of wild mushrooms, delivering a symphony of flavors with every bite.",
+    "ingredients": [
+      "Arborio rice",
+      "Black truffles",
+      "Wild mushrooms",
+      "Parmesan cheese",
+      "Vegetable broth"
+    ],
+    "flavor_profile": {
+      "sweet": 1,
+      "sour": 0,
+      "salty": 2,
+      "spicy": 0,
+      "umami": 5
+    }
+  }
+]

@@ -1,4 +1,5 @@
 import type { AppItem } from './appItem';
+import type { FriendRelationshipState } from '../lib/services/friendRequestService';
 
 export type ChatMessageStatus = 'sending' | 'sent' | 'read' | 'error';
 
@@ -13,7 +14,8 @@ export interface ChatFriend {
   online?: boolean;
   lastSeen?: string | null;
   unreadCount?: number;
-  requestStatus?: 'pending' | 'accepted';
+  requestStatus?: FriendRelationshipState;
+  requestId?: string;
   type?: 'dm';
 }
 

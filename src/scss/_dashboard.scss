@@ -1,7 +1,10 @@
-// Dashboard: the post-login landing page (/dashboard). Three real-data rails
-// (recommended recipes, nearby restaurants, suggested videos) driven off
-// recommendationService.ts. Flat brand-accented look matching Bites/Scout -
-// see _dna.scss for why FUZO dropped claymorphism project-wide.
+// Dashboard: the post-login landing page (/dashboard). Reskinned onto an
+// image-forward, badge-on-scrim card language per real food-delivery-app
+// reference screenshots (user-provided), adapted onto FUZO's own brand
+// tokens rather than the reference's literal colors - see the plan doc for
+// the full reference -> FUZO mapping. Three real-data rails (recommended
+// recipes, nearby restaurants w/ real Places photos, suggested videos)
+// still driven off recommendationService.ts.
 
 $dash-ink: #1c1917;
 $dash-ink-soft: #57534e;
@@ -15,32 +18,37 @@ $dash-surface-muted: #fafaf9;
   margin: 0 auto;
 }
 
-.dashboard-greeting {
-  padding: 1.5rem 0 1rem;
+// ---------------------------------------------------------------------------
+// Hero greeting band
+// ---------------------------------------------------------------------------
+
+.dashboard-hero {
+  margin: 0 -1rem 1.5rem;
+  padding: 2rem 1.25rem 1.75rem;
+  background: linear-gradient(135deg, $chili, $turmeric);
+  color: #fff;
 }
 
-.dashboard-greeting__title {
+.dashboard-hero__title {
   font-size: 1.5rem;
   font-weight: 800;
-  color: $dash-ink;
   margin-bottom: 0.25rem;
 }
 
-.dashboard-greeting__sub {
+.dashboard-hero__sub {
   font-size: 0.875rem;
-  color: $dash-ink-soft;
+  color: rgba(#fff, 0.9);
 }
 
-.dashboard-nudge {
+.dashboard-hero__nudge {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  background: linear-gradient(135deg, #{$chili}14, #{$turmeric}14);
-  border: 1px solid $dash-border;
+  background: rgba(#fff, 0.96);
   border-radius: 1.25rem;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  margin-top: 1.25rem;
 }
 
 .dashboard-nudge__text {
@@ -53,6 +61,234 @@ $dash-surface-muted: #fafaf9;
   font-size: 0.8rem;
   color: $dash-ink-soft;
   margin-top: 0.15rem;
+}
+
+// ---------------------------------------------------------------------------
+// Quick-nav pills
+// ---------------------------------------------------------------------------
+
+.dashboard-quicknav {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding: 1rem 0 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-quicknav__pill {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border-radius: 9999px;
+  background: $dash-surface-muted;
+  border: 1px solid $dash-border;
+  color: $dash-ink;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: $chili;
+    border-color: $chili;
+    color: #fff;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Search + veg toggle
+// ---------------------------------------------------------------------------
+
+.dashboard-search {
+  display: flex;
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.dashboard-search__bar {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid $dash-border;
+  background: #fff;
+  color: $dash-ink-faint;
+  min-width: 0;
+
+  &:focus-within {
+    border-color: $chili;
+    color: $chili;
+  }
+
+  input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: none;
+    outline: none;
+    font-size: 0.85rem;
+    color: $dash-ink;
+    background: transparent;
+
+    &::placeholder {
+      color: $dash-ink-faint;
+    }
+  }
+}
+
+.dashboard-veg-toggle {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid $dash-border;
+  background: #fff;
+  color: $dash-ink-faint;
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  &.is-active {
+    background: rgba($lime, 0.12);
+    border-color: $lime;
+    color: $lime;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Section-jump pills
+// ---------------------------------------------------------------------------
+
+.dashboard-jumpnav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.dashboard-jumpnav button {
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: $dash-ink-soft;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  &:not(:last-child) {
+    border-right: 1px solid $dash-border;
+  }
+
+  &:hover {
+    color: $chili;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Rewards promo banner
+// ---------------------------------------------------------------------------
+
+.dashboard-promo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: linear-gradient(135deg, $rose, $turmeric);
+  border-radius: 1.25rem;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-decoration: none;
+
+  &:hover {
+    color: #fff;
+    opacity: 0.94;
+  }
+}
+
+.dashboard-promo__title {
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.dashboard-promo__sub {
+  font-size: 0.78rem;
+  color: rgba(#fff, 0.9);
+  margin-top: 0.15rem;
+}
+
+.dashboard-promo__cta {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 800;
+  background: rgba(#fff, 0.22);
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+// ---------------------------------------------------------------------------
+// Category shortcuts
+// ---------------------------------------------------------------------------
+
+.dashboard-categories {
+  display: flex;
+  gap: 1.1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.dashboard-categories__item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  border: none;
+  background: none;
+  width: 4.25rem;
+}
+
+.dashboard-categories__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: $dash-surface-muted;
+  border: 1.5px solid $dash-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.dashboard-categories__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: $dash-ink-soft;
+}
+
+.dashboard-categories__item.is-active {
+  .dashboard-categories__icon {
+    border-color: $chili;
+    background: rgba($chili, 0.08);
+  }
+  .dashboard-categories__label {
+    color: $chili;
+  }
 }
 
 .dashboard-section {
@@ -87,16 +323,16 @@ $dash-surface-muted: #fafaf9;
 }
 
 // ---------------------------------------------------------------------------
-// Recipe rail
+// Image-forward card (recipes + restaurants)
 // ---------------------------------------------------------------------------
 
 .dashboard-recipe-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.1rem;
 }
 
-.dashboard-recipe-card {
+.dashboard-card {
   border-radius: 1.25rem;
   overflow: hidden;
   border: 1px solid $dash-border;
@@ -104,30 +340,72 @@ $dash-surface-muted: #fafaf9;
   text-align: left;
 }
 
-.dashboard-recipe-card__image {
-  height: 120px;
+.dashboard-card__image {
+  position: relative;
+  height: 150px;
   background-size: cover;
   background-position: center;
   background-color: $dash-surface-muted;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.55) 100%);
+  }
 }
 
-.dashboard-recipe-card__body {
+.dashboard-card__badge {
+  position: absolute;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.25rem 0.55rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.dashboard-card__badge--scrim {
+  left: 0.6rem;
+  bottom: 0.6rem;
+  background: rgba(#000, 0.55);
+  color: #fff;
+}
+
+.dashboard-card__badge--match {
+  right: 0.6rem;
+  top: 0.6rem;
+  background: $lime;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dashboard-card__body {
   padding: 0.75rem 0.9rem 0.9rem;
 }
 
-.dashboard-recipe-card__title {
+.dashboard-card__title {
   font-size: 0.85rem;
   font-weight: 700;
   color: $dash-ink;
   line-height: 1.3;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.dashboard-recipe-card__meta {
+.dashboard-card__meta {
+  font-size: 0.75rem;
+  color: $dash-ink-faint;
+}
+
+.dashboard-card__meta--accent {
   font-size: 0.7rem;
   font-weight: 700;
   color: $chili;
@@ -135,65 +413,25 @@ $dash-surface-muted: #fafaf9;
   letter-spacing: 0.04em;
 }
 
-// ---------------------------------------------------------------------------
-// Restaurant rail
-// ---------------------------------------------------------------------------
-
-.dashboard-restaurant-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.dashboard-restaurant-row {
+.dashboard-card__meta-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.9rem 1.1rem;
-  border: 1px solid $dash-border;
-  border-radius: 1rem;
-  background: #fff;
+  gap: 0.5rem;
 }
 
-.dashboard-restaurant-row__name {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: $dash-ink;
-}
-
-.dashboard-restaurant-row__meta {
-  font-size: 0.75rem;
-  color: $dash-ink-faint;
-  margin-top: 0.15rem;
-}
-
-.dashboard-restaurant-row__badge {
-  font-size: 0.65rem;
+.dashboard-card__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
   font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: $lime;
-  background: rgba($lime, 0.12);
-  padding: 0.2rem 0.6rem;
-  border-radius: 9999px;
-  white-space: nowrap;
-}
-
-.dashboard-restaurant-row__stats {
-  text-align: right;
   flex-shrink: 0;
 }
 
-.dashboard-restaurant-row__rating {
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: $dash-ink;
-}
-
-.dashboard-restaurant-row__distance {
-  font-size: 0.7rem;
-  color: $dash-ink-faint;
+.dashboard-card__vicinity {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 // ---------------------------------------------------------------------------
@@ -209,10 +447,14 @@ $dash-surface-muted: #fafaf9;
 
 .dashboard-video-card {
   flex: 0 0 200px;
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   overflow: hidden;
   border: 1px solid $dash-border;
   background: #fff;
+  display: block;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
 }
 
 .dashboard-video-card__thumb {

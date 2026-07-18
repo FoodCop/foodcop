@@ -1,0 +1,35 @@
+// ==========================================
+// Leaderboard — /leaderboard
+// ==========================================
+// Built on plain Bootstrap utility classes (nav-pills, list-group, container)
+// like ProfilePage's SavedItemDetailModal - this partial only covers the
+// bespoke bits Bootstrap doesn't already provide.
+
+.leaderboard-hero-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: $turmeric;
+  color: #1c1917;
+}
+
+.leaderboard-rank {
+  width: 2rem;
+  flex-shrink: 0;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #78716c;
+}
+
+.leaderboard-your-rank {
+  background: #1c1917;
+  color: #fff;
+
+  .text-muted {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+}

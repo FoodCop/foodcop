@@ -23,6 +23,11 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  // Opaque fallback so a missing/dead image_url still renders a solid card
+  // instead of a transparent one - the card-info gradient below it is only
+  // ever transparent-on-top-of-a-photo by design, not a standalone fill, so
+  // without this a broken image lets the stacked card behind bleed through.
+  background-color: #2b2b2b;
   background-size: cover;
   background-position: center;
   cursor: grab;
@@ -42,6 +47,22 @@
   }
 }
 
+// Family badge (TYPE_META emoji/color/label) - top-left corner of each card,
+// same visual vocabulary as ActivityTab.tsx's/FoodCardDetailModal.tsx's own
+// inline TYPE_META badge rendering, just repositioned for the swipe card.
+.feed-card-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 5;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
 .card-info {
   padding: 16px 16px 24px;
   color: #fff;
@@ -49,9 +70,17 @@
   h3 {
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   }
+}
+
+.feed-card-byline {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-bottom: 8px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .feed-meta {
@@ -65,6 +94,11 @@
     padding: 5px 12px;
     border: 1.5px solid rgba(255, 255, 255, 0.5);
     border-radius: 30px;
+  }
+
+  .feed-card-match-reason {
+    border-color: $lime;
+    background: rgba($lime, 0.2);
   }
 }
 

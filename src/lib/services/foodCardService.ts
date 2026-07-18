@@ -15,14 +15,39 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { ScoutPersistence } from '@/lib/services/scoutPersistence';
+import { PointsService, type PointsActionType } from '@/lib/services/pointsService';
 import type { ServiceResult } from '@/lib/types/serviceResult';
 import {
   familyOf,
   type CardTags,
   type FlavorVector,
+  type FoodCardFamily,
   type FoodCardRecord,
   type FoodCardType,
 } from '@/lib/types/foodCard';
+
+const FAMILY_ACTION_TYPE: Record<FoodCardFamily, PointsActionType> = {
+  recipe: 'create_recipe',
+  restaurant: 'create_restaurant',
+  video: 'create_video',
+  discovery: 'create_discovery',
+};
+
+// Best-effort, non-blocking - mirrors the existing Scout dual-write
+// convention below: a points-award failure should never fail the card write.
+// Idempotent via points_ledger's unique key, so calling this for a card
+// that's already been awarded (e.g. re-publishing) is a safe no-op.
+const awardCardPoints = async (card: FoodCardRecord) => {
+  try {
+    await PointsService.awardPoints({
+      actionType: FAMILY_ACTION_TYPE[familyOf(card.card_type)],
+      sourceType: 'food_card',
+      sourceId: card.id,
+    });
+  } catch (pointsError) {
+    console.warn('food_cards points award failed:', pointsError);
+  }
+};
 
 export interface CreateFoodCardInput {
   cardType: FoodCardType;
@@ -101,7 +126,57 @@ export const foodCardService = {
       }
     }
 
-    return { success: true, data: data as FoodCardRecord };
+    const card = data as FoodCardRecord;
+    if (status === 'PUBLISHED') {
+      await awardCardPoints(card);
+    }
+
+    return { success: true, data: card };
+  },
+
+  async listMyCards(userId: string): Promise<ServiceResult<FoodCardRecord[]>> {
+    const supabase = createClient();
+    if (!supabase) {
+      return { success: false, error: 'Supabase is not configured' };
+    }
+
+    const { data, error } = await supabase
+      .from('food_cards')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, data: (data || []) as FoodCardRecord[] };
+  },
+
+  // Promotes a DRAFT card to PUBLISHED (e.g. from the Activity tab's Your
+  // Cards grid) - the only other place a card can become PUBLISHED besides
+  // creation time, so it shares the same points-award call.
+  async publishCard(cardId: string): Promise<ServiceResult<FoodCardRecord>> {
+    const supabase = createClient();
+    if (!supabase) {
+      return { success: false, error: 'Supabase is not configured' };
+    }
+
+    const { data, error } = await supabase
+      .from('food_cards')
+      .update({ status: 'PUBLISHED' })
+      .eq('id', cardId)
+      .select()
+      .single();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    const card = data as FoodCardRecord;
+    await awardCardPoints(card);
+
+    return { success: true, data: card };
   },
 };
 

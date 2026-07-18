@@ -21,7 +21,8 @@ import { fetchCuratedRecipes } from '@/lib/recipes/curatedRecipes';
 import { PlacesService } from '@/lib/services/placesService';
 import { YouTubeService } from '@/lib/services/youtubeService';
 import { getDistance } from '@/lib/scout/geometryUtils';
-import { FLAVOR_AXES, ZERO_FLAVOR, type CardTags, type FlavorVector } from '@/lib/types/foodCard';
+import { buildPlacePhotoUrl } from '@/lib/scout/scoutLogic';
+import { FLAVOR_AXES, ZERO_FLAVOR, type CardTags, type FlavorVector, type FoodCardRecord } from '@/lib/types/foodCard';
 
 export interface AggregateResult {
   vector: FlavorVector;
@@ -36,6 +37,7 @@ export interface RecommendedRecipe {
   image: string;
   readyInMinutes: number;
   matchReason: string;
+  diets: string[];
 }
 
 export interface NearbyRestaurant {
@@ -46,6 +48,7 @@ export interface NearbyRestaurant {
   priceLevel?: number;
   distanceMeters: number;
   matchesTaste: boolean;
+  image?: string;
 }
 
 export interface SuggestedVideo {
@@ -56,6 +59,13 @@ export interface SuggestedVideo {
 }
 
 const HALF_LIFE_DAYS = 90;
+
+// Shared by aggregateForUser() (weighting the viewer's own cards) and
+// getFeedCards() (a small recency bonus on candidate cards) - same half-life
+// idea, one implementation.
+function decay(at: string): number {
+  return Math.pow(0.5, (Date.now() - new Date(at).getTime()) / (HALF_LIFE_DAYS * 86400000));
+}
 
 function topEntry(counts: Record<string, number>): string | undefined {
   const entries = Object.entries(counts);
@@ -79,9 +89,6 @@ export async function aggregateForUser(userId: string): Promise<AggregateResult>
     .eq('user_id', userId);
 
   if (error || !data?.length) return empty;
-
-  const now = Date.now();
-  const decay = (at: string) => Math.pow(0.5, (now - new Date(at).getTime()) / (HALF_LIFE_DAYS * 86400000));
 
   const sum = { ...ZERO_FLAVOR };
   let totalWeight = 0;
@@ -128,6 +135,7 @@ interface RecommendedRecipeRow {
   title: string;
   image: string;
   ready_in_minutes: number;
+  diets: string[] | null;
 }
 
 export async function getRecommendedRecipes(
@@ -148,6 +156,7 @@ export async function getRecommendedRecipes(
         image: r.image,
         readyInMinutes: r.ready_in_minutes,
         matchReason: 'Matches your flavor profile',
+        diets: r.diets || [],
       }));
     }
   }
@@ -175,7 +184,153 @@ export async function getRecommendedRecipes(
     image: recipe.image,
     readyInMinutes: recipe.readyInMinutes,
     matchReason: score > 0 ? 'Matches your onboarding preferences' : 'Popular pick',
+    diets: recipe.diets || [],
   }));
+}
+
+export interface FeedCardAuthor {
+  id: string;
+  displayName: string;
+  username: string;
+  avatarUrl: string | null;
+  isMasterBot: boolean;
+}
+
+export interface FeedCard {
+  card: FoodCardRecord;
+  author: FeedCardAuthor;
+  matchReason: string;
+}
+
+const FEED_CANDIDATE_LIMIT = 100;
+
+function euclideanDistance(a: FlavorVector, b: Partial<FlavorVector>): number {
+  let sum = 0;
+  for (const axis of FLAVOR_AXES) {
+    const diff = a[axis] - (b[axis] || 0);
+    sum += diff * diff;
+  }
+  return Math.sqrt(sum);
+}
+
+/**
+ * Discover Feed's ranking: surfaces other users' PUBLISHED food_cards, scored
+ * against the viewer's own aggregate (aggregateForUser) and onboarding prefs
+ * (getOnboardingPrefs) - the same two inputs get_recommended_recipes already
+ * uses for the /dashboard "warm"/"cold" split, reused here rather than
+ * recomputed. No SQL RPC: 100 candidate rows is cheap enough to score in JS,
+ * same shape as getRecommendedRecipes' own cold-start ranking below.
+ *
+ * Score, per card:
+ *  - +100 per viewer onboarding cuisine present in the card's tags.cuisine
+ *  - -300 soft penalty if the viewer is Vegan/Vegetarian and the card's
+ *    tags.diet doesn't carry that same value (there's no strict allergy
+ *    field anywhere in taste_profiles, confirmed against its migration - this
+ *    is a ranking nudge, not a safety guarantee)
+ *  - a flavor-distance bonus, only once the viewer has a real aggregate
+ *    (sampleSize > 0) - max(0, 60 - distance*6) across the 10 FLAVOR_AXES
+ *  - a small recency bonus (same decay() half-life used by aggregateForUser)
+ *  - +random jitter (0-10) so ordering isn't perfectly static across reloads
+ *
+ * The viewer's own cards are excluded at the query level, not score-penalized.
+ */
+export async function getFeedCards(
+  userId: string,
+  aggregate: AggregateResult,
+  onboardingPrefs: { cuisines: string[]; dietary: string[] },
+  limit = 30,
+): Promise<FeedCard[]> {
+  const supabase = createClient();
+  if (!supabase) return [];
+
+  // image_url IS NOT NULL: a swipeable photo-card feed needs a real photo to
+  // mean anything - excludes the older, imageless food_cards from
+  // scripts/seed_masterbots.ts's first pass (confirmed via a real browser
+  // screenshot: without this filter, an imageless card's fully-transparent
+  // top half - the card-info gradient has no opaque photo layer beneath it -
+  // let the stacked card behind it visually bleed through). Those cards are
+  // still visible elsewhere (Profile Activity tab); just not in this feed.
+  const { data: cards, error } = await supabase
+    .from('food_cards')
+    .select('*')
+    .eq('status', 'PUBLISHED')
+    .neq('user_id', userId)
+    .not('image_url', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(FEED_CANDIDATE_LIMIT);
+
+  if (error || !cards?.length) return [];
+
+  const authorIds = [...new Set(cards.map((c) => c.user_id as string))];
+  const { data: authors } = await supabase
+    .from('users')
+    .select('id, display_name, username, avatar_url, is_master_bot')
+    .in('id', authorIds);
+
+  const authorsById = new Map(
+    (authors || []).map((a) => [
+      a.id as string,
+      {
+        id: a.id as string,
+        displayName: (a.display_name as string) || (a.username as string) || 'FUZO User',
+        username: (a.username as string) || 'fuzo_user',
+        avatarUrl: (a.avatar_url as string) || null,
+        isMasterBot: !!a.is_master_bot,
+      } satisfies FeedCardAuthor,
+    ]),
+  );
+
+  const prefCuisines = new Set(onboardingPrefs.cuisines.map((c) => c.toLowerCase()));
+  const strictDiets = onboardingPrefs.dietary.filter((d) => d === 'Vegan' || d === 'Vegetarian');
+
+  const scored = (cards as FoodCardRecord[]).map((card) => {
+    const tags = (card.tags || {}) as Partial<CardTags>;
+    const cardCuisines = tags.cuisine || [];
+    const cardDiets = tags.diet || [];
+
+    const cuisineHits = cardCuisines.filter((c) => prefCuisines.has(c.toLowerCase())).length;
+    let score = cuisineHits * 100;
+
+    for (const diet of strictDiets) {
+      // Vegan is a subset of Vegetarian - a card tagged only 'Vegan' still
+      // satisfies a Vegetarian requirement, so it shouldn't stack both
+      // penalties (confirmed via the ranking sanity check: without this, a
+      // Vegan+Vegetarian viewer got -600 on cards that would in fact be fine).
+      const satisfied = cardDiets.includes(diet) || (diet === 'Vegetarian' && cardDiets.includes('Vegan'));
+      if (!satisfied) score -= 300;
+    }
+
+    if (aggregate.sampleSize > 0) {
+      const distance = euclideanDistance(aggregate.vector, (card.flavor_profile || {}) as Partial<FlavorVector>);
+      score += Math.max(0, 60 - distance * 6);
+    }
+
+    score += decay(card.created_at) * 20;
+    score += Math.random() * 10;
+
+    const matchReason = cuisineHits > 0
+      ? `Matches your ${cardCuisines.find((c) => prefCuisines.has(c.toLowerCase()))} preference`
+      : aggregate.sampleSize > 0
+        ? 'Matches your flavor profile'
+        : 'Popular pick';
+
+    return { card, score, matchReason };
+  });
+
+  return scored
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(({ card, matchReason }) => ({
+      card,
+      author: authorsById.get(card.user_id) || {
+        id: card.user_id,
+        displayName: 'FUZO User',
+        username: 'fuzo_user',
+        avatarUrl: null,
+        isMasterBot: false,
+      },
+      matchReason,
+    }));
 }
 
 export async function getNearbyRestaurants(lat: number, lng: number, topCuisine?: string): Promise<NearbyRestaurant[]> {
@@ -192,6 +347,8 @@ export async function getNearbyRestaurants(lat: number, lng: number, topCuisine?
         placeLat != null && placeLng != null ? getDistance({ lat, lng }, { lat: placeLat, lng: placeLng }) : Infinity;
       const haystack = `${place.name} ${place.vicinity || ''}`.toLowerCase();
 
+      const photoReference = place.photos?.[0]?.photo_reference;
+
       return {
         placeId: place.place_id || place.id || '',
         name: place.name,
@@ -200,6 +357,7 @@ export async function getNearbyRestaurants(lat: number, lng: number, topCuisine?
         priceLevel: place.price_level,
         distanceMeters,
         matchesTaste: !!cuisineLower && haystack.includes(cuisineLower),
+        image: photoReference ? buildPlacePhotoUrl(photoReference) : undefined,
       };
     })
     .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));

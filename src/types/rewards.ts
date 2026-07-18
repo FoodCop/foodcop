@@ -1,18 +1,13 @@
-// Ported from legacy/fuzoapp/src/features/rewards/types/gamification.ts
-// Change: `emoji: string` badge/achievement glyphs replaced with `icon: string`
-// (a /SVG/... path into the icon set ported from FUZO_V3) - see gamificationData.ts.
-
-export interface Requirement {
-  label: string;
-  stat: string;
-  target: number | boolean;
-}
+// Compact gamification model: one real counter per role track (recipe_cards,
+// restaurant_cards, video_cards, discovery_cards, cards_shared - see
+// supabase/migrations/20260719000000_points_and_gamification.sql), 4 tiers
+// each, no multi-stat AND-conditions. Replaces the earlier 6-role x 6-badge x
+// 35-stat-counter demo model, which was never wired to real data.
 
 export interface Badge {
   icon: string;
   title: string;
-  reward: string;
-  reqs: Requirement[];
+  threshold: number;
 }
 
 export interface Role {
@@ -21,38 +16,12 @@ export interface Role {
   rankName: string;
   accent: string;
   accentDark: string;
+  statKey: string;
   badges: Badge[];
 }
 
-export interface Achievement {
-  icon: string;
-  title: string;
-  stat: string | null;
-  target: number | null;
-  future?: boolean;
-}
-
-export interface GamificationState {
-  xp: number;
-  stats: Record<string, number | boolean>;
-  activeRole: string;
-  earnedBefore: Record<string, boolean>;
-}
-
-export interface XpAction {
-  key: string;
-  label: string;
-  xp: number;
-  effect: Record<string, number | boolean>;
-}
-
-export interface OtherAction {
-  key: string;
-  label: string;
-  effect: Record<string, number | boolean>;
-}
-
-export interface ManualFlag {
-  key: string;
-  label: string;
+export interface UserGamificationStats {
+  points: number;
+  level: number;
+  counters: Record<string, number>;
 }

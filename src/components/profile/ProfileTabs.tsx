@@ -22,13 +22,25 @@ const TAB_LABEL: Record<string, string> = { dna: 'Food DNA', settings: 'Settings
 // Tab labels/copy ported verbatim from the old app's profile.html switchTab()
 // empty states; switching driven by React state. "Food DNA" tab ports
 // dna.html's charts. Re-skinned onto Bootstrap nav-tabs.
-export default function ProfileTabs({ profile, tasteProfile }: { profile: DemoProfile; tasteProfile?: FoodDnaRealData }) {
-  const tabs: (PersonTab | BusinessTab)[] = profile.type === 'restaurant' ? ['activity', 'menu', 'info', 'gallery'] : ['activity', 'dna', 'settings'];
+export default function ProfileTabs({
+  profile,
+  tasteProfile,
+  userId,
+  isCurrentUser = true,
+}: {
+  profile: DemoProfile;
+  tasteProfile?: FoodDnaRealData;
+  userId?: string;
+  isCurrentUser?: boolean;
+}) {
+  const tabs: (PersonTab | BusinessTab)[] = profile.type === 'restaurant'
+    ? ['activity', 'menu', 'info', 'gallery']
+    : isCurrentUser ? ['activity', 'dna', 'settings'] : ['activity', 'dna'];
   const [active, setActive] = useState<string>('activity');
 
   return (
     <div className="container">
-      <h6 className="mb-2">{profile.type === 'restaurant' ? 'Business' : 'My Posts'}</h6>
+      <h6 className="mb-2">{profile.type === 'restaurant' ? 'Business' : isCurrentUser ? 'My Posts' : 'Posts'}</h6>
 
       <ul className="nav nav-tabs">
         {tabs.map((tab) => (
@@ -43,7 +55,7 @@ export default function ProfileTabs({ profile, tasteProfile }: { profile: DemoPr
       {active === 'dna' ? (
         <FoodDnaSection {...tasteProfile} />
       ) : active === 'activity' ? (
-        <ActivityTab />
+        <ActivityTab userId={userId} isCurrentUser={isCurrentUser} />
       ) : active === 'settings' ? (
         <SettingsTab />
       ) : (

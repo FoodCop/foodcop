@@ -4,11 +4,12 @@ import React, { useRef, useState } from 'react';
 import { X, Video as VideoIcon, Link as LinkIcon, Loader2, CheckCircle2, Check } from 'lucide-react';
 import { StudioStepper } from '@/components/ui/StudioStepper';
 import { NeuralReveal } from '@/components/ui/NeuralReveal';
-import { extractVideoFrameAsDataUrl, parseAiJson } from '@/lib/utils/studioHelpers';
+import { extractVideoFrameAsDataUrl, getYoutubeVideoId, parseAiJson } from '@/lib/utils/studioHelpers';
 import { GeminiService } from '@/lib/services/geminiService';
 import { YouTubeService } from '@/lib/services/youtubeService';
 import { TAXONOMY_KEYWORD_MAP } from '@/lib/utils/taxonomy';
 import { foodCardService } from '@/lib/services/foodCardService';
+import { MediaUploadService } from '@/lib/services/mediaUploadService';
 import { FlavorSliders } from './shared/FlavorSliders';
 import { TagChips } from './shared/TagChips';
 import { Dropzone } from './shared/Dropzone';
@@ -32,8 +33,6 @@ const extractLocalTags = (text: string): string[] => {
   return [...new Set(found)];
 };
 
-const YOUTUBE_ID_PATTERN = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([\w-]{11})/;
-
 interface VideoCardStudioProps {
   cardType: FoodCardType;
   onClose: () => void;
@@ -45,6 +44,7 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
   const [source, setSource] = useState<'upload' | 'youtube' | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<string | null>(null);
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [isFetchingYoutube, setIsFetchingYoutube] = useState(false);
@@ -57,11 +57,14 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
   const [error, setError] = useState<string | null>(null);
 
   const mountedRef = useRef(true);
-  React.useEffect(() => () => { mountedRef.current = false; }, []);
+  React.useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   const handleVideoFile = async (file: File) => {
     setSource('upload');
-    setMediaUrl(URL.createObjectURL(file));
+    setVideoFile(file);
     try {
       const frame = await extractVideoFrameAsDataUrl(file);
       setThumbnail(frame);
@@ -72,8 +75,8 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
   };
 
   const handleYoutubeSubmit = async () => {
-    const match = YOUTUBE_ID_PATTERN.exec(youtubeUrl);
-    if (!match) {
+    const videoId = getYoutubeVideoId(youtubeUrl);
+    if (!videoId) {
       setError('Paste a valid YouTube video, shorts, or share URL.');
       return;
     }
@@ -81,7 +84,7 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
     setIsFetchingYoutube(true);
     setError(null);
     try {
-      const result = await YouTubeService.getVideoDetails(match[1]);
+      const result = await YouTubeService.getVideoDetails(videoId);
       if (!mountedRef.current) return;
       const video = result.success ? result.data?.items?.[0] : undefined;
       const snippet = video?.snippet;
@@ -115,7 +118,18 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
 
   const handleSave = async (status: 'DRAFT' | 'PUBLISHED') => {
     setIsSaving(true);
+    setError(null);
     try {
+      let finalMediaUrl = mediaUrl;
+      if (source === 'upload' && videoFile) {
+        const uploadResult = await MediaUploadService.uploadVideo(videoFile);
+        if (!uploadResult.success) {
+          setError(uploadResult.error || 'Video upload failed. Please try again.');
+          return;
+        }
+        finalMediaUrl = uploadResult.data ?? null;
+      }
+
       const result = await foodCardService.createFoodCard(
         {
           cardType,
@@ -123,7 +137,7 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
           caption,
           tags,
           flavorProfile,
-          mediaUrl: mediaUrl || undefined,
+          mediaUrl: finalMediaUrl || undefined,
           imageUrl: thumbnail || undefined,
         },
         status,
@@ -131,6 +145,8 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
       if (result.success) {
         setDone(true);
         onCreated();
+      } else {
+        setError(result.error || 'Failed to save. Please try again.');
       }
     } finally {
       setIsSaving(false);
@@ -230,6 +246,8 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
 
               <TagChips value={tags} onChange={setTags} categories={['cuisine', 'meal_type']} />
               <FlavorSliders value={flavorProfile} onChange={setFlavorProfile} />
+
+              {error && <p className="studio-error-text">{error}</p>}
 
               <div className="studio-btn-row">
                 <button onClick={() => handleSave('DRAFT')} disabled={isSaving} className="studio-cta studio-cta--ghost">Save Draft</button>

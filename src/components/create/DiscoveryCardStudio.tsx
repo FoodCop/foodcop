@@ -37,7 +37,10 @@ export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardTy
   const [done, setDone] = useState(false);
 
   const mountedRef = useRef(true);
-  React.useEffect(() => () => { mountedRef.current = false; }, []);
+  React.useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   const handleFile = async (file: File) => {
     await loadUploadedImage(file, setImage, () => {});

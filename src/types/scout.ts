@@ -116,6 +116,7 @@ export type GoogleMapsLike = {
   SymbolPath: { CIRCLE: unknown; BACKWARD_CLOSED_ARROW: unknown };
   Polyline: new (options?: any) => any;
   importLibrary?: (library: string) => Promise<any>;
+  event?: { clearInstanceListeners: (instance: unknown) => void };
   geometry: {
     poly: {
       isLocationOnEdge: (point: { lat: number; lng: number }, polyline: any, tolerance?: number) => boolean;

@@ -6,12 +6,11 @@ import { fetchCuratedRecipes, type CuratedRecipe } from '@/lib/recipes/curatedRe
 import { BITE_DIET_FILTERS, BITE_CUISINE_FILTERS, matchesFilter } from './constants/filters';
 
 // Bites: the Discover tab's recipe finder. Sourced entirely from
-// public/data/curatedRecipes.json via fetchCuratedRecipes() - the same
-// real-data loader SwipeFeed already uses - filtered/paginated client-side
-// since the whole set is ~1,251 records. No AI recipe generation, social
-// "Trim" extraction, or share-to-chat here; those belonged to a much larger
-// legacy Studio feature that isn't part of this recipe-search scope. Saving
-// is local state for now, same scope as SwipeFeed's like/save today.
+// public/data/curatedRecipes.json via fetchCuratedRecipes() - filtered/
+// paginated client-side since the whole set is ~1,251 records. No AI recipe
+// generation, social "Trim" extraction, or share-to-chat here; those
+// belonged to a much larger legacy Studio feature that isn't part of this
+// recipe-search scope. Saving is local state for now.
 
 const PAGE_SIZE = 12;
 const KEY_NUTRIENTS = ['Calories', 'Protein', 'Fat', 'Carbohydrates'];

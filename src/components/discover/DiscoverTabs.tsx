@@ -1,16 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import SwipeFeed from './SwipeFeed';
+import { UtensilsCrossed, Flame, Film } from 'lucide-react';
+import FoodCardFeed from './FoodCardFeed';
 import TrimsReel from '../trims/TrimsReel';
 import { BitesView } from '../bites/BitesView';
 
 type DiscoverTab = 'bites' | 'feed' | 'trims';
 
-const TAB_LABEL: Record<DiscoverTab, string> = {
-  bites: 'Bites',
-  feed: 'Feed',
-  trims: 'Trims',
+const TAB_META: Record<DiscoverTab, { label: string; icon: typeof UtensilsCrossed }> = {
+  bites: { label: 'Bites', icon: UtensilsCrossed },
+  feed: { label: 'Feed', icon: Flame },
+  trims: { label: 'Trims', icon: Film },
 };
 
 export default function DiscoverTabs() {
@@ -19,21 +20,22 @@ export default function DiscoverTabs() {
 
   return (
     <div className="container-fluid p-0 d-flex flex-column" style={{ height: 'calc(100vh - 80px)' }}>
-      {/* Tabs Header */}
-      <div className="container pt-3">
-        <ul className="nav nav-tabs">
-          {tabs.map((tab) => (
-            <li className="nav-item" key={tab}>
-              <button
-                type="button"
-                className={`nav-link${active === tab ? ' active' : ''}`}
-                onClick={() => setActive(tab)}
-              >
-                {TAB_LABEL[tab]}
-              </button>
-            </li>
-          ))}
-        </ul>
+      {/* Tabs Header - folder-tab shape, see _discover.scss */}
+      <div className="discover-tabband">
+        {tabs.map((tab) => {
+          const { label, icon: Icon } = TAB_META[tab];
+          return (
+            <button
+              key={tab}
+              type="button"
+              className={`discover-tab${active === tab ? ' is-active' : ''}`}
+              onClick={() => setActive(tab)}
+            >
+              <Icon size={18} />
+              <span className="discover-tab__label">{label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Tab Content */}
@@ -44,7 +46,7 @@ export default function DiscoverTabs() {
           </div>
         ) : active === 'feed' ? (
           <div className="h-100 position-relative">
-            <SwipeFeed />
+            <FoodCardFeed />
           </div>
         ) : active === 'trims' ? (
           <div className="h-100 bg-black">

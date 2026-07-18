@@ -39,7 +39,7 @@ export const EventInviteCard = ({ messageId, userId, event, role, onRSVP }: Even
 
     setIsUpdating(true);
     const result = await RSVPService.submitRSVP(messageId, userId, newStatus);
-    
+
     if (result.success) {
       setStatus(newStatus);
       // Refresh counts
@@ -53,87 +53,74 @@ export const EventInviteCard = ({ messageId, userId, event, role, onRSVP }: Even
   };
 
   return (
-    <div className={`
-      w-full max-w-[280px] md:max-w-[320px] rounded-[2rem] overflow-hidden shadow-2xl border
-      ${isUser ? 'bg-stone-900 border-white/10 text-white' : 'bg-white border-stone-100 text-stone-900'}
-    `}>
+    <div className={`event-invite${isUser ? ' is-mine' : ''}`}>
       {/* Visual Header */}
-      <div className="relative aspect-[16/10] overflow-hidden bg-stone-800">
-        <img 
-          src={event.img || 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80'} 
-          className="w-full h-full object-cover opacity-80" 
+      <div className="event-invite__media">
+        <img
+          src={event.img || 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80'}
           alt="Event"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 to-transparent" />
-        <div className="absolute bottom-4 left-6 right-6">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="px-2 py-0.5 bg-yellow-400 rounded-md text-[9px] font-black uppercase text-stone-900">Invite</div>
-            <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Fuzo Social</span>
+        <div className="event-invite__media-scrim" />
+        <div className="event-invite__media-content">
+          <div className="event-invite__media-tags">
+            <div className="event-invite__media-badge">Invite</div>
+            <span className="event-invite__media-brand">Fuzo Social</span>
           </div>
-          <h3 className="text-xl font-black uppercase tracking-tighter leading-tight line-clamp-2 italic">
+          <h3 className="event-invite__title">
             {event.name || 'Culinary Meetup'}
           </h3>
         </div>
       </div>
 
       {/* Details */}
-      <div className="p-6 space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <p className="text-[9px] font-black uppercase tracking-widest opacity-40">When</p>
-            <div className="flex items-center gap-2">
-              <Calendar size={12} className="text-yellow-400" />
-              <span className="text-[11px] font-bold truncate">{event.eventDate || 'Sat, 12 Oct'}</span>
+      <div className="event-invite__body">
+        <div className="event-invite__grid">
+          <div className="event-invite__field">
+            <p className="event-invite__field-label">When</p>
+            <div className="event-invite__field-value">
+              <Calendar size={12} />
+              <span>{event.eventDate || 'Sat, 12 Oct'}</span>
             </div>
           </div>
-          <div className="space-y-1">
-            <p className="text-[9px] font-black uppercase tracking-widest opacity-40">Time</p>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold">{event.eventTime || '19:00 PM'}</span>
+          <div className="event-invite__field">
+            <p className="event-invite__field-label">Time</p>
+            <div className="event-invite__field-value">
+              <span>{event.eventTime || '19:00 PM'}</span>
             </div>
           </div>
         </div>
 
-        <div className="space-y-1">
-          <p className="text-[9px] font-black uppercase tracking-widest opacity-40">Location</p>
-          <div className="flex items-center gap-2">
-            <MapPin size={12} className="text-yellow-400 shrink-0" />
-            <span className="text-[11px] font-bold truncate">{event.eventLocation || 'Mama Mia\'s, Downtown'}</span>
+        <div className="event-invite__field">
+          <p className="event-invite__field-label">Location</p>
+          <div className="event-invite__field-value">
+            <MapPin size={12} />
+            <span>{event.eventLocation || 'Mama Mia\'s, Downtown'}</span>
           </div>
         </div>
 
-        <div className="pt-4 space-y-3 border-t border-white/5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <Users size={12} className="opacity-40" />
-              <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
-                {counts.going} Attending
-              </span>
+        <div className="event-invite__footer">
+          <div className="event-invite__attendance-row">
+            <div className="event-invite__attendees">
+              <Users size={12} />
+              <span>{counts.going} Attending</span>
             </div>
             {status && (
-              <div className="flex items-center gap-1 text-emerald-400">
+              <div className="event-invite__my-status">
                 <CheckCircle2 size={12} />
-                <span className="text-[9px] font-black uppercase tracking-widest">{status}</span>
+                <span>{status}</span>
               </div>
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="event-invite__rsvp-grid">
             {(['going', 'maybe', 'not_going'] as const).map((s) => (
               <button
                 key={s}
                 onClick={() => handleRSVP(s)}
                 disabled={isUpdating}
-                className={`
-                  py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 flex items-center justify-center
-                  ${status === s 
-                    ? 'bg-yellow-400 text-stone-900' 
-                    : isUser 
-                      ? 'bg-white/5 text-white hover:bg-white/10' 
-                      : 'bg-stone-50 text-stone-600 hover:bg-stone-100'}
-                `}
+                className={`event-invite__rsvp-btn${status === s ? ' is-selected' : ''}`}
               >
-                {isUpdating && status === s ? <Loader2 size={10} className="animate-spin" /> : s.replace('_', ' ')}
+                {isUpdating && status === s ? <Loader2 size={10} className="chat-spin" /> : s.replace('_', ' ')}
               </button>
             ))}
           </div>

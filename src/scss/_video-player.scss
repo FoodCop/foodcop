@@ -1,0 +1,74 @@
+// In-app playback modal (VideoPlayerModal) for YouTube embeds and direct
+// video_url files (Storage-hosted uploads). Portaled to <body>, same
+// above-everything z-index convention as the Create Card studios ($studio-z,
+// defined in _studio.scss - @import merges partials into one global scope so
+// referencing it here is safe as long as this file loads after _studio.scss).
+
+.video-player-modal {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  z-index: $studio-z;
+  // Solid, not translucent - a semi-transparent background here (rgba alpha
+  // < 1) reproduced a real Chromium compositing bug on this page where the
+  // dashboard's content painted through this fixed overlay despite correct
+  // position/z-index/rect (confirmed via getBoundingClientRect + getComputedStyle
+  // - only the alpha channel mattered; swapping to opaque #000 fixed it
+  // outright). A solid backdrop is also just the normal video-theatre
+  // convention (YouTube/Netflix don't tint their fullscreen backdrop either).
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.video-player-modal__close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: none;
+  background: rgba(#fff, 0.12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: rgba(#fff, 0.2);
+  }
+}
+
+.video-player-modal__stage {
+  width: 100%;
+  max-width: 60rem;
+  aspect-ratio: 16 / 9;
+  display: flex;
+}
+
+.video-player-modal__frame,
+.video-player-modal__video {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0.75rem;
+  background: #000;
+}
+
+// Uploaded Trims-style clips are vertical - let a tall video keep its own
+// aspect ratio inside the stage instead of stretching to the 16:9 box.
+.video-player-modal__video {
+  object-fit: contain;
+}
+
+.video-player-modal__title {
+  margin-top: 1.25rem;
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  max-width: 40rem;
+}

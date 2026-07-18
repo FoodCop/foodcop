@@ -6,6 +6,12 @@ import type { ScoutPlace, ScoutFilter } from '@/types/scout';
 
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
 
+// Shared by toScoutPlace() below and the Dashboard's nearby-restaurants rail
+// (recommendationService.ts's getNearbyRestaurants()) - same Google Places
+// Photo API URL shape, one place to build it.
+export const buildPlacePhotoUrl = (photoReference: string, mapsApiKey: string = MAPS_API_KEY, maxWidth = 400): string =>
+  `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=${mapsApiKey}`;
+
 const parseOpeningHours = (weekdayText?: string[]): Record<string, string> => {
   if (!weekdayText || weekdayText.length === 0) return {};
 
@@ -113,7 +119,7 @@ export const toScoutPlace = (result: any, index: number, mapsApiKey: string = MA
     website: result.website || '',
     vibe: [],
     img: result.photos?.[0]?.photo_reference
-      ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${result.photos[0].photo_reference}&key=${mapsApiKey}`
+      ? buildPlacePhotoUrl(result.photos[0].photo_reference, mapsApiKey)
       : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400',
     lat,
     lng,

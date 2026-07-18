@@ -1,0 +1,13 @@
+-- ==========================================
+-- Notifications: real "has anything new" tracking
+-- ==========================================
+-- Backs the new /notifications page (closes the header bell's 404 - the
+-- middleware's protectedRoutes list already anticipated this route existing,
+-- see src/lib/supabase/middleware.ts, but the page itself was never built).
+--
+-- No new notifications table: the feed is assembled from data that already
+-- exists (incoming/accepted friend_requests, points_ledger entries) rather
+-- than duplicating it into a new event-log table. The only new state needed
+-- is "when did this user last look" - one nullable timestamp - so the
+-- header's unread dot can be real instead of a permanently-on hardcoded one.
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS notifications_seen_at TIMESTAMPTZ;

@@ -10,6 +10,7 @@ interface ScoutPlaceModalProps {
   modalTab: string;
   setModalTab: (tab: string) => void;
   isLoadingDetails: boolean;
+  isSaved?: boolean;
   onClose: () => void;
   onAction: (place: ScoutPlace, action: 'save' | 'share') => void;
   onContribute?: (place: ScoutPlace) => Promise<void>;
@@ -20,6 +21,7 @@ export const ScoutPlaceModal = ({
   modalTab,
   setModalTab,
   isLoadingDetails,
+  isSaved = false,
   onClose,
   onAction,
   onContribute,
@@ -92,13 +94,20 @@ export const ScoutPlaceModal = ({
         {/* Action Row */}
         {!place.isNewFind && (
           <div className="scout-modal__actions">
-            <button className="scout-modal__action scout-modal__action--primary">
+            <button
+              className="scout-modal__action scout-modal__action--primary"
+              onClick={() => {
+                const params = new URLSearchParams({ api: '1', destination: `${place.lat},${place.lng}` });
+                if (place.placeId) params.set('destination_place_id', place.placeId);
+                window.open(`https://www.google.com/maps/dir/?${params.toString()}`, '_blank', 'noopener,noreferrer');
+              }}
+            >
               <div className="scout-modal__action-icon"><Navigation size={18} /></div>
               <span>Directions</span>
             </button>
             <button onClick={() => onAction(place, 'save')} className="scout-modal__action">
-              <div className="scout-modal__action-icon"><Bookmark size={18} /></div>
-              <span>Save</span>
+              <div className="scout-modal__action-icon"><Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} /></div>
+              <span>{isSaved ? 'Saved' : 'Save'}</span>
             </button>
             <button onClick={() => onAction(place, 'share')} className="scout-modal__action">
               <div className="scout-modal__action-icon"><Share2 size={18} /></div>

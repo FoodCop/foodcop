@@ -2,7 +2,7 @@
  * ============================================================================
  * CHAT MODULE — Real-time Studio Orchestration
  * ============================================================================
- * 
+ *
  * Component Architecture:
  * 1. ChatService Integration: Real-time Supabase synchronization.
  * 2. Inbox Orchestrator: Dynamic filtering and status management.
@@ -11,11 +11,12 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { 
-  Share2, Send, Check, CheckCheck, AlertCircle, Clock, MessageSquare, Plus, Calendar as CalendarIcon,
+import {
+  Share2, Send, Check, CheckCheck, AlertCircle, Clock, MessageSquare, Calendar as CalendarIcon,
   LayoutGrid, X, Search, ChevronLeft, Eye, Bookmark
 } from 'lucide-react';
 import { ChatService, type ChatMessage } from '../../lib/services/chatService';
+import { FriendRequestService, type FriendRelationshipState } from '../../lib/services/friendRequestService';
 import { filterFriendsByQuery } from '../../lib/chatHelpers';
 import type { ChatInboxItem, ChatUiMessage } from '../../types/chatUi';
 import type { AuthUser } from '../../types/auth';
@@ -81,6 +82,7 @@ export const ChatView = ({
   const [newGroupName, setNewGroupName] = useState('');
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
   const [showEventCreate, setShowEventCreate] = useState(false);
+  const [relationshipOverrides, setRelationshipOverrides] = useState<Record<string, { requestStatus: FriendRelationshipState; requestId?: string }>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const activeIdRef = useRef<string | null>(null);
 
@@ -90,6 +92,10 @@ export const ChatView = ({
       onClearInitial?.();
     }
   }, [initialActiveId, initialActiveType, onClearInitial]);
+
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -101,15 +107,23 @@ export const ChatView = ({
     }
   }, [messages.length, isTyping, activeId, scrollToBottom]);
 
-  const active = friends.find(f => String(f.id) === activeId);
-  const filteredFriends = useMemo(() => filterFriendsByQuery(friends, friendSearch), [friends, friendSearch]);
+  const mergedFriends = useMemo(() => friends.map((f) => {
+    if (f.type !== 'dm') return f;
+    const override = relationshipOverrides[String(f.id)];
+    return override ? { ...f, ...override } : f;
+  }), [friends, relationshipOverrides]);
+
+  const active = mergedFriends.find(f => String(f.id) === activeId);
+  const isGated = !!active && active.type === 'dm' && 'requestStatus' in active
+    && active.requestStatus !== undefined && active.requestStatus !== 'accepted';
+  const filteredFriends = useMemo(() => filterFriendsByQuery(mergedFriends, friendSearch), [mergedFriends, friendSearch]);
 
   const mapMessageToUi = useCallback((message: ChatMessage): ChatUiMessage => {
     let type: 'text' | 'share' | 'event' = 'text';
     if (message.sharedItem) {
       type = message.sharedItem.itemType === 'event' ? 'event' : 'share';
     }
-    
+
     return {
       id: message.id,
       role: message.senderId === authUser?.id ? 'user' : 'ai',
@@ -193,14 +207,14 @@ export const ChatView = ({
   };
 
   const getMessageStatusIcon = (status?: string) => {
-    if (!status || status === 'sent') return <Check size={10} className="text-stone-400" />;
-    if (status === 'sending') return <Clock size={10} className="text-stone-400 animate-pulse" />;
-    if (status === 'read') return <CheckCheck size={10} className="text-yellow-500" />;
-    if (status === 'error') return <AlertCircle size={10} className="text-red-500" />;
-    return <Check size={10} className="text-stone-400" />;
+    if (!status || status === 'sent') return <Check size={10} />;
+    if (status === 'sending') return <Clock size={10} style={{ animation: 'chat-pulse 2s ease-in-out infinite' }} />;
+    if (status === 'read') return <CheckCheck size={10} color="#f2a93b" />;
+    if (status === 'error') return <AlertCircle size={10} color="#dc2626" />;
+    return <Check size={10} />;
   };
 
-  const openConversation = async (participantId: string, type: 'dm' | 'group' = 'dm') => {
+  const openConversation = async (participantId: string, type: 'dm' | 'group' = 'dm', relationshipOverride?: FriendRelationshipState) => {
     activeIdRef.current = participantId;
 
     if (!authUser?.id || !hasSupabaseConfig) {
@@ -210,9 +224,47 @@ export const ChatView = ({
       return;
     }
 
+    const friend = type === 'dm' ? mergedFriends.find((f) => String(f.id) === participantId) : undefined;
+    const relationship: FriendRelationshipState | undefined = relationshipOverride
+      ?? (friend && 'requestStatus' in friend ? friend.requestStatus : undefined);
+
+    // 'none': no thread to open yet - send the friend request instead.
+    if (type === 'dm' && relationship === 'none') {
+      setActiveId(participantId);
+      setActiveType(type);
+      setConversationId(null);
+      setMessages([]);
+      onConversationOpened(participantId);
+
+      const sent = await FriendRequestService.sendRequest(authUser.id, participantId);
+      if (activeIdRef.current !== participantId) return;
+      if (sent.success && sent.data) {
+        setRelationshipOverrides((prev) => ({ ...prev, [participantId]: { requestStatus: 'outgoing-pending', requestId: sent.data!.id } }));
+      }
+      return;
+    }
+
+    // 'outgoing-pending': waiting on the other side, nothing to fetch yet.
+    if (type === 'dm' && relationship === 'outgoing-pending') {
+      setActiveId(participantId);
+      setActiveType(type);
+      setConversationId(null);
+      setMessages([]);
+      onConversationOpened(participantId);
+      return;
+    }
+
     setActiveId(participantId);
     setActiveType(type);
     onConversationOpened(participantId);
+
+    // 'incoming-pending': show the Accept/Decline banner, no conversation
+    // exists yet (the DB gate only allows creating one once accepted).
+    if (type === 'dm' && relationship === 'incoming-pending') {
+      setConversationId(null);
+      setMessages([]);
+      return;
+    }
 
     if (type === 'dm') {
       const conversation = await ChatService.getOrCreateConversation(authUser.id, participantId);
@@ -255,6 +307,21 @@ export const ChatView = ({
     }
   };
 
+  const acceptIncomingRequest = async () => {
+    if (!active || !('requestId' in active) || !active.requestId) return;
+    const result = await FriendRequestService.acceptRequest(active.requestId);
+    if (!result.success) return;
+    setRelationshipOverrides((prev) => ({ ...prev, [String(active.id)]: { requestStatus: 'accepted' } }));
+    openConversation(String(active.id), 'dm', 'accepted');
+  };
+
+  const declineIncomingRequest = async () => {
+    if (!active || !('requestId' in active) || !active.requestId) return;
+    await FriendRequestService.declineRequest(active.requestId);
+    setRelationshipOverrides((prev) => ({ ...prev, [String(active.id)]: { requestStatus: 'none' } }));
+    setActiveId(null);
+  };
+
   const sendMessage = async () => {
     const content = draft.trim();
     if (!content || !activeId || !authUser?.id) return;
@@ -293,10 +360,10 @@ export const ChatView = ({
     setMessages(prev => {
       const filtered = prev.filter((m) => m.id !== optimisticId);
       const mapped = mapMessageToUi(sent.data!);
-      return [...filtered, { 
-        ...mapped, 
-        status: 'sent', 
-        senderName: (authUser.user_metadata?.full_name as string) || (authUser.user_metadata?.name as string) || 'You' 
+      return [...filtered, {
+        ...mapped,
+        status: 'sent',
+        senderName: (authUser.user_metadata?.full_name as string) || (authUser.user_metadata?.name as string) || 'You'
       }];
     });
   };
@@ -341,16 +408,16 @@ export const ChatView = ({
 
     if (sent?.success && sent.data) {
       const sentMessage = sent.data;
-      setMessages(prev => ([...prev, { 
-        ...mapMessageToUi(sentMessage), 
-        status: 'sent', 
-        senderName: (authUser.user_metadata?.full_name as string) || (authUser.user_metadata?.name as string) || 'You' 
+      setMessages(prev => ([...prev, {
+        ...mapMessageToUi(sentMessage),
+        status: 'sent',
+        senderName: (authUser.user_metadata?.full_name as string) || (authUser.user_metadata?.name as string) || 'You'
       }]));
     }
   };
 
   // --- SECTION: Group Logic ---
-  
+
   const createGroup = async () => {
     if (!newGroupName.trim() || selectedMemberIds.length === 0 || !authUser?.id) return;
 
@@ -381,41 +448,37 @@ export const ChatView = ({
   };
 
   return (
-    <div className="flex h-full w-full bg-white md:bg-stone-50 animate-in fade-in overflow-hidden border-t md:border-none">
-      
+    <div className="chat-view">
+
       {/* Left Pane (Inbox List) */}
-      <div className={`
-        flex flex-col h-full bg-white md:border-r border-stone-200
-        ${activeId ? 'hidden md:flex' : 'flex'} 
-        w-full md:w-96 shrink-0
-      `}>
-        <header className="p-6 md:p-8 flex justify-between items-end bg-white">
+      <div className={`chat-view__inbox${activeId ? ' is-hidden-mobile' : ''}`}>
+        <header className="chat-view__inbox-header">
           <div>
-            <h2 className="text-3xl font-black uppercase tracking-tighter">Studio Inbox</h2>
-            <div className="flex items-center gap-4 mt-2">
-              <p className="text-[12px] font-black uppercase tracking-widest text-stone-400">Find Friends</p>
+            <h2 className="chat-view__inbox-title">Studio Inbox</h2>
+            <div className="chat-view__inbox-subrow">
+              <p className="chat-view__find-friends">Find Friends</p>
               <button
                 onClick={() => setIsCreatingGroup(true)}
-                className="flex items-center gap-1.5 text-[12px] font-black uppercase tracking-widest text-yellow-600 hover:text-yellow-700 transition-colors"
+                className="chat-view__create-group-btn"
               >
                 <LayoutGrid size={12} />
                 Create Group
               </button>
             </div>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-400 rounded-full">
-            <div className="w-2 h-2 bg-stone-900 rounded-full animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Live</span>
+          <div className="chat-view__live-badge">
+            <div className="chat-view__live-dot" />
+            <span className="chat-view__live-label">Live</span>
           </div>
         </header>
 
         {isCreatingGroup && (
-          <div className="bg-stone-50 p-6 md:p-8 border-b border-dashed border-stone-200 space-y-6 animate-in slide-in-from-top-2 duration-300">
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-black uppercase tracking-tighter">New Chat Group</h3>
-              <button onClick={() => setIsCreatingGroup(false)} className="p-2 hover:bg-white rounded-full transition-colors"><X size={20} /></button>
+          <div className="chat-view__group-panel">
+            <div className="chat-view__group-panel-head">
+              <h3 className="chat-view__group-panel-heading">New Chat Group</h3>
+              <button onClick={() => setIsCreatingGroup(false)} className="chat-view__group-panel-close"><X size={20} /></button>
             </div>
-            <div className="space-y-4">
+            <div>
               <input
                 value={newGroupName}
                 onChange={(e) => {
@@ -424,16 +487,16 @@ export const ChatView = ({
                 }}
                 disabled={isSubmittingGroup}
                 placeholder="Group Name..."
-                className="w-full bg-white px-6 py-4 rounded-2xl font-bold outline-none border focus:border-yellow-400 disabled:opacity-50"
+                className="chat-view__group-name-input"
               />
-              <div className="space-y-3">
-                <div className="flex justify-between items-center px-2">
-                  <p className="text-[12px] font-black uppercase tracking-widest text-stone-400">Select Members</p>
+              <div className="chat-view__member-picker" style={{ marginTop: '1rem' }}>
+                <div className="chat-view__member-picker-head">
+                  <p className="chat-view__member-picker-label">Select Members</p>
                   {selectedMemberIds.length === 0 && (
-                    <p className="text-[10px] font-black uppercase tracking-widest text-yellow-600 animate-pulse">Add at least 1 friend</p>
+                    <p className="chat-view__member-picker-hint">Add at least 1 friend</p>
                   )}
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="chat-view__member-chips">
                   {friends.filter(f => f.type !== 'group').map(f => (
                     <button
                       key={f.id}
@@ -443,11 +506,9 @@ export const ChatView = ({
                         setGroupError(null);
                       }}
                       disabled={isSubmittingGroup}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-black uppercase tracking-widest transition-all ${
-                        selectedMemberIds.includes(String(f.id)) ? 'bg-stone-900 text-white shadow-lg' : 'bg-white text-stone-500 border hover:border-stone-300'
-                      } ${isSubmittingGroup ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      className={`chat-view__member-chip${selectedMemberIds.includes(String(f.id)) ? ' is-selected' : ''}`}
                     >
-                      <img src={f.avatar} alt={`${f.name || 'Member'} avatar`} className="w-4 h-4 rounded-full" />
+                      <img src={f.avatar} alt={`${f.name || 'Member'} avatar`} />
                       {f.name}
                     </button>
                   ))}
@@ -455,7 +516,7 @@ export const ChatView = ({
               </div>
             </div>
             {groupError && (
-              <div className="flex items-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl text-[11px] font-bold uppercase tracking-widest border border-red-100">
+              <div className="chat-view__group-error">
                 <AlertCircle size={14} />
                 {groupError}
               </div>
@@ -463,11 +524,11 @@ export const ChatView = ({
             <button
               onClick={createGroup}
               disabled={!newGroupName.trim() || selectedMemberIds.length === 0 || isSubmittingGroup}
-              className="w-full py-4 bg-yellow-400 text-stone-900 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-2"
+              className="chat-view__group-submit"
             >
               {isSubmittingGroup ? (
                 <>
-                  <Clock size={16} className="animate-spin" />
+                  <Clock size={16} className="chat-spin" />
                   Creating...
                 </>
               ) : 'Create Studio Group'}
@@ -475,21 +536,21 @@ export const ChatView = ({
           </div>
         )}
 
-        <div className="px-6 py-4">
-          <div className="relative">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-300" />
+        <div className="chat-view__search">
+          <div className="chat-view__search-inner">
+            <Search size={18} className="chat-view__search-icon" />
             <input
               value={friendSearch}
               onChange={(e) => setFriendSearch(e.target.value)}
               placeholder="Search contacts..."
-              className="w-full bg-stone-50 border border-stone-100 rounded-2xl pl-12 pr-4 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-yellow-400/10 focus:bg-white transition-all"
+              className="chat-view__search-input"
             />
           </div>
         </div>
 
-        <div className="flex-grow overflow-y-auto pb-[env(safe-area-inset-bottom)] md:pb-4 hide-scrollbar">
+        <div className="chat-view__list chat-hide-scrollbar">
           {filteredFriends.map(c => (
-            <div key={c.id} className="relative">
+            <div key={c.id}>
               <button
                 type="button"
                 onClick={() => {
@@ -497,37 +558,38 @@ export const ChatView = ({
                     console.warn('Failed to open conversation:', error);
                   });
                 }}
-                className={`w-full bg-white px-6 py-5 flex items-center gap-4 border-b border-stone-100 cursor-pointer transition-all hover:bg-stone-50 text-left
-                  ${activeId === String(c.id) ? 'bg-stone-50 border-l-4 border-l-yellow-400 pl-5' : ''}
-                `}
+                className={`chat-view__row${activeId === String(c.id) ? ' is-active' : ''}`}
               >
-                <div className="relative shrink-0">
-                  <img src={c.avatar} alt={c.name || 'Chat'} className="w-14 h-14 rounded-[1.25rem] border-2 border-yellow-400 shadow-sm" />
+                <div className="chat-view__row-avatar">
+                  <img src={c.avatar} alt={c.name || 'Chat'} className="chat-view__row-avatar-img" />
                   {c.type === 'dm' && 'online' in c && c.online && (
-                    <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />
+                    <div className="chat-view__online-dot" />
                   )}
                   {c.type === 'group' && (
-                    <div className="absolute -bottom-1 -right-1 bg-stone-900 text-white p-1 rounded-md border-2 border-white shadow-sm">
+                    <div className="chat-view__group-dot">
                       <LayoutGrid size={10} />
                     </div>
                   )}
                 </div>
-                <div className="flex-grow min-w-0">
-                  <div className="flex justify-between mb-0.5">
-                    <div className="flex items-center gap-2 truncate">
-                      <h4 className="font-black text-sm uppercase tracking-widest truncate">{c.name}</h4>
+                <div className="chat-view__row-content">
+                  <div className="chat-view__row-top">
+                    <div className="chat-view__row-name-wrap">
+                      <h4 className="chat-view__row-name">{c.name}</h4>
                       {c.type === 'group' && (
-                        <span className="bg-stone-100 text-[10px] shrink-0 font-black px-1.5 py-0.5 rounded uppercase tracking-widest text-stone-500">Group</span>
+                        <span className="chat-view__row-group-tag">Group</span>
                       )}
                     </div>
-                    <span className="text-[11px] text-stone-400 font-bold shrink-0 ml-2">{formatFriendTime(c)}</span>
+                    <span className="chat-view__row-time">{formatFriendTime(c)}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <p className={`text-[11px] font-bold truncate pr-2 ${(c.unreadCount ?? 0) > 0 ? 'text-stone-900' : 'text-stone-400'}`}>
-                      {c.type === 'dm' && 'requestStatus' in c && c.requestStatus === 'pending' ? 'Message Request' : 'Tap to chat...'}
+                  <div className="chat-view__row-bottom">
+                    <p className={`chat-view__row-preview${(c.unreadCount ?? 0) > 0 ? ' has-unread' : ''}`}>
+                      {c.type === 'dm' && 'requestStatus' in c && c.requestStatus === 'incoming-pending' ? 'Message Request'
+                        : c.type === 'dm' && 'requestStatus' in c && c.requestStatus === 'outgoing-pending' ? 'Request Sent'
+                        : c.type === 'dm' && 'requestStatus' in c && c.requestStatus === 'none' ? 'Say hello...'
+                        : 'Tap to chat...'}
                     </p>
                     {(c.unreadCount ?? 0) > 0 && (
-                      <div className="bg-yellow-400 shrink-0 text-stone-900 text-[11px] font-black px-1.5 py-0.5 rounded-full shadow-sm min-w-5 text-center">{c.unreadCount}</div>
+                      <div className="chat-view__row-unread">{c.unreadCount}</div>
                     )}
                   </div>
                 </div>
@@ -535,64 +597,61 @@ export const ChatView = ({
             </div>
           ))}
           {filteredFriends.length === 0 && (
-            <div className="p-8 text-center bg-stone-50 rounded-[2rem] border border-stone-100 text-[12px] font-black uppercase tracking-widest text-stone-400">No contacts found.</div>
+            <div className="chat-view__empty">No contacts found.</div>
           )}
         </div>
       </div>
 
       {/* Right Pane (Active Conversation) */}
-      <div className={`
-        flex-col h-full bg-white overflow-hidden flex-grow
-        ${!activeId ? 'hidden md:flex' : 'flex w-full'}
-      `}>
+      <div className={`chat-view__conversation${activeId ? ' is-active' : ''}`}>
         {!activeId || !active ? (
-          <div className="flex-grow flex flex-col items-center justify-center bg-stone-50 text-stone-400 h-full">
-            <div className="w-24 h-24 rounded-full bg-stone-100 flex items-center justify-center text-stone-300 mb-6 drop-shadow-sm">
+          <div className="chat-view__conversation-empty">
+            <div className="chat-view__conversation-empty-icon">
               <MessageSquare size={40} />
             </div>
-            <h3 className="text-xl font-black uppercase tracking-tighter text-stone-900">Your Messages</h3>
-            <p className="text-xs font-bold uppercase tracking-widest mt-2 max-w-xs text-center">Select a conversation from the left to start chatting with your studio friends.</p>
+            <h3 className="chat-view__conversation-empty-title">Your Messages</h3>
+            <p className="chat-view__conversation-empty-sub">Select a conversation from the left to start chatting with your studio friends.</p>
           </div>
         ) : (
-          <div className="flex-grow flex flex-col h-full bg-white animate-in md:animate-none slide-in-from-right-2 md:fade-in duration-300">
+          <div className="chat-view__thread">
             {/* Conversation Header */}
-            <header className="px-4 py-3 md:p-6 border-b flex items-center justify-between bg-white z-10 shadow-sm shrink-0">
-              <div className="flex items-center gap-3">
-                <button 
-                  onClick={() => setActiveId(null)} 
-                  className="md:hidden p-2 hover:bg-stone-50 rounded-xl transition-colors shrink-0"
+            <header className="chat-view__thread-header">
+              <div className="chat-view__thread-left">
+                <button
+                  onClick={() => setActiveId(null)}
+                  className="chat-view__thread-back"
                 >
                   <ChevronLeft size={24} />
                 </button>
-                <div className="flex items-center gap-3 cursor-pointer group" onClick={() => active.type === 'dm' && onOpenUserProfile(String(active.id))}>
-                  <div className="relative shrink-0">
-                    <img src={active.avatar} alt={active.name || 'Chat'} className="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-yellow-400 group-hover:scale-105 transition-transform" />
+                <div className="chat-view__thread-identity" onClick={() => active.type === 'dm' && onOpenUserProfile(String(active.id))}>
+                  <div className="chat-view__thread-avatar">
+                    <img src={active.avatar} alt={active.name || 'Chat'} className="chat-view__thread-avatar-img" />
                     {active.type === 'dm' && 'online' in active && active.online && (
-                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
+                      <div className="chat-view__thread-online-dot" />
                     )}
                     {active.type === 'group' && (
-                      <div className="absolute -bottom-1 -right-1 bg-stone-900 text-white p-0.5 rounded shadow-sm">
+                      <div className="chat-view__thread-group-dot">
                         <LayoutGrid size={8} />
                       </div>
                     )}
                   </div>
                   <div>
-                    <h4 className="font-black text-[13px] md:text-sm uppercase tracking-widest line-clamp-1">{active.name}</h4>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <div className={`w-1.5 h-1.5 rounded-full ${active.type === 'group' ? 'bg-stone-400' : (('online' in active && active.online) ? 'bg-emerald-500' : 'bg-stone-300')}`} />
-                      <p className="text-[10px] md:text-[11px] font-bold text-stone-400 uppercase tracking-widest">
+                    <h4 className="chat-view__thread-name">{active.name}</h4>
+                    <div className="chat-view__thread-status">
+                      <div className={`chat-view__thread-status-dot${active.type === 'group' ? ' is-group' : (('online' in active && active.online) ? ' is-online' : '')}`} />
+                      <p className="chat-view__thread-status-text">
                         {active.type === 'group' ? 'Studio Group' : (('online' in active && active.online) ? 'Online' : 'Offline')}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="chat-view__thread-actions">
                 {active.type === 'dm' && (
                   <button
                     type="button"
                     onClick={() => onOpenUserProfile(String(active.id))}
-                    className="px-3 py-2 rounded-xl bg-stone-900 text-white text-[10px] md:text-[11px] font-black uppercase tracking-widest hover:bg-stone-800 transition-colors shadow-sm"
+                    className="chat-view__thread-profile-btn"
                   >
                     Profile
                   </button>
@@ -600,119 +659,133 @@ export const ChatView = ({
               </div>
             </header>
 
-            {active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'pending' && (
-              <div className="p-4 md:p-6 bg-yellow-50 border-b flex flex-col items-center gap-3 md:gap-4 text-center shrink-0">
-                <p className="text-[11px] md:text-xs font-bold text-stone-600 uppercase tracking-widest">Message Request</p>
-                <p className="text-[13px] md:text-sm font-bold text-stone-900 line-clamp-2 px-4">{active.name} wants to connect with you.</p>
-                <div className="flex gap-3 w-full max-w-sm justify-center">
-                  <button onClick={() => {}} className="flex-grow max-w-[140px] py-2.5 md:py-3 bg-stone-900 text-white rounded-xl md:rounded-2xl font-black uppercase text-[11px] md:text-[12px] tracking-widest shadow-md">Accept</button>
-                  <button onClick={() => setActiveId(null)} className="flex-grow max-w-[140px] py-2.5 md:py-3 bg-stone-100 border border-stone-200 text-stone-900 rounded-xl md:rounded-2xl font-black uppercase text-[11px] md:text-[12px] tracking-widest shadow-sm hover:bg-stone-200">Decline</button>
+            {active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'incoming-pending' && (
+              <div className="chat-view__request-banner chat-view__request-banner--incoming">
+                <p className="chat-view__request-label">Message Request</p>
+                <p className="chat-view__request-text">{active.name} wants to connect with you.</p>
+                <div className="chat-view__request-actions">
+                  <button onClick={acceptIncomingRequest} className="chat-view__request-accept">Accept</button>
+                  <button onClick={declineIncomingRequest} className="chat-view__request-decline">Decline</button>
                 </div>
               </div>
             )}
 
+            {active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'outgoing-pending' && (
+              <div className="chat-view__request-banner chat-view__request-banner--waiting">
+                <p className="chat-view__request-label">Request Sent</p>
+                <p className="chat-view__request-text">Waiting for {active.name} to accept before you can chat.</p>
+              </div>
+            )}
+
+            {active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'none' && (
+              <div className="chat-view__request-banner chat-view__request-banner--waiting">
+                <p className="chat-view__request-label">Sending Request</p>
+                <p className="chat-view__request-text">Asking {active.name} to connect...</p>
+              </div>
+            )}
+
             {/* Messages Area */}
-            <div className="flex-grow p-4 md:p-8 space-y-4 md:space-y-6 overflow-y-auto hide-scrollbar bg-[#f8f9fa] relative">
+            <div className="chat-view__messages chat-hide-scrollbar">
               {messages.map((m) => (
-                <div key={`${m.id || ''}-${m.role}-${m.type || 'text'}-${m.text || ''}-${m.item?.id || ''}`} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                <div key={`${m.id || ''}-${m.role}-${m.type || 'text'}-${m.text || ''}-${m.item?.id || ''}`} className={`chat-view__message-group${m.role === 'user' ? ' is-mine' : ''}`}>
                   {activeType === 'group' && m.role !== 'user' && m.senderName && (
-                    <span className="text-[10px] md:text-[11px] font-black uppercase tracking-widest text-stone-400 mb-1 ml-4">{m.senderName}</span>
+                    <span className="chat-view__message-sender">{m.senderName}</span>
                   )}
-                  <div className={`max-w-[85%] md:max-w-[75%] p-4 md:p-5 rounded-[1.5rem] md:rounded-[2rem] font-bold text-[13px] md:text-sm shadow-sm ${m.role === 'user' ? 'bg-stone-900 text-white rounded-br-md md:rounded-br-lg' : 'bg-white border border-stone-100 text-stone-900 rounded-bl-md md:rounded-bl-lg'}`}>
+                  <div className={`chat-view__bubble${m.role === 'user' ? ' is-mine' : ''}`}>
                     {m.type === 'share' ? (
-                      <div className="space-y-3 md:space-y-4 min-w-[200px]">
-                        <div className="flex items-center justify-between">
-                          <p className="opacity-60 text-[10px] md:text-[11px] uppercase font-black tracking-widest">Shared Item</p>
-                          <span className="badge bg-warning text-dark px-2 py-1 rounded-pill">{m.item?.cat || 'Item'}</span>
+                      <div className="chat-view__share-card">
+                        <div className="chat-view__share-head">
+                          <p className="chat-view__share-eyebrow">Shared Item</p>
+                          <span className="chat-view__share-badge">{m.item?.cat || 'Item'}</span>
                         </div>
-                        <div className="rounded-xl overflow-hidden shadow-sm aspect-video relative group border border-stone-100/20">
-                          <img src={m.item?.img} alt={m.item?.name || 'Shared item'} className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <div className="chat-view__share-media">
+                          <img src={m.item?.img} alt={m.item?.name || 'Shared item'} />
+                          <div className="chat-view__share-overlay">
                             <button
                               onClick={() => {
                                 if (m.item?.id?.startsWith('recipe')) setTab('bites');
                                 else if (m.item?.id?.startsWith('video')) setTab('trims');
                                 else setTab('scout');
                               }}
-                              className="p-2 md:p-3 bg-white text-stone-900 rounded-full shadow-xl hover:scale-110 transition-transform"
+                              className="chat-view__share-view-btn"
                             >
-                              <Eye size={18} className="md:w-5 md:h-5" />
+                              <Eye size={18} />
                             </button>
                           </div>
                         </div>
-                        <div className="space-y-0.5">
-                          <p className="font-black uppercase tracking-tighter text-base md:text-lg line-clamp-2">{m.item?.name}</p>
-                          <p className="text-[10px] md:text-[11px] opacity-50 font-bold uppercase tracking-widest">Sent via Fuzo Studio</p>
+                        <div>
+                          <p className="chat-view__share-title">{m.item?.name}</p>
+                          <p className="chat-view__share-sub">Sent via Fuzo Studio</p>
                         </div>
-                        <div className="grid grid-cols-3 gap-1.5 md:gap-2 pt-1">
+                        <div className="chat-view__share-actions">
                           <button
                             onClick={() => {
                               if (m.item?.id?.startsWith('recipe')) setTab('bites');
                               else if (m.item?.id?.startsWith('video')) setTab('trims');
                               else setTab('scout');
                             }}
-                            className={`flex flex-col items-center gap-1 p-1.5 md:p-2 rounded-xl transition-colors ${m.role === 'user' ? 'hover:bg-white/10' : 'hover:bg-stone-50'}`}
+                            className="chat-view__share-action"
                           >
-                            <div className={`w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center ${m.role === 'user' ? 'bg-white/10 text-white' : 'bg-stone-50 text-stone-600'}`}><Eye size={14} /></div>
-                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest">View</span>
+                            <div className="chat-view__share-action-icon"><Eye size={14} /></div>
+                            <span className="chat-view__share-action-label">View</span>
                           </button>
                           <button
                             onClick={() => { if (m.item) onSave(m.item); }}
-                            className={`flex flex-col items-center gap-1 p-1.5 md:p-2 rounded-xl transition-colors ${m.role === 'user' ? 'hover:bg-white/10' : 'hover:bg-stone-50'}`}
+                            className="chat-view__share-action"
                           >
-                            <div className={`w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center ${m.role === 'user' ? 'bg-white/10 text-white' : 'bg-stone-50 text-stone-600'}`}><Bookmark size={14} /></div>
-                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest">Save</span>
+                            <div className="chat-view__share-action-icon"><Bookmark size={14} /></div>
+                            <span className="chat-view__share-action-label">Save</span>
                           </button>
                           <button
                             onClick={() => { if (m.item) onShareRequest(m.item); }}
-                            className={`flex flex-col items-center gap-1 p-1.5 md:p-2 rounded-xl transition-colors ${m.role === 'user' ? 'hover:bg-white/10' : 'hover:bg-stone-50'}`}
+                            className="chat-view__share-action"
                           >
-                            <div className={`w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center ${m.role === 'user' ? 'bg-white/10 text-white' : 'bg-stone-50 text-stone-600'}`}><Share2 size={14} /></div>
-                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest">Share</span>
+                            <div className="chat-view__share-action-icon"><Share2 size={14} /></div>
+                            <span className="chat-view__share-action-label">Share</span>
                           </button>
                         </div>
                       </div>
                     ) : m.type === 'event' && m.item ? (
-                      <EventInviteCard 
+                      <EventInviteCard
                         messageId={m.id}
                         userId={authUser?.id}
-                        event={m.item} 
-                        role={m.role} 
+                        event={m.item}
+                        role={m.role}
                       />
                     ) : m.text}
                   </div>
                   {m.role === 'user' && (
-                    <div className="flex items-center gap-1 mt-1.5 px-2 md:px-4 text-stone-400 opacity-80">{getMessageStatusIcon(m.status)}</div>
+                    <div className="chat-view__status-row">{getMessageStatusIcon(m.status)}</div>
                   )}
                 </div>
               ))}
               {isTyping && (
-                <div className="flex items-center gap-2 bg-white border border-stone-100 p-3 md:p-4 rounded-2xl md:rounded-[1.5rem] w-fit shadow-sm rounded-bl-sm">
-                  <div className="flex gap-1.5">
-                    <div className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="chat-view__typing">
+                  <div className="chat-view__typing-dots">
+                    <div className="chat-view__typing-dot" style={{ animationDelay: '0ms' }} />
+                    <div className="chat-view__typing-dot" style={{ animationDelay: '150ms' }} />
+                    <div className="chat-view__typing-dot" style={{ animationDelay: '300ms' }} />
                   </div>
                 </div>
               )}
-              <div ref={messagesEndRef} className="h-2" />
+              <div ref={messagesEndRef} style={{ height: '0.5rem' }} />
             </div>
 
             {showEventCreate && (
-              <EventCreateModal 
-                onClose={() => setShowEventCreate(false)} 
-                onSubmit={sendEventInvite} 
+              <EventCreateModal
+                onClose={() => setShowEventCreate(false)}
+                onSubmit={sendEventInvite}
               />
             )}
 
             {/* Conversation Composer */}
-            <footer className="p-3 md:p-5 border-t flex items-end gap-2 md:gap-3 bg-white z-10 shrink-0 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:pb-5">
+            <footer className="chat-view__composer">
               <button
                 onClick={() => setShowEventCreate(true)}
-                disabled={active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'pending'}
-                className="w-[44px] h-[44px] md:w-[52px] md:h-[52px] shrink-0 bg-stone-100 text-stone-500 rounded-full md:rounded-3xl flex items-center justify-center hover:bg-stone-200 transition-colors disabled:opacity-50"
+                disabled={isGated}
+                className="chat-view__composer-icon-btn"
               >
-                <CalendarIcon size={18} className="md:w-5 md:h-5" />
+                <CalendarIcon size={18} />
               </button>
               <textarea
                 value={draft}
@@ -723,20 +796,20 @@ export const ChatView = ({
                     sendMessage();
                   }
                 }}
-                placeholder={(active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'pending') ? 'Accept request to reply...' : 'Type a message...'}
-                disabled={active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'pending'}
-                className="flex-grow bg-stone-50 md:bg-white md:border md:border-stone-100 px-5 md:px-6 py-3.5 md:py-4 rounded-[1.5rem] md:rounded-[2rem] font-bold text-[13px] md:text-sm outline-none focus:ring-4 focus:ring-yellow-400/10 transition-shadow disabled:opacity-50 resize-none min-h-[44px] md:min-h-[52px] max-h-32 hide-scrollbar shadow-inner shadow-stone-900/5 md:shadow-none"
+                placeholder={isGated ? 'Waiting on a friend request...' : 'Type a message...'}
+                disabled={isGated}
+                className="chat-view__composer-input chat-hide-scrollbar"
                 rows={1}
-                style={{ 
+                style={{
                   height: draft ? 'auto' : undefined,
                 }}
               />
               <button
                 onClick={sendMessage}
-                disabled={(active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'pending') || !draft.trim()}
-                className="w-[44px] h-[44px] md:w-[52px] md:h-[52px] shrink-0 bg-yellow-400 text-stone-900 rounded-full md:rounded-3xl flex items-center justify-center shadow-md active:scale-95 transition-all disabled:opacity-50 disabled:grayscale disabled:scale-100"
+                disabled={isGated || !draft.trim()}
+                className="chat-view__composer-send"
               >
-                <Send size={18} className="md:w-5 md:h-5 ml-1" />
+                <Send size={18} />
               </button>
             </footer>
           </div>
@@ -745,3 +818,5 @@ export const ChatView = ({
     </div>
   );
 };
+
+export default ChatView;

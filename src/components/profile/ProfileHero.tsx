@@ -6,7 +6,7 @@ import type { DemoProfile } from './demoProfile';
 
 // Ported from Soziety's user-profile.html .main-profile / .social-bar /
 // .list-button structure, re-skinned onto Bootstrap flex/card utilities.
-export default function ProfileHero({ profile }: { profile: DemoProfile }) {
+export default function ProfileHero({ profile, userId }: { profile: DemoProfile; userId?: string }) {
   const [following, setFollowing] = useState(false);
 
   return (
@@ -39,7 +39,7 @@ export default function ProfileHero({ profile }: { profile: DemoProfile }) {
             </button>
           </>
         ) : (
-          <Link href="/messages" className="btn btn-sm btn-outline-secondary">
+          <Link href={userId ? `/messages?userId=${userId}` : '/messages'} className="btn btn-sm btn-outline-secondary">
             Message
           </Link>
         )}

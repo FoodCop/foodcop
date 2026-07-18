@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { primaryLinks, moreLinks, cuisines } from './navData';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { CreateCardModal } from '@/components/create/CreateCardModal';
+import { NotificationsService } from '@/lib/services/notificationsService';
 
 // Nav drawer + dropdowns are driven entirely by React state, not Bootstrap's
 // JS (data-bs-toggle/dismiss). Bootstrap's offcanvas appends a full-viewport
@@ -18,9 +20,25 @@ import { CreateCardModal } from '@/components/create/CreateCardModal';
 // inside this one persistent component.
 export default function SiteHeader() {
   const { user } = useAuth();
+  const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<'cuisines' | 'more' | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
+
+  useEffect(() => {
+    if (!user?.id) {
+      setHasUnreadNotifications(false);
+      return;
+    }
+    let cancelled = false;
+    NotificationsService.hasUnread(user.id).then((result) => {
+      if (!cancelled) setHasUnreadNotifications(result);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id, pathname]);
 
   const closeAll = () => {
     setDrawerOpen(false);
@@ -65,9 +83,11 @@ export default function SiteHeader() {
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
               <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
             </svg>
-            <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-              <span className="visually-hidden">New alerts</span>
-            </span>
+            {hasUnreadNotifications && (
+              <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                <span className="visually-hidden">New alerts</span>
+              </span>
+            )}
           </Link>
 
           {user ? (
