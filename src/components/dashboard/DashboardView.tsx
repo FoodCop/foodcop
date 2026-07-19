@@ -4,7 +4,9 @@ import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import Link from 'next/link';
 import { Search, Clock, MapPin, Star, PlayCircle, Compass, UtensilsCrossed, Film, Trophy, Bot, Leaf } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { createClient } from '@/lib/supabase/client';
 import { CreateCardModal } from '@/components/create/CreateCardModal';
+import { ScoutAddPinModal } from '@/components/scout/ScoutAddPinModal';
 import { VideoPlayerModal } from '@/components/ui/VideoPlayerModal';
 import { PointsService } from '@/lib/services/pointsService';
 import { POINTS_PER_LEVEL } from '@/lib/rewards/progressionEngine';
@@ -75,6 +77,11 @@ export default function DashboardView() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState<SuggestedVideo | null>(null);
 
+  // Restaurant-pin prompt (Group 2 item 12) - null = not yet known.
+  const [isBusinessProfile, setIsBusinessProfile] = useState<boolean | null>(null);
+  const [hasPinnedRestaurant, setHasPinnedRestaurant] = useState<boolean | null>(null);
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+
   const [rewardsStats, setRewardsStats] = useState<{ points: number; level: number } | null>(null);
 
   const [searchText, setSearchText] = useState('');
@@ -116,6 +123,43 @@ export default function DashboardView() {
       if (!cancelled && statsResult.success && statsResult.data) {
         setRewardsStats({ points: statsResult.data.points, level: statsResult.data.level });
       }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  // Restaurant-pin prompt: business-type profiles get nudged to pin their
+  // own place via the existing Scout Restaurant-family Create Card flow -
+  // every pin grows FUZO's own local-establishment dataset (the whole point
+  // of prompting, not just allowing it). Gated on card_type, not just "any
+  // food_cards exist," since a restaurant owner could have published a
+  // recipe card first without ever pinning their own place.
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    const supabase = createClient();
+    if (!supabase) return;
+
+    (async () => {
+      const { data: profileRow } = await supabase.from('users').select('profile_type').eq('id', user.id).maybeSingle();
+      if (cancelled) return;
+      const isBusiness = profileRow?.profile_type === 'business';
+      setIsBusinessProfile(isBusiness);
+      if (!isBusiness) {
+        setHasPinnedRestaurant(true);
+        return;
+      }
+
+      const { data: pinnedCard } = await supabase
+        .from('food_cards')
+        .select('id')
+        .eq('user_id', user.id)
+        .in('card_type', ['RESTAURANT_VISIT', 'CAFE_VISIT', 'STREET_FOOD'])
+        .limit(1)
+        .maybeSingle();
+      if (!cancelled) setHasPinnedRestaurant(!!pinnedCard);
     })();
 
     return () => {
@@ -175,16 +219,28 @@ export default function DashboardView() {
         <div className="dashboard-hero__title">Hey, {displayName} 👋</div>
         <div className="dashboard-hero__sub">Recommendations tuned to your taste, wherever you are.</div>
 
-        {tasteLoaded && aggregate?.sampleSize === 0 && (
+        {isBusinessProfile && hasPinnedRestaurant === false ? (
           <div className="dashboard-hero__nudge">
             <div>
-              <div className="dashboard-nudge__text">You haven&apos;t created any food cards yet.</div>
-              <div className="dashboard-nudge__sub">Recipes below are based on your onboarding preferences — create a card to sharpen them.</div>
+              <div className="dashboard-nudge__text">Your restaurant isn&apos;t pinned yet.</div>
+              <div className="dashboard-nudge__sub">Pin your place so FUZO users can discover it on Scout — it only takes a minute.</div>
             </div>
-            <button type="button" className="btn btn-light btn-sm fw-bold" onClick={() => setIsCreateOpen(true)}>
-              + Create a Card
+            <button type="button" className="btn btn-light btn-sm fw-bold" onClick={() => setIsPinModalOpen(true)}>
+              📍 Pin My Restaurant
             </button>
           </div>
+        ) : (
+          tasteLoaded && aggregate?.sampleSize === 0 && (
+            <div className="dashboard-hero__nudge">
+              <div>
+                <div className="dashboard-nudge__text">You haven&apos;t created any food cards yet.</div>
+                <div className="dashboard-nudge__sub">Recipes below are based on your onboarding preferences — create a card to sharpen them.</div>
+              </div>
+              <button type="button" className="btn btn-light btn-sm fw-bold" onClick={() => setIsCreateOpen(true)}>
+                + Create a Card
+              </button>
+            </div>
+          )
         )}
       </div>
 
@@ -362,6 +418,13 @@ export default function DashboardView() {
       </section>
 
       {isCreateOpen && <CreateCardModal onClose={() => setIsCreateOpen(false)} />}
+      {isPinModalOpen && (
+        <ScoutAddPinModal
+          cardType="RESTAURANT_VISIT"
+          onClose={() => setIsPinModalOpen(false)}
+          onSuccess={() => setHasPinnedRestaurant(true)}
+        />
+      )}
       {activeVideo && (
         <VideoPlayerModal
           title={activeVideo.title}
