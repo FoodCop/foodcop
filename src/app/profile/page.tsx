@@ -30,7 +30,7 @@ export default function ProfilePage() {
 
       const { data: userRow } = await supabase
         .from('users')
-        .select('display_name, username, profile_type')
+        .select('display_name, username, profile_type, avatar_url, banner_url')
         .eq('id', user.id)
         .maybeSingle();
       if (userRow) {
@@ -40,6 +40,8 @@ export default function ProfilePage() {
           role: userRow.profile_type === 'business' ? 'Restaurant' : userRow.profile_type === 'creator' ? 'Creator' : 'Food Explorer',
           type: userRow.profile_type === 'business' ? 'restaurant' : 'person',
           bites: 0,
+          avatarUrl: userRow.avatar_url ?? user.user_metadata?.avatar_url ?? null,
+          bannerUrl: userRow.banner_url,
         });
       }
 

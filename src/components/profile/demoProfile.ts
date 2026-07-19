@@ -6,6 +6,8 @@ export type DemoProfile = {
   role: string;
   type: 'person' | 'restaurant';
   bites: number;
+  avatarUrl?: string | null;
+  bannerUrl?: string | null;
 };
 
 export const DEMO_PROFILES: Record<'person' | 'restaurant', DemoProfile> = {

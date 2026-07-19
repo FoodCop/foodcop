@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { ServiceResult } from '@/lib/types/serviceResult';
 
 const BUCKET = 'food-card-media';
+const PROFILE_BUCKET = 'profile-media';
 
 export const MediaUploadService = {
   async uploadVideo(file: File): Promise<ServiceResult<string>> {
@@ -40,6 +41,40 @@ export const MediaUploadService = {
 
     const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
     return { success: true, data: data.publicUrl };
+  },
+
+  // Fixed filename per user/kind (not timestamped like uploadVideo) - an
+  // avatar/banner is a single current value, not a growing gallery, so
+  // upsert:true replaces it in place instead of orphaning the old file. A
+  // cache-busting query param is appended to the returned URL so the
+  // browser doesn't keep showing a stale cached image after re-upload.
+  async uploadProfileImage(file: File, kind: 'avatar' | 'banner'): Promise<ServiceResult<string>> {
+    const supabase = createClient();
+    if (!supabase) {
+      return { success: false, error: 'Supabase is not configured' };
+    }
+
+    const { data: authData } = await supabase.auth.getUser();
+    const userId = authData?.user?.id;
+    if (!userId) {
+      return { success: false, error: 'You must be logged in to upload an image' };
+    }
+
+    const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const path = `${userId}/${kind}.${extension}`;
+
+    const { error: uploadError } = await supabase.storage.from(PROFILE_BUCKET).upload(path, file, {
+      contentType: file.type || 'image/jpeg',
+      cacheControl: '3600',
+      upsert: true,
+    });
+
+    if (uploadError) {
+      return { success: false, error: uploadError.message };
+    }
+
+    const { data } = supabase.storage.from(PROFILE_BUCKET).getPublicUrl(path);
+    return { success: true, data: `${data.publicUrl}?v=${Date.now()}` };
   },
 };
 
