@@ -1,8 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { COUNTRY_DIAL_CODES, DEFAULT_COUNTRY_CODE } from '@/lib/data/countryCodes';
+import LocationPickerModal from './LocationPickerModal';
+
+// Splits a stored "+1 4165550123"-style phone string back into a country
+// selection + local number for editing - longest dial code first so "+1"
+// (US/CA) doesn't shadow-match "+1246" (Barbados) etc.
+function parsePhone(phone: string | null): { countryCode: string; number: string } {
+  if (!phone) return { countryCode: DEFAULT_COUNTRY_CODE, number: '' };
+  const sorted = [...COUNTRY_DIAL_CODES].sort((a, b) => b.dialCode.length - a.dialCode.length);
+  const match = sorted.find((c) => phone.startsWith(c.dialCode));
+  if (!match) return { countryCode: DEFAULT_COUNTRY_CODE, number: phone };
+  return { countryCode: match.code, number: phone.slice(match.dialCode.length).trim() };
+}
 
 export default function SettingsTab() {
   const router = useRouter();
@@ -13,9 +26,86 @@ export default function SettingsTab() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  const [userId, setUserId] = useState<string | null>(null);
+  const [countryCode, setCountryCode] = useState(DEFAULT_COUNTRY_CODE);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isSavingPhone, setIsSavingPhone] = useState(false);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [locationAddress, setLocationAddress] = useState<string | null>(null);
+  const [locationLat, setLocationLat] = useState<number | null>(null);
+  const [locationLng, setLocationLng] = useState<number | null>(null);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [isSavingLocation, setIsSavingLocation] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+    (async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      setUserId(user.id);
+      const { data } = await supabase.from('users').select('phone, location, lat, lng').eq('id', user.id).maybeSingle();
+      if (data) {
+        const parsed = parsePhone(data.phone);
+        setCountryCode(parsed.countryCode);
+        setPhoneNumber(parsed.number);
+        setLocationAddress(data.location ?? null);
+        setLocationLat(data.lat ?? null);
+        setLocationLng(data.lng ?? null);
+      }
+    })();
+  }, []);
+
   const showToast = (message: string) => {
     setToastMessage(message);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleSavePhone = async () => {
+    if (!userId) return;
+    setIsSavingPhone(true);
+    setPhoneError(null);
+    try {
+      const dialCode = COUNTRY_DIAL_CODES.find((c) => c.code === countryCode)?.dialCode ?? '';
+      const trimmed = phoneNumber.trim();
+      const phone = trimmed ? `${dialCode} ${trimmed}` : null;
+      const supabase = createClient();
+      if (!supabase) return;
+      const { error } = await supabase.from('users').update({ phone }).eq('id', userId);
+      if (error) {
+        setPhoneError(error.message);
+        return;
+      }
+      showToast('Phone number saved');
+    } finally {
+      setIsSavingPhone(false);
+    }
+  };
+
+  const handleLocationConfirm = async (result: { lat: number; lng: number; address: string }) => {
+    setShowLocationPicker(false);
+    if (!userId) return;
+    setIsSavingLocation(true);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      const { error } = await supabase
+        .from('users')
+        .update({ location: result.address, lat: result.lat, lng: result.lng })
+        .eq('id', userId);
+      if (error) {
+        showToast(error.message);
+        return;
+      }
+      setLocationAddress(result.address);
+      setLocationLat(result.lat);
+      setLocationLng(result.lng);
+      showToast('Location saved');
+    } finally {
+      setIsSavingLocation(false);
+    }
   };
 
   const handleSignOut = async () => {
@@ -119,6 +209,62 @@ export default function SettingsTab() {
           <div className="d-flex justify-content-between text-muted" style={{ fontSize: '0.65rem' }}>
             <span>5km</span><span>25km</span><span>50km+</span>
           </div>
+        </div>
+      </div>
+
+      {/* ── CONTACT & LOCATION (real, persisted) ── */}
+      <SectionTitle>Contact & Location</SectionTitle>
+      <div className="list-group shadow-sm rounded-4 border-0">
+        <div className="list-group-item p-3 border-0 border-bottom">
+          <div className="fw-bold text-dark mb-2">Phone number</div>
+          <div className="d-flex gap-2">
+            <select
+              className="form-select form-select-sm w-auto"
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value)}
+              disabled={!userId}
+            >
+              {COUNTRY_DIAL_CODES.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.flag} {c.dialCode}
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              className="form-control form-control-sm"
+              placeholder="416 555 0123"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              disabled={!userId}
+            />
+            <button
+              type="button"
+              className="btn btn-sm btn-primary fw-bold flex-shrink-0"
+              onClick={handleSavePhone}
+              disabled={!userId || isSavingPhone}
+            >
+              {isSavingPhone ? '…' : 'Save'}
+            </button>
+          </div>
+          {phoneError && <div className="text-danger small mt-2">{phoneError}</div>}
+        </div>
+        <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0">
+          <div className="d-flex align-items-center gap-3">
+            <div className="bg-success bg-opacity-10 text-success rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🗺️</div>
+            <div className="text-start">
+              <div className="fw-bold text-dark">Location</div>
+              <small className="text-muted">{locationAddress || 'Not set'}</small>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-secondary flex-shrink-0"
+            onClick={() => setShowLocationPicker(true)}
+            disabled={!userId || isSavingLocation}
+          >
+            {isSavingLocation ? '…' : locationAddress ? 'Update' : 'Set on map'}
+          </button>
         </div>
       </div>
 
@@ -339,6 +485,15 @@ export default function SettingsTab() {
             </div>
           </div>
         </div>
+      )}
+
+      {showLocationPicker && (
+        <LocationPickerModal
+          initialLat={locationLat}
+          initialLng={locationLng}
+          onConfirm={handleLocationConfirm}
+          onClose={() => setShowLocationPicker(false)}
+        />
       )}
     </div>
   );
