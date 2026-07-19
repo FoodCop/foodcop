@@ -59,7 +59,7 @@ export default function GallerySection() {
                 <div className="hover-content">
                   <div className="gallery-content">
                     <h4 className="title">
-                      <a href="#">{item.title}</a>
+                      <a href="/trims">{item.title}</a>
                     </h4>
                     <span>{item.category}</span>
                   </div>

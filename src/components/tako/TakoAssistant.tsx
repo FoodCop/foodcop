@@ -21,12 +21,14 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { Bot, Send, X, Search, ArrowLeft } from 'lucide-react';
 import { GeminiService } from '@/lib/services/geminiService';
 import { CHEF_SUGGESTED_PROMPTS, CHEF_SYSTEM_INSTRUCTION, CHEF_RESPONSE_SCHEMA, MOODS, QUICK_ACTIONS, QUICK_LINKS, getGreeting } from '@/lib/tako/prompts';
 import type { ChatMessage, ChefStructuredResponse, QuickAction } from '@/types/tako';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+import { CreateCardModal } from '@/components/create/CreateCardModal';
 
 const parseChefResponse = (text: string): ChefStructuredResponse | null => {
   if (!text) return null;
@@ -66,6 +68,7 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [isCreateCardOpen, setIsCreateCardOpen] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const trapRef = useFocusTrap(variant === 'overlay' && isOpen);
@@ -141,6 +144,8 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
       onClose?.();
     } else if (action.type === 'prompt') {
       startChat(action.prompt);
+    } else if (action.type === 'create-card') {
+      setIsCreateCardOpen(true);
     } else {
       showNotice(`${action.label} is coming soon.`);
     }
@@ -156,6 +161,7 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
   };
 
   return (
+    <>
     <div
       ref={variant === 'overlay' ? trapRef : undefined}
       role={variant === 'overlay' ? 'dialog' : undefined}
@@ -343,5 +349,10 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
         </div>
       )}
     </div>
+    {isCreateCardOpen && createPortal(
+      <CreateCardModal onClose={() => { setIsCreateCardOpen(false); onClose?.(); }} />,
+      document.body,
+    )}
+    </>
   );
 }

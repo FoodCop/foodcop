@@ -36,6 +36,7 @@ export interface Mood {
 export type QuickAction =
   | { icon: string; label: string; color: string; type: 'navigate'; href: string }
   | { icon: string; label: string; color: string; type: 'prompt'; prompt: string }
+  | { icon: string; label: string; color: string; type: 'create-card' }
   | { icon: string; label: string; color: string; type: 'soon' };
 
 export interface QuickLink {

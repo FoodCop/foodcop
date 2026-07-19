@@ -34,7 +34,7 @@ export const QUICK_ACTIONS: QuickAction[] = [
   { icon: '/SVG/social/Location.svg', label: 'Find Somewhere To Eat', color: '#E8472B', type: 'prompt', prompt: 'Find me somewhere good to eat nearby' },
   { icon: '/SVG/social/Home.svg', label: 'Cook Tonight', color: '#F2A93B', type: 'prompt', prompt: 'What should I cook tonight?' },
   { icon: '/SVG/social/Video.svg', label: 'Watch Trims', color: '#9B7FD4', type: 'navigate', href: '/trims' },
-  { icon: '/SVG/social/Camera.svg', label: 'Create Content', color: '#EC4899', type: 'soon' },
+  { icon: '/SVG/social/Camera.svg', label: 'Create Content', color: '#EC4899', type: 'create-card' },
   { icon: '/SVG/map/Radar.svg', label: 'Explore Nearby', color: '#22C55E', type: 'navigate', href: '/scout' },
   { icon: '/SVG/social/Team.svg', label: 'Plan With My Crew', color: '#5B9BD5', type: 'navigate', href: '/messages' },
   { icon: '/SVG/social/Earth.svg', label: 'Explore A Cuisine', color: '#F59E0B', type: 'prompt', prompt: 'Suggest a cuisine for me to explore' },

@@ -9,7 +9,7 @@ export default function BlogSection() {
       comments: 12,
       img: 'blog-17.jpg',
       description: 'Learn how to turn any culinary idea or fridge photo into a structured, step-by-step recipe instantly.',
-      link: '#',
+      link: '/discover',
     },
     {
       title: 'How the Points Loop Works',
@@ -17,7 +17,7 @@ export default function BlogSection() {
       comments: 8,
       img: 'blog-18.jpg',
       description: 'Discover how saving Bites and sharing Trims earns you points and levels up your creator status.',
-      link: '#',
+      link: '/rewards',
     },
     {
       title: 'New Scout Features Released',
@@ -25,7 +25,7 @@ export default function BlogSection() {
       comments: 24,
       img: 'blog-19.jpg',
       description: 'We just updated Scout! Now you can filter local spots based on your exact dietary preferences and saved tastes.',
-      link: '#',
+      link: '/scout',
     },
   ];
 
@@ -61,11 +61,11 @@ export default function BlogSection() {
                   <div className="post-meta">
                     <span>
                       <i className="far fa-user-alt"></i>
-                      <Link href="#">{`By ${post.author}`}</Link>
+                      <Link href={post.link}>{`By ${post.author}`}</Link>
                     </span>
                     <span>
                       <i className="far fa-comment"></i>
-                      <Link href="#">{`Comment (${post.comments})`}</Link>
+                      <Link href={post.link}>{`Comment (${post.comments})`}</Link>
                     </span>
                   </div>
                   <h4 className="title">

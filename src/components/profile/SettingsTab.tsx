@@ -198,16 +198,16 @@ export default function SettingsTab() {
       {/* ── CONNECTED ACCOUNTS ── */}
       <SectionTitle>Connected Accounts</SectionTitle>
       <div className="list-group shadow-sm rounded-4 border-0">
-        <button className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom" onClick={() => showToast('Instagram connected!')}>
+        <button className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom" onClick={() => showToast('Connect Instagram to import your food photos')}>
           <div className="d-flex align-items-center gap-3">
             <div className="rounded p-2 text-center d-flex align-items-center justify-content-center text-white fw-bold" style={{ width: '40px', height: '40px', background: 'linear-gradient(135deg,#F58529,#DD2A7B,#8134AF)' }}>IG</div>
             <div className="text-start">
               <div className="fw-bold text-dark">Instagram</div>
-              <small className="text-muted">@naveenkaur · Connected</small>
+              <small className="text-muted">Tap to connect</small>
             </div>
           </div>
           <div className="d-flex align-items-center gap-2">
-            <span className="text-success fw-bold" style={{ fontSize: '0.75rem' }}>Connected</span>
+            <span className="text-secondary fw-bold" style={{ fontSize: '0.75rem' }}>Connect</span>
             <span className="text-muted fw-bold fs-5">›</span>
           </div>
         </button>
