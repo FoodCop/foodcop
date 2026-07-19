@@ -40,8 +40,6 @@ export default function UserProfilePage() {
           handle: userRow.username || 'user',
           role: userRow.profile_subtype || (userRow.profile_type === 'business' ? 'Restaurant' : userRow.profile_type === 'creator' ? 'Creator' : 'Food Explorer'),
           type: userRow.profile_type === 'business' ? 'restaurant' : 'person',
-          followers: 0,
-          following: 0,
           bites: 0,
         });
       }

@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChatView } from '../../../components/chat/ChatView';
 import { useAuth } from '../../../components/auth/AuthProvider';
-import { ChatService } from '../../../lib/services/chatService';
+import { ChatService, type ChatGroup as ChatGroupRecord } from '../../../lib/services/chatService';
 import { FriendRequestService } from '../../../lib/services/friendRequestService';
 import { PlateService, type PlateItemType } from '../../../lib/services/plateService';
 import type { ChatInboxItem, ChatFriend, ChatGroup as ChatGroupUi } from '../../../types/chatUi';
@@ -12,6 +12,16 @@ import type { AuthUser } from '../../../types/auth';
 import type { AppItem } from '../../../types/appItem';
 
 const GROUP_FALLBACK_AVATAR = 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=150&q=80';
+
+const toChatGroupUi = (group: ChatGroupRecord): ChatGroupUi => ({
+  id: group.id,
+  name: group.name,
+  avatar: group.avatarUrl || GROUP_FALLBACK_AVATAR,
+  description: group.description,
+  lastMessageAt: group.lastMessageAt,
+  unreadCount: 0,
+  type: 'group',
+});
 
 const mapPlateItemType = (item: AppItem): PlateItemType => {
   const type = (item.itemType || item.type || '').toLowerCase();
@@ -89,15 +99,7 @@ function MessagesPageContent() {
         };
       });
 
-      const groupItems: ChatGroupUi[] = groups.map((group) => ({
-        id: group.id,
-        name: group.name,
-        avatar: group.avatarUrl || GROUP_FALLBACK_AVATAR,
-        description: group.description,
-        lastMessageAt: group.lastMessageAt,
-        unreadCount: 0,
-        type: 'group',
-      }));
+      const groupItems: ChatGroupUi[] = groups.map(toChatGroupUi);
 
       setFriends([...groupItems, ...dmItems]);
     })();
@@ -163,6 +165,7 @@ function MessagesPageContent() {
         // No unread-tracking table exists yet - deliberately a no-op.
         onConversationOpened={() => {}}
         onOpenUserProfile={(userId: string) => router.push(`/profile/${userId}`)}
+        onGroupCreated={(group) => setFriends((prev) => [toChatGroupUi(group), ...(prev ?? [])])}
         initialActiveId={pendingOpen?.id}
         initialActiveType={pendingOpen?.type}
         onClearInitial={() => setPendingOpen(null)}

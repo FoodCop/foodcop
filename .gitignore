@@ -44,5 +44,10 @@ next-env.d.ts
 /legacy
 .claude
 
+# graphify (dev tool install + its generated output, not app code)
+/graphify
+/graphify_env
+/graphify-out
+
 # Allow example env
 !.env.example

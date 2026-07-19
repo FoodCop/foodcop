@@ -5,8 +5,6 @@ export type DemoProfile = {
   handle: string;
   role: string;
   type: 'person' | 'restaurant';
-  followers: number;
-  following: number;
   bites: number;
 };
 
@@ -16,8 +14,6 @@ export const DEMO_PROFILES: Record<'person' | 'restaurant', DemoProfile> = {
     handle: 'amara.eats',
     role: 'Food Explorer',
     type: 'person',
-    followers: 1204,
-    following: 342,
     bites: 24,
   },
   restaurant: {
@@ -25,8 +21,6 @@ export const DEMO_PROFILES: Record<'person' | 'restaurant', DemoProfile> = {
     handle: 'spicetrailkitchen',
     role: 'Restaurant',
     type: 'restaurant',
-    followers: 4821,
-    following: 12,
     bites: 58,
   },
 };

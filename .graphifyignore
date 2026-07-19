@@ -1,0 +1,17 @@
+graphify/
+graphify_env/
+graphify-out/
+legacy/
+node_modules/
+.next/
+
+# Code only, plus the small code-referenced SVG icon library - everything
+# else under public/ is bulk media (stock/generated photos, videos, bundled
+# vendor CSS/JS, Envato template assets) with no code-graph value.
+public/generated-images/
+public/images/
+public/videos/
+public/assets/
+public/assets-romio/
+public/assets-soziety/
+public/vendor/

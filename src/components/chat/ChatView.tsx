@@ -15,7 +15,7 @@ import {
   Share2, Send, Check, CheckCheck, AlertCircle, Clock, MessageSquare, Calendar as CalendarIcon,
   LayoutGrid, X, Search, ChevronLeft, Eye, Bookmark
 } from 'lucide-react';
-import { ChatService, type ChatMessage } from '../../lib/services/chatService';
+import { ChatService, type ChatMessage, type ChatGroup as ChatGroupRecord } from '../../lib/services/chatService';
 import { FriendRequestService, type FriendRelationshipState } from '../../lib/services/friendRequestService';
 import { filterFriendsByQuery } from '../../lib/chatHelpers';
 import type { ChatInboxItem, ChatUiMessage } from '../../types/chatUi';
@@ -54,6 +54,7 @@ export const ChatView = ({
   setTab,
   onConversationOpened,
   onOpenUserProfile,
+  onGroupCreated,
   initialActiveId,
   initialActiveType,
   onClearInitial,
@@ -65,6 +66,7 @@ export const ChatView = ({
   setTab: (tab: string) => void;
   onConversationOpened: (friendId: string) => void;
   onOpenUserProfile: (userId: string) => void;
+  onGroupCreated?: (group: ChatGroupRecord) => void;
   initialActiveId?: string | null;
   initialActiveType?: 'dm' | 'group' | null;
   onClearInitial?: () => void;
@@ -435,6 +437,12 @@ export const ChatView = ({
         setIsCreatingGroup(false);
         setNewGroupName('');
         setSelectedMemberIds([]);
+        // The inbox list (`friends`) is owned by the parent page and only
+        // fetched once on mount - without this, the creator's own sidebar
+        // never shows the group they just made until a full page reload,
+        // even though it exists correctly in the DB (a real bug found while
+        // verifying group chat end-to-end).
+        onGroupCreated?.(result.data);
         openConversation(result.data.id, 'group');
       } else {
         setGroupError(result.error || 'Failed to create group');

@@ -15,6 +15,7 @@ import { createClient } from '@/lib/supabase/client';
 export default function ProfilePage() {
   const [demoType, setDemoType] = useState<'person' | 'restaurant'>('person');
   const [realProfile, setRealProfile] = useState<DemoProfile | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | undefined>(undefined);
   const [tasteProfile, setTasteProfile] = useState<FoodDnaRealData | undefined>(undefined);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function ProfilePage() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
+      setCurrentUserId(user.id);
 
       const { data: userRow } = await supabase
         .from('users')
@@ -37,8 +39,6 @@ export default function ProfilePage() {
           handle: userRow.username || user.email?.split('@')[0] || 'user',
           role: userRow.profile_type === 'business' ? 'Restaurant' : userRow.profile_type === 'creator' ? 'Creator' : 'Food Explorer',
           type: userRow.profile_type === 'business' ? 'restaurant' : 'person',
-          followers: 0,
-          following: 0,
           bites: 0,
         });
       }
@@ -63,7 +63,7 @@ export default function ProfilePage() {
   return (
     <div>
       <ProfileHeader />
-      <ProfileHero profile={profile} />
+      <ProfileHero profile={profile} userId={currentUserId} />
       <ProfileTabs profile={profile} tasteProfile={tasteProfile} />
 
       {!realProfile && (
