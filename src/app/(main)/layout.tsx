@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import Script from "next/script";
 import SiteHeader from "@/components/header/SiteHeader";
 import TakoWidget from "@/components/tako/TakoWidget";
 
@@ -9,16 +8,13 @@ import TakoWidget from "@/components/tako/TakoWidget";
 // every route change - the previous per-page <SiteHeader/> remount was racing
 // with Bootstrap's async offcanvas close transition (removeChild errors /
 // dead buttons after using the menu).
+// The Google Maps JS API script used to load here - moved to the root
+// layout (src/app/layout.tsx) so pages outside (main), like Profile, can use
+// window.google.maps too.
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <SiteHeader />
-      {/* Google Maps JS API — loaded once here so ScoutView (and any other
-          map feature) can access window.google.maps across all (main) routes */}
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places,geometry,marker&loading=async`}
-        strategy="afterInteractive"
-      />
       {children}
       <TakoWidget />
     </>

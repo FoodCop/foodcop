@@ -50,6 +50,17 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             webpack's dynamic-import chunk splitting (ChunkLoadError). This
             drives all our data-bs-toggle markup (offcanvas, dropdowns, etc). */}
         <Script src="/vendor/bootstrap.bundle.min.js" strategy="afterInteractive" />
+        {/* Google Maps JS API - loaded here (root layout), not a route-group
+            layout, so every page can use window.google.maps regardless of
+            which layout it sits under. Used to live only in (main)/layout.tsx
+            ("across all (main) routes"), which silently broke the Profile
+            food map (a different route group, src/app/profile/layout.tsx)
+            with zero error - the map div rendered at the right size, just
+            with no google.maps loaded to actually draw into it. */}
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places,geometry,marker&loading=async`}
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

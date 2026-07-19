@@ -9,6 +9,8 @@ import FoodCardDetailModal from './FoodCardDetailModal';
 import { foodCardService } from '../../lib/services/foodCardService';
 import { TYPE_META, type FoodCardFamily, type FoodCardRecord } from '../../lib/types/foodCard';
 import { useAuth } from '../auth/AuthProvider';
+import ProfileFoodMap, { type ProfileMapPlace } from './ProfileFoodMap';
+import { Grid3x3, MapPin } from 'lucide-react';
 
 interface ActivityTabProps {
   userId?: string;
@@ -58,6 +60,7 @@ export default function ActivityTab({ userId, isCurrentUser = true }: ActivityTa
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<AppItem | null>(null);
   const [activeFilterTab, setActiveFilterTab] = useState<ActivityCategory>('places');
+  const [placesView, setPlacesView] = useState<'grid' | 'map'>('grid');
 
   const [myCards, setMyCards] = useState<FoodCardRecord[]>([]);
   const [isLoadingCards, setIsLoadingCards] = useState(true);
@@ -123,6 +126,26 @@ export default function ActivityTab({ userId, isCurrentUser = true }: ActivityTa
     [tiles, activeFilterTab],
   );
 
+  // Real places to plot - both saved Places and Restaurant-family cards
+  // already carry real lat/lng (Scout/ScoutAddPinModal always writes it),
+  // so this is never fabricated, just the subset with usable coordinates.
+  const mapPlaces = useMemo<ProfileMapPlace[]>(() => {
+    if (activeFilterTab !== 'places') return [];
+    return filteredTiles
+      .map((tile): ProfileMapPlace | null => {
+        const lat = tile.kind === 'saved' ? tile.item.lat : tile.item.lat;
+        const lng = tile.kind === 'saved' ? tile.item.lng : tile.item.lng;
+        if (typeof lat !== 'number' || typeof lng !== 'number') return null;
+        return {
+          id: tile.kind === 'saved' ? `saved-${tile.item.id}` : `card-${tile.item.id}`,
+          name: tile.kind === 'saved' ? tile.item.name || 'Saved place' : tile.item.title,
+          lat,
+          lng,
+        };
+      })
+      .filter((p): p is ProfileMapPlace => p !== null);
+  }, [filteredTiles, activeFilterTab]);
+
   const handleSave = async (item: AppItem) => {
     const result = await PlateService.saveToPlate({
       itemId: item.itemId || item.id || '',
@@ -178,7 +201,38 @@ export default function ActivityTab({ userId, isCurrentUser = true }: ActivityTa
         ))}
       </ul>
 
-      {filteredTiles.length === 0 ? (
+      {activeFilterTab === 'places' && (
+        <div className="d-flex justify-content-end gap-1 mb-3">
+          <button
+            type="button"
+            className={`btn btn-sm rounded-pill d-flex align-items-center gap-1 ${placesView === 'grid' ? 'btn-dark' : 'btn-outline-secondary'}`}
+            onClick={() => setPlacesView('grid')}
+          >
+            <Grid3x3 size={14} /> Grid
+          </button>
+          <button
+            type="button"
+            className={`btn btn-sm rounded-pill d-flex align-items-center gap-1 ${placesView === 'map' ? 'btn-dark' : 'btn-outline-secondary'}`}
+            onClick={() => setPlacesView('map')}
+          >
+            <MapPin size={14} /> Map
+          </button>
+        </div>
+      )}
+
+      {activeFilterTab === 'places' && placesView === 'map' ? (
+        <ProfileFoodMap
+          places={mapPlaces}
+          onSelect={(id) => {
+            const tile = filteredTiles.find((t) => (t.kind === 'saved' ? `saved-${t.item.id}` : `card-${t.item.id}`) === id);
+            if (!tile) return;
+            if (tile.kind === 'saved') setSelectedItem(tile.item);
+            else setSelectedCard(tile.item);
+          }}
+        />
+      ) : null}
+
+      {activeFilterTab === 'places' && placesView === 'map' ? null : filteredTiles.length === 0 ? (
         <div className="text-center text-muted py-5 bg-light rounded-4">
           <div style={{ fontSize: 32 }}>🍽️</div>
           <div className="fw-bold mt-2 text-uppercase" style={{ fontSize: '0.8rem', letterSpacing: '1px' }}>
