@@ -49,5 +49,8 @@ next-env.d.ts
 /graphify_env
 /graphify-out
 
+# design review screenshots (working reference images, not app code)
+/design
+
 # Allow example env
 !.env.example

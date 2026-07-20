@@ -9,7 +9,7 @@ export default function AuthBackHeader() {
 
   return (
     <div className="pt-3">
-      <button onClick={() => router.back()} className="btn btn-link ps-0 text-decoration-none" type="button">
+      <button onClick={() => router.back()} className="btn btn-link ps-0 auth-back" type="button">
         ← Back
       </button>
     </div>

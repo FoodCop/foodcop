@@ -1,2 +1,223 @@
-// Login + Onboarding styling - filled in when re-skinned off Romio's
-// compiled CSS.
+// Login: re-skinned from a Claude Design mockup (soft pill inputs/buttons,
+// warm gold CTA) onto this app's real design system - FUZO brand tokens
+// from _variables.scss (the mockup's gold maps directly onto $turmeric,
+// already $secondary) and the real heading/body fonts (Barlow
+// Condensed/Hanken Grotesk, wired globally via $headings-font-family), not
+// a generic system font. The waving-hand emoji in the mockup was swapped
+// for a real SVG (public/SVG/social/Smile.svg), same emoji->SVG approach
+// _onboarding.scss already established. Scoped to its own .auth-* classes
+// rather than overriding .btn-primary/.form-control globally, since $chili
+// stays the site-wide primary everywhere else - this gold treatment is
+// specific to the auth screen, not a brand-wide accent swap.
+
+$auth-ink: #1c1917;
+$auth-ink-soft: #6b7280;
+$auth-border: #e7e5e2;
+$auth-surface-muted: #fcfbfa;
+$auth-radius-pill: 9999px;
+
+.auth-page {
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 0.5rem 1rem 3rem;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-back {
+  color: $auth-ink;
+  font-weight: 600;
+  padding: 0;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: $auth-ink;
+  }
+}
+
+.auth-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+  margin: 1.5rem 0 0.25rem;
+}
+
+.auth-title__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.auth-subtitle {
+  color: $auth-ink-soft;
+  font-size: 0.9375rem;
+  margin-bottom: 1.75rem;
+}
+
+.auth-field {
+  margin-bottom: 1.125rem;
+}
+
+.auth-field__label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: $auth-ink;
+  margin-bottom: 0.5rem;
+}
+
+.auth-field__input {
+  width: 100%;
+  padding: 0.9375rem 1.25rem;
+  border-radius: $auth-radius-pill;
+  border: 1.5px solid $auth-border;
+  background: $auth-surface-muted;
+  font-size: 0.9375rem;
+  color: $auth-ink;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &::placeholder {
+    color: #a8a29e;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $turmeric;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba($turmeric, 0.16);
+  }
+}
+
+.auth-password {
+  position: relative;
+
+  .auth-field__input {
+    padding-right: 3rem;
+  }
+}
+
+.auth-password__toggle {
+  all: unset;
+  position: absolute;
+  top: 50%;
+  right: 1.1rem;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: $auth-ink-soft;
+  }
+}
+
+.auth-switch {
+  font-size: 0.875rem;
+  color: $auth-ink-soft;
+  margin-bottom: 1.5rem;
+}
+
+.auth-switch__link {
+  all: unset;
+  cursor: pointer;
+  font-weight: 700;
+  color: $auth-ink;
+  text-decoration: underline;
+}
+
+.auth-cta {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  padding: 0.9375rem;
+  border-radius: $auth-radius-pill;
+  background: $turmeric;
+  color: $auth-ink;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+
+  &:hover {
+    filter: brightness(0.96);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: $auth-ink-soft;
+  font-size: 0.8125rem;
+  margin: 1.5rem 0;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: $auth-border;
+  }
+}
+
+.auth-google {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.875rem;
+  border-radius: $auth-radius-pill;
+  border: 1.5px solid $auth-border;
+  background: #fff;
+  color: $auth-ink;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  cursor: pointer;
+
+  &:hover {
+    background: $auth-surface-muted;
+  }
+
+  img {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
+
+.auth-guest {
+  all: unset;
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  color: $turmeric;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+.auth-footer {
+  margin-top: auto;
+  padding-top: 3rem;
+  text-align: center;
+  color: $turmeric;
+  font-weight: 800;
+  font-size: 0.8125rem;
+  letter-spacing: 0.15em;
+}

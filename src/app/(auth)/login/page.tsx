@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Eye, EyeOff } from 'lucide-react';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import AuthBackHeader from '@/components/auth/AuthBackHeader';
 
 // Adapted from Romio's SignIn/SignUp screens (merged into one toggle, matching
 // the old FUZO login.html's single-page sign-in/sign-up flow), wired to real
-// Supabase Auth. Re-skinned onto plain Bootstrap form markup (master CSS)
-// instead of Romio's compiled CSS.
+// Supabase Auth. Re-skinned from a Claude Design mockup (soft pill inputs,
+// warm gold CTA - see _auth.scss) - the mockup's waving-hand emoji is a real
+// SVG here (public/SVG/social/Smile.svg) instead.
 export default function LoginPage() {
   const router = useRouter();
 
@@ -96,140 +98,144 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container">
+    <div className="auth-page">
       <AuthBackHeader />
-      <div className="row justify-content-center">
-        <div className="col-12 col-sm-8 col-md-6 col-lg-4 py-5">
-          <h1 className="h3 fw-bold">
-            {mode === 'signin' ? 'Welcome Back! 👋' : 'Join FUZO Today 🍽️'}
-          </h1>
-          <p className="text-muted">
-            {mode === 'signin' ? 'Your next favorite meal awaits' : 'Find your next favorite meal, together'}
-          </p>
-          {!isSupabaseConfigured && (
-            <div className="alert alert-warning small">
-              Supabase isn’t connected yet — this form will render but auth calls will no-op until
-              NEXT_PUBLIC_SUPABASE_URL/ANON_KEY are set in .env.local.
-            </div>
-          )}
 
-          {confirmationSent ? (
-            <div className="alert alert-success small">
-              Almost there — we sent a confirmation link to <strong>{email}</strong>. Click it, then
-              sign in below.
-              <div className="mt-2">
-                <button
-                  type="button"
-                  className="btn btn-link p-0 align-baseline small"
-                  onClick={() => {
-                    setConfirmationSent(false);
-                    setMode('signin');
-                  }}
-                >
-                  Back to sign in
-                </button>
-              </div>
-            </div>
-          ) : (
-          <form onSubmit={handleSubmit}>
-            {mode === 'signup' && (
-              <div className="mb-3">
-                <label htmlFor="name" className="form-label">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  className="form-control"
-                  placeholder="Your Name"
-                  autoComplete="off"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-            )}
-
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                className="form-control"
-                placeholder="Email Address"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <div className="input-group">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  className="form-control"
-                  placeholder="Password"
-                  autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={() => setShowPassword((v) => !v)}
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
-              </div>
-            </div>
-
-            {error && <div className="alert alert-danger small">{error}</div>}
-
-            <p className="small">
-              {mode === 'signin' ? (
-                <>
-                  Don&rsquo;t have an account?{' '}
-                  <button type="button" className="btn btn-link p-0 align-baseline" onClick={() => setMode('signup')}>
-                    Sign Up
-                  </button>
-                </>
-              ) : (
-                <>
-                  Already have an account?{' '}
-                  <button type="button" className="btn btn-link p-0 align-baseline" onClick={() => setMode('signin')}>
-                    Sign In
-                  </button>
-                </>
-              )}
-            </p>
-
-            <div className="d-grid gap-2 mb-3">
-              <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Please wait…' : mode === 'signin' ? 'Sign In' : 'Sign Up'}
-              </button>
-            </div>
-
-            <div className="text-center text-muted small mb-2">or continue with</div>
-            <div className="d-grid gap-2">
-              <button type="button" className="btn btn-outline-dark" onClick={handleGoogle}>
-                Continue with Google
-              </button>
-              <button type="button" className="btn btn-outline-secondary" onClick={handleGuest}>
-                Continue as Guest
-              </button>
-            </div>
-          </form>
-          )}
+      <h1 className="auth-title">
+        {mode === 'signin' ? (
+          <>
+            Welcome Back! <img src="/SVG/social/Smile.svg" className="auth-title__icon" alt="" />
+          </>
+        ) : (
+          'Join FUZO Today 🍽️'
+        )}
+      </h1>
+      <p className="auth-subtitle">
+        {mode === 'signin' ? 'Your next favorite meal awaits' : 'Find your next favorite meal, together'}
+      </p>
+      {!isSupabaseConfigured && (
+        <div className="alert alert-warning small">
+          Supabase isn’t connected yet — this form will render but auth calls will no-op until
+          NEXT_PUBLIC_SUPABASE_URL/ANON_KEY are set in .env.local.
         </div>
-      </div>
+      )}
+
+      {confirmationSent ? (
+        <div className="alert alert-success small">
+          Almost there — we sent a confirmation link to <strong>{email}</strong>. Click it, then
+          sign in below.
+          <div className="mt-2">
+            <button
+              type="button"
+              className="btn btn-link p-0 align-baseline small"
+              onClick={() => {
+                setConfirmationSent(false);
+                setMode('signin');
+              }}
+            >
+              Back to sign in
+            </button>
+          </div>
+        </div>
+      ) : (
+      <form onSubmit={handleSubmit}>
+        {mode === 'signup' && (
+          <div className="auth-field">
+            <label htmlFor="name" className="auth-field__label">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="auth-field__input"
+              placeholder="Your Name"
+              autoComplete="off"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+        )}
+
+        <div className="auth-field">
+          <label htmlFor="email" className="auth-field__label">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            className="auth-field__input"
+            placeholder="Email Address"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="auth-field">
+          <label htmlFor="password" className="auth-field__label">
+            Password
+          </label>
+          <div className="auth-password">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              className="auth-field__input"
+              placeholder="Password"
+              autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="auth-password__toggle"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+        </div>
+
+        {error && <div className="alert alert-danger small">{error}</div>}
+
+        <p className="auth-switch">
+          {mode === 'signin' ? (
+            <>
+              Don&rsquo;t have an account?{' '}
+              <button type="button" className="auth-switch__link" onClick={() => setMode('signup')}>
+                Sign Up
+              </button>
+            </>
+          ) : (
+            <>
+              Already have an account?{' '}
+              <button type="button" className="auth-switch__link" onClick={() => setMode('signin')}>
+                Sign In
+              </button>
+            </>
+          )}
+        </p>
+
+        <button type="submit" className="auth-cta" disabled={loading}>
+          {loading ? 'Please wait…' : mode === 'signin' ? 'Sign In' : 'Sign Up'}
+        </button>
+
+        <div className="auth-divider">or continue with</div>
+
+        <button type="button" className="auth-google" onClick={handleGoogle}>
+          <img src="/assets-romio/images/svg/google.svg" alt="" />
+          Continue with Google
+        </button>
+        <button type="button" className="auth-guest" onClick={handleGuest}>
+          Continue as Guest
+        </button>
+      </form>
+      )}
+
+      <div className="auth-footer">FUZO</div>
     </div>
   );
 }
