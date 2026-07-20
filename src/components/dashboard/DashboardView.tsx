@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import Link from 'next/link';
-import { Search, Clock, MapPin, Star, PlayCircle, Compass, UtensilsCrossed, Film, Trophy, Bot, Leaf } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { Search, Clock, MapPin, Star, Play, Compass, UtensilsCrossed, Film, Bot, Leaf, Plus, LocateFixed } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { createClient } from '@/lib/supabase/client';
 import { CreateCardModal } from '@/components/create/CreateCardModal';
@@ -42,9 +43,16 @@ const QUICK_NAV = [
   { href: '/scout', label: 'Scout', icon: Compass },
   { href: '/discover', label: 'Bites', icon: UtensilsCrossed },
   { href: '/trims', label: 'Trims', icon: Film },
-  { href: '/rewards', label: 'Rewards', icon: Trophy },
+  { href: '/rewards', label: 'Rewards', icon: Star },
   { href: '/ai-chef', label: 'AI Chef', icon: Bot },
 ];
+
+const JUMP_SECTIONS = [
+  { key: 'recipes', label: 'Recipes' },
+  { key: 'restaurants', label: 'Restaurants' },
+  { key: 'videos', label: 'Videos' },
+] as const;
+type JumpSection = (typeof JUMP_SECTIONS)[number]['key'];
 
 const VEG_DIETS = new Set(['vegetarian', 'vegan']);
 
@@ -59,6 +67,7 @@ const VEG_DIETS = new Set(['vegetarian', 'vegan']);
 // _dashboard.scss for the full styling rationale.
 export default function DashboardView() {
   const { user } = useAuth();
+  const pathname = usePathname();
 
   const [aggregate, setAggregate] = useState<AggregateResult | null>(null);
   const [tasteLoaded, setTasteLoaded] = useState(false);
@@ -87,10 +96,16 @@ export default function DashboardView() {
   const [searchText, setSearchText] = useState('');
   const [vegOnly, setVegOnly] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<JumpSection>('recipes');
 
   const recipesRef = useRef<HTMLDivElement | null>(null);
   const restaurantsRef = useRef<HTMLDivElement | null>(null);
   const videosRef = useRef<HTMLDivElement | null>(null);
+  const sectionRefs: Record<JumpSection, RefObject<HTMLDivElement | null>> = {
+    recipes: recipesRef,
+    restaurants: restaurantsRef,
+    videos: videosRef,
+  };
 
   // Taste aggregate + recipes + videos - all keyed off the user's own data,
   // no location needed.
@@ -168,12 +183,14 @@ export default function DashboardView() {
   }, [user]);
 
   // Nearby restaurants - waits for taste data (so matchesTaste is meaningful)
-  // and browser geolocation consent.
-  useEffect(() => {
-    if (!tasteLoaded || typeof navigator === 'undefined' || !navigator.geolocation) return;
-
+  // and browser geolocation consent. Extracted so the empty-state's "Enable
+  // Location" button can retry the same request on demand, not just the
+  // one automatic attempt on load.
+  const requestLocation = () => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
       async (position) => {
+        setGeoDenied(false);
         const results = await getNearbyRestaurants(position.coords.latitude, position.coords.longitude, topCuisine);
         setRestaurants(results);
       },
@@ -181,6 +198,11 @@ export default function DashboardView() {
         setGeoDenied(true);
       },
     );
+  };
+
+  useEffect(() => {
+    if (!tasteLoaded) return;
+    requestLocation();
     // Deliberately runs once taste data is ready, not on every topCuisine change -
     // re-requesting geolocation on every render would be a bad prompt experience.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -198,8 +220,9 @@ export default function DashboardView() {
 
   const pointsToNextLevel = rewardsStats ? POINTS_PER_LEVEL - (rewardsStats.points % POINTS_PER_LEVEL) : 0;
 
-  const scrollToSection = (ref: RefObject<HTMLDivElement | null>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const scrollToSection = (section: JumpSection) => {
+    setActiveSection(section);
+    sectionRefs[section].current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   if (!user) {
@@ -225,8 +248,8 @@ export default function DashboardView() {
               <div className="dashboard-nudge__text">Your restaurant isn&apos;t pinned yet.</div>
               <div className="dashboard-nudge__sub">Pin your place so FUZO users can discover it on Scout — it only takes a minute.</div>
             </div>
-            <button type="button" className="btn btn-light btn-sm fw-bold" onClick={() => setIsPinModalOpen(true)}>
-              📍 Pin My Restaurant
+            <button type="button" className="dashboard-nudge__cta" onClick={() => setIsPinModalOpen(true)}>
+              <MapPin size={14} /> Pin My Restaurant
             </button>
           </div>
         ) : (
@@ -236,8 +259,8 @@ export default function DashboardView() {
                 <div className="dashboard-nudge__text">You haven&apos;t created any food cards yet.</div>
                 <div className="dashboard-nudge__sub">Recipes below are based on your onboarding preferences — create a card to sharpen them.</div>
               </div>
-              <button type="button" className="btn btn-light btn-sm fw-bold" onClick={() => setIsCreateOpen(true)}>
-                + Create a Card
+              <button type="button" className="dashboard-nudge__cta" onClick={() => setIsCreateOpen(true)}>
+                <Plus size={14} /> Create a Card
               </button>
             </div>
           )
@@ -247,7 +270,11 @@ export default function DashboardView() {
       {/* Quick-nav pills */}
       <div className="dashboard-quicknav">
         {QUICK_NAV.map(({ href, label, icon: Icon }) => (
-          <Link key={href} href={href} className="dashboard-quicknav__pill">
+          <Link
+            key={href}
+            href={href}
+            className={`dashboard-quicknav__pill${pathname === href ? ' is-active' : ''}`}
+          >
             <Icon size={16} />
             {label}
           </Link>
@@ -278,16 +305,25 @@ export default function DashboardView() {
 
       {/* Section-jump pills */}
       <div className="dashboard-jumpnav">
-        <button type="button" onClick={() => scrollToSection(recipesRef)}>Recipes</button>
-        <button type="button" onClick={() => scrollToSection(restaurantsRef)}>Restaurants</button>
-        <button type="button" onClick={() => scrollToSection(videosRef)}>Videos</button>
+        {JUMP_SECTIONS.map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            className={activeSection === key ? 'is-active' : undefined}
+            onClick={() => scrollToSection(key)}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Real rewards promo banner */}
       {rewardsStats && (
         <Link href="/rewards" className="dashboard-promo">
           <div>
-            <div className="dashboard-promo__title">Level {rewardsStats.level} · {pointsToNextLevel} pts to next level</div>
+            <div className="dashboard-promo__title">
+              <span className="dashboard-promo__level">Level {rewardsStats.level}</span> · {pointsToNextLevel} pts to next level
+            </div>
             <div className="dashboard-promo__sub">Publish and share cards to keep leveling up</div>
           </div>
           <span className="dashboard-promo__cta">View Rewards →</span>
@@ -331,7 +367,7 @@ export default function DashboardView() {
                 </div>
                 <div className="dashboard-card__body">
                   <div className="dashboard-card__title">{recipe.title}</div>
-                  <div className="dashboard-card__meta dashboard-card__meta--accent">{recipe.matchReason}</div>
+                  <span className="dashboard-card__pick">{recipe.matchReason}</span>
                 </div>
               </div>
             ))}
@@ -345,7 +381,15 @@ export default function DashboardView() {
           <Link href="/scout" className="dashboard-section__sub">Open Scout →</Link>
         </div>
         {geoDenied ? (
-          <div className="dashboard-empty">Enable location access to see restaurants near you.</div>
+          <div className="dashboard-empty dashboard-empty--location">
+            <div className="dashboard-empty__icon">
+              <MapPin size={20} />
+            </div>
+            <p className="mb-3">Enable location access to see restaurants near you.</p>
+            <button type="button" className="dashboard-empty__cta" onClick={requestLocation}>
+              <LocateFixed size={14} /> Enable Location
+            </button>
+          </div>
         ) : restaurants === null ? (
           <div className="dashboard-empty">Finding restaurants near you…</div>
         ) : restaurants.length === 0 ? (
@@ -392,7 +436,7 @@ export default function DashboardView() {
         {loadingVideos ? (
           <div className="dashboard-empty">Loading videos…</div>
         ) : videos.length === 0 ? null : (
-          <div className="dashboard-video-row">
+          <div className="dashboard-video-grid">
             {videos.map((video) => (
               <button
                 key={video.videoId}
@@ -400,13 +444,12 @@ export default function DashboardView() {
                 onClick={() => setActiveVideo(video)}
                 className="dashboard-video-card"
               >
-                {video.thumbnail ? (
-                  <img src={video.thumbnail} alt="" className="dashboard-video-card__thumb" />
-                ) : (
-                  <div className="dashboard-video-card__thumb d-flex align-items-center justify-content-center">
-                    <PlayCircle size={28} />
-                  </div>
-                )}
+                <div className="dashboard-video-card__thumb">
+                  {video.thumbnail && <img src={video.thumbnail} alt="" />}
+                  <span className="dashboard-video-card__play">
+                    <Play size={18} fill="currentColor" />
+                  </span>
+                </div>
                 <div className="dashboard-video-card__body">
                   <div className="dashboard-video-card__title">{video.title}</div>
                   <div className="dashboard-video-card__channel">{video.channelTitle}</div>
