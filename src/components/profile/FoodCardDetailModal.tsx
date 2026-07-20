@@ -6,8 +6,8 @@ import type { FoodCardRecord } from '../../lib/types/foodCard';
 import { TYPE_META } from '../../lib/types/foodCard';
 import { foodCardService } from '../../lib/services/foodCardService';
 import { PointsService } from '../../lib/services/pointsService';
-import { ChatService, type ChatContact } from '../../lib/services/chatService';
-import FriendPickerModal from '../chat/FriendPickerModal';
+import { ChatService } from '../../lib/services/chatService';
+import FriendPickerModal, { type ShareTarget } from '../chat/FriendPickerModal';
 import { VideoPlayerModal } from '../ui/VideoPlayerModal';
 
 interface FoodCardDetailModalProps {
@@ -38,28 +38,35 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
     }
   };
 
-  const handlePickFriend = async (friend: ChatContact) => {
+  const handlePickShareTarget = async (target: ShareTarget) => {
     setShowFriendPicker(false);
     setShareStatus('sending');
 
-    const conversation = await ChatService.getOrCreateConversation(currentUserId, friend.id);
-    if (!conversation.success || !conversation.data) {
-      setShareStatus('error');
-      return;
-    }
+    const item = {
+      id: current.id,
+      itemType: 'food_card' as const,
+      name: current.title,
+      caption: current.caption || undefined,
+      img: current.image_url || undefined,
+      cat: meta.label,
+    };
 
-    const sent = await ChatService.sendSharedItemMessage({
-      conversationId: conversation.data.id,
-      senderId: currentUserId,
-      item: {
-        id: current.id,
-        itemType: 'food_card',
-        name: current.title,
-        caption: current.caption || undefined,
-        img: current.image_url || undefined,
-        cat: meta.label,
-      },
-    });
+    const sent =
+      target.type === 'group'
+        ? await ChatService.sendGroupSharedItemMessage({
+            groupId: target.group.id,
+            senderId: currentUserId,
+            item,
+          })
+        : await (async () => {
+            const conversation = await ChatService.getOrCreateConversation(currentUserId, target.friend.id);
+            if (!conversation.success || !conversation.data) return { success: false as const };
+            return ChatService.sendSharedItemMessage({
+              conversationId: conversation.data.id,
+              senderId: currentUserId,
+              item,
+            });
+          })();
 
     if (!sent.success || !sent.data) {
       setShareStatus('error');
@@ -145,7 +152,7 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
               )}
 
               {shareStatus === 'sent' && (
-                <div className="alert alert-success mt-4 mb-0">Shared! Your friend will see it in Messages.</div>
+                <div className="alert alert-success mt-4 mb-0">Shared! They&rsquo;ll see it in Messages.</div>
               )}
               {shareStatus === 'error' && (
                 <div className="alert alert-danger mt-4 mb-0">Couldn&rsquo;t share that — try again.</div>
@@ -169,7 +176,7 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
                 onClick={() => setShowFriendPicker(true)}
                 disabled={shareStatus === 'sending'}
               >
-                {shareStatus === 'sending' ? 'Sending...' : 'Share with a Friend'}
+                {shareStatus === 'sending' ? 'Sending...' : 'Share'}
               </button>
             </div>
           </div>
@@ -180,7 +187,7 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
         <FriendPickerModal
           currentUserId={currentUserId}
           onClose={() => setShowFriendPicker(false)}
-          onPick={handlePickFriend}
+          onPick={handlePickShareTarget}
         />
       )}
 

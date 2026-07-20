@@ -20,11 +20,11 @@ import { Search, X, RefreshCw, Navigation, Locate, MapPin } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { PlacesService } from '@/lib/services/placesService';
 import { PlateService } from '@/lib/services/plateService';
-import { ChatService, type ChatContact } from '@/lib/services/chatService';
+import { ChatService } from '@/lib/services/chatService';
 import { PointsService } from '@/lib/services/pointsService';
 import { normalizeItemForPlateSave } from '@/lib/services/savedItems';
 import { useAuth } from '../auth/AuthProvider';
-import FriendPickerModal from '../chat/FriendPickerModal';
+import FriendPickerModal, { type ShareTarget } from '../chat/FriendPickerModal';
 import type { AppItem } from '@/types/appItem';
 import type { ScoutPlace, ScoutFilter, MapLike } from '@/types/scout';
 import { getGoogleMaps } from '@/types/scout';
@@ -428,22 +428,28 @@ export default function ScoutView() {
     }
   };
 
-  const handlePickFriendForShare = async (friend: ChatContact) => {
+  const handlePickShareTarget = async (target: ShareTarget) => {
     const place = shareTargetPlace;
     setShareTargetPlace(null);
     if (!place || !user?.id) return;
 
-    const conversation = await ChatService.getOrCreateConversation(user.id, friend.id);
-    if (!conversation.success || !conversation.data) {
-      showActionToast('Could not start conversation. Please try again.');
-      return;
-    }
-
-    const sent = await ChatService.sendSharedItemMessage({
-      conversationId: conversation.data.id,
-      senderId: user.id,
-      item: toAppItem(place),
-    });
+    const item = toAppItem(place);
+    const sent =
+      target.type === 'group'
+        ? await ChatService.sendGroupSharedItemMessage({
+            groupId: target.group.id,
+            senderId: user.id,
+            item,
+          })
+        : await (async () => {
+            const conversation = await ChatService.getOrCreateConversation(user.id, target.friend.id);
+            if (!conversation.success || !conversation.data) return { success: false as const };
+            return ChatService.sendSharedItemMessage({
+              conversationId: conversation.data.id,
+              senderId: user.id,
+              item,
+            });
+          })();
 
     if (!sent.success || !sent.data) {
       showActionToast('Could not share this place. Please try again.');
@@ -451,7 +457,7 @@ export default function ScoutView() {
     }
 
     await PointsService.awardPoints({ actionType: 'share_card', sourceType: 'share', sourceId: sent.data.id });
-    showActionToast(`Shared ${place.name} with ${friend.name}`);
+    showActionToast(`Shared ${place.name} with ${target.type === 'group' ? target.group.name : target.friend.name}`);
   };
 
   // --- Map Initialization ---
@@ -780,7 +786,7 @@ export default function ScoutView() {
         <FriendPickerModal
           currentUserId={user.id}
           onClose={() => setShareTargetPlace(null)}
-          onPick={handlePickFriendForShare}
+          onPick={handlePickShareTarget}
         />
       )}
 
