@@ -31,9 +31,9 @@ export default function TasteProfile() {
             <p className="sec-sub" style={{ color: 'rgba(255,255,255,.55)' }}>
               No two people enjoy food the same way.<br />FUZO starts by learning yours.
             </p>
-            <div style={{ marginTop: '28px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div className="feature-list" style={{ marginTop: '28px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {['Cuisine preferences', 'Spice level & dietary needs', 'Budget & dining style', 'Favourite dishes & places'].map(item => (
-                <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'var(--sora)', fontSize: '.9rem', fontWeight: 300, color: 'rgba(255,255,255,.7)' }}>
+                <div key={item} className="feature-item" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'var(--sora)', fontSize: '.9rem', fontWeight: 300, color: 'rgba(255,255,255,.7)' }}>
                   <span style={{ color: 'var(--gold)', fontSize: '1rem' }}>✓</span> {item}
                 </div>
               ))}

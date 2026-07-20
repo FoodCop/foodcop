@@ -14,8 +14,6 @@ import HomeFooter from '@/components/home/HomeFooter';
 export default function Home() {
   return (
     <div className="v6-page-wrapper v6-page">
-      <div id="cur"></div>
-      <div id="cur-o"></div>
       <div id="pbar"></div>
 
       <Hero />

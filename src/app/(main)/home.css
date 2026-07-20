@@ -39,7 +39,6 @@
      cards' rotated/translated overflow from adding a horizontal scrollbar,
      but doesn't establish a scroll container, so sticky keeps working. */
   overflow-x:clip;
-  cursor:none;
   scrollbar-width:none;
 }
 .v6-page::-webkit-scrollbar{display:none;}
@@ -57,16 +56,6 @@
 #grow .grow-inner{display:grid;grid-template-columns:55% 45%;gap:64px;align-items:start;}
 .sec-inner-p{padding:0 60px;}
 
-
-/* ── CURSOR ── */
-#cur{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:9999;
-  transform:translate(-50%,-50%);
-  background:var(--cta2);
-  transition:width .18s var(--ease),height .18s var(--ease);}
-#cur-o{position:fixed;width:36px;height:36px;border:1.5px solid rgba(255,107,0,.45);border-radius:50%;
-  pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
-body.hov #cur{width:46px;height:46px;background:rgba(255,107,0,.1);border:1.5px solid var(--cta1);}
-body.hov #cur-o{opacity:0;}
 
 /* ── PROGRESS ── */
 #pbar{position:fixed;top:0;left:0;width:100%;height:2.5px;
@@ -104,16 +93,18 @@ body.hov #cur-o{opacity:0;}
   background:#0a0a0a;
   display:flex;align-items:center;justify-content:center;
 }
-.hero-video video{
-  width:100%;height:100%;object-fit:cover;opacity:.85;
-}
-/* Fallback image slides when no video */
+/* Cross-fading hero video slides (hs0/hs1) - video is a replaced element, so
+   the ::after gradient overlay lives on this wrapper div instead of on the
+   <video> itself (replaced elements don't render generated content). */
 .hslide{
   position:absolute;inset:0;z-index:1;
-  background-size:cover;background-position:center;
+  overflow:hidden;
   opacity:0;transform:scale(1.1);
   will-change:opacity,transform;
   transition:opacity .05s,transform .05s;
+}
+.hslide video{
+  width:100%;height:100%;object-fit:cover;display:block;
 }
 .hslide.on{opacity:1;}
 .hslide::after{
@@ -798,7 +789,7 @@ footer{
 }
 @media(max-width:600px){
   .hero-h1{font-size:clamp(2.8rem,10vw,4rem);}
-  .hero-btns{flex-direction:column;align-items:flex-start;}
+  .hero-btns{flex-direction:column;align-items:center;}
   .cards-stage{height:420px;}
   .fcard{width:220px;height:330px;}
   .tako-phones{gap:10px;}
@@ -815,4 +806,29 @@ footer{
   .fcta-h{font-size:clamp(2rem,8vw,3rem);}
   .emo-content{padding:80px 24px;}
   .emo-h{font-size:clamp(2.4rem,8vw,4rem);}
+
+  /* ── Center all copy at mobile width ──
+     Chat-bubble mockups (.tmsg/.ts-bubble) are intentionally left as-is -
+     they simulate a real messaging UI and centering would break that
+     left/right speaker convention. */
+  .hero-tagline{justify-content:center;}
+  .hero-body{text-align:center;margin-left:auto;margin-right:auto;}
+  .hero-sub-small{margin-left:auto;margin-right:auto;}
+
+  .eyebrow{justify-content:center;}
+  .sec-h,.sec-sub{text-align:center;}
+  .sec-sub{margin-left:auto;margin-right:auto;}
+  .cat-wrap,.fc-icons,.s-icons-row{justify-content:center;}
+  .feature-list{align-items:center;}
+  .feature-item,.spin{justify-content:center;}
+
+  .gcard{text-align:center;}
+
+  .emo-h,.emo-lines span,.emo-end{text-align:center;}
+
+  .foot-top{align-items:center;text-align:center;}
+  .foot-taglines{align-items:center;}
+  .foot-cols{justify-content:center;text-align:center;}
+  .foot-soc{justify-content:center;}
+  .foot-bot{flex-direction:column;text-align:center;}
 }

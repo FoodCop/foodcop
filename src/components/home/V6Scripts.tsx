@@ -4,73 +4,26 @@ import { useEffect } from 'react';
 
 export default function V6Scripts() {
   useEffect(() => {
-    // ─── CURSOR ───
-    const cur = document.getElementById('cur');
-    const curo = document.getElementById('cur-o');
-    let mx = 0, my = 0, ox = 0, oy = 0;
-    
-    let rafId: number;
-    
-    const onMouseMove = (e: MouseEvent) => {
-      mx = e.clientX;
-      my = e.clientY;
-      if (cur) {
-        cur.style.left = mx + 'px';
-        cur.style.top = my + 'px';
-      }
-    };
-    document.addEventListener('mousemove', onMouseMove);
-    
-    function loop() {
-      ox += (mx - ox) * 0.1;
-      oy += (my - oy) * 0.1;
-      if (curo) {
-        curo.style.left = ox + 'px';
-        curo.style.top = oy + 'px';
-      }
-      rafId = requestAnimationFrame(loop);
-    }
-    loop();
-
-    const hoverSelectors = 'a, button, .cat-pill, .gcard, .ccard, .s-ico, .spill';
-    
-    // We attach event listeners to body to handle dynamic elements using event delegation
-    const onMouseOver = (e: MouseEvent) => {
-      const target = e.target as Element;
-      if (target.closest(hoverSelectors)) {
-        document.body.classList.add('hov');
-      }
-    };
-    const onMouseOut = (e: MouseEvent) => {
-      const target = e.target as Element;
-      if (target.closest(hoverSelectors)) {
-        document.body.classList.remove('hov');
-      }
-    };
-    document.body.addEventListener('mouseover', onMouseOver);
-    document.body.addEventListener('mouseout', onMouseOut);
-
     // ─── HERO SLIDES ───
     let curHS = 0;
     function heroLogic(sy: number) {
       const heroEl = document.getElementById('hero');
       const hslides = [
         document.getElementById('hs0'),
-        document.getElementById('hs1'),
-        document.getElementById('hs2')
+        document.getElementById('hs1')
       ];
       const hdotsEl = document.querySelectorAll('.hdot');
       const hBody = document.getElementById('hBody');
-      
-      if (!heroEl || !hBody || !hslides[0] || !hslides[1] || !hslides[2]) return;
+
+      if (!heroEl || !hBody || !hslides[0] || !hslides[1]) return;
 
       const top = heroEl.offsetTop;
       const h = heroEl.offsetHeight;
       const wH = window.innerHeight;
-      
+
       const p = Math.max(0, Math.min((sy - top) / Math.max(1, h - wH), 1));
-      const idx = Math.min(2, Math.floor(p * 3));
-      const lp = (p * 3) % 1;
+      const idx = Math.min(1, Math.floor(p * 2));
+      const lp = (p * 2) % 1;
       
       if (idx !== curHS) {
         hslides[curHS]?.classList.remove('on');
@@ -257,10 +210,6 @@ export default function V6Scripts() {
 
     return () => {
       // Cleanup
-      document.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(rafId);
-      document.body.removeEventListener('mouseover', onMouseOver);
-      document.body.removeEventListener('mouseout', onMouseOut);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('scroll', growCards);
       observer.disconnect();

@@ -8,12 +8,13 @@ import TakoAssistant from './TakoAssistant';
 // Global floating Tako FAB, mounted once in (main)/layout.tsx so it persists
 // across client-side navigation - ported from FUZO_V3/js/tako.js's
 // site-wide FAB + overlay pattern. Hidden on /ai-chef itself, which already
-// renders the full TakoAssistant experience inline.
+// renders the full TakoAssistant experience inline, and on "/" - the
+// marketing homepage isn't part of the logged-in app experience Tako assists with.
 export default function TakoWidget() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  if (pathname === '/ai-chef') return null;
+  if (pathname === '/ai-chef' || pathname === '/') return null;
 
   return (
     <>

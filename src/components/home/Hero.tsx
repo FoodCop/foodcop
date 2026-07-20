@@ -5,15 +5,18 @@ export default function Hero() {
   return (
     <section id="hero">
       <div className="hero-pin" id="heroPin">
-        {/* VIDEO BACKGROUND */}
+        {/* VIDEO BACKGROUND — two clips cross-fading as hero-scroll progresses */}
         <div className="hero-video" id="heroVideo">
-          <video autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }}>
-            <source src="/v6/hero-video.mp4" type="video/mp4" />
-          </video>
-          {/* Fallback image slides */}
-          <div className="hslide on" id="hs0" style={{ backgroundImage: "url('/v6/hero-street.png')" }}></div>
-          <div className="hslide" id="hs1" style={{ backgroundImage: "url('/v6/hero-slide2.png')" }}></div>
-          <div className="hslide" id="hs2" style={{ backgroundImage: "url('/v6/ramen.png')" }}></div>
+          <div className="hslide on" id="hs0">
+            <video autoPlay muted loop playsInline>
+              <source src="/videos/hero_video_01.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div className="hslide" id="hs1">
+            <video autoPlay muted loop playsInline>
+              <source src="/videos/hero_video_02.mp4" type="video/mp4" />
+            </video>
+          </div>
         </div>
 
         {/* Hero body */}
@@ -34,7 +37,6 @@ export default function Hero() {
         {/* Slide dots */}
         <div className="hdots" id="hdots">
           <div className="hdot on"></div>
-          <div className="hdot"></div>
           <div className="hdot"></div>
         </div>
       </div>

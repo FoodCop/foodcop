@@ -49,7 +49,7 @@ export default function ShareScout() {
             <p className="sec-sub" style={{ color: 'rgba(255,255,255,.55)' }}>
               Find nearby restaurants that match your taste — not just the closest ones.
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '28px' }}>
+            <div className="feature-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '28px' }}>
               {[
                 { dot: 'var(--cta1)', text: 'Shin Ramen · 0.3km · 96% match', delay: '0s', dur: '5s' },
                 { dot: 'var(--gold)', text: 'Sakura Café · 0.7km · 91% match', delay: '.5s', dur: '5.2s' },
