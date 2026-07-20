@@ -14,7 +14,7 @@ import AuthBackHeader from '@/components/auth/AuthBackHeader';
 export default function LoginPage() {
   const router = useRouter();
 
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [mode, setMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [confirmationSent, setConfirmationSent] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
 
   const afterAuth = async (supabase: NonNullable<ReturnType<typeof createClient>>, userId: string) => {
     await supabase.from('users').upsert(
@@ -69,6 +70,26 @@ export default function LoginPage() {
     if (data.user) await afterAuth(supabase, data.user.id);
   };
 
+  const handleForgotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    const supabase = createClient();
+    if (!supabase) {
+      setError('Supabase isn’t connected yet — add NEXT_PUBLIC_SUPABASE_URL/ANON_KEY to .env.local.');
+      return;
+    }
+    setLoading(true);
+    const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/recovery`,
+    });
+    setLoading(false);
+    if (authError) {
+      setError(authError.message);
+      return;
+    }
+    setResetSent(true);
+  };
+
   const handleGoogle = async () => {
     const supabase = createClient();
     if (!supabase) {
@@ -106,12 +127,18 @@ export default function LoginPage() {
           <>
             Welcome Back! <img src="/SVG/social/Smile.svg" className="auth-title__icon" alt="" />
           </>
-        ) : (
+        ) : mode === 'signup' ? (
           'Join FUZO Today 🍽️'
+        ) : (
+          'Reset Your Password'
         )}
       </h1>
       <p className="auth-subtitle">
-        {mode === 'signin' ? 'Your next favorite meal awaits' : 'Find your next favorite meal, together'}
+        {mode === 'signin'
+          ? 'Your next favorite meal awaits'
+          : mode === 'signup'
+          ? 'Find your next favorite meal, together'
+          : 'Enter your email and we’ll send you a reset link'}
       </p>
       {!isSupabaseConfigured && (
         <div className="alert alert-warning small">
@@ -137,6 +164,57 @@ export default function LoginPage() {
             </button>
           </div>
         </div>
+      ) : mode === 'forgot' ? (
+        resetSent ? (
+          <div className="alert alert-success small">
+            If an account exists for <strong>{email}</strong>, we&rsquo;ve sent a password reset
+            link. Check your inbox (and spam folder).
+            <div className="mt-2">
+              <button
+                type="button"
+                className="btn btn-link p-0 align-baseline small"
+                onClick={() => {
+                  setResetSent(false);
+                  setMode('signin');
+                }}
+              >
+                Back to sign in
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleForgotSubmit}>
+            <div className="auth-field">
+              <label htmlFor="forgot-email" className="auth-field__label">
+                Email
+              </label>
+              <input
+                autoFocus
+                type="email"
+                id="forgot-email"
+                className="auth-field__input"
+                placeholder="Email Address"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            {error && <div className="alert alert-danger small">{error}</div>}
+
+            <p className="auth-switch">
+              Remembered your password?{' '}
+              <button type="button" className="auth-switch__link" onClick={() => setMode('signin')}>
+                Sign In
+              </button>
+            </p>
+
+            <button type="submit" className="auth-cta" disabled={loading}>
+              {loading ? 'Sending…' : 'Send Reset Link'}
+            </button>
+          </form>
+        )
       ) : (
       <form onSubmit={handleSubmit}>
         {mode === 'signup' && (
@@ -198,6 +276,14 @@ export default function LoginPage() {
             </button>
           </div>
         </div>
+
+        {mode === 'signin' && (
+          <p className="auth-switch" style={{ marginBottom: '1rem', marginTop: '-0.5rem' }}>
+            <button type="button" className="auth-switch__link" onClick={() => setMode('forgot')}>
+              Forgot password?
+            </button>
+          </p>
+        )}
 
         {error && <div className="alert alert-danger small">{error}</div>}
 
