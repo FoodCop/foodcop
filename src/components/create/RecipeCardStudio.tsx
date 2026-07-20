@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { X, Image as ImageIcon, Loader2, CheckCircle2, Check, Plus, Trash2 } from 'lucide-react';
+import { X, Image as ImageIcon, Loader2, CheckCircle2, Plus, Trash2 } from 'lucide-react';
 import { StudioStepper } from '@/components/ui/StudioStepper';
 import { NeuralReveal } from '@/components/ui/NeuralReveal';
 import { loadUploadedImage, parseAiJson } from '@/lib/utils/studioHelpers';
@@ -11,7 +11,8 @@ import { UGC_CUISINES } from '@/lib/utils/taxonomy';
 import { FlavorSliders } from './shared/FlavorSliders';
 import { TagChips } from './shared/TagChips';
 import { Dropzone } from './shared/Dropzone';
-import { DEFAULT_FLAVOR, emptyCardTags, TYPE_META, type FoodCardType, type FlavorVector, type CardTags } from '@/lib/types/foodCard';
+import { CardSuccessScreen } from './shared/CardSuccessScreen';
+import { DEFAULT_FLAVOR, emptyCardTags, TYPE_META, type FoodCardType, type FlavorVector, type CardTags, type FoodCardRecord } from '@/lib/types/foodCard';
 
 // Recipe family (RECIPE, HOME_COOKING, DESSERT, DRINK). Modeled on
 // BITES_STUDIO_READY_RECKONER.md's 6-step wizard: Visuals -> Identity ->
@@ -40,7 +41,7 @@ export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, on
   const [tags, setTags] = useState<CardTags>(emptyCardTags());
   const [flavorProfile, setFlavorProfile] = useState<FlavorVector>(DEFAULT_FLAVOR);
   const [isSaving, setIsSaving] = useState(false);
-  const [done, setDone] = useState(false);
+  const [createdCard, setCreatedCard] = useState<FoodCardRecord | null>(null);
 
   const mountedRef = useRef(true);
   React.useEffect(() => {
@@ -100,8 +101,8 @@ export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, on
         },
         status,
       );
-      if (result.success) {
-        setDone(true);
+      if (result.success && result.data) {
+        setCreatedCard(result.data);
         onCreated();
       }
     } finally {
@@ -214,7 +215,7 @@ export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, on
 
         {currentStep === 3 && <NeuralReveal onNext={() => setCurrentStep(4)} title="Neural Synthesis" subtitle="Extracting Flavor & Nutrition..." />}
 
-        {currentStep === 4 && !done && (
+        {currentStep === 4 && !createdCard && (
           <div className="studio-panel--scroll">
             <div className="studio-panel__inner">
               <div className="studio-panel__head">
@@ -244,7 +245,9 @@ export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, on
                 </ul>
               )}
 
-              <TagChips value={tags} onChange={setTags} categories={['cuisine', 'meal_type', 'diet', 'cooking_style']} />
+              {/* Cuisine is already picked in the Identity step; asking again here read as a
+                  duplicate step since it showed the same list with nothing pre-selected. */}
+              <TagChips value={tags} onChange={setTags} categories={['meal_type', 'diet', 'cooking_style']} />
               <FlavorSliders value={flavorProfile} onChange={setFlavorProfile} />
 
               <div className="studio-btn-row">
@@ -258,15 +261,7 @@ export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, on
           </div>
         )}
 
-        {done && (
-          <div className="studio-success">
-            <div className="studio-success__icon">
-              <Check size={72} strokeWidth={4} />
-            </div>
-            <h2 className="studio-success__heading">Card Locked</h2>
-            <button onClick={onDone} className="studio-success__btn">Done</button>
-          </div>
-        )}
+        {createdCard && <CardSuccessScreen card={createdCard} lockedLabel="Card Locked" onDone={onDone} />}
       </div>
     </div>
   );

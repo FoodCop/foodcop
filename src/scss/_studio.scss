@@ -826,8 +826,96 @@ $studio-z: 1100;
   color: $studio-success;
 }
 
+.studio-success__card {
+  width: 100%;
+  max-width: 20rem;
+}
+
+.studio-success__card-face {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: $studio-radius-xl;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.25);
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.studio-success__card-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent 60%);
+}
+
+.studio-success__card-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: $studio-radius-pill;
+  background: #fff;
+  color: darken($studio-success, 15%);
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.studio-success__card-info {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 1rem;
+  text-align: left;
+}
+
+.studio-success__card-type {
+  display: block;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.studio-success__card-title {
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.25rem;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+
+.studio-success__card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.studio-success__card-tag {
+  padding: 0.25rem 0.6rem;
+  border-radius: $studio-radius-pill;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 .studio-success__heading {
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.04em;

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { X, Star, Image as ImageIcon, Loader2, CheckCircle2, Check } from 'lucide-react';
+import { X, Star, Image as ImageIcon, Loader2, CheckCircle2 } from 'lucide-react';
 import { StudioStepper } from '@/components/ui/StudioStepper';
 import { NeuralReveal } from '@/components/ui/NeuralReveal';
 import { loadUploadedImage, parseAiJson } from '@/lib/utils/studioHelpers';
@@ -10,7 +10,8 @@ import { foodCardService } from '@/lib/services/foodCardService';
 import { FlavorSliders } from './shared/FlavorSliders';
 import { TagChips } from './shared/TagChips';
 import { Dropzone } from './shared/Dropzone';
-import { DEFAULT_FLAVOR, emptyCardTags, TYPE_META, type FoodCardType, type FlavorVector, type CardTags } from '@/lib/types/foodCard';
+import { CardSuccessScreen } from './shared/CardSuccessScreen';
+import { DEFAULT_FLAVOR, emptyCardTags, TYPE_META, type FoodCardType, type FlavorVector, type CardTags, type FoodCardRecord } from '@/lib/types/foodCard';
 
 // The lightest of the four Create Card families: FOOD_REVIEW,
 // FOOD_EXPLORATION, FOOD_RECOMMENDATION, FOOD_COLLECTION all share this exact
@@ -35,7 +36,7 @@ export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardTy
   const [tags, setTags] = useState<CardTags>(emptyCardTags());
   const [flavorProfile, setFlavorProfile] = useState<FlavorVector>(DEFAULT_FLAVOR);
   const [isSaving, setIsSaving] = useState(false);
-  const [done, setDone] = useState(false);
+  const [createdCard, setCreatedCard] = useState<FoodCardRecord | null>(null);
 
   const mountedRef = useRef(true);
   React.useEffect(() => {
@@ -82,8 +83,8 @@ export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardTy
         },
         status,
       );
-      if (result.success) {
-        setDone(true);
+      if (result.success && result.data) {
+        setCreatedCard(result.data);
         onCreated();
       }
     } finally {
@@ -172,7 +173,7 @@ export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardTy
 
         {currentStep === 2 && <NeuralReveal onNext={() => setCurrentStep(3)} />}
 
-        {currentStep === 3 && !done && (
+        {currentStep === 3 && !createdCard && (
           <div className="studio-panel--scroll">
             <div className="studio-panel__inner">
               <div className="studio-panel__head">
@@ -203,17 +204,7 @@ export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardTy
           </div>
         )}
 
-        {done && (
-          <div className="studio-success">
-            <div className="studio-success__icon">
-              <Check size={72} strokeWidth={4} />
-            </div>
-            <h2 className="studio-success__heading">Card Locked</h2>
-            <button onClick={onDone} className="studio-success__btn">
-              Done
-            </button>
-          </div>
-        )}
+        {createdCard && <CardSuccessScreen card={createdCard} lockedLabel="Card Locked" onDone={onDone} />}
       </div>
     </div>
   );

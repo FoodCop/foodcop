@@ -27,11 +27,13 @@ export default function ProfileTabs({
   tasteProfile,
   userId,
   isCurrentUser = true,
+  initialActivityCategory,
 }: {
   profile: DemoProfile;
   tasteProfile?: FoodDnaRealData;
   userId?: string;
   isCurrentUser?: boolean;
+  initialActivityCategory?: 'places' | 'recipes' | 'videos' | 'posts';
 }) {
   const tabs: (PersonTab | BusinessTab)[] = profile.type === 'restaurant'
     ? ['activity', 'menu', 'info', 'gallery']
@@ -55,7 +57,7 @@ export default function ProfileTabs({
       {active === 'dna' ? (
         <FoodDnaSection {...tasteProfile} />
       ) : active === 'activity' ? (
-        <ActivityTab userId={userId} isCurrentUser={isCurrentUser} />
+        <ActivityTab userId={userId} isCurrentUser={isCurrentUser} initialCategory={initialActivityCategory} />
       ) : active === 'settings' ? (
         <SettingsTab />
       ) : (

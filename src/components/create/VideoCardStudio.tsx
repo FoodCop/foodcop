@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { X, Video as VideoIcon, Link as LinkIcon, Loader2, CheckCircle2, Check } from 'lucide-react';
+import { X, Video as VideoIcon, Link as LinkIcon, Loader2, CheckCircle2 } from 'lucide-react';
 import { StudioStepper } from '@/components/ui/StudioStepper';
 import { NeuralReveal } from '@/components/ui/NeuralReveal';
 import { extractVideoFrameAsDataUrl, getYoutubeVideoId, parseAiJson } from '@/lib/utils/studioHelpers';
@@ -13,7 +13,8 @@ import { MediaUploadService } from '@/lib/services/mediaUploadService';
 import { FlavorSliders } from './shared/FlavorSliders';
 import { TagChips } from './shared/TagChips';
 import { Dropzone } from './shared/Dropzone';
-import { DEFAULT_FLAVOR, emptyCardTags, TYPE_META, type FoodCardType, type FlavorVector, type CardTags } from '@/lib/types/foodCard';
+import { CardSuccessScreen } from './shared/CardSuccessScreen';
+import { DEFAULT_FLAVOR, emptyCardTags, TYPE_META, type FoodCardType, type FlavorVector, type CardTags, type FoodCardRecord } from '@/lib/types/foodCard';
 
 // Video family (BITE_VIDEO). Modeled on TRIMS_STUDIO_READY_RECKONER.md's
 // two-pipeline pattern: an uploaded video runs through Identity/Story +
@@ -54,7 +55,7 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
   const [tags, setTags] = useState<CardTags>(emptyCardTags());
   const [flavorProfile, setFlavorProfile] = useState<FlavorVector>(DEFAULT_FLAVOR);
   const [isSaving, setIsSaving] = useState(false);
-  const [done, setDone] = useState(false);
+  const [createdCard, setCreatedCard] = useState<FoodCardRecord | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const mountedRef = useRef(true);
@@ -143,8 +144,8 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
         },
         status,
       );
-      if (result.success) {
-        setDone(true);
+      if (result.success && result.data) {
+        setCreatedCard(result.data);
         onCreated();
       } else {
         setError(result.error || 'Failed to save. Please try again.');
@@ -233,7 +234,7 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
 
         {source === 'upload' && currentStep === 2 && <NeuralReveal onNext={() => setCurrentStep(3)} />}
 
-        {((source === 'upload' && currentStep === 3) || (source === 'youtube' && currentStep === 1)) && !done && (
+        {((source === 'upload' && currentStep === 3) || (source === 'youtube' && currentStep === 1)) && !createdCard && (
           <div className="studio-panel--scroll">
             <div className="studio-panel__inner">
               <div className="studio-panel__head">
@@ -261,15 +262,7 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
           </div>
         )}
 
-        {done && (
-          <div className="studio-success">
-            <div className="studio-success__icon">
-              <Check size={72} strokeWidth={4} />
-            </div>
-            <h2 className="studio-success__heading">Trim Locked</h2>
-            <button onClick={onDone} className="studio-success__btn">Done</button>
-          </div>
-        )}
+        {createdCard && <CardSuccessScreen card={createdCard} lockedLabel="Trim Locked" onDone={onDone} />}
       </div>
     </div>
   );

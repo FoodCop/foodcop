@@ -12,12 +12,13 @@ import { useAuth } from '../auth/AuthProvider';
 import ProfileFoodMap, { type ProfileMapPlace } from './ProfileFoodMap';
 import { Grid3x3, MapPin } from 'lucide-react';
 
+type ActivityCategory = 'places' | 'recipes' | 'videos' | 'posts';
+
 interface ActivityTabProps {
   userId?: string;
   isCurrentUser?: boolean;
+  initialCategory?: ActivityCategory;
 }
-
-type ActivityCategory = 'places' | 'recipes' | 'videos' | 'posts';
 
 const CATEGORY_FILTERS: Array<{ key: ActivityCategory; label: string }> = [
   { key: 'places', label: 'Places' },
@@ -51,7 +52,7 @@ type ActivityTile =
   | { kind: 'saved'; category: ActivityCategory; item: AppItem }
   | { kind: 'card'; category: ActivityCategory; item: FoodCardRecord };
 
-export default function ActivityTab({ userId, isCurrentUser = true }: ActivityTabProps) {
+export default function ActivityTab({ userId, isCurrentUser = true, initialCategory }: ActivityTabProps) {
   const { user } = useAuth();
   const currentUserId = user?.id;
   const targetUserId = isCurrentUser || !userId ? currentUserId : userId;
@@ -59,7 +60,7 @@ export default function ActivityTab({ userId, isCurrentUser = true }: ActivityTa
   const [savedItems, setSavedItems] = useState<AppItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<AppItem | null>(null);
-  const [activeFilterTab, setActiveFilterTab] = useState<ActivityCategory>('places');
+  const [activeFilterTab, setActiveFilterTab] = useState<ActivityCategory>(initialCategory ?? 'places');
   const [placesView, setPlacesView] = useState<'grid' | 'map'>('grid');
 
   const [myCards, setMyCards] = useState<FoodCardRecord[]>([]);

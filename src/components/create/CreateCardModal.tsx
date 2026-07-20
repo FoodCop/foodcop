@@ -42,12 +42,12 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ onClose }) => 
       return <ScoutAddPinModal cardType={cardType} onClose={onClose} onSuccess={() => onDone('/scout')} />;
     }
     if (family === 'recipe') {
-      return <RecipeCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} onDone={() => onDone('/profile')} />;
+      return <RecipeCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} onDone={() => onDone('/profile?activity=recipes')} />;
     }
     if (family === 'video') {
-      return <VideoCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} onDone={() => onDone('/profile')} />;
+      return <VideoCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} onDone={() => onDone('/profile?activity=videos')} />;
     }
-    return <DiscoveryCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} onDone={() => onDone('/profile')} />;
+    return <DiscoveryCardStudio cardType={cardType} onClose={onClose} onCreated={onCreated} onDone={() => onDone('/profile?activity=posts')} />;
   }
 
   return (
