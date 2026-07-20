@@ -4,18 +4,23 @@ import { useEffect, useMemo, useState } from 'react';
 import { Search, SlidersHorizontal, Clock, Users, X, List, ChefHat, PieChart, Bookmark } from 'lucide-react';
 import { fetchCuratedRecipes, type CuratedRecipe } from '@/lib/recipes/curatedRecipes';
 import { BITE_DIET_FILTERS, BITE_CUISINE_FILTERS, matchesFilter } from './constants/filters';
+import { PlateService } from '@/lib/services/plateService';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 // Bites: the Discover tab's recipe finder. Sourced entirely from
 // public/data/curatedRecipes.json via fetchCuratedRecipes() - filtered/
 // paginated client-side since the whole set is ~1,251 records. No AI recipe
 // generation, social "Trim" extraction, or share-to-chat here; those
 // belonged to a much larger legacy Studio feature that isn't part of this
-// recipe-search scope. Saving is local state for now.
+// recipe-search scope. Saving goes through the same saved_items/PlateService
+// pipeline every other save in the app uses (itemType 'recipe'), so a saved
+// recipe survives reload and shows up in Profile Activity's Recipes filter.
 
 const PAGE_SIZE = 12;
 const KEY_NUTRIENTS = ['Calories', 'Protein', 'Fat', 'Carbohydrates'];
 
 export function BitesView() {
+  const { user } = useAuth();
   const [recipes, setRecipes] = useState<CuratedRecipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
@@ -37,6 +42,21 @@ export function BitesView() {
       cancelled = true;
     };
   }, []);
+
+  // Load which recipes the signed-in user has already saved, so the toggle
+  // reflects real state instead of always starting unsaved.
+  useEffect(() => {
+    if (!user?.id) return;
+    (async () => {
+      const result = await PlateService.listSavedItems();
+      if (result.success && result.data) {
+        const ids = new Set(
+          result.data.filter((i) => i.item_type === 'recipe').map((i) => Number(i.item_id)),
+        );
+        setSaved(ids);
+      }
+    })();
+  }, [user?.id]);
 
   useEffect(() => {
     setPage(0);
@@ -75,13 +95,34 @@ export function BitesView() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageItems = filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
 
-  const toggleSave = (id: number) => {
+  const toggleSave = async (recipe: CuratedRecipe) => {
+    const id = recipe.id;
+    const wasSaved = saved.has(id);
+
+    // Optimistic toggle, reverted below if the write fails.
     setSaved((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
+      if (wasSaved) next.delete(id);
       else next.add(id);
       return next;
     });
+
+    const result = wasSaved
+      ? await PlateService.removeFromPlate({ itemId: String(id), itemType: 'recipe' })
+      : await PlateService.saveToPlate({
+          itemId: String(id),
+          itemType: 'recipe',
+          metadata: { title: recipe.title, image: recipe.image, cat: 'Recipe' },
+        });
+
+    if (!result.success) {
+      setSaved((prev) => {
+        const next = new Set(prev);
+        if (wasSaved) next.add(id);
+        else next.delete(id);
+        return next;
+      });
+    }
   };
 
   const resetFilters = () => {
@@ -207,7 +248,7 @@ export function BitesView() {
         <BitesRecipeModal
           recipe={selected}
           saved={saved.has(selected.id)}
-          onToggleSave={() => toggleSave(selected.id)}
+          onToggleSave={() => toggleSave(selected)}
           onClose={() => setSelected(null)}
         />
       )}

@@ -23,6 +23,7 @@ import { PlateService } from '@/lib/services/plateService';
 import { ChatService } from '@/lib/services/chatService';
 import { PointsService } from '@/lib/services/pointsService';
 import { normalizeItemForPlateSave } from '@/lib/services/savedItems';
+import { UserSettingsService } from '@/lib/services/userSettingsService';
 import { useAuth } from '../auth/AuthProvider';
 import FriendPickerModal, { type ShareTarget } from '../chat/FriendPickerModal';
 import type { AppItem } from '@/types/appItem';
@@ -369,6 +370,19 @@ export default function ScoutView() {
       if (result.success && result.data) {
         const ids = new Set(result.data.filter((i) => i.item_type === 'restaurant').map((i) => i.item_id));
         setSavedPlaceIds(ids);
+      }
+    })();
+  }, [user?.id]);
+
+  // Seed the distance filter's default from Settings' Discovery Radius
+  // (previously always a hardcoded 5km) - only on initial load, so it
+  // doesn't fight a distance the user has since changed via the filter UI.
+  useEffect(() => {
+    if (!user?.id) return;
+    (async () => {
+      const result = await UserSettingsService.get();
+      if (result.success && result.data) {
+        setFilter((prev) => ({ ...prev, maxDistance: result.data!.discoveryRadiusKm * 1000 }));
       }
     })();
   }, [user?.id]);

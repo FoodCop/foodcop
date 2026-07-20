@@ -7,6 +7,7 @@ import { NeuralReveal } from '@/components/ui/NeuralReveal';
 import { loadUploadedImage, parseAiJson } from '@/lib/utils/studioHelpers';
 import { GeminiService } from '@/lib/services/geminiService';
 import { foodCardService } from '@/lib/services/foodCardService';
+import { UserSettingsService } from '@/lib/services/userSettingsService';
 import { UGC_CUISINES } from '@/lib/utils/taxonomy';
 import { FlavorSliders } from './shared/FlavorSliders';
 import { TagChips } from './shared/TagChips';
@@ -47,6 +48,17 @@ export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, on
   React.useEffect(() => {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
+  }, []);
+
+  // Settings' "AI Card Generation" toggle - when off, skip the Gemini call
+  // and the Neural Reveal step entirely (showing that animation without a
+  // real analysis behind it would be exactly the kind of fake UI this
+  // project has repeatedly hunted down and removed) and go straight to Review.
+  const [aiEnabled, setAiEnabled] = useState(true);
+  React.useEffect(() => {
+    UserSettingsService.get().then((result) => {
+      if (result.success && result.data) setAiEnabled(result.data.aiCardGeneration);
+    });
   }, []);
 
   const handleFile = async (file: File) => {
@@ -206,8 +218,18 @@ export const RecipeCardStudio: React.FC<RecipeCardStudioProps> = ({ cardType, on
                 ))}
                 <button onClick={addIngredient} className="studio-add-row"><Plus size={16} /> Add ingredient</button>
               </div>
-              <button onClick={() => { setCurrentStep(3); runAnalysis(); }} className="studio-cta">
-                Neural Sync
+              <button
+                onClick={() => {
+                  if (aiEnabled) {
+                    setCurrentStep(3);
+                    runAnalysis();
+                  } else {
+                    setCurrentStep(4);
+                  }
+                }}
+                className="studio-cta"
+              >
+                {aiEnabled ? 'Neural Sync' : 'Continue'}
               </button>
             </div>
           </div>

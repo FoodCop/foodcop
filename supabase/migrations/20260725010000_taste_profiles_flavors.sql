@@ -1,0 +1,13 @@
+-- ==========================================
+-- Taste profiles: real per-user flavor preferences
+-- ==========================================
+-- OnboardingWizard.tsx's "What flavors do you enjoy?" step (state.a.flavors)
+-- has always been collected and shown in the onboarding preview ("Top
+-- flavors"), but finalize() never actually wrote it to taste_profiles -
+-- silently dropped on every signup. Adding the column here and backfilling
+-- the write in OnboardingWizard.tsx closes that gap, and gives Settings'
+-- "Flavor Profile" row (previously a dead button) something real to edit -
+-- same TEXT[] shape as the existing cuisines/dietary columns, not the
+-- separate 0-5-axis "Flavor DNA" concept FoodDnaSection still shows as
+-- Demo preview (that's a different, deferred piece of work).
+ALTER TABLE public.taste_profiles ADD COLUMN IF NOT EXISTS flavors TEXT[] DEFAULT '{}';

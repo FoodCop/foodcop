@@ -10,6 +10,7 @@ import { YouTubeService } from '@/lib/services/youtubeService';
 import { TAXONOMY_KEYWORD_MAP } from '@/lib/utils/taxonomy';
 import { foodCardService } from '@/lib/services/foodCardService';
 import { MediaUploadService } from '@/lib/services/mediaUploadService';
+import { UserSettingsService } from '@/lib/services/userSettingsService';
 import { FlavorSliders } from './shared/FlavorSliders';
 import { TagChips } from './shared/TagChips';
 import { Dropzone } from './shared/Dropzone';
@@ -62,6 +63,17 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
   React.useEffect(() => {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
+  }, []);
+
+  // Settings' "AI Card Generation" toggle - see RecipeCardStudio.tsx for why
+  // this skips straight to Review instead of faking the Reveal animation.
+  // The YouTube-URL path already never calls Gemini (Zero-LLM by design,
+  // see file header), so this only changes the upload path's Identity step.
+  const [aiEnabled, setAiEnabled] = useState(true);
+  React.useEffect(() => {
+    UserSettingsService.get().then((result) => {
+      if (result.success && result.data) setAiEnabled(result.data.aiCardGeneration);
+    });
   }, []);
 
   const handleVideoFile = async (file: File) => {
@@ -225,8 +237,19 @@ export const VideoCardStudio: React.FC<VideoCardStudioProps> = ({ cardType, onCl
                 placeholder="Caption..."
                 className="studio-textarea"
               />
-              <button onClick={() => { setCurrentStep(2); runAnalysis(); }} disabled={!title} className="studio-cta">
-                Neural Sync
+              <button
+                onClick={() => {
+                  if (aiEnabled) {
+                    setCurrentStep(2);
+                    runAnalysis();
+                  } else {
+                    setCurrentStep(3);
+                  }
+                }}
+                disabled={!title}
+                className="studio-cta"
+              >
+                {aiEnabled ? 'Neural Sync' : 'Continue'}
               </button>
             </div>
           </div>

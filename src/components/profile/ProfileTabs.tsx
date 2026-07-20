@@ -28,16 +28,24 @@ export default function ProfileTabs({
   userId,
   isCurrentUser = true,
   initialActivityCategory,
+  showFoodDna = true,
 }: {
   profile: DemoProfile;
   tasteProfile?: FoodDnaRealData;
   userId?: string;
   isCurrentUser?: boolean;
   initialActivityCategory?: 'places' | 'recipes' | 'videos' | 'posts';
+  /** Settings' "Show Food DNA™" toggle - only gates a non-owner's view; the owner always sees their own tab. */
+  showFoodDna?: boolean;
 }) {
+  const dnaVisible = isCurrentUser || showFoodDna;
   const tabs: (PersonTab | BusinessTab)[] = profile.type === 'restaurant'
     ? ['activity', 'menu', 'info', 'gallery']
-    : isCurrentUser ? ['activity', 'dna', 'settings'] : ['activity', 'dna'];
+    : isCurrentUser
+      ? ['activity', 'dna', 'settings']
+      : dnaVisible
+        ? ['activity', 'dna']
+        : ['activity'];
   const [active, setActive] = useState<string>('activity');
 
   return (

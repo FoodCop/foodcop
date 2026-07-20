@@ -11,6 +11,7 @@ import { ScoutAddPinModal } from '@/components/scout/ScoutAddPinModal';
 import { VideoPlayerModal } from '@/components/ui/VideoPlayerModal';
 import { PointsService } from '@/lib/services/pointsService';
 import { POINTS_PER_LEVEL } from '@/lib/rewards/progressionEngine';
+import { UserSettingsService, DEFAULT_USER_SETTINGS, type UserSettings } from '@/lib/services/userSettingsService';
 import {
   aggregateForUser,
   getOnboardingPrefs,
@@ -72,6 +73,7 @@ export default function DashboardView() {
   const [aggregate, setAggregate] = useState<AggregateResult | null>(null);
   const [tasteLoaded, setTasteLoaded] = useState(false);
   const [topCuisine, setTopCuisine] = useState<string | undefined>(undefined);
+  const [settings, setSettings] = useState<UserSettings>(DEFAULT_USER_SETTINGS);
 
   const [recipes, setRecipes] = useState<RecommendedRecipe[]>([]);
   const [loadingRecipes, setLoadingRecipes] = useState(true);
@@ -114,7 +116,15 @@ export default function DashboardView() {
     let cancelled = false;
 
     (async () => {
-      const [aggregateResult, prefs] = await Promise.all([aggregateForUser(user.id), getOnboardingPrefs(user.id)]);
+      const settingsResult = await UserSettingsService.get();
+      const userSettings = settingsResult.success && settingsResult.data ? settingsResult.data : DEFAULT_USER_SETTINGS;
+      if (cancelled) return;
+      setSettings(userSettings);
+
+      const [aggregateResult, prefs] = await Promise.all([
+        aggregateForUser(user.id, userSettings.useActivityForMl),
+        getOnboardingPrefs(user.id),
+      ]);
       if (cancelled) return;
       setAggregate(aggregateResult);
       setTasteLoaded(true);
@@ -191,7 +201,10 @@ export default function DashboardView() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         setGeoDenied(false);
-        const results = await getNearbyRestaurants(position.coords.latitude, position.coords.longitude, topCuisine);
+        const results = await getNearbyRestaurants(position.coords.latitude, position.coords.longitude, topCuisine, {
+          radiusKm: settings.discoveryRadiusKm,
+          hiddenGems: settings.showHiddenGems,
+        });
         setRestaurants(results);
       },
       () => {

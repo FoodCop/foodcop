@@ -29,6 +29,7 @@ import {
   type OnboardingState,
   type CardOpt,
 } from '@/lib/onboarding/data';
+import { MultiChips, ToggleButton, toggleArr } from '@/components/ui/MultiChips';
 
 // Ported from the old app's onboarding.html: the real branching flow
 // (Discover Food / Create & Inspire / Grow My Food Business), starting at
@@ -83,6 +84,7 @@ export default function OnboardingWizard() {
           user_id: user.id,
           cuisines: state.a.cuisines,
           dietary: state.a.dietary,
+          flavors: state.a.flavors,
           result_emoji: r.icon,
           result_title: r.title,
           result_desc: r.desc,
@@ -472,12 +474,6 @@ function Screen({
   }
 }
 
-function toggleArr(arr: string[], value: string, max?: number): string[] {
-  if (arr.includes(value)) return arr.filter((v) => v !== value);
-  if (max && arr.length >= max) return arr;
-  return [...arr, value];
-}
-
 function CardPicker({
   value,
   onSelect,
@@ -511,61 +507,6 @@ function CardPicker({
   );
 }
 
-function ToggleButton({
-  id,
-  label,
-  checked,
-  onChange,
-  type = 'checkbox',
-  name,
-}: {
-  id: string;
-  label: string;
-  checked: boolean;
-  onChange: () => void;
-  type?: 'checkbox' | 'radio';
-  name?: string;
-}) {
-  return (
-    <>
-      <input
-        type={type}
-        className="visually-hidden"
-        id={id}
-        name={name}
-        checked={checked}
-        onChange={onChange}
-        autoComplete="off"
-      />
-      <label className={`onboarding-chip${checked ? ' is-selected' : ''}`} htmlFor={id}>
-        {label}
-      </label>
-    </>
-  );
-}
-
-function MultiChips({ options, selected, max, onToggle }: { options: readonly string[]; selected: string[]; max?: number; onToggle: (v: string) => void }) {
-  const atMax = !!(max && selected.length >= max);
-  return (
-    <>
-      <div className="onboarding-chips">
-        {options.map((opt, i) => {
-          const on = selected.includes(opt);
-          return (
-            <span key={opt} className={!on && atMax ? 'is-at-max' : ''}>
-              <ToggleButton id={`chip-${i}-${opt}`} label={opt} checked={on} onChange={() => onToggle(opt)} />
-            </span>
-          );
-        })}
-      </div>
-      {max && (
-        <p className="onboarding-chip-count">
-          {selected.length} / {max} selected
-        </p>
-      )}
-    </>
-  );
-}
 
 function TextField({ label, value, placeholder, onChange }: { label: string; value: string; placeholder?: string; onChange: (v: string) => void }) {
   return (

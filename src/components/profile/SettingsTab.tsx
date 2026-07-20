@@ -1,10 +1,33 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { COUNTRY_DIAL_CODES, DEFAULT_COUNTRY_CODE } from '@/lib/data/countryCodes';
+import { FLAVORS, CUISINES, DIETARY } from '@/lib/onboarding/data';
 import LocationPickerModal from './LocationPickerModal';
+import TastePreferenceEditModal from './TastePreferenceEditModal';
+import {
+  UserSettingsService,
+  DEFAULT_USER_SETTINGS,
+  type UserSettings,
+  type MatchSensitivity,
+  type ProfileVisibility,
+} from '@/lib/services/userSettingsService';
+
+type TasteField = 'flavors' | 'cuisines' | 'dietary';
+
+const TASTE_FIELD_CONFIG: Record<TasteField, { title: string; emoji: string; options: readonly string[] }> = {
+  flavors: { title: 'Flavor Profile', emoji: '🌶️', options: FLAVORS },
+  cuisines: { title: 'Cuisine Preferences', emoji: '🌍', options: CUISINES },
+  dietary: { title: 'Dietary Preferences', emoji: '🥗', options: DIETARY },
+};
+
+const summarize = (values: string[], emptyText: string) => {
+  if (values.length === 0) return emptyText;
+  if (values.length <= 3) return values.join(' · ');
+  return `${values.slice(0, 3).join(', ')} +${values.length - 3} more`;
+};
 
 // Splits a stored "+1 4165550123"-style phone string back into a country
 // selection + local number for editing - longest dial code first so "+1"
@@ -37,6 +60,16 @@ export default function SettingsTab() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [isSavingLocation, setIsSavingLocation] = useState(false);
 
+  const [tasteProfile, setTasteProfile] = useState<Record<TasteField, string[]>>({
+    flavors: [],
+    cuisines: [],
+    dietary: [],
+  });
+  const [editingField, setEditingField] = useState<TasteField | null>(null);
+
+  const [settings, setSettings] = useState<UserSettings>(DEFAULT_USER_SETTINGS);
+  const radiusSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     const supabase = createClient();
     if (!supabase) return;
@@ -55,8 +88,58 @@ export default function SettingsTab() {
         setLocationLat(data.lat ?? null);
         setLocationLng(data.lng ?? null);
       }
+
+      const { data: taste } = await supabase
+        .from('taste_profiles')
+        .select('flavors, cuisines, dietary')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (taste) {
+        setTasteProfile({
+          flavors: taste.flavors ?? [],
+          cuisines: taste.cuisines ?? [],
+          dietary: taste.dietary ?? [],
+        });
+      }
+
+      const settingsResult = await UserSettingsService.get();
+      if (settingsResult.success && settingsResult.data) {
+        setSettings(settingsResult.data);
+      }
     })();
   }, []);
+
+  const updateSetting = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
+    setSettings((prev) => ({ ...prev, [key]: value }));
+    UserSettingsService.update({ [key]: value }).then((result) => {
+      if (!result.success) showToast(result.error || 'Could not save setting');
+    });
+  };
+
+  const updateRadiusSetting = (value: number) => {
+    setSettings((prev) => ({ ...prev, discoveryRadiusKm: value }));
+    if (radiusSaveTimer.current) clearTimeout(radiusSaveTimer.current);
+    radiusSaveTimer.current = setTimeout(() => {
+      UserSettingsService.update({ discoveryRadiusKm: value }).then((result) => {
+        if (!result.success) showToast(result.error || 'Could not save setting');
+      });
+    }, 500);
+  };
+
+  const handleSaveTasteField = async (field: TasteField, values: string[]) => {
+    if (!userId) return;
+    const supabase = createClient();
+    if (!supabase) return;
+    const { error } = await supabase
+      .from('taste_profiles')
+      .upsert({ user_id: userId, [field]: values, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+    if (error) {
+      showToast(error.message);
+      return;
+    }
+    setTasteProfile((prev) => ({ ...prev, [field]: values }));
+    showToast(`${TASTE_FIELD_CONFIG[field].title} saved`);
+  };
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -152,60 +235,67 @@ export default function SettingsTab() {
       {/* ── TASTE PREFERENCES ── */}
       <SectionTitle>Taste Preferences</SectionTitle>
       <div className="list-group shadow-sm rounded-4 border-0">
-        <button className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
+        <button
+          type="button"
+          className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom"
+          onClick={() => setEditingField('flavors')}
+        >
           <div className="d-flex align-items-center gap-3">
             <div className="bg-danger bg-opacity-10 text-danger rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🌶️</div>
             <div className="text-start">
               <div className="fw-bold text-dark">Flavor Profile</div>
-              <small className="text-muted">Spicy 4.6 · Savory 4.1 · Creamy 3.8</small>
+              <small className="text-muted">{summarize(tasteProfile.flavors, 'No flavors picked yet')}</small>
             </div>
           </div>
           <span className="text-muted fw-bold fs-5">›</span>
         </button>
-        <button className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
+        <button
+          type="button"
+          className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom"
+          onClick={() => setEditingField('cuisines')}
+        >
           <div className="d-flex align-items-center gap-3">
             <div className="bg-warning bg-opacity-10 text-warning rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🌍</div>
             <div className="text-start">
               <div className="fw-bold text-dark">Cuisine Preferences</div>
-              <small className="text-muted">Indian, Thai, Mexican +7 more</small>
+              <small className="text-muted">{summarize(tasteProfile.cuisines, 'No cuisines picked yet')}</small>
             </div>
           </div>
           <span className="text-muted fw-bold fs-5">›</span>
         </button>
-        <button className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
+        <button
+          type="button"
+          className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom"
+          onClick={() => setEditingField('dietary')}
+        >
           <div className="d-flex align-items-center gap-3">
             <div className="bg-success bg-opacity-10 text-success rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🥗</div>
             <div className="text-start">
               <div className="fw-bold text-dark">Dietary Preferences</div>
-              <small className="text-muted">No restrictions currently set</small>
+              <small className="text-muted">{summarize(tasteProfile.dietary, 'No restrictions currently set')}</small>
             </div>
           </div>
           <span className="text-muted fw-bold fs-5">›</span>
-        </button>
-        <button className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-primary bg-opacity-10 text-primary rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🏷️</div>
-            <div className="text-start">
-              <div className="fw-bold text-dark">Price Range</div>
-              <small className="text-muted">$$ Mid-range preferred</small>
-            </div>
-          </div>
-          <div className="d-flex align-items-center gap-2">
-            <span className="badge bg-light text-dark border">$$–$$$</span>
-            <span className="text-muted fw-bold fs-5">›</span>
-          </div>
         </button>
         <div className="list-group-item d-flex flex-column p-3 border-0 border-bottom">
           <div className="d-flex align-items-center gap-3 mb-2">
             <div className="bg-info bg-opacity-10 text-info rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>📍</div>
             <div className="flex-grow-1">
               <div className="fw-bold text-dark d-flex justify-content-between">
-                Discovery Radius <span className="text-primary">25 km</span>
+                Discovery Radius <span className="text-primary">{settings.discoveryRadiusKm} km</span>
               </div>
               <small className="text-muted">How far you'd travel for food</small>
             </div>
           </div>
-          <input type="range" className="form-range" min="5" max="50" step="5" defaultValue="25" />
+          <input
+            type="range"
+            className="form-range"
+            min="5"
+            max="50"
+            step="5"
+            value={settings.discoveryRadiusKm}
+            onChange={(e) => updateRadiusSetting(Number(e.target.value))}
+          />
           <div className="d-flex justify-content-between text-muted" style={{ fontSize: '0.65rem' }}>
             <span>5km</span><span>25km</span><span>50km+</span>
           </div>
@@ -279,9 +369,13 @@ export default function SettingsTab() {
               <small className="text-muted">How closely we filter recommendations</small>
             </div>
           </div>
-          <select className="form-select form-select-sm w-auto border-0 bg-light fw-bold text-primary">
+          <select
+            className="form-select form-select-sm w-auto border-0 bg-light fw-bold text-primary"
+            value={settings.matchSensitivity}
+            onChange={(e) => updateSetting('matchSensitivity', e.target.value as MatchSensitivity)}
+          >
             <option>Broad</option>
-            <option defaultValue="true">Balanced</option>
+            <option>Balanced</option>
             <option>Exact</option>
           </select>
         </div>
@@ -294,7 +388,13 @@ export default function SettingsTab() {
             </div>
           </div>
           <div className="form-check form-switch fs-4 m-0">
-            <input className="form-check-input" type="checkbox" role="switch" defaultChecked />
+            <input
+              className="form-check-input"
+              type="checkbox"
+              role="switch"
+              checked={settings.showHiddenGems}
+              onChange={(e) => updateSetting('showHiddenGems', e.target.checked)}
+            />
           </div>
         </div>
         <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
@@ -306,7 +406,13 @@ export default function SettingsTab() {
             </div>
           </div>
           <div className="form-check form-switch fs-4 m-0">
-            <input className="form-check-input" type="checkbox" role="switch" />
+            <input
+              className="form-check-input"
+              type="checkbox"
+              role="switch"
+              checked={settings.prioritizeTrending}
+              onChange={(e) => updateSetting('prioritizeTrending', e.target.checked)}
+            />
           </div>
         </div>
       </div>
@@ -321,8 +427,12 @@ export default function SettingsTab() {
               <div className="fw-bold text-dark">Profile Visibility</div>
             </div>
           </div>
-          <select className="form-select form-select-sm w-auto border-0 bg-light fw-bold text-primary">
-            <option defaultValue="true">Public</option>
+          <select
+            className="form-select form-select-sm w-auto border-0 bg-light fw-bold text-primary"
+            value={settings.profileVisibility}
+            onChange={(e) => updateSetting('profileVisibility', e.target.value as ProfileVisibility)}
+          >
+            <option>Public</option>
             <option>Followers</option>
             <option>Private</option>
           </select>
@@ -336,7 +446,13 @@ export default function SettingsTab() {
             </div>
           </div>
           <div className="form-check form-switch fs-4 m-0">
-            <input className="form-check-input" type="checkbox" role="switch" defaultChecked />
+            <input
+              className="form-check-input"
+              type="checkbox"
+              role="switch"
+              checked={settings.showFoodDna}
+              onChange={(e) => updateSetting('showFoodDna', e.target.checked)}
+            />
           </div>
         </div>
       </div>
@@ -397,7 +513,13 @@ export default function SettingsTab() {
             </div>
           </div>
           <div className="form-check form-switch fs-4 m-0">
-            <input className="form-check-input" type="checkbox" role="switch" defaultChecked />
+            <input
+              className="form-check-input"
+              type="checkbox"
+              role="switch"
+              checked={settings.aiCardGeneration}
+              onChange={(e) => updateSetting('aiCardGeneration', e.target.checked)}
+            />
           </div>
         </div>
         <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
@@ -409,7 +531,13 @@ export default function SettingsTab() {
             </div>
           </div>
           <div className="form-check form-switch fs-4 m-0">
-            <input className="form-check-input" type="checkbox" role="switch" defaultChecked />
+            <input
+              className="form-check-input"
+              type="checkbox"
+              role="switch"
+              checked={settings.useActivityForMl}
+              onChange={(e) => updateSetting('useActivityForMl', e.target.checked)}
+            />
           </div>
         </div>
       </div>
@@ -493,6 +621,17 @@ export default function SettingsTab() {
           initialLng={locationLng}
           onConfirm={handleLocationConfirm}
           onClose={() => setShowLocationPicker(false)}
+        />
+      )}
+
+      {editingField && (
+        <TastePreferenceEditModal
+          title={TASTE_FIELD_CONFIG[editingField].title}
+          emoji={TASTE_FIELD_CONFIG[editingField].emoji}
+          options={TASTE_FIELD_CONFIG[editingField].options}
+          initialSelected={tasteProfile[editingField]}
+          onSave={(values) => handleSaveTasteField(editingField, values)}
+          onClose={() => setEditingField(null)}
         />
       )}
     </div>

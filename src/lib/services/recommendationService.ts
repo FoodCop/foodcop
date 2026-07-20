@@ -23,6 +23,7 @@ import { YouTubeService } from '@/lib/services/youtubeService';
 import { getDistance } from '@/lib/scout/geometryUtils';
 import { buildPlacePhotoUrl } from '@/lib/scout/scoutLogic';
 import { FLAVOR_AXES, ZERO_FLAVOR, type CardTags, type FlavorVector, type FoodCardRecord } from '@/lib/types/foodCard';
+import type { MatchSensitivity } from '@/lib/services/userSettingsService';
 
 export interface AggregateResult {
   vector: FlavorVector;
@@ -45,6 +46,7 @@ export interface NearbyRestaurant {
   name: string;
   vicinity: string;
   rating?: number;
+  reviews?: number;
   priceLevel?: number;
   distanceMeters: number;
   matchesTaste: boolean;
@@ -78,8 +80,13 @@ function topEntry(counts: Record<string, number>): string | undefined {
  * food_cards (all statuses - this personalizes their own dashboard, not a
  * public-facing aggregate) and writes the vector to profiles.food_dna.
  */
-export async function aggregateForUser(userId: string): Promise<AggregateResult> {
+// useActivityForMl gates this at the caller's discretion (Settings' "Use
+// Activity for ML" toggle) - when a user opts out, their own authored-card
+// history stops personalizing recommendations for themselves; existing
+// profiles.food_dna is left untouched rather than overwritten with zeros.
+export async function aggregateForUser(userId: string, useActivityForMl = true): Promise<AggregateResult> {
   const empty: AggregateResult = { vector: ZERO_FLAVOR, cuisineCounts: {}, dietCounts: {}, sampleSize: 0 };
+  if (!useActivityForMl) return empty;
   const supabase = createClient();
   if (!supabase) return empty;
 
@@ -239,6 +246,8 @@ export async function getFeedCards(
   aggregate: AggregateResult,
   onboardingPrefs: { cuisines: string[]; dietary: string[] },
   limit = 30,
+  matchSensitivity: MatchSensitivity = 'Balanced',
+  prioritizeTrending = false,
 ): Promise<FeedCard[]> {
   const supabase = createClient();
   if (!supabase) return [];
@@ -283,6 +292,17 @@ export async function getFeedCards(
   const prefCuisines = new Set(onboardingPrefs.cuisines.map((c) => c.toLowerCase()));
   const strictDiets = onboardingPrefs.dietary.filter((d) => d === 'Vegan' || d === 'Vegetarian');
 
+  // Match Sensitivity (Settings' "Discovery & Matching" section): Balanced
+  // is the original, unchanged default. Broad softens the diet penalty for
+  // viewers who'd rather see more, imperfectly-matching cards. Exact hard-
+  // excludes cards that don't genuinely fit, rather than just ranking them
+  // lower - the only sensitivity level that filters instead of just sorts.
+  const dietPenalty = matchSensitivity === 'Broad' ? 150 : 300;
+  const trendingWeight = prioritizeTrending ? 50 : 20;
+
+  const dietSatisfied = (cardDiets: string[]) =>
+    strictDiets.every((diet) => cardDiets.includes(diet) || (diet === 'Vegetarian' && cardDiets.includes('Vegan')));
+
   const scored = (cards as FoodCardRecord[]).map((card) => {
     const tags = (card.tags || {}) as Partial<CardTags>;
     const cardCuisines = tags.cuisine || [];
@@ -297,7 +317,7 @@ export async function getFeedCards(
       // penalties (confirmed via the ranking sanity check: without this, a
       // Vegan+Vegetarian viewer got -600 on cards that would in fact be fine).
       const satisfied = cardDiets.includes(diet) || (diet === 'Vegetarian' && cardDiets.includes('Vegan'));
-      if (!satisfied) score -= 300;
+      if (!satisfied) score -= dietPenalty;
     }
 
     if (aggregate.sampleSize > 0) {
@@ -305,7 +325,7 @@ export async function getFeedCards(
       score += Math.max(0, 60 - distance * 6);
     }
 
-    score += decay(card.created_at) * 20;
+    score += decay(card.created_at) * trendingWeight;
     score += Math.random() * 10;
 
     const matchReason = cuisineHits > 0
@@ -314,10 +334,13 @@ export async function getFeedCards(
         ? 'Matches your flavor profile'
         : 'Popular pick';
 
-    return { card, score, matchReason };
+    const qualifiesForExact = prefCuisines.size === 0 || cuisineHits > 0;
+
+    return { card, score, matchReason, cardDiets, qualifiesForExact };
   });
 
   return scored
+    .filter((entry) => matchSensitivity !== 'Exact' || (entry.qualifiesForExact && dietSatisfied(entry.cardDiets)))
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map(({ card, matchReason }) => ({
@@ -333,34 +356,47 @@ export async function getFeedCards(
     }));
 }
 
-export async function getNearbyRestaurants(lat: number, lng: number, topCuisine?: string): Promise<NearbyRestaurant[]> {
-  const result = await PlacesService.searchNearby(lat, lng);
+export async function getNearbyRestaurants(
+  lat: number,
+  lng: number,
+  topCuisine?: string,
+  options?: { radiusKm?: number; hiddenGems?: boolean },
+): Promise<NearbyRestaurant[]> {
+  const radiusMeters = (options?.radiusKm ?? 5) * 1000;
+  const result = await PlacesService.searchNearby(lat, lng, radiusMeters);
   if (!result.success || !result.data?.results?.length) return [];
 
   const cuisineLower = topCuisine?.toLowerCase();
 
-  return result.data.results
-    .map((place) => {
-      const placeLat = place.geometry?.location?.lat;
-      const placeLng = place.geometry?.location?.lng;
-      const distanceMeters =
-        placeLat != null && placeLng != null ? getDistance({ lat, lng }, { lat: placeLat, lng: placeLng }) : Infinity;
-      const haystack = `${place.name} ${place.vicinity || ''}`.toLowerCase();
+  const restaurants = result.data.results.map((place) => {
+    const placeLat = place.geometry?.location?.lat;
+    const placeLng = place.geometry?.location?.lng;
+    const distanceMeters =
+      placeLat != null && placeLng != null ? getDistance({ lat, lng }, { lat: placeLat, lng: placeLng }) : Infinity;
+    const haystack = `${place.name} ${place.vicinity || ''}`.toLowerCase();
 
-      const photoReference = place.photos?.[0]?.photo_reference;
+    const photoReference = place.photos?.[0]?.photo_reference;
 
-      return {
-        placeId: place.place_id || place.id || '',
-        name: place.name,
-        vicinity: place.vicinity || place.formatted_address || '',
-        rating: place.rating,
-        priceLevel: place.price_level,
-        distanceMeters,
-        matchesTaste: !!cuisineLower && haystack.includes(cuisineLower),
-        image: photoReference ? buildPlacePhotoUrl(photoReference) : undefined,
-      };
-    })
-    .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    return {
+      placeId: place.place_id || place.id || '',
+      name: place.name,
+      vicinity: place.vicinity || place.formatted_address || '',
+      rating: place.rating,
+      reviews: place.user_ratings_total,
+      priceLevel: place.price_level,
+      distanceMeters,
+      matchesTaste: !!cuisineLower && haystack.includes(cuisineLower),
+      image: photoReference ? buildPlacePhotoUrl(photoReference) : undefined,
+    };
+  });
+
+  // Show Hidden Gems (Settings' "Discovery & Matching" section): a soft
+  // re-sort toward fewer-reviews spots first, using Google Places' own real
+  // review-count field - not a hard filter, so a sparse area doesn't end up
+  // empty. Off (or no review-count data) keeps the original rating-first sort.
+  return options?.hiddenGems
+    ? restaurants.sort((a, b) => (a.reviews ?? 0) - (b.reviews ?? 0))
+    : restaurants.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
 }
 
 export async function getSuggestedVideos(topCuisine?: string): Promise<SuggestedVideo[]> {

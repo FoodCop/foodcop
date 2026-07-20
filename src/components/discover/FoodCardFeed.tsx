@@ -10,6 +10,7 @@ import {
 } from '@/lib/services/recommendationService';
 import { PlateService, type PlateItemType } from '@/lib/services/plateService';
 import { TYPE_META, familyOf, type FoodCardFamily } from '@/lib/types/foodCard';
+import { UserSettingsService, DEFAULT_USER_SETTINGS } from '@/lib/services/userSettingsService';
 
 // Same Tinder-style drag/swipe mechanic as the old SwipeFeed.tsx (ported
 // from Romio's Home.tsx originally), re-pointed at real food_cards ranked by
@@ -41,11 +42,21 @@ export default function FoodCardFeed() {
     let cancelled = false;
 
     (async () => {
+      const settingsResult = await UserSettingsService.get();
+      const settings = settingsResult.success && settingsResult.data ? settingsResult.data : DEFAULT_USER_SETTINGS;
+
       const [aggregate, onboardingPrefs] = await Promise.all([
-        aggregateForUser(user.id),
+        aggregateForUser(user.id, settings.useActivityForMl),
         getOnboardingPrefs(user.id),
       ]);
-      const feed = await getFeedCards(user.id, aggregate, onboardingPrefs);
+      const feed = await getFeedCards(
+        user.id,
+        aggregate,
+        onboardingPrefs,
+        30,
+        settings.matchSensitivity,
+        settings.prioritizeTrending,
+      );
       if (!cancelled) {
         setCards(feed);
         setLoading(false);

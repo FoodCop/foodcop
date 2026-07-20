@@ -7,6 +7,7 @@ import { NeuralReveal } from '@/components/ui/NeuralReveal';
 import { loadUploadedImage, parseAiJson } from '@/lib/utils/studioHelpers';
 import { GeminiService } from '@/lib/services/geminiService';
 import { foodCardService } from '@/lib/services/foodCardService';
+import { UserSettingsService } from '@/lib/services/userSettingsService';
 import { FlavorSliders } from './shared/FlavorSliders';
 import { TagChips } from './shared/TagChips';
 import { Dropzone } from './shared/Dropzone';
@@ -42,6 +43,15 @@ export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardTy
   React.useEffect(() => {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
+  }, []);
+
+  // Settings' "AI Card Generation" toggle - see RecipeCardStudio.tsx for why
+  // this skips straight to Review instead of faking the Reveal animation.
+  const [aiEnabled, setAiEnabled] = useState(true);
+  React.useEffect(() => {
+    UserSettingsService.get().then((result) => {
+      if (result.success && result.data) setAiEnabled(result.data.aiCardGeneration);
+    });
   }, []);
 
   const handleFile = async (file: File) => {
@@ -161,11 +171,18 @@ export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardTy
                 />
               </div>
               <button
-                onClick={() => { setCurrentStep(2); runAnalysis(); }}
+                onClick={() => {
+                  if (aiEnabled) {
+                    setCurrentStep(2);
+                    runAnalysis();
+                  } else {
+                    setCurrentStep(3);
+                  }
+                }}
                 disabled={caption.length < 5}
                 className="studio-cta"
               >
-                Neural Sync
+                {aiEnabled ? 'Neural Sync' : 'Continue'}
               </button>
             </div>
           </div>
