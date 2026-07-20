@@ -1,0 +1,336 @@
+The biggest mistake would be trying to use **one prompt** for all Masterbots.
+
+What you actually want is:
+
+## Layer 1 — Global Brand DNA
+
+(shared by every image)
+
+## Layer 2 — Profile DNA
+
+(Jun, Aurelia, Sebastian, etc.)
+
+## Layer 3 — Dish DNA
+
+(the actual food)
+
+This gives you consistency while still making each Masterbot visually distinct.
+
+---
+
+# MASTER PROMPT FRAMEWORK
+
+## SYSTEM STYLE BLOCK
+
+Use this block for every image regardless of profile.
+
+```text
+Professional food photography for a premium culinary discovery platform.
+
+The food is the hero of the image.
+
+Photographed using realistic commercial food photography techniques.
+
+Natural food textures.
+Authentic ingredients.
+Professional food styling.
+Clean composition.
+Exceptional plating.
+Realistic lighting.
+Shallow depth of field.
+Editorial food photography.
+Award-winning culinary photography.
+Canon EOS R5.
+Ultra-high-resolution.
+Commercial advertising quality.
+
+No artificial appearance.
+No CGI look.
+No exaggerated food styling.
+No unrealistic colors.
+No clutter.
+No unnecessary props.
+
+The image should feel authentic, aspirational, and professionally photographed.
+```
+
+---
+
+# PROFILE BLOCKS
+
+---
+
+## JUN TANAKA
+
+### Zen Minimalist
+
+```text
+Japanese zen minimalism.
+Wabi-sabi aesthetics.
+Michelin-star omakase.
+Artisan ceramic tableware.
+Generous negative space.
+Refined restraint.
+Sophisticated hospitality photography.
+Subtle moody lighting.
+Luxury restaurant atmosphere.
+Understated elegance.
+```
+
+### Lighting
+
+```text
+soft moody indoor lighting,
+luxury Japanese restaurant ambiance,
+warm subtle highlights,
+minimalist composition
+```
+
+---
+
+## AURELIA VOSS
+
+### Street Explorer
+
+```text
+Premium street food culture.
+Travel magazine photography.
+Urban culinary exploration.
+Modern food hall atmosphere.
+Contemporary street food presentation.
+Energetic composition.
+Authentic local food culture.
+Commercial fast-casual advertising.
+```
+
+### Lighting
+
+```text
+natural daylight,
+bright outdoor environment,
+open-air food market atmosphere,
+fresh vibrant colors,
+travel editorial photography
+```
+
+---
+
+## SEBASTIAN LECLAIR
+
+### Epicurean
+
+```text
+Michelin-star tasting menu.
+Luxury fine dining.
+World-class gastronomy.
+Architectural plating.
+Luxury hospitality photography.
+Sophisticated table setting.
+Culinary artistry.
+Editorial restaurant photography.
+```
+
+### Lighting
+
+```text
+dramatic fine dining lighting,
+dark luxury restaurant ambiance,
+controlled highlights,
+editorial culinary photography
+```
+
+---
+
+## LILA CHENG
+
+### Green Gourmet
+
+```text
+Plant-based gastronomy.
+Sustainable cuisine.
+Seasonal ingredients.
+Organic produce.
+Wellness-focused fine dining.
+Natural beauty.
+Fresh botanical presentation.
+```
+
+### Lighting
+
+```text
+soft natural daylight,
+bright airy atmosphere,
+fresh organic aesthetic,
+clean contemporary environment
+```
+
+---
+
+## RAFAEL MENDEZ
+
+### Adventurer
+
+```text
+Regional culinary discovery.
+Authentic cultural cuisine.
+Luxury travel photography.
+Destination dining.
+Rare ingredients.
+Global food exploration.
+Rich culinary storytelling.
+```
+
+### Lighting
+
+```text
+golden hour lighting,
+travel magazine aesthetic,
+outdoor destination atmosphere,
+warm natural sunlight
+```
+
+---
+
+## ANIKA KAPOOR
+
+### Spice Scholar
+
+```text
+Indian and Asian culinary heritage.
+Layered flavors.
+Authentic spices.
+Regional cooking traditions.
+Premium contemporary presentation.
+Cultural richness.
+Refined spice-forward cuisine.
+```
+
+### Lighting
+
+```text
+warm daylight,
+rich color rendering,
+premium restaurant atmosphere,
+vibrant but realistic colors
+```
+
+---
+
+## OMAR DARZI
+
+### Coffee Pilgrim
+
+```text
+Specialty coffee culture.
+Third-wave coffee movement.
+Artisan cafés.
+Coffee craftsmanship.
+Lifestyle editorial photography.
+Slow living aesthetic.
+```
+
+### Lighting
+
+```text
+morning window light,
+soft natural illumination,
+café atmosphere,
+minimalist lifestyle photography
+```
+
+---
+
+# DISH BLOCK
+
+This gets inserted dynamically.
+
+Example:
+
+```text
+A gourmet loaded hot dog featuring artisan sausage, caramelized onions, specialty sauces and crispy toppings.
+```
+
+or
+
+```text
+An exquisite omakase nigiri course featuring bluefin tuna, sea bream, Japanese scallop and uni.
+```
+
+---
+
+# UNIVERSAL NEGATIVE
+
+Use for every generation.
+
+```text
+cartoon,
+cgi,
+3d render,
+illustration,
+anime,
+ai generated appearance,
+plastic textures,
+unrealistic food,
+oversaturated colors,
+food delivery photography,
+low quality,
+blurry,
+text,
+watermark,
+logo,
+people,
+hands,
+fingers,
+utensils being held,
+duplicate food,
+floating ingredients,
+deformed food,
+cluttered composition,
+stock photo appearance
+```
+
+---
+
+# API TEMPLATE
+
+Generate the final prompt by assembling:
+
+```text
+[GLOBAL STYLE]
+
+[PROFILE STYLE]
+
+[PROFILE LIGHTING]
+
+[DISH]
+
+Professional commercial food photography.
+```
+
+Example:
+
+```text
+[GLOBAL STYLE]
+
+[AURELIA STYLE]
+
+[AURELIA LIGHTING]
+
+A gourmet loaded hot dog featuring artisan sausage, caramelized onions, specialty sauces and crispy toppings.
+
+Professional commercial food photography.
+```
+
+This structure scales extremely well because you can store:
+
+```json
+{
+  "masterbot": "Aurelia Voss",
+  "profile": "Street Explorer",
+  "style": "...",
+  "lighting": "...",
+  "dishes": [...]
+}
+```
+
+Then generate **10 dishes × 7 Masterbots = 70 unique images** with a consistent visual identity and very little prompt engineering per image.

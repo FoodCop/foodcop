@@ -1,0 +1,746 @@
+
+
+<div id="cur"></div><div id="cur-o"></div>
+<div id="pbar"></div>
+
+<!-- ========================================
+     NAV — orange FUZO logo from LOGOS.png
+======================================== -->
+<nav id="nav">
+  <!-- Show top half of LOGOS.png (orange gradient on dark) -->
+  <a href="#" class="nav-logo">
+    <img src="/placeholder.png" alt="img" />
+  </a>
+  <div class="nav-links">
+    <a href="#discover">Discover</a>
+    <a href="#grow">Restaurants</a>
+    <a href="#tako">Tako</a>
+    <a href="#final-cta">About</a>
+  </div>
+  <a href="#final-cta" class="nav-cta">Download App</a>
+</nav>
+
+<!-- ========================================
+     HERO — video bg + 3 image slides
+======================================== -->
+<section id="hero">
+  <div class="hero-pin" id="heroPin">
+
+    <!-- VIDEO BACKGROUND — placeholder with fallback images -->
+    <!-- To use real video: replace src with your video URL or base64 -->
+    <div class="hero-video" id="heroVideo">
+      <!-- Uncomment and set src when video available:
+      <video autoplay muted loop playsinline src="YOUR_VIDEO_URL"></video>
+      -->
+      <!-- Image slides as fallback -->
+      <div class="hslide on" id="hs0" style="background-image:url('/placeholder.png')"></div>
+      <div class="hslide" id="hs1" style="background-image:url('/placeholder.png')"></div>
+      <div class="hslide" id="hs2" style="background-image:url('/placeholder.png')"></div>
+    </div>
+
+    <!-- Hero body — bottom-left -->
+    <div class="hero-body" id="hBody">
+      <p class="hero-tagline">The Undiscovered Gastronomy</p>
+      <h1 class="hero-h1">
+        Eat<br>
+        <span>Boldly.</span>
+        Live<br>Fully.
+      </h1>
+      <p class="hero-sub-small">The app that thinks about food as much as you do.</p>
+      <div class="hero-btns">
+        <a href="#taste" class="btn-cta">🍴 Discover Food That Finds You</a>
+        <a href="#discover" class="btn-ghost">Explore FUZO</a>
+      </div>
+    </div>
+
+    <!-- Slide dots -->
+    <div class="hdots" id="hdots">
+      <div class="hdot on"></div>
+      <div class="hdot"></div>
+      <div class="hdot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     DISCOVER YOUR TASTE — white section (moved from hero)
+======================================== -->
+<section id="taste-intro" style="background:var(--van);">
+  <div class="ti-eyebrow">Your Taste · Your World</div>
+  <h2 class="ti-h">Discover Your Taste.</h2>
+  <p class="ti-sub">Find restaurants, cafés and hidden gems that match your unique taste — not just your location.</p>
+  <div class="ti-btns">
+    <a href="#final-cta" class="btn-cta">🍴 Discover Food That Finds You</a>
+    <a href="#discover" class="btn-ghost" style="color:var(--ink);border-color:rgba(0,0,0,.2);">Explore FUZO</a>
+  </div>
+</section>
+
+<!-- ========================================
+     MIRO STACKING SECTIONS
+     Stack up (first half) + Stack left (second half)
+======================================== -->
+
+<!-- ========================================
+     SEC 1 — TASTE PROFILE + Food DNA (warm bg)
+======================================== -->
+<section id="taste" style="background:var(--warm);padding:120px 0;">
+  <div class="two-col" style="max-width:1300px;margin:0 auto;padding:0 60px;" class="sec-inner-p">
+    <!-- Copy -->
+    <div class="sl">
+      <div class="eyebrow" style="color:var(--gold);">
+        <span style="width:22px;height:1.5px;background:var(--gold);display:block;flex-shrink:0;"></span>
+        Taste Profile
+      </div>
+      <h2 class="sec-h" style="color:#fff;">Every Taste<br>Is Different.</h2>
+      <p class="sec-sub" style="color:rgba(255,255,255,.55);">No two people enjoy food the same way.<br>FUZO starts by learning yours.</p>
+      <div style="margin-top:28px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;font-family:var(--sora);font-size:.9rem;font-weight:300;color:rgba(255,255,255,.7);">
+          <span style="color:var(--gold);font-size:1rem;">✓</span> Cuisine preferences
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-family:var(--sora);font-size:.9rem;font-weight:300;color:rgba(255,255,255,.7);">
+          <span style="color:var(--gold);font-size:1rem;">✓</span> Spice level &amp; dietary needs
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-family:var(--sora);font-size:.9rem;font-weight:300;color:rgba(255,255,255,.7);">
+          <span style="color:var(--gold);font-size:1rem;">✓</span> Budget &amp; dining style
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-family:var(--sora);font-size:.9rem;font-weight:300;color:rgba(255,255,255,.7);">
+          <span style="color:var(--gold);font-size:1rem;">✓</span> Favourite dishes &amp; places
+        </div>
+      </div>
+      <a href="#final-cta" class="btn-cta" style="margin-top:32px;display:inline-flex;font-size:.82rem;padding:14px 34px;">
+        Discover Food That Finds You
+      </a>
+    </div>
+
+    <!-- Right — Phone + DNA image popping out -->
+    <div class="srr d2" style="position:relative;display:flex;align-items:center;justify-content:center;height:600px;">
+
+      <!-- DNA image behind — popping animation -->
+      <div id="dnaImg" style="position:absolute;right:-20px;top:0;width:260px;height:420px;
+           border-radius:24px;overflow:hidden;
+           box-shadow:0 32px 80px rgba(0,0,0,.4);
+           animation:phoneHover 6s 1s ease-in-out infinite;
+           transform:rotate(4deg);">
+        <img src="/placeholder.png" alt="img" />
+        <div style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,.65);border-radius:8px;padding:5px 10px;font-family:var(--sora);font-size:.6rem;font-weight:700;color:var(--gold);letter-spacing:.1em;">YOUR FOOD DNA</div>
+      </div>
+
+      <!-- Taste profile phone — in front -->
+      <div class="phone-wrap" style="position:relative;z-index:2;">
+        <div class="phone-frame" style="width:260px;height:530px;">
+          <div class="tp-top">
+            <h3>Your Taste Profile</h3>
+            <p>Tell us what you love</p>
+          </div>
+          <div class="tp-scroll">
+            <div>
+              <div class="tp-lbl">Cuisines You Love</div>
+              <div class="chips" id="cChips">
+                <div class="chip sel">🇯🇵 Japanese</div>
+                <div class="chip">🇮🇳 Indian</div>
+                <div class="chip sel">🇹🇭 Thai</div>
+                <div class="chip">🇮🇹 Italian</div>
+                <div class="chip g">🌮 Mexican</div>
+                <div class="chip">🇰🇷 Korean</div>
+                <div class="chip sel">☕ Café</div>
+              </div>
+            </div>
+            <div>
+              <div class="tp-lbl">Spice Level</div>
+              <div class="spice-row">
+                <div class="sdot">🧊</div>
+                <div class="sdot">🌿</div>
+                <div class="sdot on">🌶️</div>
+                <div class="sdot">🔥</div>
+                <div class="sdot">💀</div>
+              </div>
+            </div>
+            <div>
+              <div class="tp-lbl">Dietary</div>
+              <div class="chips">
+                <div class="chip sel">No restrictions</div>
+                <div class="chip">Vegetarian</div>
+                <div class="chip">Halal</div>
+              </div>
+            </div>
+            <div>
+              <div class="tp-lbl">Budget per meal</div>
+              <div class="bbar"><div class="bfill" id="bFill"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-top:4px;">
+                <span style="font-family:var(--sora);font-size:.58rem;color:var(--gray2);">$5</span>
+                <span style="font-family:var(--sora);font-size:.6rem;font-weight:700;color:var(--cta2);">~$25</span>
+                <span style="font-family:var(--sora);font-size:.58rem;color:var(--gray2);">$100+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- pop badges on phone -->
+        <div class="pop-badge" style="top:-16px;left:-44px;animation-delay:.2s;">
+          <span class="pb-e">🌶️</span><span>Medium Spice</span>
+        </div>
+        <div class="pop-badge" style="bottom:60px;left:-40px;animation-delay:1.1s;animation-duration:5.2s;">
+          <span class="pb-e">💰</span><span>$25 avg</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     SEC 2 — DISCOVER (vanilla)
+======================================== -->
+<section id="discover" style="background:var(--van);padding:120px 0;">
+  <div style="max-width:1300px;margin:0 auto;padding:0 60px;">
+    <div class="two-col reverse">
+      <div class="sl">
+        <div class="eyebrow">Discover</div>
+        <h2 class="sec-h">Discover More<br>Than Restaurants.</h2>
+        <p class="sec-sub">Explore cafés, food trucks, bakeries, desserts and hidden gems curated around your taste.</p>
+        <div class="cat-wrap">
+          <div class="cat-pill">☕ Cafés</div>
+          <div class="cat-pill">🚚 Food Trucks</div>
+          <div class="cat-pill">🥐 Bakeries</div>
+          <div class="cat-pill">🍰 Desserts</div>
+          <div class="cat-pill">🍣 Fine Dining</div>
+          <div class="cat-pill">🌮 Street Food</div>
+          <div class="cat-pill">🍺 Bars &amp; Pubs</div>
+        </div>
+      </div>
+      <div class="discover-vis sc d2">
+        <img src="/placeholder.png" alt="img" />
+        <div class="disc-overlay">
+          <div class="do-icon">📍</div>
+          <div class="do-text">
+            <b>12 places match your taste</b>
+            <span>Within 2km · Open now</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     SEC 3 — FOOD CARDS (warm bg)
+======================================== -->
+<section id="foodcards" style="background:var(--warm);padding:120px 0;">
+  <div style="max-width:1300px;margin:0 auto;padding:0 60px;">
+    <div class="two-col">
+      <div class="sl">
+        <div class="eyebrow" style="color:var(--gold);"><span style="width:22px;height:1.5px;background:var(--gold);display:block;flex-shrink:0;"></span>Food Cards</div>
+        <h2 class="sec-h" style="color:#fff;">Every Great Meal<br>Deserves To Be<br><em>Remembered.</em></h2>
+        <p class="sec-sub" style="color:rgba(255,255,255,.55);">Save your favourite discoveries. Build your personal food collection. Come back anytime.</p>
+        <div class="fc-icons">
+          <div class="fc-icon-i"><span class="ico">❤️</span> Save</div>
+          <div class="fc-icon-i"><span class="ico">📍</span> Location</div>
+          <div class="fc-icon-i"><span class="ico">📤</span> Share</div>
+          <div class="fc-icon-i"><span class="ico">📁</span> Collections</div>
+        </div>
+      </div>
+      <!-- Stacked cards -->
+      <div class="cards-stage sc d2" id="cardsStage">
+        <div class="fcard" id="fc1" style="transform:rotate(-15deg) translate(-72px,44px);z-index:1;">
+          <img src="/placeholder.png" alt="img" />
+          <div class="fcard-meta"><b>Nobu Tokyo</b><span>Tokyo · Sushi</span></div>
+        </div>
+        <div class="fcard" id="fc2" style="transform:rotate(13deg) translate(72px,44px);z-index:2;">
+          <img src="/placeholder.png" alt="img" />
+          <div class="fcard-meta"><b>La Trattoria</b><span>NYC · Italian</span></div>
+        </div>
+        <div class="fcard" id="fc3" style="transform:rotate(-2deg);z-index:3;">
+          <img src="/placeholder.png" alt="img" />
+          <div class="hrt-badge">❤️ Saved</div>
+          <div class="fcard-meta"><b>Centrale Bistro</b><span>San Francisco</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     SEC 4 — SHARE (vanilla)
+======================================== -->
+<section id="share" style="background:var(--van);padding:120px 0;">
+  <div style="max-width:1300px;margin:0 auto;padding:0 60px;">
+    <div class="two-col reverse">
+      <div class="srr">
+        <div class="eyebrow">Share</div>
+        <h2 class="sec-h">Share Your<br>Food Story.</h2>
+        <p class="sec-sub">Beautiful food cards designed to be shared with friends, family and your community.</p>
+        <div class="s-icons-row">
+          <div class="s-ico" title="Instagram">📸</div>
+          <div class="s-ico" title="WhatsApp">💬</div>
+          <div class="s-ico" title="Messenger">📨</div>
+          <div class="s-ico" title="Copy Link">🔗</div>
+        </div>
+      </div>
+      <div class="share-vis sc d2">
+        <div class="share-vis-img">
+          <img src="/placeholder.png" alt="img" />
+        </div>
+        <div class="story-float">
+          <img src="/placeholder.png" alt="img" />
+        </div>
+        <div class="share-pills">
+          <div class="spill"><span>📸</span>Instagram</div>
+          <div class="spill"><span>💬</span>WhatsApp</div>
+          <div class="spill"><span>🔗</span>Copy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     SEC 5 — SCOUT MAPS (warm bg) — fuzo_food image
+======================================== -->
+<section id="scout" style="background:var(--warm);padding:120px 0;">
+  <div style="max-width:1300px;margin:0 auto;padding:0 60px;">
+    <div class="two-col">
+      <div class="sl">
+        <div class="eyebrow" style="color:var(--gold);"><span style="width:22px;height:1.5px;background:var(--gold);display:block;flex-shrink:0;"></span>Scout Maps</div>
+        <h2 class="sec-h" style="color:#fff;">Explore Your<br>City Differently.</h2>
+        <p class="sec-sub" style="color:rgba(255,255,255,.55);">Find nearby restaurants that match your taste — not just the closest ones.</p>
+        <!-- Animated pin list -->
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:28px;">
+          <div class="spin" style="animation-delay:0s;">
+            <span class="spin-dot" style="background:var(--cta1);"></span>Shin Ramen · 0.3km · 96% match
+          </div>
+          <div class="spin" style="animation-delay:.5s;animation-duration:5.2s;">
+            <span class="spin-dot" style="background:var(--gold);"></span>Sakura Café · 0.7km · 91% match
+          </div>
+          <div class="spin" style="animation-delay:1s;animation-duration:4.8s;">
+            <span class="spin-dot" style="background:#fff;"></span>El Taco Loco · 1.1km · 88% match
+          </div>
+        </div>
+      </div>
+      <!-- FUZO food logo image -->
+      <div class="scout-vis sc d2">
+        <img src="/placeholder.png" alt="img" />
+        <div class="scout-pin-list">
+          <div class="spin"><span class="spin-dot" style="background:var(--cta2);"></span>Shin Ramen · 0.3km</div>
+          <div class="spin"><span class="spin-dot" style="background:var(--gold);"></span>Sakura Café · 0.7km</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     SEC 6 — RESTAURANTS (vanilla) — rsts image
+     Vertical stacking cards for Promote/Moments/Events/Insights
+======================================== -->
+<section id="grow" style="background:var(--van);padding:120px 0;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 60px;">
+    <!-- Head -->
+    <div class="sr" style="text-align:center;max-width:600px;margin:0 auto 64px;">
+      <div class="eyebrow" style="justify-content:center;">For Restaurants</div>
+      <h2 class="sec-h" style="text-align:center;">Helping Great Food<br>Get Discovered.</h2>
+      <p class="sec-sub" style="margin:16px auto 0;text-align:center;max-width:500px;">Whether you're a restaurant, café, chef or food truck — FUZO gives you the tools to grow your business.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:55% 45%;gap:64px;align-items:start;">
+      <!-- Left: rsts image + explore button -->
+      <div class="sc d1">
+        <div class="grow-hero-img">
+          <img src="/placeholder.png" alt="img" />
+          <a href="#final-cta" class="explore-btn">🍽️ Start Exploring</a>
+        </div>
+      </div>
+
+      <!-- Right: vertical stacking cards -->
+      <div class="vstack">
+        <div class="gcard-outer sr d1">
+          <div class="gcard">
+            <div class="gc-ico">📢</div>
+            <div class="gc-t">Promote</div>
+            <p class="gc-d">Reach customers who already love your cuisine with targeted, taste-based promotion.</p>
+          </div>
+        </div>
+        <div class="gcard-outer sr d2">
+          <div class="gcard">
+            <div class="gc-ico">📸</div>
+            <div class="gc-t">Moments</div>
+            <p class="gc-d">Showcase your best dishes through beautiful food moments that live on customer profiles.</p>
+          </div>
+        </div>
+        <div class="gcard-outer sr d3">
+          <div class="gcard">
+            <div class="gc-ico">📅</div>
+            <div class="gc-t">Events</div>
+            <p class="gc-d">Announce special menus, tasting nights and pop-up events directly to interested diners.</p>
+          </div>
+        </div>
+        <div class="gcard-outer sr d4">
+          <div class="gcard">
+            <div class="gc-ico">📈</div>
+            <div class="gc-t">Insights</div>
+            <p class="gc-d">Understand exactly what brings customers through your door and how to keep them coming back.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     SEC 7 — TAKO (yellow bg)
+======================================== -->
+<section id="tako" style="background:var(--gold);padding:120px 0;">
+  <div style="max-width:1300px;margin:0 auto;padding:0 60px;">
+    <div class="two-col reverse">
+      <!-- Tako phones — simulated screens -->
+      <div class="tako-phones sc" style="flex-wrap:nowrap;">
+        <!-- Left side phone -->
+        <div class="tphone side" style="margin-bottom:32px;">
+          <div class="tako-screen">
+            <div class="ts-head">
+              <div class="tshl">TAKO AI</div>
+              <div class="tsht">Discover</div>
+            </div>
+            <div class="ts-body">
+              <div class="ts-bubble ts-t">
+                <span class="tsn">TAKO</span>
+                Based on your taste, here are today's picks 🍽️
+              </div>
+              <!-- restaurant card mockup -->
+              <div style="background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;margin-top:4px;">
+                <div style="height:80px;background:linear-gradient(135deg,rgba(255,107,0,.3),rgba(191,44,32,.2));display:flex;align-items:center;justify-content:center;font-size:2rem;">🍜</div>
+                <div style="padding:8px 10px;">
+                  <div style="font-family:var(--sora);font-size:.62rem;font-weight:700;color:#fff;">Shin Ramen</div>
+                  <div style="font-family:var(--sora);font-size:.55rem;color:rgba(255,255,255,.5);margin-top:2px;">0.3km · 96% match · Open</div>
+                </div>
+              </div>
+              <div class="ts-bubble ts-t"><span class="tsn">TAKO</span>Want to book a table?</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main phone — chat -->
+        <div class="tphone main">
+          <div class="tako-screen">
+            <div class="ts-head">
+              <div class="tshl">TAKO AI</div>
+              <div class="tsht">Your Food Companion</div>
+            </div>
+            <div class="ts-body">
+              <div class="ts-bubble ts-u">I'm craving spicy ramen 🍜</div>
+              <div class="ts-bubble ts-t">
+                <span class="tsn">TAKO</span>
+                Five hidden ramen spots nearby, all within 2km and open now 🎉
+              </div>
+              <div class="ts-bubble ts-u">Book the closest one!</div>
+              <div class="ts-bubble ts-t">
+                <span class="tsn">TAKO</span>
+                Done ✅ Shin Ramen, 7:30pm. They know you like it extra spicy 🌶️
+              </div>
+              <div class="typing">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right side phone -->
+        <div class="tphone side" style="margin-top:32px;">
+          <div class="tako-screen">
+            <div class="ts-head">
+              <div class="tshl">TAKO AI</div>
+              <div class="tsht">Weekly Picks</div>
+            </div>
+            <div class="ts-body">
+              <div class="ts-bubble ts-t"><span class="tsn">TAKO</span>Your week in food 🍽️</div>
+              <!-- mini cards -->
+              <div style="display:flex;flex-direction:column;gap:5px;margin-top:3px;">
+                <div style="background:rgba(255,255,255,.08);border-radius:9px;padding:7px 9px;display:flex;align-items:center;gap:7px;">
+                  <span style="font-size:1.1rem;">🍕</span>
+                  <div><div style="font-family:var(--sora);font-size:.58rem;font-weight:700;color:#fff;">Tony's Pizza</div><div style="font-family:var(--sora);font-size:.52rem;color:rgba(255,255,255,.4);">Tue · Italian</div></div>
+                </div>
+                <div style="background:rgba(255,255,255,.08);border-radius:9px;padding:7px 9px;display:flex;align-items:center;gap:7px;">
+                  <span style="font-size:1.1rem;">🥗</span>
+                  <div><div style="font-family:var(--sora);font-size:.58rem;font-weight:700;color:#fff;">Green Bowl</div><div style="font-family:var(--sora);font-size:.52rem;color:rgba(255,255,255,.4);">Thu · Healthy</div></div>
+                </div>
+                <div style="background:rgba(255,201,9,.15);border-radius:9px;padding:7px 9px;display:flex;align-items:center;gap:7px;border:1px solid rgba(255,201,9,.3);">
+                  <span style="font-size:1.1rem;">🍜</span>
+                  <div><div style="font-family:var(--sora);font-size:.58rem;font-weight:700;color:var(--gold);">Shin Ramen · Tonight</div><div style="font-family:var(--sora);font-size:.52rem;color:rgba(255,255,255,.5);">7:30pm · Booked</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy + chat -->
+      <div class="srr">
+        <div class="eyebrow" style="color:var(--cta2);"><span style="width:22px;height:1.5px;background:var(--cta2);display:block;flex-shrink:0;"></span>Tako AI</div>
+        <h2 class="sec-h">Meet Tako.</h2>
+        <p class="sec-sub" style="color:rgba(0,0,0,.55);">Your personal food companion that understands your cravings and helps you discover your next favourite meal.</p>
+        <!-- Chat animation -->
+        <div class="tako-chat-wrap">
+          <div class="tmsg u" id="tm1">I'm craving spicy ramen 🍜</div>
+          <div class="tmsg t" id="tm2"><span class="tn">TAKO</span>Here are five hidden ramen spots nearby — all open right now. Want me to book a table? 🎉</div>
+          <div class="tmsg u" id="tm3">Yes! The closest one.</div>
+          <div class="tmsg t" id="tm4"><span class="tn">TAKO</span>Done ✅ Shin Ramen, 0.3km, 7:30pm. They know you prefer extra spicy.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     SEC 8 — EMOTIONAL (vanilla + DNA image)
+======================================== -->
+<section id="emotional" style="background:var(--van);">
+  <div class="emo-bg">
+    <img src="/placeholder.png" alt="img" />
+  </div>
+  <div class="emo-content">
+    <h2 class="emo-h sr">Food Is More<br>Than A Meal.</h2>
+    <div class="emo-lines" id="eLines">
+      <span>It's birthdays.</span>
+      <span>Road trips.</span>
+      <span>Weekend brunches.</span>
+      <span>Late-night cravings.</span>
+      <span>Family dinners.</span>
+    </div>
+    <p class="emo-end sr d5">Every meal has a story.<br>FUZO helps you discover yours.</p>
+  </div>
+</section>
+
+<!-- ========================================
+     FINAL CTA (warm bg)
+======================================== -->
+<section id="final-cta" style="background:var(--warm);padding:180px 48px;text-align:center;">
+  <div style="max-width:700px;margin:0 auto;" class="sr">
+    <div class="eyebrow" style="color:var(--gold);justify-content:center;"><span style="width:22px;height:1.5px;background:var(--gold);display:block;flex-shrink:0;"></span>Get Started</div>
+    <h2 class="fcta-h">Ready To Discover<br>Your Taste?</h2>
+    <p class="fcta-sub">Create your Taste Profile today and start exploring restaurants you'll actually love.</p>
+    <a href="#" class="btn-cta-lg">🍴 Discover Food That Finds You</a>
+  </div>
+</section>
+
+<!-- ========================================
+     FOOTER
+======================================== -->
+<footer>
+  <div class="foot-top">
+    <div>
+      <!-- Orange FUZO logo — same as nav -->
+      <div class="foot-logo-wrap">
+        <img src="/placeholder.png" alt="img" />
+      </div>
+      <div class="foot-taglines" style="margin-top:16px;">
+        <span>Your Taste.</span>
+        <span>Your Journey.</span>
+        <span>Your Food World.</span>
+      </div>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="#">Discover</a>
+        <a href="#">Food Cards</a>
+        <a href="#">Scout Maps</a>
+        <a href="#">Tako AI</a>
+      </div>
+      <div class="foot-col">
+        <h4>Restaurants</h4>
+        <a href="#">Get Listed</a>
+        <a href="#">Promote</a>
+        <a href="#">Insights</a>
+        <a href="#">Events</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+      <div class="foot-col">
+        <h4>Download</h4>
+        <a href="#">App Store</a>
+        <a href="#">Google Play</a>
+        <div class="foot-soc" style="margin-top:14px;">
+          <a href="#" title="Instagram">📸</a>
+          <a href="#" title="TikTok">🎵</a>
+          <a href="#" title="LinkedIn">💼</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bot">
+    <span>© 2025 FUZO. All rights reserved.</span>
+    <span>Discover Food That Finds You.</span>
+  </div>
+</footer>
+
+<script>
+/* ─── CURSOR ─── */
+const cur=document.getElementById('cur'),curo=document.getElementById('cur-o');
+let mx=0,my=0,ox=0,oy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function l(){ox+=(mx-ox)*.1;oy+=(my-oy)*.1;curo.style.left=ox+'px';curo.style.top=oy+'px';requestAnimationFrame(l);})();
+document.querySelectorAll('a,button,.cat-pill,.gcard,.ccard,.s-ico,.spill').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
+});
+
+/* ─── PROGRESS + NAV ─── */
+const pbar=document.getElementById('pbar'),nav=document.getElementById('nav');
+function onScroll(){
+  const sy=window.scrollY;
+  pbar.style.transform=`scaleX(${sy/(document.body.scrollHeight-window.innerHeight)})`;
+  nav.classList.toggle('on',sy>60);
+  heroLogic(sy);
+  cardsParallax(sy);
+  checkSections(sy);
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+
+/* ─── HERO SLIDES ─── */
+const heroEl=document.getElementById('hero');
+const hslides=[document.getElementById('hs0'),document.getElementById('hs1'),document.getElementById('hs2')];
+const hdotsEl=document.querySelectorAll('.hdot');
+const hBody=document.getElementById('hBody');
+let curHS=0;
+function heroLogic(sy){
+  const top=heroEl.offsetTop,h=heroEl.offsetHeight,wH=window.innerHeight;
+  const p=Math.max(0,Math.min((sy-top)/(h-wH),1));
+  const idx=Math.min(2,Math.floor(p*3));
+  const lp=(p*3)%1;
+  if(idx!==curHS){
+    hslides[curHS].classList.remove('on');hdotsEl[curHS].classList.remove('on');
+    curHS=idx;hslides[curHS].classList.add('on');hdotsEl[curHS].classList.add('on');
+  }
+  hslides.forEach((s,i)=>{s.style.transform=i===idx?`scale(${1.1-lp*.1})`:'scale(1.08)';});
+  const fade=Math.max(0,1-p*4);
+  hBody.style.opacity=fade;
+  hBody.style.transform=`translateY(${(1-fade)*36}px)`;
+}
+
+/* ─── CARD PARALLAX ─── */
+const fc1=document.getElementById('fc1'),fc2=document.getElementById('fc2'),fc3=document.getElementById('fc3'),cs=document.getElementById('cardsStage');
+function cardsParallax(sy){
+  if(!cs)return;
+  const r=cs.getBoundingClientRect(),wH=window.innerHeight;
+  if(r.top>wH||r.bottom<0)return;
+  const p=(wH-r.top)/(wH+r.height);
+  const lift=p*28;
+  if(fc1)fc1.style.transform=`rotate(-15deg) translate(-72px,${44-lift*.6}px)`;
+  if(fc2)fc2.style.transform=`rotate(13deg) translate(72px,${44-lift*.4}px)`;
+  if(fc3)fc3.style.transform=`rotate(-2deg) translateY(${-lift*1.1}px)`;
+}
+
+/* ─── SCROLL REVEAL ─── */
+function revealAll(){
+  document.querySelectorAll('.sr,.sl,.srr,.sc').forEach(el=>{
+    if(el.getBoundingClientRect().top<window.innerHeight*.88)el.classList.add('in');
+  });
+}
+document.querySelectorAll('.sr,.sl,.srr,.sc').forEach(el=>{
+  new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.1}).observe(el);
+});
+
+/* ─── TASTE PROFILE CHIPS ANIM ─── */
+const tasteEl=document.getElementById('taste');
+const chips=document.querySelectorAll('.chip');
+let tTrig=false;
+
+/* ─── EMOTIONAL SECTION ─── */
+const emoEl=document.getElementById('emotional');
+const eLines=document.querySelectorAll('#eLines span');
+let eTrig=false;
+
+/* ─── TAKO CHAT ─── */
+const takoEl=document.getElementById('tako');
+const tmsgs=document.querySelectorAll('.tmsg');
+let takTrig=false;
+
+/* ─── BUDGET BAR ─── */
+let bTrig=false;
+
+function checkSections(){
+  const wH=window.innerHeight;
+
+  // Taste chips
+  if(!tTrig&&tasteEl.getBoundingClientRect().top<wH*.7){
+    tTrig=true;
+    chips.forEach((c,i)=>setTimeout(()=>{c.style.opacity='1';c.style.transform='scale(1)';},i*60));
+    setTimeout(()=>{const b=document.getElementById('bFill');if(b)b.style.width='55%';},500);
+  }
+
+  // Emotional
+  if(!eTrig&&emoEl.getBoundingClientRect().top<wH*.75){
+    eTrig=true;
+    eLines.forEach((el,i)=>setTimeout(()=>el.classList.add('on'),i*160));
+  }
+
+  // Tako chat
+  if(!takTrig&&takoEl.getBoundingClientRect().top<wH*.75){
+    takTrig=true;
+    tmsgs.forEach((el,i)=>setTimeout(()=>el.classList.add('vis'),400+i*600));
+  }
+
+  revealAll();
+}
+
+/* ─── CHIP INIT (hidden before scroll) ─── */
+chips.forEach(c=>{c.style.opacity='0';c.style.transform='scale(.7)';c.style.transition='opacity .4s ease, transform .4s ease';});
+
+/* ─── GROW CARDS STACKING SCROLL ─── */
+/* Make the vstack cards sticky-scroll stack like a Miro card deck */
+const gcOuters=document.querySelectorAll('.gcard-outer');
+function growCards(){
+  gcOuters.forEach((el,i)=>{
+    const r=el.getBoundingClientRect();
+    const wH=window.innerHeight;
+    if(r.top<wH-.1){
+      // card has entered: scale it slightly based on how many are above it
+      const inner=el.querySelector('.gcard');
+      const depth=i*0.02;
+      // subtle scale/shadow for stacking feel
+      inner.style.transform=`scale(${1-depth})`;
+      inner.style.transformOrigin='top center';
+    }
+  });
+}
+window.addEventListener('scroll',growCards,{passive:true});
+
+/* ─── MIRO OVERLAP ANIMATION ─── */
+/* Sections fade+slide in from below and stick — using IntersectionObserver per section */
+const sections=[
+  document.getElementById('taste'),
+  document.getElementById('discover'),
+  document.getElementById('foodcards'),
+  document.getElementById('share'),
+  document.getElementById('scout'),
+  document.getElementById('grow'),
+  document.getElementById('tako'),
+  document.getElementById('emotional'),
+  document.getElementById('final-cta'),
+];
+sections.forEach((s,i)=>{
+  if(!s)return;
+  s.style.transition=`transform .8s cubic-bezier(.16,1,.3,1), opacity .8s cubic-bezier(.16,1,.3,1)`;
+  new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        s.style.opacity='1';
+        s.style.transform='translateY(0)';
+      }
+    });
+  },{threshold:.05}).observe(s);
+  // Initial offset (only if not hero)
+  if(i>0){
+    s.style.opacity='0.01';
+    s.style.transform='translateY(40px)';
+  }
+});
+
+/* ─── INIT ─── */
+revealAll();
+heroLogic(window.scrollY);
+checkSections();
+</script>

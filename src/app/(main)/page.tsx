@@ -1,15 +1,15 @@
-import './home-v6.css';
-import V6Scripts from '@/components/home-v6/V6Scripts';
-import Hero from '@/components/home-v6/Hero';
-import TasteProfile from '@/components/home-v6/TasteProfile';
-import Discover from '@/components/home-v6/Discover';
-import FoodCards from '@/components/home-v6/FoodCards';
-import ShareScout from '@/components/home-v6/ShareScout';
-import Grow from '@/components/home-v6/Grow';
-import TakoChat from '@/components/home-v6/TakoChat';
-import Emotional from '@/components/home-v6/Emotional';
-import FinalCTA from '@/components/home-v6/FinalCTA';
-import HomeFooter from '@/components/home-v6/HomeFooter';
+import './home.css';
+import V6Scripts from '@/components/home/V6Scripts';
+import Hero from '@/components/home/Hero';
+import TasteProfile from '@/components/home/TasteProfile';
+import Discover from '@/components/home/Discover';
+import FoodCards from '@/components/home/FoodCards';
+import ShareScout from '@/components/home/ShareScout';
+import Grow from '@/components/home/Grow';
+import TakoChat from '@/components/home/TakoChat';
+import Emotional from '@/components/home/Emotional';
+import FinalCTA from '@/components/home/FinalCTA';
+import HomeFooter from '@/components/home/HomeFooter';
 
 export default function Home() {
   return (
