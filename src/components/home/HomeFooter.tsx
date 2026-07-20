@@ -6,7 +6,7 @@ export default function HomeFooter() {
       <div className="foot-top">
         <div>
           <div className="foot-logo-wrap">
-            <span className="foot-logo-text">FUZO</span>
+            <img src="/fuzo_logo.svg" alt="FUZO" />
           </div>
           <div className="foot-taglines" style={{ marginTop: '16px' }}>
             <span>Your Taste.</span>

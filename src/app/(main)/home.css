@@ -713,9 +713,9 @@ footer{
   display:flex;align-items:flex-start;justify-content:space-between;
   margin-bottom:60px;gap:40px;flex-wrap:wrap;
 }
-.foot-logo-text{
-  font-family:var(--sora);font-weight:800;font-size:2rem;
-  letter-spacing:-0.02em;color:#fff;
+.foot-logo-wrap img{
+  height:38px;width:auto;object-fit:contain;
+  filter:brightness(0) invert(1);
 }
 .foot-taglines{margin-top:16px;display:flex;flex-direction:column;gap:1px;}
 .foot-taglines span{
