@@ -49,8 +49,8 @@ export default function SiteHeader() {
     <>
     <nav className="navbar bg-white shadow-sm sticky-top">
       <div className="container">
-        <Link href="/dashboard" className="navbar-brand fw-bold text-primary" onClick={closeAll}>
-          FUZO
+        <Link href="/dashboard" className="navbar-brand" onClick={closeAll}>
+          <img src="/fuzo_logo.svg" alt="FUZO" className="navbar-brand-logo" />
         </Link>
 
         {/* Space out brand and icons */}
@@ -124,7 +124,7 @@ export default function SiteHeader() {
 
         <div className={`offcanvas offcanvas-end${drawerOpen ? ' show' : ''}`} tabIndex={-1}>
           <div className="offcanvas-header">
-            <span className="fw-bold text-primary">FUZO</span>
+            <img src="/fuzo_logo.svg" alt="FUZO" className="navbar-brand-logo" />
             <button type="button" className="btn-close" aria-label="Close" onClick={closeAll} />
           </div>
 

@@ -1,5 +1,11 @@
 // SiteHeader / offcanvas nav styling.
 
+.navbar-brand-logo {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
 // Frosted-glass slide-in panel (Ekomart's .side-bar used
 // backdrop-filter: blur(7px) on the panel itself) - only applies below `lg`,
 // where the offcanvas actually slides in; at `lg+` it's just the inline navbar.
