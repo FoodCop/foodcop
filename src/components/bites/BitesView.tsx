@@ -48,12 +48,29 @@ export function BitesView() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return recipes.filter((r) => {
-      if (q && !r.title.toLowerCase().includes(q)) return false;
+      // Matches the title OR the dish-type tags (Dinner/Lunch/Breakfast/etc.) -
+      // title-only matching meant searching "Dinner" only surfaced the handful
+      // of recipes with that word literally in the title (e.g. "Skillet
+      // Enchilada Dinner"), missing the hundreds of other recipes actually
+      // tagged Dinner whose titles don't happen to say so.
+      if (q && !r.title.toLowerCase().includes(q) && !r.dishTypes.some((t) => t.toLowerCase().includes(q))) return false;
       if (dietFilter && !matchesFilter(r.diets, dietFilter)) return false;
       if (cuisineFilter && !matchesFilter(r.cuisines, cuisineFilter)) return false;
       return true;
     });
   }, [recipes, query, dietFilter, cuisineFilter]);
+
+  // Prefer showing the tag that actually matched the search (e.g. "Dinner")
+  // over whatever happens to be first in the recipe's raw dishTypes array,
+  // so the card visibly reflects what was searched for instead of showing
+  // an unrelated tag like "Lunch" or "Main course" first.
+  const cardTags = (recipe: CuratedRecipe) => {
+    const q = query.trim().toLowerCase();
+    if (!q) return recipe.dishTypes.slice(0, 2);
+    const matched = recipe.dishTypes.filter((t) => t.toLowerCase().includes(q));
+    const rest = recipe.dishTypes.filter((t) => !t.toLowerCase().includes(q));
+    return [...matched, ...rest].slice(0, 2);
+  };
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageItems = filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
@@ -159,7 +176,7 @@ export function BitesView() {
                 <div className="bites-card__body">
                   <h3 className="bites-card__title">{recipe.title}</h3>
                   <div className="bites-card__tags">
-                    {recipe.dishTypes.slice(0, 2).map((t) => (
+                    {cardTags(recipe).map((t) => (
                       <span key={t} className="bites-card__tag">
                         {t}
                       </span>
