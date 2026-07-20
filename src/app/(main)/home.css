@@ -32,7 +32,13 @@
   font-family:var(--sora);
   background:var(--van);
   color:var(--ink);
-  overflow-x:hidden;
+  /* clip, not hidden: any non-visible overflow-x here makes this div the
+     scroll container position:sticky descendants (the hero pin) measure
+     against instead of the real viewport - since this div itself never
+     scrolls, that silently breaks the pin. clip still stops the parallax
+     cards' rotated/translated overflow from adding a horizontal scrollbar,
+     but doesn't establish a scroll container, so sticky keeps working. */
+  overflow-x:clip;
   cursor:none;
   scrollbar-width:none;
 }
