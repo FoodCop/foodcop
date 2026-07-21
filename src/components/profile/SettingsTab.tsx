@@ -66,6 +66,7 @@ export default function SettingsTab() {
     dietary: [],
   });
   const [editingField, setEditingField] = useState<TasteField | null>(null);
+  const [hasDnaScores, setHasDnaScores] = useState(false);
 
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_USER_SETTINGS);
   const radiusSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -91,10 +92,11 @@ export default function SettingsTab() {
 
       const { data: taste } = await supabase
         .from('taste_profiles')
-        .select('flavors, cuisines, dietary')
+        .select('flavors, cuisines, dietary, dna_scores')
         .eq('user_id', user.id)
         .maybeSingle();
       if (taste) {
+        setHasDnaScores(!!taste.dna_scores);
         setTasteProfile({
           flavors: taste.flavors ?? [],
           cuisines: taste.cuisines ?? [],
@@ -273,6 +275,20 @@ export default function SettingsTab() {
             <div className="text-start">
               <div className="fw-bold text-dark">Dietary Preferences</div>
               <small className="text-muted">{summarize(tasteProfile.dietary, 'No restrictions currently set')}</small>
+            </div>
+          </div>
+          <span className="text-muted fw-bold fs-5">›</span>
+        </button>
+        <button
+          type="button"
+          className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom"
+          onClick={() => router.push('/dna-quiz')}
+        >
+          <div className="d-flex align-items-center gap-3">
+            <div className="bg-primary bg-opacity-10 text-primary rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🧬</div>
+            <div className="text-start">
+              <div className="fw-bold text-dark">Food DNA Quiz</div>
+              <small className="text-muted">{hasDnaScores ? 'Retake the 25-question quiz' : 'Take the 25-question quiz'}</small>
             </div>
           </div>
           <span className="text-muted fw-bold fs-5">›</span>

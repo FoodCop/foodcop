@@ -129,7 +129,7 @@ export function isModuleComplete(tp: TasteProfileState, mod: Module): boolean {
   return moduleAnsweredCount(tp, mod) === mod.questions.length;
 }
 
-type DnaAxis = 'adventure' | 'luxury' | 'comfort' | 'social' | 'health';
+export type DnaAxis = 'adventure' | 'luxury' | 'comfort' | 'social' | 'health';
 type Contribution = Partial<Record<DnaAxis, number>>;
 
 const DNA_WEIGHTS: Record<string, Record<string, Record<string, Contribution> | { scale: (v: number) => Contribution } | { multi: (arr: string[]) => Contribution }>> = {

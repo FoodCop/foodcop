@@ -74,6 +74,7 @@ export default function DashboardView() {
   const [tasteLoaded, setTasteLoaded] = useState(false);
   const [topCuisine, setTopCuisine] = useState<string | undefined>(undefined);
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_USER_SETTINGS);
+  const [dnaLuxury, setDnaLuxury] = useState<number | undefined>(undefined);
 
   const [recipes, setRecipes] = useState<RecommendedRecipe[]>([]);
   const [loadingRecipes, setLoadingRecipes] = useState(true);
@@ -120,6 +121,12 @@ export default function DashboardView() {
       const userSettings = settingsResult.success && settingsResult.data ? settingsResult.data : DEFAULT_USER_SETTINGS;
       if (cancelled) return;
       setSettings(userSettings);
+
+      const supabase = createClient();
+      if (supabase) {
+        const { data: taste } = await supabase.from('taste_profiles').select('dna_scores').eq('user_id', user.id).maybeSingle();
+        if (!cancelled && taste?.dna_scores) setDnaLuxury(taste.dna_scores.luxury);
+      }
 
       const [aggregateResult, prefs] = await Promise.all([
         aggregateForUser(user.id, userSettings.useActivityForMl),
@@ -204,6 +211,7 @@ export default function DashboardView() {
         const results = await getNearbyRestaurants(position.coords.latitude, position.coords.longitude, topCuisine, {
           radiusKm: settings.discoveryRadiusKm,
           hiddenGems: settings.showHiddenGems,
+          luxury: dnaLuxury,
         });
         setRestaurants(results);
       },

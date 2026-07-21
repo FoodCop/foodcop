@@ -1,0 +1,14 @@
+-- ==========================================
+-- Real Food DNA quiz results
+-- ==========================================
+-- src/lib/recommendation/dna.ts is a complete, real 25-question/5-module
+-- Food DNA quiz (MODULES, computeDnaScores, PERSONA_MAP) that has never had
+-- a UI wired to it - found via a repo-wide grep during the 2026-07-20/21
+-- audit, zero imports anywhere. This column is what a real quiz screen
+-- persists: computeDnaScores()'s own {adventure, luxury, comfort, social,
+-- health} output, stored as-is. NULL means "hasn't taken the quiz yet" -
+-- the same real-vs-demo gate FoodDnaSection.tsx already uses for
+-- cuisines/dietary/personality. Persona is deliberately NOT stored
+-- separately - personaFromScores(scores) is a pure function of this column,
+-- so storing it too would just be a second, driftable copy.
+ALTER TABLE public.taste_profiles ADD COLUMN IF NOT EXISTS dna_scores JSONB;

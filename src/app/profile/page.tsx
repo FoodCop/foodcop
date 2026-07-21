@@ -30,6 +30,7 @@ function ProfilePageContent() {
   const initialActivityCategory = ACTIVITY_CATEGORIES.includes(activityParam as ActivityCategory)
     ? (activityParam as ActivityCategory)
     : undefined;
+  const initialTab = searchParams.get('tab') === 'dna' ? 'dna' : undefined;
 
   const [demoType, setDemoType] = useState<'person' | 'restaurant'>('person');
   const [realProfile, setRealProfile] = useState<DemoProfile | null>(null);
@@ -65,7 +66,7 @@ function ProfilePageContent() {
 
       const { data: taste } = await supabase
         .from('taste_profiles')
-        .select('cuisines, dietary, result_emoji, result_title, result_desc')
+        .select('cuisines, dietary, result_emoji, result_title, result_desc, dna_scores')
         .eq('user_id', user.id)
         .maybeSingle();
       if (taste) {
@@ -73,6 +74,7 @@ function ProfilePageContent() {
           cuisines: taste.cuisines ?? undefined,
           dietary: taste.dietary ?? undefined,
           personality: taste.result_title ? { icon: taste.result_emoji, title: taste.result_title, desc: taste.result_desc } : null,
+          dnaScores: taste.dna_scores ?? null,
         });
       }
     })();
@@ -84,7 +86,7 @@ function ProfilePageContent() {
     <div>
       <ProfileHeader />
       <ProfileHero profile={profile} userId={currentUserId} />
-      <ProfileTabs profile={profile} tasteProfile={tasteProfile} initialActivityCategory={initialActivityCategory} />
+      <ProfileTabs profile={profile} tasteProfile={tasteProfile} initialActivityCategory={initialActivityCategory} initialTab={initialTab} />
 
       {!realProfile && (
         <div className="container text-center py-3">

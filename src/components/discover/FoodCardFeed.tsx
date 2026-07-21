@@ -11,6 +11,7 @@ import {
 import { PlateService, type PlateItemType } from '@/lib/services/plateService';
 import { TYPE_META, familyOf, type FoodCardFamily } from '@/lib/types/foodCard';
 import { UserSettingsService, DEFAULT_USER_SETTINGS } from '@/lib/services/userSettingsService';
+import { createClient } from '@/lib/supabase/client';
 
 // Same Tinder-style drag/swipe mechanic as the old SwipeFeed.tsx (ported
 // from Romio's Home.tsx originally), re-pointed at real food_cards ranked by
@@ -45,6 +46,13 @@ export default function FoodCardFeed() {
       const settingsResult = await UserSettingsService.get();
       const settings = settingsResult.success && settingsResult.data ? settingsResult.data : DEFAULT_USER_SETTINGS;
 
+      const supabase = createClient();
+      const dnaScores = supabase
+        ? (
+            await supabase.from('taste_profiles').select('dna_scores').eq('user_id', user.id).maybeSingle()
+          ).data?.dna_scores ?? null
+        : null;
+
       const [aggregate, onboardingPrefs] = await Promise.all([
         aggregateForUser(user.id, settings.useActivityForMl),
         getOnboardingPrefs(user.id),
@@ -56,6 +64,7 @@ export default function FoodCardFeed() {
         30,
         settings.matchSensitivity,
         settings.prioritizeTrending,
+        dnaScores,
       );
       if (!cancelled) {
         setCards(feed);

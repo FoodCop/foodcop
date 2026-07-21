@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { personaFromScores, type DnaAxis } from '@/lib/recommendation/dna';
 
 // Ported from the old app's dna.html ("FUZO — Taste Profile"): DNA score
 // bars, the animated fingerprint radar, Flavor DNA + Top Cuisines bars, Food
@@ -10,25 +12,37 @@ import { useEffect, useState } from 'react';
 // Onboarding only ever collects cuisines/dietary/a quiz-derived personality
 // result - nowhere near enough to honestly back DNA-axis scores, an
 // exploration score, visit/review counters, or badges. So `personality`,
-// `cuisines`, and `dietary` (when passed in) replace their sections with
-// real data; everything else stays the original showcase content, tagged
-// "Demo preview" so it doesn't read as this user's real activity.
+// `cuisines`, `dietary`, and now `dnaScores` (when passed in) replace their
+// sections with real data; everything else stays the original showcase
+// content, tagged "Demo preview" so it doesn't read as this user's real
+// activity. `dnaScores` comes from the real 25-question quiz at /dna-quiz
+// (src/lib/recommendation/dna.ts's computeDnaScores) - deliberately a
+// separate persona from `personality` above (onboarding's own, simpler
+// quiz), not a replacement for it.
 
 export type FoodDnaRealData = {
   cuisines?: string[];
   dietary?: string[];
   personality?: { icon: string; title: string; desc: string } | null;
+  dnaScores?: Record<DnaAxis, number> | null;
 };
 
 const REAL_CUISINE_COLORS = ['#7C3AED', '#F43F5E', '#22C55E', '#F59E0B', '#EF4444'];
 
-const DNA_SCORES = [
-  { key: 'adventure', label: 'Adventure', emoji: '🌍', iconBg: '#EDE8FF', from: '#7C3AED', to: '#A855F7', value: 85 },
-  { key: 'luxury', label: 'Luxury', emoji: '⭐', iconBg: '#FFE8F0', from: '#F59E0B', to: '#FBBF24', value: 60 },
-  { key: 'comfort', label: 'Comfort', emoji: '🍲', iconBg: '#FFE8F0', from: '#F43F5E', to: '#FB7185', value: 40 },
-  { key: 'social', label: 'Social', emoji: '👥', iconBg: '#FFF5E0', from: '#F97316', to: '#FB923C', value: 75 },
-  { key: 'health', label: 'Health', emoji: '🥗', iconBg: '#E8F5E9', from: '#22C55E', to: '#4ADE80', value: 30 },
-];
+// Shared visual metadata per DNA axis - reused as-is by the real quiz's
+// Results screen (src/components/dna-quiz/DnaQuizWizard.tsx) so the real
+// bars look identical to the demo ones they replace.
+export const DNA_AXIS_META: Record<DnaAxis, { label: string; emoji: string; iconBg: string; from: string; to: string }> = {
+  adventure: { label: 'Adventure', emoji: '🌍', iconBg: '#EDE8FF', from: '#7C3AED', to: '#A855F7' },
+  luxury: { label: 'Luxury', emoji: '⭐', iconBg: '#FFE8F0', from: '#F59E0B', to: '#FBBF24' },
+  comfort: { label: 'Comfort', emoji: '🍲', iconBg: '#FFE8F0', from: '#F43F5E', to: '#FB7185' },
+  social: { label: 'Social', emoji: '👥', iconBg: '#FFF5E0', from: '#F97316', to: '#FB923C' },
+  health: { label: 'Health', emoji: '🥗', iconBg: '#E8F5E9', from: '#22C55E', to: '#4ADE80' },
+};
+
+const DNA_AXIS_ORDER: DnaAxis[] = ['adventure', 'luxury', 'comfort', 'social', 'health'];
+
+const DEMO_DNA_SCORES: Record<DnaAxis, number> = { adventure: 85, luxury: 60, comfort: 40, social: 75, health: 30 };
 
 const CUISINES = [
   { name: 'Indian', flag: '🇮🇳', pct: 78, color: '#7C3AED' },
@@ -115,7 +129,7 @@ function useCountUp(target: number, active: boolean, duration = 1200) {
   return value;
 }
 
-export default function FoodDnaSection({ cuisines, dietary, personality }: FoodDnaRealData = {}) {
+export default function FoodDnaSection({ cuisines, dietary, personality, dnaScores }: FoodDnaRealData = {}) {
   const [animate, setAnimate] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setAnimate(true), 80);
@@ -124,6 +138,7 @@ export default function FoodDnaSection({ cuisines, dietary, personality }: FoodD
 
   const score = useCountUp(87, animate, 1400);
   const realCuisines = cuisines && cuisines.length > 0 ? cuisines.slice(0, 5) : null;
+  const dnaPersona = dnaScores ? personaFromScores(dnaScores) : null;
 
   return (
     <div>
@@ -167,27 +182,45 @@ export default function FoodDnaSection({ cuisines, dietary, personality }: FoodD
       </div>
 
       <div className="section">
-        <div className="section-title">
-          Food DNA™<span className="demo-tag">Demo preview</span>
+        <div className="section-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span>
+            Food DNA™{!dnaScores && <span className="demo-tag">Demo preview</span>}
+          </span>
+          <Link href="/dna-quiz" className="view-all">
+            {dnaScores ? 'Retake quiz' : 'Take the 2-min quiz →'}
+          </Link>
         </div>
-        <div className="dna-grid">
-          {DNA_SCORES.map((d) => (
-            <div className="dna-row" key={d.key}>
-              <div className="dna-label">
-                <div className="icon" style={{ background: d.iconBg }}>
-                  {d.emoji}
-                </div>
-                {d.label}
-              </div>
-              <div className="dna-track">
-                <div
-                  className="dna-fill"
-                  style={{ width: animate ? `${d.value}%` : '0%', background: `linear-gradient(90deg,${d.from},${d.to})` }}
-                />
-              </div>
-              <div className="dna-pct">{d.value}%</div>
+        {dnaPersona && (
+          <div className="personality-card" style={{ marginBottom: 12 }}>
+            <div className="personality-card__icon">{dnaPersona.emoji}</div>
+            <div>
+              <div className="personality-card__title">{dnaPersona.title}</div>
+              <div className="personality-card__desc">{dnaPersona.desc}</div>
             </div>
-          ))}
+          </div>
+        )}
+        <div className="dna-grid">
+          {DNA_AXIS_ORDER.map((axis) => {
+            const meta = DNA_AXIS_META[axis];
+            const value = dnaScores ? dnaScores[axis] : DEMO_DNA_SCORES[axis];
+            return (
+              <div className="dna-row" key={axis}>
+                <div className="dna-label">
+                  <div className="icon" style={{ background: meta.iconBg }}>
+                    {meta.emoji}
+                  </div>
+                  {meta.label}
+                </div>
+                <div className="dna-track">
+                  <div
+                    className="dna-fill"
+                    style={{ width: animate ? `${value}%` : '0%', background: `linear-gradient(90deg,${meta.from},${meta.to})` }}
+                  />
+                </div>
+                <div className="dna-pct">{value}%</div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

@@ -24,6 +24,15 @@ import { getDistance } from '@/lib/scout/geometryUtils';
 import { buildPlacePhotoUrl } from '@/lib/scout/scoutLogic';
 import { FLAVOR_AXES, ZERO_FLAVOR, type CardTags, type FlavorVector, type FoodCardRecord } from '@/lib/types/foodCard';
 import type { MatchSensitivity } from '@/lib/services/userSettingsService';
+import type { DnaAxis } from '@/lib/recommendation/dna';
+
+// Diet tags treated as "health-conscious" for the Food DNA quiz's Health
+// axis bias below - deliberately excludes Halal/Kosher/Jain, which are
+// about religious/cultural practice, not health.
+const HEALTH_DIET_TAGS = new Set(['Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free']);
+const HIGH_PRICE_LEVELS = new Set(['$$$', '$$$$']);
+const LOW_PRICE_LEVELS = new Set(['$', '$$']);
+const DNA_AXIS_THRESHOLD = 65;
 
 export interface AggregateResult {
   vector: FlavorVector;
@@ -248,6 +257,7 @@ export async function getFeedCards(
   limit = 30,
   matchSensitivity: MatchSensitivity = 'Balanced',
   prioritizeTrending = false,
+  dnaScores?: Record<DnaAxis, number> | null,
 ): Promise<FeedCard[]> {
   const supabase = createClient();
   if (!supabase) return [];
@@ -325,6 +335,21 @@ export async function getFeedCards(
       score += Math.max(0, 60 - distance * 6);
     }
 
+    // Food DNA quiz bias (Health/Luxury only - the two axes with a real
+    // content signal to hook into, see supabase/migrations/
+    // 20260726000000_taste_profiles_dna_scores.sql). No score change at all
+    // when dnaScores is absent (hasn't taken the quiz).
+    if (dnaScores) {
+      if (dnaScores.health > DNA_AXIS_THRESHOLD && cardDiets.some((d) => HEALTH_DIET_TAGS.has(d))) {
+        score += 30;
+      }
+      const priceLevel = tags.price_level;
+      if (priceLevel) {
+        if (dnaScores.luxury > DNA_AXIS_THRESHOLD && HIGH_PRICE_LEVELS.has(priceLevel)) score += 30;
+        else if (dnaScores.luxury < 100 - DNA_AXIS_THRESHOLD && LOW_PRICE_LEVELS.has(priceLevel)) score += 30;
+      }
+    }
+
     score += decay(card.created_at) * trendingWeight;
     score += Math.random() * 10;
 
@@ -360,7 +385,7 @@ export async function getNearbyRestaurants(
   lat: number,
   lng: number,
   topCuisine?: string,
-  options?: { radiusKm?: number; hiddenGems?: boolean },
+  options?: { radiusKm?: number; hiddenGems?: boolean; luxury?: number },
 ): Promise<NearbyRestaurant[]> {
   const radiusMeters = (options?.radiusKm ?? 5) * 1000;
   const result = await PlacesService.searchNearby(lat, lng, radiusMeters);
@@ -394,9 +419,22 @@ export async function getNearbyRestaurants(
   // re-sort toward fewer-reviews spots first, using Google Places' own real
   // review-count field - not a hard filter, so a sparse area doesn't end up
   // empty. Off (or no review-count data) keeps the original rating-first sort.
-  return options?.hiddenGems
-    ? restaurants.sort((a, b) => (a.reviews ?? 0) - (b.reviews ?? 0))
-    : restaurants.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+  const baseCompare = options?.hiddenGems
+    ? (a: NearbyRestaurant, b: NearbyRestaurant) => (a.reviews ?? 0) - (b.reviews ?? 0)
+    : (a: NearbyRestaurant, b: NearbyRestaurant) => (b.rating ?? 0) - (a.rating ?? 0);
+
+  // Food DNA quiz's Luxury axis: a secondary bias (not a hard filter) toward
+  // higher/lower Google price_level (0-4, already real), same threshold/
+  // no-op-when-absent convention as getFeedCards' Health/Luxury bias above.
+  const luxury = options?.luxury;
+  if (luxury === undefined) return restaurants.sort(baseCompare);
+
+  const luxuryCompare = (a: NearbyRestaurant, b: NearbyRestaurant) => {
+    if (luxury > DNA_AXIS_THRESHOLD) return (b.priceLevel ?? -1) - (a.priceLevel ?? -1);
+    if (luxury < 100 - DNA_AXIS_THRESHOLD) return (a.priceLevel ?? 5) - (b.priceLevel ?? 5);
+    return 0;
+  };
+  return restaurants.sort((a, b) => luxuryCompare(a, b) || baseCompare(a, b));
 }
 
 export async function getSuggestedVideos(topCuisine?: string): Promise<SuggestedVideo[]> {
