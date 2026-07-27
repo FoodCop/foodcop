@@ -478,7 +478,13 @@ export default function ScoutView() {
   useEffect(() => {
     if (!mapRef.current || !MAPS_API_KEY) return;
 
+    let cancelled = false;
+    let attempts = 0;
+    // ~10s of retrying at 500ms apart before giving up for real.
+    const MAX_ATTEMPTS = 20;
+
     const initMap = async () => {
+      if (cancelled) return;
       const google = getGoogleMaps();
       if (!google) {
         // Retry if Maps script hasn't loaded yet
@@ -488,12 +494,31 @@ export default function ScoutView() {
 
       let MapClass = google.Map;
       if (!MapClass && typeof google.importLibrary === 'function') {
-        const mapsLib = await google.importLibrary("maps") as any;
-        MapClass = mapsLib.Map;
+        try {
+          const mapsLib = await google.importLibrary("maps") as any;
+          if (cancelled) return;
+          MapClass = mapsLib.Map;
+        } catch {
+          // importLibrary can reject transiently while the rest of the
+          // bootstrap script is still loading - fall through to the retry
+          // below instead of treating one failed attempt as fatal.
+        }
       }
 
       if (!MapClass) {
-        console.error("Failed to load Google Maps Map class.");
+        // google.maps exists as an empty stub the instant the bootstrap
+        // script's first line runs (`google.maps = google.maps || {}`),
+        // well before the script that actually defines importLibrary/Map
+        // has finished loading - so "google is truthy" doesn't mean "Map is
+        // ready yet". Keep retrying (bounded) instead of giving up on what's
+        // usually just a premature first check - this was a real race that
+        // made the map fail to render on a coin-flip basis.
+        attempts += 1;
+        if (attempts >= MAX_ATTEMPTS) {
+          console.error("Failed to load Google Maps Map class after retrying.");
+          return;
+        }
+        setTimeout(initMap, 500);
         return;
       }
 
@@ -538,6 +563,7 @@ export default function ScoutView() {
     // 'removeChild'" error with no application code in the stack (the crash
     // is inside React-DOM's own reconciler, not this file).
     return () => {
+      cancelled = true;
       const google = getGoogleMaps();
       activeMarkersRef.current.forEach((m) => m.setMap(null));
       activeMarkersRef.current = [];
