@@ -134,7 +134,7 @@ export default function ProfileHero({ profile, userId }: { profile: DemoProfile;
         className="position-relative bg-light"
         style={{
           height: 140,
-          backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'linear-gradient(135deg, #fdeee9, #fdf6e3)',
+          backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'linear-gradient(135deg, #fff9d6, #fbf7ec)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

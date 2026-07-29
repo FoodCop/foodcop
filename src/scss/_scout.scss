@@ -13,7 +13,7 @@
 // (search submit, active filters/tabs, primary CTAs, focus rings). Rose is
 // used for the "new/dropped pin" accent, the one legacy used purple for.
 
-$scout-accent: $chili;
+$scout-accent: $fuzo-yellow;
 $scout-google: $sky;
 $scout-fuzo: $turmeric;
 $scout-saved: $lime;
@@ -1026,7 +1026,7 @@ $scout-z-wizard: 1100;
 
 .scout-modal__reserve {
   background: $scout-accent;
-  color: #fff;
+  color: $fuzo-yellow-ink;
 
   &:hover {
     background: darken($scout-accent, 6%);
