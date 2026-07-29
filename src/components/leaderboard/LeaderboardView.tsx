@@ -65,7 +65,7 @@ export default function LeaderboardView() {
           <li className="nav-item" key={tab}>
             <button
               className={`nav-link rounded-pill fw-bold text-uppercase py-2 ${
-                scope === tab ? 'active bg-warning text-dark' : 'text-secondary'
+                scope === tab ? 'active bg-primary text-dark' : 'text-secondary'
               }`}
               onClick={() => setScope(tab)}
               style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}
@@ -78,7 +78,7 @@ export default function LeaderboardView() {
 
       {isLoading ? (
         <div className="text-center py-5">
-          <div className="spinner-border text-warning" role="status">
+          <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
@@ -94,7 +94,7 @@ export default function LeaderboardView() {
           {entries.map((entry, index) => (
             <li
               key={entry.id}
-              className={`list-group-item d-flex align-items-center gap-3 py-3 ${entry.id === user?.id ? 'bg-warning-subtle' : ''}`}
+              className={`list-group-item d-flex align-items-center gap-3 py-3 ${entry.id === user?.id ? 'bg-primary-subtle' : ''}`}
             >
               <span className="leaderboard-rank">
                 {index < 3 ? MEDALS[index] : index + 1}
@@ -109,7 +109,7 @@ export default function LeaderboardView() {
                 <div className="fw-bold text-truncate">{entry.displayName}</div>
                 <div className="small text-muted">Level {entry.pointsLevel}</div>
               </div>
-              <div className="fw-bolder text-warning-emphasis">{entry.pointsTotal.toLocaleString()} pts</div>
+              <div className="fw-bolder text-primary-emphasis">{entry.pointsTotal.toLocaleString()} pts</div>
             </li>
           ))}
         </ul>
@@ -122,7 +122,7 @@ export default function LeaderboardView() {
             <div className="fw-bold">Your Rank</div>
             {myStats && <div className="small text-muted">Level {myStats.pointsLevel}</div>}
           </div>
-          {myStats && <div className="fw-bolder text-warning-emphasis">{myStats.pointsTotal.toLocaleString()} pts</div>}
+          {myStats && <div className="fw-bolder text-primary-emphasis">{myStats.pointsTotal.toLocaleString()} pts</div>}
         </div>
       )}
     </div>

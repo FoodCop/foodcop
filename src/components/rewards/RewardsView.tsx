@@ -61,7 +61,7 @@ export default function RewardsView() {
   if (isLoading) {
     return (
       <div className="rewards-page text-center py-5">
-        <div className="spinner-border text-warning" role="status">
+        <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
@@ -88,7 +88,7 @@ export default function RewardsView() {
       {/* LEVEL CARD */}
       <div className="rewards-level-card">
         <div className="rewards-level-ring">
-          <RingSvg fraction={pct} size={80} stroke={8} color="#f2a93b" trackColor="#292524" />
+          <RingSvg fraction={pct} size={80} stroke={8} color="#fae71b" trackColor="#292524" />
           <div className="rewards-level-ring__face">
             <span className="rewards-level-ring__num">{level}</span>
             <span className="rewards-level-ring__tag">Level</span>

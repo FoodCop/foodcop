@@ -172,7 +172,7 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
               )}
               <button
                 type="button"
-                className="btn btn-warning flex-grow-1 fw-bold text-dark rounded-pill"
+                className="btn btn-primary flex-grow-1 fw-bold text-dark rounded-pill"
                 onClick={() => setShowFriendPicker(true)}
                 disabled={shareStatus === 'sending'}
               >

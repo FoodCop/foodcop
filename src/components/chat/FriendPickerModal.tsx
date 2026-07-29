@@ -61,7 +61,7 @@ export default function FriendPickerModal({ currentUserId, onClose, onPick }: Fr
           <div className="modal-body pt-0">
             {isLoading ? (
               <div className="text-center py-4">
-                <div className="spinner-border text-warning" role="status">
+                <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
               </div>

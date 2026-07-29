@@ -16,7 +16,7 @@ $rewards-border: #f0efed;
 $rewards-surface-muted: #fafaf9;
 $rewards-track: #f0efed;
 $rewards-earned-bg: #fffbeb;
-$rewards-earned-border: $turmeric;
+$rewards-earned-border: $fuzo-yellow;
 $rewards-done: #4d7c0f;
 
 .rewards-page {
@@ -63,7 +63,7 @@ $rewards-done: #4d7c0f;
   transform: translate(-50%, -12px);
   opacity: 0;
   z-index: 200;
-  background: $turmeric;
+  background: $fuzo-yellow;
   color: $rewards-ink;
   padding: 1rem 1.5rem;
   border-radius: $border-radius-lg;
@@ -159,7 +159,7 @@ $rewards-done: #4d7c0f;
 }
 
 .rewards-level-info__rank {
-  color: $turmeric;
+  color: $fuzo-yellow;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -186,7 +186,7 @@ $rewards-done: #4d7c0f;
 
 .rewards-level-info__fill {
   height: 100%;
-  background: $turmeric;
+  background: $fuzo-yellow;
   transition: width 0.5s ease-out;
 }
 
@@ -342,7 +342,7 @@ $rewards-done: #4d7c0f;
   color: $rewards-ink-faint;
 
   &.is-earned {
-    background: $turmeric;
+    background: $fuzo-yellow;
     color: $rewards-ink;
   }
 }
@@ -382,7 +382,7 @@ $rewards-done: #4d7c0f;
   transition: width 0.5s ease;
 
   .rewards-badge-card.is-earned & {
-    background: $turmeric;
+    background: $fuzo-yellow;
   }
 }
 
@@ -427,7 +427,7 @@ $rewards-done: #4d7c0f;
   }
 
   &.is-done {
-    border-color: $turmeric;
+    border-color: $fuzo-yellow;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 }
@@ -472,7 +472,7 @@ $rewards-done: #4d7c0f;
   margin-top: 0.25rem;
 
   .rewards-ach-card.is-done & {
-    color: darken($turmeric, 15%);
+    color: darken($fuzo-yellow, 15%);
   }
 }
 
@@ -558,7 +558,7 @@ $rewards-done: #4d7c0f;
 
   &--xp {
     background: $rewards-ink;
-    color: $turmeric;
+    color: $fuzo-yellow;
 
     &:hover {
       background: lighten($rewards-ink, 10%);
@@ -570,8 +570,8 @@ $rewards-done: #4d7c0f;
     border-color: $rewards-border;
 
     &.is-on {
-      background: $turmeric;
-      border-color: $turmeric;
+      background: $fuzo-yellow;
+      border-color: $fuzo-yellow;
       color: $rewards-ink;
     }
   }

@@ -78,7 +78,7 @@ export default function SavedItemDetailModal({
             <div className="d-flex justify-content-between align-items-start mb-3">
               <div>
                 <h3 className="fw-bolder mb-1">{title}</h3>
-                <span className="badge bg-warning text-dark text-uppercase">{category}</span>
+                <span className="badge bg-primary text-dark text-uppercase">{category}</span>
               </div>
             </div>
 
@@ -95,7 +95,7 @@ export default function SavedItemDetailModal({
                 <ul className="nav nav-pills nav-fill mb-3 bg-light rounded-3 p-1">
                   <li className="nav-item">
                     <button
-                      className={`nav-link rounded-3 fw-bold ${activeTab === 'details' ? 'active bg-warning text-dark' : 'text-secondary'}`}
+                      className={`nav-link rounded-3 fw-bold ${activeTab === 'details' ? 'active bg-primary text-dark' : 'text-secondary'}`}
                       onClick={() => setActiveTab('details')}
                     >
                       Details
@@ -103,7 +103,7 @@ export default function SavedItemDetailModal({
                   </li>
                   <li className="nav-item">
                     <button
-                      className={`nav-link rounded-3 fw-bold ${activeTab === 'ingredients' ? 'active bg-warning text-dark' : 'text-secondary'}`}
+                      className={`nav-link rounded-3 fw-bold ${activeTab === 'ingredients' ? 'active bg-primary text-dark' : 'text-secondary'}`}
                       onClick={() => setActiveTab('ingredients')}
                     >
                       Ingredients
@@ -111,7 +111,7 @@ export default function SavedItemDetailModal({
                   </li>
                   <li className="nav-item">
                     <button
-                      className={`nav-link rounded-3 fw-bold ${activeTab === 'instructions' ? 'active bg-warning text-dark' : 'text-secondary'}`}
+                      className={`nav-link rounded-3 fw-bold ${activeTab === 'instructions' ? 'active bg-primary text-dark' : 'text-secondary'}`}
                       onClick={() => setActiveTab('instructions')}
                     >
                       Instructions
@@ -158,7 +158,7 @@ export default function SavedItemDetailModal({
                 Save to Plate
               </button>
             )}
-            <button type="button" className="btn btn-warning flex-grow-1 fw-bold text-dark rounded-pill" onClick={handleShareClick}>
+            <button type="button" className="btn btn-primary flex-grow-1 fw-bold text-dark rounded-pill" onClick={handleShareClick}>
               Share
             </button>
           </div>
