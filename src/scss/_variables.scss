@@ -4,15 +4,31 @@
 // explicitly dropped. Must be set BEFORE `@import "bootstrap/scss/bootstrap"`.
 
 // ===== Master brand color, client-specified (2026-07 rebrand) =====
-// The client's chosen brand yellow, approved as "Direction B: Soft Citrus
+// The client's chosen brand color, approved as "Direction B: Soft Citrus
 // System" out of a 3-direction mockup round - fuzo-yellow used with
 // restraint (CTAs, active states, progress) against a warm cream base, not
 // as a full flood-fill. Save this hex exactly - it's the one client-mandated
 // constant everything else in this file is built around.
-$fuzo-yellow: #fae71b;
-$fuzo-yellow-ink: #6b5f00;    // text/icons ON fuzo-yellow - it's too light for white text to pass contrast
-$fuzo-yellow-tint: #fff9d6;   // faint wash for card highlights, badge backgrounds
-$fuzo-yellow-deep: #d4c400;   // hover/pressed state, borders on yellow fields
+//
+// Updated 2026-07-29: client moved the exact hex from a light, bright yellow
+// (#FAE71B) to this medium-dark warm taupe (#7A6B5E) - kept the name
+// "fuzo-yellow" since that's what the client calls it, but the LIGHTNESS
+// direction inverted (was ~85% luminance, now ~15%). That flips which text
+// color reads legibly against a solid fill of it: every "solid
+// $fuzo-yellow background + dark ink text" pairing from the first pass
+// needed dark-on-light logic reversed to light-on-dark. $fuzo-yellow-ink is
+// therefore now a LIGHT color (not dark) - it means "text/icon ON a solid
+// $fuzo-yellow surface" and was already used that way at the large majority
+// of call sites, so flipping its value here fixed most of them for free;
+// the handful of exceptions (accent text directly on the page, text on a
+// pale tint of the accent, accent text on the app's separate dark-ink
+// chrome) needed individual review - see 2026-07-29 commit for the by-file
+// breakdown.
+$fuzo-yellow: #7a6b5e;
+$fuzo-yellow-ink: #fdfbf7;      // text/icons ON a solid fuzo-yellow surface (was dark, now light - see note above)
+$fuzo-yellow-tint: #ece8e5;     // faint wash for card highlights/badge backgrounds - dark text sits on this
+$fuzo-yellow-deep: #5f5349;     // darker shade for borders/hover, and for text/icons ON a fuzo-yellow-tint background
+$fuzo-yellow-pale: #b6ada6;     // lighter shade for accent-colored text/icons on the app's dark-ink chrome (Rewards level card, Dashboard promo banner, Tako's dark action button) - raw fuzo-yellow no longer has enough contrast against near-black for that role
 
 $chili: #e8472b;
 $turmeric: #f2a93b;
@@ -23,9 +39,11 @@ $rose: #f06292;
 // $primary retargeted from $chili to $fuzo-yellow - this is the single
 // highest-leverage step in the rebrand: every .btn-primary/.text-primary/
 // .bg-primary usage across the whole app (not just Dashboard) picks this up
-// automatically. Bootstrap 5.3's own color-contrast() should correctly pick
-// dark button text against a background this light without a manual
-// override - verify visually per screen, don't assume.
+// automatically. Bootstrap 5.3's own color-contrast() picks button text
+// against whichever of black/white has better contrast - it self-corrected
+// from dark to light text automatically when the hex got darker (2026-07-29),
+// unlike every hand-written SCSS pairing in the page partials, which needed
+// individual review - still worth a visual check per screen, don't assume.
 $primary: $fuzo-yellow;
 $secondary: $turmeric;
 $success: $lime;

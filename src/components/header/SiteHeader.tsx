@@ -48,16 +48,32 @@ export default function SiteHeader() {
   return (
     <>
     <nav className="navbar fz-navbar sticky-top">
-      <div className="container">
-        <Link href="/dashboard" className="navbar-brand" onClick={closeAll}>
+      <div className="container fz-navbar__row">
+        {/* Left slot - profile picture button, fixed-width so the centered
+            logo doesn't drift when this is empty (logged out). */}
+        <div className="fz-navbar__side fz-navbar__side--start">
+          {user && (
+            <Link href="/profile" className="text-dark" aria-label="Profile">
+              <div className="rounded-circle bg-light d-flex align-items-center justify-content-center overflow-hidden border fz-avatar-ring" style={{ width: 32, height: 32 }}>
+                {user.user_metadata?.avatar_url ? (
+                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-100 h-100 object-fit-cover" />
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                )}
+              </div>
+            </Link>
+          )}
+        </div>
+
+        <Link href="/dashboard" className="navbar-brand fz-navbar__brand" onClick={closeAll}>
           <img src="/fuzo_logo.svg" alt="FUZO" className="navbar-brand-logo" />
         </Link>
 
-        {/* Space out brand and icons */}
-        <div className="flex-grow-1" />
-
         {/* Top Nav Icons */}
-        <div className="d-flex align-items-center gap-3 ms-auto me-3">
+        <div className="d-flex align-items-center gap-3 fz-navbar__side fz-navbar__side--end">
           {user && (
             <button
               type="button"
@@ -77,7 +93,7 @@ export default function SiteHeader() {
               <span className="visually-hidden">New messages</span>
             </span>
           </Link>
-          
+
           <Link href="/notifications" className="text-dark position-relative" aria-label="Notifications">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -90,35 +106,22 @@ export default function SiteHeader() {
             )}
           </Link>
 
-          {user ? (
-            <Link href="/profile" className="text-dark" aria-label="Profile">
-              <div className="rounded-circle bg-light d-flex align-items-center justify-content-center overflow-hidden border fz-avatar-ring" style={{ width: 32, height: 32 }}>
-                {user.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-100 h-100 object-fit-cover" />
-                ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                )}
-              </div>
-            </Link>
-          ) : (
+          {!user && (
             <Link href="/login" className="btn btn-outline-primary btn-sm rounded-pill fw-bold px-3">
               Sign In
             </Link>
           )}
-        </div>
 
-        <button
-          className="navbar-toggler border-0 px-0"
-          type="button"
-          aria-expanded={drawerOpen}
-          aria-label="Toggle navigation"
-          onClick={() => setDrawerOpen((v) => !v)}
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
+          <button
+            className="navbar-toggler border-0 px-0"
+            type="button"
+            aria-expanded={drawerOpen}
+            aria-label="Toggle navigation"
+            onClick={() => setDrawerOpen((v) => !v)}
+          >
+            <span className="navbar-toggler-icon" />
+          </button>
+        </div>
 
         {drawerOpen && <div className="offcanvas-backdrop fade show" onClick={closeAll} />}
 

@@ -439,7 +439,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
                 <div className="scout-wizard__rating-stars">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <button key={s} onClick={() => setDetails({ ...details, rating: s })}>
-                      <Star size={32} fill={s <= details.rating ? "#fae71b" : "none"} style={{ color: s <= details.rating ? '#d4c400' : '#292524' }} />
+                      <Star size={32} fill={s <= details.rating ? "#7a6b5e" : "none"} style={{ color: s <= details.rating ? '#5f5349' : '#292524' }} />
                     </button>
                   ))}
                 </div>
@@ -458,7 +458,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
               {/* Hours */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 16 }}>
-                  <Clock size={16} style={{ color: '#d4c400' }} />
+                  <Clock size={16} style={{ color: '#5f5349' }} />
                   <span style={{ fontSize: 11, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#78716c' }}>Opening Hours</span>
                 </div>
                 <div className="scout-wizard__hours-card">

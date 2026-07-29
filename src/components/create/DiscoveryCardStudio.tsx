@@ -158,7 +158,7 @@ export const DiscoveryCardStudio: React.FC<DiscoveryCardStudioProps> = ({ cardTy
                 <div className="studio-rating">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <button key={s} className="studio-rating__star" onClick={() => setRating(s === rating ? 0 : s)}>
-                      <Star size={32} fill={s <= rating ? '#fae71b' : 'none'} style={{ color: s <= rating ? '#d4c400' : '#292524' }} />
+                      <Star size={32} fill={s <= rating ? '#7a6b5e' : 'none'} style={{ color: s <= rating ? '#5f5349' : '#292524' }} />
                     </button>
                   ))}
                 </div>

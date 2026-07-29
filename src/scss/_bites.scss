@@ -499,7 +499,7 @@ $bites-radius-xl: 1.75rem;
   height: 1.5rem;
   border-radius: 50%;
   background: $fuzo-yellow;
-  color: $bites-ink;
+  color: $fuzo-yellow-ink;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -566,6 +566,6 @@ $bites-radius-xl: 1.75rem;
 
   &.is-saved {
     background: $fuzo-yellow;
-    color: $bites-ink;
+    color: $fuzo-yellow-ink;
   }
 }

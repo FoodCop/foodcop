@@ -211,7 +211,7 @@ export const ChatView = ({
   const getMessageStatusIcon = (status?: string) => {
     if (!status || status === 'sent') return <Check size={10} />;
     if (status === 'sending') return <Clock size={10} style={{ animation: 'chat-pulse 2s ease-in-out infinite' }} />;
-    if (status === 'read') return <CheckCheck size={10} color="#fae71b" />;
+    if (status === 'read') return <CheckCheck size={10} color="#7a6b5e" />;
     if (status === 'error') return <AlertCircle size={10} color="#dc2626" />;
     return <Check size={10} />;
   };

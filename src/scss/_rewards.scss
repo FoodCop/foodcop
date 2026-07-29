@@ -64,7 +64,7 @@ $rewards-done: #4d7c0f;
   opacity: 0;
   z-index: 200;
   background: $fuzo-yellow;
-  color: $rewards-ink;
+  color: $fuzo-yellow-ink;
   padding: 1rem 1.5rem;
   border-radius: $border-radius-lg;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
@@ -159,7 +159,7 @@ $rewards-done: #4d7c0f;
 }
 
 .rewards-level-info__rank {
-  color: $fuzo-yellow;
+  color: $fuzo-yellow-pale;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -186,7 +186,7 @@ $rewards-done: #4d7c0f;
 
 .rewards-level-info__fill {
   height: 100%;
-  background: $fuzo-yellow;
+  background: $fuzo-yellow-pale;
   transition: width 0.5s ease-out;
 }
 
@@ -343,7 +343,7 @@ $rewards-done: #4d7c0f;
 
   &.is-earned {
     background: $fuzo-yellow;
-    color: $rewards-ink;
+    color: $fuzo-yellow-ink;
   }
 }
 
@@ -558,7 +558,7 @@ $rewards-done: #4d7c0f;
 
   &--xp {
     background: $rewards-ink;
-    color: $fuzo-yellow;
+    color: $fuzo-yellow-pale;
 
     &:hover {
       background: lighten($rewards-ink, 10%);
@@ -572,7 +572,7 @@ $rewards-done: #4d7c0f;
     &.is-on {
       background: $fuzo-yellow;
       border-color: $fuzo-yellow;
-      color: $rewards-ink;
+      color: $fuzo-yellow-ink;
     }
   }
 }

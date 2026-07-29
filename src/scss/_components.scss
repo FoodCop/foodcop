@@ -14,6 +14,16 @@
 // Bootstrap utility: the food/recipe card, the pastel category tile, section
 // titles, the rewards progress ring, and the empty-state pattern.
 
+// Text/icon color for content sitting on a solid .bg-primary/.btn-primary
+// surface. Bootstrap's own color-contrast() handles this automatically for
+// plain .btn-primary usage, but a few spots pair .bg-primary with a
+// hardcoded .text-dark instead of relying on that - those don't self-correct
+// when $primary's lightness changes (2026-07-29: light yellow -> dark
+// taupe), so they use this class instead now.
+.fz-on-accent {
+  color: $fuzo-yellow-ink !important;
+}
+
 .fz-card {
   background: $fz-paper;
   border: 1px solid $fz-border;
@@ -45,7 +55,7 @@
     letter-spacing: 0.03em;
     text-transform: uppercase;
     background: $fuzo-yellow-tint;
-    color: $fuzo-yellow-ink;
+    color: $fuzo-yellow-deep;
     padding: 0.15rem 0.55rem;
     border-radius: 999px;
   }
@@ -64,7 +74,7 @@
   font-size: 1.4rem;
   flex-shrink: 0;
 
-  &--1 { background: linear-gradient(135deg, $fuzo-yellow-tint, #fff2a8); }
+  &--1 { background: linear-gradient(135deg, $fuzo-yellow-tint, mix($fuzo-yellow, #fff, 30%)); }
   &--2 { background: linear-gradient(135deg, $chili-tint, #ffcabb); }
   &--3 { background: linear-gradient(135deg, $sky-tint, #bcdcf5); }
   &--4 { background: linear-gradient(135deg, $lime-tint, #cfe8a4); }

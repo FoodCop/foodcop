@@ -145,7 +145,7 @@ $dash-surface-muted: #fafaf9;
 
   &:focus-within {
     border-color: $fuzo-yellow-deep;
-    color: $fuzo-yellow-ink;
+    color: $fuzo-yellow-deep;
   }
 
   input {
@@ -244,7 +244,7 @@ $dash-surface-muted: #fafaf9;
 }
 
 .dashboard-promo__level {
-  color: $fuzo-yellow;
+  color: $fuzo-yellow-pale;
 }
 
 .dashboard-promo__sub {
@@ -307,7 +307,7 @@ $dash-surface-muted: #fafaf9;
   // Rotating pastel tint, same family as _components.scss's .fz-tile - a
   // row of category icons reads as one colorful system instead of one
   // repeated hue.
-  &--1 { background: linear-gradient(135deg, $fuzo-yellow-tint, #fff2a8); }
+  &--1 { background: linear-gradient(135deg, $fuzo-yellow-tint, mix($fuzo-yellow, #fff, 30%)); }
   &--2 { background: linear-gradient(135deg, $chili-tint, #ffcabb); }
   &--3 { background: linear-gradient(135deg, $sky-tint, #bcdcf5); }
   &--4 { background: linear-gradient(135deg, $lime-tint, #cfe8a4); }
@@ -327,7 +327,7 @@ $dash-surface-muted: #fafaf9;
     border-color: $fuzo-yellow-deep;
   }
   .dashboard-categories__label {
-    color: $fuzo-yellow-ink;
+    color: $fuzo-yellow-deep;
   }
 }
 
@@ -379,7 +379,7 @@ a.dashboard-section__sub {
   height: 3rem;
   border-radius: 50%;
   background: $fuzo-yellow-tint;
-  color: $fuzo-yellow-ink;
+  color: $fuzo-yellow-deep;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -486,7 +486,7 @@ a.dashboard-section__sub {
   display: inline-block;
   font-size: 0.65rem;
   font-weight: 800;
-  color: $fuzo-yellow-ink;
+  color: $fuzo-yellow-deep;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   background: $fuzo-yellow-tint;

@@ -65,7 +65,7 @@ export default function LeaderboardView() {
           <li className="nav-item" key={tab}>
             <button
               className={`nav-link rounded-pill fw-bold text-uppercase py-2 ${
-                scope === tab ? 'active bg-primary text-dark' : 'text-secondary'
+                scope === tab ? 'active bg-primary fz-on-accent' : 'text-secondary'
               }`}
               onClick={() => setScope(tab)}
               style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}

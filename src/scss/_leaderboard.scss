@@ -13,7 +13,7 @@
   height: 3.5rem;
   border-radius: 999px;
   background: $fuzo-yellow;
-  color: #1c1917;
+  color: $fuzo-yellow-ink;
 }
 
 .leaderboard-rank {
@@ -31,5 +31,13 @@
 
   .text-muted {
     color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  // Bootstrap's .text-primary-emphasis darkens $primary for use on light
+  // backgrounds - wrong direction on this dark bar, same fix as the app's
+  // other accent-text-on-dark-chrome spots (Rewards level card, Dashboard
+  // promo banner).
+  .text-primary-emphasis {
+    color: $fuzo-yellow-pale !important;
   }
 }

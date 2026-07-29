@@ -18,6 +18,51 @@
   border-color: $fz-border !important;
 }
 
+// Header row: profile avatar (left) / logo (center) / icons+menu (right).
+// Below `lg` the logo is true-centered via a grid (the outer two columns
+// share a fixed width so an empty left slot - logged out, no avatar -
+// doesn't pull the logo off-center). At `lg+` this reverts to a plain
+// flex row (brand-left, icons-right) - the client's centering request was
+// specifically about the mobile header, not the wider inline navbar.
+.fz-navbar__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fz-navbar__side {
+  flex-shrink: 0;
+}
+
+.fz-navbar__brand {
+  margin: 0;
+}
+
+@include media-breakpoint-down(lg) {
+  .fz-navbar__row {
+    display: grid;
+    // Outer columns size to their own content (avatar vs. the wider
+    // create/messages/notifications/menu cluster) rather than a fixed
+    // width, so the logo centers in whatever space is actually left over
+    // instead of risking the two sides overlapping it.
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+  }
+
+  .fz-navbar__side--start {
+    justify-self: start;
+    min-width: 2.5rem;
+  }
+
+  .fz-navbar__brand {
+    justify-self: center;
+  }
+
+  .fz-navbar__side--end {
+    justify-self: end;
+  }
+}
+
 // Frosted-glass slide-in panel (Ekomart's .side-bar used
 // backdrop-filter: blur(7px) on the panel itself) - only applies below `lg`,
 // where the offcanvas actually slides in; at `lg+` it's just the inline navbar.

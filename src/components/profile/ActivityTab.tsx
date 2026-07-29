@@ -191,7 +191,7 @@ export default function ActivityTab({ userId, isCurrentUser = true, initialCateg
           <li className="nav-item" key={key}>
             <button
               className={`nav-link rounded-pill fw-bold text-uppercase py-2 ${
-                activeFilterTab === key ? 'active bg-primary text-dark' : 'text-secondary'
+                activeFilterTab === key ? 'active bg-primary fz-on-accent' : 'text-secondary'
               }`}
               onClick={() => setActiveFilterTab(key)}
               style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}
@@ -266,7 +266,7 @@ export default function ActivityTab({ userId, isCurrentUser = true, initialCateg
                     <p className="text-white fw-bolder mb-1 text-truncate" style={{ fontSize: '0.85rem' }}>
                       {tile.item.name}
                     </p>
-                    <span className="badge bg-primary text-dark text-uppercase" style={{ fontSize: '0.6rem' }}>
+                    <span className="badge bg-primary fz-on-accent text-uppercase" style={{ fontSize: '0.6rem' }}>
                       {tile.item.cat}
                     </span>
                   </div>

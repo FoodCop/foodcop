@@ -174,7 +174,7 @@ $chat-danger: #dc2626;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: $chat-ink;
+  color: $fuzo-yellow-ink;
 }
 
 // Create-group inline panel
@@ -323,7 +323,7 @@ $chat-danger: #dc2626;
   width: 100%;
   padding: 1rem;
   background: $fuzo-yellow;
-  color: $chat-ink;
+  color: $fuzo-yellow-ink;
   border: none;
   border-radius: 1rem;
   font-weight: 900;
@@ -524,7 +524,7 @@ $chat-danger: #dc2626;
 .chat-view__row-unread {
   background: $fuzo-yellow;
   flex-shrink: 0;
-  color: $chat-ink;
+  color: $fuzo-yellow-ink;
   font-size: 11px;
   font-weight: 900;
   padding: 0.125rem 0.375rem;
@@ -1017,7 +1017,7 @@ $chat-danger: #dc2626;
 
 .chat-view__share-badge {
   background: $fuzo-yellow;
-  color: $chat-ink;
+  color: $fuzo-yellow-ink;
   padding: 0.25rem 0.5rem;
   border-radius: 999px;
   font-size: 11px;
@@ -1235,7 +1235,7 @@ $chat-danger: #dc2626;
   height: 44px;
   flex-shrink: 0;
   background: $fuzo-yellow;
-  color: $chat-ink;
+  color: $fuzo-yellow-ink;
   border: none;
   border-radius: 999px;
   display: flex;
@@ -1326,7 +1326,7 @@ $chat-danger: #dc2626;
   font-size: 9px;
   font-weight: 900;
   text-transform: uppercase;
-  color: $chat-ink;
+  color: $fuzo-yellow-ink;
 }
 
 .event-invite__media-brand {
@@ -1468,7 +1468,7 @@ $chat-danger: #dc2626;
 
   &.is-selected {
     background: $fuzo-yellow;
-    color: $chat-ink;
+    color: $fuzo-yellow-ink;
   }
 }
 
@@ -1530,7 +1530,7 @@ $chat-danger: #dc2626;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $chat-ink;
+  color: $fuzo-yellow-ink;
   box-shadow: 0 8px 20px rgba($fuzo-yellow, 0.2);
   flex-shrink: 0;
 }
