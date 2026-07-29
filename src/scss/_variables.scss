@@ -17,7 +17,7 @@
 // Derived shades are now Sass color functions of the base rather than
 // hand-computed hex, specifically so a future hex correction only touches
 // this one line instead of every derived value again:
-$fuzo-yellow: #eaaf23;
+$fuzo-yellow: #f1c74d;
 $fuzo-yellow-ink: mix(#000, $fuzo-yellow, 75%);   // dark text/icons ON a solid fuzo-yellow surface
 $fuzo-yellow-tint: mix(#fff, $fuzo-yellow, 85%);  // pale wash for card highlights/badge backgrounds - dark text sits on this
 $fuzo-yellow-deep: mix(#000, $fuzo-yellow, 15%);  // darker/richer shade for borders/hover, and for text/icons ON a fuzo-yellow-tint background

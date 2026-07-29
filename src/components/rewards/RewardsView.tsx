@@ -88,7 +88,7 @@ export default function RewardsView() {
       {/* LEVEL CARD */}
       <div className="rewards-level-card">
         <div className="rewards-level-ring">
-          <RingSvg fraction={pct} size={80} stroke={8} color="#f0c765" trackColor="#292524" />
+          <RingSvg fraction={pct} size={80} stroke={8} color="#f5d882" trackColor="#292524" />
           <div className="rewards-level-ring__face">
             <span className="rewards-level-ring__num">{level}</span>
             <span className="rewards-level-ring__tag">Level</span>
