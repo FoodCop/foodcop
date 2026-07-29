@@ -10,25 +10,18 @@
 // as a full flood-fill. Save this hex exactly - it's the one client-mandated
 // constant everything else in this file is built around.
 //
-// Updated 2026-07-29: client moved the exact hex from a light, bright yellow
-// (#FAE71B) to this medium-dark warm taupe (#7A6B5E) - kept the name
-// "fuzo-yellow" since that's what the client calls it, but the LIGHTNESS
-// direction inverted (was ~85% luminance, now ~15%). That flips which text
-// color reads legibly against a solid fill of it: every "solid
-// $fuzo-yellow background + dark ink text" pairing from the first pass
-// needed dark-on-light logic reversed to light-on-dark. $fuzo-yellow-ink is
-// therefore now a LIGHT color (not dark) - it means "text/icon ON a solid
-// $fuzo-yellow surface" and was already used that way at the large majority
-// of call sites, so flipping its value here fixed most of them for free;
-// the handful of exceptions (accent text directly on the page, text on a
-// pale tint of the accent, accent text on the app's separate dark-ink
-// chrome) needed individual review - see 2026-07-29 commit for the by-file
-// breakdown.
-$fuzo-yellow: #7a6b5e;
-$fuzo-yellow-ink: #fdfbf7;      // text/icons ON a solid fuzo-yellow surface (was dark, now light - see note above)
-$fuzo-yellow-tint: #ece8e5;     // faint wash for card highlights/badge backgrounds - dark text sits on this
-$fuzo-yellow-deep: #5f5349;     // darker shade for borders/hover, and for text/icons ON a fuzo-yellow-tint background
-$fuzo-yellow-pale: #b6ada6;     // lighter shade for accent-colored text/icons on the app's dark-ink chrome (Rewards level card, Dashboard promo banner, Tako's dark action button) - raw fuzo-yellow no longer has enough contrast against near-black for that role
+// Corrected 2026-07-29: the previous value (#7A6B5E, a medium-dark taupe)
+// was given in error - #EAAF23 (a saturated golden yellow) is correct. Its
+// luminance (~47%) needs DARK text on a solid fill, same direction as the
+// very first #FAE71B pass, not light text like the (wrong) taupe did.
+// Derived shades are now Sass color functions of the base rather than
+// hand-computed hex, specifically so a future hex correction only touches
+// this one line instead of every derived value again:
+$fuzo-yellow: #eaaf23;
+$fuzo-yellow-ink: mix(#000, $fuzo-yellow, 75%);   // dark text/icons ON a solid fuzo-yellow surface
+$fuzo-yellow-tint: mix(#fff, $fuzo-yellow, 85%);  // pale wash for card highlights/badge backgrounds - dark text sits on this
+$fuzo-yellow-deep: mix(#000, $fuzo-yellow, 15%);  // darker/richer shade for borders/hover, and for text/icons ON a fuzo-yellow-tint background
+$fuzo-yellow-pale: mix(#fff, $fuzo-yellow, 30%);  // lighter shade for accent-colored text/icons on the app's dark-ink chrome (Rewards level card, Dashboard promo banner, Tako's dark action button)
 
 $chili: #e8472b;
 $turmeric: #f2a93b;
