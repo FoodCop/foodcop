@@ -515,7 +515,7 @@ $studio-z: 1100;
 
   &.is-dragging {
     border-color: $studio-accent;
-    background: rgba($turmeric, 0.08);
+    background: rgba($studio-accent, 0.08);
     color: $studio-ink;
   }
 }

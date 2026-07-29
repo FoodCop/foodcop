@@ -12,7 +12,11 @@
 // concave cutout at the base.
 
 .discover-tabband {
-  background: $chili;
+  // Direction B reserves fuzo-yellow for accents/CTAs rather than a full
+  // flood-fill band (that treatment was Direction A, not what the client
+  // picked) - this folder-tab band uses the same dark-ink chrome as the
+  // Rewards level card / Dashboard rewards banner instead.
+  background: $fz-ink;
   padding: 0.85rem 1rem 0;
   display: flex;
   gap: 0.35rem;
@@ -41,7 +45,7 @@
 
 .discover-tab.is-active {
   background: #fff;
-  color: $chili;
+  color: $fz-ink;
   box-shadow: 0 -2px 10px rgba(#000, 0.12);
 }
 

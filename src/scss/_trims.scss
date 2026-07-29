@@ -56,8 +56,8 @@
 }
 
 .follow-btn {
-  border: 1px solid $chili;
-  color: $chili;
+  border: 1px solid $fuzo-yellow;
+  color: $fuzo-yellow-ink;
   background: rgba(255, 255, 255, 0.9);
   border-radius: $border-radius-sm;
   text-align: center;
@@ -67,9 +67,9 @@
   letter-spacing: 0.5px;
 
   &.following {
-    background-color: $chili;
-    border-color: $chili;
-    color: #fff;
+    background-color: $fuzo-yellow;
+    border-color: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
   }
 }
 
@@ -95,7 +95,7 @@
     }
 
     &.liked {
-      color: $chili;
+      color: $fuzo-yellow;
     }
   }
 }

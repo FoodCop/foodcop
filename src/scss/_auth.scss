@@ -1,14 +1,17 @@
 // Login: re-skinned from a Claude Design mockup (soft pill inputs/buttons,
 // warm gold CTA) onto this app's real design system - FUZO brand tokens
-// from _variables.scss (the mockup's gold maps directly onto $turmeric,
-// already $secondary) and the real heading/body fonts (Barlow
+// from _variables.scss and the real heading/body fonts (Barlow
 // Condensed/Hanken Grotesk, wired globally via $headings-font-family), not
 // a generic system font. The waving-hand emoji in the mockup was swapped
 // for a real SVG (public/SVG/social/Smile.svg), same emoji->SVG approach
 // _onboarding.scss already established. Scoped to its own .auth-* classes
-// rather than overriding .btn-primary/.form-control globally, since $chili
-// stays the site-wide primary everywhere else - this gold treatment is
-// specific to the auth screen, not a brand-wide accent swap.
+// rather than overriding .btn-primary/.form-control globally - originally
+// because the mockup's gold predated the 2026-07 rebrand's $primary
+// retarget to fuzo-yellow (built with $turmeric standing in); now that
+// $primary IS a warm gold too, this file's gold matches the rest of the
+// app "for free," but it's kept scoped rather than switched to
+// .btn-primary since Bootstrap's automatic contrast-picked button text
+// wasn't verified against this specific pill shape/sizing.
 
 $auth-ink: #1c1917;
 $auth-ink-soft: #6b7280;
@@ -87,9 +90,9 @@ $auth-radius-pill: 9999px;
 
   &:focus {
     outline: none;
-    border-color: $turmeric;
+    border-color: $fuzo-yellow;
     background: #fff;
-    box-shadow: 0 0 0 4px rgba($turmeric, 0.16);
+    box-shadow: 0 0 0 4px rgba($fuzo-yellow, 0.16);
   }
 }
 
@@ -138,7 +141,7 @@ $auth-radius-pill: 9999px;
   text-align: center;
   padding: 0.9375rem;
   border-radius: $auth-radius-pill;
-  background: $turmeric;
+  background: $fuzo-yellow;
   color: $auth-ink;
   font-weight: 800;
   font-size: 1rem;
@@ -206,7 +209,7 @@ $auth-radius-pill: 9999px;
   text-align: center;
   padding: 0.75rem;
   margin-top: 0.5rem;
-  color: $turmeric;
+  color: $fuzo-yellow-ink;
   font-weight: 700;
   font-size: 0.9375rem;
   cursor: pointer;
@@ -216,7 +219,7 @@ $auth-radius-pill: 9999px;
   margin-top: auto;
   padding-top: 3rem;
   text-align: center;
-  color: $turmeric;
+  color: $fuzo-yellow-ink;
   font-weight: 800;
   font-size: 0.8125rem;
   letter-spacing: 0.15em;
