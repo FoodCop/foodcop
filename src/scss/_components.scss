@@ -1,0 +1,117 @@
+// Shared component layer for the Direction B ("Soft Citrus System") rebrand.
+// Replaces src/scss/components/_cards.scss, which was never actually
+// imported anywhere and referenced mixins/variables (clay-card, --clay-3)
+// from the claymorphism style already dropped project-wide - dead code, not
+// extended.
+//
+// Deliberately does NOT reinvent buttons/pills/badges - now that $primary is
+// fuzo-yellow (see _variables.scss), Bootstrap's own .btn.btn-primary,
+// .badge, .rounded-pill utilities already give the right look project-wide,
+// matching how this codebase already leans on Bootstrap utility composition
+// (see SiteHeader.tsx's `btn btn-primary btn-sm rounded-circle`) rather than
+// a parallel custom-class system. This file covers only the genuinely
+// bespoke patterns from the approved mockup that don't map onto a plain
+// Bootstrap utility: the food/recipe card, the pastel category tile, section
+// titles, the rewards progress ring, and the empty-state pattern.
+
+.fz-card {
+  background: $fz-paper;
+  border: 1px solid $fz-border;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+
+  &__image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__body {
+    padding: 0.7rem 0.85rem 0.85rem;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: $fz-ink;
+    margin: 0.4rem 0 0.35rem;
+  }
+
+  &__badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-ink;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+  }
+}
+
+// Pastel gradient category tile - rotates through the brand family's tints
+// so a row of icons reads as "one colorful system" rather than one repeated
+// hue. Apply .fz-tile plus one of the 5 numbered modifiers in sequence.
+.fz-tile {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+
+  &--1 { background: linear-gradient(135deg, $fuzo-yellow-tint, #fff2a8); }
+  &--2 { background: linear-gradient(135deg, $chili-tint, #ffcabb); }
+  &--3 { background: linear-gradient(135deg, $sky-tint, #bcdcf5); }
+  &--4 { background: linear-gradient(135deg, $lime-tint, #cfe8a4); }
+  &--5 { background: linear-gradient(135deg, $rose-tint, #f8c2d6); }
+}
+
+.fz-section-title {
+  font-family: $headings-font-family;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: $fz-ink;
+  margin: 0 0 0.15rem;
+}
+
+.fz-section-sub {
+  font-size: 0.76rem;
+  color: $fz-ink-soft;
+  margin: 0 0 0.85rem;
+}
+
+// Conic-gradient progress ring, used by the Rewards banner pattern - value
+// is set inline per instance via --fz-ring-pct (0-100).
+.fz-ring {
+  --fz-ring-pct: 0;
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: conic-gradient($fuzo-yellow calc(var(--fz-ring-pct) * 1%), $fz-border 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::after {
+    content: '';
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 50%;
+    background: $fz-paper;
+  }
+}
+
+.fz-empty {
+  text-align: center;
+  padding: 1.4rem 1.1rem;
+  color: $fz-ink-soft;
+  font-size: 0.82rem;
+  background: $fz-cream;
+  border-radius: $border-radius-lg;
+}

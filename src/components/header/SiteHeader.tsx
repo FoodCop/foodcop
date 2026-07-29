@@ -47,7 +47,7 @@ export default function SiteHeader() {
 
   return (
     <>
-    <nav className="navbar bg-white shadow-sm sticky-top">
+    <nav className="navbar fz-navbar sticky-top">
       <div className="container">
         <Link href="/dashboard" className="navbar-brand" onClick={closeAll}>
           <img src="/fuzo_logo.svg" alt="FUZO" className="navbar-brand-logo" />
@@ -92,7 +92,7 @@ export default function SiteHeader() {
 
           {user ? (
             <Link href="/profile" className="text-dark" aria-label="Profile">
-              <div className="rounded-circle bg-light d-flex align-items-center justify-content-center overflow-hidden border" style={{ width: 32, height: 32 }}>
+              <div className="rounded-circle bg-light d-flex align-items-center justify-content-center overflow-hidden border fz-avatar-ring" style={{ width: 32, height: 32 }}>
                 {user.user_metadata?.avatar_url ? (
                   <img src={user.user_metadata.avatar_url} alt="Profile" className="w-100 h-100 object-fit-cover" />
                 ) : (

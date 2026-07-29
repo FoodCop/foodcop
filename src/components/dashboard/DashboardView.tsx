@@ -353,14 +353,16 @@ export default function DashboardView() {
 
       {/* Category shortcuts */}
       <div className="dashboard-categories">
-        {CATEGORY_SHORTCUTS.map((cat) => (
+        {CATEGORY_SHORTCUTS.map((cat, i) => (
           <button
             key={cat.keyword}
             type="button"
             className={`dashboard-categories__item${activeCategory === cat.keyword ? ' is-active' : ''}`}
             onClick={() => setActiveCategory((prev) => (prev === cat.keyword ? null : cat.keyword))}
           >
-            <span className="dashboard-categories__icon">
+            {/* Rotating pastel tint (1-5) - same tile system as _components.scss's .fz-tile,
+                kept as its own modifier here since this icon is round, not the square tile shape. */}
+            <span className={`dashboard-categories__icon dashboard-categories__icon--${(i % 5) + 1}`}>
               <img src={cat.icon} alt="" />
             </span>
             <span className="dashboard-categories__label">{cat.label}</span>

@@ -25,7 +25,10 @@ $dash-surface-muted: #fafaf9;
 .dashboard-hero {
   margin: 0 -1rem 1.5rem;
   padding: 2rem 1.25rem 1.75rem;
-  background: linear-gradient(135deg, $turmeric, lighten($turmeric, 12%));
+  // Direction B keeps the hero band restrained (paper, not a flood-fill) -
+  // the fuzo-yellow tint moves to the nudge card below instead, which is
+  // now the visually distinct element on this band.
+  background: $fz-paper;
   color: $dash-ink;
 }
 
@@ -45,7 +48,8 @@ $dash-surface-muted: #fafaf9;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  background: rgba(#fff, 0.96);
+  background: $fuzo-yellow-tint;
+  border: 1px solid rgba($fuzo-yellow-deep, 0.35);
   border-radius: 1.25rem;
   padding: 1rem 1.25rem;
   margin-top: 1.25rem;
@@ -68,18 +72,14 @@ $dash-surface-muted: #fafaf9;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: $dash-ink;
-  color: #fff;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
   border: none;
   border-radius: 9999px;
   padding: 0.55rem 1rem;
   font-size: 0.8rem;
   font-weight: 800;
   white-space: nowrap;
-
-  svg {
-    color: $turmeric;
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -144,8 +144,8 @@ $dash-surface-muted: #fafaf9;
   min-width: 0;
 
   &:focus-within {
-    border-color: $chili;
-    color: $chili;
+    border-color: $fuzo-yellow-deep;
+    color: $fuzo-yellow-ink;
   }
 
   input {
@@ -212,7 +212,7 @@ $dash-surface-muted: #fafaf9;
 
   &.is-active {
     color: $dash-ink;
-    border-bottom-color: $turmeric;
+    border-bottom-color: $fuzo-yellow;
   }
 }
 
@@ -244,7 +244,7 @@ $dash-surface-muted: #fafaf9;
 }
 
 .dashboard-promo__level {
-  color: $turmeric;
+  color: $fuzo-yellow;
 }
 
 .dashboard-promo__sub {
@@ -257,8 +257,8 @@ $dash-surface-muted: #fafaf9;
   flex-shrink: 0;
   font-size: 0.8rem;
   font-weight: 800;
-  background: $turmeric;
-  color: $dash-ink;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
   padding: 0.5rem 1rem;
   border-radius: 9999px;
   white-space: nowrap;
@@ -291,7 +291,6 @@ $dash-surface-muted: #fafaf9;
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  background: rgba($turmeric, 0.14);
   border: 1.5px solid transparent;
   display: flex;
   align-items: center;
@@ -304,6 +303,15 @@ $dash-surface-muted: #fafaf9;
     height: 100%;
     object-fit: contain;
   }
+
+  // Rotating pastel tint, same family as _components.scss's .fz-tile - a
+  // row of category icons reads as one colorful system instead of one
+  // repeated hue.
+  &--1 { background: linear-gradient(135deg, $fuzo-yellow-tint, #fff2a8); }
+  &--2 { background: linear-gradient(135deg, $chili-tint, #ffcabb); }
+  &--3 { background: linear-gradient(135deg, $sky-tint, #bcdcf5); }
+  &--4 { background: linear-gradient(135deg, $lime-tint, #cfe8a4); }
+  &--5 { background: linear-gradient(135deg, $rose-tint, #f8c2d6); }
 }
 
 .dashboard-categories__label {
@@ -313,12 +321,13 @@ $dash-surface-muted: #fafaf9;
 }
 
 .dashboard-categories__item.is-active {
+  // Selection now reads as a ring around the tile rather than swapping its
+  // pastel fill, so the tile keeps its own color identity either way.
   .dashboard-categories__icon {
-    border-color: $chili;
-    background: rgba($chili, 0.08);
+    border-color: $fuzo-yellow-deep;
   }
   .dashboard-categories__label {
-    color: $chili;
+    color: $fuzo-yellow-ink;
   }
 }
 
@@ -369,8 +378,8 @@ a.dashboard-section__sub {
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  background: rgba($turmeric, 0.16);
-  color: $turmeric;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-ink;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -381,8 +390,8 @@ a.dashboard-section__sub {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: $turmeric;
-  color: $dash-ink;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
   border: none;
   border-radius: 9999px;
   padding: 0.55rem 1.1rem;
@@ -477,10 +486,10 @@ a.dashboard-section__sub {
   display: inline-block;
   font-size: 0.65rem;
   font-weight: 800;
-  color: $dash-ink;
+  color: $fuzo-yellow-ink;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  background: rgba($turmeric, 0.22);
+  background: $fuzo-yellow-tint;
   padding: 0.2rem 0.55rem;
   border-radius: 9999px;
 }
@@ -551,8 +560,8 @@ a.dashboard-section__sub {
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 50%;
-  background: $turmeric;
-  color: $dash-ink;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
   display: flex;
   align-items: center;
   justify-content: center;
