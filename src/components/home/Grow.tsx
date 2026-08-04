@@ -1,11 +1,12 @@
 import React from 'react';
+import { Megaphone, Camera, Calendar, TrendingUp, Utensils } from 'lucide-react';
 
 export default function Grow() {
   const cards = [
-    { ico: '📢', title: 'Promote', desc: 'Reach customers who already love your cuisine with targeted, taste-based promotion.' },
-    { ico: '📸', title: 'Moments', desc: 'Showcase your best dishes through beautiful food moments that live on customer profiles.' },
-    { ico: '📅', title: 'Events', desc: 'Announce special menus, tasting nights and pop-up events directly to interested diners.' },
-    { ico: '📈', title: 'Insights', desc: 'Understand exactly what brings customers through your door and how to keep them coming back.' },
+    { Ico: Megaphone, title: 'Promote', desc: 'Reach customers who already love your cuisine with targeted, taste-based promotion.' },
+    { Ico: Camera, title: 'Moments', desc: 'Showcase your best dishes through beautiful food moments that live on customer profiles.' },
+    { Ico: Calendar, title: 'Events', desc: 'Announce special menus, tasting nights and pop-up events directly to interested diners.' },
+    { Ico: TrendingUp, title: 'Insights', desc: 'Understand exactly what brings customers through your door and how to keep them coming back.' },
   ];
 
   return (
@@ -25,7 +26,7 @@ export default function Grow() {
           <div className="sc d1">
             <div className="grow-hero-img">
               <img src="/v6/restaurant.png" alt="Restaurants on FUZO" />
-              <a href="#final-cta" className="explore-btn">🍽️ Get Listed Free</a>
+              <a href="#final-cta" className="explore-btn"><Utensils size={16} className="hicon" /> Get Listed Free</a>
             </div>
           </div>
 
@@ -34,7 +35,7 @@ export default function Grow() {
             {cards.map((c, i) => (
               <div key={c.title} className={`gcard-outer sr d${i + 1}`}>
                 <div className="gcard">
-                  <div className="gc-ico">{c.ico}</div>
+                  <div className="gc-ico"><c.Ico size={26} className="hicon" strokeWidth={1.75} /></div>
                   <div className="gc-t">{c.title}</div>
                   <p className="gc-d">{c.desc}</p>
                 </div>

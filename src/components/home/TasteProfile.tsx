@@ -1,4 +1,5 @@
 import React from 'react';
+import { Utensils, Check } from 'lucide-react';
 
 export default function TasteProfile() {
   return (
@@ -11,7 +12,7 @@ export default function TasteProfile() {
         <h2 className="ti-h">Discover Your Taste.</h2>
         <p className="ti-sub">Find restaurants, cafés and hidden gems that match your unique taste — not just your location.</p>
         <div className="ti-btns">
-          <a href="#final-cta" className="btn-cta">🍴 Discover Food That Finds You</a>
+          <a href="#final-cta" className="btn-cta"><Utensils size={16} className="hicon" /> Discover Food That Finds You</a>
           <a href="#discover" className="btn-ghost" style={{ color: 'var(--ink)', borderColor: 'rgba(0,0,0,.2)' }}>Explore FUZO</a>
         </div>
       </section>
@@ -23,23 +24,23 @@ export default function TasteProfile() {
         <div className="two-col sec-inner-p">
           {/* Copy */}
           <div className="sl">
-            <div className="eyebrow" style={{ color: 'var(--gold)' }}>
-              <span style={{ width: '22px', height: '1.5px', background: 'var(--gold)', display: 'block', flexShrink: 0 }}></span>
+            <div className="eyebrow" style={{ color: 'var(--cta2)' }}>
+              <span style={{ width: '22px', height: '1.5px', background: 'var(--cta2)', display: 'block', flexShrink: 0 }}></span>
               Taste Profile
             </div>
-            <h2 className="sec-h" style={{ color: '#fff' }}>Every Taste<br />Is Different.</h2>
-            <p className="sec-sub" style={{ color: 'rgba(255,255,255,.55)' }}>
+            <h2 className="sec-h" style={{ color: 'var(--ink)' }}>Every Taste<br />Is Different.</h2>
+            <p className="sec-sub" style={{ color: 'rgba(0,0,0,.55)' }}>
               No two people enjoy food the same way.<br />FUZO starts by learning yours.
             </p>
             <div className="feature-list" style={{ marginTop: '28px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {['Cuisine preferences', 'Spice level & dietary needs', 'Budget & dining style', 'Favourite dishes & places'].map(item => (
-                <div key={item} className="feature-item" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'var(--sora)', fontSize: '.9rem', fontWeight: 300, color: 'rgba(255,255,255,.7)' }}>
-                  <span style={{ color: 'var(--gold)', fontSize: '1rem' }}>✓</span> {item}
+                <div key={item} className="feature-item" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'var(--sora)', fontSize: '.9rem', fontWeight: 300, color: 'rgba(0,0,0,.7)' }}>
+                  <Check size={16} className="hicon hicon-float" style={{ color: 'var(--cta2)' }} /> {item}
                 </div>
               ))}
             </div>
             <a href="#final-cta" className="btn-cta" style={{ marginTop: '32px', display: 'inline-flex', fontSize: '.82rem', padding: '14px 34px' }}>
-              Discover Food That Finds You
+              <Utensils size={15} className="hicon" /> Discover Food That Finds You
             </a>
           </div>
 

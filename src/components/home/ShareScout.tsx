@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link2 } from 'lucide-react';
+import { FaInstagram, FaWhatsapp, FaFacebookMessenger } from 'react-icons/fa6';
 
 export default function ShareScout() {
   return (
@@ -13,10 +15,10 @@ export default function ShareScout() {
             <h2 className="sec-h">Share Your<br />Food Story.</h2>
             <p className="sec-sub">Beautiful food cards designed to be shared with friends, family and your community.</p>
             <div className="s-icons-row">
-              <div className="s-ico" title="Instagram">📸</div>
-              <div className="s-ico" title="WhatsApp">💬</div>
-              <div className="s-ico" title="Messenger">📨</div>
-              <div className="s-ico" title="Copy Link">🔗</div>
+              <div className="s-ico" title="Instagram"><FaInstagram size={19} className="hicon" style={{ color: '#E1306C' }} /></div>
+              <div className="s-ico" title="WhatsApp"><FaWhatsapp size={19} className="hicon" style={{ color: '#25D366' }} /></div>
+              <div className="s-ico" title="Messenger"><FaFacebookMessenger size={19} className="hicon" style={{ color: '#0084FF' }} /></div>
+              <div className="s-ico" title="Copy Link"><Link2 size={19} className="hicon" /></div>
             </div>
           </div>
           <div className="share-vis sc d2">
@@ -27,9 +29,9 @@ export default function ShareScout() {
               <img src="/v6/food-card1.png" alt="Food story" />
             </div>
             <div className="share-pills">
-              <div className="spill"><span>📸</span>Instagram</div>
-              <div className="spill"><span>💬</span>WhatsApp</div>
-              <div className="spill"><span>🔗</span>Copy</div>
+              <div className="spill"><FaInstagram size={14} className="hicon" style={{ color: '#E1306C' }} />Instagram</div>
+              <div className="spill"><FaWhatsapp size={14} className="hicon" style={{ color: '#25D366' }} />WhatsApp</div>
+              <div className="spill"><Link2 size={14} className="hicon" />Copy</div>
             </div>
           </div>
         </div>
@@ -41,12 +43,12 @@ export default function ShareScout() {
       <section id="scout">
         <div className="two-col sec-inner-p">
           <div className="sl">
-            <div className="eyebrow" style={{ color: 'var(--gold)' }}>
-              <span style={{ width: '22px', height: '1.5px', background: 'var(--gold)', display: 'block', flexShrink: 0 }}></span>
+            <div className="eyebrow" style={{ color: 'var(--cta2)' }}>
+              <span style={{ width: '22px', height: '1.5px', background: 'var(--cta2)', display: 'block', flexShrink: 0 }}></span>
               Scout Maps
             </div>
-            <h2 className="sec-h" style={{ color: '#fff' }}>Explore Your<br />City Differently.</h2>
-            <p className="sec-sub" style={{ color: 'rgba(255,255,255,.55)' }}>
+            <h2 className="sec-h" style={{ color: 'var(--ink)' }}>Explore Your<br />City Differently.</h2>
+            <p className="sec-sub" style={{ color: 'rgba(0,0,0,.55)' }}>
               Find nearby restaurants that match your taste — not just the closest ones.
             </p>
             <div className="feature-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '28px' }}>

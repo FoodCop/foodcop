@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaInstagram, FaTiktok, FaLinkedin } from 'react-icons/fa6';
 
 export default function HomeFooter() {
   return (
@@ -41,9 +42,9 @@ export default function HomeFooter() {
             <a href="#">App Store</a>
             <a href="#">Google Play</a>
             <div className="foot-soc" style={{ marginTop: '14px' }}>
-              <a href="#" title="Instagram">📸</a>
-              <a href="#" title="TikTok">🎵</a>
-              <a href="#" title="LinkedIn">💼</a>
+              <a href="#" title="Instagram"><FaInstagram size={16} className="hicon" /></a>
+              <a href="#" title="TikTok"><FaTiktok size={16} className="hicon" /></a>
+              <a href="#" title="LinkedIn"><FaLinkedin size={16} className="hicon" /></a>
             </div>
           </div>
         </div>

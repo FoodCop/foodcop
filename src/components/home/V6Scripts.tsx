@@ -64,14 +64,14 @@ export default function V6Scripts() {
     }
 
     // ─── SCROLL REVEAL ───
-    function revealAll() {
-      document.querySelectorAll('.sr, .sl, .srr, .sc').forEach(el => {
-        if (el.getBoundingClientRect().top < window.innerHeight * 0.88) {
-          el.classList.add('in');
-        }
-      });
-    }
-
+    // The IntersectionObserver below already adds `.in` the moment each
+    // element scrolls into view - it used to be duplicated here with a
+    // manual getBoundingClientRect() scan over every .sr/.sl/.srr/.sc on
+    // the page, re-run on every single scroll event via checkSections().
+    // That scan only grows as more sections mount, and by the time you're
+    // deep in the page (Tako/Emotional/Final CTA) it was heavy enough
+    // per-tick to visibly stall the sticky nav's repaint during fast
+    // scrolling. The observer alone is sufficient.
     const observer = new IntersectionObserver(es => {
       es.forEach(e => {
         if (e.isIntersecting) {
@@ -120,8 +120,6 @@ export default function V6Scripts() {
           setTimeout(() => el.classList.add('vis'), 400 + i * 600);
         });
       }
-
-      revealAll();
     }
 
     // ─── PROGRESS + NAV ───
@@ -169,42 +167,7 @@ export default function V6Scripts() {
     }
     window.addEventListener('scroll', growCards, { passive: true });
 
-    // ─── MIRO OVERLAP ANIMATION ───
-    const sectionIds = [
-      'taste',
-      'discover',
-      'foodcards',
-      'share',
-      'scout',
-      'grow',
-      'tako',
-      'emotional',
-      'final-cta'
-    ];
-    
-    const secObserver = new IntersectionObserver(es => {
-      es.forEach(e => {
-        if (e.isIntersecting) {
-          (e.target as HTMLElement).style.opacity = '1';
-          (e.target as HTMLElement).style.transform = 'translateY(0)';
-        }
-      });
-    }, { threshold: 0.05 });
-
-    sectionIds.forEach((id, i) => {
-      const s = document.getElementById(id);
-      if (!s) return;
-      s.style.transition = 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-      secObserver.observe(s);
-      
-      if (i > 0) {
-        s.style.opacity = '0.01';
-        s.style.transform = 'translateY(40px)';
-      }
-    });
-
     // ─── INIT ───
-    revealAll();
     heroLogic(window.scrollY);
     checkSections();
 
@@ -213,7 +176,6 @@ export default function V6Scripts() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('scroll', growCards);
       observer.disconnect();
-      secObserver.disconnect();
     };
   }, []);
 

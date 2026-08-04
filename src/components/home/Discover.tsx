@@ -1,4 +1,5 @@
 import React from 'react';
+import { MapPin } from 'lucide-react';
 
 export default function Discover() {
   return (
@@ -17,7 +18,7 @@ export default function Discover() {
         <div className="discover-vis sc d2">
           <img src="/v6/discover.png" alt="Discover cafés and restaurants near you" />
           <div className="disc-overlay">
-            <div className="do-icon">📍</div>
+            <div className="do-icon"><MapPin size={18} className="hicon hicon-float" /></div>
             <div className="do-text">
               <b>12 places match your taste</b>
               <span>Within 2km · Open now</span>

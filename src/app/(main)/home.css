@@ -56,6 +56,26 @@
 #grow .grow-inner{display:grid;grid-template-columns:55% 45%;gap:64px;align-items:start;}
 .sec-inner-p{padding:0 60px;}
 
+/* ── ICON MICRO-ANIMATION ──
+   Real (lucide) icons replacing emoji get a small, tasteful motion cue
+   instead of sitting static: icons inside an already-hoverable element
+   (buttons, cards, pills) perk up - scale + a slight rotate - together
+   with that element's existing hover lift. Icons that aren't inside a
+   hoverable element (e.g. a plain feature-list row) get a gentle
+   continuous float instead, matching the site's existing badgePop/
+   phoneHover idle-motion language rather than sitting inert. */
+.hicon{display:inline-flex;flex-shrink:0;transition:transform .3s var(--ease);}
+a:hover .hicon,
+.gcard:hover .hicon,
+.s-ico:hover .hicon,
+.spill:hover .hicon,
+.cat-pill:hover .hicon,
+.explore-btn:hover .hicon{
+  transform:scale(1.15) rotate(-8deg);
+}
+.hicon.hicon-float{animation:hiconFloat 2.6s ease-in-out infinite;}
+@keyframes hiconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
 
 /* ── PROGRESS ── */
 #pbar{position:fixed;top:0;left:0;width:100%;height:2.5px;
@@ -198,6 +218,43 @@
   will-change:transform;
 }
 
+/* ── Sticky stack (Hero → Final CTA) ──
+   Every top-level section from #taste-intro through #final-cta (except
+   #grow) shares one containing block (.v6-page-wrapper), so each pins at
+   top:0 and naturally slides up to cover the earlier ones as the page
+   scrolls - no dimension/layout changes, position:sticky is a paint-time
+   offset only. Two sections keep their own pre-existing scroll mechanism
+   instead of this one and are left out: #hero (320vh video-crossfade
+   pin) and #grow (its own internal vstack/gcard-outer card stack).
+
+   A panel taller than the viewport would otherwise get permanently
+   stuck with its lower content trapped below the fold, since a stuck
+   element doesn't reveal more of itself via scroll on its own - so
+   StackScroll.tsx runs a brief "reveal" scroll-scrub right after each
+   panel sticks, nudging its own content upward internally until
+   everything has been shown, before the normal cover transition (scale
+   /lift/shadow on the panel underneath as the next one slides over it)
+   takes over. z-index below keeps paint order correct throughout
+   (footer needs a higher z-index than #final-cta since sticky/
+   positioned elements always paint above static ones regardless of
+   source order). */
+#taste-intro,#taste,#discover,#foodcards,#share,#scout,#tako,#emotional,#final-cta{
+  position:sticky;
+  top:0;
+  transform-origin:top center;
+}
+#grow{ position:relative; }
+#taste-intro{z-index:1;}
+#taste{z-index:2;}
+#discover{z-index:3;}
+#foodcards{z-index:4;}
+#share{z-index:5;}
+#scout{z-index:6;}
+#grow{z-index:7;}
+#tako{z-index:8;}
+#emotional{z-index:9;}
+#final-cta{z-index:10;}
+
 /* =========================================================
    DISCOVER YOUR TASTE + subtext (SECTION right after hero)
    White background, text block
@@ -275,7 +332,7 @@
    SEC 1 — TASTE PROFILE (warm bg)
 ========================================================= */
 #taste{
-  background:var(--warm);
+  background:var(--gold);
   padding:120px 0;
 }
 /* Pop-out phone with animation */
@@ -380,7 +437,7 @@
 /* =========================================================
    SEC 3 — FOOD CARDS (warm bg)
 ========================================================= */
-#foodcards{background:var(--warm);padding:120px 0;}
+#foodcards{background:var(--gold);padding:120px 0;}
 .cards-stage{
   position:relative;height:520px;
   display:flex;align-items:flex-end;justify-content:center;
@@ -415,7 +472,7 @@
 .fc-icons{display:flex;gap:24px;flex-wrap:wrap;margin-top:28px;}
 .fc-icon-i{
   display:flex;align-items:center;gap:7px;
-  font-family:var(--sora);font-size:.82rem;font-weight:400;color:rgba(255,255,255,.7);
+  font-family:var(--sora);font-size:.82rem;font-weight:400;color:rgba(0,0,0,.6);
 }
 .fc-icon-i .ico{font-size:1.1rem;}
 
@@ -463,7 +520,7 @@
 /* =========================================================
    SEC 5 — SCOUT MAPS (warm bg) — uses fuzo_food image
 ========================================================= */
-#scout{background:var(--warm);padding:120px 0;}
+#scout{background:var(--gold);padding:120px 0;}
 .scout-vis{
   position:relative;height:600px;border-radius:28px;overflow:hidden;
   box-shadow:0 40px 100px rgba(0,0,0,.4);
@@ -628,7 +685,12 @@
    SEC 8 — EMOTIONAL (vanilla — use DNA image)
 ========================================================= */
 #emotional{
-  position:relative;min-height:100vh;
+  /* position comes from the sticky-stack rule above - this used to also
+     set position:relative here, which at equal ID-selector specificity
+     silently won (later in source order) and stopped #emotional from
+     ever actually sticking, leaving a gap where #tako showed through
+     underneath once #emotional scrolled past normally. */
+  min-height:100vh;
   display:flex;align-items:center;overflow:hidden;
   background:var(--van);
 }
@@ -670,10 +732,10 @@
 }
 
 /* =========================================================
-   SEC 9 — FINAL CTA (warm bg)
+   SEC 9 — FINAL CTA (gold bg)
 ========================================================= */
 #final-cta{
-  background:var(--warm);
+  background:var(--gold);
   padding:180px 48px;text-align:center;
 }
 .fcta-inner{max-width:700px;margin:0 auto;}
@@ -681,13 +743,13 @@
   font-family:var(--sora);
   font-size:clamp(2.6rem,5.2vw,5rem);
   font-weight:800;line-height:.92;
-  letter-spacing:-0.03em;color:#fff;
+  letter-spacing:-0.03em;color:var(--ink);
   margin-bottom:20px;
 }
 .fcta-sub{
   font-family:var(--sora);
   font-size:1.05rem;font-weight:200;
-  color:rgba(255,255,255,.55);line-height:1.8;
+  color:rgba(0,0,0,.55);line-height:1.8;
   margin-bottom:48px;
 }
 .btn-cta-lg{
@@ -703,6 +765,12 @@
    FOOTER
 ========================================================= */
 footer{
+  /* Static elements always paint below positioned ones, so without this
+     the sticky #final-cta (z-index:10) would show through the footer
+     once scrolled underneath it - relative+z-index fixes paint order
+     without touching layout (no offsets set). */
+  position:relative;
+  z-index:11;
   background:var(--ink);
   padding:72px 80px 48px;
 }
@@ -738,9 +806,10 @@ footer{
   width:38px;height:38px;border-radius:11px;
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
   display:flex;align-items:center;justify-content:center;font-size:1rem;
+  color:rgba(255,255,255,.55);
   text-decoration:none;transition:all .2s;
 }
-.foot-soc a:hover{background:rgba(255,201,9,.12);border-color:rgba(255,201,9,.3);}
+.foot-soc a:hover{background:rgba(255,201,9,.12);border-color:rgba(255,201,9,.3);color:var(--gold);}
 .foot-bot{
   border-top:1px solid rgba(255,255,255,.06);
   padding-top:26px;

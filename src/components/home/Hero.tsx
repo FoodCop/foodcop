@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { Utensils } from 'lucide-react';
 
 export default function Hero() {
   return (
@@ -29,7 +30,7 @@ export default function Hero() {
           </h1>
           <p className="hero-sub-small">The app that thinks about food as much as you do.</p>
           <div className="hero-btns">
-            <a href="#taste" className="btn-cta">🍴 Discover Food That Finds You</a>
+            <a href="#taste" className="btn-cta"><Utensils size={16} className="hicon" /> Discover Food That Finds You</a>
             <a href="#discover" className="btn-ghost">Explore FUZO</a>
           </div>
         </div>
