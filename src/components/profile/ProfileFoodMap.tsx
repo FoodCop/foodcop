@@ -16,6 +16,9 @@ export interface ProfileMapPlace {
 interface ProfileFoodMapProps {
   places: ProfileMapPlace[];
   onSelect?: (id: string) => void;
+  /** Shows an "Add a place" CTA in the empty state - omitted for a
+   * read-only (someone else's) profile view. */
+  onAdd?: () => void;
 }
 
 // A real map of places the profile owner has actually pinned (Restaurant-
@@ -24,7 +27,7 @@ interface ProfileFoodMapProps {
 // rather than a new map library or component, and the same lesson learned
 // there: markers/listeners must be torn down on unmount or a later resize
 // can crash React's reconciler trying to touch an already-detached node.
-export default function ProfileFoodMap({ places, onSelect }: ProfileFoodMapProps) {
+export default function ProfileFoodMap({ places, onSelect, onAdd }: ProfileFoodMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -138,6 +141,11 @@ export default function ProfileFoodMap({ places, onSelect }: ProfileFoodMapProps
         <div className="fw-bold mt-2 text-uppercase" style={{ fontSize: '0.8rem', letterSpacing: '1px' }}>
           No places pinned yet
         </div>
+        {onAdd && (
+          <button type="button" className="btn btn-primary btn-sm fw-bold rounded-pill mt-3 px-3" onClick={onAdd}>
+            + Add a place
+          </button>
+        )}
       </div>
     );
   }

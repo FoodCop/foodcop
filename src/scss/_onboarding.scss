@@ -18,9 +18,40 @@ $onboarding-radius-lg: 1.5rem;
 $onboarding-radius-xl: 1.75rem;
 
 .onboarding-page {
+  position: relative;
   max-width: 34rem;
   margin: 0 auto;
   padding: 0.5rem 1rem 4rem;
+  isolation: isolate;
+
+  // Ambient light behind the card stack - fixed so it doesn't scroll away
+  // on long screens (quiz/portfolio), blurred so it reads as glow rather
+  // than a decoration competing with the card itself.
+  &::before,
+  &::after {
+    content: '';
+    position: fixed;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+  }
+
+  &::before {
+    top: -6rem;
+    right: -8rem;
+    width: 20rem;
+    height: 20rem;
+    background: radial-gradient(circle, rgba($fuzo-yellow, 0.35), rgba($fuzo-yellow, 0));
+  }
+
+  &::after {
+    bottom: -8rem;
+    left: -10rem;
+    width: 22rem;
+    height: 22rem;
+    background: radial-gradient(circle, rgba($sky, 0.16), rgba($sky, 0));
+  }
 }
 
 .onboarding-step-label {
@@ -38,25 +69,124 @@ $onboarding-radius-xl: 1.75rem;
   background: $onboarding-border;
   overflow: hidden;
   margin-bottom: 1.75rem;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .onboarding-progress__fill {
   height: 100%;
   border-radius: $onboarding-radius-pill;
-  background: $onboarding-accent;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, $fuzo-yellow-deep, $onboarding-accent);
+  box-shadow: 0 0 8px rgba($onboarding-accent, 0.6);
+  transition: width 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+// ---------------------------------------------------------------------------
+// Card stack - sells the "3D card" look. Two static faux-cards peek out
+// behind the real one for depth; the real card (.onboarding-card, ref'd in
+// OnboardingWizard.tsx) is what gsap actually flies out/in on step change,
+// inside this stack's perspective so the rotateY reads as 3D instead of a
+// flat skew.
+// ---------------------------------------------------------------------------
+
+.onboarding-card-stack {
+  position: relative;
+  perspective: 1600px;
+}
+
+.onboarding-card-stack__layer {
+  position: absolute;
+  inset: 0;
+  border-radius: $onboarding-radius-xl;
+  background: #fff;
+  border: 1px solid $onboarding-border;
+  pointer-events: none;
+}
+
+.onboarding-card-stack__layer--1 {
+  transform: translate(8px, 10px) rotate(-2deg);
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.onboarding-card-stack__layer--2 {
+  transform: translate(16px, 20px) rotate(-4deg);
+  opacity: 0.4;
+  z-index: -1;
 }
 
 .onboarding-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
   background: #fff;
   border: 1px solid $onboarding-border;
   border-radius: $onboarding-radius-xl;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba($onboarding-ink, 0.04), 0 24px 48px -20px rgba($onboarding-ink, 0.22);
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+// object-fit: contain (not cover) - the generated art is dense, text-heavy
+// "poster" style with content near every edge, so cropping to fill a fixed
+// box loses real content. Letterboxing against the surface gradient is the
+// trade-off, but nothing gets cut off.
+.onboarding-card__visual {
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  padding: 0.5rem;
+  background: linear-gradient(135deg, $onboarding-surface-muted, mix($onboarding-surface-muted, #fff, 40%));
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: calc(#{$onboarding-radius-xl} - 0.5rem);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+
+    &.is-loaded {
+      opacity: 1;
+    }
+  }
+}
+
+.onboarding-card__body {
+  min-width: 0;
   padding: 1.5rem;
+}
+
+// Left/right split once there's room for it - image as its own column,
+// question/content as the other, instead of stacked image-on-top. Stays
+// stacked below this so the card doesn't get cramped on phone widths.
+@media (min-width: 640px) {
+  .onboarding-page {
+    max-width: 50rem;
+  }
+
+  .onboarding-card {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .onboarding-card__visual {
+    aspect-ratio: auto;
+    width: 46%;
+    min-height: 24rem;
+    padding: 1rem;
+  }
+
+  .onboarding-card__body {
+    flex: 1;
+    padding: 2rem;
+  }
 }
 
 .onboarding-title {
   font-weight: 800;
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   text-transform: uppercase;
   letter-spacing: -0.02em;
   color: $onboarding-ink;
@@ -89,15 +219,23 @@ $onboarding-radius-xl: 1.75rem;
   border-radius: $onboarding-radius-lg;
   border: 2px solid $onboarding-border;
   background: #fff;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 
   &:hover {
     border-color: $onboarding-ink-faint;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -12px rgba($onboarding-ink, 0.18);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 
   &.is-active {
     border-color: $onboarding-accent;
-    background: rgba($onboarding-accent, 0.15);
+    background: rgba($onboarding-accent, 0.12);
+    box-shadow: 0 10px 24px -10px rgba($onboarding-accent, 0.45);
+    animation: onboarding-pop 0.25s ease;
   }
 }
 
@@ -106,10 +244,11 @@ $onboarding-radius-xl: 1.75rem;
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 50%;
-  background: $onboarding-surface-muted;
+  background: linear-gradient(135deg, $onboarding-surface-muted, mix($onboarding-surface-muted, #fff, 60%));
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
 
   img {
     width: 1.375rem;
@@ -118,7 +257,7 @@ $onboarding-radius-xl: 1.75rem;
   }
 
   .onboarding-option.is-active & {
-    background: #fff;
+    background: linear-gradient(135deg, $fuzo-yellow-tint, mix($fuzo-yellow, #fff, 30%));
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   }
 }
@@ -156,7 +295,12 @@ $onboarding-radius-xl: 1.75rem;
   color: $onboarding-ink;
   font-weight: 700;
   font-size: 0.875rem;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+
+  &:hover:not(.is-at-max) {
+    border-color: $onboarding-ink-faint;
+    transform: translateY(-1px);
+  }
 
   &.is-at-max {
     opacity: 0.4;
@@ -167,7 +311,18 @@ $onboarding-radius-xl: 1.75rem;
     border-color: $onboarding-accent;
     color: $fuzo-yellow-ink;
     opacity: 1;
+    box-shadow: 0 4px 12px -4px rgba($onboarding-accent, 0.55);
+    animation: onboarding-pop 0.25s ease;
   }
+}
+
+// Shared micro-interaction for anything that just became selected/active - a
+// quick overshoot-and-settle rather than an instant color swap. Plays once
+// per selection since it's tied to the class being added, not re-renders.
+@keyframes onboarding-pop {
+  0% { transform: scale(0.94); }
+  60% { transform: scale(1.03); }
+  100% { transform: scale(1); }
 }
 
 .onboarding-chip-count {
@@ -219,11 +374,13 @@ $onboarding-radius-xl: 1.75rem;
   background: $onboarding-surface-muted;
   font-size: 0.9375rem;
   color: $onboarding-ink;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 
   &:focus {
     outline: none;
     border-color: $onboarding-accent;
     background: #fff;
+    box-shadow: 0 0 0 4px rgba($onboarding-accent, 0.15);
   }
 }
 
@@ -360,12 +517,29 @@ $onboarding-radius-xl: 1.75rem;
   display: flex;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.75rem 0;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid $onboarding-border;
+
+  &:first-child {
+    border-top-left-radius: $onboarding-radius-lg;
+    border-top-right-radius: $onboarding-radius-lg;
+  }
 
   &:last-child {
     border-bottom: none;
+    border-bottom-left-radius: $onboarding-radius-lg;
+    border-bottom-right-radius: $onboarding-radius-lg;
   }
+}
+
+// Preview rows read as one grouped "receipt" panel rather than a loose list -
+// the rows above keep their own borders/radii, this just gives them a shared
+// tinted backdrop and outer edge.
+.onboarding-preview {
+  background: $onboarding-surface-muted;
+  border: 1px solid $onboarding-border;
+  border-radius: $onboarding-radius-lg;
+  overflow: hidden;
 }
 
 .onboarding-preview-row__label {
@@ -387,18 +561,20 @@ $onboarding-radius-xl: 1.75rem;
 }
 
 .onboarding-result__icon {
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 5.5rem;
+  height: 5.5rem;
   border-radius: 50%;
-  background: $onboarding-surface-muted;
+  background: radial-gradient(circle at 35% 30%, #fff, $onboarding-surface-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 0.75rem;
+  margin: 0 auto 1rem;
+  position: relative;
+  box-shadow: 0 12px 32px -10px rgba($onboarding-accent, 0.55), 0 0 0 6px rgba($onboarding-accent, 0.12);
 
   img {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
     object-fit: contain;
   }
 }
@@ -438,9 +614,15 @@ $onboarding-radius-xl: 1.75rem;
   color: $onboarding-ink;
   font-weight: 700;
   font-size: 0.9375rem;
+  transition: border-color 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: $onboarding-ink-faint;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
   }
 }
 
@@ -448,11 +630,21 @@ $onboarding-radius-xl: 1.75rem;
   padding: 0.875rem 2rem;
   border-radius: $onboarding-radius-pill;
   border: none;
-  background: $onboarding-accent;
+  background: linear-gradient(135deg, $onboarding-accent, $fuzo-yellow-deep);
   color: $fuzo-yellow-ink;
   font-weight: 800;
   font-size: 0.9375rem;
   box-shadow: 0 8px 18px rgba($onboarding-accent, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba($onboarding-accent, 0.45);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
 
   &:disabled {
     opacity: 0.5;

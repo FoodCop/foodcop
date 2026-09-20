@@ -1,33 +1,22 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ChevronRight, LogOut, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { COUNTRY_DIAL_CODES, DEFAULT_COUNTRY_CODE } from '@/lib/data/countryCodes';
-import { FLAVORS, CUISINES, DIETARY } from '@/lib/onboarding/data';
+import { TASTE_FIELD_CONFIG, type TasteField } from './settings/shared';
 import LocationPickerModal from './LocationPickerModal';
 import TastePreferenceEditModal from './TastePreferenceEditModal';
-import {
-  UserSettingsService,
-  DEFAULT_USER_SETTINGS,
-  type UserSettings,
-  type MatchSensitivity,
-  type ProfileVisibility,
-} from '@/lib/services/userSettingsService';
-
-type TasteField = 'flavors' | 'cuisines' | 'dietary';
-
-const TASTE_FIELD_CONFIG: Record<TasteField, { title: string; emoji: string; options: readonly string[] }> = {
-  flavors: { title: 'Flavor Profile', emoji: '🌶️', options: FLAVORS },
-  cuisines: { title: 'Cuisine Preferences', emoji: '🌍', options: CUISINES },
-  dietary: { title: 'Dietary Preferences', emoji: '🥗', options: DIETARY },
-};
-
-const summarize = (values: string[], emptyText: string) => {
-  if (values.length === 0) return emptyText;
-  if (values.length <= 3) return values.join(' · ');
-  return `${values.slice(0, 3).join(', ')} +${values.length - 3} more`;
-};
+import ProfileSettingsPanel from './settings/ProfileSettingsPanel';
+import TastePreferencesPanel from './settings/TastePreferencesPanel';
+import DiscoveryPanel from './settings/DiscoveryPanel';
+import PrivacyPanel from './settings/PrivacyPanel';
+import ConnectedAccountsPanel from './settings/ConnectedAccountsPanel';
+import NotificationsPanel from './settings/NotificationsPanel';
+import AppearancePanel from './settings/AppearancePanel';
+import { UserSettingsService, DEFAULT_USER_SETTINGS, type UserSettings } from '@/lib/services/userSettingsService';
+import { ActivityEventService } from '@/lib/services/activityEventService';
 
 // Splits a stored "+1 4165550123"-style phone string back into a country
 // selection + local number for editing - longest dial code first so "+1"
@@ -40,8 +29,24 @@ function parsePhone(phone: string | null): { countryCode: string; number: string
   return { countryCode: match.code, number: phone.slice(match.dialCode.length).trim() };
 }
 
-export default function SettingsTab() {
+interface SettingsTabProps {
+  /** Lets Edit Profile's saves update ProfileHero's name/handle immediately. */
+  onProfileUpdate?: (patch: { name?: string; handle?: string }) => void;
+}
+
+// Letters, digits, underscore, period; 3-30 chars - no spaces, so it always
+// renders cleanly as an "@handle" everywhere the app displays it.
+const USERNAME_PATTERN = /^[a-z0-9_.]{3,30}$/;
+
+type SettingsView = 'menu' | 'profile' | 'taste' | 'discovery' | 'privacy' | 'connected' | 'notifications' | 'appearance';
+
+// Redesigned as a drill-down menu (per the new Profile mockup) instead of one
+// long inline-editing page - every field below is the exact same real,
+// persisted state the old single-page SettingsTab had, just grouped behind
+// a menu row + a panel instead of always being on screen at once.
+export default function SettingsTab({ onProfileUpdate }: SettingsTabProps = {}) {
   const router = useRouter();
+  const [view, setView] = useState<SettingsView>('menu');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -50,6 +55,21 @@ export default function SettingsTab() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const [userId, setUserId] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState('');
+  const [savedDisplayName, setSavedDisplayName] = useState('');
+  const [username, setUsername] = useState('');
+  const [savedUsername, setSavedUsername] = useState('');
+  const [isSavingName, setIsSavingName] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [isSavingUsername, setIsSavingUsername] = useState(false);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+  const [usernameCheck, setUsernameCheck] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
+  const usernameCheckTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const usernameCheckSeq = useRef(0);
+  const [bio, setBio] = useState('');
+  const [savedBio, setSavedBio] = useState('');
+  const [isSavingBio, setIsSavingBio] = useState(false);
+  const [bioError, setBioError] = useState<string | null>(null);
   const [countryCode, setCountryCode] = useState(DEFAULT_COUNTRY_CODE);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isSavingPhone, setIsSavingPhone] = useState(false);
@@ -70,6 +90,7 @@ export default function SettingsTab() {
 
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_USER_SETTINGS);
   const radiusSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const radiusBeforeDrag = useRef(DEFAULT_USER_SETTINGS.discoveryRadiusKm);
 
   useEffect(() => {
     const supabase = createClient();
@@ -80,8 +101,20 @@ export default function SettingsTab() {
       } = await supabase.auth.getUser();
       if (!user) return;
       setUserId(user.id);
-      const { data } = await supabase.from('users').select('phone, location, lat, lng').eq('id', user.id).maybeSingle();
+      // Public columns from users; the owner-only ones (phone, address,
+      // coordinates) come from my_private_profile - other people can't read them.
+      const [{ data: pub }, { data: priv }] = await Promise.all([
+        supabase.from('users').select('display_name, username, bio').eq('id', user.id).maybeSingle(),
+        supabase.from('my_private_profile').select('phone, location, lat, lng').maybeSingle(),
+      ]);
+      const data = pub ? { ...pub, phone: priv?.phone ?? null, location: priv?.location ?? null, lat: priv?.lat ?? null, lng: priv?.lng ?? null } : null;
       if (data) {
+        setDisplayName(data.display_name ?? '');
+        setSavedDisplayName(data.display_name ?? '');
+        setUsername(data.username ?? '');
+        setSavedUsername(data.username ?? '');
+        setBio(data.bio ?? '');
+        setSavedBio(data.bio ?? '');
         const parsed = parsePhone(data.phone);
         setCountryCode(parsed.countryCode);
         setPhoneNumber(parsed.number);
@@ -111,19 +144,63 @@ export default function SettingsTab() {
     })();
   }, []);
 
+  // Live availability check, debounced - tells the user whether a username
+  // is taken before they hit Save, instead of only finding out from a
+  // unique-constraint error after submitting.
+  useEffect(() => {
+    if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
+    const trimmed = username.trim().toLowerCase();
+
+    if (!userId || trimmed === savedUsername.toLowerCase()) {
+      setUsernameCheck('idle');
+      return;
+    }
+    if (!USERNAME_PATTERN.test(trimmed)) {
+      setUsernameCheck('idle');
+      return;
+    }
+
+    setUsernameCheck('checking');
+    const seq = ++usernameCheckSeq.current;
+    usernameCheckTimer.current = setTimeout(async () => {
+      const supabase = createClient();
+      if (!supabase) return;
+      const { data } = await supabase.from('users').select('id').eq('username', trimmed).neq('id', userId).maybeSingle();
+      if (seq !== usernameCheckSeq.current) return; // a newer keystroke already superseded this check
+      setUsernameCheck(data ? 'taken' : 'available');
+    }, 450);
+
+    return () => {
+      if (usernameCheckTimer.current) clearTimeout(usernameCheckTimer.current);
+    };
+  }, [username, userId, savedUsername]);
+
   const updateSetting = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
+    const previous = settings[key];
     setSettings((prev) => ({ ...prev, [key]: value }));
+    if (key === 'useActivityForMl') ActivityEventService.resetConsentCache();
     UserSettingsService.update({ [key]: value }).then((result) => {
-      if (!result.success) showToast(result.error || 'Could not save setting');
+      if (!result.success) {
+        if (key === 'useActivityForMl') ActivityEventService.resetConsentCache();
+        // Roll the switch back so the screen never claims a setting that didn't save.
+        setSettings((prev) => ({ ...prev, [key]: previous }));
+        showToast(result.error || 'Could not save setting');
+      }
     });
   };
 
   const updateRadiusSetting = (value: number) => {
+    // Only the value from before this drag started is worth restoring on failure.
+    if (radiusSaveTimer.current === null) radiusBeforeDrag.current = settings.discoveryRadiusKm;
     setSettings((prev) => ({ ...prev, discoveryRadiusKm: value }));
     if (radiusSaveTimer.current) clearTimeout(radiusSaveTimer.current);
     radiusSaveTimer.current = setTimeout(() => {
+      radiusSaveTimer.current = null;
       UserSettingsService.update({ discoveryRadiusKm: value }).then((result) => {
-        if (!result.success) showToast(result.error || 'Could not save setting');
+        if (!result.success) {
+          setSettings((prev) => ({ ...prev, discoveryRadiusKm: radiusBeforeDrag.current }));
+          showToast(result.error || 'Could not save setting');
+        }
       });
     }, 500);
   };
@@ -146,6 +223,85 @@ export default function SettingsTab() {
   const showToast = (message: string) => {
     setToastMessage(message);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleSaveDisplayName = async () => {
+    if (!userId) return;
+    const trimmed = displayName.trim();
+    if (!trimmed) {
+      setNameError('Name can’t be empty.');
+      return;
+    }
+    setIsSavingName(true);
+    setNameError(null);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      const { error } = await supabase.from('users').update({ display_name: trimmed }).eq('id', userId);
+      if (error) {
+        setNameError(error.message);
+        return;
+      }
+      setDisplayName(trimmed);
+      setSavedDisplayName(trimmed);
+      onProfileUpdate?.({ name: trimmed });
+      showToast('Name saved');
+    } finally {
+      setIsSavingName(false);
+    }
+  };
+
+  const handleSaveUsername = async () => {
+    if (!userId) return;
+    const trimmed = username.trim().toLowerCase();
+    if (!USERNAME_PATTERN.test(trimmed)) {
+      setUsernameError('3-30 characters: letters, numbers, underscore, or period.');
+      return;
+    }
+    if (usernameCheck === 'taken') {
+      setUsernameError('That username is already taken.');
+      return;
+    }
+    setIsSavingUsername(true);
+    setUsernameError(null);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      const { error } = await supabase.from('users').update({ username: trimmed }).eq('id', userId);
+      if (error) {
+        setUsernameError(error.code === '23505' ? 'That username is already taken.' : error.message);
+        setUsernameCheck(error.code === '23505' ? 'taken' : 'idle');
+        return;
+      }
+      setUsername(trimmed);
+      setSavedUsername(trimmed);
+      setUsernameCheck('idle');
+      onProfileUpdate?.({ handle: trimmed });
+      showToast('Username saved');
+    } finally {
+      setIsSavingUsername(false);
+    }
+  };
+
+  const handleSaveBio = async () => {
+    if (!userId) return;
+    const trimmed = bio.trim();
+    setIsSavingBio(true);
+    setBioError(null);
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
+      const { error } = await supabase.from('users').update({ bio: trimmed || null }).eq('id', userId);
+      if (error) {
+        setBioError(error.message);
+        return;
+      }
+      setBio(trimmed);
+      setSavedBio(trimmed);
+      showToast('Bio saved');
+    } finally {
+      setIsSavingBio(false);
+    }
   };
 
   const handleSavePhone = async () => {
@@ -220,11 +376,33 @@ export default function SettingsTab() {
     }
   };
 
-  const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <h6 className="text-muted fw-bold text-uppercase mt-4 mb-2 ms-2" style={{ fontSize: '0.75rem', letterSpacing: '1px' }}>
-      {children}
-    </h6>
-  );
+  const nameDirty = displayName.trim() !== savedDisplayName;
+  const usernameTrimmedLower = username.trim().toLowerCase();
+  const usernameDirty = usernameTrimmedLower !== savedUsername.toLowerCase();
+  const usernameFormatValid = USERNAME_PATTERN.test(usernameTrimmedLower);
+  const bioDirty = bio.trim() !== savedBio;
+
+  const MENU_ROWS: { key: SettingsView; emoji: string; title: string; sub: string }[] = [
+    { key: 'profile', emoji: '👤', title: 'Profile', sub: 'Name, username, photo and bio' },
+    { key: 'taste', emoji: '🍴', title: 'Taste Preferences', sub: 'Cuisines, dietary preferences' },
+    { key: 'discovery', emoji: '📍', title: 'Discovery', sub: 'Discovery radius and match sensitivity' },
+    { key: 'privacy', emoji: '🔒', title: 'Privacy', sub: 'Profile visibility and data' },
+    { key: 'connected', emoji: '🔗', title: 'Connected Accounts', sub: 'Instagram, TikTok, YouTube' },
+  ];
+  const PREFERENCE_ROWS: { key: SettingsView; emoji: string; title: string; sub: string }[] = [
+    { key: 'notifications', emoji: '🔔', title: 'Notifications', sub: 'Manage your notifications' },
+    { key: 'appearance', emoji: '🌙', title: 'Appearance', sub: 'Light, dark or system' },
+  ];
+
+  const PANEL_TITLE: Record<Exclude<SettingsView, 'menu'>, string> = {
+    profile: 'Profile',
+    taste: 'Taste Preferences',
+    discovery: 'Discovery',
+    privacy: 'Privacy',
+    connected: 'Connected Accounts',
+    notifications: 'Notifications',
+    appearance: 'Appearance',
+  };
 
   return (
     <div className="pb-5 position-relative">
@@ -234,355 +412,133 @@ export default function SettingsTab() {
         </div>
       )}
 
-      {/* ── TASTE PREFERENCES ── */}
-      <SectionTitle>Taste Preferences</SectionTitle>
-      <div className="list-group shadow-sm rounded-4 border-0">
-        <button
-          type="button"
-          className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom"
-          onClick={() => setEditingField('flavors')}
-        >
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-danger bg-opacity-10 text-danger rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🌶️</div>
-            <div className="text-start">
-              <div className="fw-bold text-dark">Flavor Profile</div>
-              <small className="text-muted">{summarize(tasteProfile.flavors, 'No flavors picked yet')}</small>
-            </div>
+      {view === 'menu' ? (
+        <>
+          <div className="fz-settings-header">
+            <div className="fz-settings-title">Settings</div>
+            <div className="fz-settings-sub">Keep your profile, preferences and experience just right.</div>
           </div>
-          <span className="text-muted fw-bold fs-5">›</span>
-        </button>
-        <button
-          type="button"
-          className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom"
-          onClick={() => setEditingField('cuisines')}
-        >
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-warning bg-opacity-10 text-warning rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🌍</div>
-            <div className="text-start">
-              <div className="fw-bold text-dark">Cuisine Preferences</div>
-              <small className="text-muted">{summarize(tasteProfile.cuisines, 'No cuisines picked yet')}</small>
-            </div>
-          </div>
-          <span className="text-muted fw-bold fs-5">›</span>
-        </button>
-        <button
-          type="button"
-          className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom"
-          onClick={() => setEditingField('dietary')}
-        >
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-success bg-opacity-10 text-success rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🥗</div>
-            <div className="text-start">
-              <div className="fw-bold text-dark">Dietary Preferences</div>
-              <small className="text-muted">{summarize(tasteProfile.dietary, 'No restrictions currently set')}</small>
-            </div>
-          </div>
-          <span className="text-muted fw-bold fs-5">›</span>
-        </button>
-        <button
-          type="button"
-          className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom"
-          onClick={() => router.push('/dna-quiz')}
-        >
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-primary bg-opacity-10 text-primary rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🧬</div>
-            <div className="text-start">
-              <div className="fw-bold text-dark">Food DNA Quiz</div>
-              <small className="text-muted">{hasDnaScores ? 'Retake the 25-question quiz' : 'Take the 25-question quiz'}</small>
-            </div>
-          </div>
-          <span className="text-muted fw-bold fs-5">›</span>
-        </button>
-        <div className="list-group-item d-flex flex-column p-3 border-0 border-bottom">
-          <div className="d-flex align-items-center gap-3 mb-2">
-            <div className="bg-info bg-opacity-10 text-info rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>📍</div>
-            <div className="flex-grow-1">
-              <div className="fw-bold text-dark d-flex justify-content-between">
-                Discovery Radius <span className="text-primary">{settings.discoveryRadiusKm} km</span>
-              </div>
-              <small className="text-muted">How far you'd travel for food</small>
-            </div>
-          </div>
-          <input
-            type="range"
-            className="form-range"
-            min="5"
-            max="50"
-            step="5"
-            value={settings.discoveryRadiusKm}
-            onChange={(e) => updateRadiusSetting(Number(e.target.value))}
-          />
-          <div className="d-flex justify-content-between text-muted" style={{ fontSize: '0.65rem' }}>
-            <span>5km</span><span>25km</span><span>50km+</span>
-          </div>
-        </div>
-      </div>
 
-      {/* ── CONTACT & LOCATION (real, persisted) ── */}
-      <SectionTitle>Contact & Location</SectionTitle>
-      <div className="list-group shadow-sm rounded-4 border-0">
-        <div className="list-group-item p-3 border-0 border-bottom">
-          <div className="fw-bold text-dark mb-2">Phone number</div>
-          <div className="d-flex gap-2">
-            <select
-              className="form-select form-select-sm w-auto"
-              value={countryCode}
-              onChange={(e) => setCountryCode(e.target.value)}
-              disabled={!userId}
-            >
-              {COUNTRY_DIAL_CODES.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.flag} {c.dialCode}
-                </option>
-              ))}
-            </select>
-            <input
-              type="tel"
-              className="form-control form-control-sm"
-              placeholder="416 555 0123"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              disabled={!userId}
-            />
+          <div className="fz-settings-group">
+            {MENU_ROWS.map((row) => (
+              <button key={row.key} type="button" className="fz-settings-row" onClick={() => setView(row.key)}>
+                <div className="fz-settings-row__icon">{row.emoji}</div>
+                <div className="fz-settings-row__body">
+                  <div className="fz-settings-row__title">{row.title}</div>
+                  <div className="fz-settings-row__sub">{row.sub}</div>
+                </div>
+                <ChevronRight size={18} className="fz-settings-row__chevron" />
+              </button>
+            ))}
+          </div>
+
+          <div className="fz-settings-group">
+            <div className="fz-settings-group__label">App Preferences</div>
+            {PREFERENCE_ROWS.map((row) => (
+              <button key={row.key} type="button" className="fz-settings-row" onClick={() => setView(row.key)}>
+                <div className="fz-settings-row__icon">{row.emoji}</div>
+                <div className="fz-settings-row__body">
+                  <div className="fz-settings-row__title">{row.title}</div>
+                  <div className="fz-settings-row__sub">{row.sub}</div>
+                </div>
+                <ChevronRight size={18} className="fz-settings-row__chevron" />
+              </button>
+            ))}
+          </div>
+
+          <div className="fz-settings-group">
+            <div className="fz-settings-group__label">Account</div>
+            <button type="button" className="fz-settings-row" onClick={handleSignOut} disabled={isSigningOut}>
+              <div className="fz-settings-row__icon"><LogOut size={18} /></div>
+              <div className="fz-settings-row__body">
+                <div className="fz-settings-row__title">{isSigningOut ? 'Signing out…' : 'Sign Out'}</div>
+              </div>
+            </button>
             <button
               type="button"
-              className="btn btn-sm btn-primary fw-bold flex-shrink-0"
-              onClick={handleSavePhone}
-              disabled={!userId || isSavingPhone}
+              className="fz-settings-row fz-settings-row--danger"
+              onClick={() => {
+                setDeleteError(null);
+                setDeleteConfirmText('');
+                setShowDeleteConfirm(true);
+              }}
             >
-              {isSavingPhone ? '…' : 'Save'}
+              <div className="fz-settings-row__icon"><Trash2 size={18} className="text-danger" /></div>
+              <div className="fz-settings-row__body">
+                <div className="fz-settings-row__title">Delete Account</div>
+              </div>
             </button>
           </div>
-          {phoneError && <div className="text-danger small mt-2">{phoneError}</div>}
-        </div>
-        <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0">
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-success bg-opacity-10 text-success rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🗺️</div>
-            <div className="text-start">
-              <div className="fw-bold text-dark">Location</div>
-              <small className="text-muted">{locationAddress || 'Not set'}</small>
-            </div>
+
+          <div className="text-center text-muted mt-4" style={{ fontSize: '0.75rem' }}>
+            FUZO v3.0.0 (Next.js Port) · Made with ❤️
           </div>
-          <button
-            type="button"
-            className="btn btn-sm btn-outline-secondary flex-shrink-0"
-            onClick={() => setShowLocationPicker(true)}
-            disabled={!userId || isSavingLocation}
-          >
-            {isSavingLocation ? '…' : locationAddress ? 'Update' : 'Set on map'}
+        </>
+      ) : (
+        <>
+          <button type="button" className="fz-settings-back" onClick={() => setView('menu')}>
+            ← {PANEL_TITLE[view]}
           </button>
-        </div>
-      </div>
 
-      {/* ── DISCOVERY & MATCHING ── */}
-      <SectionTitle>Discovery & Matching</SectionTitle>
-      <div className="list-group shadow-sm rounded-4 border-0">
-        <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-purple bg-opacity-10 rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px', backgroundColor: '#F0EAF8' }}>🎯</div>
-            <div>
-              <div className="fw-bold text-dark">Match Sensitivity</div>
-              <small className="text-muted">How closely we filter recommendations</small>
-            </div>
-          </div>
-          <select
-            className="form-select form-select-sm w-auto border-0 bg-light fw-bold text-primary"
-            value={settings.matchSensitivity}
-            onChange={(e) => updateSetting('matchSensitivity', e.target.value as MatchSensitivity)}
-          >
-            <option>Broad</option>
-            <option>Balanced</option>
-            <option>Exact</option>
-          </select>
-        </div>
-        <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-warning bg-opacity-10 text-warning rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>💎</div>
-            <div>
-              <div className="fw-bold text-dark">Show Hidden Gems</div>
-              <small className="text-muted">Include lesser-known spots</small>
-            </div>
-          </div>
-          <div className="form-check form-switch fs-4 m-0">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              role="switch"
-              checked={settings.showHiddenGems}
-              onChange={(e) => updateSetting('showHiddenGems', e.target.checked)}
+          {view === 'profile' && (
+            <ProfileSettingsPanel
+              userId={userId}
+              displayName={displayName}
+              setDisplayName={setDisplayName}
+              nameDirty={nameDirty}
+              isSavingName={isSavingName}
+              nameError={nameError}
+              setNameError={setNameError}
+              onSaveName={handleSaveDisplayName}
+              username={username}
+              setUsername={setUsername}
+              usernameDirty={usernameDirty}
+              usernameFormatValid={usernameFormatValid}
+              usernameCheck={usernameCheck}
+              isSavingUsername={isSavingUsername}
+              usernameError={usernameError}
+              setUsernameError={setUsernameError}
+              onSaveUsername={handleSaveUsername}
+              bio={bio}
+              setBio={setBio}
+              bioDirty={bioDirty}
+              isSavingBio={isSavingBio}
+              bioError={bioError}
+              onSaveBio={handleSaveBio}
+              countryCode={countryCode}
+              setCountryCode={setCountryCode}
+              phoneNumber={phoneNumber}
+              setPhoneNumber={setPhoneNumber}
+              isSavingPhone={isSavingPhone}
+              phoneError={phoneError}
+              onSavePhone={handleSavePhone}
+              locationAddress={locationAddress}
+              isSavingLocation={isSavingLocation}
+              onOpenLocationPicker={() => setShowLocationPicker(true)}
             />
-          </div>
-        </div>
-        <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-danger bg-opacity-10 text-danger rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🚀</div>
-            <div>
-              <div className="fw-bold text-dark">Prioritise Trending Spots</div>
-              <small className="text-muted">Weight recently popular places higher</small>
-            </div>
-          </div>
-          <div className="form-check form-switch fs-4 m-0">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              role="switch"
-              checked={settings.prioritizeTrending}
-              onChange={(e) => updateSetting('prioritizeTrending', e.target.checked)}
+          )}
+
+          {view === 'taste' && (
+            <TastePreferencesPanel
+              tasteProfile={tasteProfile}
+              hasDnaScores={hasDnaScores}
+              onEditField={setEditingField}
             />
-          </div>
-        </div>
-      </div>
+          )}
 
-      {/* ── PRIVACY ── */}
-      <SectionTitle>Privacy & Social</SectionTitle>
-      <div className="list-group shadow-sm rounded-4 border-0">
-        <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-secondary bg-opacity-10 text-secondary rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>👁️</div>
-            <div>
-              <div className="fw-bold text-dark">Profile Visibility</div>
-            </div>
-          </div>
-          <select
-            className="form-select form-select-sm w-auto border-0 bg-light fw-bold text-primary"
-            value={settings.profileVisibility}
-            onChange={(e) => updateSetting('profileVisibility', e.target.value as ProfileVisibility)}
-          >
-            <option>Public</option>
-            <option>Followers</option>
-            <option>Private</option>
-          </select>
-        </div>
-        <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-primary bg-opacity-10 text-primary rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🧬</div>
-            <div>
-              <div className="fw-bold text-dark">Show Food DNA™</div>
-              <small className="text-muted d-block">Others can see your scores</small>
-            </div>
-          </div>
-          <div className="form-check form-switch fs-4 m-0">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              role="switch"
-              checked={settings.showFoodDna}
-              onChange={(e) => updateSetting('showFoodDna', e.target.checked)}
-            />
-          </div>
-        </div>
-      </div>
+          {view === 'discovery' && (
+            <DiscoveryPanel settings={settings} updateSetting={updateSetting} updateRadiusSetting={updateRadiusSetting} />
+          )}
 
-      {/* ── CONNECTED ACCOUNTS ── */}
-      <SectionTitle>Connected Accounts</SectionTitle>
-      <div className="list-group shadow-sm rounded-4 border-0">
-        <button className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom" onClick={() => showToast('Connect Instagram to import your food photos')}>
-          <div className="d-flex align-items-center gap-3">
-            <div className="rounded p-2 text-center d-flex align-items-center justify-content-center text-white fw-bold" style={{ width: '40px', height: '40px', background: 'linear-gradient(135deg,#F58529,#DD2A7B,#8134AF)' }}>IG</div>
-            <div className="text-start">
-              <div className="fw-bold text-dark">Instagram</div>
-              <small className="text-muted">Tap to connect</small>
-            </div>
-          </div>
-          <div className="d-flex align-items-center gap-2">
-            <span className="text-secondary fw-bold" style={{ fontSize: '0.75rem' }}>Connect</span>
-            <span className="text-muted fw-bold fs-5">›</span>
-          </div>
-        </button>
-        <button className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom" onClick={() => showToast('Connect TikTok to import videos')}>
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-dark text-white rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🎵</div>
-            <div className="text-start">
-              <div className="fw-bold text-dark">TikTok</div>
-              <small className="text-muted">Tap to connect</small>
-            </div>
-          </div>
-          <div className="d-flex align-items-center gap-2">
-            <span className="text-secondary fw-bold" style={{ fontSize: '0.75rem' }}>Connect</span>
-            <span className="text-muted fw-bold fs-5">›</span>
-          </div>
-        </button>
-        <button className="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-0 border-bottom" onClick={() => showToast('Connect YouTube to import cooking content')}>
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-danger text-white rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>▶</div>
-            <div className="text-start">
-              <div className="fw-bold text-dark">YouTube</div>
-              <small className="text-muted">Tap to connect</small>
-            </div>
-          </div>
-          <div className="d-flex align-items-center gap-2">
-            <span className="text-secondary fw-bold" style={{ fontSize: '0.75rem' }}>Connect</span>
-            <span className="text-muted fw-bold fs-5">›</span>
-          </div>
-        </button>
-      </div>
+          {view === 'privacy' && <PrivacyPanel settings={settings} updateSetting={updateSetting} />}
 
-      {/* ── AI & PERSONALISATION ── */}
-      <SectionTitle>AI & Personalisation</SectionTitle>
-      <div className="list-group shadow-sm rounded-4 border-0">
-        <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-primary bg-opacity-10 text-primary rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🤖</div>
-            <div>
-              <div className="fw-bold text-dark">AI Card Generation</div>
-              <small className="text-muted d-block">Auto-generate titles and captions</small>
-            </div>
-          </div>
-          <div className="form-check form-switch fs-4 m-0">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              role="switch"
-              checked={settings.aiCardGeneration}
-              onChange={(e) => updateSetting('aiCardGeneration', e.target.checked)}
-            />
-          </div>
-        </div>
-        <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
-          <div className="d-flex align-items-center gap-3">
-            <div className="bg-info bg-opacity-10 text-info rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🧠</div>
-            <div>
-              <div className="fw-bold text-dark">Use Activity for ML</div>
-              <small className="text-muted d-block">Include likes, saves in match model</small>
-            </div>
-          </div>
-          <div className="form-check form-switch fs-4 m-0">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              role="switch"
-              checked={settings.useActivityForMl}
-              onChange={(e) => updateSetting('useActivityForMl', e.target.checked)}
-            />
-          </div>
-        </div>
-      </div>
+          {view === 'connected' && <ConnectedAccountsPanel />}
 
-      {/* ── ACCOUNT ── */}
-      <SectionTitle>Account</SectionTitle>
-      <div className="list-group shadow-sm rounded-4 border-0 mb-3">
-        <button
-          className="list-group-item list-group-item-action d-flex align-items-center p-3 border-0 border-bottom text-dark fw-bold"
-          onClick={handleSignOut}
-          disabled={isSigningOut}
-        >
-          <div className="me-3 fs-5">🚪</div> {isSigningOut ? 'Signing out…' : 'Sign Out'}
-        </button>
-        <button
-          className="list-group-item list-group-item-action d-flex align-items-center p-3 border-0 text-danger fw-bold"
-          onClick={() => {
-            setDeleteError(null);
-            setDeleteConfirmText('');
-            setShowDeleteConfirm(true);
-          }}
-        >
-          <div className="me-3 fs-5">🗑️</div> Delete Account
-        </button>
-      </div>
+          {view === 'notifications' && <NotificationsPanel settings={settings} updateSetting={updateSetting} />}
 
-      <div className="text-center text-muted mt-4" style={{ fontSize: '0.75rem' }}>
-        FUZO v3.0.0 (Next.js Port) · Made with ❤️
-      </div>
+          {view === 'appearance' && <AppearancePanel />}
+        </>
+      )}
 
       {showDeleteConfirm && (
         <div className="modal show d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>

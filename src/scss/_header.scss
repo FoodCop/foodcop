@@ -6,12 +6,42 @@
   object-fit: contain;
 }
 
-// Direction B swaps the flat white/shadow chrome for the warm paper base +
-// hairline border used everywhere else in the rebrand (.fz-card, etc.),
-// instead of a drop shadow.
+// Client request: navbar background moved from the paper/white base to gold.
+// Uses the marketing homepage's gold (--gold in home.css) rather than the
+// app's $fuzo-yellow token, per client preference - the two are close but
+// not identical, and this keeps the navbar visually matched to the
+// homepage's gold sections it sits directly above (Taste Profile, Food
+// Cards, Scout Maps, Final CTA). Hardcoded here rather than reading the
+// --gold custom property, since home.css only loads on the homepage route
+// and this navbar renders on every page.
+$fz-navbar-gold: #ffc909;
+
+// A hairline border alone isn't reliable here: this navbar sits sticky over
+// page content that's sometimes the same gold - close enough that a thin,
+// low-opacity border nearly disappears against it and the bar stops reading
+// as a distinct element. A real drop shadow keeps the navbar visually
+// lifted off the page regardless of what color ends up behind it.
 .fz-navbar {
-  background-color: $fz-paper;
-  border-bottom: 1px solid $fz-border;
+  background-color: $fz-navbar-gold;
+  border-bottom: 1px solid rgba($fz-ink, 0.15);
+  box-shadow: 0 2px 12px rgba($fz-ink, 0.18);
+}
+
+// Sign In needs real contrast against the new yellow bar - a solid
+// .btn-primary (also $fuzo-yellow) would blend straight into it, so this
+// uses the brand's warm red-orange ($chili) instead, the same family as the
+// homepage's CTA buttons.
+.fz-navbar__signin {
+  background-color: $chili;
+  border-color: $chili;
+  color: #fff;
+
+  &:hover,
+  &:focus {
+    background-color: mix(#000, $chili, 12%);
+    border-color: mix(#000, $chili, 12%);
+    color: #fff;
+  }
 }
 
 .fz-avatar-ring {

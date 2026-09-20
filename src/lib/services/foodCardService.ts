@@ -153,6 +153,18 @@ export const foodCardService = {
     return { success: true, data: (data || []) as FoodCardRecord[] };
   },
 
+  /**
+   * One card by id. Row-level security decides whether the caller may see it (published cards of a
+   * viewable profile, or their own) - so a deleted card or a private profile simply comes back null.
+   */
+  async getCardById(cardId: string): Promise<ServiceResult<FoodCardRecord | null>> {
+    const supabase = createClient();
+    if (!supabase) return { success: false, error: 'Supabase is not configured' };
+    const { data, error } = await supabase.from('food_cards').select('*').eq('id', cardId).maybeSingle();
+    if (error) return { success: false, error: error.message };
+    return { success: true, data: (data as FoodCardRecord | null) ?? null };
+  },
+
   // Promotes a DRAFT card to PUBLISHED (e.g. from the Activity tab's Your
   // Cards grid) - the only other place a card can become PUBLISHED besides
   // creation time, so it shares the same points-award call.

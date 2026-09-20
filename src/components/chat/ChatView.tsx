@@ -1,828 +1,529 @@
+'use client';
+
 /**
- * ============================================================================
- * CHAT MODULE — Real-time Studio Orchestration
- * ============================================================================
+ * CHAT - orchestrator for /messages.
  *
- * Component Architecture:
- * 1. ChatService Integration: Real-time Supabase synchronization.
- * 2. Inbox Orchestrator: Dynamic filtering and status management.
- * 3. Messaging Engine: Supports text and rich Studio item shares.
- * 4. Group Logic: Dynamic group creation and member synchronization (Realtime).
+ * Owns the data: inbox (real last message + unread from get_chat_inbox), friends,
+ * follow requests, blocks, the open thread's messages, realtime updates, typing,
+ * presence and read receipts. ChatInbox / ChatThread / NewChatModal are purely
+ * presentational. Every message is end-to-end encrypted by ChatService before it
+ * leaves the browser and decrypted here after it arrives.
  */
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { MessageSquareLock, SquarePen } from 'lucide-react';
 import {
-  Share2, Send, Check, CheckCheck, AlertCircle, Clock, MessageSquare, Calendar as CalendarIcon,
-  LayoutGrid, X, Search, ChevronLeft, Eye, Bookmark
-} from 'lucide-react';
-import { ChatService, type ChatMessage, type ChatGroup as ChatGroupRecord } from '../../lib/services/chatService';
-import { FriendRequestService, type FriendRelationshipState } from '../../lib/services/friendRequestService';
-import { filterFriendsByQuery } from '../../lib/chatHelpers';
-import type { ChatInboxItem, ChatUiMessage } from '../../types/chatUi';
-import type { AuthUser } from '../../types/auth';
-import type { AppItem } from '../../types/appItem';
-import { isSupabaseConfigured as hasSupabaseConfig } from '../../lib/supabase/client';
-import { EventInviteCard } from './EventInviteCard';
-import { EventCreateModal } from './EventCreateModal';
+  ChatService,
+  previewOfMessage,
+  type ChatContact,
+  type ChatGroup,
+  type GroupMember,
+  type IncomingRequest,
+  type InboxThread,
+  type ReportReason,
+} from '@/lib/services/chatService';
+import { FriendRequestService } from '@/lib/services/friendRequestService';
+import { foodCardService } from '@/lib/services/foodCardService';
+import type { FoodCardRecord } from '@/lib/types/foodCard';
+import FoodCardDetailModal from '@/components/profile/FoodCardDetailModal';
+import { createClient } from '@/lib/supabase/client';
+import type { AuthUser } from '@/types/auth';
+import type { AppItem } from '@/types/appItem';
+import ChatInbox, { threadKey } from './ChatInbox';
+import ChatThread, { DialogShell, type UiMessage } from './ChatThread';
+import NewChatModal from './NewChatModal';
 
-/**
- * requestNotificationPermission helper (moved from index.tsx or kept here if specific to chat)
- */
-const requestNotificationPermission = async () => {
-  if (globalThis.Notification === undefined) return;
-  if (globalThis.Notification.permission !== 'default') return;
-  try {
-    await globalThis.Notification.requestPermission();
-  } catch (error) {
-    console.warn('Notification permission request failed:', error);
-  }
+const TYPING_EXPIRY_MS = 4000;
+const PEER_READ_POLL_MS = 10_000;
+
+const errorNotice = (code: string | undefined, message: string | undefined) => {
+  if (code === 'not-ready') return 'Secure messaging is locked on this device. Reload the page to unlock it.';
+  if (code === 'peer-not-ready') return 'They haven’t turned on secure messaging yet.';
+  return message || 'Couldn’t send that message. Please try again.';
 };
 
-/**
- * COMPONENT: ChatView
- * Master orchestrator for the 'Chat' feature.
- * Coordinates:
- * - Direct Messaging (Supabase Realtime)
- * - Group Clusters
- * - Shared Studio Artifacts (Bites/Trims/Scout)
- */
 export const ChatView = ({
-  friends,
   authUser,
+  showOnlineStatus,
+  sendReadReceipts,
+  notifyMessages,
+  initialUserId,
+  onClearInitial,
   onSave,
   onShareRequest,
   setTab,
-  onConversationOpened,
   onOpenUserProfile,
-  onGroupCreated,
-  initialActiveId,
-  initialActiveType,
-  onClearInitial,
 }: {
-  friends: ChatInboxItem[];
-  authUser: AuthUser | null;
+  authUser: AuthUser;
+  showOnlineStatus: boolean;
+  sendReadReceipts: boolean;
+  notifyMessages: boolean;
+  initialUserId?: string | null;
+  onClearInitial?: () => void;
   onSave: (item: AppItem) => void;
   onShareRequest: (item: AppItem) => void;
   setTab: (tab: string) => void;
-  onConversationOpened: (friendId: string) => void;
   onOpenUserProfile: (userId: string) => void;
-  onGroupCreated?: (group: ChatGroupRecord) => void;
-  initialActiveId?: string | null;
-  initialActiveType?: 'dm' | 'group' | null;
-  onClearInitial?: () => void;
 }) => {
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [activeType, setActiveType] = useState<'dm' | 'group' | null>(null);
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<ChatUiMessage[]>([]);
-  const [draft, setDraft] = useState('');
-  const [friendSearch, setFriendSearch] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [isCreatingGroup, setIsCreatingGroup] = useState(false);
-  const [isSubmittingGroup, setIsSubmittingGroup] = useState(false);
-  const [groupError, setGroupError] = useState<string | null>(null);
-  const [newGroupName, setNewGroupName] = useState('');
-  const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
-  const [showEventCreate, setShowEventCreate] = useState(false);
-  const [relationshipOverrides, setRelationshipOverrides] = useState<Record<string, { requestStatus: FriendRelationshipState; requestId?: string }>>({});
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const activeIdRef = useRef<string | null>(null);
+  const userId = authUser.id;
 
-  useEffect(() => {
-    if (initialActiveId) {
-      openConversation(initialActiveId, initialActiveType || 'dm');
-      onClearInitial?.();
-    }
-  }, [initialActiveId, initialActiveType, onClearInitial]);
+  const [threads, setThreads] = useState<InboxThread[]>([]);
+  const [friends, setFriends] = useState<ChatContact[]>([]);
+  const [requests, setRequests] = useState<IncomingRequest[]>([]);
+  const [blockedIds, setBlockedIds] = useState<string[]>([]);
+  const [isLoadingInbox, setIsLoadingInbox] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
-  useEffect(() => {
-    requestNotificationPermission();
-  }, []);
+  const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [messages, setMessages] = useState<UiMessage[]>([]);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [members, setMembers] = useState<GroupMember[]>([]);
+  const [peerReady, setPeerReady] = useState<boolean | null>(null);
+  const [peerReadAt, setPeerReadAt] = useState<string | null>(null);
+  const [typingIds, setTypingIds] = useState<Set<string>>(new Set());
+  const [sendNotice, setSendNotice] = useState<string | null>(null);
+  const [onlineIds, setOnlineIds] = useState<Set<string>>(new Set());
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
+  const [newChatOpen, setNewChatOpen] = useState(false);
+  const [viewingCard, setViewingCard] = useState<FoodCardRecord | null>(null);
+  const [notice, setNotice] = useState<{ title: string; body: string; action?: { label: string; onClick: () => void } } | null>(null);
 
-  useEffect(() => {
-    if (activeId) {
-      scrollToBottom();
-    }
-  }, [messages.length, isTyping, activeId, scrollToBottom]);
+  const activeKeyRef = useRef<string | null>(null);
+  const typingHandle = useRef<ReturnType<typeof ChatService.openTypingChannel> | null>(null);
+  const typingTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handledInitial = useRef<string | null>(null);
+  const threadsRef = useRef<InboxThread[]>([]);
+  const settingsRef = useRef({ notifyMessages });
 
-  const mergedFriends = useMemo(() => friends.map((f) => {
-    if (f.type !== 'dm') return f;
-    const override = relationshipOverrides[String(f.id)];
-    return override ? { ...f, ...override } : f;
-  }), [friends, relationshipOverrides]);
+  useEffect(() => { activeKeyRef.current = activeKey; }, [activeKey]);
+  useEffect(() => { threadsRef.current = threads; }, [threads]);
+  useEffect(() => { settingsRef.current = { notifyMessages }; }, [notifyMessages]);
 
-  const active = mergedFriends.find(f => String(f.id) === activeId);
-  const isGated = !!active && active.type === 'dm' && 'requestStatus' in active
-    && active.requestStatus !== undefined && active.requestStatus !== 'accepted';
-  const filteredFriends = useMemo(() => filterFriendsByQuery(mergedFriends, friendSearch), [mergedFriends, friendSearch]);
+  const activeThread = useMemo(() => threads.find((t) => threadKey(t) === activeKey) ?? null, [threads, activeKey]);
+  const isBlocked = !!activeThread?.peerId && blockedIds.includes(activeThread.peerId);
 
-  const mapMessageToUi = useCallback((message: ChatMessage): ChatUiMessage => {
-    let type: 'text' | 'share' | 'event' = 'text';
-    if (message.sharedItem) {
-      type = message.sharedItem.itemType === 'event' ? 'event' : 'share';
-    }
-
-    return {
-      id: message.id,
-      role: message.senderId === authUser?.id ? 'user' : 'ai',
-      type,
-      text: message.content,
-      item: message.sharedItem,
-    };
-  }, [authUser?.id]);
-
-  useEffect(() => {
-    if (!draft.trim() || !activeId || !authUser?.id) return;
-    if (activeType === 'dm' && !conversationId) return;
-
-
-    const targetId = activeType === 'group' ? activeId : conversationId;
-    const isGroup = activeType === 'group';
-
-    if (!targetId) return;
-
-    ChatService.sendTypingStatus(targetId, authUser.id, true, isGroup);
-
-    const timeout = setTimeout(() => {
-      ChatService.sendTypingStatus(targetId, authUser.id, false, isGroup);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, [draft, activeId, authUser?.id, conversationId, activeType]);
-
-  useEffect(() => {
-    if (!activeId || (!conversationId && activeType === 'dm')) return;
-
-    const targetId = activeType === 'group' ? activeId : (conversationId as string);
-    const isGroup = activeType === 'group';
-
-    const unsubscribe = ChatService.subscribeToTypingStatus(targetId, (typingUserId, typingStatus) => {
-      if (typingUserId !== authUser?.id) {
-        setIsTyping(typingStatus);
-      }
-    }, isGroup);
-
-    return () => unsubscribe();
-  }, [activeId, activeType, conversationId, authUser?.id]);
-
-  const appendIncomingMessage = useCallback((message: ChatMessage) => {
-    setMessages(prev => {
-      if (prev.some((entry) => entry.id === message.id)) return prev;
-      return [...prev, mapMessageToUi(message)];
-    });
-    if (message.senderId !== authUser?.id && activeId) {
-      onConversationOpened(activeId);
-    }
-  }, [activeId, authUser?.id, mapMessageToUi, onConversationOpened]);
-
-  useEffect(() => {
-    setActiveId(null);
-    setConversationId(null);
-    setMessages([]);
-  }, [authUser?.id]);
-
-  useEffect(() => {
-    if (!activeId || !activeType) return;
-
-    if (activeType === 'dm' && conversationId) {
-      const unsubscribe = ChatService.subscribeToConversationMessages(conversationId, (message) => {
-        appendIncomingMessage(message);
-      });
-      return () => unsubscribe();
-    } else if (activeType === 'group' && activeId) {
-      const unsubscribe = ChatService.subscribeToGroupMessages(activeId, (message) => {
-        appendIncomingMessage(message);
-      });
-      return () => unsubscribe();
-    }
-  }, [activeId, activeType, conversationId, appendIncomingMessage]);
-
-  const formatFriendTime = (item: ChatInboxItem) => {
-    if ('time' in item && item.time) return item.time;
-    if ('online' in item && item.online) return 'now';
-    if ('lastSeen' in item && item.lastSeen) return 'recent';
-    return '—';
-  };
-
-  const getMessageStatusIcon = (status?: string) => {
-    if (!status || status === 'sent') return <Check size={10} />;
-    if (status === 'sending') return <Clock size={10} style={{ animation: 'chat-pulse 2s ease-in-out infinite' }} />;
-    if (status === 'read') return <CheckCheck size={10} color="#3c3213" />;
-    if (status === 'error') return <AlertCircle size={10} color="#dc2626" />;
-    return <Check size={10} />;
-  };
-
-  const openConversation = async (participantId: string, type: 'dm' | 'group' = 'dm', relationshipOverride?: FriendRelationshipState) => {
-    activeIdRef.current = participantId;
-
-    if (!authUser?.id || !hasSupabaseConfig) {
-      setActiveId(participantId);
-      setActiveType(type);
-      setMessages([]);
-      return;
-    }
-
-    const friend = type === 'dm' ? mergedFriends.find((f) => String(f.id) === participantId) : undefined;
-    const relationship: FriendRelationshipState | undefined = relationshipOverride
-      ?? (friend && 'requestStatus' in friend ? friend.requestStatus : undefined);
-
-    // 'none': no thread to open yet - send the friend request instead.
-    if (type === 'dm' && relationship === 'none') {
-      setActiveId(participantId);
-      setActiveType(type);
-      setConversationId(null);
-      setMessages([]);
-      onConversationOpened(participantId);
-
-      const sent = await FriendRequestService.sendRequest(authUser.id, participantId);
-      if (activeIdRef.current !== participantId) return;
-      if (sent.success && sent.data) {
-        setRelationshipOverrides((prev) => ({ ...prev, [participantId]: { requestStatus: 'outgoing-pending', requestId: sent.data!.id } }));
-      }
-      return;
-    }
-
-    // 'outgoing-pending': waiting on the other side, nothing to fetch yet.
-    if (type === 'dm' && relationship === 'outgoing-pending') {
-      setActiveId(participantId);
-      setActiveType(type);
-      setConversationId(null);
-      setMessages([]);
-      onConversationOpened(participantId);
-      return;
-    }
-
-    setActiveId(participantId);
-    setActiveType(type);
-    onConversationOpened(participantId);
-
-    // 'incoming-pending': show the Accept/Decline banner, no conversation
-    // exists yet (the DB gate only allows creating one once accepted).
-    if (type === 'dm' && relationship === 'incoming-pending') {
-      setConversationId(null);
-      setMessages([]);
-      return;
-    }
-
-    if (type === 'dm') {
-      const conversation = await ChatService.getOrCreateConversation(authUser.id, participantId);
-      if (activeIdRef.current !== participantId) return;
-      if (!conversation.success || !conversation.data) return;
-
-      setConversationId(conversation.data.id);
-      const result = await ChatService.listMessages(conversation.data.id);
-      if (activeIdRef.current !== participantId) return;
-      if (!result.success || !result.data) {
-        setMessages([]);
-        return;
-      }
-
-      setMessages(result.data.map((message) => ({
-        id: message.id,
-        role: message.senderId === authUser?.id ? 'user' : 'ai',
-        type: message.sharedItem ? 'share' : 'text',
-        text: message.content,
-        item: message.sharedItem,
-        status: message.senderId === authUser?.id ? 'sent' : undefined,
-      })));
+  // ── Loading real data ────────────────────────────────────────────────────
+  const loadAll = useCallback(async () => {
+    const [inbox, friendList, incoming, blocked] = await Promise.all([
+      ChatService.getInbox(userId),
+      ChatService.listFriends(userId),
+      ChatService.listIncomingRequests(userId),
+      ChatService.listBlockedIds(userId),
+    ]);
+    if (!inbox.success) {
+      setLoadError(inbox.error ?? 'Couldn’t load your conversations.');
     } else {
-      setConversationId(null);
-      const result = await ChatService.listGroupMessages(participantId);
-      if (activeIdRef.current !== participantId) return;
-      if (!result.success || !result.data) {
-        setMessages([]);
-        return;
-      }
-
-      setMessages(result.data.map((message) => ({
-        id: message.id,
-        role: message.senderId === authUser?.id ? 'user' : 'ai',
-        type: message.sharedItem ? 'share' : 'text',
-        text: message.content,
-        item: message.sharedItem,
-        status: message.senderId === authUser?.id ? 'sent' : undefined,
-      })));
+      setLoadError(null);
+      setThreads(inbox.data ?? []);
     }
-  };
+    if (friendList.success) setFriends(friendList.data ?? []);
+    if (incoming.success) setRequests(incoming.data ?? []);
+    setBlockedIds(blocked);
+    setIsLoadingInbox(false);
+  }, [userId]);
 
-  const acceptIncomingRequest = async () => {
-    if (!active || !('requestId' in active) || !active.requestId) return;
-    const result = await FriendRequestService.acceptRequest(active.requestId);
-    if (!result.success) return;
-    setRelationshipOverrides((prev) => ({ ...prev, [String(active.id)]: { requestStatus: 'accepted' } }));
-    openConversation(String(active.id), 'dm', 'accepted');
-  };
+  useEffect(() => {
+    const t = setTimeout(loadAll, 0);
+    return () => clearTimeout(t);
+  }, [loadAll]);
 
-  const declineIncomingRequest = async () => {
-    if (!active || !('requestId' in active) || !active.requestId) return;
-    await FriendRequestService.declineRequest(active.requestId);
-    setRelationshipOverrides((prev) => ({ ...prev, [String(active.id)]: { requestStatus: 'none' } }));
-    setActiveId(null);
-  };
+  // Debounced refresh for events that change many things at once (new thread, unsend).
+  const scheduleRefresh = useCallback(() => {
+    if (refreshTimer.current) clearTimeout(refreshTimer.current);
+    refreshTimer.current = setTimeout(loadAll, 600);
+  }, [loadAll]);
 
-  const sendMessage = async () => {
-    const content = draft.trim();
-    if (!content || !activeId || !authUser?.id) return;
+  useEffect(() => () => { if (refreshTimer.current) clearTimeout(refreshTimer.current); }, []);
 
-    setDraft('');
-    const optimisticId = `local-${Date.now()}`;
-    setMessages(prev => ([...prev, {
-      id: optimisticId,
-      role: 'user',
-      type: 'text',
-      text: content,
-      status: 'sending',
-    }]));
+  // ── Presence (mutual: hide yours = can't see anyone else's) ──────────────
+  useEffect(() => ChatService.joinPresence(userId, showOnlineStatus, setOnlineIds), [userId, showOnlineStatus]);
 
-    let sent;
-    if (activeType === 'dm' && conversationId) {
-      sent = await ChatService.sendTextMessage({
-        conversationId,
-        senderId: authUser.id,
-        content,
-      });
-    } else if (activeType === 'group') {
-      sent = await ChatService.sendGroupTextMessage({
-        groupId: activeId,
-        senderId: authUser.id,
-        content,
-      });
+  // ── Opening a conversation ───────────────────────────────────────────────
+  const openThread = useCallback(async (thread: InboxThread) => {
+    const key = threadKey(thread);
+    activeKeyRef.current = key;
+    setActiveKey(key);
+    setMessages([]);
+    setMembers([]);
+    setTypingIds(new Set());
+    setSendNotice(null);
+    setPeerReady(thread.type === 'dm' ? null : true);
+    setPeerReadAt(null);
+    setIsLoadingMessages(true);
+
+    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+      Notification.requestPermission().catch(() => undefined);
     }
 
-    if (!sent || !sent.success || !sent.data) {
-      setMessages(prev => prev.map((message) => message.id === optimisticId ? { ...message, status: 'error' } : message));
-      setDraft(content);
+    const [result, groupMembers, ready] = await Promise.all([
+      ChatService.listMessages({ threadType: thread.type, threadId: thread.id, userId }),
+      thread.type === 'group' ? ChatService.listGroupMembers(thread.id) : Promise.resolve(null),
+      thread.type === 'dm' && thread.peerId ? ChatService.hasSecureMessaging(thread.peerId) : Promise.resolve(true),
+    ]);
+    if (activeKeyRef.current !== key) return; // user moved on while this loaded
+
+    setMessages(result.success ? result.data ?? [] : []);
+    if (groupMembers?.success) setMembers(groupMembers.data ?? []);
+    setPeerReady(ready);
+    setIsLoadingMessages(false);
+
+    ChatService.markRead(thread.type, thread.id, userId);
+    setThreads((prev) => prev.map((t) => (threadKey(t) === key ? { ...t, unread: 0 } : t)));
+  }, [userId]);
+
+  const openDmWithFriend = useCallback(async (friend: ChatContact) => {
+    setNewChatOpen(false);
+    const existing = threadsRef.current.find((t) => t.type === 'dm' && t.peerId === friend.id);
+    if (existing) return openThread(existing);
+
+    const conversation = await ChatService.getOrCreateConversation(userId, friend.id);
+    if (!conversation.success || !conversation.data) {
+      setNotice({ title: 'Can’t start this chat', body: conversation.error ?? 'You can only message people you follow each other.' });
       return;
     }
-
-    setMessages(prev => {
-      const filtered = prev.filter((m) => m.id !== optimisticId);
-      const mapped = mapMessageToUi(sent.data!);
-      return [...filtered, {
-        ...mapped,
-        status: 'sent',
-        senderName: (authUser.user_metadata?.full_name as string) || (authUser.user_metadata?.name as string) || 'You'
-      }];
-    });
-  };
-
-  const sendEventInvite = async (eventData: {
-    name: string;
-    date: string;
-    time: string;
-    location: string;
-    description: string;
-  }) => {
-    if (!activeId || !authUser?.id) return;
-
-    const eventItem: AppItem = {
-      itemType: 'event',
-      name: eventData.name,
-      caption: eventData.description,
-      eventDate: eventData.date,
-      eventTime: eventData.time,
-      eventLocation: eventData.location,
-      rsvpCount: 0,
-      cat: 'Meetup',
-      img: 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80',
+    const fresh: InboxThread = {
+      type: 'dm', id: conversation.data.id, peerId: friend.id, title: friend.name, avatar: friend.avatar, username: friend.username,
+      createdAt: new Date().toISOString(), lastAt: null, lastText: '', lastMine: false, unread: 0,
     };
+    setThreads((prev) => (prev.some((t) => threadKey(t) === threadKey(fresh)) ? prev : [fresh, ...prev]));
+    return openThread(fresh);
+  }, [openThread, userId]);
 
-    setShowEventCreate(false);
+  // Deep link (/messages?userId=…, from a profile's Message button).
+  useEffect(() => {
+    if (isLoadingInbox || !initialUserId || handledInitial.current === initialUserId) return;
+    handledInitial.current = initialUserId;
 
-    let sent;
-    if (activeType === 'dm' && conversationId) {
-      sent = await ChatService.sendSharedItemMessage({
-        conversationId,
-        senderId: authUser.id,
-        item: eventItem,
-      });
-    } else if (activeType === 'group') {
-      sent = await ChatService.sendGroupSharedItemMessage({
-        groupId: activeId,
-        senderId: authUser.id,
-        item: eventItem,
-      });
-    }
-
-    if (sent?.success && sent.data) {
-      const sentMessage = sent.data;
-      setMessages(prev => ([...prev, {
-        ...mapMessageToUi(sentMessage),
-        status: 'sent',
-        senderName: (authUser.user_metadata?.full_name as string) || (authUser.user_metadata?.name as string) || 'You'
-      }]));
-    }
-  };
-
-  // --- SECTION: Group Logic ---
-
-  const createGroup = async () => {
-    if (!newGroupName.trim() || selectedMemberIds.length === 0 || !authUser?.id) return;
-
-    setIsSubmittingGroup(true);
-    setGroupError(null);
-
-    try {
-      const result = await ChatService.createGroup({
-        name: newGroupName,
-        memberIds: [authUser.id, ...selectedMemberIds],
-        createdBy: authUser.id,
-      });
-
-      if (result.success && result.data) {
-        setIsCreatingGroup(false);
-        setNewGroupName('');
-        setSelectedMemberIds([]);
-        // The inbox list (`friends`) is owned by the parent page and only
-        // fetched once on mount - without this, the creator's own sidebar
-        // never shows the group they just made until a full page reload,
-        // even though it exists correctly in the DB (a real bug found while
-        // verifying group chat end-to-end).
-        onGroupCreated?.(result.data);
-        openConversation(result.data.id, 'group');
-      } else {
-        setGroupError(result.error || 'Failed to create group');
+    (async () => {
+      const existing = threadsRef.current.find((t) => t.type === 'dm' && t.peerId === initialUserId);
+      const friend = friends.find((f) => f.id === initialUserId);
+      if (existing) await openThread(existing);
+      else if (friend) await openDmWithFriend(friend);
+      else {
+        const supabase = createClient();
+        const { data } = supabase ? await supabase.from('users').select('display_name, username').eq('id', initialUserId).maybeSingle() : { data: null };
+        const name = data?.display_name || data?.username || 'this person';
+        setNotice({
+          title: `Follow ${name} first`,
+          body: 'You can message people once you follow each other. Send a follow request from their profile.',
+          action: { label: 'View profile', onClick: () => onOpenUserProfile(initialUserId) },
+        });
       }
-    } catch (err) {
-      console.error('[ChatView] createGroup exception:', err);
-      setGroupError('An unexpected error occurred');
-    } finally {
-      setIsSubmittingGroup(false);
+      onClearInitial?.();
+    })();
+  }, [isLoadingInbox, initialUserId, friends, openThread, openDmWithFriend, onClearInitial, onOpenUserProfile]);
+
+  // ── Realtime: incoming + unsent messages ─────────────────────────────────
+  useEffect(() => {
+    return ChatService.subscribeToAllMessages(userId, {
+      onMessage: ({ threadType, threadId, message }) => {
+        const key = `${threadType}:${threadId}`;
+        const mine = message.senderId === userId;
+        const isOpen = activeKeyRef.current === key;
+        const known = threadsRef.current.some((t) => threadKey(t) === key);
+
+        if (!known) {
+          scheduleRefresh(); // a brand-new conversation - pull it in with its real title/avatar
+          return;
+        }
+
+        setThreads((prev) =>
+          prev
+            .map((t) =>
+              threadKey(t) === key
+                ? { ...t, lastAt: message.createdAt, lastText: previewOfMessage(message), lastMine: mine, unread: mine || isOpen ? 0 : t.unread + 1 }
+                : t,
+            )
+            .sort((a, b) => (b.lastAt ?? b.createdAt).localeCompare(a.lastAt ?? a.createdAt)),
+        );
+
+        if (isOpen) {
+          setMessages((prev) => (prev.some((m) => m.id === message.id) ? prev : [...prev, message]));
+          if (!mine) ChatService.markRead(threadType, threadId, userId);
+        }
+
+        // Generic on purpose: an OS notification shouldn't put message text on a lock screen.
+        if (!mine && (!isOpen || document.visibilityState === 'hidden') && settingsRef.current.notifyMessages
+          && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+          const t = threadsRef.current.find((x) => threadKey(x) === key);
+          const n = new Notification(t?.title ?? 'New message', { body: 'Sent you a message', tag: key });
+          n.onclick = () => { window.focus(); if (t) openThread(t); n.close(); };
+        }
+      },
+      onDelete: ({ messageId }) => {
+        setMessages((prev) => prev.filter((m) => m.id !== messageId));
+        scheduleRefresh();
+      },
+    });
+  }, [userId, scheduleRefresh, openThread]);
+
+  // ── Typing indicator for the open thread ─────────────────────────────────
+  useEffect(() => {
+    typingHandle.current?.close();
+    typingHandle.current = null;
+    if (!activeThread) return;
+
+    const timers = typingTimers.current;
+    const handle = ChatService.openTypingChannel(activeThread.type, activeThread.id, userId, (typerId, isTyping) => {
+      const prevTimer = timers.get(typerId);
+      if (prevTimer) clearTimeout(prevTimer);
+      setTypingIds((prev) => {
+        const next = new Set(prev);
+        if (isTyping) next.add(typerId); else next.delete(typerId);
+        return next;
+      });
+      if (isTyping) {
+        timers.set(typerId, setTimeout(() => setTypingIds((p) => { const n = new Set(p); n.delete(typerId); return n; }), TYPING_EXPIRY_MS));
+      }
+    });
+    typingHandle.current = handle;
+    return () => {
+      handle.close();
+      timers.forEach(clearTimeout);
+      timers.clear();
+    };
+  }, [activeThread?.type, activeThread?.id, userId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Read receipts (DMs): re-check when the chat changes and every few seconds ──
+  useEffect(() => {
+    if (!activeThread || activeThread.type !== 'dm') return;
+    // Reciprocal: if you don't send read receipts, you don't see anyone else's either.
+    if (!sendReadReceipts) return;
+    let cancelled = false;
+    const check = () => ChatService.getPeerReadAt(activeThread.id).then((at) => { if (!cancelled) setPeerReadAt(at); });
+    check();
+    const interval = setInterval(check, PEER_READ_POLL_MS);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [activeThread?.type, activeThread?.id, messages.length, sendReadReceipts]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Sending ──────────────────────────────────────────────────────────────
+  const deliver = useCallback(async (thread: InboxThread, text: string, existingLocalId?: string) => {
+    const localId = existingLocalId ?? `local-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const now = new Date().toISOString();
+    const optimistic: UiMessage = {
+      id: localId, senderId: userId, content: text, sharedItem: null, createdAt: now,
+      encrypted: true, undecryptable: false, status: 'sending',
+      conversationId: thread.type === 'dm' ? thread.id : undefined, groupId: thread.type === 'group' ? thread.id : undefined,
+    };
+    setSendNotice(null);
+    setMessages((prev) => (existingLocalId ? prev.map((m) => (m.id === existingLocalId ? optimistic : m)) : [...prev, optimistic]));
+
+    const res = thread.type === 'dm'
+      ? await ChatService.sendTextMessage({ conversationId: thread.id, senderId: userId, content: text })
+      : await ChatService.sendGroupTextMessage({ groupId: thread.id, senderId: userId, content: text });
+
+    if (!res.success || !res.data) {
+      if (res.code === 'peer-not-ready') setPeerReady(false);
+      setSendNotice(errorNotice(res.code, res.error));
+      setMessages((prev) => prev.map((m) => (m.id === localId ? { ...m, status: 'error' } : m)));
+      return;
     }
+    const sent = res.data;
+    setMessages((prev) => {
+      const withoutLocal = prev.filter((m) => m.id !== localId);
+      // The realtime echo of our own message may have landed first.
+      return withoutLocal.some((m) => m.id === sent.id) ? withoutLocal : [...withoutLocal, { ...sent, status: 'sent' }];
+    });
+    setThreads((prev) => prev.map((t) => (threadKey(t) === threadKey(thread) ? { ...t, lastAt: sent.createdAt, lastText: text, lastMine: true } : t)));
+  }, [userId]);
+
+  const sendText = (text: string) => { if (activeThread) deliver(activeThread, text); };
+
+  const retry = (message: UiMessage) => { if (activeThread && message.content) deliver(activeThread, message.content, message.id); };
+
+  const sendEvent = async (e: { name: string; date: string; time: string; location: string; description: string }) => {
+    if (!activeThread) return;
+    const item: AppItem = {
+      itemType: 'event', name: e.name, caption: e.description, eventDate: e.date, eventTime: e.time, eventLocation: e.location, rsvpCount: 0, cat: 'Meetup',
+    };
+    setSendNotice(null);
+    const res = activeThread.type === 'dm'
+      ? await ChatService.sendSharedItemMessage({ conversationId: activeThread.id, senderId: userId, item })
+      : await ChatService.sendGroupSharedItemMessage({ groupId: activeThread.id, senderId: userId, item });
+    if (!res.success || !res.data) {
+      if (res.code === 'peer-not-ready') setPeerReady(false);
+      setSendNotice(errorNotice(res.code, res.error));
+      return;
+    }
+    const sent = res.data;
+    setMessages((prev) => (prev.some((m) => m.id === sent.id) ? prev : [...prev, { ...sent, status: 'sent' }]));
+    setThreads((prev) => prev.map((t) => (threadKey(t) === threadKey(activeThread) ? { ...t, lastAt: sent.createdAt, lastText: previewOfMessage(sent), lastMine: true } : t)));
   };
+
+  const unsend = async (message: UiMessage) => {
+    if (!activeThread) return;
+    const res = await ChatService.deleteMessage(activeThread.type, message.id);
+    if (!res.success) { setSendNotice(res.error ?? 'Couldn’t unsend that message.'); return; }
+    setMessages((prev) => prev.filter((m) => m.id !== message.id));
+    scheduleRefresh();
+  };
+
+  // ── Safety ───────────────────────────────────────────────────────────────
+  const block = async () => {
+    if (!activeThread?.peerId) return;
+    const res = await ChatService.blockUser(activeThread.peerId);
+    if (!res.success) { setSendNotice(res.error ?? 'Couldn’t block this user.'); return; }
+    setBlockedIds((prev) => [...new Set([...prev, activeThread.peerId as string])]);
+    scheduleRefresh();
+  };
+
+  const unblock = async () => {
+    if (!activeThread?.peerId) return;
+    const res = await ChatService.unblockUser(userId, activeThread.peerId);
+    if (res.success) setBlockedIds((prev) => prev.filter((id) => id !== activeThread.peerId));
+  };
+
+  const report = async (reason: ReportReason, details: string) => {
+    if (!activeThread) return false;
+    const res = await ChatService.reportUser({
+      reporterId: userId, reportedUserId: activeThread.peerId, threadType: activeThread.type, threadId: activeThread.id, reason, details,
+    });
+    return res.success;
+  };
+
+  const leaveGroup = async () => {
+    if (!activeThread || activeThread.type !== 'group') return;
+    const res = await ChatService.leaveGroup(activeThread.id, userId);
+    if (!res.success) { setSendNotice(res.error ?? 'Couldn’t leave the group.'); return; }
+    setThreads((prev) => prev.filter((t) => threadKey(t) !== threadKey(activeThread)));
+    setActiveKey(null);
+  };
+
+  // ── Requests + groups ────────────────────────────────────────────────────
+  const acceptRequest = async (r: IncomingRequest) => {
+    const res = await FriendRequestService.acceptRequest(r.requestId);
+    if (res.success) { await loadAll(); openDmWithFriend(r.from); }
+  };
+
+  const declineRequest = async (r: IncomingRequest) => {
+    const res = await FriendRequestService.declineRequest(r.requestId);
+    if (res.success) setRequests((prev) => prev.filter((x) => x.requestId !== r.requestId));
+  };
+
+  const createGroup = async (name: string, memberIds: string[]): Promise<string | null> => {
+    const res = await ChatService.createGroup({ name, memberIds, createdBy: userId });
+    if (!res.success || !res.data) return res.error ?? 'Couldn’t create the group.';
+    const group: ChatGroup = res.data;
+    const fresh: InboxThread = {
+      type: 'group', id: group.id, title: group.name, avatar: group.avatarUrl ?? null,
+      createdAt: group.createdAt, lastAt: null, lastText: '', lastMine: false, unread: 0,
+    };
+    setNewChatOpen(false);
+    setThreads((prev) => [fresh, ...prev]);
+    openThread(fresh);
+    return null;
+  };
+
+  // Tapping a shared card opens the REAL thing it points at - the card itself (recipe, review, visit ...) -
+  // rather than sending everyone to the map. Older-style items fall back to their own section.
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const openSharedItem = async (item: AppItem) => {
+    const id = item.id || item.itemId || '';
+    if (item.itemType === 'food_card' && UUID.test(id)) {
+      const res = await foodCardService.getCardById(id);
+      if (res.success && res.data) { setViewingCard(res.data); return; }
+      setNotice({ title: 'Card unavailable', body: 'This card was deleted, or its owner has made their profile private.' });
+      return;
+    }
+    if (id.startsWith('recipe')) return setTab('bites');
+    if (id.startsWith('video')) return setTab('trims');
+    if (item.placeId || typeof item.lat === 'number') return setTab('scout');
+    setNotice({ title: 'Nothing to open', body: 'This item doesn’t have a page to open.' });
+  };
+
+  const peerOnline = !!activeThread?.peerId && showOnlineStatus && onlineIds.has(activeThread.peerId);
+  const someoneTyping = [...typingIds].some((id) => id !== userId);
 
   return (
-    <div className="chat-view">
+    <div className="fz-chat">
+      <ChatInbox
+        threads={threads}
+        requests={requests}
+        activeKey={activeKey}
+        onlineIds={showOnlineStatus ? onlineIds : new Set()}
+        isLoading={isLoadingInbox}
+        hiddenOnMobile={!!activeThread}
+        onSelect={openThread}
+        onNewChat={() => setNewChatOpen(true)}
+        onAcceptRequest={acceptRequest}
+        onDeclineRequest={declineRequest}
+      />
 
-      {/* Left Pane (Inbox List) */}
-      <div className={`chat-view__inbox${activeId ? ' is-hidden-mobile' : ''}`}>
-        <header className="chat-view__inbox-header">
-          <div>
-            <h2 className="chat-view__inbox-title">Studio Inbox</h2>
-            <div className="chat-view__inbox-subrow">
-              <p className="chat-view__find-friends">Find Friends</p>
-              <button
-                onClick={() => setIsCreatingGroup(true)}
-                className="chat-view__create-group-btn"
-              >
-                <LayoutGrid size={12} />
-                Create Group
-              </button>
-            </div>
-          </div>
-          <div className="chat-view__live-badge">
-            <div className="chat-view__live-dot" />
-            <span className="chat-view__live-label">Live</span>
-          </div>
-        </header>
-
-        {isCreatingGroup && (
-          <div className="chat-view__group-panel">
-            <div className="chat-view__group-panel-head">
-              <h3 className="chat-view__group-panel-heading">New Chat Group</h3>
-              <button onClick={() => setIsCreatingGroup(false)} className="chat-view__group-panel-close"><X size={20} /></button>
-            </div>
-            <div>
-              <input
-                value={newGroupName}
-                onChange={(e) => {
-                  setNewGroupName(e.target.value);
-                  setGroupError(null);
-                }}
-                disabled={isSubmittingGroup}
-                placeholder="Group Name..."
-                className="chat-view__group-name-input"
-              />
-              <div className="chat-view__member-picker" style={{ marginTop: '1rem' }}>
-                <div className="chat-view__member-picker-head">
-                  <p className="chat-view__member-picker-label">Select Members</p>
-                  {selectedMemberIds.length === 0 && (
-                    <p className="chat-view__member-picker-hint">Add at least 1 friend</p>
-                  )}
-                </div>
-                <div className="chat-view__member-chips">
-                  {friends.filter(f => f.type !== 'group').map(f => (
-                    <button
-                      key={f.id}
-                      onClick={() => {
-                        if (isSubmittingGroup) return;
-                        setSelectedMemberIds(prev => prev.includes(String(f.id)) ? prev.filter(mid => mid !== String(f.id)) : [...prev, String(f.id)]);
-                        setGroupError(null);
-                      }}
-                      disabled={isSubmittingGroup}
-                      className={`chat-view__member-chip${selectedMemberIds.includes(String(f.id)) ? ' is-selected' : ''}`}
-                    >
-                      <img src={f.avatar} alt={`${f.name || 'Member'} avatar`} />
-                      {f.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            {groupError && (
-              <div className="chat-view__group-error">
-                <AlertCircle size={14} />
-                {groupError}
-              </div>
-            )}
-            <button
-              onClick={createGroup}
-              disabled={!newGroupName.trim() || selectedMemberIds.length === 0 || isSubmittingGroup}
-              className="chat-view__group-submit"
-            >
-              {isSubmittingGroup ? (
-                <>
-                  <Clock size={16} className="chat-spin" />
-                  Creating...
-                </>
-              ) : 'Create Studio Group'}
-            </button>
-          </div>
-        )}
-
-        <div className="chat-view__search">
-          <div className="chat-view__search-inner">
-            <Search size={18} className="chat-view__search-icon" />
-            <input
-              value={friendSearch}
-              onChange={(e) => setFriendSearch(e.target.value)}
-              placeholder="Search contacts..."
-              className="chat-view__search-input"
-            />
-          </div>
-        </div>
-
-        <div className="chat-view__list chat-hide-scrollbar">
-          {filteredFriends.map(c => (
-            <div key={c.id}>
-              <button
-                type="button"
-                onClick={() => {
-                  openConversation(String(c.id), c.type || 'dm').catch((error) => {
-                    console.warn('Failed to open conversation:', error);
-                  });
-                }}
-                className={`chat-view__row${activeId === String(c.id) ? ' is-active' : ''}`}
-              >
-                <div className="chat-view__row-avatar">
-                  <img src={c.avatar} alt={c.name || 'Chat'} className="chat-view__row-avatar-img" />
-                  {c.type === 'dm' && 'online' in c && c.online && (
-                    <div className="chat-view__online-dot" />
-                  )}
-                  {c.type === 'group' && (
-                    <div className="chat-view__group-dot">
-                      <LayoutGrid size={10} />
-                    </div>
-                  )}
-                </div>
-                <div className="chat-view__row-content">
-                  <div className="chat-view__row-top">
-                    <div className="chat-view__row-name-wrap">
-                      <h4 className="chat-view__row-name">{c.name}</h4>
-                      {c.type === 'group' && (
-                        <span className="chat-view__row-group-tag">Group</span>
-                      )}
-                    </div>
-                    <span className="chat-view__row-time">{formatFriendTime(c)}</span>
-                  </div>
-                  <div className="chat-view__row-bottom">
-                    <p className={`chat-view__row-preview${(c.unreadCount ?? 0) > 0 ? ' has-unread' : ''}`}>
-                      {c.type === 'dm' && 'requestStatus' in c && c.requestStatus === 'incoming-pending' ? 'Message Request'
-                        : c.type === 'dm' && 'requestStatus' in c && c.requestStatus === 'outgoing-pending' ? 'Request Sent'
-                        : c.type === 'dm' && 'requestStatus' in c && c.requestStatus === 'none' ? 'Say hello...'
-                        : 'Tap to chat...'}
-                    </p>
-                    {(c.unreadCount ?? 0) > 0 && (
-                      <div className="chat-view__row-unread">{c.unreadCount}</div>
-                    )}
-                  </div>
-                </div>
-              </button>
-            </div>
-          ))}
-          {filteredFriends.length === 0 && (
-            <div className="chat-view__empty">No contacts found.</div>
-          )}
-        </div>
-      </div>
-
-      {/* Right Pane (Active Conversation) */}
-      <div className={`chat-view__conversation${activeId ? ' is-active' : ''}`}>
-        {!activeId || !active ? (
-          <div className="chat-view__conversation-empty">
-            <div className="chat-view__conversation-empty-icon">
-              <MessageSquare size={40} />
-            </div>
-            <h3 className="chat-view__conversation-empty-title">Your Messages</h3>
-            <p className="chat-view__conversation-empty-sub">Select a conversation from the left to start chatting with your studio friends.</p>
-          </div>
+      <div className={`fz-chat-pane${activeThread ? ' is-active' : ''}`}>
+        {activeThread ? (
+          <ChatThread
+            key={activeKey}
+            thread={activeThread}
+            userId={userId}
+            messages={messages}
+            isLoading={isLoadingMessages}
+            online={peerOnline}
+            typing={someoneTyping}
+            members={members}
+            peerReady={peerReady}
+            blocked={isBlocked}
+            peerReadAt={sendReadReceipts ? peerReadAt : null}
+            sendNotice={sendNotice}
+            onBack={() => { activeKeyRef.current = null; setActiveKey(null); }}
+            onSend={sendText}
+            onRetry={retry}
+            onSendEvent={sendEvent}
+            onUnsend={unsend}
+            onTypingChange={(t) => typingHandle.current?.setTyping(t)}
+            onOpenProfile={onOpenUserProfile}
+            onBlock={block}
+            onUnblock={unblock}
+            onReport={report}
+            onLeaveGroup={leaveGroup}
+            onSave={onSave}
+            onShareRequest={onShareRequest}
+            onOpenItem={openSharedItem}
+          />
         ) : (
-          <div className="chat-view__thread">
-            {/* Conversation Header */}
-            <header className="chat-view__thread-header">
-              <div className="chat-view__thread-left">
-                <button
-                  onClick={() => setActiveId(null)}
-                  className="chat-view__thread-back"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                <div className="chat-view__thread-identity" onClick={() => active.type === 'dm' && onOpenUserProfile(String(active.id))}>
-                  <div className="chat-view__thread-avatar">
-                    <img src={active.avatar} alt={active.name || 'Chat'} className="chat-view__thread-avatar-img" />
-                    {active.type === 'dm' && 'online' in active && active.online && (
-                      <div className="chat-view__thread-online-dot" />
-                    )}
-                    {active.type === 'group' && (
-                      <div className="chat-view__thread-group-dot">
-                        <LayoutGrid size={8} />
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <h4 className="chat-view__thread-name">{active.name}</h4>
-                    <div className="chat-view__thread-status">
-                      <div className={`chat-view__thread-status-dot${active.type === 'group' ? ' is-group' : (('online' in active && active.online) ? ' is-online' : '')}`} />
-                      <p className="chat-view__thread-status-text">
-                        {active.type === 'group' ? 'Studio Group' : (('online' in active && active.online) ? 'Online' : 'Offline')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="chat-view__thread-actions">
-                {active.type === 'dm' && (
-                  <button
-                    type="button"
-                    onClick={() => onOpenUserProfile(String(active.id))}
-                    className="chat-view__thread-profile-btn"
-                  >
-                    Profile
-                  </button>
-                )}
-              </div>
-            </header>
-
-            {active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'incoming-pending' && (
-              <div className="chat-view__request-banner chat-view__request-banner--incoming">
-                <p className="chat-view__request-label">Message Request</p>
-                <p className="chat-view__request-text">{active.name} wants to connect with you.</p>
-                <div className="chat-view__request-actions">
-                  <button onClick={acceptIncomingRequest} className="chat-view__request-accept">Accept</button>
-                  <button onClick={declineIncomingRequest} className="chat-view__request-decline">Decline</button>
-                </div>
-              </div>
+          <div className="fz-chat-pane__empty">
+            <div className="fz-chat-pane__empty-icon"><MessageSquareLock size={38} /></div>
+            <h2>Your messages are private</h2>
+            <p>Chats are end-to-end encrypted — only you and the people in them can read what’s said.</p>
+            {loadError ? (
+              <button type="button" className="fz-chat-pill fz-chat-pill--accent" onClick={() => { setIsLoadingInbox(true); loadAll(); }}>Try again</button>
+            ) : (
+              <button type="button" className="fz-chat-pill fz-chat-pill--accent" onClick={() => setNewChatOpen(true)}><SquarePen size={15} /> New chat</button>
             )}
-
-            {active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'outgoing-pending' && (
-              <div className="chat-view__request-banner chat-view__request-banner--waiting">
-                <p className="chat-view__request-label">Request Sent</p>
-                <p className="chat-view__request-text">Waiting for {active.name} to accept before you can chat.</p>
-              </div>
-            )}
-
-            {active.type === 'dm' && 'requestStatus' in active && active.requestStatus === 'none' && (
-              <div className="chat-view__request-banner chat-view__request-banner--waiting">
-                <p className="chat-view__request-label">Sending Request</p>
-                <p className="chat-view__request-text">Asking {active.name} to connect...</p>
-              </div>
-            )}
-
-            {/* Messages Area */}
-            <div className="chat-view__messages chat-hide-scrollbar">
-              {messages.map((m) => (
-                <div key={`${m.id || ''}-${m.role}-${m.type || 'text'}-${m.text || ''}-${m.item?.id || ''}`} className={`chat-view__message-group${m.role === 'user' ? ' is-mine' : ''}`}>
-                  {activeType === 'group' && m.role !== 'user' && m.senderName && (
-                    <span className="chat-view__message-sender">{m.senderName}</span>
-                  )}
-                  <div className={`chat-view__bubble${m.role === 'user' ? ' is-mine' : ''}`}>
-                    {m.type === 'share' ? (
-                      <div className="chat-view__share-card">
-                        <div className="chat-view__share-head">
-                          <p className="chat-view__share-eyebrow">Shared Item</p>
-                          <span className="chat-view__share-badge">{m.item?.cat || 'Item'}</span>
-                        </div>
-                        <div className="chat-view__share-media">
-                          <img src={m.item?.img} alt={m.item?.name || 'Shared item'} />
-                          <div className="chat-view__share-overlay">
-                            <button
-                              onClick={() => {
-                                if (m.item?.id?.startsWith('recipe')) setTab('bites');
-                                else if (m.item?.id?.startsWith('video')) setTab('trims');
-                                else setTab('scout');
-                              }}
-                              className="chat-view__share-view-btn"
-                            >
-                              <Eye size={18} />
-                            </button>
-                          </div>
-                        </div>
-                        <div>
-                          <p className="chat-view__share-title">{m.item?.name}</p>
-                          <p className="chat-view__share-sub">Sent via Fuzo Studio</p>
-                        </div>
-                        <div className="chat-view__share-actions">
-                          <button
-                            onClick={() => {
-                              if (m.item?.id?.startsWith('recipe')) setTab('bites');
-                              else if (m.item?.id?.startsWith('video')) setTab('trims');
-                              else setTab('scout');
-                            }}
-                            className="chat-view__share-action"
-                          >
-                            <div className="chat-view__share-action-icon"><Eye size={14} /></div>
-                            <span className="chat-view__share-action-label">View</span>
-                          </button>
-                          <button
-                            onClick={() => { if (m.item) onSave(m.item); }}
-                            className="chat-view__share-action"
-                          >
-                            <div className="chat-view__share-action-icon"><Bookmark size={14} /></div>
-                            <span className="chat-view__share-action-label">Save</span>
-                          </button>
-                          <button
-                            onClick={() => { if (m.item) onShareRequest(m.item); }}
-                            className="chat-view__share-action"
-                          >
-                            <div className="chat-view__share-action-icon"><Share2 size={14} /></div>
-                            <span className="chat-view__share-action-label">Share</span>
-                          </button>
-                        </div>
-                      </div>
-                    ) : m.type === 'event' && m.item ? (
-                      <EventInviteCard
-                        messageId={m.id}
-                        userId={authUser?.id}
-                        event={m.item}
-                        role={m.role}
-                      />
-                    ) : m.text}
-                  </div>
-                  {m.role === 'user' && (
-                    <div className="chat-view__status-row">{getMessageStatusIcon(m.status)}</div>
-                  )}
-                </div>
-              ))}
-              {isTyping && (
-                <div className="chat-view__typing">
-                  <div className="chat-view__typing-dots">
-                    <div className="chat-view__typing-dot" style={{ animationDelay: '0ms' }} />
-                    <div className="chat-view__typing-dot" style={{ animationDelay: '150ms' }} />
-                    <div className="chat-view__typing-dot" style={{ animationDelay: '300ms' }} />
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} style={{ height: '0.5rem' }} />
-            </div>
-
-            {showEventCreate && (
-              <EventCreateModal
-                onClose={() => setShowEventCreate(false)}
-                onSubmit={sendEventInvite}
-              />
-            )}
-
-            {/* Conversation Composer */}
-            <footer className="chat-view__composer">
-              <button
-                onClick={() => setShowEventCreate(true)}
-                disabled={isGated}
-                className="chat-view__composer-icon-btn"
-              >
-                <CalendarIcon size={18} />
-              </button>
-              <textarea
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                  }
-                }}
-                placeholder={isGated ? 'Waiting on a friend request...' : 'Type a message...'}
-                disabled={isGated}
-                className="chat-view__composer-input chat-hide-scrollbar"
-                rows={1}
-                style={{
-                  height: draft ? 'auto' : undefined,
-                }}
-              />
-              <button
-                onClick={sendMessage}
-                disabled={isGated || !draft.trim()}
-                className="chat-view__composer-send"
-              >
-                <Send size={18} />
-              </button>
-            </footer>
+            {loadError && <p className="fz-chat-pane__error" role="alert">{loadError}</p>}
           </div>
         )}
       </div>
+
+      {newChatOpen && (
+        <NewChatModal
+          userId={userId}
+          friends={friends}
+          blockedIds={blockedIds}
+          onClose={() => setNewChatOpen(false)}
+          onOpenDm={openDmWithFriend}
+          onCreateGroup={createGroup}
+        />
+      )}
+
+      {viewingCard && (
+        <FoodCardDetailModal
+          card={viewingCard}
+          currentUserId={userId}
+          onClose={() => setViewingCard(null)}
+          onUpdated={(updated) => setViewingCard(updated)}
+        />
+      )}
+
+      {notice && (
+        <DialogShell title={notice.title} onClose={() => setNotice(null)}>
+          <p className="fz-chat-dialog__text">{notice.body}</p>
+          <div className="fz-chat-dialog__actions">
+            <button type="button" className="fz-chat-pill" onClick={() => setNotice(null)}>Close</button>
+            {notice.action && <button type="button" className="fz-chat-pill fz-chat-pill--accent" onClick={() => { const a = notice.action; setNotice(null); a?.onClick(); }}>{notice.action.label}</button>}
+          </div>
+        </DialogShell>
+      )}
     </div>
   );
 };

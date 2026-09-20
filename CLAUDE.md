@@ -1,4 +1,8 @@
 @AGENTS.md
+@DESIGN_SYSTEM.md
+
+## Design
+All UI must follow the design system in DESIGN_SYSTEM.md (source of truth: the /profile page, `src/scss/_profile.scss`).
 
 ## graphify
 

@@ -4,41 +4,23 @@ import { useEffect } from 'react';
 
 export default function V6Scripts() {
   useEffect(() => {
-    // ─── HERO SLIDES ───
-    let curHS = 0;
+    // ─── HERO BODY FADE ───
+    // Used to also cross-fade between two background video slides (hs0/hs1)
+    // and their dot indicators - both replaced by HeroScene's 3D flythrough.
+    // The scroll-driven fade/lift on the hero copy itself is unrelated to
+    // that background and still applies against #hero's 320vh pin.
     function heroLogic(sy: number) {
       const heroEl = document.getElementById('hero');
-      const hslides = [
-        document.getElementById('hs0'),
-        document.getElementById('hs1')
-      ];
-      const hdotsEl = document.querySelectorAll('.hdot');
       const hBody = document.getElementById('hBody');
 
-      if (!heroEl || !hBody || !hslides[0] || !hslides[1]) return;
+      if (!heroEl || !hBody) return;
 
       const top = heroEl.offsetTop;
       const h = heroEl.offsetHeight;
       const wH = window.innerHeight;
 
       const p = Math.max(0, Math.min((sy - top) / Math.max(1, h - wH), 1));
-      const idx = Math.min(1, Math.floor(p * 2));
-      const lp = (p * 2) % 1;
-      
-      if (idx !== curHS) {
-        hslides[curHS]?.classList.remove('on');
-        hdotsEl[curHS]?.classList.remove('on');
-        curHS = idx;
-        hslides[curHS]?.classList.add('on');
-        hdotsEl[curHS]?.classList.add('on');
-      }
-      
-      hslides.forEach((s, i) => {
-        if (s) {
-          s.style.transform = i === idx ? `scale(${1.1 - lp * .1})` : 'scale(1.08)';
-        }
-      });
-      
+
       const fade = Math.max(0, 1 - p * 4);
       hBody.style.opacity = fade.toString();
       hBody.style.transform = `translateY(${(1 - fade) * 36}px)`;

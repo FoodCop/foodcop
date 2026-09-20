@@ -46,6 +46,7 @@ import { ScoutDiscoveryPanel } from './ScoutDiscoveryPanel';
 import { ScoutPlaceModal } from './ScoutPlaceModal';
 import { ScoutRoutePlanner } from './ScoutRoutePlanner';
 import { ScoutAddPinModal } from './ScoutAddPinModal';
+import { ActivityEventService } from '@/lib/services/activityEventService';
 
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
 
@@ -256,6 +257,7 @@ export default function ScoutView() {
   const handleSearch = (e?: React.FormEvent, explicitQuery?: string) => {
     if (e) e.preventDefault();
     const queryToUse = explicitQuery || searchQuery;
+    if (queryToUse.trim()) ActivityEventService.track({ type: 'search', metadata: { query: queryToUse.trim() } });
     if (mapInstanceRef.current) {
       fetchPlaces(mapInstanceRef.current, queryToUse);
     }

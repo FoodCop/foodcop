@@ -33,6 +33,7 @@ export const MODULES: Module[] = [
       { id: 'q3', type: 'single', text: 'Who do you usually dine with?', options: ['Alone', 'Partner', 'Friends', 'Family', 'Colleagues'] },
       { id: 'q4', type: 'single', text: 'What type of dining do you prefer?', options: ['Takeout', 'Delivery', 'Casual Dining', 'Fine Dining', 'Mix of everything'] },
       { id: 'q5', type: 'single', text: 'How far would you travel for great food?', options: ['Under 5 km', '5-10 km', '10-25 km', '25-50 km', 'Anywhere'] },
+      { id: 'q6', type: 'scale', text: 'How important is healthy, nutritious food when you eat out?', helper: '1 = not important, 5 = very important' },
     ],
   },
   {
@@ -65,6 +66,7 @@ export const MODULES: Module[] = [
       { id: 'q3', type: 'single', text: 'On a rainy day you prefer:', options: ['Comfort food', 'Hot drinks', 'Soup', 'Street food', 'Desserts'] },
       { id: 'q4', type: 'single', text: 'Your ideal weekend food adventure:', options: ['Food truck', 'Hidden cafe', 'Fine dining', 'Ethnic cuisine', 'Local market'] },
       { id: 'q5', type: 'single', text: 'If you could eat one category forever:', options: ['Pizza', 'Burgers', 'Asian', 'Indian', 'Mediterranean', 'Desserts'] },
+      { id: 'q6', type: 'single', text: 'What do you usually crave?', options: ['Familiar favourites', 'Something new', 'Light and nutritious'] },
     ],
   },
   {
@@ -137,6 +139,7 @@ const DNA_WEIGHTS: Record<string, Record<string, Record<string, Contribution> | 
     q1: { Daily: { social: 10 }, '3–5 times a week': { social: 7 }, Rarely: { social: 1 } },
     q4: { 'Fine Dining': { luxury: 15 }, Takeout: { comfort: 8 }, 'Mix of everything': { adventure: 5 } },
     q5: { Anywhere: { adventure: 15 }, 'Under 5 km': { comfort: 5 } },
+    q6: { scale: (v: number) => ({ health: v * 4 }) },
   },
   discovery: {
     q1: { Always: { adventure: 20 }, Never: { comfort: 15 } },
@@ -145,6 +148,7 @@ const DNA_WEIGHTS: Record<string, Record<string, Record<string, Contribution> | 
   },
   mood: {
     q1: { multi: (arr: string[]) => ({ comfort: arr.length * 5 }) },
+    q6: { 'Familiar favourites': { comfort: 15 }, 'Something new': { adventure: 15 }, 'Light and nutritious': { health: 20 } },
   },
   budget: {
     q1: { '$100+': { luxury: 20 }, 'Under $15': { comfort: 10 } },
@@ -184,12 +188,37 @@ export function computeDnaScores(tp: TasteProfileState): Record<DnaAxis, number>
   return scores;
 }
 
-export const PERSONA_MAP: Record<DnaAxis, { emoji: string; title: string; desc: string }> = {
-  adventure: { emoji: '🌍', title: 'Flavor Explorer', desc: 'You love exploring bold flavors and trying new cuisines.' },
-  luxury: { emoji: '⭐', title: 'Fine Dining Devotee', desc: 'You seek out premium ingredients and elevated experiences.' },
-  comfort: { emoji: '🍲', title: 'Comfort Seeker', desc: 'You know exactly what makes a meal feel like home.' },
-  social: { emoji: '👥', title: 'Social Foodie', desc: 'Food is how you connect — sharing plates and recommendations.' },
-  health: { emoji: '🥗', title: 'Mindful Eater', desc: 'You make thoughtful, health-conscious choices.' },
+export const PERSONA_MAP: Record<DnaAxis, { emoji: string; title: string; desc: string; quote: string }> = {
+  adventure: {
+    emoji: '🌍',
+    title: 'Flavor Explorer',
+    desc: 'You love exploring bold flavors and trying new cuisines. New places, new tastes, new stories — that’s you.',
+    quote: 'You’d rather try something unfamiliar than order the same thing twice.',
+  },
+  luxury: {
+    emoji: '⭐',
+    title: 'Fine Dining Devotee',
+    desc: 'You seek out premium ingredients and elevated experiences — the meal is the occasion.',
+    quote: 'A tasting menu beats a quick bite, every time.',
+  },
+  comfort: {
+    emoji: '🍲',
+    title: 'Comfort Seeker',
+    desc: 'You know exactly what makes a meal feel like home, and you always go back for it.',
+    quote: 'The best meal is the one that feels familiar.',
+  },
+  social: {
+    emoji: '👥',
+    title: 'Social Foodie',
+    desc: 'Food is how you connect — sharing plates, swapping recommendations, planning the next outing.',
+    quote: 'A great meal is even better with people around the table.',
+  },
+  health: {
+    emoji: '🥗',
+    title: 'Mindful Eater',
+    desc: 'You make thoughtful, health-conscious choices without giving up on flavor.',
+    quote: 'You read the menu for what makes you feel good, not just what sounds good.',
+  },
 };
 
 export function personaFromScores(scores: Record<DnaAxis, number>) {

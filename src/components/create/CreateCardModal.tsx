@@ -23,11 +23,20 @@ const FAMILY_ORDER: { family: FoodCardFamily; label: string }[] = [
 
 interface CreateCardModalProps {
   onClose: () => void;
+  /** Skip the family picker and jump straight into one family's studio - used
+   * by an empty-state's "Add a recipe/place/video/post" CTA, which already
+   * knows what the user wants to create. Auto-selects the type outright when
+   * the family only has one (video), otherwise narrows step 0's grid to just
+   * that family's types. */
+  initialFamily?: FoodCardFamily;
 }
 
-export const CreateCardModal: React.FC<CreateCardModalProps> = ({ onClose }) => {
+export const CreateCardModal: React.FC<CreateCardModalProps> = ({ onClose, initialFamily }) => {
   const router = useRouter();
-  const [cardType, setCardType] = useState<FoodCardType | null>(null);
+  const familyTypes = initialFamily ? FOOD_CARD_TYPES.filter((t) => TYPE_META[t].family === initialFamily) : null;
+  const [cardType, setCardType] = useState<FoodCardType | null>(
+    familyTypes && familyTypes.length === 1 ? familyTypes[0] : null,
+  );
 
   if (cardType) {
     const family = TYPE_META[cardType].family;
@@ -55,7 +64,9 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ onClose }) => 
       <header className="studio-header">
         <div>
           <span className="studio-header__eyebrow">FUZO Studio</span>
-          <h1 className="studio-header__title">Create a Card</h1>
+          <h1 className="studio-header__title">
+            {initialFamily ? `Create a ${FAMILY_ORDER.find((f) => f.family === initialFamily)?.label}` : 'Create a Card'}
+          </h1>
         </div>
         <button onClick={onClose} aria-label="Close" className="studio-close">
           <X size={22} />
@@ -64,7 +75,7 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ onClose }) => 
 
       <div className="studio-body studio-body--scroll">
         <div className="studio-type-groups">
-          {FAMILY_ORDER.map(({ family, label }) => {
+          {(initialFamily ? FAMILY_ORDER.filter((f) => f.family === initialFamily) : FAMILY_ORDER).map(({ family, label }) => {
             const types = FOOD_CARD_TYPES.filter((t) => TYPE_META[t].family === family);
             return (
               <div key={family}>

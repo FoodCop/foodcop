@@ -169,6 +169,25 @@ export const FriendRequestService = {
   // Leaderboard's Friends tab and the card-sharing friend picker, both of
   // which only care about "who can I actually reach," not full relationship
   // state.
+  /**
+   * Accepted-friend COUNT for any user, via get_friend_count() - the raw
+   * friend_requests rows are only visible to the two people involved, so a
+   * client-side count of someone else's friends is always wrong. Falls back to
+   * counting the caller's own list (correct only for their own profile).
+   */
+  async getFriendCount(userId: string): Promise<FriendResult<number>> {
+    const client = supabase;
+    if (!client) return { success: false, error: 'Supabase is not configured' };
+    const id = userId.trim();
+    if (!id) return { success: true, data: 0 };
+
+    const { data, error } = await client.rpc('get_friend_count', { p_user: id });
+    if (!error && typeof data === 'number') return { success: true, data };
+
+    const own = await this.listAcceptedFriendIds(id);
+    return own.success ? { success: true, data: own.data?.length ?? 0 } : { success: false, error: own.error };
+  },
+
   async listAcceptedFriendIds(userId: string): Promise<FriendResult<string[]>> {
     const client = supabase;
     if (!client) {

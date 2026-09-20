@@ -5,19 +5,6 @@ export default function TasteProfile() {
   return (
     <>
       {/* ========================================
-           DISCOVER YOUR TASTE — white section
-      ======================================== */}
-      <section id="taste-intro">
-        <div className="ti-eyebrow">Your Taste · Your World</div>
-        <h2 className="ti-h">Discover Your Taste.</h2>
-        <p className="ti-sub">Find restaurants, cafés and hidden gems that match your unique taste — not just your location.</p>
-        <div className="ti-btns">
-          <a href="#final-cta" className="btn-cta"><Utensils size={16} className="hicon" /> Discover Food That Finds You</a>
-          <a href="#discover" className="btn-ghost" style={{ color: 'var(--ink)', borderColor: 'rgba(0,0,0,.2)' }}>Explore FUZO</a>
-        </div>
-      </section>
-
-      {/* ========================================
            SEC 1 — TASTE PROFILE (warm bg)
       ======================================== */}
       <section id="taste">

@@ -1,12 +1,15 @@
 @import "./variables";
 @import "bootstrap/scss/bootstrap";
+@import "./theme";
 @import "./components";
 
+@import "./industry";
 @import "./header";
 @import "./scout";
 @import "./auth";
 @import "./profile";
 @import "./dna";
+@import "./food-dna";
 @import "./feed";
 @import "./trims";
 @import "./rewards";
@@ -16,6 +19,7 @@
 @import "./dashboard";
 @import "./studio";
 @import "./chat";
+@import "./chat-app";
 @import "./leaderboard";
 @import "./discover";
 @import "./video-player";

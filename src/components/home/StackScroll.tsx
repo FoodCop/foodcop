@@ -9,7 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 // unrelated scroll mechanisms and are left out. The footer isn't included
 // either - it just scrolls over the pinned #final-cta naturally at the end.
 const STACK_IDS = [
-  'taste-intro', 'taste', 'discover', 'foodcards',
+  'taste', 'discover', 'foodcards',
   'share', 'scout', 'tako', 'emotional', 'final-cta',
 ];
 
@@ -17,8 +17,8 @@ const coverEase = gsap.parseEase('power1.inOut');
 
 // What to nudge upward during the reveal phase. Most sections wrap all
 // their content in one child div, so translating that alone reproduces an
-// internal scroll. A couple (#taste-intro, #emotional) have several direct
-// children instead, so all of them move together. If the single child is
+// internal scroll. #emotional has several direct children instead, so all
+// of them move together. If the single child is
 // itself one of the .sr/.sl/.srr/.sc scroll-reveal elements (only
 // #final-cta today), its own transform is already driving an entrance
 // fade/slide - reaching one level deeper avoids fighting that with ours.

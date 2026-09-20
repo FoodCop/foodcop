@@ -9,6 +9,7 @@ import {
   type FeedCard,
 } from '@/lib/services/recommendationService';
 import { PlateService, type PlateItemType } from '@/lib/services/plateService';
+import { ActivityEventService } from '@/lib/services/activityEventService';
 import { TYPE_META, familyOf, type FoodCardFamily } from '@/lib/types/foodCard';
 import { UserSettingsService, DEFAULT_USER_SETTINGS } from '@/lib/services/userSettingsService';
 import { createClient } from '@/lib/supabase/client';
@@ -151,7 +152,10 @@ export default function FoodCardFeed() {
     } else {
       if (dislikeEl) dislikeEl.style.opacity = '1';
       currentCard.style.animation = 'swipeLeft 0.5s forwards';
+      // Skips feed Flavor DNA / Food DNA behaviour signals (src/lib/profile/kpi).
+      ActivityEventService.track({ type: 'card_skipped', entityType: 'food_card', entityId: cards[currentIndex].card.id });
     }
+    ActivityEventService.track({ type: 'card_viewed', entityType: 'food_card', entityId: cards[currentIndex].card.id });
 
     setTimeout(() => {
       currentCard.style.display = 'none';

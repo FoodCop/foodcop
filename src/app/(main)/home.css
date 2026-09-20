@@ -43,7 +43,6 @@
 }
 .v6-page::-webkit-scrollbar{display:none;}
 /* Section padding via CSS */
-#taste-intro{padding:120px 80px 100px;}
 #taste{padding:120px 0;}
 #discover{padding:120px 0;}
 #foodcards{padding:120px 0;}
@@ -99,7 +98,7 @@ a:hover .hicon,
 /* .nav-cta:hover omitted */
 
 /* =========================================================
-   HERO — Cinematic video BG + 3 overlay slides
+   HERO — Cinematic 3D scroll flythrough (HeroScene.tsx)
 ========================================================= */
 #hero{height:320vh;position:relative;}
 .hero-pin{
@@ -107,29 +106,18 @@ a:hover .hicon,
   overflow:hidden;
   display:flex;align-items:center;justify-content:center;
 }
-/* Video background */
+/* Flat fallback fill - base color behind the 3D canvas (its fog blends
+   distant objects into this), and the only background shown when the scene
+   is skipped for prefers-reduced-motion. */
 .hero-video{
   position:absolute;inset:0;z-index:0;
   background:#0a0a0a;
-  display:flex;align-items:center;justify-content:center;
 }
-/* Cross-fading hero video slides (hs0/hs1) - video is a replaced element, so
-   the ::after gradient overlay lives on this wrapper div instead of on the
-   <video> itself (replaced elements don't render generated content). */
-.hslide{
+/* 3D canvas - see HeroScene.tsx. Decorative only, so clicks pass through to
+   whatever's visually beneath/around it. */
+.hero-scene{
   position:absolute;inset:0;z-index:1;
-  overflow:hidden;
-  opacity:0;transform:scale(1.1);
-  will-change:opacity,transform;
-  transition:opacity .05s,transform .05s;
-}
-.hslide video{
-  width:100%;height:100%;object-fit:cover;display:block;
-}
-.hslide.on{opacity:1;}
-.hslide::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(160deg,rgba(5,3,0,.65) 0%,rgba(5,3,0,.2) 40%,rgba(5,3,0,.6) 100%);
+  pointer-events:none;
 }
 
 /* Hero copy — bottom-left aligned, Apple-style */
@@ -185,12 +173,21 @@ a:hover .hicon,
 }
 .btn-ghost:hover{border-color:rgba(255,201,9,.7);color:var(--gold);transform:translateY(-3px);}
 
-.hdots{
-  position:absolute;bottom:36px;right:56px;z-index:5;
-  display:flex;gap:7px;
+/* Chapter 2 - a second beat of copy shown mid-flythrough, see the scroll
+   effect in Hero.tsx. Absolutely positioned (not a flex child of
+   .hero-pin) so it overlays independently of .hero-body's own layout;
+   opacity/transform are set imperatively by that effect, not by CSS. The
+   .warm-bg class here is only for its descendant color overrides on
+   .eyebrow/.sec-h/.sec-sub (white/gold text) - .hero-chapter2 doesn't
+   carry the .sec class those rules key their background off of, so no
+   background is applied. */
+.hero-chapter2{
+  position:absolute;inset:0;z-index:3;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 40px;
+  opacity:0;
+  pointer-events:none;
 }
-.hdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .4s var(--ease);}
-.hdot.on{width:22px;border-radius:100px;background:var(--gold);}
 
 /* =========================================================
    STACKING CARD SCROLL (Miro-style)
@@ -219,13 +216,13 @@ a:hover .hicon,
 }
 
 /* ── Sticky stack (Hero → Final CTA) ──
-   Every top-level section from #taste-intro through #final-cta (except
-   #grow) shares one containing block (.v6-page-wrapper), so each pins at
-   top:0 and naturally slides up to cover the earlier ones as the page
-   scrolls - no dimension/layout changes, position:sticky is a paint-time
-   offset only. Two sections keep their own pre-existing scroll mechanism
-   instead of this one and are left out: #hero (320vh video-crossfade
-   pin) and #grow (its own internal vstack/gcard-outer card stack).
+   Every top-level section from #taste through #final-cta (except #grow)
+   shares one containing block (.v6-page-wrapper), so each pins at top:0 and
+   naturally slides up to cover the earlier ones as the page scrolls - no
+   dimension/layout changes, position:sticky is a paint-time offset only.
+   Two sections keep their own pre-existing scroll mechanism instead of this
+   one and are left out: #hero (320vh 3D flythrough pin, see HeroScene.tsx)
+   and #grow (its own internal vstack/gcard-outer card stack).
 
    A panel taller than the viewport would otherwise get permanently
    stuck with its lower content trapped below the fold, since a stuck
@@ -238,13 +235,12 @@ a:hover .hicon,
    (footer needs a higher z-index than #final-cta since sticky/
    positioned elements always paint above static ones regardless of
    source order). */
-#taste-intro,#taste,#discover,#foodcards,#share,#scout,#tako,#emotional,#final-cta{
+#taste,#discover,#foodcards,#share,#scout,#tako,#emotional,#final-cta{
   position:sticky;
   top:0;
   transform-origin:top center;
 }
 #grow{ position:relative; }
-#taste-intro{z-index:1;}
 #taste{z-index:2;}
 #discover{z-index:3;}
 #foodcards{z-index:4;}
@@ -254,35 +250,6 @@ a:hover .hicon,
 #tako{z-index:8;}
 #emotional{z-index:9;}
 #final-cta{z-index:10;}
-
-/* =========================================================
-   DISCOVER YOUR TASTE + subtext (SECTION right after hero)
-   White background, text block
-========================================================= */
-#taste-intro{
-  background:var(--van);
-  padding:120px 80px 100px;
-  text-align:center;
-}
-.ti-eyebrow{
-  font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;
-  color:var(--cta2);font-weight:600;
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  margin-bottom:20px;
-}
-.ti-eyebrow::before,.ti-eyebrow::after{content:'';width:22px;height:1.5px;background:var(--cta2);}
-.ti-h{
-  font-family:var(--sora);
-  font-size:clamp(2.8rem,5.5vw,5.5rem);
-  font-weight:800;line-height:.92;
-  letter-spacing:-0.03em;color:var(--ink);
-  margin-bottom:20px;
-}
-.ti-sub{
-  font-size:1.1rem;font-weight:200;color:var(--gray);
-  line-height:1.8;max-width:540px;margin:0 auto;
-}
-.ti-btns{margin-top:40px;display:flex;gap:12px;justify-content:center;}
 
 /* =========================================================
    SHARED SECTION TYPOGRAPHY
@@ -839,7 +806,7 @@ footer{
   /* nav.on omitted */
   /* .nav-links omitted */
   .hero-body{padding:0 28px;margin-bottom:80px;}
-  #taste-intro{padding:80px 28px;}
+  .hero-chapter2{padding:0 28px;}
   .sec-inner-p{padding:0 28px!important;}
   footer{padding:50px 28px 36px;}
   .foot-top{flex-direction:column;}
@@ -850,8 +817,6 @@ footer{
   #grow .grow-inner{grid-template-columns:1fr;}
   /* Section section-inner padding */
   .sec-inner-p{padding:0 28px !important;}
-  /* taste-intro responsive */
-  #taste-intro{padding:80px 28px;}
   #final-cta{padding:100px 28px;}
   /* Two-col two max-width */
   .two-col{padding:0 !important;}

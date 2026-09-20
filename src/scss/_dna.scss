@@ -2,19 +2,25 @@
 // taste-profile-screen.css - trimmed to only the rules FoodDnaSection.tsx
 // actually uses (header/topnav/bottom-nav rules dropped, since Bootstrap's
 // ProfileHeader/ProfileHero already cover that chrome).
+//
+// Re-tokenized onto this app's real Direction B brand variables ($fz-ink/
+// $fz-cream/$fuzo-yellow from _variables.scss) - this partial predated the
+// 2026-07 rebrand and still had its original hand-picked purple palette
+// (#1a1025 etc.), which is why Profile looked like a different app from
+// everything built since.
 
 .section {
-  background: #fff;
+  background: $fz-paper;
+  border: 1px solid $fz-border;
   border-radius: 20px;
   margin: 12px 0;
   padding: 18px 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 .section-title {
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 0.04em;
-  color: #1a1025;
+  color: $fz-ink;
   margin-bottom: 14px;
   text-transform: uppercase;
 }
@@ -28,16 +34,56 @@
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #9b8eaa;
-  background: #f3effa;
+  color: $fz-ink-soft;
+  background: $fz-cream;
   border-radius: 999px;
   padding: 2px 8px;
   margin-left: 6px;
   vertical-align: middle;
 }
 
-// Real "Your Food Personality" + Dietary blocks, sourced from the
-// onboarding quiz result / taste_profiles row.
+// ── Hero personality card (dnaPersona - Flavor Explorer etc.) ──
+.persona-hero {
+  background: $fz-ink-card;
+  border-radius: 20px;
+  margin: 12px 0;
+  padding: 22px 20px;
+  text-align: left;
+}
+.persona-hero__label {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $fuzo-yellow;
+  margin-bottom: 8px;
+}
+.persona-hero__title {
+  font-family: $headings-font-family;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.persona-hero__desc {
+  font-size: 13px;
+  color: $fz-ink-card-soft;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.persona-hero__quote {
+  display: inline-block;
+  font-size: 12.5px;
+  font-style: italic;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 3px solid $fuzo-yellow;
+  border-radius: 0 10px 10px 0;
+  padding: 10px 14px;
+}
+
+// Legacy fallback (onboarding-quiz personality, shown only when the real 25-
+// question DNA quiz hasn't been taken yet).
 .personality-card {
   display: flex;
   align-items: center;
@@ -48,7 +94,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #f3effa;
+  background: $fz-cream;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,11 +109,11 @@
 .personality-card__title {
   font-size: 15px;
   font-weight: 900;
-  color: #1a1025;
+  color: $fz-ink;
 }
 .personality-card__desc {
   font-size: 12px;
-  color: #7c6d8a;
+  color: $fz-ink-soft;
   margin-top: 2px;
 }
 
@@ -79,8 +125,8 @@
 .dietary-chip {
   padding: 6px 12px;
   border-radius: 999px;
-  background: #f3effa;
-  color: #4a3060;
+  background: $fz-cream;
+  color: $fz-ink;
   font-size: 11.5px;
   font-weight: 800;
 }
@@ -90,17 +136,21 @@
 }
 .score-num {
   font-weight: 900;
-  color: #1a1025;
+  color: $fz-ink;
   line-height: 1;
 }
 .score-label {
   font-size: 10.5px;
-  color: #9b8eaa;
+  color: $fz-ink-soft;
   font-weight: 700;
   margin-top: 2px;
 }
 
-// Food DNA bars
+// Horizontal DNA axis bars - still used as-is by the DNA quiz's own Results
+// screen (src/components/dna-quiz/DnaQuizWizard.tsx), which keeps its own
+// local DNA_AXIS_ORDER. The redesigned Profile page below uses the vertical
+// .trait-grid/.trait-col version instead, sharing the same DNA_AXIS_META
+// colors.
 .dna-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -117,7 +167,7 @@
   gap: 7px;
   font-size: 13px;
   font-weight: 700;
-  color: #2d2040;
+  color: $fz-ink;
   .icon {
     width: 24px;
     height: 24px;
@@ -132,7 +182,7 @@
 .dna-track {
   height: 6px;
   border-radius: 4px;
-  background: #ede8f5;
+  background: $fz-cream;
   position: relative;
   overflow: hidden;
 }
@@ -144,59 +194,84 @@
 .dna-pct {
   font-size: 11.5px;
   font-weight: 800;
-  color: #7c6d8a;
+  color: $fz-ink-soft;
   text-align: right;
 }
 
-// Fingerprint
-.fp-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 320px;
-  aspect-ratio: 440/560;
-  margin: 0 auto;
+// ── Food DNA trait bars (Adventure/Social/Comfort/Luxury/Health) - vertical
+// gauge columns, one per axis. ──
+.trait-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+.trait-col {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
 }
-.fp-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  filter: blur(40px);
-  opacity: 0.35;
-  pointer-events: none;
-}
-.fp-svg {
-  position: absolute;
-  inset: 0;
+.trait-col__gauge {
   width: 100%;
-  height: 100%;
+  max-width: 34px;
+  height: 84px;
+  border-radius: 999px;
+  background: $fz-cream;
+  border: 1px solid $fz-border;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
 }
-.fp-foods {
-  position: absolute;
-  inset: 0;
+.trait-col__fill {
   width: 100%;
-  height: 100%;
+  border-radius: 999px;
+  transition: height 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.food-item {
-  position: absolute;
-  line-height: 1;
+.trait-col__pct {
+  font-size: 12px;
+  font-weight: 900;
+  color: $fz-ink;
+}
+.trait-col__label {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: $fz-ink-soft;
   text-align: center;
-  transform-origin: center center;
-  transition:
-    opacity 0.25s ease,
-    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  cursor: default;
-  user-select: none;
-  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));
-  &:hover {
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
-    z-index: 10;
-  }
+  line-height: 1.2;
 }
 
-// Two-col: Fingerprint + Flavor DNA/Cuisines
+// ── Flavor Balance radar (RadarChart.tsx) ──
+.radar-chart {
+  max-width: 260px;
+  margin: 4px auto 0;
+}
+.radar-chart__ring {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 1;
+}
+.radar-chart__spoke {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1;
+}
+.radar-chart__fill {
+  stroke-width: 1.5;
+  transition:
+    d 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    points 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.radar-chart__dot {
+  transition: cx 0.8s, cy 0.8s;
+}
+.radar-chart__label {
+  font-size: 9px;
+  font-weight: 800;
+  fill: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+// Two-col: Flavor Balance radar (dark) + Flavor DNA/Cuisines
 .two-col {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -204,16 +279,21 @@
   margin: 12px 0;
 }
 .half-section {
-  background: #fff;
+  background: $fz-paper;
+  border: 1px solid $fz-border;
   border-radius: 20px;
   padding: 14px 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  &--dark {
+    background: $fz-ink-card;
+    border-color: $fz-ink-card;
+  }
 }
 .half-title {
   font-size: 11.5px;
   font-weight: 900;
   letter-spacing: 0.04em;
-  color: #1a1025;
+  color: $fz-ink;
   margin-bottom: 10px;
   text-transform: uppercase;
 }
@@ -235,7 +315,7 @@
   &__name {
     font-size: 12px;
     font-weight: 800;
-    color: #7c6d8a;
+    color: $fz-ink-soft;
   }
   &__val {
     font-size: 12px;
@@ -245,7 +325,7 @@
 .flavor-track {
   height: 6px;
   border-radius: 4px;
-  background: #ede8f5;
+  background: $fz-cream;
   overflow: hidden;
 }
 .flavor-fill {
@@ -257,58 +337,49 @@
 .view-all {
   font-size: 11px;
   font-weight: 800;
-  color: $fuzo-yellow-ink;
+  color: $fuzo-yellow-deep;
   cursor: pointer;
 }
 
-.cuisine-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 9px;
+// ── Top Cuisines - vertical bar columns ──
+.cuisine-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 10px;
+  align-items: end;
 }
-.cuisine-rank {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #ede8f5;
-  font-size: 9.5px;
+.cuisine-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+.cuisine-col__pct {
+  font-size: 11px;
   font-weight: 900;
-  color: #7c6d8a;
+  color: $fz-ink;
+}
+.cuisine-col__gauge {
+  width: 100%;
+  max-width: 36px;
+  height: 70px;
+  border-radius: 10px 10px 4px 4px;
+  background: $fz-cream;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 18px;
-}
-.cuisine-flag {
-  font-size: 16px;
-  flex: 0 0 22px;
-}
-.cuisine-info {
-  flex: 1;
-  min-width: 0;
-}
-.cuisine-name {
-  font-size: 11.5px;
-  font-weight: 800;
-  color: #1a1025;
-}
-.cuisine-bar-wrap {
-  height: 4px;
-  border-radius: 3px;
-  background: #ede8f5;
-  margin-top: 2px;
+  align-items: flex-end;
   overflow: hidden;
 }
-.cuisine-bar {
-  height: 100%;
-  border-radius: 3px;
+.cuisine-col__fill {
+  width: 100%;
+  border-radius: 10px 10px 4px 4px;
+  transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.cuisine-pct {
+.cuisine-col__name {
   font-size: 10.5px;
   font-weight: 800;
-  color: #7c6d8a;
-  white-space: nowrap;
+  color: $fz-ink-soft;
+  line-height: 1.2;
 }
 
 // Food Stats
@@ -327,24 +398,23 @@
 .stat-num {
   font-size: 22px;
   font-weight: 900;
-  color: #1a1025;
+  color: $fz-ink;
   line-height: 1;
 }
 .stat-label {
   font-size: 10px;
-  color: #9b8eaa;
+  color: $fz-ink-soft;
   font-weight: 700;
   line-height: 1.3;
   margin-top: 3px;
 }
 
-// Match card
+// Match card / "Your Next Bite" CTA
 .match-card {
-  background: linear-gradient(135deg, #3b1f7a 0%, #5b2d9e 100%);
+  background: $fz-ink-card;
   border-radius: 20px;
   margin: 12px 0;
   padding: 18px;
-  box-shadow: 0 4px 20px rgba(60, 30, 130, 0.35);
 }
 .match-header {
   display: flex;
@@ -355,12 +425,12 @@
 .match-title {
   font-size: 13px;
   font-weight: 900;
-  color: #fff;
+  color: $fuzo-yellow;
   letter-spacing: 0.03em;
 }
 .match-sub {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.55);
+  color: $fz-ink-card-soft;
   margin-top: 2px;
 }
 .best-match {
@@ -416,8 +486,8 @@
   margin-top: 4px;
 }
 .view-rest-btn {
-  background: #fff;
-  color: #3b1f7a;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
   border: none;
   border-radius: 14px;
   padding: 10px 14px;
@@ -462,7 +532,7 @@
 .badge-label {
   font-size: 10px;
   font-weight: 800;
-  color: #4a3060;
+  color: $fz-ink;
   text-align: center;
   max-width: 56px;
   line-height: 1.3;

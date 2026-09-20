@@ -1,43 +1,511 @@
-// ==========================================
-// Leaderboard — /leaderboard
-// ==========================================
-// Built on plain Bootstrap utility classes (nav-pills, list-group, container)
-// like ProfilePage's SavedItemDetailModal - this partial only covers the
-// bespoke bits Bootstrap doesn't already provide.
+// ============================================================================
+// Leaderboard (/leaderboard) - Direction B "Soft Citrus". See DESIGN_SYSTEM.md.
+// Full-width dark hero band (title + controls | podium) over a cream page, paper
+// rows with 1px $fz-border, brand yellow for active states / leader / your row,
+// dark text on yellow, quiet motion. Tabs reuse .fz-profile-tab from Profile.
+//
+// Desktop (>= 992px): hero band spans the screen; body is two columns
+// (rankings | sticky sidebar). Below that everything stacks and the
+// "Your rank" card becomes a sticky bottom bar.
+// ============================================================================
 
-.leaderboard-hero-icon {
+$lb-ease: cubic-bezier(0.16, 1, 0.3, 1);
+$lb-page-bg: #f6f5f2; // same cream as the Profile page; set to #fff for a pure white body
+$lb-hero-bg: linear-gradient(135deg, mix(#fff, $fz-ink-card, 7%) 0%, $fz-ink-card 60%);
+
+.fz-lb {
+  background: $lb-page-bg;
+  min-height: 100vh;
+  padding-bottom: 4rem;
+
+  &__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 3vw, 2.5rem);
+  }
+}
+
+// ── Hero band ──
+.fz-lb-hero {
+  background: $lb-hero-bg;
+  color: #fff;
+  padding-top: 1.75rem;
+  overflow: hidden;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: end;
+  }
+
+  &__intro { padding-bottom: 0.5rem; }
+
+  &__stage { min-width: 0; }
+
+  &__loading {
+    height: 15rem;
+    border-radius: 18px 18px 0 0;
+    background: linear-gradient(90deg, rgba(#fff, 0.06) 25%, rgba(#fff, 0.12) 50%, rgba(#fff, 0.06) 75%);
+    background-size: 200% 100%;
+    animation: fz-lb-shimmer 1.4s linear infinite;
+  }
+
+  @media (min-width: 992px) {
+    padding-top: 3rem;
+
+    &__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 3rem; }
+    &__intro { padding-bottom: 3rem; }
+  }
+}
+
+// ── Header ──
+.fz-lb-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+
+  &__icon {
+    flex: 0 0 auto;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35);
+  }
+}
+
+.fz-lb-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $fuzo-yellow;
+}
+
+.fz-lb-title {
+  font-family: $headings-font-family;
+  font-weight: 800;
+  font-size: 2.2rem;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: #fff;
+  margin: 0.1rem 0 0;
+
+  @media (min-width: 992px) { font-size: 3.4rem; }
+}
+
+.fz-lb-sub { font-size: 0.92rem; color: $fz-ink-card-soft; margin: 0; max-width: 30rem; }
+
+// ── Controls (on the dark hero) ──
+.fz-lb-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+
+  .fz-lb-scope { padding: 0.9rem 0 0.5rem; }
+
+  // Reuse Profile's pill tabs, re-skinned for a dark surface.
+  .fz-profile-tab { background: rgba(#fff, 0.1); color: rgba(#fff, 0.85); }
+  .fz-profile-tab:hover:not(.fz-profile-tab--active) { background: rgba(#fff, 0.18); color: #fff; }
+  .fz-profile-tab--active { background: $fuzo-yellow; color: $fuzo-yellow-ink; }
+}
+
+.fz-lb-seg {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 3px;
+  border-radius: 9999px;
+  background: rgba(#fff, 0.1);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+
+  &__btn {
+    border: 0;
+    background: transparent;
+    padding: 0.42rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(#fff, 0.8);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s $lb-ease, color 0.2s;
+
+    &:hover:not(.is-active) { color: #fff; background: rgba(#fff, 0.12); }
+    &.is-active { background: $fuzo-yellow; color: $fuzo-yellow-ink; box-shadow: 0 2px 8px rgba($fuzo-yellow, 0.35); }
+  }
+}
+
+// ── Avatars ──
+.fz-lb-avatar {
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+
+  &--initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $headings-font-family;
+    font-weight: 800;
+    color: $fz-ink;
+  }
+}
+
+.fz-lb-you { font-weight: 800; color: $fuzo-yellow-deep; }
+.fz-lb-pod .fz-lb-you { color: $fuzo-yellow; }
+
+// ── Podium (sits on the hero, steps meet the band's bottom edge) ──
+.fz-lb-podium {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.5rem;
+  max-width: 640px;
+  margin-left: auto;
+}
+
+.fz-lb-pod {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0 0.25rem;
+  min-width: 0;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.25s $lb-ease;
+
+  &:hover { color: #fff; transform: translateY(-3px); }
+  &--empty { pointer-events: none; }
+
+  &__crown { font-size: 1.6rem; line-height: 1; margin-bottom: -0.15rem; animation: fz-lb-float 3s ease-in-out infinite; }
+
+  // Yellow gradient ring, same as the Profile avatar.
+  &__ring {
+    padding: 3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f1c74d, #e8b938, #f1c74d);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    margin-bottom: 0.35rem;
+
+    .fz-lb-avatar { border: 2px solid #141210; }
+  }
+
+  &__name {
+    max-width: 100%;
+    font-family: $headings-font-family;
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__pts {
+    font-family: $headings-font-family;
+    font-weight: 800;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: $fuzo-yellow;
+    small { font-size: 0.65rem; font-weight: 700; color: $fz-ink-card-soft; letter-spacing: 0.04em; }
+  }
+
+  &__level {
+    margin-top: 0.25rem;
+    padding: 0.1rem 0.6rem;
+    border-radius: 9999px;
+    background: rgba(#fff, 0.1);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $fz-ink-card-soft;
+  }
+
+  // Pedestal - taller for the leader.
+  &__step {
+    width: 100%;
+    margin-top: 0.85rem;
+    height: 3.4rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 0.5rem;
+    border-radius: 14px 14px 0 0;
+    background: rgba(#fff, 0.08);
+    font-family: $headings-font-family;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: rgba(#fff, 0.55);
+  }
+  &.is-first &__step { height: 5.2rem; background: linear-gradient(180deg, rgba($fuzo-yellow, 0.3), rgba($fuzo-yellow, 0.08)); color: $fuzo-yellow; }
+  &.is-me &__name { color: $fuzo-yellow; }
+
+  @media (min-width: 992px) {
+    &__step { height: 4rem; }
+    &.is-first &__step { height: 6.4rem; }
+  }
+}
+
+@keyframes fz-lb-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+// ── Body: rankings + sidebar ──
+.fz-lb-body {
+  display: block;
+  padding-top: 1.25rem;
+
+  // Below desktop the sidebar's children join the body's flow directly, so the
+  // "Your rank" card can stick to the bottom of the viewport across the whole list.
+  .fz-lb-side { display: contents; }
+
+  @media (min-width: 992px) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 2rem;
+    align-items: start;
+    padding-top: 2rem;
+
+    .fz-lb-side {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: sticky;
+      top: 6.5rem; // clears the sticky site header
+    }
+  }
+}
+
+.fz-lb-note {
+  margin: 0 0 0.9rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: 12px;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-deep;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.fz-lb-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 999px;
+  margin-top: 0.4rem;
+  padding: 0.55rem 1.4rem;
+  border: 0;
+  border-radius: 9999px;
   background: $fuzo-yellow;
   color: $fuzo-yellow-ink;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.3);
+  transition: transform 0.15s $lb-ease, background 0.15s;
+
+  &:hover { background: mix(#fff, $fuzo-yellow, 15%); color: $fuzo-yellow-ink; transform: translateY(-1px); }
 }
 
-.leaderboard-rank {
-  width: 2rem;
-  flex-shrink: 0;
-  text-align: center;
-  font-weight: 800;
-  font-size: 1.1rem;
-  color: #78716c;
+// ── Rows ──
+.fz-lb-list { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+
+.fz-lb-list > li {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fz-lb-in 0.45s $lb-ease forwards;
+  animation-delay: calc(var(--row-i, 0) * 45ms);
 }
 
-.leaderboard-your-rank {
-  background: #1c1917;
+@keyframes fz-lb-in { to { opacity: 1; transform: none; } }
+
+.fz-lb-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1.15rem;
+  background: $fz-paper;
+  border: 1px solid $fz-border;
+  border-radius: 18px;
+  text-decoration: none;
+  color: $fz-ink;
+  transition: transform 0.2s $lb-ease, border-color 0.2s, box-shadow 0.2s;
+
+  &:hover { color: $fz-ink; transform: translateY(-2px); border-color: $fuzo-yellow-deep; box-shadow: 0 6px 16px rgba($fz-ink, 0.07); }
+
+  &.is-me {
+    background: linear-gradient(135deg, mix(#fff, $fuzo-yellow-tint, 40%), $fz-cream);
+    border-color: $fuzo-yellow;
+  }
+
+  &__rank { flex: 0 0 2.4rem; text-align: center; font-family: $headings-font-family; font-weight: 800; font-size: 1.3rem; color: $fz-ink-soft; }
+  &__who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  &__name { font-weight: 800; font-size: 0.98rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  &__meta { font-size: 0.75rem; font-weight: 600; color: $fz-ink-soft; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  &__pts {
+    flex: 0 0 auto;
+    font-family: $headings-font-family;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: $fz-ink;
+    small { font-size: 0.68rem; font-weight: 700; color: $fz-ink-soft; letter-spacing: 0.04em; }
+  }
+}
+
+// ── Your ranking ──
+// Mobile: sticky bottom bar. Desktop: sits at the top of the sticky sidebar.
+.fz-lb-you-card {
+  position: sticky;
+  bottom: 1rem;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem 1.15rem;
+  border-radius: 20px;
+  background: $fz-ink-card;
   color: #fff;
+  box-shadow: 0 10px 28px rgba($fz-ink, 0.28);
 
-  .text-muted {
-    color: rgba(255, 255, 255, 0.6) !important;
+  @media (min-width: 992px) { position: static; margin-top: 0; padding: 1.2rem; }
+
+  &__rank {
+    flex: 0 0 auto;
+    min-width: 4.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.6rem 0.5rem;
+    border-radius: 14px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+  }
+  &__hash { font-family: $headings-font-family; font-weight: 800; font-size: 1.7rem; line-height: 1; }
+  &__label { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.8; margin-top: 0.15rem; white-space: nowrap; }
+
+  &__body { flex: 1; min-width: 0; }
+  &__top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+  &__title { font-family: $headings-font-family; font-weight: 800; font-size: 1.1rem; letter-spacing: -0.01em; }
+  &__pts {
+    font-family: $headings-font-family;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: $fuzo-yellow;
+    small { font-size: 0.65rem; font-weight: 700; color: $fz-ink-card-soft; letter-spacing: 0.04em; }
+  }
+  &__nudge { margin-top: 0.1rem; font-size: 0.8rem; font-weight: 600; color: $fuzo-yellow-pale; }
+
+  &__level {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: $fz-ink-card-soft;
+    white-space: nowrap;
+  }
+  &__track {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(#fff, 0.14);
+    overflow: hidden;
+    span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, $fuzo-yellow, $fuzo-yellow-deep); transition: width 0.8s $lb-ease; }
+  }
+}
+
+// ── Recent points (sidebar) ──
+.fz-lb-recent {
+  margin-top: 1rem;
+  padding: 1.1rem 1.2rem;
+  background: $fz-paper;
+  border: 1px solid $fz-border;
+  border-radius: 20px;
+
+  @media (min-width: 992px) { margin-top: 0; }
+
+  &__title { font-family: $headings-font-family; font-weight: 800; font-size: 1.05rem; letter-spacing: -0.01em; color: $fz-ink; margin: 0 0 0.6rem; }
+  &__empty { margin: 0; font-size: 0.82rem; color: $fz-ink-soft; }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-top: 1px solid $fz-border;
+      &:first-child { border-top: 0; }
+    }
   }
 
-  // Bootstrap's .text-primary-emphasis darkens $primary for use on light
-  // backgrounds - wrong direction on this dark bar, same fix as the app's
-  // other accent-text-on-dark-chrome spots (Rewards level card, Dashboard
-  // promo banner).
-  .text-primary-emphasis {
-    color: $fuzo-yellow-pale !important;
+  &__what {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: $fz-ink;
+    small { font-size: 0.7rem; font-weight: 600; color: $fz-ink-soft; }
   }
+
+  &__pts {
+    flex: 0 0 auto;
+    padding: 0.15rem 0.6rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+}
+
+// ── Loading skeleton ──
+.fz-lb-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  &__row {
+    height: 4.2rem;
+    border-radius: 18px;
+    background: linear-gradient(90deg, rgba($fz-ink, 0.06) 25%, rgba($fz-ink, 0.03) 50%, rgba($fz-ink, 0.06) 75%);
+    background-size: 200% 100%;
+    animation: fz-lb-shimmer 1.4s linear infinite;
+  }
+}
+
+@keyframes fz-lb-shimmer { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-lb-pod__crown, .fz-lb-hero__loading, .fz-lb-skeleton__row { animation: none; }
+  .fz-lb-list > li { animation-duration: 0.01ms; animation-delay: 0s; }
+}
+
+@media (max-width: 480px) {
+  .fz-lb-pod__name { font-size: 0.85rem; }
+  .fz-lb-pod__pts { font-size: 1.1rem; }
+  .fz-lb-you-card { gap: 0.75rem; padding: 0.85rem; }
+  .fz-lb-you-card__level span:last-child { display: none; }
+  .fz-lb-row { gap: 0.7rem; padding: 0.7rem 0.85rem; }
 }

@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { PlayCircle } from 'lucide-react';
 import type { FoodCardRecord } from '../../lib/types/foodCard';
-import { TYPE_META } from '../../lib/types/foodCard';
+import { TYPE_META, familyOf } from '../../lib/types/foodCard';
 import { foodCardService } from '../../lib/services/foodCardService';
 import { PointsService } from '../../lib/services/pointsService';
 import { ChatService } from '../../lib/services/chatService';
@@ -26,6 +27,10 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
 
   const meta = TYPE_META[current.card_type];
   const isVideo = current.card_type === 'BITE_VIDEO' && !!current.media_url;
+  const family = familyOf(current.card_type);
+  const ingredients = (current.ingredients ?? []).filter((row) => row[0]);
+  const nutrition = Object.entries(current.nutrition ?? {}).filter(([, v]) => typeof v === 'number' && v > 0);
+  const hasPlace = family === 'restaurant' && typeof current.lat === 'number' && typeof current.lng === 'number';
   const allTags = Object.values(current.tags).flat().filter((t): t is string => typeof t === 'string' && t.length > 0);
 
   const handlePublish = async () => {
@@ -149,6 +154,34 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
                     <span key={tag} className="badge bg-light text-dark border">{tag}</span>
                   ))}
                 </div>
+              )}
+
+              {family === 'recipe' && ingredients.length > 0 && (
+                <div className="mt-4">
+                  <h6 className="fw-bold text-uppercase small text-muted mb-2">Ingredients</h6>
+                  <ul className="list-unstyled mb-0">
+                    {ingredients.map(([name, qty, unit], i) => (
+                      <li key={`${name}-${i}`} className="d-flex justify-content-between border-bottom py-1">
+                        <span className="fw-semibold">{name}</span>
+                        <span className="text-muted">{[qty, unit].filter(Boolean).join(' ')}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {family === 'recipe' && nutrition.length > 0 && (
+                <div className="d-flex flex-wrap gap-2 mt-3">
+                  {nutrition.map(([key, value]) => (
+                    <span key={key} className="badge bg-warning-subtle text-dark border">{key}: {String(value)}</span>
+                  ))}
+                </div>
+              )}
+
+              {hasPlace && (
+                <Link href="/scout" className="btn btn-outline-dark btn-sm rounded-pill mt-3 fw-bold" onClick={onClose}>
+                  📍 View on map
+                </Link>
               )}
 
               {shareStatus === 'sent' && (

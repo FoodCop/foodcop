@@ -22,6 +22,13 @@ export interface UserSettings {
   showFoodDna: boolean;
   aiCardGeneration: boolean;
   useActivityForMl: boolean;
+  notifyMessages: boolean;
+  notifySocial: boolean;
+  notifyRecommendations: boolean;
+  /** Chat presence: show "Active now" to others (and see theirs). */
+  showOnlineStatus: boolean;
+  /** Chat: let people see when you've read their message (and see theirs). */
+  sendReadReceipts: boolean;
 }
 
 export const DEFAULT_USER_SETTINGS: UserSettings = {
@@ -33,6 +40,11 @@ export const DEFAULT_USER_SETTINGS: UserSettings = {
   showFoodDna: true,
   aiCardGeneration: true,
   useActivityForMl: true,
+  notifyMessages: true,
+  notifySocial: true,
+  notifyRecommendations: true,
+  showOnlineStatus: true,
+  sendReadReceipts: true,
 };
 
 interface ServiceResult<T> {
@@ -50,6 +62,11 @@ interface UserSettingsRow {
   show_food_dna: boolean;
   ai_card_generation: boolean;
   use_activity_for_ml: boolean;
+  notify_messages: boolean;
+  notify_social: boolean;
+  notify_recommendations: boolean;
+  show_online_status: boolean;
+  send_read_receipts: boolean;
 }
 
 const fromRow = (row: UserSettingsRow): UserSettings => ({
@@ -61,6 +78,11 @@ const fromRow = (row: UserSettingsRow): UserSettings => ({
   showFoodDna: row.show_food_dna,
   aiCardGeneration: row.ai_card_generation,
   useActivityForMl: row.use_activity_for_ml,
+  notifyMessages: row.notify_messages,
+  notifySocial: row.notify_social,
+  notifyRecommendations: row.notify_recommendations,
+  showOnlineStatus: row.show_online_status ?? true,
+  sendReadReceipts: row.send_read_receipts ?? true,
 });
 
 const toRow = (settings: Partial<UserSettings>) => ({
@@ -72,6 +94,11 @@ const toRow = (settings: Partial<UserSettings>) => ({
   ...(settings.showFoodDna !== undefined && { show_food_dna: settings.showFoodDna }),
   ...(settings.aiCardGeneration !== undefined && { ai_card_generation: settings.aiCardGeneration }),
   ...(settings.useActivityForMl !== undefined && { use_activity_for_ml: settings.useActivityForMl }),
+  ...(settings.notifyMessages !== undefined && { notify_messages: settings.notifyMessages }),
+  ...(settings.notifySocial !== undefined && { notify_social: settings.notifySocial }),
+  ...(settings.notifyRecommendations !== undefined && { notify_recommendations: settings.notifyRecommendations }),
+  ...(settings.showOnlineStatus !== undefined && { show_online_status: settings.showOnlineStatus }),
+  ...(settings.sendReadReceipts !== undefined && { send_read_receipts: settings.sendReadReceipts }),
 });
 
 export const UserSettingsService = {
@@ -90,15 +117,27 @@ export const UserSettingsService = {
     return { success: true, data: data ? fromRow(data as UserSettingsRow) : DEFAULT_USER_SETTINGS };
   },
 
-  /** For any user id - used by recommendation/visibility logic reading someone else's settings server- or client-side. */
-  async getForUser(userId: string): Promise<ServiceResult<UserSettings>> {
+  /**
+   * What a VISITOR may learn about another user's privacy settings: can I view
+   * this profile, and is Food DNA shown. Goes through get_profile_access()
+   * (SECURITY DEFINER) because user_settings itself is owner-only - and the
+   * "can I view" answer is computed in the database, from the same rule that
+   * gates the content tables, not re-derived in the browser.
+   * Fails CLOSED: any error means "cannot view".
+   */
+  async getProfileAccess(userId: string): Promise<{ canView: boolean; visibility: ProfileVisibility; showFoodDna: boolean }> {
+    const denied = { canView: false, visibility: 'Private' as ProfileVisibility, showFoodDna: false };
     const client = createClient();
-    if (!client) return { success: false, error: 'Supabase is not configured' };
+    if (!client) return denied;
 
-    const { data, error } = await client.from('user_settings').select('*').eq('user_id', userId).maybeSingle();
-    if (error) return { success: false, error: error.message };
-
-    return { success: true, data: data ? fromRow(data as UserSettingsRow) : DEFAULT_USER_SETTINGS };
+    const { data, error } = await client.rpc('get_profile_access', { p_owner: userId });
+    if (error) return denied;
+    const row = (Array.isArray(data) ? data[0] : data) as
+      | { out_can_view: boolean; out_visibility: ProfileVisibility; out_show_food_dna: boolean }
+      | null
+      | undefined;
+    if (!row) return denied;
+    return { canView: !!row.out_can_view, visibility: row.out_visibility, showFoodDna: !!row.out_show_food_dna };
   },
 
   async update(partial: Partial<UserSettings>): Promise<ServiceResult<null>> {

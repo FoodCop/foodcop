@@ -1,37 +1,33 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { personaFromScores, type DnaAxis } from '@/lib/recommendation/dna';
+import type { DnaAxis } from '@/lib/recommendation/dna';
+import type { FoodCardRecord, FlavorAxis } from '@/lib/types/foodCard';
+import { useProfileKpis } from '@/lib/hooks/useProfileKpis';
+import { DNA_AXES, DNA_PROFILE, computePersonality, type BadgeProgress } from '@/lib/profile/kpi/compute';
+import RadarChart from './RadarChart';
 
-// Ported from the old app's dna.html ("FUZO — Taste Profile"): DNA score
-// bars, the animated fingerprint radar, Flavor DNA + Top Cuisines bars, Food
-// Stats counters, Match card, and Badges row. Uses the same demo/fallback
-// values dna.html itself renders when there's no live Supabase session yet.
-//
-// Onboarding only ever collects cuisines/dietary/a quiz-derived personality
-// result - nowhere near enough to honestly back DNA-axis scores, an
-// exploration score, visit/review counters, or badges. So `personality`,
-// `cuisines`, `dietary`, and now `dnaScores` (when passed in) replace their
-// sections with real data; everything else stays the original showcase
-// content, tagged "Demo preview" so it doesn't read as this user's real
-// activity. `dnaScores` comes from the real 25-question quiz at /dna-quiz
-// (src/lib/recommendation/dna.ts's computeDnaScores) - deliberately a
-// separate persona from `personality` above (onboarding's own, simpler
-// quiz), not a replacement for it.
+// Food DNA tab - the "three stories" layout from the Profile KPI spec:
+//   1. Who am I as a food person?   Personality + Fingerprint, Food DNA, Flavor DNA, Top Cuisines
+//   2. How much have I explored?    Exploration Score + Food Stats
+//   3. What have I achieved?        Badges
+// Every number comes from src/lib/profile/kpi/compute.ts (pure, spec-driven);
+// this file only renders it. Missing data shows an honest empty/CTA state,
+// never showcase numbers.
 
 export type FoodDnaRealData = {
   cuisines?: string[];
   dietary?: string[];
   personality?: { icon: string; title: string; desc: string } | null;
   dnaScores?: Record<DnaAxis, number> | null;
+  /** Kept for callers that still pass it; the KPI engine reads its own signals now. */
+  gamification?: { points: number; level: number; counters: Record<string, number> } | null;
+  homeLocation?: { lat: number; lng: number } | null;
 };
 
-const REAL_CUISINE_COLORS = ['#7C3AED', '#F43F5E', '#22C55E', '#F59E0B', '#EF4444'];
-
 // Shared visual metadata per DNA axis - reused as-is by the real quiz's
-// Results screen (src/components/dna-quiz/DnaQuizWizard.tsx) so the real
-// bars look identical to the demo ones they replace.
+// Results screen (src/components/dna-quiz/DnaQuizWizard.tsx).
 export const DNA_AXIS_META: Record<DnaAxis, { label: string; emoji: string; iconBg: string; from: string; to: string }> = {
   adventure: { label: 'Adventure', emoji: '🌍', iconBg: '#EDE8FF', from: '#7C3AED', to: '#A855F7' },
   luxury: { label: 'Luxury', emoji: '⭐', iconBg: '#FFE8F0', from: '#F59E0B', to: '#FBBF24' },
@@ -40,368 +36,434 @@ export const DNA_AXIS_META: Record<DnaAxis, { label: string; emoji: string; icon
   health: { label: 'Health', emoji: '🥗', iconBg: '#E8F5E9', from: '#22C55E', to: '#4ADE80' },
 };
 
-const DNA_AXIS_ORDER: DnaAxis[] = ['adventure', 'luxury', 'comfort', 'social', 'health'];
-
-const DEMO_DNA_SCORES: Record<DnaAxis, number> = { adventure: 85, luxury: 60, comfort: 40, social: 75, health: 30 };
-
-const CUISINES = [
-  { name: 'Indian', flag: '🇮🇳', pct: 78, color: '#7C3AED' },
-  { name: 'Thai', flag: '🇹🇭', pct: 62, color: '#F43F5E' },
-  { name: 'Mexican', flag: '🇲🇽', pct: 48, color: '#22C55E' },
-  { name: 'Japanese', flag: '🇯🇵', pct: 40, color: '#F59E0B' },
-  { name: 'Italian', flag: '🇮🇹', pct: 35, color: '#EF4444' },
+// Flavor DNA's 10 axes (spec order + emoji). Colours are food-semantic, from the brand family.
+const FLAVOR_META: { axis: FlavorAxis; name: string; emoji: string; color: string }[] = [
+  { axis: 'spicy', name: 'Spicy', emoji: '🌶️', color: '#e8472b' },
+  { axis: 'savory', name: 'Savoury', emoji: '🍖', color: '#f2a93b' },
+  { axis: 'smoky', name: 'Smoky', emoji: '🔥', color: '#8b7355' },
+  { axis: 'tangy', name: 'Tangy', emoji: '🍋', color: '#8fbb2a' },
+  { axis: 'salty', name: 'Salty', emoji: '🧂', color: '#5b9bd5' },
+  { axis: 'crunchy', name: 'Crunchy', emoji: '🥨', color: '#d4609a' },
+  { axis: 'fresh', name: 'Fresh', emoji: '🥗', color: '#4ade80' },
+  { axis: 'bitter', name: 'Bitter', emoji: '☕', color: '#6b7280' },
+  { axis: 'creamy', name: 'Creamy', emoji: '🥛', color: '#e0b93c' },
+  { axis: 'sweet', name: 'Sweet', emoji: '🍰', color: '#ec4899' },
 ];
 
-const FLAVORS = [
-  { name: 'Spicy', value: 2, color: '#E8472B' },
-  { name: 'Savory', value: 2, color: '#F2A93B' },
-  { name: 'Smoky', value: 2, color: '#8B7355' },
-  { name: 'Tangy', value: 2, color: '#22C55E' },
-  { name: 'Salty', value: 2, color: '#5B9BD5' },
-  { name: 'Crunchy', value: 2, color: '#D4609A' },
-  { name: 'Fresh', value: 2, color: '#4ADE80' },
-  { name: 'Bitter', value: 2, color: '#6B7280' },
-  { name: 'Creamy', value: 2, color: '#FCD34D' },
-  { name: 'Sweet', value: 2, color: '#EC4899' },
-];
+const MEDALS = ['🥇', '🥈', '🥉', '4', '5'];
 
-const FOOD_EMOJI = ['🌶️', '🍛', '🧆', '🫕', '🍢', '🍗', '🌯', '🍜', '🧆', '🥙', '🫔', '🌮', '🥩', '🥩', '🥗', '🥗', '🍲', '🫚', '🫙', '🔥', '🔥', '🌶️', '🫕', '🍚'];
-
-const RINGS = [
-  { rx: 28, ry: 40, n: 4, fs: 18 },
-  { rx: 56, ry: 78, n: 7, fs: 20 },
-  { rx: 86, ry: 120, n: 11, fs: 22 },
-  { rx: 118, ry: 162, n: 14, fs: 22 },
-  { rx: 152, ry: 207, n: 17, fs: 24 },
-  { rx: 186, ry: 248, n: 20, fs: 24 },
-];
-const CX = 220;
-const CY = 280;
-
-function getRingPoints() {
-  const pts: { x: number; y: number; angle: number; fs: number }[] = [];
-  RINGS.forEach((ring) => {
-    for (let i = 0; i < ring.n; i++) {
-      const t = (i / ring.n) * 2 * Math.PI - Math.PI / 2;
-      const x = CX + ring.rx * Math.cos(t);
-      const y = CY + ring.ry * Math.sin(t);
-      const dx = -ring.rx * Math.sin(t);
-      const dy = ring.ry * Math.cos(t);
-      const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
-      pts.push({ x, y, angle, fs: ring.fs });
-    }
-  });
-  return pts;
-}
-const RING_POINTS = getRingPoints();
-
-const STATS = [
-  { emoji: '🍽️', target: 42, label: 'Restaurants Explored' },
-  { emoji: '📝', target: 18, label: 'Reviews Written' },
-  { emoji: '📍', target: 14, label: 'Avg Food Radius km' },
-  { emoji: '📅', target: 23, label: 'Days Active This Month' },
-];
-
-const BADGES = [
-  { emoji: '🌍', label: 'World Food Explorer', bg: 'linear-gradient(135deg,#4338CA,#6D28D9)' },
-  { emoji: '🌶️', label: 'Spice Warrior', bg: 'linear-gradient(135deg,#DC2626,#EF4444)' },
-  { emoji: '☕', label: 'Café Hunter', bg: 'linear-gradient(135deg,#92400E,#B45309)' },
-  { emoji: '🍔', label: 'Burger Buff', bg: 'linear-gradient(135deg,#D97706,#F59E0B)' },
-  { emoji: '🍣', label: 'Sushi Scout', bg: 'linear-gradient(135deg,#065F46,#059669)' },
-  { emoji: '🍕', label: 'Pizza Fan', bg: 'linear-gradient(135deg,#1E3A5F,#2563EB)' },
-];
-
-function useCountUp(target: number, active: boolean, duration = 1200) {
+function useCountUp(target: number, active: boolean, duration = 1100) {
   const [value, setValue] = useState(0);
   useEffect(() => {
     if (!active) return;
     let raf: number;
     const start = performance.now();
-    function tick(now: number) {
-      const progress = Math.min((now - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - progress, 4);
-      setValue(Math.round(ease * target));
-      if (progress < 1) raf = requestAnimationFrame(tick);
-    }
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      setValue(Math.round((1 - Math.pow(1 - p, 4)) * target));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [active, target, duration]);
   return value;
 }
 
-export default function FoodDnaSection({ cuisines, dietary, personality, dnaScores }: FoodDnaRealData = {}) {
+export default function FoodDnaSection({
+  cuisines,
+  dietary,
+  personality,
+  dnaScores,
+  myCards,
+  userId,
+  isOwner = true,
+}: FoodDnaRealData & { myCards?: FoodCardRecord[]; userId?: string; isOwner?: boolean }) {
   const [animate, setAnimate] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setAnimate(true), 80);
     return () => clearTimeout(t);
   }, []);
 
-  const score = useCountUp(87, animate, 1400);
-  const realCuisines = cuisines && cuisines.length > 0 ? cuisines.slice(0, 5) : null;
-  const dnaPersona = dnaScores ? personaFromScores(dnaScores) : null;
+  const { kpis, preferredCuisines, isLoading } = useProfileKpis({
+    userId,
+    isOwner,
+    cards: myCards ?? [],
+    fallbackDnaScores: dnaScores ?? null,
+    fallbackCuisines: cuisines ?? null,
+  });
+
+  const { stats, exploration, foodDna, flavorDna, topCuisines, foodStats, badges } = kpis;
+  const persona = computePersonality(foodDna);
+  const hasDna = !!foodDna.scores;
 
   return (
-    <div>
-      {personality && (
-        <div className="section">
-          <div className="section-title">Your Food Personality</div>
-          <div className="personality-card">
-            <div className="personality-card__icon">
-              <img src={personality.icon} alt="" />
-            </div>
-            <div>
-              <div className="personality-card__title">{personality.title}</div>
-              <div className="personality-card__desc">{personality.desc}</div>
-            </div>
-          </div>
+    <div className="fz-dna">
+      {/* ── Personality + Fingerprint ─────────────────────────────────── */}
+      <section className="fz-dna-hero">
+        <div className="fz-dna-hero__body">
+          <div className="fz-dna-eyebrow fz-dna-eyebrow--on-dark">Your Food Personality</div>
+          {persona && foodDna.scores ? (
+            <>
+              <h2 className="fz-dna-hero__title">
+                <span aria-hidden>{DNA_PROFILE[persona.primary].emoji}</span> {DNA_PROFILE[persona.primary].primary}
+              </h2>
+              {persona.secondary && (
+                <span className="fz-dna-hero__chip">
+                  <span aria-hidden>{DNA_PROFILE[persona.secondary].emoji}</span> Also {DNA_PROFILE[persona.secondary].secondary}
+                </span>
+              )}
+              <p className="fz-dna-hero__desc">{DNA_PROFILE[persona.primary].desc}</p>
+              <p className="fz-dna-hero__quote">“{DNA_PROFILE[persona.primary].quote}”</p>
+            </>
+          ) : personality ? (
+            <>
+              <h2 className="fz-dna-hero__title">{personality.title}</h2>
+              <p className="fz-dna-hero__desc">{personality.desc}</p>
+            </>
+          ) : (
+            <>
+              <h2 className="fz-dna-hero__title">Discover your Food DNA</h2>
+              <p className="fz-dna-hero__desc">A 2-minute quiz maps your Adventurer, Comfort, Health, Luxury and Social sides - then your real activity keeps it up to date.</p>
+            </>
+          )}
+          {isOwner && (
+            <Link href="/dna-quiz" className="fz-dna-hero__cta">
+              {hasDna ? 'Retake quiz' : 'Take the 2-min quiz →'}
+            </Link>
+          )}
         </div>
-      )}
 
-      {dietary && dietary.length > 0 && (
-        <div className="section">
-          <div className="section-title">Dietary Preferences</div>
-          <div className="dietary-chips">
-            {dietary.map((d) => (
-              <span className="dietary-chip" key={d}>
-                {d}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="section" style={{ textAlign: 'center' }}>
-        <div className="section-title" style={{ marginBottom: 0 }}>
-          <span className="demo-tag">Demo preview</span>
-        </div>
-        <div className="score-icon">🔥</div>
-        <div className="score-num" style={{ fontSize: 32 }}>
-          {score}
-        </div>
-        <div className="score-label">Exploration Score</div>
-      </div>
-
-      <div className="section">
-        <div className="section-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span>
-            Food DNA™{!dnaScores && <span className="demo-tag">Demo preview</span>}
-          </span>
-          <Link href="/dna-quiz" className="view-all">
-            {dnaScores ? 'Retake quiz' : 'Take the 2-min quiz →'}
-          </Link>
-        </div>
-        {dnaPersona && (
-          <div className="personality-card" style={{ marginBottom: 12 }}>
-            <div className="personality-card__icon">{dnaPersona.emoji}</div>
-            <div>
-              <div className="personality-card__title">{dnaPersona.title}</div>
-              <div className="personality-card__desc">{dnaPersona.desc}</div>
-            </div>
+        {foodDna.scores && (
+          <div className="fz-dna-hero__print">
+            <div className="fz-dna-hero__print-label">DNA Fingerprint</div>
+            <RadarChart
+              animate={animate}
+              fillColor="#f1c74d"
+              ariaLabel="Food DNA fingerprint"
+              axes={DNA_AXES.map((a) => ({ label: DNA_PROFILE[a].label, value: (foodDna.scores as Record<DnaAxis, number>)[a] / 100 }))}
+            />
           </div>
         )}
-        <div className="dna-grid">
-          {DNA_AXIS_ORDER.map((axis) => {
-            const meta = DNA_AXIS_META[axis];
-            const value = dnaScores ? dnaScores[axis] : DEMO_DNA_SCORES[axis];
-            return (
-              <div className="dna-row" key={axis}>
-                <div className="dna-label">
-                  <div className="icon" style={{ background: meta.iconBg }}>
-                    {meta.emoji}
-                  </div>
-                  {meta.label}
-                </div>
-                <div className="dna-track">
-                  <div
-                    className="dna-fill"
-                    style={{ width: animate ? `${value}%` : '0%', background: `linear-gradient(90deg,${meta.from},${meta.to})` }}
-                  />
-                </div>
-                <div className="dna-pct">{value}%</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      </section>
 
-      <div className="two-col">
-        <div className="half-section" style={{ background: '#0F0B1E' }}>
-          <div className="half-title" style={{ color: '#fff', textAlign: 'center' }}>
-            Food DNA™ Fingerprint<span className="demo-tag">Demo preview</span>
-          </div>
-          <Fingerprint animate={animate} />
-        </div>
-
-        <div className="half-section">
-          <div className="half-title">
-            Flavor DNA<span className="demo-tag">Demo preview</span>
-          </div>
-          <div className="flavor-rows">
-            {FLAVORS.map((f) => (
-              <div className="flavor-row" key={f.name}>
-                <div className="flavor-row__head">
-                  <span className="flavor-row__name">{f.name}</span>
-                  <span className="flavor-row__val" style={{ color: f.color }}>
-                    {f.value.toFixed(1)}
-                  </span>
-                </div>
-                <div className="flavor-track">
-                  <div
-                    className="flavor-fill"
-                    style={{ width: animate ? `${(f.value / 5) * 100}%` : '0%', background: `linear-gradient(90deg,${f.color}99,${f.color})` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-          <hr style={{ border: 'none', borderTop: '1px dashed #EDE8F5', margin: '20px 0' }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <div className="half-title" style={{ marginBottom: 0 }}>
-              Top Cuisines{!realCuisines && <span className="demo-tag">Demo preview</span>}
-            </div>
-            {!realCuisines && <span className="view-all">View all</span>}
-          </div>
-          {(realCuisines
-            ? realCuisines.map((name, i) => ({ name, pct: 100 - i * 20, color: REAL_CUISINE_COLORS[i % REAL_CUISINE_COLORS.length] }))
-            : CUISINES
-          ).map((c, i) => (
-            <div className="cuisine-row" key={c.name}>
-              <div className="cuisine-rank">{i + 1}</div>
-              {!realCuisines && <div className="cuisine-flag">{(c as (typeof CUISINES)[number]).flag}</div>}
-              <div className="cuisine-info">
-                <div className="cuisine-name">{c.name}</div>
-                <div className="cuisine-bar-wrap">
-                  <div className="cuisine-bar" style={{ width: animate ? `${c.pct}%` : '0%', background: c.color }} />
-                </div>
-              </div>
-              {!realCuisines && <div className="cuisine-pct">{c.pct}%</div>}
-            </div>
+      {dietary && dietary.length > 0 && (
+        <div className="fz-dna-chips" aria-label="Dietary preferences">
+          {dietary.map((d) => (
+            <span className="fz-dna-chip" key={d}>{d}</span>
           ))}
         </div>
-      </div>
+      )}
 
-      <div className="section">
-        <div className="section-title">
-          Food Stats<span className="demo-tag">Demo preview</span>
-        </div>
-        <div className="stats-grid">
-          {STATS.map((s) => (
-            <StatItem key={s.label} {...s} animate={animate} />
-          ))}
-        </div>
-      </div>
+      {/* ── KPI tiles ─────────────────────────────────────────────────── */}
+      <section className="fz-dna-tiles" aria-busy={isLoading}>
+        <Tile emoji="📍" label="Places Explored" value={stats.placesExplored} animate={animate} index={0} />
+        <Tile emoji="🌎" label="Cuisines Explored" value={stats.cuisinesExplored} animate={animate} index={1} />
+        <Tile emoji="🔖" label="Food Cards Saved" value={stats.cardsSaved} animate={animate} index={2} />
+        <Tile emoji="⭐" label="Reviews Posted" value={stats.reviewsPosted} animate={animate} index={3} />
+        <Tile emoji="🎬" label="Content Created" value={stats.contentCreated} animate={animate} index={4} />
+        <Tile emoji="🔗" label="Food Shared" value={stats.foodShared} animate={animate} index={5} />
+      </section>
 
-      <div className="match-card">
-        <div className="match-header">
-          <div>
-            <div className="match-title">
-              MATCHES YOU&rsquo;LL LOVE<span className="demo-tag" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>Demo preview</span>
-            </div>
-            <div className="match-sub">Based on your taste profile</div>
-          </div>
-          <div className="best-match">
-            <div className="best-match-label">Best Match</div>
-            <div className="best-match-pct">92%</div>
-          </div>
-        </div>
-        <div className="match-content">
-          <div className="match-thumb">🍛</div>
-          <div className="match-info">
-            <div className="match-name">The Spice Route</div>
-            <div className="match-meta">Modern Indian · 2.1 km</div>
-            <div className="match-tag">⭐ Highly matches your taste</div>
-          </div>
-          <button className="view-rest-btn" type="button">
-            View
-            <br />
-            Restaurant
-          </button>
-        </div>
-      </div>
+      {/* ── Story 1: who am I ─────────────────────────────────────────── */}
+      <StoryHeading eyebrow="Identity" title="Who you are as a food person" note="Evolves slowly" />
+      <div className="fz-dna-grid">
+        <Card title="Food DNA" className="fz-dna-card--fill" aside={foodDna.scores && foodDna.behaviourWeight > 0 ? `${Math.round(foodDna.behaviourWeight * 100)}% from your activity` : undefined}>
+          {foodDna.scores ? (
+            <ul className="fz-dna-axes">
+              {foodDna.ranked.map((axis, i) => {
+                const pct = (foodDna.scores as Record<DnaAxis, number>)[axis];
+                const role = i === 0 ? 'Primary' : persona?.secondary === axis ? 'Secondary' : null;
+                return (
+                  <li key={axis} className={`fz-dna-axis${i === 0 ? ' is-primary' : ''}`}>
+                    <span className="fz-dna-axis__icon" aria-hidden>{DNA_PROFILE[axis].emoji}</span>
+                    <div className="fz-dna-axis__main">
+                      <div className="fz-dna-axis__top">
+                        <span className="fz-dna-axis__name">
+                          {DNA_PROFILE[axis].label}
+                          {role && <span className="fz-dna-axis__role">{role}</span>}
+                        </span>
+                        <span className="fz-dna-axis__pct">{pct}<small>%</small></span>
+                      </div>
+                      <span className="fz-dna-track fz-dna-track--thick"><span className="fz-dna-fill" style={{ width: animate ? `${pct}%` : '0%' }} /></span>
+                      <span className="fz-dna-axis__trait">{DNA_PROFILE[axis].trait}</span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <Empty emoji="🧬" title="No Food DNA yet" sub={isOwner ? 'Take the quiz to see your five DNA scores.' : 'This member has not taken the quiz yet.'} />
+          )}
+        </Card>
 
-      <div className="section">
-        <div className="badges-header">
-          <div className="section-title" style={{ marginBottom: 0 }}>
-            Badges<span className="demo-tag">Demo preview</span>
-          </div>
-          <span className="view-all">View all</span>
-        </div>
-        <div className="badges-row">
-          {BADGES.map((b) => (
-            <div className="badge-item" key={b.label}>
-              <div className="badge-circle" style={{ background: b.bg }}>
-                {b.emoji}
+        <Card title="Flavor DNA" className="fz-dna-card--fill">
+          {flavorDna ? (
+            <>
+              {flavorDna.top.length > 0 && (
+                <p className="fz-dna-note">
+                  Your strongest flavours:{' '}
+                  <strong>{flavorDna.top.map((a) => FLAVOR_META.find((f) => f.axis === a)?.name).join(' · ')}</strong>
+                </p>
+              )}
+              <ul className="fz-dna-rings">
+                {/* The engine's own top-3 leads (so ties match the "strongest flavours" line), then the rest by score. */}
+                {[...FLAVOR_META]
+                  .sort((a, b) => {
+                    const ta = flavorDna.top.indexOf(a.axis);
+                    const tb = flavorDna.top.indexOf(b.axis);
+                    if (ta !== -1 || tb !== -1) return (ta === -1 ? 99 : ta) - (tb === -1 ? 99 : tb);
+                    return flavorDna.scores[b.axis] - flavorDna.scores[a.axis];
+                  })
+                  .map((f) => (
+                    <FlavorRing key={f.axis} emoji={f.emoji} name={f.name} pct={flavorDna.scores[f.axis]} color={f.color} isTop={flavorDna.top.includes(f.axis)} animate={animate} />
+                  ))}
+              </ul>
+            </>
+          ) : (
+            <Empty emoji="🌶️" title="No Flavor DNA yet" sub="Pick flavours in onboarding, save dishes or publish a card and it builds itself." />
+          )}
+        </Card>
+
+        <Card title="Top Cuisines" className="fz-dna-card--wide">
+          {topCuisines.length > 0 ? (
+            <ol className="fz-dna-cuisines">
+              {topCuisines.map((c, i) => (
+                <li key={c.name} className="fz-dna-cuisine">
+                  <span className="fz-dna-cuisine__rank" aria-hidden>{MEDALS[i]}</span>
+                  <span className="fz-dna-cuisine__name">{c.name}</span>
+                  <span className="fz-dna-track"><span className="fz-dna-fill" style={{ width: animate ? `${c.score}%` : '0%' }} /></span>
+                  <span className="fz-dna-cuisine__pct">{c.score}%</span>
+                </li>
+              ))}
+            </ol>
+          ) : preferredCuisines ? (
+            <>
+              <p className="fz-dna-note">Your preferred cuisines - visit or save places to see your real affinity.</p>
+              <div className="fz-dna-chips">
+                {preferredCuisines.slice(0, 8).map((c) => <span className="fz-dna-chip" key={c}>{c}</span>)}
               </div>
-              <div className="badge-label">{b.label}</div>
-            </div>
-          ))}
-        </div>
+            </>
+          ) : (
+            <Empty emoji="🌎" title="No cuisine data yet" sub="Visit, save or review places and your top cuisines appear here." />
+          )}
+        </Card>
       </div>
+
+      {/* ── Story 2: how much have I explored ─────────────────────────── */}
+      <StoryHeading eyebrow="Activity" title="How much you’ve explored" note="Updates as you go" />
+      <div className="fz-dna-grid">
+        <ExplorationCard exploration={exploration} animate={animate} />
+        <Card title="Food Stats">
+          <div className="fz-dna-mini-tiles">
+            <MiniTile label="Restaurants Explored" value={foodStats.restaurantsExplored} animate={animate} />
+            <MiniTile label="Reviews Written" value={foodStats.reviewsWritten} animate={animate} />
+            <MiniTile label={`Days Active in ${exploration.monthLabel}`} value={foodStats.daysActive} animate={animate} />
+          </div>
+          <p className="fz-dna-note fz-dna-note--foot">Only meaningful activity counts - saves, visits, reviews, shares and posts. Opening the app doesn’t.</p>
+        </Card>
+      </div>
+
+      {/* ── Story 3: achievements ─────────────────────────────────────── */}
+      <StoryHeading eyebrow="Achievements" title="What you’ve accomplished" action={<Link href="/rewards" className="fz-dna-link">View all rewards</Link>} />
+      <BadgeShelf badges={badges} />
+
+      {/* ── Next bite CTA ─────────────────────────────────────────────── */}
+      <section className="fz-dna-next">
+        <div>
+          <div className="fz-dna-eyebrow fz-dna-eyebrow--on-dark">Your Next Bite</div>
+          <p className="fz-dna-next__sub">We found places that match your Food DNA.</p>
+        </div>
+        <Link href="/scout" className="fz-dna-hero__cta fz-dna-hero__cta--solid">Explore Places →</Link>
+      </section>
     </div>
   );
 }
 
-function StatItem({ emoji, target, label, animate }: { emoji: string; target: number; label: string; animate: boolean }) {
-  const value = useCountUp(target, animate, 1000);
+// ───────────────────────────── building blocks ─────────────────────────────
+
+function StoryHeading({ eyebrow, title, note, action }: { eyebrow: string; title: string; note?: string; action?: React.ReactNode }) {
   return (
-    <div className="stat-item">
-      <div className="stat-icon">{emoji}</div>
-      <div className="stat-num">{value}</div>
-      <div className="stat-label">{label}</div>
+    <div className="fz-dna-story">
+      <div>
+        <div className="fz-dna-eyebrow">{eyebrow}{note ? <span className="fz-dna-eyebrow__note">· {note}</span> : null}</div>
+        <h3 className="fz-dna-story__title">{title}</h3>
+      </div>
+      {action}
     </div>
   );
 }
 
-function Fingerprint({ animate }: { animate: boolean }) {
-  const [show, setShow] = useState(false);
-  useEffect(() => {
-    if (!animate) return;
-    const t = setTimeout(() => setShow(true), 100);
-    return () => clearTimeout(t);
-  }, [animate]);
-
+function Card({ title, aside, className, children }: { title: string; aside?: string; className?: string; children: React.ReactNode }) {
   return (
-    <div className="fp-wrap">
-      <div className="fp-glow" style={{ background: 'radial-gradient(ellipse 60% 70% at 50% 50%, #E8472B55, transparent)' }} />
-      <svg className="fp-svg" viewBox="0 0 440 560" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <radialGradient id="fp-cg" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#E8472B" stopOpacity=".25" />
-            <stop offset="100%" stopColor="#E8472B" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <ellipse cx={CX} cy={CY} rx={160} ry={210} fill="url(#fp-cg)" />
-        {RINGS.map((ring, i) => (
-          <ellipse
-            key={i}
-            cx={CX}
-            cy={CY}
-            rx={ring.rx}
-            ry={ring.ry}
-            fill="none"
-            stroke="#E8472B"
-            strokeWidth={1.5}
-            opacity={0.15 + i * 0.04}
-            strokeDasharray="3 4"
+    <section className={`fz-dna-card${className ? ` ${className}` : ''}`}>
+      <div className="fz-dna-card__head">
+        <h4 className="fz-dna-card__title">{title}</h4>
+        {aside && <span className="fz-dna-card__aside">{aside}</span>}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function Empty({ emoji, title, sub }: { emoji: string; title: string; sub: string }) {
+  return (
+    <div className="fz-empty-state">
+      <div className="fz-empty-state__icon">{emoji}</div>
+      <div className="fz-empty-state__title">{title}</div>
+      <div className="fz-empty-state__sub">{sub}</div>
+    </div>
+  );
+}
+
+// Flip card: front = icon + label, back = the number. A mouse flips it on
+// hover (and back on leave); touch/pen and keyboard toggle it on tap/Enter,
+// since those have no hover. Native <button> keeps it keyboard-operable;
+// aria-pressed tells assistive tech which side is showing. The count-up runs
+// each time the back comes into view.
+function Tile({ emoji, label, value, animate, index }: { emoji: string; label: string; value: number | null; animate: boolean; index: number }) {
+  const [flipped, setFlipped] = useState(false);
+  const inputKind = useRef<'mouse' | 'other'>('other');
+  const shown = useCountUp(value ?? 0, flipped && value != null, 900);
+  return (
+    <button
+      type="button"
+      className={`fz-dna-tile${flipped ? ' is-flipped' : ''}${animate ? ' is-in' : ''}`}
+      style={{ ['--tile-i' as string]: index }}
+      aria-pressed={flipped}
+      aria-label={`${label}: ${flipped ? (value == null ? 'not available' : value) : 'activate to reveal'}`}
+      onPointerEnter={(e) => {
+        inputKind.current = e.pointerType === 'mouse' ? 'mouse' : 'other';
+        if (e.pointerType === 'mouse') setFlipped(true);
+      }}
+      onPointerLeave={(e) => { if (e.pointerType === 'mouse') setFlipped(false); }}
+      onPointerDown={(e) => { inputKind.current = e.pointerType === 'mouse' ? 'mouse' : 'other'; }}
+      onKeyDown={() => { inputKind.current = 'other'; }}
+      onBlur={() => { if (inputKind.current !== 'mouse') setFlipped(false); }}
+      // A mouse click would otherwise flip the card straight back while hovering.
+      onClick={() => { if (inputKind.current !== 'mouse') setFlipped((f) => !f); }}
+    >
+      <span className="fz-dna-tile__inner">
+        <span className="fz-dna-tile__face fz-dna-tile__front">
+          <span className="fz-dna-tile__icon" aria-hidden>{emoji}</span>
+          <span className="fz-dna-tile__label">{label}</span>
+          <span className="fz-dna-tile__hint" aria-hidden>
+            <span className="fz-dna-tile__hint--touch">Tap to reveal</span>
+            <span className="fz-dna-tile__hint--hover">Hover to reveal</span>
+          </span>
+        </span>
+        <span className="fz-dna-tile__face fz-dna-tile__back" aria-hidden>
+          <span className="fz-dna-tile__num">{value == null ? '—' : shown}</span>
+          <span className="fz-dna-tile__label">{label}</span>
+          {value == null && <span className="fz-dna-tile__hint">Only visible to the owner</span>}
+        </span>
+      </span>
+    </button>
+  );
+}
+
+function MiniTile({ label, value, animate }: { label: string; value: number; animate: boolean }) {
+  const shown = useCountUp(value, animate);
+  return (
+    <div className="fz-dna-mini">
+      <div className="fz-dna-mini__num">{shown}</div>
+      <div className="fz-dna-mini__label">{label}</div>
+    </div>
+  );
+}
+
+// One flavour as a progress ring with its emoji in the centre. The top three
+// get a tinted card so the "strongest flavours" line is visible at a glance.
+const RING_R = 25;
+const RING_C = 2 * Math.PI * RING_R;
+function FlavorRing({ emoji, name, pct, color, isTop, animate }: { emoji: string; name: string; pct: number; color: string; isTop: boolean; animate: boolean }) {
+  return (
+    <li className={`fz-dna-ring${isTop ? ' is-top' : ''}`} style={{ ['--ring-color' as string]: color }} title={`${name} ${pct}%`}>
+      <span className="fz-dna-ring__dial">
+        <svg viewBox="0 0 60 60" aria-hidden>
+          <circle className="fz-dna-ring__track" cx="30" cy="30" r={RING_R} />
+          <circle
+            className="fz-dna-ring__arc"
+            cx="30"
+            cy="30"
+            r={RING_R}
+            strokeDasharray={RING_C}
+            strokeDashoffset={animate ? RING_C * (1 - pct / 100) : RING_C}
           />
+        </svg>
+        <span className="fz-dna-ring__emoji" aria-hidden>{emoji}</span>
+      </span>
+      <span className="fz-dna-ring__name">{name}</span>
+      <span className="fz-dna-ring__pct">{pct}%</span>
+    </li>
+  );
+}
+
+function ExplorationCard({ exploration, animate }: { exploration: ReturnType<typeof useProfileKpis>['kpis']['exploration']; animate: boolean }) {
+  const score = useCountUp(exploration.score, animate, 1300);
+  const { deltaPct } = exploration;
+  return (
+    <Card title="Exploration Score">
+      <div className="fz-dna-explore">
+        <div className="fz-dna-explore__score">
+          <span className="fz-dna-explore__num">{score}</span>
+          <span className="fz-dna-explore__of">/ 100</span>
+        </div>
+        <div className="fz-dna-explore__meta">
+          <div className="fz-dna-explore__month">This month · {exploration.monthLabel}</div>
+          {deltaPct != null ? (
+            <div className={`fz-dna-delta ${deltaPct >= 0 ? 'fz-dna-delta--up' : 'fz-dna-delta--down'}`}>
+              {deltaPct >= 0 ? '↑' : '↓'} {Math.abs(deltaPct)}% from last month
+            </div>
+          ) : (
+            <div className="fz-dna-delta">No score last month yet</div>
+          )}
+        </div>
+      </div>
+      <div className="fz-dna-bars fz-dna-bars--tight">
+        {exploration.breakdown.map((row) => (
+          <div className="fz-dna-bar" key={row.key}>
+            <span className="fz-dna-bar__label">{row.label}</span>
+            <span className="fz-dna-track"><span className="fz-dna-fill" style={{ width: animate ? `${(row.value / row.max) * 100}%` : '0%' }} /></span>
+            <span className="fz-dna-bar__pct">{row.value}/{row.max}</span>
+          </div>
         ))}
-      </svg>
-      <div className="fp-foods">
-        {RING_POINTS.map((pt, i) => (
-          <div
-            key={i}
-            className="food-item"
-            title={FOOD_EMOJI[i % FOOD_EMOJI.length]}
-            style={{
-              left: `${(pt.x / 440) * 100}%`,
-              top: `${(pt.y / 560) * 100}%`,
-              fontSize: pt.fs,
-              opacity: show ? 1 : 0,
-              transform: `translate(-50%,-50%) rotate(${pt.angle.toFixed(1)}deg) scale(${show ? 1 : 0})`,
-              transitionDelay: `${i * 14}ms`,
-            }}
-          >
-            {FOOD_EMOJI[i % FOOD_EMOJI.length]}
+      </div>
+    </Card>
+  );
+}
+
+function BadgeShelf({ badges }: { badges: BadgeProgress[] }) {
+  const earned = badges.filter((b) => b.earned);
+  // Next-up: the closest unearned badge in each group, so progress feels reachable.
+  const nextUp = Object.values(
+    badges.filter((b) => !b.earned).reduce<Record<string, BadgeProgress>>((acc, b) => {
+      const best = acc[b.group];
+      if (!best || b.current / b.target > best.current / best.target) acc[b.group] = b;
+      return acc;
+    }, {}),
+  );
+
+  return (
+    <div className="fz-dna-card">
+      {earned.length === 0 && (
+        <p className="fz-dna-note">No badges yet - your first is a few places away.</p>
+      )}
+      <div className="fz-dna-badges">
+        {earned.map((b) => (
+          <div className="fz-dna-badge fz-dna-badge--earned" key={b.id} title={b.requirement}>
+            <span className="fz-dna-badge__icon" aria-hidden>{b.emoji}</span>
+            <span className="fz-dna-badge__title">{b.title}</span>
+            <span className="fz-dna-badge__req">{b.group}</span>
+          </div>
+        ))}
+        {nextUp.map((b) => (
+          <div className="fz-dna-badge fz-dna-badge--locked" key={b.id} title={b.requirement}>
+            <span className="fz-dna-badge__icon" aria-hidden>{b.emoji}</span>
+            <span className="fz-dna-badge__title">{b.title}</span>
+            <span className="fz-dna-badge__req">{b.requirement}</span>
+            <span className="fz-dna-badge__progress">
+              <span style={{ width: `${Math.min(100, (b.current / b.target) * 100)}%` }} />
+            </span>
           </div>
         ))}
       </div>

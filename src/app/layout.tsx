@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import Script from "next/script";
-import { barlowCondensed, hankenGrotesk } from "@/lib/font";
+import { barlow, barlowCondensed, hankenGrotesk } from "@/lib/font";
 
 // Master stylesheet (Bootstrap + our own variables/partials) - the ONE design
 // system for the whole app. See docs/plan: components are being re-skinned
@@ -39,7 +39,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const { data } = await supabase.auth.getUser();
 
   return (
-    <html lang="en" className={`${barlowCondensed.variable} ${hankenGrotesk.variable}`}>
+    <html
+      lang="en"
+      className={`${barlowCondensed.variable} ${hankenGrotesk.variable} ${barlow.variable}`}
+    >
       <body>
         <AuthProvider initialUser={data.user}>
           {children}

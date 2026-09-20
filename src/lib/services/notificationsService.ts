@@ -55,6 +55,12 @@ export const NotificationsService = {
     const client = createClient();
     if (!client) return { success: false, error: 'Supabase is not configured' };
 
+    // Settings > Notifications > Social: when off, friend-request activity is
+    // left out of the feed (Messages / Recommendations have no notification
+    // source yet, so those two switches have nothing to gate).
+    const { data: prefs } = await client.from('user_settings').select('notify_social').eq('user_id', userId).maybeSingle();
+    const notifySocial = prefs?.notify_social ?? true;
+
     const [requestsResult, pointsResult] = await Promise.all([
       client
         .from('friend_requests')
@@ -83,7 +89,7 @@ export const NotificationsService = {
 
     const notifications: AppNotification[] = [];
 
-    for (const r of requests) {
+    for (const r of notifySocial ? requests : []) {
       const isIncoming = r.requested_id === userId;
       const otherId = isIncoming ? r.requester_id : r.requested_id;
       const other = usersById.get(otherId);
@@ -137,7 +143,10 @@ export const NotificationsService = {
     const client = createClient();
     if (!client) return false;
 
-    const { data: userRow } = await client.from('users').select('notifications_seen_at').eq('id', userId).maybeSingle();
+    const { data: prefs } = await client.from('user_settings').select('notify_social').eq('user_id', userId).maybeSingle();
+    const notifySocial = prefs?.notify_social ?? true;
+
+    const { data: userRow } = await client.from('my_private_profile').select('notifications_seen_at').maybeSingle();
     const seenAt = userRow?.notifications_seen_at as string | null | undefined;
 
     const pendingQuery = client
@@ -164,7 +173,7 @@ export const NotificationsService = {
       acceptedQuery,
     ]);
 
-    return (pendingCount || 0) > 0 || (pointsCount || 0) > 0 || (acceptedCount || 0) > 0;
+    return (notifySocial && ((pendingCount || 0) > 0 || (acceptedCount || 0) > 0)) || (pointsCount || 0) > 0;
   },
 
   async markSeen(userId: string): Promise<void> {

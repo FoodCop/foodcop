@@ -4,11 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Users } from 'lucide-react';
 import { ChatService, type ChatContact, type ChatGroup } from '../../lib/services/chatService';
 import { FriendRequestService } from '../../lib/services/friendRequestService';
-
-// Same placeholder used for groups with no avatar_url in the Messages inbox
-// (src/app/(main)/messages/page.tsx's GROUP_FALLBACK_AVATAR) - kept as a
-// local copy since that constant isn't exported.
-const GROUP_FALLBACK_AVATAR = 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=150&q=80';
+import ChatAvatar from './ChatAvatar';
 
 export type ShareTarget =
   | { type: 'dm'; friend: ChatContact }
@@ -84,12 +80,7 @@ export default function FriendPickerModal({ currentUserId, onClose, onPick }: Fr
                             className="btn w-100 d-flex align-items-center gap-3 text-start p-2"
                             onClick={() => onPick({ type: 'group', group })}
                           >
-                            <img
-                              src={group.avatarUrl || GROUP_FALLBACK_AVATAR}
-                              alt={group.name}
-                              className="rounded-circle"
-                              style={{ width: 44, height: 44, objectFit: 'cover' }}
-                            />
+                            <ChatAvatar id={group.id} name={group.name} src={group.avatarUrl ?? null} size={44} group />
                             <div>
                               <div className="fw-bold d-flex align-items-center gap-1">
                                 <Users size={14} />
@@ -115,7 +106,7 @@ export default function FriendPickerModal({ currentUserId, onClose, onPick }: Fr
                             className="btn w-100 d-flex align-items-center gap-3 text-start p-2"
                             onClick={() => onPick({ type: 'dm', friend })}
                           >
-                            <img src={friend.avatar} alt={friend.name} className="rounded-circle" style={{ width: 44, height: 44, objectFit: 'cover' }} />
+                            <ChatAvatar id={friend.id} name={friend.name} src={friend.avatar} size={44} />
                             <div>
                               <div className="fw-bold">{friend.name}</div>
                               <div className="small text-muted">@{friend.username}</div>

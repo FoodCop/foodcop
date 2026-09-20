@@ -1,0 +1,568 @@
+// ============================================================================
+// Messages (/messages) - Direction B "Soft Citrus". See DESIGN_SYSTEM.md.
+// Cream page, paper panels with 1px $fz-border, brand yellow for your bubbles /
+// active states / primary actions (dark text on it), pill controls, soft radii,
+// quiet motion. Two panes on desktop (inbox | conversation); one at a time on
+// mobile. The lock motif is deliberate: every chat is end-to-end encrypted.
+// ============================================================================
+
+$chat-ease: cubic-bezier(0.16, 1, 0.3, 1);
+$chat-online: #22c55e;
+$chat-danger-tint: #fdecec;
+
+// ── Page shell ──
+.fz-chat-page {
+  height: calc(100dvh - 84px);
+  min-height: 420px;
+  background: #f6f5f2;
+  padding: 0.75rem;
+
+  @media (max-width: 767px) { padding: 0; height: calc(100dvh - 70px); }
+}
+
+.fz-chat-loading { padding: 3rem 1rem; text-align: center; color: $fz-ink-soft; font-weight: 600; }
+
+.fz-chat {
+  display: grid;
+  grid-template-columns: 380px minmax(0, 1fr);
+  height: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  background: $fz-paper;
+  border: 1px solid $fz-border;
+  border-radius: 24px;
+  overflow: hidden;
+
+  @media (max-width: 991px) { grid-template-columns: 320px minmax(0, 1fr); }
+  @media (max-width: 767px) { grid-template-columns: minmax(0, 1fr); border-radius: 0; border: 0; }
+}
+
+.fz-chat-eyebrow { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: $fz-ink-soft; }
+
+// ── Shared controls ──
+.fz-chat-icon-btn {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: $fz-ink;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s $chat-ease;
+
+  &:hover { background: $fz-cream; }
+  &:active { transform: scale(0.94); }
+  &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+  &--accent { background: $fuzo-yellow; color: $fuzo-yellow-ink; box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35); &:hover { background: mix(#fff, $fuzo-yellow, 15%); } }
+}
+
+.fz-chat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1.05rem;
+  border: 0;
+  border-radius: 9999px;
+  background: #eae5dc;
+  color: #443e35;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s $chat-ease, box-shadow 0.15s;
+
+  &:hover:not(:disabled) { background: #ded7cb; color: $fz-ink; transform: translateY(-1px); }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  &--accent { background: $fuzo-yellow; color: $fuzo-yellow-ink; box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.3); &:hover:not(:disabled) { background: mix(#fff, $fuzo-yellow, 15%); color: $fuzo-yellow-ink; } }
+  &--danger { background: $danger; color: #fff; &:hover:not(:disabled) { background: darken($danger, 6%); color: #fff; } }
+  &--muted { background: transparent; color: $fz-ink-soft; cursor: default; &:hover { background: transparent; transform: none; } }
+}
+
+.fz-chat-search {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 1rem 0.6rem;
+  padding: 0 0.9rem;
+  height: 42px;
+  border-radius: 9999px;
+  background: $fz-cream;
+  border: 1px solid transparent;
+  color: $fz-ink-soft;
+  transition: border-color 0.15s, background 0.15s;
+
+  &:focus-within { background: #fff; border-color: $fuzo-yellow; }
+  input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 0.88rem; color: $fz-ink; }
+  &--modal { margin: 0 0 0.75rem; }
+}
+
+.fz-chat-tabs {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0 1rem 0.75rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+  &--modal { padding: 0 0 0.85rem; }
+}
+
+.fz-chat-tab {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.38rem 0.95rem;
+  border: 0;
+  border-radius: 9999px;
+  background: #eae5dc;
+  color: #443e35;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s $chat-ease;
+
+  &:hover:not(.is-active) { background: #ded7cb; }
+  &.is-active { background: $fuzo-yellow; color: $fuzo-yellow-ink; box-shadow: 0 2px 8px rgba($fuzo-yellow, 0.3); }
+  &__badge { min-width: 18px; height: 18px; padding: 0 5px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; background: $fz-ink; color: $fuzo-yellow; font-size: 0.66rem; font-weight: 800; }
+}
+
+.fz-chat-skeleton {
+  height: 3.6rem;
+  margin: 0 1rem 0.5rem;
+  border-radius: 16px;
+  background: linear-gradient(90deg, rgba($fz-ink, 0.06) 25%, rgba($fz-ink, 0.03) 50%, rgba($fz-ink, 0.06) 75%);
+  background-size: 200% 100%;
+  animation: fz-chat-shimmer 1.4s linear infinite;
+  &--right { width: 60%; margin-left: auto; }
+}
+@keyframes fz-chat-shimmer { to { background-position: -200% 0; } }
+
+// ── Avatar ──
+.fz-chat-avatar {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+
+  &__img { display: block; border-radius: 50%; object-fit: cover;
+    &--initials { display: flex; align-items: center; justify-content: center; font-family: $headings-font-family; font-weight: 800; color: $fz-ink; } }
+
+  &__online { position: absolute; right: 0; bottom: 0; width: 12px; height: 12px; border-radius: 50%; background: $chat-online; border: 2px solid $fz-paper; }
+}
+
+// ── Inbox ──
+.fz-chat-inbox {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid $fz-border;
+  background: $fz-paper;
+
+  @media (max-width: 767px) { border-right: 0; &.is-hidden-mobile { display: none; } }
+
+  &__head { display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 1rem 0.8rem; }
+  &__title { font-family: $headings-font-family; font-weight: 800; font-size: 1.9rem; letter-spacing: -0.02em; line-height: 1.05; color: $fz-ink; margin: 0.1rem 0 0; }
+  &__list { flex: 1; min-height: 0; overflow-y: auto; padding: 0.15rem 0.5rem 1rem; }
+}
+
+.fz-chat-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: $fz-cream; }
+  &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: -2px; }
+  &.is-active { background: $fuzo-yellow-tint; }
+
+  &__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+  &__top, &__bottom { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  &__name { font-weight: 800; font-size: 0.95rem; color: $fz-ink; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  &__time { flex: 0 0 auto; font-size: 0.7rem; font-weight: 600; color: $fz-ink-soft; }
+  &__preview { flex: 1; min-width: 0; font-size: 0.82rem; color: $fz-ink-soft; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  &__you { color: $fz-ink-soft; }
+  &__empty { display: inline-flex; align-items: center; gap: 0.3rem; font-style: italic; }
+  &__unread { flex: 0 0 auto; min-width: 20px; height: 20px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; background: $fuzo-yellow; color: $fuzo-yellow-ink; font-size: 0.7rem; font-weight: 800; }
+
+  &.has-unread &__name, &.has-unread &__preview { color: $fz-ink; font-weight: 800; }
+  &.has-unread &__time { color: $fuzo-yellow-deep; font-weight: 800; }
+}
+
+.fz-chat-request {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.75rem;
+  margin-bottom: 0.4rem;
+  border: 1px solid $fz-border;
+  border-radius: 16px;
+  background: $fz-paper;
+
+  &__who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  &__name { font-weight: 800; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  &__sub { font-size: 0.74rem; color: $fz-ink-soft; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  &__actions { display: flex; flex-direction: column; gap: 0.3rem; .fz-chat-pill { padding: 0.3rem 0.85rem; font-size: 0.75rem; justify-content: center; } }
+}
+
+// ── Conversation pane ──
+.fz-chat-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: #fff;
+
+  @media (max-width: 767px) { display: none; &.is-active { display: flex; } }
+
+  &__empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 2rem;
+    text-align: center;
+    background: radial-gradient(circle at 50% 35%, rgba($fuzo-yellow, 0.12), transparent 60%), $fz-cream;
+
+    h2 { font-family: $headings-font-family; font-weight: 800; font-size: 1.6rem; letter-spacing: -0.01em; color: $fz-ink; margin: 0.5rem 0 0; }
+    p { max-width: 24rem; margin: 0; font-size: 0.9rem; color: $fz-ink-soft; }
+  }
+  &__empty-icon { width: 84px; height: 84px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: $fuzo-yellow-tint; color: $fuzo-yellow-deep; border: 2px solid $fuzo-yellow; }
+  &__error { color: $danger !important; font-weight: 600; }
+}
+
+.fz-chat-thread {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+
+  &__head { display: flex; align-items: center; gap: 0.4rem; padding: 0.7rem 0.9rem; border-bottom: 1px solid $fz-border; background: rgba($fz-cream, 0.92); backdrop-filter: blur(10px); }
+  &__back { display: none; @media (max-width: 767px) { display: inline-flex; } }
+  &__who { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.7rem; border: 0; background: transparent; padding: 0.2rem 0.3rem; border-radius: 14px; text-align: left; cursor: pointer; &:hover { background: rgba(#fff, 0.6); } }
+  &__names { display: flex; flex-direction: column; min-width: 0; }
+  &__name { font-family: $headings-font-family; font-weight: 800; font-size: 1.1rem; letter-spacing: -0.01em; color: $fz-ink; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  &__status { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.72rem; font-weight: 600; color: $fz-ink-soft; &.is-online { color: darken($chat-online, 8%); } }
+  &__menu-wrap { position: relative; }
+
+  &__messages { flex: 1; min-height: 0; overflow-y: auto; padding: 1rem clamp(0.75rem, 3vw, 1.75rem) 0.5rem; background: #fff; }
+  &__loading { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; .fz-chat-skeleton { margin: 0; height: 2.8rem; width: 55%; } .fz-chat-skeleton--right { margin-left: auto; } }
+  &__empty { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; padding: 2.5rem 1rem; text-align: center; color: $fz-ink-soft; font-size: 0.9rem; p { margin: 0; } }
+  &__empty-icon { font-size: 2.2rem; }
+}
+
+.fz-chat-e2ee-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 1rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-deep;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.fz-chat-day { display: flex; justify-content: center; margin: 1rem 0 0.6rem; span { padding: 0.2rem 0.8rem; border-radius: 9999px; background: $fz-cream; color: $fz-ink-soft; font-size: 0.7rem; font-weight: 700; } }
+
+// ── Messages ──
+.fz-chat-msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.45rem;
+  margin-top: 0.15rem;
+  animation: fz-chat-pop 0.25s $chat-ease;
+
+  &.is-last { margin-bottom: 0.55rem; }
+  // Cards (shared items, event invites) are tall, so give them real breathing room above and below.
+  &.has-card { margin-top: 1rem; &.is-last { margin-bottom: 1rem; } }
+  &.is-mine { justify-content: flex-end; }
+
+  &__avatar { flex: 0 0 28px; width: 28px; }
+  &__col { display: flex; flex-direction: column; max-width: min(75%, 34rem); min-width: 0; }
+  &.is-mine &__col { align-items: flex-end; }
+  &__sender { margin: 0.35rem 0 0.15rem 0.5rem; font-size: 0.72rem; font-weight: 800; color: $fuzo-yellow-deep; }
+  &__line { display: flex; align-items: center; gap: 0.25rem; max-width: 100%; }
+  &.is-mine &__line { flex-direction: row-reverse; }
+
+  &__tools { position: relative; opacity: 0; transition: opacity 0.15s; }
+  &__line:hover &__tools, &__line:focus-within &__tools { opacity: 1; }
+  &__tool { width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; background: transparent; color: $fz-ink-soft; cursor: pointer; &:hover { background: $fz-cream; } }
+
+  &__meta { display: flex; align-items: center; gap: 0.35rem; margin: 0.15rem 0.4rem 0; font-size: 0.68rem; font-weight: 600; color: $fz-ink-soft; }
+  &__seen { display: inline-flex; align-items: center; gap: 0.2rem; color: darken($chat-online, 8%); font-weight: 700; }
+  &__legacy { padding: 0 0.4rem; border-radius: 9999px; background: $fz-cream; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  &__retry { display: inline-flex; align-items: center; gap: 0.25rem; border: 0; background: transparent; color: $danger; font-size: 0.72rem; font-weight: 800; cursor: pointer; }
+}
+
+@keyframes fz-chat-pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.fz-chat-bubble {
+  padding: 0.55rem 0.9rem;
+  border-radius: 18px 18px 18px 6px;
+  background: $fz-cream;
+  border: 1px solid $fz-border;
+  color: $fz-ink;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+
+  &.is-mine { border-radius: 18px 18px 6px 18px; background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; }
+  &.is-error { background: $chat-danger-tint; border-color: rgba($danger, 0.4); color: $danger; }
+  &--locked { display: inline-flex; align-items: center; gap: 0.35rem; font-style: italic; color: $fz-ink-soft; background: transparent; border-style: dashed; }
+}
+
+.fz-chat-typing { display: inline-flex; gap: 4px; margin: 0.3rem 0 0.6rem 2rem; padding: 0.6rem 0.8rem; border-radius: 16px 16px 16px 6px; background: $fz-cream; border: 1px solid $fz-border;
+  span { width: 6px; height: 6px; border-radius: 50%; background: $fz-ink-soft; animation: chat-bounce 1s infinite; &:nth-child(2) { animation-delay: 0.15s; } &:nth-child(3) { animation-delay: 0.3s; } } }
+
+// ── Shared item = iMessage-style link preview ──
+// Full-bleed cover with a huge bold headline across the top and the FUZO mark
+// bottom-right, over a caption band tinted from the cover itself. Tap opens the
+// item; Save / Share are round buttons beside it.
+.fz-chat-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 100%;
+
+  &__card {
+    display: block;
+    width: min(320px, 66vw);
+    padding: 0;
+    border: 0;
+    border-radius: 26px 26px 26px 6px;
+    overflow: hidden;
+    background: $fz-ink-card;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba($fz-ink, 0.16);
+    transition: transform 0.2s $chat-ease, box-shadow 0.2s;
+
+    &:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba($fz-ink, 0.22); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 3px; }
+  }
+
+  &__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 5 / 6;
+    background: linear-gradient(160deg, mix(#fff, $fz-ink-card, 10%), $fz-ink-card);
+    overflow: hidden;
+    > img:first-child { width: 100%; height: 100%; object-fit: cover; display: block; }
+  }
+
+  // Keeps the white headline readable on any photo.
+  &__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.12) 42%, transparent 62%); pointer-events: none; }
+
+  &__headline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.15rem 0;
+    font-family: $headings-font-family;
+    font-weight: 800;
+    font-size: clamp(2.1rem, 9.5vw, 3rem);
+    line-height: 0.95;
+    letter-spacing: -0.005em;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__mark { position: absolute; right: 0.9rem; bottom: 0.85rem; height: 26px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.4)); }
+
+  &__caption {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.1rem 0.9rem;
+    overflow: hidden;
+    isolation: isolate;
+
+    // The band is the cover, zoomed into its bottom edge and blurred: always the photo's own colours.
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -40%;
+      z-index: -2;
+      background: var(--cover, linear-gradient(160deg, #3a332b, #241f16)) center bottom / cover no-repeat;
+      filter: blur(24px) saturate(1.35);
+    }
+    &::after { content: ''; position: absolute; inset: 0; z-index: -1; background: rgba(0, 0, 0, 0.32); }
+  }
+  &__title { display: block; font-family: $headings-font-family; font-weight: 800; font-size: 1.15rem; letter-spacing: -0.01em; line-height: 1.15; color: #fff; }
+  &__sub { display: block; margin-top: 0.1rem; font-size: 0.78rem; font-weight: 600; color: rgba(255, 255, 255, 0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  &__side { display: flex; flex-direction: column; gap: 0.4rem; }
+  &__round {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: #eae5dc;
+    color: $fz-ink;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s $chat-ease;
+    &:hover { background: $fuzo-yellow; color: $fuzo-yellow-ink; transform: scale(1.06); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+// Yours: buttons on the left, sharper bottom-right corner (same tinted design).
+.fz-chat-msg.is-mine .fz-chat-link {
+  flex-direction: row-reverse;
+  &__card { border-radius: 26px 26px 6px 26px; }
+}
+
+// ── Composer + notices ──
+.fz-chat-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem calc(0.7rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid $fz-border;
+  background: #fff;
+
+  &__field { position: relative; flex: 1; min-width: 0; }
+  textarea { display: block; width: 100%; max-height: 140px; resize: none; padding: 0.65rem 1rem; border: 1px solid transparent; border-radius: 22px; background: $fz-cream; color: $fz-ink; font-size: 0.92rem; line-height: 1.35; outline: 0; transition: background 0.15s, border-color 0.15s; &:focus { background: #fff; border-color: $fuzo-yellow; } }
+  &__count { position: absolute; right: 0.9rem; bottom: -1.1rem; font-size: 0.64rem; font-weight: 700; color: $fz-ink-soft; &.is-over { color: $danger; } }
+}
+
+.fz-chat-send { flex: 0 0 auto; width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; background: $fuzo-yellow; color: $fuzo-yellow-ink; cursor: pointer; box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35); transition: transform 0.15s $chat-ease, opacity 0.15s; &:hover:not(:disabled) { transform: translateY(-1px) scale(1.04); } &:disabled { opacity: 0.4; box-shadow: none; cursor: not-allowed; } }
+
+.fz-chat-notice {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-top: 1px solid $fz-border;
+  background: $fz-cream;
+  color: $fz-ink-soft;
+  font-size: 0.82rem;
+  font-weight: 600;
+
+  &--error { background: $chat-danger-tint; color: $danger; }
+}
+
+// ── Menus + dialogs ──
+.fz-chat-menu-scrim { position: fixed; inset: 0; z-index: 20; }
+.fz-chat-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 21;
+  min-width: 190px;
+  padding: 0.35rem;
+  border: 1px solid $fz-border;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba($fz-ink, 0.16);
+  animation: fz-chat-pop 0.18s $chat-ease;
+
+  button { display: flex; align-items: center; gap: 0.5rem; width: 100%; padding: 0.55rem 0.8rem; border: 0; border-radius: 10px; background: transparent; text-align: left; font-size: 0.86rem; font-weight: 700; color: $fz-ink; cursor: pointer; &:hover { background: $fz-cream; } &.is-danger { color: $danger; } }
+  &--small { right: auto; left: 0; min-width: 130px; }
+}
+.fz-chat-msg.is-mine .fz-chat-menu--small { left: auto; right: 0; }
+
+.fz-chat-dialog-scrim { position: fixed; inset: 0; z-index: 1060; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(20, 16, 12, 0.55); backdrop-filter: blur(3px); animation: chat-fade-in 0.15s; }
+.fz-chat-dialog {
+  width: min(460px, 100%);
+  max-height: 88dvh;
+  overflow-y: auto;
+  padding: 1.2rem 1.25rem 1.3rem;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  animation: fz-chat-pop 0.22s $chat-ease;
+
+  &__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; h2 { font-family: $headings-font-family; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.01em; margin: 0; color: $fz-ink; } }
+  &__text { margin: 0 0 1rem; font-size: 0.88rem; line-height: 1.5; color: $fz-ink-soft; }
+  &__label { margin: 0.9rem 0 0.4rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: $fz-ink-soft; span { text-transform: none; letter-spacing: 0; font-weight: 700; color: $fuzo-yellow-deep; } }
+  &__input, &__textarea { width: 100%; padding: 0.65rem 0.9rem; border: 1px solid $fz-border; border-radius: 14px; background: $fz-paper; font-size: 0.9rem; color: $fz-ink; outline: 0; &:focus { border-color: $fuzo-yellow; } }
+  &__textarea { resize: none; margin-top: 0.7rem; }
+  &__error { display: flex; align-items: center; gap: 0.35rem; margin: 0.7rem 0 0; font-size: 0.8rem; font-weight: 700; color: $danger; }
+  &__actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem; }
+  &__radios { display: flex; flex-direction: column; gap: 0.35rem; }
+}
+
+.fz-chat-radio { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.85rem; border: 1px solid $fz-border; border-radius: 12px; font-size: 0.88rem; font-weight: 600; cursor: pointer; input { accent-color: $fuzo-yellow-deep; } &.is-selected { border-color: $fuzo-yellow; background: $fuzo-yellow-tint; } }
+
+.fz-chat-people { list-style: none; margin: 0; padding: 0; max-height: 46dvh; overflow-y: auto;
+  li > button, &__row { display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.55rem 0.5rem; border: 0; border-radius: 14px; background: transparent; text-align: left; cursor: pointer; &:hover { background: $fz-cream; } }
+  &__row { cursor: default; &:hover { background: transparent; } }
+  &__who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  &__name { font-weight: 800; font-size: 0.9rem; color: $fz-ink; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  &__sub { font-size: 0.74rem; color: $fz-ink-soft; }
+  &__none { padding: 1rem 0.5rem; font-size: 0.85rem; color: $fz-ink-soft; }
+  &__check { flex: 0 0 22px; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid $fz-border; }
+  &--picker li > button.is-selected { background: $fuzo-yellow-tint; .fz-chat-people__check { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; } }
+}
+
+.fz-chat-members { list-style: none; margin: 0; padding: 0; li > button { display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.55rem 0.4rem; border: 0; border-radius: 14px; background: transparent; text-align: left; cursor: pointer; &:hover { background: $fz-cream; } }
+  &__who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  &__name { font-weight: 800; font-size: 0.9rem; color: $fz-ink; }
+  &__sub { font-size: 0.74rem; color: $fz-ink-soft; }
+  &__role { padding: 0.15rem 0.6rem; border-radius: 9999px; background: $fuzo-yellow-tint; color: $fuzo-yellow-deep; font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+}
+
+// ── Secure messaging setup / unlock ──
+.fz-chat-gate { min-height: calc(100dvh - 84px); display: flex; align-items: center; justify-content: center; padding: 1.5rem 1rem; background: radial-gradient(circle at 50% 0%, rgba($fuzo-yellow, 0.16), transparent 55%), #f6f5f2;
+
+  &__card { display: flex; flex-direction: column; width: min(460px, 100%); padding: 2rem 1.75rem; border: 1px solid $fz-border; border-radius: 26px; background: $fz-paper; box-shadow: 0 18px 50px rgba($fz-ink, 0.1); }
+  &__icon { align-self: center; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: $fuzo-yellow; color: $fuzo-yellow-ink; box-shadow: 0 6px 18px rgba($fuzo-yellow, 0.4); }
+  &__title { margin: 1rem 0 0.35rem; text-align: center; font-family: $headings-font-family; font-weight: 800; font-size: 1.9rem; letter-spacing: -0.02em; line-height: 1.05; color: $fz-ink; }
+  &__sub { margin: 0 0 1rem; text-align: center; font-size: 0.9rem; line-height: 1.5; color: $fz-ink-soft; }
+  &__points { list-style: none; margin: 0 0 1.1rem; padding: 0.85rem 1rem; display: flex; flex-direction: column; gap: 0.55rem; border-radius: 16px; background: $fz-cream; li { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.82rem; font-weight: 600; color: $fz-ink; svg { flex: 0 0 auto; margin-top: 2px; color: $fuzo-yellow-deep; } } }
+  &__label { margin: 0.6rem 0 0.3rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: $fz-ink-soft; }
+  &__input { width: 100%; padding: 0.7rem 0.95rem; border: 1px solid $fz-border; border-radius: 14px; background: #fff; font-size: 0.95rem; color: $fz-ink; outline: 0; &:focus { border-color: $fuzo-yellow; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.25); } }
+  &__hint { margin: 0.4rem 0 0; font-size: 0.78rem; font-weight: 600; color: $fz-ink-soft; &--warn { color: darken($turmeric, 12%); } &--error { color: $danger; font-weight: 700; } }
+  &__check { display: flex; gap: 0.55rem; align-items: flex-start; margin: 0.9rem 0 0; font-size: 0.8rem; font-weight: 600; color: $fz-ink; input { margin-top: 3px; accent-color: $fuzo-yellow-deep; } }
+  &__btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 1.1rem; padding: 0.8rem 1rem; border: 0; border-radius: 9999px; background: $fuzo-yellow; color: $fuzo-yellow-ink; font-weight: 800; font-size: 0.95rem; cursor: pointer; box-shadow: 0 6px 18px rgba($fuzo-yellow, 0.4); transition: transform 0.15s $chat-ease, opacity 0.15s; &:hover:not(:disabled) { transform: translateY(-1px); } &:disabled { opacity: 0.5; box-shadow: none; cursor: not-allowed; } }
+  &__link { align-self: center; margin-top: 0.9rem; border: 0; background: transparent; font-size: 0.82rem; font-weight: 700; color: $fz-ink-soft; text-decoration: underline; cursor: pointer; &:hover { color: $fz-ink; } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-chat-msg, .fz-chat-menu, .fz-chat-dialog, .fz-chat-typing span, .fz-chat-skeleton { animation: none; }
+}
+
+// Optional-backup disclosure on the secure-messaging screen (one-tap setup by default).
+.fz-chat-gate__details {
+  margin-top: 1.1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  background: $fz-cream;
+
+  summary { cursor: pointer; font-size: 0.82rem; font-weight: 700; color: $fz-ink; list-style: none; &::-webkit-details-marker { display: none; } &::after { content: ' ▾'; color: $fz-ink-soft; } }
+  &[open] summary::after { content: ' ▴'; }
+  .fz-chat-gate__hint { margin: 0.6rem 0 0.2rem; }
+}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
@@ -9,6 +9,7 @@ import { primaryLinks, moreLinks, cuisines } from './navData';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { CreateCardModal } from '@/components/create/CreateCardModal';
 import { NotificationsService } from '@/lib/services/notificationsService';
+import { createClient } from '@/lib/supabase/client';
 
 // Nav drawer + dropdowns are driven entirely by React state, not Bootstrap's
 // JS (data-bs-toggle/dismiss). Bootstrap's offcanvas appends a full-viewport
@@ -21,10 +22,12 @@ import { NotificationsService } from '@/lib/services/notificationsService';
 export default function SiteHeader() {
   const { user } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<'cuisines' | 'more' | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!user?.id) {
@@ -43,6 +46,14 @@ export default function SiteHeader() {
   const closeAll = () => {
     setDrawerOpen(false);
     setOpenDropdown(null);
+    setProfileMenuOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    closeAll();
+    const supabase = createClient();
+    await supabase?.auth.signOut();
+    router.push('/login');
   };
 
   return (
@@ -53,18 +64,55 @@ export default function SiteHeader() {
             logo doesn't drift when this is empty (logged out). */}
         <div className="fz-navbar__side fz-navbar__side--start">
           {user && (
-            <Link href="/profile" className="text-dark" aria-label="Profile">
-              <div className="rounded-circle bg-light d-flex align-items-center justify-content-center overflow-hidden border fz-avatar-ring" style={{ width: 32, height: 32 }}>
-                {user.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-100 h-100 object-fit-cover" />
-                ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                )}
-              </div>
-            </Link>
+            <div className="position-relative">
+              <button
+                type="button"
+                className="btn p-0 border-0 bg-transparent"
+                aria-label="Account menu"
+                aria-expanded={profileMenuOpen}
+                onClick={() => setProfileMenuOpen((v) => !v)}
+              >
+                <div className="rounded-circle bg-light d-flex align-items-center justify-content-center overflow-hidden border fz-avatar-ring" style={{ width: 32, height: 32 }}>
+                  {user.user_metadata?.avatar_url ? (
+                    <img src={user.user_metadata.avatar_url} alt="Profile" className="w-100 h-100 object-fit-cover" />
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  )}
+                </div>
+              </button>
+
+              {profileMenuOpen && (
+                <>
+                  <div
+                    className="position-fixed top-0 start-0 w-100 h-100"
+                    style={{ zIndex: 1040 }}
+                    onClick={() => setProfileMenuOpen(false)}
+                  />
+                  <div
+                    className="position-absolute top-100 start-0 mt-2 bg-white rounded shadow-sm border py-1"
+                    style={{ zIndex: 1041, minWidth: 160 }}
+                  >
+                    <Link
+                      href="/profile"
+                      className="d-block px-3 py-2 text-dark text-decoration-none"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      type="button"
+                      className="d-block w-100 text-start bg-transparent border-0 px-3 py-2 text-dark"
+                      onClick={handleSignOut}
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           )}
         </div>
 
@@ -107,7 +155,7 @@ export default function SiteHeader() {
           </Link>
 
           {!user && (
-            <Link href="/login" className="btn btn-outline-primary btn-sm rounded-pill fw-bold px-3">
+            <Link href="/login" className="btn fz-navbar__signin btn-sm rounded-pill fw-bold px-3">
               Sign In
             </Link>
           )}
@@ -165,6 +213,9 @@ export default function SiteHeader() {
                   <Link href="/profile" className="btn btn-outline-primary w-100" onClick={closeAll}>
                     Profile
                   </Link>
+                  <button type="button" className="btn btn-outline-secondary w-100" onClick={handleSignOut}>
+                    Sign Out
+                  </button>
                 </>
               ) : (
                 <Link href="/login" className="btn btn-primary w-100" onClick={closeAll}>

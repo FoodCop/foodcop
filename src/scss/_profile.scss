@@ -1,1 +1,1425 @@
-// Profile page styling - filled in when re-skinned off Soziety's compiled CSS.
+// ============================================================================
+// Profile page – Direction B design system
+// Matches the landing page's warm-cream base, dark-gradient card style,
+// gold-pill tab system, and premium typography.
+// ============================================================================
+
+// ── Shell ──
+.profile-shell {
+  margin: 0 auto;
+  background: #f6f5f2;
+  min-height: 100vh;
+  width: 100%;
+}
+
+// ── Settings gear spin animation ──
+@keyframes profile-settings-spin {
+  to { transform: rotate(360deg); }
+}
+.profile-settings-spin {
+  animation: profile-settings-spin 0.4s ease;
+}
+
+// ============================================================================
+// TOP HEADER BAR (fallback/minimal)
+// ============================================================================
+.profile-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(251, 247, 236, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid $fz-border;
+  padding: 0.75rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__title {
+    font-family: $headings-font-family;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: $fz-ink;
+    letter-spacing: -0.01em;
+  }
+
+  &__gear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: $fz-paper;
+    border: 1px solid $fz-border;
+    cursor: pointer;
+    color: $fz-ink;
+    transition: background 0.15s, border-color 0.15s;
+
+    &:hover {
+      background: $fuzo-yellow-tint;
+      border-color: $fuzo-yellow-deep;
+    }
+  }
+}
+
+// ============================================================================
+// FULL-BLEED HERO BANNER & INTEGRATED TOP NAV
+// ============================================================================
+.fz-hero-full-banner {
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+
+  // Dark overlay gradient matching the screenshot moody dark aesthetic
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 8, 6, 0.72) 0%,
+      rgba(10, 8, 6, 0.3) 30%,
+      rgba(10, 8, 6, 0.7) 70%,
+      rgba(10, 8, 6, 0.94) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  // Top Centered Brand Logo
+  &__nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 2rem 0.5rem 2rem;
+    width: 100%;
+    margin: 0 auto;
+
+    @media (max-width: 768px) {
+      padding: 1.25rem 1rem 0.5rem 1rem;
+    }
+  }
+
+  &__logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      opacity: 0.95;
+    }
+
+    img {
+      height: 28px;
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  // Top-Left Back Arrow Button
+  &__back-btn {
+    position: absolute;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 16, 12, 0.52);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    z-index: 20;
+
+    &:hover {
+      background: $fuzo-yellow;
+      color: #241f16;
+      border-color: $fuzo-yellow;
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: 0 6px 18px rgba(241, 199, 77, 0.45);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.94);
+    }
+
+    @media (max-width: 768px) {
+      left: 1rem;
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  // Bottom Content Area
+  &__bottom {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 2rem 3rem 2.5rem 3rem;
+    width: 100%;
+    margin: 0 auto;
+
+    @media (max-width: 768px) {
+      padding: 1.5rem 1.25rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+  }
+
+  &__profile-info {
+    display: flex;
+    align-items: center;
+    gap: 1.35rem;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+
+  &__avatar-wrap {
+    position: relative;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, #f1c74d, #e8b938, #f1c74d);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #141210;
+    }
+  }
+
+  &__avatar-btn {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #1f1d1a;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  &__text-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  &__name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__name {
+    font-size: 1.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    margin: 0;
+    line-height: 1.1;
+    font-family: $headings-font-family;
+  }
+
+  &__level-badge {
+    background: #f1c74d;
+    color: #18181b;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2.5px 9px;
+    border-radius: 9999px;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &__subtitle {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.88rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  &__dot {
+    opacity: 0.5;
+  }
+
+  &__stats-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 0.2rem;
+  }
+
+  &__stat {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.72);
+
+    strong {
+      color: #ffffff;
+      font-weight: 800;
+      margin-right: 0.35rem;
+      font-size: 0.95rem;
+    }
+  }
+
+  // Right Actions (Follow, Message)
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  &__btn-follow {
+    background: #f1c74d;
+    color: #18181b;
+    border: none;
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.6rem 1.75rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 14px rgba(241, 199, 77, 0.3);
+
+    &:hover {
+      background: #f7d36b;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(241, 199, 77, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__btn-message {
+    background: rgba(24, 22, 20, 0.85);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.6rem 1.6rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: rgba(36, 33, 30, 0.95);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// ============================================================================
+// HIGHLIGHTS SECTION & 3D FAN CAROUSEL
+// ============================================================================
+.fz-highlights-section {
+  background: #f6f5f2;
+  padding: 2.75rem 1.5rem 3.25rem 1.5rem;
+  width: 100%;
+  overflow: hidden;
+
+  &__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding: 0 2rem;
+
+    @media (max-width: 768px) {
+      padding: 0 0.5rem;
+    }
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8c857b;
+  }
+
+  &__nav-btns {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    height: 34px;
+    padding: 0 0.85rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: #e8e6e1;
+    color: #44403c;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: #dedcd6;
+      transform: scale(1.03);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+  &__nav-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: #e8e6e1;
+    color: #44403c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: #dedcd6;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // 3D Carousel Stage
+  &__carousel-stage {
+    position: relative;
+    height: 380px;
+    perspective: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    margin: 0.5rem 0 1.5rem 0;
+  }
+
+  // Individual 3D Card
+  &__card {
+    position: absolute;
+    width: 255px;
+    height: 350px;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #000000;
+    box-shadow: 0 15px 35px -8px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+                opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+                box-shadow 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+                filter 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: center center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    // Progressive frosted blur layer over the lower half of the image
+    &__blur {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 52%;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0) 100%);
+      -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    // Deep dark gradient overlay fading image to solid dark
+    &__gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 25%,
+        rgba(0, 0, 0, 0.18) 45%,
+        rgba(0, 0, 0, 0.7) 68%,
+        #000000 92%,
+        #000000 100%
+      );
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    &__content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem 1.25rem 1.25rem 1.25rem;
+      z-index: 3;
+      color: #ffffff;
+      text-align: left;
+    }
+
+    &__title {
+      font-size: 1.22rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 0.2rem 0;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    &__subtitle {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.72);
+      margin: 0;
+      font-weight: 400;
+    }
+
+    // States based on relative index to center
+    &--center {
+      z-index: 10;
+      opacity: 1;
+      transform: translateX(0) scale(1) translateZ(0);
+      box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      filter: brightness(1);
+    }
+
+    &--left-1 {
+      z-index: 6;
+      opacity: 0.95;
+      transform: translateX(-220px) scale(0.91) rotateY(6deg);
+      box-shadow: 0 18px 36px -8px rgba(0, 0, 0, 0.45);
+      filter: blur(1.5px) brightness(0.85);
+    }
+
+    &--right-1 {
+      z-index: 6;
+      opacity: 0.95;
+      transform: translateX(220px) scale(0.91) rotateY(-6deg);
+      box-shadow: 0 18px 36px -8px rgba(0, 0, 0, 0.45);
+      filter: blur(1.5px) brightness(0.85);
+    }
+
+    &--left-2 {
+      z-index: 3;
+      opacity: 0.78;
+      transform: translateX(-440px) scale(0.81) rotateY(10deg);
+      box-shadow: 0 10px 25px -6px rgba(0, 0, 0, 0.35);
+      filter: blur(2.5px) brightness(0.72);
+    }
+
+    &--right-2 {
+      z-index: 3;
+      opacity: 0.78;
+      transform: translateX(440px) scale(0.81) rotateY(-10deg);
+      box-shadow: 0 10px 25px -6px rgba(0, 0, 0, 0.35);
+      filter: blur(2.5px) brightness(0.72);
+    }
+
+    &--hidden {
+      z-index: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(0) scale(0.5);
+    }
+  }
+
+  // Caption underneath the cards
+  &__caption {
+    text-align: center;
+    font-size: 0.825rem;
+    color: #8c857b;
+    margin: 0.75rem 0 0 0;
+  }
+}
+
+
+// ============================================================================
+// TAB NAVIGATION – pill style matching screenshot exactly
+// ============================================================================
+.fz-profile-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 0 1.5rem 0;
+  border-bottom: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.fz-profile-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.4rem;
+  border-radius: 9999px;
+  border: none;
+  background: #eae5dc;
+  color: #443e35;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover:not(&--active) {
+    background: #ded7cb;
+    color: #1f1b14;
+  }
+
+  &--active {
+    background: #f1c74d;
+    color: #241f16;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(241, 199, 77, 0.25);
+  }
+}
+
+// ============================================================================
+// ACTIVITY CARD GRID – 3-column screenshot-matching full-bleed cards
+// ============================================================================
+.fz-activity-container {
+  width: 100%;
+  padding-bottom: 3.5rem;
+}
+
+// Sub-tabs row inside Activity: All, Places, Recipes, Videos, Posts
+.fz-activity-subtabs {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.fz-activity-subtab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1.15rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(36, 31, 22, 0.12);
+  background: #ffffff;
+  color: #554f46;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover:not(&--active) {
+    border-color: #241f16;
+    color: #241f16;
+    background: #faf8f5;
+  }
+
+  &--active {
+    background: #241f16;
+    border-color: #241f16;
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &__count {
+    font-size: 0.72rem;
+    opacity: 0.75;
+  }
+}
+
+// Grid vs Map view switcher
+.fz-view-switch {
+  display: inline-flex;
+  align-items: center;
+  background: #ece7de;
+  border-radius: 9999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.fz-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.32rem 0.75rem;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: #635b4f;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+
+  svg {
+    stroke-width: 2.2;
+  }
+
+  &:hover:not(&--active) {
+    color: #241f16;
+  }
+
+  &--active {
+    background: #ffffff;
+    color: #241f16;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Activity Section grouping for "All" view
+.fz-activity-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2.75rem;
+}
+
+.fz-activity-section {
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(36, 31, 22, 0.08);
+  }
+
+  &__title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #241f16;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  &__count {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #635b4f;
+    background: #ece7de;
+    padding: 0.15rem 0.55rem;
+    border-radius: 9999px;
+  }
+
+  &__view-all {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #8c6a0c;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.15s ease;
+
+    &:hover {
+      color: #241f16;
+      text-decoration: underline;
+    }
+  }
+}
+
+// Show More pill button
+.fz-show-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.58rem 1.45rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1.5px solid rgba(36, 31, 22, 0.14);
+  color: #241f16;
+  font-weight: 700;
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+  &:hover {
+    background: #f1c74d;
+    border-color: #f1c74d;
+    color: #241f16;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(241, 199, 77, 0.32);
+  }
+}
+
+.fz-activity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding: 0.25rem 0 0.5rem;
+
+  @media (max-width: 991px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+// Screenshot-matching full-bleed food card
+.fz-activity-card {
+  position: relative;
+  aspect-ratio: 3 / 3.8;
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #181512;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: none;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+
+    .fz-activity-card__photo {
+      transform: scale(1.04);
+    }
+  }
+
+  &__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &__fallback-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #322b24 0%, #1c1814 60%, #0d0b09 100%);
+  }
+
+  // Top-left frosted category badge (RESTAURANT, RECIPE, STREET FOOD, etc.)
+  &__badge {
+    position: absolute;
+    top: 1.1rem;
+    left: 1.1rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    background: rgba(30, 26, 22, 0.52);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 9999px;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // Top-right draft pill if applicable
+  &__draft-badge {
+    position: absolute;
+    top: 1.1rem;
+    right: 1.1rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.65rem;
+    background: rgba(225, 95, 35, 0.88);
+    backdrop-filter: blur(8px);
+    border-radius: 9999px;
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  // Deep dark gradient overlay fading up from bottom
+  &__overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 2;
+    padding: 3.5rem 1.25rem 1.25rem 1.25rem;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.35) 35%,
+      rgba(0, 0, 0, 0.82) 72%,
+      rgba(0, 0, 0, 0.96) 100%
+    );
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    pointer-events: none;
+    text-align: left;
+  }
+
+  &__title {
+    color: #ffffff;
+    font-size: 1.18rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin: 0 0 0.25rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__subtitle {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.82rem;
+    font-weight: 400;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  // Create card slot for profile owner
+  &--create {
+    aspect-ratio: 3 / 3.8;
+    border-radius: 22px;
+    background: #fbf7ee;
+    border: 2px dashed rgba(36, 31, 22, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #635b4f;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.22s ease;
+
+    &:hover {
+      border-color: #f1c74d;
+      color: #241f16;
+      background: #fffdf7;
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+  }
+}
+
+// ============================================================================
+// FOOD MOMENTS SECTION
+// ============================================================================
+.fz-moments-section {
+  margin: 1.5rem 0;
+}
+
+.fz-moments-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.fz-moments-section__title {
+  font-family: $headings-font-family;
+  font-weight: 800;
+  font-size: 1rem;
+  color: $fz-ink;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.fz-moments-section__viewall {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: $fuzo-yellow-deep;
+  cursor: pointer;
+}
+
+.fz-moments-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+
+  @media (min-width: 576px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.fz-moment-card {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  background: linear-gradient(to bottom, #d5d0ca 0%, #7a756e 50%, #241f16 100%);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  }
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 0.6rem 0.7rem;
+    text-align: left;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.78), transparent);
+  }
+
+  &__title {
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.82rem;
+    line-height: 1.15;
+  }
+
+  &__subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+
+  &__chip {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(255, 254, 251, 0.9);
+    border-radius: 999px;
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $fz-ink;
+    backdrop-filter: blur(4px);
+  }
+
+  &--add {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    color: $fz-ink-soft;
+    border: 2px dashed $fz-border;
+    background: $fz-cream;
+    transition: border-color 0.15s, background 0.15s;
+
+    &:hover {
+      background: $fuzo-yellow-tint;
+      border-color: $fuzo-yellow-deep;
+      transform: none;
+      box-shadow: none;
+    }
+
+    span {
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: $fz-ink;
+    }
+
+    small {
+      font-size: 0.68rem;
+    }
+  }
+}
+
+.fz-moment-chip {
+  display: inline-block;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-deep;
+  font-weight: 800;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+}
+
+.fz-moment-type-chip {
+  flex: 1;
+  border: 1.5px solid $fz-border;
+  background: $fz-paper;
+  border-radius: 999px;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: $fz-ink-soft;
+  cursor: pointer;
+  transition: background 0.14s, color 0.14s, border-color 0.14s;
+
+  &--active {
+    background: $fuzo-yellow;
+    border-color: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-weight: 800;
+  }
+}
+
+// ============================================================================
+// POINTS / GAMIFICATION BANNER
+// ============================================================================
+.fz-points-banner {
+  background: linear-gradient(135deg, mix(#fff, $fuzo-yellow-tint, 40%), $fz-cream);
+  border: 1px solid $fz-border;
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.35rem;
+  margin: 1.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+
+  &__avatar {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__heading {
+    font-family: $headings-font-family;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: $fz-ink;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.4rem;
+    line-height: 1.1;
+  }
+
+  &__bar-track {
+    height: 7px;
+    border-radius: 999px;
+    background: rgba($fz-ink, 0.1);
+    overflow: hidden;
+    margin-bottom: 0.7rem;
+  }
+
+  &__bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, $fuzo-yellow 0%, $fuzo-yellow-deep 100%);
+    transition: width 0.6s ease;
+  }
+
+  &__badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba($fz-ink, 0.06);
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: $fz-ink;
+  }
+}
+
+// ============================================================================
+// SETTINGS TAB
+// ============================================================================
+.fz-settings-header {
+  margin-bottom: 1.25rem;
+}
+
+.fz-settings-title {
+  font-family: $headings-font-family;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: $fz-ink;
+  letter-spacing: -0.01em;
+}
+
+.fz-settings-sub {
+  font-size: 0.84rem;
+  color: $fz-ink-soft;
+}
+
+.fz-settings-group {
+  margin-bottom: 1.5rem;
+}
+
+.fz-settings-group__label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: $fz-ink-soft;
+  margin: 0 0.2rem 0.5rem;
+}
+
+.fz-settings-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  text-align: left;
+  background: $fz-paper;
+  border: 1.5px solid $fz-border;
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: border-color 0.14s, background 0.14s;
+
+  &:hover {
+    border-color: $fz-ink-soft;
+  }
+
+  &__icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 0.85rem;
+    background: $fuzo-yellow-tint;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-weight: 800;
+    color: $fz-ink;
+    font-size: 0.9rem;
+  }
+
+  &__sub {
+    font-size: 0.76rem;
+    color: $fz-ink-soft;
+  }
+
+  &__chevron {
+    color: $fz-ink-soft;
+    flex-shrink: 0;
+  }
+
+  &--danger &__title {
+    color: $danger;
+  }
+}
+
+.fz-settings-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: $fz-ink;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+// ============================================================================
+// EMPTY STATES
+// ============================================================================
+.fz-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  gap: 0.65rem;
+  text-align: center;
+
+  &__icon { font-size: 2.5rem; line-height: 1; }
+
+  &__title {
+    font-family: $headings-font-family;
+    font-weight: 800;
+    font-size: 1rem;
+    color: $fz-ink;
+  }
+
+  &__sub {
+    font-size: 0.82rem;
+    color: $fz-ink-soft;
+    max-width: 260px;
+  }
+}
+
+// Section title (consistent)
+.fz-section-title {
+  font-family: $headings-font-family;
+  font-weight: 800;
+  font-size: 1rem;
+  color: $fz-ink;
+  letter-spacing: -0.01em;
+  margin: 1.25rem 0 0.75rem;
+}
+
+// ── Stats divider line (replaces Bootstrap .vr) ──
+.fz-hero-stats__divider {
+  width: 1px;
+  height: 32px;
+  background: $fz-border;
+  flex-shrink: 0;
+}
+
+// ── Gold spinner keyframe ──
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Private profile (Instagram-style) ──
+.fz-hero-full-banner__bio {
+  margin: 0.15rem 0 0.1rem;
+  max-width: 34rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.fz-private-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  margin: 2rem auto 3rem;
+  padding: 2.5rem 1.5rem;
+  max-width: 34rem;
+  background: $fz-paper;
+  border: 1px solid $fz-border;
+  border-radius: 22px;
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    background: $fuzo-yellow-tint;
+    border: 2px solid $fuzo-yellow;
+  }
+  &__title { font-family: $headings-font-family; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.01em; color: $fz-ink; margin: 0.4rem 0 0; }
+  &__sub { font-size: 0.9rem; color: $fz-ink-soft; margin: 0; max-width: 24rem; }
+}

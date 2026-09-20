@@ -25,13 +25,11 @@ export interface AwardPointsOutcome {
   wasDuplicate: boolean;
 }
 
-export interface LeaderboardEntry {
+export interface PointsHistoryEntry {
   id: string;
-  displayName: string;
-  username: string;
-  avatarUrl: string | null;
-  pointsTotal: number;
-  pointsLevel: number;
+  actionType: string;
+  points: number;
+  createdAt: string;
 }
 
 export interface UserPointsStats {
@@ -42,19 +40,6 @@ export interface UserPointsStats {
 
 const asRecord = (value: unknown): Record<string, unknown> => {
   return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
-};
-
-const toLeaderboardEntry = (value: unknown): LeaderboardEntry => {
-  const row = asRecord(value);
-  const id = String(row.id || '');
-  return {
-    id,
-    displayName: typeof row.display_name === 'string' && row.display_name.trim() ? row.display_name : (typeof row.username === 'string' ? row.username : 'User'),
-    username: typeof row.username === 'string' ? row.username : 'fuzo_user',
-    avatarUrl: typeof row.avatar_url === 'string' && row.avatar_url.trim() ? row.avatar_url : null,
-    pointsTotal: Number(row.points_total) || 0,
-    pointsLevel: Number(row.points_level) || 1,
-  };
 };
 
 export const PointsService = {
@@ -115,61 +100,28 @@ export const PointsService = {
     };
   },
 
-  async getLeaderboard(params: {
-    scope: 'global' | 'friends';
-    friendIds?: string[];
-    limit?: number;
-  }): Promise<PointsResult<LeaderboardEntry[]>> {
+  /** The signed-in user's own most recent point awards (points_ledger is owner-only). */
+  async getRecentPoints(userId: string, limit = 5): Promise<PointsResult<PointsHistoryEntry[]>> {
     const client = createClient();
     if (!client) return { success: false, error: 'Supabase is not configured' };
 
-    if (params.scope === 'friends' && (!params.friendIds || params.friendIds.length === 0)) {
-      return { success: true, data: [] };
-    }
+    const { data, error } = await client
+      .from('points_ledger')
+      .select('id, action_type, points, created_at')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    if (error) return { success: false, error: error.message };
 
-    let query = client
-      .from('users')
-      .select('id, display_name, username, avatar_url, points_total, points_level')
-      .order('points_total', { ascending: false })
-      .order('points_level', { ascending: false })
-      .limit(params.limit ?? 25);
-
-    if (params.scope === 'friends') {
-      query = query.in('id', params.friendIds!);
-    }
-
-    const { data, error } = await query;
-    if (error) {
-      return { success: false, error: error.message };
-    }
-
-    return { success: true, data: (data || []).map(toLeaderboardEntry) };
-  },
-
-  async getUserRank(userId: string): Promise<PointsResult<number>> {
-    const client = createClient();
-    if (!client) return { success: false, error: 'Supabase is not configured' };
-
-    const { data: me, error: meError } = await client
-      .from('users')
-      .select('points_total')
-      .eq('id', userId)
-      .maybeSingle();
-
-    if (meError || !me) {
-      return { success: false, error: meError?.message || 'User not found' };
-    }
-
-    const { count, error } = await client
-      .from('users')
-      .select('id', { count: 'exact', head: true })
-      .gt('points_total', me.points_total);
-
-    if (error) {
-      return { success: false, error: error.message };
-    }
-
-    return { success: true, data: (count ?? 0) + 1 };
+    return {
+      success: true,
+      data: (data ?? []).map((r) => ({
+        id: String(r.id),
+        actionType: String(r.action_type),
+        points: Number(r.points) || 0,
+        createdAt: String(r.created_at),
+      })),
+    };
   },
 };
 
