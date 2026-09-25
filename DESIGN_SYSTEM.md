@@ -61,7 +61,7 @@ Bootstrap's `.btn-primary`, `.badge`, `.rounded-pill` already look right – use
 - Check both desktop and ≤768px.
 
 ## Food DNA tab (`src/scss/_food-dna.scss`, `FoodDnaSection.tsx`)
-Layout = the KPI spec's three stories: **Identity** (personality hero + fingerprint radar, Food DNA, Flavor DNA, Top Cuisines) → **Activity** (Exploration Score, Food Stats) → **Achievements** (badges). Pattern: one dark `.fz-dna-hero`, KPI tiles `.fz-dna-tile`, cream/paper `.fz-dna-card`s, yellow-gradient `.fz-dna-fill` bars (flavours use their own food colour), earned badges outlined yellow / locked badges greyscale with progress.
+Layout = the KPI spec's three stories: **Identity** (personality hero + 3D fingerprint globe `DnaGlobe.tsx` - canvas, rotating geodesic mesh (dots joined by lines), emoji nodes sit on mesh junctions sized by score, nothing drawn outside the sphere, drag to spin; Food DNA, Flavor DNA, Top Cuisines) → **Activity** (Exploration Score, Food Stats) → **Achievements** (badges). Pattern: one dark `.fz-dna-hero`, KPI tiles `.fz-dna-tile`, cream/paper `.fz-dna-card`s, yellow-gradient `.fz-dna-fill` bars (flavours use their own food colour), earned badges outlined yellow / locked badges greyscale with progress.
 All numbers come from `src/lib/profile/kpi/compute.ts` (pure, tunable constants at the top) - UI never computes KPIs itself.
 
 ## Leaderboard (`src/scss/_leaderboard.scss`, `LeaderboardView.tsx`)
@@ -69,3 +69,16 @@ Owner-approved palette: dark ink hero + brand yellow accents on a cream page (`$
 
 ## Messages (`src/scss/_chat-app.scss`, `src/components/chat/*`)
 Cream page, one rounded paper card split into inbox | conversation (single pane on mobile). Yellow = your bubbles, active tab/row tint, unread badges, primary actions (dark text on it); pills for every control; `.fz-profile-tab` look for filter tabs. Lock motif on purpose - every chat is end-to-end encrypted (see `src/lib/chat/e2ee.ts`, `supabase/migrations/20260919040000_secure_chat.sql`). Avatars: photo or tinted initials (`ChatAvatar`), never a placeholder-photo service. Secure-messaging setup/unlock is `SecureMessagingGate` (`.fz-chat-gate`).
+
+## Elevation (`src/scss/_profile-elevation.scss`)
+Client-requested: every Profile block reads as a raised card popping off the page. Use the `$fz-shadow-*` tokens in `_variables.scss` (warm, ink-tinted, layered) - never hand-written shadows:
+`$fz-shadow-sm` (pills, nested blocks) · `$fz-shadow-card` / `-hover` (paper cards, with inset top highlight) · `$fz-shadow-dark` / `-hover` (photo + dark ink cards). Hover = lift (-2px content cards, -5/-6px photo cards) + the `-hover` shadow, eased with `$fz-ease`. Scroll rows/grids get extra bottom padding so shadows aren't clipped. Respect `prefers-reduced-motion`.
+
+## Mobile profile hero (`src/scss/_profile-hero-flip.scss`, `ProfileHero.tsx`)
+<=768px only. The hero looks the same as desktop's stacked mobile layout (banner photo, avatar, name, stats, buttons). Its stats row is a button with a yellow "Socials" chip: tapping it flips the card (`.fz-hero-flip`, rotateY) to a dark back face listing the user's socials (`users.social_links`: Instagram, Facebook, TikTok, Pinterest - stored as handles, URLs built in `socialLinksService.ts`; edited in Settings > Profile > Social Profiles). Brand badges: `.fz-social-badge--<platform>`. (An Airbnb-style white card layout was tried and rejected by the client.)
+
+## Dashboard (`src/scss/_dashboard.scss`, `DashboardView.tsx`)
+Built from the client's sketch, one layout for phone + desktop. Top bar = same solid gold as the site navbar (`$fz-navbar-gold`): profile photo (ink ring) | FUZO logo (tap = opens the Tako AI overlay; slim ~52px bar, no label) | bell menu (Notifications + Messages). Then a paper pill segment Bites | Feed | Trims (links to `/discover?tab=`), then horizontal rails of 3:4 photo cards (dark scrim, frosted chips): Recommended Restaurants (taste match first), Near You (closest first), Your Taste (recipes), Watch & Cook (YouTube, hidden when empty). Each rail is a raised paper panel (like Highlights) showing 4 cards + a "See all" card (fanned stack of 3 photos + "+N more" pill) that expands the rail into a grid in place ("Show less" collapses). Desktop fits 4 + See all exactly, so no arrows/sideways scroll there. Floating paper dock at the bottom: Explore (Scout) | raised yellow + (create card) | Rewards. SiteHeader and the floating Tako button are hidden on /dashboard.
+
+## Profile world map (`ProfileFoodMap.tsx`, `.fz-world-map` in `_profile.scss`)
+Client reference: flat world map, light-blue sea (#e6eef8), soft grey land, dark teal dots (#1d4a5c) per pinned place. Opens on exactly one world across the card (fractional zoom = log2(width/256)), 2:1 canvas. Below zoom 5 = labels/roads hidden; from zoom 5 = real Google map detail in the same palette. Frosted "World" / "My places" pills top-right, "N places" pill bottom-left; empty state floats over the world map. gestureHandling cooperative (page scroll isn't hijacked).

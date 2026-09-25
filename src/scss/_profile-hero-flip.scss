@@ -1,0 +1,270 @@
+// ============================================================================
+// PROFILE HERO - MOBILE FLIP CARD (ProfileHero.tsx)
+// Mobile (<=768px) only: the hero looks exactly like before; tapping its stats
+// row flips it over to a back face listing the user's social profiles
+// (users.social_links). Desktop is unchanged - the back face is display:none.
+// ============================================================================
+
+$flip-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
+
+// Brand badges for the social platforms (also used in Settings > Social Profiles).
+.fz-social-badge {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(#fff, 0.25), 0 4px 10px -2px rgba($fz-ink, 0.35);
+
+  &--instagram { background: linear-gradient(135deg, #f58529 0%, #dd2a7b 50%, #8134af 100%); }
+  &--facebook { background: #1877f2; }
+  &--tiktok { background: #111; box-shadow: inset 0 0 0 1px rgba(#fff, 0.14), -2px 0 0 rgba(#25f4ee, 0.55), 2px 0 0 rgba(#fe2c55, 0.55); }
+  &--pinterest { background: #e60023; }
+}
+
+// Mobile-only pieces: the flip hint chip and the back face.
+.fz-hero-full-banner__flip-hint { display: none; }
+.fz-hero-flip__back { display: none; }
+
+@media (max-width: 768px) {
+  // ---- Flip mechanics (front face = the original banner hero) ---------------
+  .profile-shell .fz-hero-flip {
+    margin: 0 0.75rem;
+    perspective: 1400px;
+  }
+
+  .fz-hero-flip__inner {
+    display: grid;
+    transform-style: preserve-3d;
+    transition: transform 0.75s $flip-ease;
+  }
+  .fz-hero-flip.is-flipped .fz-hero-flip__inner { transform: rotateY(180deg); }
+
+  .fz-hero-flip__face {
+    grid-area: 1 / 1;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  // The banner keeps its card look from _profile-elevation, minus the side
+  // margins - the flip wrapper owns those so both faces line up.
+  .profile-shell .fz-hero-flip .fz-hero-full-banner { margin: 0; }
+
+  // Stats row = the flip button: same look as before, plus a small hint chip.
+  .fz-hero-full-banner__stats-row--btn {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus-visible { outline: 2px solid $fuzo-yellow; outline-offset: 4px; border-radius: 8px; }
+    &:active { opacity: 0.8; }
+  }
+
+  .fz-hero-full-banner__flip-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba($fuzo-yellow, 0.35);
+    animation: fz-flip-nudge 3.2s $fz-ease infinite 1.5s;
+  }
+
+  // ---- Back: social profiles ------------------------------------------------
+  .fz-hero-flip__back {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transform: rotateY(180deg);
+    padding: 1rem 1rem 1.1rem;
+    border-radius: 24px;
+    color: #fff;
+    background: $fz-ink-card;
+    box-shadow:
+      0 0 0 1px rgba($fz-ink, 0.1),
+      0 2px 4px rgba($fz-ink, 0.14),
+      0 16px 32px -8px rgba($fz-ink, 0.32),
+      0 40px 80px -24px rgba($fz-ink, 0.5);
+  }
+
+  // Blurred, darkened banner behind the back face + a warm glow.
+  .fz-hero-flip__back-bg {
+    position: absolute;
+    inset: -20px;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    filter: blur(18px) saturate(1.2) brightness(0.45);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 85% 0%, rgba($fuzo-yellow, 0.28), transparent 70%),
+        linear-gradient(180deg, rgba(10, 8, 6, 0.35), rgba(10, 8, 6, 0.8));
+    }
+  }
+
+  .fz-hero-flip__back-head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .fz-hero-flip__back-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid $fuzo-yellow;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+  }
+
+  .fz-hero-flip__back-title {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+
+    strong {
+      font-family: $headings-font-family;
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .fz-hero-flip__back-eyebrow {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $fuzo-yellow-pale;
+  }
+
+  .fz-hero-flip__back-close {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(#fff, 0.25);
+    background: rgba(20, 16, 12, 0.5);
+    color: #fff;
+    transition: background 0.2s ease, color 0.2s ease;
+
+    &:hover,
+    &:active { background: $fuzo-yellow; color: $fuzo-yellow-ink; border-color: $fuzo-yellow; }
+  }
+
+  .fz-hero-flip__socials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    align-content: start;
+    // The back is as tall as the hero - centre the tiles in the free space.
+    margin: auto 0;
+  }
+
+  .fz-hero-flip__social {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    padding: 0.6rem 0.6rem;
+    border-radius: 16px;
+    border: 1px solid rgba(#fff, 0.14);
+    background: rgba(#fff, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #fff;
+    text-decoration: none;
+    text-align: left;
+    font: inherit;
+    box-shadow: inset 0 1px 0 rgba(#fff, 0.08);
+    transition: transform 0.2s $fz-ease, background 0.2s ease, border-color 0.2s ease;
+
+    &:hover,
+    &:active {
+      color: #fff;
+      background: rgba(#fff, 0.14);
+      border-color: rgba($fuzo-yellow, 0.6);
+    }
+    &:active { transform: scale(0.97); }
+
+    &--empty {
+      border-style: dashed;
+      background: rgba(#fff, 0.04);
+      .fz-social-badge { opacity: 0.55; filter: saturate(0.6); }
+      .fz-hero-flip__social-handle { color: $fuzo-yellow-pale; }
+    }
+  }
+
+  .fz-hero-flip__social-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+  .fz-hero-flip__social-name {
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .fz-hero-flip__social-handle {
+    font-size: 0.7rem;
+    color: rgba(#fff, 0.65);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fz-hero-flip__social-go {
+    flex-shrink: 0;
+    color: rgba(#fff, 0.6);
+  }
+
+  .fz-hero-flip__empty {
+    grid-column: 1 / -1;
+    margin: 0.5rem 0 0;
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(#fff, 0.7);
+  }
+}
+
+@keyframes fz-flip-nudge {
+  0%, 80%, 100% { transform: none; }
+  86% { transform: rotate(-8deg) scale(1.06); }
+  92% { transform: rotate(6deg) scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-hero-flip__inner { transition: none; }
+  .fz-hero-full-banner__flip-hint { animation: none; }
+}

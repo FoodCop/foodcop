@@ -56,6 +56,9 @@ export default function SiteHeader() {
     router.push('/login');
   };
 
+  // The dashboard carries its own top bar + bottom dock (DashboardView).
+  if (pathname === '/dashboard') return null;
+
   return (
     <>
     <nav className="navbar fz-navbar sticky-top">

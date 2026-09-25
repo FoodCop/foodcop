@@ -67,6 +67,36 @@ $rose-tint: #fde3ec;
 $fz-ink-card: $fz-ink;
 $fz-ink-card-soft: mix(#fff, $fz-ink, 55%); // secondary text ON $fz-ink-card
 
+// ===== Elevation ("cards pop off the screen") =====
+// Layered warm shadows tinted with $fz-ink (never cold grey/black): a tight
+// contact shadow + a soft ambient drop + a long diffuse falloff. The inset top
+// highlight gives light surfaces a subtle raised "lip". Used by
+// src/scss/_profile-elevation.scss; reuse these on other pages instead of
+// hand-writing new box-shadows.
+$fz-ease: cubic-bezier(0.16, 1, 0.3, 1);
+$fz-shadow-sm:
+  0 1px 2px rgba($fz-ink, 0.06),
+  0 4px 10px -2px rgba($fz-ink, 0.1);
+$fz-shadow-card:
+  inset 0 1px 0 rgba(#fff, 0.7),
+  0 1px 2px rgba($fz-ink, 0.06),
+  0 6px 14px -4px rgba($fz-ink, 0.12),
+  0 18px 36px -14px rgba($fz-ink, 0.2);
+$fz-shadow-card-hover:
+  inset 0 1px 0 rgba(#fff, 0.7),
+  0 2px 4px rgba($fz-ink, 0.06),
+  0 14px 26px -8px rgba($fz-ink, 0.18),
+  0 32px 56px -18px rgba($fz-ink, 0.3);
+// Dark / photo cards need a deeper shadow to separate from the cream page.
+$fz-shadow-dark:
+  0 2px 4px rgba($fz-ink, 0.12),
+  0 12px 24px -6px rgba($fz-ink, 0.28),
+  0 28px 52px -16px rgba($fz-ink, 0.4);
+$fz-shadow-dark-hover:
+  0 4px 8px rgba($fz-ink, 0.14),
+  0 20px 36px -8px rgba($fz-ink, 0.34),
+  0 42px 72px -20px rgba($fz-ink, 0.46);
+
 $font-family-sans-serif: var(--body-font), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
   Helvetica, Arial, sans-serif;
 $headings-font-family: var(--heading-font), $font-family-sans-serif;

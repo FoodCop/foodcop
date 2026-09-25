@@ -1,6 +1,7 @@
 'use client';
 
 import { COUNTRY_DIAL_CODES } from '@/lib/data/countryCodes';
+import SocialLinksEditor from './SocialLinksEditor';
 
 interface ProfileSettingsPanelProps {
   userId: string | null;
@@ -168,6 +169,8 @@ export default function ProfileSettingsPanel({
           {bioError && <div className="text-danger small mt-2">{bioError}</div>}
         </div>
       </div>
+
+      <SocialLinksEditor userId={userId} />
 
       <div className="fz-settings-group__label">Contact & Location</div>
       <div className="list-group shadow-sm rounded-4 border-0">

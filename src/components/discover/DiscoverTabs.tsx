@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { UtensilsCrossed, Flame, Film } from 'lucide-react';
 import FoodCardFeed from './FoodCardFeed';
 import TrimsReel from '../trims/TrimsReel';
@@ -15,8 +16,12 @@ const TAB_META: Record<DiscoverTab, { label: string; icon: typeof UtensilsCrosse
 };
 
 export default function DiscoverTabs() {
-  const [active, setActive] = useState<DiscoverTab>('feed');
   const tabs: DiscoverTab[] = ['bites', 'feed', 'trims'];
+  // Deep link from the dashboard's Bites | Feed | Trims segment: /discover?tab=bites
+  const tabParam = useSearchParams().get('tab');
+  const [active, setActive] = useState<DiscoverTab>(
+    tabs.includes(tabParam as DiscoverTab) ? (tabParam as DiscoverTab) : 'feed',
+  );
 
   return (
     <div className="container-fluid p-0 d-flex flex-column" style={{ height: 'calc(100vh - 80px)' }}>

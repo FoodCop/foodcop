@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import type { DnaAxis } from '@/lib/recommendation/dna';
 import type { FoodCardRecord, FlavorAxis } from '@/lib/types/foodCard';
 import { useProfileKpis } from '@/lib/hooks/useProfileKpis';
 import { DNA_AXES, DNA_PROFILE, computePersonality, type BadgeProgress } from '@/lib/profile/kpi/compute';
-import RadarChart from './RadarChart';
+import DnaGlobe from './DnaGlobe';
 
 // Food DNA tab - the "three stories" layout from the Profile KPI spec:
 //   1. Who am I as a food person?   Personality + Fingerprint, Food DNA, Flavor DNA, Top Cuisines
@@ -35,6 +35,18 @@ export const DNA_AXIS_META: Record<DnaAxis, { label: string; emoji: string; icon
   social: { label: 'Social', emoji: '👥', iconBg: '#FFF5E0', from: '#F97316', to: '#FB923C' },
   health: { label: 'Health', emoji: '🥗', iconBg: '#E8F5E9', from: '#22C55E', to: '#4ADE80' },
 };
+
+// Shooting stars on the Food DNA hero's space backdrop. Staggered, co-prime-ish
+// cycles so ~1-2 streak across per second without ever syncing up.
+const SHOOTING_STARS = [
+  { top: '8%', left: '6%', len: 120, dur: 3.1, delay: 0, angle: 18 },
+  { top: '22%', left: '38%', len: 90, dur: 3.7, delay: 0.6, angle: 24 },
+  { top: '55%', left: '12%', len: 100, dur: 4.3, delay: 1.3, angle: 14 },
+  { top: '5%', left: '62%', len: 140, dur: 4.9, delay: 2.1, angle: 30 },
+  { top: '70%', left: '44%', len: 80, dur: 3.4, delay: 2.7, angle: 20 },
+  { top: '35%', left: '72%', len: 110, dur: 5.3, delay: 0.9, angle: 26 },
+  { top: '80%', left: '2%', len: 95, dur: 4.1, delay: 3.4, angle: 12 },
+];
 
 // Flavor DNA's 10 axes (spec order + emoji). Colours are food-semantic, from the brand family.
 const FLAVOR_META: { axis: FlavorAxis; name: string; emoji: string; color: string }[] = [
@@ -100,6 +112,23 @@ export default function FoodDnaSection({
     <div className="fz-dna">
       {/* ── Personality + Fingerprint ─────────────────────────────────── */}
       <section className="fz-dna-hero">
+        {/* Deep-space backdrop: star fields + shooting stars (pure CSS, decorative). */}
+        <div className="fz-dna-hero__space" aria-hidden="true">
+          {SHOOTING_STARS.map((star, i) => (
+            <span
+              key={i}
+              className="fz-dna-hero__shooting"
+              style={{
+                top: star.top,
+                left: star.left,
+                width: star.len,
+                '--shoot-dur': `${star.dur}s`,
+                '--shoot-delay': `${star.delay}s`,
+                '--shoot-angle': `${star.angle}deg`,
+              } as CSSProperties}
+            />
+          ))}
+        </div>
         <div className="fz-dna-hero__body">
           <div className="fz-dna-eyebrow fz-dna-eyebrow--on-dark">Your Food Personality</div>
           {persona && foodDna.scores ? (
@@ -136,11 +165,14 @@ export default function FoodDnaSection({
         {foodDna.scores && (
           <div className="fz-dna-hero__print">
             <div className="fz-dna-hero__print-label">DNA Fingerprint</div>
-            <RadarChart
+            <DnaGlobe
               animate={animate}
-              fillColor="#f1c74d"
               ariaLabel="Food DNA fingerprint"
-              axes={DNA_AXES.map((a) => ({ label: DNA_PROFILE[a].label, value: (foodDna.scores as Record<DnaAxis, number>)[a] / 100 }))}
+              axes={DNA_AXES.map((a) => ({
+                label: DNA_PROFILE[a].label,
+                emoji: DNA_PROFILE[a].emoji,
+                value: (foodDna.scores as Record<DnaAxis, number>)[a] / 100,
+              }))}
             />
           </div>
         )}

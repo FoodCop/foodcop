@@ -10,11 +10,12 @@ import TakoAssistant from './TakoAssistant';
 // site-wide FAB + overlay pattern. Hidden on /ai-chef itself, which already
 // renders the full TakoAssistant experience inline, and on "/" - the
 // marketing homepage isn't part of the logged-in app experience Tako assists with.
+// Also hidden on /dashboard, where the FUZO logo in its top bar opens Tako.
 export default function TakoWidget() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  if (pathname === '/ai-chef' || pathname === '/') return null;
+  if (pathname === '/ai-chef' || pathname === '/' || pathname === '/dashboard') return null;
 
   return (
     <>

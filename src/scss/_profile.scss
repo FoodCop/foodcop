@@ -1423,3 +1423,113 @@
   &__title { font-family: $headings-font-family; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.01em; color: $fz-ink; margin: 0.4rem 0 0; }
   &__sub { font-size: 0.9rem; color: $fz-ink-soft; margin: 0; max-width: 24rem; }
 }
+
+// ============================================================================
+// PROFILE WORLD MAP (ProfileFoodMap.tsx) - opens on the whole world with a dot
+// per pinned place; zooming in shows the full Google map. Colours match the
+// client's reference (light blue sea, soft grey land, dark dots).
+// ============================================================================
+.fz-world-map {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #e6eef8;
+  border: 1px solid rgba($fz-border, 0.8);
+
+  // ~2:1 like a flat world map; capped so it never dominates the page.
+  &__canvas {
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    min-height: 220px;
+    max-height: 560px;
+  }
+
+  // World / My places - frosted pills, top right.
+  &__controls {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    gap: 0.4rem;
+    z-index: 2;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid rgba($fz-border, 0.9);
+    border-radius: 9999px;
+    background: rgba($fz-paper, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: $fz-ink;
+    font-size: 0.76rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: $fz-shadow-sm;
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; transform: translateY(-1px); }
+  }
+
+  // "12 places" legend, bottom left.
+  &__count {
+    position: absolute;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 9999px;
+    background: rgba($fz-paper, 0.92);
+    color: $fz-ink;
+    font-size: 0.74rem;
+    font-weight: 800;
+    box-shadow: $fz-shadow-sm;
+    pointer-events: none;
+  }
+
+  &__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #1d4a5c;
+    box-shadow: 0 0 0 2px #fff;
+  }
+
+  // Empty state floats over the (still visible) world map.
+  &__empty {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.6rem 0.55rem 0.9rem;
+    border-radius: 9999px;
+    background: rgba($fz-paper, 0.95);
+    color: $fz-ink;
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: $fz-shadow-card;
+  }
+
+  &__add {
+    padding: 0.3rem 0.8rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.76rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+}

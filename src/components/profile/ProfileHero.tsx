@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Camera, ChevronLeft, ChevronRight, Loader2, Plus } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Camera, ChevronLeft, ChevronRight, Loader2, Plus, Repeat2, RotateCcw } from 'lucide-react';
 import { type UserProfile } from './demoProfile';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { createClient } from '@/lib/supabase/client';
@@ -14,6 +14,23 @@ import HighlightEditorModal from './HighlightEditorModal';
 import HighlightViewerModal from './HighlightViewerModal';
 import FoodCardDetailModal from './FoodCardDetailModal';
 import SavedItemDetailModal from './SavedItemDetailModal';
+import { SOCIAL_ICONS } from './settings/SocialLinksEditor';
+import { SOCIAL_META, SOCIAL_PLATFORMS, SocialLinksService, type SocialLinks } from '@/lib/services/socialLinksService';
+
+// The hero card flips to show the user's other social profiles - a mobile-only
+// interaction (desktop keeps the wide banner with its Edit Profile / Banner buttons).
+const MOBILE_QUERY = '(max-width: 768px)';
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_QUERY);
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  return isMobile;
+}
 
 export type ActivityCategory = 'places' | 'recipes' | 'videos' | 'posts';
 export type ProfileNavTarget = { tab: 'settings' } | { tab: 'activity'; category: ActivityCategory };
@@ -82,6 +99,24 @@ export default function ProfileHero({
   const [editingHighlight, setEditingHighlight] = useState<ProfileHighlight | 'new' | null>(null);
   const [viewingHighlight, setViewingHighlight] = useState<ProfileHighlight | null>(null);
   const [viewingDetail, setViewingDetail] = useState<HighlightItemRef | null>(null);
+
+  const isMobile = useIsMobile();
+  const [flipped, setFlipped] = useState(false);
+  const [socialLinks, setSocialLinks] = useState<SocialLinks>({});
+  const isFlipped = isMobile && flipped;
+
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    SocialLinksService.get(userId).then((res) => {
+      if (!cancelled) setSocialLinks(res.data ?? {});
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  const linkedPlatforms = SOCIAL_PLATFORMS.filter((p) => socialLinks[p]);
 
   // Active card index for the 3D Fan Carousel (default index 1 is "Ramen Week", front and center)
   const [activeIndex, setActiveIndex] = useState(1);
@@ -272,9 +307,12 @@ export default function ProfileHero({
       {/* ─────────────────────────────────────────────────────────────
           1. FULL-BLEED HERO BANNER WITH INTEGRATED NAV
       ───────────────────────────────────────────────────────────── */}
+      <div className={`fz-hero-flip${isFlipped ? ' is-flipped' : ''}`}>
+      <div className="fz-hero-flip__inner">
       <section
-        className="fz-hero-full-banner"
+        className="fz-hero-full-banner fz-hero-flip__face"
         style={{ backgroundImage: `url(${bannerUrl || '/images/profile/hero_banner.jpg'})` }}
+        inert={isFlipped}
       >
         <div className="fz-hero-full-banner__overlay" />
 
@@ -299,7 +337,15 @@ export default function ProfileHero({
           <div className="fz-hero-full-banner__profile-info">
             {/* Avatar with Gold Ring */}
             <div className="fz-hero-full-banner__avatar-wrap">
-              <img src={avatarUrl || '/images/profile/avatar.jpg'} alt={profile.name} />
+              <img
+                src={avatarUrl || '/images/profile/avatar.jpg'}
+                alt={profile.name}
+                onError={(e) => applyFallbackAvatar(e.currentTarget)}
+                // A broken URL can fail before hydration attaches onError - check on mount too.
+                ref={(img) => {
+                  if (img && img.complete && img.naturalWidth === 0) applyFallbackAvatar(img);
+                }}
+              />
               {isOwnProfile && (
                 <>
                   <button
@@ -347,7 +393,12 @@ export default function ProfileHero({
 
               {profile.bio && <p className="fz-hero-full-banner__bio">{profile.bio}</p>}
 
-              <div className="fz-hero-full-banner__stats-row">
+              {/* On mobile the stats row is the flip trigger (back = social profiles). */}
+              <StatsRow
+                asButton={isMobile}
+                onClick={() => setFlipped(true)}
+                label={`Show ${profile.name}'s social profiles`}
+              >
                 {/* Post/bite counts would reveal a private profile's activity, so they're hidden until access is granted. */}
                 {!restricted && (
                   <>
@@ -365,7 +416,13 @@ export default function ProfileHero({
                   <strong>{friendCount}</strong>
                   <span>Friends</span>
                 </div>
-              </div>
+                {isMobile && (
+                  <span className="fz-hero-full-banner__flip-hint" aria-hidden="true">
+                    <Repeat2 size={13} strokeWidth={2.4} />
+                    Socials
+                  </span>
+                )}
+              </StatsRow>
             </div>
           </div>
 
@@ -435,6 +492,90 @@ export default function ProfileHero({
           </div>
         </div>
       </section>
+
+      {/* Back of the card (mobile only): the user's other social profiles. */}
+      <section
+        className="fz-hero-flip__face fz-hero-flip__back"
+        aria-label={`${profile.name}'s social profiles`}
+        inert={!isFlipped}
+      >
+        <div
+          className="fz-hero-flip__back-bg"
+          style={{ backgroundImage: `url(${bannerUrl || '/images/profile/hero_banner.jpg'})` }}
+          aria-hidden="true"
+        />
+        <div className="fz-hero-flip__back-head">
+          <img
+            className="fz-hero-flip__back-avatar"
+            src={avatarUrl || DEFAULT_AVATAR}
+            alt=""
+            onError={(e) => applyFallbackAvatar(e.currentTarget)}
+            ref={(img) => {
+              if (img && img.complete && img.naturalWidth === 0) applyFallbackAvatar(img);
+            }}
+          />
+          <div className="fz-hero-flip__back-title">
+            <span className="fz-hero-flip__back-eyebrow">Find me on</span>
+            <strong>{profile.name}</strong>
+          </div>
+          <button
+            type="button"
+            className="fz-hero-flip__back-close"
+            onClick={() => setFlipped(false)}
+            aria-label="Flip back to profile"
+            title="Flip back"
+          >
+            <RotateCcw size={16} strokeWidth={2.4} />
+          </button>
+        </div>
+
+        <div className="fz-hero-flip__socials">
+          {(isOwnProfile ? SOCIAL_PLATFORMS : linkedPlatforms).map((p) => {
+            const Icon = SOCIAL_ICONS[p];
+            const handle = socialLinks[p];
+            const content = (
+              <>
+                <span className={`fz-social-badge fz-social-badge--${p}`} aria-hidden="true">
+                  <Icon size={17} />
+                </span>
+                <span className="fz-hero-flip__social-text">
+                  <span className="fz-hero-flip__social-name">{SOCIAL_META[p].label}</span>
+                  <span className="fz-hero-flip__social-handle">{handle ? `@${handle}` : 'Add yours'}</span>
+                </span>
+                {handle ? <ArrowUpRight size={16} className="fz-hero-flip__social-go" /> : <Plus size={16} className="fz-hero-flip__social-go" />}
+              </>
+            );
+            return handle ? (
+              <a
+                key={p}
+                className="fz-hero-flip__social"
+                href={SOCIAL_META[p].urlFor(handle)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {content}
+              </a>
+            ) : (
+              <button
+                key={p}
+                type="button"
+                className="fz-hero-flip__social fz-hero-flip__social--empty"
+                onClick={() => {
+                  setFlipped(false);
+                  onNavigate?.({ tab: 'settings' });
+                }}
+              >
+                {content}
+              </button>
+            );
+          })}
+          {!isOwnProfile && linkedPlatforms.length === 0 && (
+            <p className="fz-hero-flip__empty">{profile.name} hasn&apos;t linked any social profiles yet.</p>
+          )}
+        </div>
+      </section>
+      </div>
+      </div>
 
       {uploadError && <div className="alert alert-danger small py-2 m-3">{uploadError}</div>}
 
@@ -597,5 +738,31 @@ export default function ProfileHero({
         />
       )}
     </div>
+  );
+}
+
+// Swap a broken avatar for the default one (instead of showing alt text in the ring).
+const DEFAULT_AVATAR = '/images/profile/avatar.jpg';
+function applyFallbackAvatar(img: HTMLImageElement) {
+  if (!img.src.endsWith(DEFAULT_AVATAR)) img.src = DEFAULT_AVATAR;
+}
+
+// Stats row - a real <button> on mobile (it flips the hero card), a plain div elsewhere.
+function StatsRow({
+  asButton,
+  onClick,
+  label,
+  children,
+}: {
+  asButton: boolean;
+  onClick: () => void;
+  label: string;
+  children: React.ReactNode;
+}) {
+  if (!asButton) return <div className="fz-hero-full-banner__stats-row">{children}</div>;
+  return (
+    <button type="button" className="fz-hero-full-banner__stats-row fz-hero-full-banner__stats-row--btn" onClick={onClick} aria-label={label}>
+      {children}
+    </button>
   );
 }

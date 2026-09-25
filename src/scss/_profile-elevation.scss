@@ -1,0 +1,333 @@
+// ============================================================================
+// PROFILE ELEVATION LAYER
+// Client request: every block on the Profile should read as a physical card
+// popping off the page - raised with a layered shadow, lifting further on
+// hover. Scoped to .profile-shell (own + public profile) so it doesn't leak
+// into other pages; imported after _profile/_food-dna so it wins on equal
+// specificity. Shadows come from the $fz-shadow-* tokens in _variables.scss.
+// ============================================================================
+
+@mixin fz-raised($rest: $fz-shadow-card, $hover: $fz-shadow-card-hover, $lift: -3px) {
+  box-shadow: $rest;
+  transition: transform 0.3s $fz-ease, box-shadow 0.3s $fz-ease, border-color 0.2s ease, background 0.2s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY($lift);
+      box-shadow: $hover;
+    }
+  }
+}
+
+.profile-shell {
+  // Slightly deeper page tone so paper cards separate from it.
+  background: mix($fz-cream, #efeae0, 40%);
+  // Top gap lives on the shell as padding, not as the hero's margin-top - a
+  // child's top margin collapses through the shell, which left the white
+  // <body> showing as a strip above the hero card.
+  padding-top: 1.25rem;
+  @media (min-width: 1480px) { padding-top: 1.5rem; }
+  @media (max-width: 768px) { padding-top: 0.75rem; }
+
+  // ---- Hero banner: inset from the page edges as one big floating card -----
+  .fz-hero-full-banner {
+    width: auto;
+    max-width: 1440px;
+    margin: 0 auto;
+    border-radius: 28px;
+    // Clip the cover photo + overlay to the rounded corners (Safari needs the
+    // isolation for overflow:hidden + border-radius on a transformed child).
+    isolation: isolate;
+    // Biggest card on the page = deepest shadow: hairline edge, contact
+    // shadow, and a long soft drop so it floats well above the cream page.
+    box-shadow:
+      0 0 0 1px rgba($fz-ink, 0.1),
+      0 2px 4px rgba($fz-ink, 0.14),
+      0 16px 32px -8px rgba($fz-ink, 0.32),
+      0 40px 80px -24px rgba($fz-ink, 0.5);
+
+    @media (max-width: 1480px) { margin-left: 1.25rem; margin-right: 1.25rem; }
+    @media (max-width: 768px) {
+      margin-left: 0.75rem;
+      margin-right: 0.75rem;
+      border-radius: 22px;
+    }
+  }
+
+  // ---- Highlights: a paper card matching the hero's width -------------------
+  .fz-highlights-section {
+    width: auto;
+    max-width: 1440px;
+    margin: 1.5rem auto 0;
+    background: $fz-paper;
+    border: 1px solid rgba($fz-border, 0.7);
+    border-radius: 28px;
+    box-shadow: $fz-shadow-card;
+
+    @media (max-width: 1480px) { margin-left: 1.25rem; margin-right: 1.25rem; }
+    @media (max-width: 768px) {
+      margin: 1rem 0.75rem 0;
+      border-radius: 22px;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+  }
+
+  // Section heading - matches the Activity section titles (accent bar + heading font).
+  .fz-highlights-section__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: $headings-font-family;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+    color: $fz-ink;
+
+    &::before {
+      content: '';
+      width: 5px;
+      height: 1.1em;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, $fuzo-yellow, $fuzo-yellow-deep);
+      box-shadow: 0 2px 6px rgba($fuzo-yellow-deep, 0.45);
+    }
+
+    @media (max-width: 768px) { font-size: 1.15rem; }
+  }
+
+  // Header controls - must contrast with the paper card they sit on.
+  // "Add" is the primary action -> yellow pill; arrows are cream with a border.
+  .fz-highlights-section__add-btn,
+  .fz-highlights-section__nav-btn {
+    transition: transform 0.2s $fz-ease, box-shadow 0.2s $fz-ease, background 0.15s ease, border-color 0.15s ease;
+    &:active { transform: translateY(0); }
+  }
+
+  .fz-highlights-section__add-btn {
+    background: $fuzo-yellow;
+    border: 1px solid $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35);
+
+    &:hover {
+      background: mix(#fff, $fuzo-yellow, 15%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba($fuzo-yellow, 0.45);
+    }
+  }
+
+  .fz-highlights-section__nav-btn {
+    background: $fz-cream;
+    border: 1px solid $fz-border;
+    color: $fz-ink;
+    box-shadow: $fz-shadow-sm;
+
+    &:hover {
+      background: $fuzo-yellow-tint;
+      border-color: $fuzo-yellow-deep;
+      transform: translateY(-2px);
+      box-shadow: $fz-shadow-card-hover;
+    }
+  }
+
+  // ---- Body under the hero: same width as the hero/highlights cards --------
+  // ProfileTabs' root is a Bootstrap .container; widen it so its content edges
+  // line up with the floating cards above (1440px + their 1.25rem side gutter).
+  > .container {
+    max-width: calc(1440px + 2.5rem);
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    @media (max-width: 768px) { padding-left: 0.75rem; padding-right: 0.75rem; }
+  }
+
+  // ---- Tab bar: a floating frosted pill (scrolls with the page - client
+  // asked for it NOT to be sticky) ------------------------------------------
+  .fz-profile-tabs {
+    width: fit-content;
+    max-width: 100%;
+    margin: 1.75rem 0 1.5rem;
+    padding: 0.4rem;
+    gap: 0.3rem;
+    background: rgba($fz-paper, 0.86);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    border: 1px solid rgba($fz-border, 0.8);
+    border-radius: 9999px;
+    box-shadow: $fz-shadow-card;
+  }
+  .fz-profile-tab {
+    background: transparent;
+    color: $fz-ink-soft;
+
+    &:hover:not(.fz-profile-tab--active) {
+      background: $fz-cream;
+      color: $fz-ink;
+    }
+  }
+  .fz-profile-tab--active {
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow:
+      inset 0 1px 0 rgba(#fff, 0.45),
+      0 6px 16px -4px rgba($fuzo-yellow-deep, 0.6);
+  }
+
+  // ---- Activity: each section is its own raised paper panel ----------------
+  .fz-activity-sections { gap: 1.75rem; }
+
+  .fz-activity-section,
+  .fz-activity-panel {
+    background: $fz-paper;
+    border: 1px solid rgba($fz-border, 0.7);
+    border-radius: 28px;
+    padding: 1.5rem 1.6rem 1.25rem;
+    box-shadow: $fz-shadow-card;
+
+    @media (max-width: 768px) {
+      border-radius: 22px;
+      padding: 1.1rem 1rem 1rem;
+    }
+  }
+
+  .fz-activity-section__head {
+    border-bottom-color: $fz-border;
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.35rem;
+  }
+  // Small yellow accent bar before each section title.
+  .fz-activity-section__title::before {
+    content: '';
+    width: 4px;
+    height: 1.1em;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, $fuzo-yellow, $fuzo-yellow-deep);
+  }
+  .fz-activity-section__count {
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-ink;
+  }
+
+  // ---- Photo cards (activity grid, food moments) --------------------------
+  .fz-activity-card {
+    @include fz-raised($fz-shadow-dark, $fz-shadow-dark-hover, -6px);
+    &:active { transform: translateY(-2px); }
+  }
+
+  .fz-activity-card--create {
+    border-style: dashed;
+    background: $fz-paper;
+    @include fz-raised($fz-shadow-sm, $fz-shadow-card-hover, -6px);
+  }
+
+  .fz-moment-card {
+    @include fz-raised($fz-shadow-dark, $fz-shadow-dark-hover, -5px);
+  }
+  .fz-moment-card--add {
+    @include fz-raised($fz-shadow-sm, $fz-shadow-card-hover, -5px);
+  }
+
+  // Grids need breathing room so the long shadow falloff isn't clipped.
+  .fz-activity-grid { padding: 0.5rem 0 1.5rem; }
+  .fz-moments-grid { gap: 1rem; padding-bottom: 1rem; }
+
+  // ---- Food DNA tab --------------------------------------------------------
+  .fz-dna-hero,
+  .fz-dna-next {
+    box-shadow: $fz-shadow-dark;
+  }
+
+  .fz-dna-card {
+    border-color: rgba($fz-border, 0.7);
+    @include fz-raised($lift: -2px);
+  }
+
+  // Nested blocks inside a card sit one step lower than their parent.
+  .fz-dna-mini,
+  .fz-dna-explore {
+    box-shadow: $fz-shadow-sm;
+  }
+
+  .fz-dna-tile__front {
+    border-color: rgba($fz-border, 0.7);
+    box-shadow: $fz-shadow-card;
+  }
+  .fz-dna-tile__back { box-shadow: $fz-shadow-dark; }
+  @media (hover: hover) {
+    .fz-dna-tile:hover .fz-dna-tile__inner { transform: translateY(-3px); }
+    .fz-dna-tile.is-flipped:hover .fz-dna-tile__inner { transform: translateY(-3px) rotateY(180deg); }
+    .fz-dna-tile:hover .fz-dna-tile__front { box-shadow: $fz-shadow-card-hover; }
+  }
+  // Horizontal scroll rows clip overflow - pad so shadows stay visible.
+  .fz-dna-tiles { padding-top: 0.6rem; padding-bottom: 1.4rem; }
+  .fz-dna-badges { padding: 0.5rem 0.75rem 1.4rem; margin: 0 -0.75rem; }
+
+  .fz-dna-badge {
+    border-color: rgba($fz-border, 0.7);
+    @include fz-raised($lift: -3px);
+  }
+  .fz-dna-badge--locked { box-shadow: $fz-shadow-sm; }
+
+  // ---- Points banner, settings, notices -------------------------------------
+  .fz-points-banner {
+    box-shadow: $fz-shadow-card;
+  }
+
+  .fz-settings-row {
+    border-color: rgba($fz-border, 0.7);
+    margin-bottom: 0.75rem;
+    @include fz-raised($lift: -2px);
+  }
+
+  // Settings sub-panels (Bootstrap list groups) - replace shadow-sm with the card shadow.
+  .list-group.shadow-sm {
+    box-shadow: $fz-shadow-card !important;
+  }
+
+  .fz-private-notice {
+    box-shadow: $fz-shadow-card;
+  }
+
+  .fz-profile-map {
+    box-shadow: $fz-shadow-dark;
+  }
+
+  // ---- Controls: pills sit slightly raised too ------------------------------
+  .fz-activity-subtab:not(.fz-activity-subtab--active),
+  .fz-show-more-btn {
+    box-shadow: $fz-shadow-sm;
+  }
+  .fz-activity-subtab {
+    border-color: rgba($fz-border, 0.9);
+    &:hover:not(.fz-activity-subtab--active) {
+      transform: translateY(-1px);
+      box-shadow: $fz-shadow-card;
+    }
+  }
+  .fz-activity-subtab--active {
+    background: $fz-ink;
+    border-color: $fz-ink;
+    box-shadow: 0 8px 18px -6px rgba($fz-ink, 0.55);
+  }
+  .fz-activity-subtabs {
+    // Room for the pill shadows inside the horizontal scroller.
+    padding: 0.35rem 0.25rem 0.85rem;
+    margin: 0 -0.25rem 1.25rem;
+  }
+  .fz-view-switch {
+    box-shadow: inset 0 1px 3px rgba($fz-ink, 0.1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fz-activity-card,
+    .fz-moment-card,
+    .fz-dna-card,
+    .fz-dna-badge,
+    .fz-settings-row {
+      transition: box-shadow 0.2s ease;
+      &:hover { transform: none; }
+    }
+  }
+}

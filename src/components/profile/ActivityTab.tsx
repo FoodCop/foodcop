@@ -412,7 +412,7 @@ export default function ActivityTab({
       </div>
 
       {tiles.length === 0 ? (
-        <div className="text-center py-5">
+        <div className="fz-activity-panel text-center py-5">
           <div style={{ fontSize: 44, marginBottom: 12 }}>🍽️</div>
           <h4 style={{ fontWeight: 800, color: '#241f16', marginBottom: 8, fontFamily: 'Outfit, sans-serif' }}>
             No activity yet
@@ -569,7 +569,7 @@ export default function ActivityTab({
         </div>
       ) : (
         /* Specific Category Filter View */
-        <div>
+        <div className="fz-activity-panel">
           {(() => {
             const filteredTiles = tiles.filter((t) => t.category === activeTab);
             const visibleTiles = filteredTiles.slice(0, categoryLimit);
