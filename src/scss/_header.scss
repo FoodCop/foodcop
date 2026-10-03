@@ -1,4 +1,14 @@
-// SiteHeader / offcanvas nav styling.
+// ============================================================================
+// THE APP NAVBAR (SiteHeader.tsx) - one bar on every page. Client sketch:
+// slim (~52px) solid gold bar, ink-ringed profile photo | FUZO logo (opens
+// Tako) | bell (Notifications + Messages). The dashboard's
+// sticky tab bar sits right under it (top: 52px).
+// ============================================================================
+
+// Client request: the marketing homepage's gold (--gold in home.css) rather
+// than $fuzo-yellow, so the bar matches the homepage's gold sections.
+$fz-navbar-gold: #ffc909;
+$fz-topbar-h: 52px;
 
 .navbar-brand-logo {
   height: 28px;
@@ -6,99 +16,205 @@
   object-fit: contain;
 }
 
-// Client request: navbar background moved from the paper/white base to gold.
-// Uses the marketing homepage's gold (--gold in home.css) rather than the
-// app's $fuzo-yellow token, per client preference - the two are close but
-// not identical, and this keeps the navbar visually matched to the
-// homepage's gold sections it sits directly above (Taste Profile, Food
-// Cards, Scout Maps, Final CTA). Hardcoded here rather than reading the
-// --gold custom property, since home.css only loads on the homepage route
-// and this navbar renders on every page.
-$fz-navbar-gold: #ffc909;
-
-// A hairline border alone isn't reliable here: this navbar sits sticky over
-// page content that's sometimes the same gold - close enough that a thin,
-// low-opacity border nearly disappears against it and the bar stops reading
-// as a distinct element. A real drop shadow keeps the navbar visually
-// lifted off the page regardless of what color ends up behind it.
-.fz-navbar {
-  background-color: $fz-navbar-gold;
+.fz-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: $fz-topbar-h;
+  padding: 0.4rem max(1rem, calc((100% - 1280px) / 2 + 2rem));
+  padding-top: calc(0.4rem + env(safe-area-inset-top));
+  background: $fz-navbar-gold;
   border-bottom: 1px solid rgba($fz-ink, 0.15);
   box-shadow: 0 2px 12px rgba($fz-ink, 0.18);
-}
 
-// Sign In needs real contrast against the new yellow bar - a solid
-// .btn-primary (also $fuzo-yellow) would blend straight into it, so this
-// uses the brand's warm red-orange ($chili) instead, the same family as the
-// homepage's CTA buttons.
-.fz-navbar__signin {
-  background-color: $chili;
-  border-color: $chili;
-  color: #fff;
-
-  &:hover,
-  &:focus {
-    background-color: mix(#000, $chili, 12%);
-    border-color: mix(#000, $chili, 12%);
-    color: #fff;
-  }
-}
-
-.fz-avatar-ring {
-  border-color: $fz-border !important;
-}
-
-// Header row: profile avatar (left) / logo (center) / icons+menu (right).
-// Below `lg` the logo is true-centered via a grid (the outer two columns
-// share a fixed width so an empty left slot - logged out, no avatar -
-// doesn't pull the logo off-center). At `lg+` this reverts to a plain
-// flex row (brand-left, icons-right) - the client's centering request was
-// specifically about the mobile header, not the wider inline navbar.
-.fz-navbar__row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.fz-navbar__side {
-  flex-shrink: 0;
-}
-
-.fz-navbar__brand {
-  margin: 0;
-}
-
-@include media-breakpoint-down(lg) {
-  .fz-navbar__row {
-    display: grid;
-    // Outer columns size to their own content (avatar vs. the wider
-    // create/messages/notifications/menu cluster) rather than a fixed
-    // width, so the logo centers in whatever space is actually left over
-    // instead of risking the two sides overlapping it.
-    grid-template-columns: auto 1fr auto;
+  &__side {
+    display: flex;
     align-items: center;
-  }
-
-  .fz-navbar__side--start {
+    gap: 0.25rem;
     justify-self: start;
-    min-width: 2.5rem;
+
+    &--end { justify-self: end; }
   }
 
-  .fz-navbar__brand {
-    justify-self: center;
+  &__anchor { position: relative; }
+
+  &__avatar {
+    width: 36px;
+    height: 36px;
+    padding: 2px;
+    border: 0;
+    border-radius: 50%;
+    background: $fz-ink;
+    box-shadow: 0 3px 8px rgba($fz-ink, 0.25);
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease;
+
+    img,
+    span {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid $fz-navbar-gold;
+      object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $fz-ink;
+      color: $fuzo-yellow;
+      font-family: $headings-font-family;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    &:hover { transform: scale(1.05); }
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: 2px; }
   }
 
-  .fz-navbar__side--end {
-    justify-self: end;
+  // Logo doubles as the entry point to Tako, the AI bot.
+  &__logo {
+    display: flex;
+    align-items: center;
+    padding: 0.2rem 0.5rem;
+    border: 0;
+    border-radius: 9999px;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    img { height: 24px; display: block; }
+    &:hover { background: rgba($fz-ink, 0.08); }
+    &:active { transform: scale(0.96); }
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: 2px; }
+  }
+
+  &__icon {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: $fz-ink;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover { background: rgba($fz-ink, 0.1); }
+    &[aria-expanded="true"] { background: $fz-ink; color: $fz-navbar-gold; }
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: 2px; }
+  }
+
+  &__dot {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: $chili;
+    border: 2px solid $fz-navbar-gold;
+  }
+
+  &__signin {
+    padding: 0.38rem 0.95rem;
+    border-radius: 9999px;
+    background: $fz-ink;
+    color: $fuzo-yellow;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-decoration: none;
+    &:hover { color: #fff; }
+  }
+
+  &__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    border: 0;
+    background: transparent;
+    cursor: default;
+  }
+
+  &__menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 2;
+    width: 230px;
+    padding: 0.4rem;
+    background: $fz-paper;
+    border: 1px solid rgba($fz-border, 0.9);
+    border-radius: 18px;
+    box-shadow: $fz-shadow-card-hover;
+    animation: fz-topbar-pop 0.22s $fz-ease;
+
+    &--start { right: auto; left: 0; }
+  }
+
+  &__menu-head {
+    display: flex;
+    flex-direction: column;
+    padding: 0.45rem 0.65rem 0.6rem;
+    margin-bottom: 0.25rem;
+    border-bottom: 1px solid $fz-border;
+    line-height: 1.3;
+
+    strong { font-size: 0.9rem; color: $fz-ink; }
+    span { font-size: 0.74rem; color: $fz-ink-soft; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+
+  &__menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.65rem;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: $fz-ink;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: left;
+    text-decoration: none;
+
+    &:hover { background: $fz-cream; color: $fz-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: -2px; }
+  }
+
+  &__menu-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-ink;
+  }
+
+  &__menu-badge {
+    margin-left: auto;
+    padding: 0.1rem 0.45rem;
+    border-radius: 9999px;
+    background: $chili;
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 800;
   }
 }
 
-// Frosted-glass slide-in panel (Ekomart's .side-bar used
-// backdrop-filter: blur(7px) on the panel itself) - only applies below `lg`,
-// where the offcanvas actually slides in; at `lg+` it's just the inline navbar.
-@include media-breakpoint-down(lg) {
-  #siteNavOffcanvas.offcanvas-end {
-    background-color: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(7px);
-  }
+@keyframes fz-topbar-pop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-topbar__menu { animation: none; }
 }

@@ -1,24 +1,20 @@
 'use client';
 
-import { Children, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import {
-  Bell,
   ChartNoAxesColumn,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
   Clock,
   Compass,
   Film,
   Flame,
+  Home,
   LocateFixed,
   MapPin,
-  MessageCircle,
   Play,
   Plus,
-  Sparkles,
-  Star,
   UtensilsCrossed,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -26,45 +22,74 @@ import { createClient } from '@/lib/supabase/client';
 import { CreateCardModal } from '@/components/create/CreateCardModal';
 import { ScoutAddPinModal } from '@/components/scout/ScoutAddPinModal';
 import { VideoPlayerModal } from '@/components/ui/VideoPlayerModal';
-import TakoAssistant from '@/components/tako/TakoAssistant';
-import { NotificationsService } from '@/lib/services/notificationsService';
+import { RecipeDetailModal, useRecipeSaves } from '@/components/bites/RecipeDetailModal';
+import { fetchCuratedRecipes, type CuratedRecipe } from '@/lib/recipes/curatedRecipes';
 import { UserSettingsService, DEFAULT_USER_SETTINGS, type UserSettings } from '@/lib/services/userSettingsService';
 import {
   aggregateForUser,
   getOnboardingPrefs,
   pickTopCuisine,
   getRecommendedRecipes,
-  getNearbyRestaurants,
   getSuggestedVideos,
   type RecommendedRecipe,
-  type NearbyRestaurant,
   type SuggestedVideo,
 } from '@/lib/services/recommendationService';
+import HomeTabs, { type HomeTab } from './HomeTabs';
+import { Rail, SkeletonCards } from './Rail';
+import DashPlaceCard from './DashPlaceCard';
+import { useNearbyPlaces, type DashPlace } from './useNearbyPlaces';
+import { NearbyCities } from './NearbyCities';
 
 // Dashboard = the post-login home, laid out from the client's sketch (same
 // structure on phone and desktop):
-//   top bar     profile photo | FUZO logo (opens Tako, the AI bot) | bell (notifications + messages)
-//   segment     Bites | Feed | Trims  -> the matching /discover tab
-//   rails       Recommended Restaurants, Near You, Your Taste (+ Watch & Cook)
+//   top bar     the app-wide SiteHeader: profile photo | FUZO logo (Tako) | bell + menu
+//   tabs        For you · Bites · Feed · Trims - switch in place (no navigation), URL ?tab= kept in sync
+//   For you     Recommended Restaurants, Near You (Google + FUZO restaurants), Your Taste, Watch & Cook
 //   bottom dock Explore (Scout) | raised + (create a card) | Rewards
-// Data is unchanged from the previous dashboard - see recommendationService.ts
-// for how each rail decides what "matches your taste" means. Styles: _dashboard.scss.
-// The global SiteHeader and floating Tako button are hidden on this route
-// because this page carries its own top bar and dock.
+// Styles: _dashboard.scss (top bar: _header.scss).
 
-const SEGMENTS = [
-  { tab: 'bites', label: 'Bites', icon: UtensilsCrossed },
-  { tab: 'feed', label: 'Feed', icon: Flame },
-  { tab: 'trims', label: 'Trims', icon: Film },
-] as const;
+type TabKey = 'foryou' | 'bites' | 'feed' | 'trims';
+const TABS: HomeTab<TabKey>[] = [
+  { key: 'foryou', label: 'For you', icon: Home },
+  { key: 'bites', label: 'Bites', icon: UtensilsCrossed },
+  { key: 'feed', label: 'Feed', icon: Flame },
+  { key: 'trims', label: 'Trims', icon: Film },
+];
+const isTab = (v: string | null): v is TabKey => TABS.some((t) => t.key === v);
 
-const mapsUrl = (place: NearbyRestaurant) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}${place.placeId ? `&query_place_id=${encodeURIComponent(place.placeId)}` : ''}`;
-
-const formatKm = (m: number) => (m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`);
+// Each section's code only loads the first time its tab is opened.
+function PanelLoading({ label }: { label: string }) {
+  return (
+    <div className="fz-dash-panel__loading" role="status">
+      <span className="spinner-border spinner-border-sm text-warning" aria-hidden="true" /> Loading {label}…
+    </div>
+  );
+}
+const BitesView = dynamic(() => import('@/components/bites/BitesView').then((m) => m.BitesView), { loading: () => <PanelLoading label="Bites" /> });
+const FoodCardFeed = dynamic(() => import('@/components/discover/FoodCardFeed'), { loading: () => <PanelLoading label="Feed" /> });
+const TrimsReel = dynamic(() => import('@/components/trims/TrimsReel'), { ssr: false, loading: () => <PanelLoading label="Trims" /> });
 
 export default function DashboardView() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const active: TabKey = isTab(tabParam) ? tabParam : 'foryou';
+  const tabsAnchorRef = useRef<HTMLDivElement>(null);
+
+  // Keep Bites/Feed mounted once opened, so switching back is instant and keeps
+  // their scroll/filter state. (Trims unmounts when you leave so videos stop.)
+  const [visited, setVisited] = useState<Set<TabKey>>(() => new Set([active]));
+  if (!visited.has(active)) setVisited(new Set(visited).add(active));
+
+  const selectTab = (key: TabKey) => {
+    if (key === active) return;
+    window.history.pushState(null, '', key === 'foryou' ? window.location.pathname : `?tab=${key}`);
+    // If the tab bar has scrolled under the top bar, bring the new section into view from its start.
+    const anchor = tabsAnchorRef.current;
+    if (anchor && anchor.getBoundingClientRect().top < 0) {
+      window.scrollTo({ top: window.scrollY + anchor.getBoundingClientRect().top - 60, behavior: 'smooth' });
+    }
+  };
 
   const [tasteLoaded, setTasteLoaded] = useState(false);
   const [topCuisine, setTopCuisine] = useState<string | undefined>(undefined);
@@ -73,19 +98,15 @@ export default function DashboardView() {
 
   const [recipes, setRecipes] = useState<RecommendedRecipe[]>([]);
   const [loadingRecipes, setLoadingRecipes] = useState(true);
-
-  // null = not yet loaded (still requesting geolocation / fetching places).
-  const [restaurants, setRestaurants] = useState<NearbyRestaurant[] | null>(null);
-  const [geoDenied, setGeoDenied] = useState(false);
+  const [curatedById, setCuratedById] = useState<Map<number, CuratedRecipe>>(() => new Map());
+  const [openRecipe, setOpenRecipe] = useState<CuratedRecipe | null>(null);
+  const { saved: savedRecipes, toggleSave: toggleRecipeSave } = useRecipeSaves();
 
   const [videos, setVideos] = useState<SuggestedVideo[]>([]);
   const [loadingVideos, setLoadingVideos] = useState(true);
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isTakoOpen, setIsTakoOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState<SuggestedVideo | null>(null);
-  const [inboxOpen, setInboxOpen] = useState(false);
-  const [hasUnread, setHasUnread] = useState(false);
 
   // Restaurant-pin prompt for business profiles - null = not yet known.
   const [isBusinessProfile, setIsBusinessProfile] = useState<boolean | null>(null);
@@ -118,9 +139,11 @@ export default function DashboardView() {
       const cuisine = pickTopCuisine(aggregateResult, prefs.cuisines);
       setTopCuisine(cuisine);
 
-      const recipeResults = await getRecommendedRecipes(user.id, aggregateResult, prefs, 12);
+      const [recipeResults, curated] = await Promise.all([getRecommendedRecipes(user.id, aggregateResult, prefs, 12), fetchCuratedRecipes()]);
       if (!cancelled) {
         setRecipes(recipeResults);
+        // Full recipes (ingredients/steps/nutrition) for the cards' detail view.
+        setCuratedById(new Map(curated.map((r) => [r.id, r])));
         setLoadingRecipes(false);
       }
 
@@ -135,18 +158,6 @@ export default function DashboardView() {
       cancelled = true;
     };
   }, [user]);
-
-  // Unread dot on the bell.
-  useEffect(() => {
-    if (!user?.id) return;
-    let cancelled = false;
-    NotificationsService.hasUnread(user.id).then((r) => {
-      if (!cancelled) setHasUnread(r);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [user?.id]);
 
   // Business profiles get nudged to pin their own place (grows FUZO's local dataset).
   useEffect(() => {
@@ -179,45 +190,45 @@ export default function DashboardView() {
     };
   }, [user]);
 
-  // Nearby restaurants - waits for taste data (so matchesTaste is meaningful) and
-  // geolocation consent. The location card's button retries it on demand.
-  const requestLocation = () => {
-    if (typeof navigator === 'undefined' || !navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        setGeoDenied(false);
-        const results = await getNearbyRestaurants(position.coords.latitude, position.coords.longitude, topCuisine, {
-          radiusKm: settings.discoveryRadiusKm,
-          hiddenGems: settings.showHiddenGems,
-          luxury: dnaLuxury,
-        });
-        setRestaurants(results);
-      },
-      () => setGeoDenied(true),
-    );
+  // Restaurants (Google + FUZO) near the user's GPS location or saved home area.
+  const { loc, recommended, nearest, retryGps } = useNearbyPlaces({
+    enabled: tasteLoaded,
+    topCuisine,
+    radiusKm: settings.discoveryRadiusKm,
+    hiddenGems: settings.showHiddenGems,
+    luxury: dnaLuxury,
+  });
+
+  const placePreviews = (list: DashPlace[] | null) => list?.slice(0, 10).map((p) => p.image);
+  const usingHome = loc.status === 'ready' && loc.source === 'home';
+  const restaurantSub = (base: string) => (usingHome ? `${base} · near your home area` : base);
+
+  const restaurantRail = (list: DashPlace[] | null, lens: 'match' | 'distance') => {
+      if (loc.status === 'unavailable') {
+        return (
+          <div className="fz-dash-notice">
+            <span className="fz-dash-notice__icon">
+              <MapPin size={20} />
+            </span>
+            <span className="fz-dash-notice__text">
+              <strong>We don&apos;t know where you are yet</strong>
+              <span>Turn on location, or set your home area so we can show places near you.</span>
+            </span>
+            <span className="fz-dash-notice__actions">
+              <button type="button" className="fz-dash-notice__btn" onClick={retryGps}>
+                <LocateFixed size={14} /> Use my location
+              </button>
+              <Link href="/profile?tab=settings" className="fz-dash-notice__link">
+                Set home area
+              </Link>
+            </span>
+          </div>
+        );
+      }
+      if (list === null) return <SkeletonCards />;
+      if (list.length === 0) return <div className="fz-dash-rail__empty">No restaurants found nearby yet - try a bigger discovery radius in Settings.</div>;
+      return list.slice(0, 10).map((place) => <DashPlaceCard key={place.key} place={place} lens={lens} />);
   };
-
-  useEffect(() => {
-    if (!tasteLoaded) return;
-    requestLocation();
-    // Runs once taste data is ready - re-prompting for location on every change would be hostile.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasteLoaded]);
-
-  // Same places, two lenses: best taste match first vs. closest first.
-  const recommended = useMemo(
-    () =>
-      restaurants
-        ? [...restaurants].sort(
-            (a, b) => Number(b.matchesTaste) - Number(a.matchesTaste) || (b.rating ?? 0) - (a.rating ?? 0),
-          )
-        : null,
-    [restaurants],
-  );
-  const nearest = useMemo(
-    () => (restaurants ? [...restaurants].sort((a, b) => a.distanceMeters - b.distanceMeters) : null),
-    [restaurants],
-  );
 
   if (!user) {
     return (
@@ -227,208 +238,149 @@ export default function DashboardView() {
     );
   }
 
-  const displayName = (user.user_metadata?.display_name as string | undefined) || user.email?.split('@')[0] || 'You';
-  const avatarUrl = user.user_metadata?.avatar_url as string | undefined;
-
-  const restaurantRail = (list: NearbyRestaurant[] | null, badge: 'match' | 'distance') => {
-    if (geoDenied) {
-      return (
-        <div className="fz-dash-notice">
-          <span className="fz-dash-notice__icon">
-            <MapPin size={20} />
-          </span>
-          <span className="fz-dash-notice__text">
-            <strong>Location is off</strong>
-            <span>Turn it on to see great places around you.</span>
-          </span>
-          <button type="button" className="fz-dash-notice__btn" onClick={requestLocation}>
-            <LocateFixed size={14} /> Enable
-          </button>
-        </div>
-      );
-    }
-    if (list === null) return <SkeletonCards />;
-    if (list.length === 0) return <div className="fz-dash-rail__empty">No restaurants found nearby yet.</div>;
-    return list.slice(0, 10).map((place) => (
-      <a
-        key={place.placeId || place.name}
-        className="fz-dash-card"
-        href={mapsUrl(place)}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {place.image ? <img className="fz-dash-card__img" src={place.image} alt="" loading="lazy" /> : <span className="fz-dash-card__img fz-dash-card__img--empty" />}
-        <span className="fz-dash-card__shade" />
-        {badge === 'match' && place.matchesTaste && (
-          <span className="fz-dash-card__chip fz-dash-card__chip--gold">
-            <Sparkles size={11} /> Your taste
-          </span>
-        )}
-        {badge === 'distance' && Number.isFinite(place.distanceMeters) && (
-          <span className="fz-dash-card__chip">
-            <MapPin size={11} /> {formatKm(place.distanceMeters)}
-          </span>
-        )}
-        <span className="fz-dash-card__body">
-          <span className="fz-dash-card__title">{place.name}</span>
-          <span className="fz-dash-card__meta">
-            {place.rating != null && (
-              <span className="fz-dash-card__rating">
-                <Star size={11} fill="currentColor" /> {place.rating}
-              </span>
-            )}
-            <span className="fz-dash-card__sub">{place.vicinity}</span>
-          </span>
-        </span>
-      </a>
-    ));
-  };
+  const useMyLocation = usingHome ? (
+    <button type="button" className="fz-dash-rail__locate" onClick={retryGps}>
+      <LocateFixed size={13} /> Use my location
+    </button>
+  ) : null;
 
   return (
     <div className="fz-dash">
-      {/* ── Top bar: profile | FUZO (bot) | inbox ─────────────────────── */}
-      <header className="fz-dash-top">
-        <Link href="/profile" className="fz-dash-top__avatar" aria-label="Your profile">
-          {avatarUrl ? <img src={avatarUrl} alt="" /> : <span>{displayName.charAt(0).toUpperCase()}</span>}
-        </Link>
-
-        {/* Tapping the logo opens Tako, the AI food assistant. */}
-        <button type="button" className="fz-dash-top__logo" onClick={() => setIsTakoOpen(true)} aria-label="Ask Tako, your AI food assistant" title="Ask Tako">
-          <img src="/fuzo_logo.svg" alt="FUZO" />
-        </button>
-
-        <div className="fz-dash-top__inbox">
-          <button
-            type="button"
-            className="fz-dash-top__bell"
-            aria-label="Notifications and messages"
-            aria-expanded={inboxOpen}
-            onClick={() => setInboxOpen((v) => !v)}
-          >
-            <Bell size={20} strokeWidth={2.2} />
-            {hasUnread && <span className="fz-dash-top__dot" aria-hidden="true" />}
-          </button>
-          {inboxOpen && (
-            <>
-              <button type="button" className="fz-dash-top__scrim" aria-label="Close" onClick={() => setInboxOpen(false)} />
-              <div className="fz-dash-top__menu" role="menu">
-                <Link href="/notifications" className="fz-dash-top__menu-item" role="menuitem" onClick={() => setInboxOpen(false)}>
-                  <span className="fz-dash-top__menu-icon"><Bell size={16} /></span>
-                  Notifications
-                  {hasUnread && <span className="fz-dash-top__menu-badge">New</span>}
-                </Link>
-                <Link href="/messages" className="fz-dash-top__menu-item" role="menuitem" onClick={() => setInboxOpen(false)}>
-                  <span className="fz-dash-top__menu-icon"><MessageCircle size={16} /></span>
-                  Messages
-                </Link>
-              </div>
-            </>
-          )}
-        </div>
-      </header>
-
+      {/* The top bar is the app-wide SiteHeader (same on every page). */}
       <main className="fz-dash__body">
-        {/* ── Bites | Feed | Trims ─────────────────────────────────────── */}
-        <nav className="fz-dash-seg" aria-label="Discover">
-          {SEGMENTS.map(({ tab, label, icon: Icon }) => (
-            <Link key={tab} href={`/discover?tab=${tab}`} className="fz-dash-seg__item">
-              <Icon size={16} strokeWidth={2.3} />
-              {label}
-            </Link>
-          ))}
-        </nav>
+        {/* ── For you · Bites · Feed · Trims (switch in place) ─────────── */}
+        <div ref={tabsAnchorRef} className="fz-dash-tabs-wrap">
+          <HomeTabs tabs={TABS} active={active} onChange={selectTab} />
+        </div>
 
-        {isBusinessProfile && hasPinnedRestaurant === false && (
-          <div className="fz-dash-nudge">
-            <div>
-              <strong>Your restaurant isn&apos;t pinned yet.</strong>
-              <span>Pin your place so FUZO users can find it on Scout.</span>
-            </div>
-            <button type="button" onClick={() => setIsPinModalOpen(true)}>
-              <MapPin size={14} /> Pin it
-            </button>
-          </div>
-        )}
-
-        <Rail
-          title="Recommended Restaurants"
-          sub="Picked for your taste"
-          link={{ href: '/scout', label: 'Scout' }}
-          previews={recommended?.slice(0, 10).map((p) => p.image)}
-        >
-          {restaurantRail(recommended, 'match')}
-        </Rail>
-
-        <Rail title="Near You" sub="Closest first" link={{ href: '/scout', label: 'Map' }} previews={nearest?.slice(0, 10).map((p) => p.image)}>
-          {restaurantRail(nearest, 'distance')}
-        </Rail>
-
-        <Rail
-          title="Your Taste"
-          sub={topCuisine ? `Because you love ${topCuisine}` : 'Recipes matched to your flavour profile'}
-          previews={recipes.map((r) => r.image)}
-        >
-          {loadingRecipes ? (
-            <SkeletonCards />
-          ) : recipes.length === 0 ? (
-            <div className="fz-dash-rail__empty">No recipe matches yet - create a card to teach FUZO your taste.</div>
-          ) : (
-            recipes.map((recipe) => (
-              <div key={recipe.id} className="fz-dash-card">
-                <img className="fz-dash-card__img" src={recipe.image} alt="" loading="lazy" />
-                <span className="fz-dash-card__shade" />
-                <span className="fz-dash-card__chip">
-                  <Clock size={11} /> {recipe.readyInMinutes}m
-                </span>
-                <span className="fz-dash-card__body">
-                  <span className="fz-dash-card__title">{recipe.title}</span>
-                  <span className="fz-dash-card__sub fz-dash-card__sub--gold">{recipe.matchReason}</span>
-                </span>
+        {/* For you */}
+        <div role="tabpanel" id="home-panel-foryou" aria-labelledby="home-tab-foryou" hidden={active !== 'foryou'} className="fz-dash-panel">
+          {isBusinessProfile && hasPinnedRestaurant === false && (
+            <div className="fz-dash-nudge">
+              <div>
+                <strong>Your restaurant isn&apos;t pinned yet.</strong>
+                <span>Pin your place so FUZO users can find it on Scout.</span>
               </div>
-            ))
+              <button type="button" onClick={() => setIsPinModalOpen(true)}>
+                <MapPin size={14} /> Pin it
+              </button>
+            </div>
           )}
-        </Rail>
 
-        {(loadingVideos || videos.length > 0) && (
-          <Rail title="Watch & Cook" sub={topCuisine ? `${topCuisine} on YouTube` : 'Trending recipes'} wide previews={videos.map((v) => v.thumbnail)}>
-            {loadingVideos ? (
-              <SkeletonCards wide />
+          <NearbyCities loc={loc} />
+
+          <Rail
+            title="Recommended Restaurants"
+            sub={restaurantSub('On FUZO & picked for your taste')}
+            link={{ href: '/scout', label: 'Scout' }}
+            previews={placePreviews(recommended)}
+            extraAction={useMyLocation}
+          >
+            {restaurantRail(recommended, 'match')}
+          </Rail>
+
+          <Rail title="Near You" sub={restaurantSub('Closest first')} link={{ href: '/scout', label: 'Map' }} previews={placePreviews(nearest)}>
+            {restaurantRail(nearest, 'distance')}
+          </Rail>
+
+          <Rail
+            title="Your Taste"
+            sub={topCuisine ? `Because you love ${topCuisine}` : 'Recipes matched to your flavour profile'}
+            previews={recipes.map((r) => r.image)}
+          >
+            {loadingRecipes ? (
+              <SkeletonCards />
+            ) : recipes.length === 0 ? (
+              <div className="fz-dash-rail__empty">No recipe matches yet - create a card to teach FUZO your taste.</div>
             ) : (
-              videos.map((video) => (
-                <button key={video.videoId} type="button" className="fz-dash-card fz-dash-card--wide" onClick={() => setActiveVideo(video)}>
-                  {video.thumbnail && <img className="fz-dash-card__img" src={video.thumbnail} alt="" loading="lazy" />}
-                  <span className="fz-dash-card__shade" />
-                  <span className="fz-dash-card__play">
-                    <Play size={18} fill="currentColor" />
-                  </span>
-                  <span className="fz-dash-card__body">
-                    <span className="fz-dash-card__title">{video.title}</span>
-                    <span className="fz-dash-card__sub">{video.channelTitle}</span>
-                  </span>
-                </button>
-              ))
+              recipes.map((recipe) => {
+                const full = curatedById.get(recipe.id);
+                const inner = (
+                  <>
+                    <img className="fz-dash-card__img" src={recipe.image} alt="" loading="lazy" />
+                    <span className="fz-dash-card__shade" />
+                    <span className="fz-dash-card__chip">
+                      <Clock size={11} /> {recipe.readyInMinutes}m
+                    </span>
+                    <span className="fz-dash-card__body">
+                      <span className="fz-dash-card__title">{recipe.title}</span>
+                      <span className="fz-dash-card__sub fz-dash-card__sub--gold">{recipe.matchReason}</span>
+                    </span>
+                  </>
+                );
+                // Opens the full recipe (ingredients, steps, nutrition, save) when we have it.
+                return full ? (
+                  <button key={recipe.id} type="button" className="fz-dash-card" onClick={() => setOpenRecipe(full)} aria-label={`Open recipe: ${recipe.title}`}>
+                    {inner}
+                  </button>
+                ) : (
+                  <div key={recipe.id} className="fz-dash-card fz-dash-card--static">
+                    {inner}
+                  </div>
+                );
+              })
             )}
           </Rail>
+
+          {(loadingVideos || videos.length > 0) && (
+            <Rail title="Watch & Cook" sub={topCuisine ? `${topCuisine} on YouTube` : 'Trending recipes'} wide previews={videos.map((v) => v.thumbnail)}>
+              {loadingVideos ? (
+                <SkeletonCards wide />
+              ) : (
+                videos.map((video) => (
+                  <button key={video.videoId} type="button" className="fz-dash-card fz-dash-card--wide" onClick={() => setActiveVideo(video)} aria-label={`Play: ${video.title}`}>
+                    {video.thumbnail && <img className="fz-dash-card__img" src={video.thumbnail} alt="" loading="lazy" />}
+                    <span className="fz-dash-card__shade" />
+                    <span className="fz-dash-card__play">
+                      <Play size={18} fill="currentColor" />
+                    </span>
+                    <span className="fz-dash-card__body">
+                      <span className="fz-dash-card__title">{video.title}</span>
+                      <span className="fz-dash-card__sub">{video.channelTitle}</span>
+                    </span>
+                  </button>
+                ))
+              )}
+            </Rail>
+          )}
+        </div>
+
+        {/* Bites / Feed stay mounted once opened; Trims only while active. */}
+        {visited.has('bites') && (
+          <div role="tabpanel" id="home-panel-bites" aria-labelledby="home-tab-bites" hidden={active !== 'bites'} className="fz-dash-panel fz-dash-panel--bites">
+            <BitesView />
+          </div>
+        )}
+        {visited.has('feed') && (
+          <div role="tabpanel" id="home-panel-feed" aria-labelledby="home-tab-feed" hidden={active !== 'feed'} className="fz-dash-panel fz-dash-panel--feed">
+            <FoodCardFeed />
+          </div>
+        )}
+        {active === 'trims' && (
+          <div role="tabpanel" id="home-panel-trims" aria-labelledby="home-tab-trims" className="fz-dash-panel fz-dash-panel--trims">
+            <div className="fz-dash-reel">
+              <TrimsReel />
+            </div>
+          </div>
         )}
       </main>
 
       {/* ── Bottom dock: Explore | + | Rewards ───────────────────────── */}
       <nav className="fz-dash-dock" aria-label="Quick actions">
         <Link href="/scout" className="fz-dash-dock__item">
-          <Compass size={22} strokeWidth={2.1} />
+          <Compass size={18} strokeWidth={2.1} />
           <span>Explore</span>
         </Link>
         <button type="button" className="fz-dash-dock__create" onClick={() => setIsCreateOpen(true)} aria-label="Create a food card">
-          <Plus size={28} strokeWidth={2.6} />
+          <Plus size={22} strokeWidth={2.6} />
         </button>
         <Link href="/rewards" className="fz-dash-dock__item">
-          <ChartNoAxesColumn size={22} strokeWidth={2.4} />
+          <ChartNoAxesColumn size={18} strokeWidth={2.4} />
           <span>Rewards</span>
         </Link>
       </nav>
 
       {isCreateOpen && <CreateCardModal onClose={() => setIsCreateOpen(false)} />}
-      <TakoAssistant variant="overlay" isOpen={isTakoOpen} onClose={() => setIsTakoOpen(false)} />
       {isPinModalOpen && (
         <ScoutAddPinModal
           cardType="RESTAURANT_VISIT"
@@ -443,115 +395,15 @@ export default function DashboardView() {
           onClose={() => setActiveVideo(null)}
         />
       )}
+      {openRecipe && (
+        <RecipeDetailModal
+          recipe={openRecipe}
+          initialTab="ingredients"
+          saved={savedRecipes.has(openRecipe.id)}
+          onToggleSave={() => toggleRecipeSave(openRecipe)}
+          onClose={() => setOpenRecipe(null)}
+        />
+      )}
     </div>
-  );
-}
-
-// A titled row of cards. Shows the first PREVIEW_COUNT cards, then a "See all"
-// card (a fanned stack of the next photos + a count) that expands the section
-// into a grid in place - no long sideways scroll. Arrow buttons appear on
-// devices with a mouse while it's a row.
-const PREVIEW_COUNT = 4;
-
-function Rail({
-  title,
-  sub,
-  link,
-  wide = false,
-  previews = [],
-  children,
-}: {
-  title: string;
-  sub?: string;
-  link?: { href: string; label: string };
-  wide?: boolean;
-  /** Image URL per card, in the same order as the cards - used for the "See all" stack. */
-  previews?: (string | undefined)[];
-  children: ReactNode;
-}) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [expanded, setExpanded] = useState(false);
-  const items = Children.toArray(children);
-  const hidden = items.length - PREVIEW_COUNT;
-  const collapsible = hidden > 0;
-  const showGrid = collapsible && expanded;
-
-  // Stack = the next photos after the visible cards (falling back to the first ones).
-  const pool = previews.filter((u): u is string => !!u);
-  const stack = (pool.slice(PREVIEW_COUNT, PREVIEW_COUNT + 3).length === 3 ? pool.slice(PREVIEW_COUNT, PREVIEW_COUNT + 3) : pool.slice(0, 3));
-
-  const scroll = (dir: 1 | -1) => {
-    const el = trackRef.current;
-    if (el) el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: 'smooth' });
-  };
-
-  const collapse = () => {
-    setExpanded(false);
-    trackRef.current?.closest('.fz-dash-rail')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  return (
-    <section className={`fz-dash-rail${showGrid ? ' is-expanded' : ''}`}>
-      <div className="fz-dash-rail__head">
-        <div className="fz-dash-rail__heading">
-          <h2 className="fz-dash-rail__title">{title}</h2>
-          {sub && <p className="fz-dash-rail__sub">{sub}</p>}
-        </div>
-        <div className="fz-dash-rail__actions">
-          {showGrid ? (
-            <button type="button" className="fz-dash-rail__less" onClick={collapse}>
-              Show less <ChevronUp size={14} />
-            </button>
-          ) : (
-            <>
-              {link && (
-                <Link href={link.href} className="fz-dash-rail__link">
-                  {link.label} <ChevronRight size={14} />
-                </Link>
-              )}
-              <button type="button" className="fz-dash-rail__arrow" onClick={() => scroll(-1)} aria-label={`Scroll ${title} left`}>
-                <ChevronLeft size={16} />
-              </button>
-              <button type="button" className="fz-dash-rail__arrow" onClick={() => scroll(1)} aria-label={`Scroll ${title} right`}>
-                <ChevronRight size={16} />
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-      <div
-        className={`fz-dash-rail__track${wide ? ' fz-dash-rail__track--wide' : ''}${showGrid ? ' fz-dash-rail__track--grid' : ''}`}
-        ref={trackRef}
-      >
-        {showGrid || !collapsible ? items : items.slice(0, PREVIEW_COUNT)}
-        {collapsible && !expanded && (
-          <button
-            type="button"
-            className={`fz-dash-seeall${wide ? ' fz-dash-seeall--wide' : ''}`}
-            onClick={() => setExpanded(true)}
-            aria-label={`See all ${items.length} in ${title}`}
-          >
-            <span className="fz-dash-seeall__stack" aria-hidden="true">
-              {stack.map((src, i) => (
-                <img key={i} src={src} alt="" loading="lazy" className={`fz-dash-seeall__photo fz-dash-seeall__photo--${i + 1}`} />
-              ))}
-              {stack.length === 0 && <span className="fz-dash-seeall__photo fz-dash-seeall__photo--2 fz-dash-seeall__photo--blank" />}
-            </span>
-            <span className="fz-dash-seeall__label">See all</span>
-            <span className="fz-dash-seeall__count">+{hidden} more</span>
-          </button>
-        )}
-      </div>
-    </section>
-  );
-}
-
-function SkeletonCards({ wide = false }: { wide?: boolean }) {
-  return (
-    <>
-      {Array.from({ length: 5 }, (_, i) => (
-        <span key={i} className={`fz-dash-card fz-dash-card--skeleton${wide ? ' fz-dash-card--wide' : ''}`} aria-hidden="true" />
-      ))}
-    </>
   );
 }

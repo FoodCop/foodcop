@@ -1,8 +1,13 @@
 import type { ReactNode } from 'react';
+import SiteHeader from '@/components/header/SiteHeader';
 
-// No route-specific CSS anymore - styled entirely by the master
-// src/scss/main.scss build (incl. _profile.scss/_dna.scss partials) imported
-// once in the root layout.
+// Profile pages use the same app navbar as everywhere else. Styled entirely by
+// the master src/scss/main.scss build (incl. _profile.scss/_dna.scss partials).
 export default function ProfileLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <SiteHeader />
+      {children}
+    </>
+  );
 }

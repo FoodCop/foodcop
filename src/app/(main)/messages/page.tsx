@@ -10,6 +10,7 @@ import { PlateService, type PlateItemType } from '@/lib/services/plateService';
 import { UserSettingsService, DEFAULT_USER_SETTINGS, type UserSettings } from '@/lib/services/userSettingsService';
 import type { AuthUser } from '@/types/auth';
 import type { AppItem } from '@/types/appItem';
+import ShareSheet, { sharePayloadFromItem, type SharePayload } from '@/components/share/ShareSheet';
 
 const mapPlateItemType = (item: AppItem): PlateItemType => {
   const type = (item.itemType || item.type || '').toLowerCase();
@@ -20,8 +21,8 @@ const mapPlateItemType = (item: AppItem): PlateItemType => {
 };
 
 const TAB_ROUTES: Record<string, string> = {
-  bites: '/discover',
-  trims: '/trims',
+  bites: '/dashboard?tab=bites',
+  trims: '/dashboard?tab=trims',
   scout: '/scout',
 };
 
@@ -40,6 +41,7 @@ function MessagesPageContent() {
   const [initialUserId, setInitialUserId] = useState<string | null>(() => searchParams.get('userId'));
   const [status, setStatus] = useState<E2eeStatus | null>(null);
   const [settings, setSettings] = useState<UserSettings | null>(null);
+  const [sharing, setSharing] = useState<SharePayload | null>(null);
 
   const userId = user?.id;
 
@@ -79,11 +81,12 @@ function MessagesPageContent() {
             metadata: item as unknown as Record<string, unknown>,
           });
         }}
-        // No share-target picker exists outside chat itself yet - deliberately a no-op.
-        onShareRequest={() => {}}
-        setTab={(tab: string) => router.push(TAB_ROUTES[tab] || '/discover')}
+        // Forward a card: to another FUZO chat or to other apps.
+        onShareRequest={(item: AppItem) => setSharing(sharePayloadFromItem(item))}
+        setTab={(tab: string) => router.push(TAB_ROUTES[tab] || '/dashboard')}
         onOpenUserProfile={(id: string) => router.push(`/profile/${id}`)}
       />
+      <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
     </div>
   );
 }

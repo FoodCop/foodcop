@@ -13,6 +13,8 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { ChevronRight, Trophy } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { ROLES } from '@/lib/rewards/gamificationData';
 import { getLevelProgress, isBadgeEarned, badgeProgress, roleEarnedCount, roleRankLabel, POINTS_PER_LEVEL } from '@/lib/rewards/progressionEngine';
@@ -105,6 +107,16 @@ export default function RewardsView() {
           </div>
         </div>
       </div>
+
+      {/* Leaderboard: see how your points compare. */}
+      <Link href="/leaderboard" className="rewards-leaderboard-link">
+        <span className="rewards-leaderboard-link__icon"><Trophy size={20} /></span>
+        <span className="rewards-leaderboard-link__text">
+          <strong>See where you rank</strong>
+          <span>Compare your points with friends and everyone on FUZO.</span>
+        </span>
+        <ChevronRight size={18} className="rewards-leaderboard-link__go" />
+      </Link>
 
       {/* ROLE SWITCHER */}
       <div className="rewards-role-row scout-hide-scrollbar">

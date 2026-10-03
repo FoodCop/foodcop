@@ -180,225 +180,6 @@ $bites-radius-xl: 1.75rem;
 }
 
 // ---------------------------------------------------------------------------
-// Recipe grid
-// ---------------------------------------------------------------------------
-
-.bites-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-  gap: 1.25rem;
-
-  @media (max-width: 26.25rem) {
-    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-    gap: 0.875rem;
-  }
-}
-
-.bites-card {
-  display: block;
-  width: 100%;
-  border: none;
-  background: var(--fz-surface);
-  border-radius: $bites-radius-xl;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  text-align: left;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  }
-
-  &:focus-visible {
-    outline: 2px solid $fuzo-yellow;
-    outline-offset: 2px;
-  }
-
-  &--skeleton {
-    box-shadow: none;
-    pointer-events: none;
-    cursor: default;
-  }
-}
-
-// The card image shows the whole photo, uncropped - a blurred, zoomed copy
-// of the same image fills the frame behind it (album-art style) instead of
-// `object-fit: cover` cropping the photo to fit a fixed box.
-.bites-card__image {
-  aspect-ratio: 4 / 3;
-  position: relative;
-  background: $bites-photo-backdrop;
-  overflow: hidden;
-}
-
-.bites-card__image-backdrop {
-  position: absolute;
-  inset: -12%;
-  z-index: 0;
-  background-size: cover;
-  background-position: center;
-  filter: blur(20px) brightness(0.55) saturate(1.15);
-  transform: scale(1.1);
-}
-
-.bites-card__image-fg {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-
-  &.bites-img--fallback {
-    object-fit: contain;
-    padding: 2rem;
-    background: $bites-surface-muted;
-  }
-}
-
-.bites-card__save {
-  position: absolute;
-  top: 0.625rem;
-  left: 0.625rem;
-  z-index: 2;
-  width: 1.875rem;
-  height: 1.875rem;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(6px);
-  color: $bites-ink;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
-
-  &:hover {
-    transform: scale(1.08);
-  }
-
-  &:focus-visible {
-    outline: 2px solid $fuzo-yellow;
-    outline-offset: 2px;
-  }
-
-  &.is-saved {
-    background: $fuzo-yellow;
-    color: $fuzo-yellow-ink;
-  }
-}
-
-.bites-card__badges {
-  position: absolute;
-  top: 0.625rem;
-  right: 0.625rem;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  align-items: flex-end;
-}
-
-.bites-card__badge {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(6px);
-  padding: 0.25rem 0.5rem;
-  border-radius: $bites-radius-pill;
-  font-size: 0.6875rem;
-  font-weight: 800;
-  color: $bites-ink;
-}
-
-.bites-card__image-overlay {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  padding: 1.5rem 0.75rem 0.625rem;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 100%);
-}
-
-.bites-card__title {
-  font-size: 0.875rem;
-  font-weight: 800;
-  color: #fff;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.3;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-// Icon-only row under the image - each button jumps straight into the
-// detail modal on that tab, so seeing ingredients/steps/nutrition never
-// requires reading past the photo first.
-.bites-card__actions {
-  display: flex;
-  border-top: 1px solid $bites-border;
-}
-
-.bites-card__action {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 0;
-  border: none;
-  background: var(--fz-surface);
-  color: $bites-ink-soft;
-  transition: background 0.15s ease, color 0.15s ease;
-
-  &:not(:last-child) {
-    border-right: 1px solid $bites-border;
-  }
-
-  &:hover {
-    background: $bites-surface-muted;
-    color: $bites-ink;
-  }
-
-  &:focus-visible {
-    outline: 2px solid $fuzo-yellow;
-    outline-offset: -2px;
-  }
-}
-
-// Placed after .bites-card__image/.bites-card__action so its `background`
-// wins the cascade (equal specificity, later source order) instead of
-// their own `background` declarations flattening the shimmer to a solid fill.
-.bites-skel__shimmer {
-  background: linear-gradient(100deg, $bites-surface-muted 30%, $bites-border 50%, $bites-surface-muted 70%);
-  background-size: 200% 100%;
-  animation: bites-shimmer 1.4s ease-in-out infinite;
-}
-
-.bites-skel__action {
-  flex: 1;
-  height: 2.5rem;
-
-  &:not(:last-child) {
-    border-right: 1px solid $bites-border;
-  }
-}
-
-@keyframes bites-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Empty state + pagination
 // ---------------------------------------------------------------------------
 
@@ -475,389 +256,548 @@ $bites-radius-xl: 1.75rem;
 }
 
 // ---------------------------------------------------------------------------
-// Recipe detail modal
+// Recipe detail (RecipeDetailModal.tsx) - portalled to <body> so nothing on
+// the page (tab bar, dock) can sit over it. Phone: bottom sheet with the photo
+// on top. Desktop: photo column (title on the photo, like the recipe card) +
+// paper panel with pill tabs, scrolling content and a sticky footer
+// (yellow Save + round Share).
 // ---------------------------------------------------------------------------
 
-.bites-modal-backdrop {
+.fz-recipe {
   position: fixed;
   inset: 0;
-  z-index: 1200;
-  background: var(--fz-scrim);
-  backdrop-filter: blur(4px);
+  z-index: 1900;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 0;
+  background: rgba(20, 16, 12, 0.55);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  animation: fz-share-fade 0.2s ease both;
 
   @media (min-width: 768px) {
     align-items: center;
-    padding: 2rem;
+    padding: 1.5rem;
   }
-}
 
-.bites-modal {
-  position: relative;
-  background: var(--fz-surface);
-  width: 100%;
-  max-width: 32rem;
-  max-height: 92dvh;
-  border-radius: 2rem 2rem 0 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-
-  // Enough width for a side-by-side layout: image on the left, info/tabs/
-  // content stacked on the right - a grid so .bites-modal__image can span
-  // both the body and footer rows without changing the component's markup.
-  @media (min-width: 48rem) {
-    display: grid;
-    grid-template-columns: 38% 1fr;
-    grid-template-rows: 1fr auto;
+  &__dialog {
+    position: relative;
     width: 100%;
-    max-width: 50rem;
-    height: 34rem;
-    max-height: 88dvh;
-    border-radius: 2rem;
-  }
-}
+    height: 94dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 26px 26px 0 0;
+    background: $fz-paper;
+    box-shadow: 0 -12px 40px -10px rgba(20, 16, 12, 0.4);
+    animation: fz-share-up 0.34s $fz-ease both;
 
-.bites-modal__close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 5;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  border: none;
-  background: rgba(28, 25, 23, 0.7);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s ease;
-
-  &:hover {
-    background: rgba(28, 25, 23, 0.9);
+    @media (min-width: 768px) {
+      display: grid;
+      grid-template-columns: 44% 56%;
+      width: min(960px, 100%);
+      height: min(640px, 100%);
+      border-radius: 26px;
+      box-shadow: $fz-shadow-dark-hover;
+      animation-name: fz-share-pop;
+    }
   }
 
-  &:focus-visible {
-    outline: 2px solid $fuzo-yellow;
-    outline-offset: 2px;
-  }
-
-  // Keep the close button anchored over the image's corner instead of
-  // drifting to the modal's outer edge once the image is a 38%-wide column.
-  @media (min-width: 48rem) {
-    right: calc(62% + 1rem);
-  }
-}
-
-// Same "whole photo, uncropped" treatment as the grid cards: a blurred,
-// zoomed copy of the photo fills the frame, with the sharp, uncropped photo
-// centered on top - `object-fit: cover` here was zooming so far into short,
-// wide recipe photos that it mostly showed background bokeh, not the dish.
-.bites-modal__image {
-  height: 14rem;
-  flex-shrink: 0;
-  position: relative;
-  background: $bites-photo-backdrop;
-  overflow: hidden;
-
-  &::after {
-    content: '';
+  // One close button: frosted over the photo on phones, cream on the panel on desktop.
+  &__close {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0) 60%);
-  }
-
-  @media (min-width: 48rem) {
-    grid-column: 1;
-    grid-row: 1 / 3;
-    height: 100%;
-  }
-}
-
-.bites-modal__image-backdrop {
-  position: absolute;
-  inset: -12%;
-  background-size: cover;
-  background-position: center;
-  filter: blur(20px) brightness(0.55) saturate(1.15);
-  transform: scale(1.1);
-}
-
-.bites-modal__image-fg {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-
-  &.bites-img--fallback {
-    object-fit: contain;
-    padding: 3rem;
-  }
-}
-
-.bites-modal__image-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 1.25rem 1.5rem;
-  z-index: 1;
-}
-
-.bites-modal__title {
-  color: #fff;
-  font-size: 1.375rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin: 0;
-}
-
-.bites-modal__body {
-  padding: 1.25rem 1.5rem 0;
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
-
-  @media (min-width: 48rem) {
-    grid-column: 2;
-    grid-row: 1;
-    min-width: 0;
-    padding-top: 1.75rem;
-  }
-}
-
-.bites-modal__info {
-  padding-bottom: 1rem;
-  border-bottom: 1px solid $bites-border;
-  margin-bottom: 1.25rem;
-}
-
-.bites-modal__stats {
-  display: flex;
-  gap: 1.25rem;
-
-  span {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: $bites-ink-soft;
-  }
-}
-
-.bites-modal__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-
-.bites-modal__tag {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: $bites-ink-soft;
-  background: $bites-surface-muted;
-  padding: 0.3125rem 0.625rem;
-  border-radius: $bites-radius-pill;
-}
-
-.bites-modal__tabs {
-  display: flex;
-  gap: 0.25rem;
-  background: $bites-surface-muted;
-  border-radius: $bites-radius-lg;
-  padding: 0.25rem;
-  margin-bottom: 1.25rem;
-
-  button {
-    flex: 1;
-    display: flex;
+    top: 0.9rem;
+    right: 0.9rem;
+    z-index: 4;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.375rem;
-    padding: 0.625rem;
-    border: none;
-    background: transparent;
-    border-radius: 1rem;
-    font-size: 0.75rem;
+    border: 1px solid rgba(#fff, 0.2);
+    background: rgba(30, 26, 22, 0.52);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #fff;
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover { transform: scale(1.06); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow; outline-offset: 2px; }
+
+    @media (min-width: 768px) {
+      border-color: $fz-border;
+      background: $fz-cream;
+      color: $fz-ink;
+      backdrop-filter: none;
+      &:hover { background: $fuzo-yellow-tint; }
+    }
+  }
+
+  // ── Photo ────────────────────────────────────────────────────────────────
+  &__media {
+    position: relative;
+    flex: 0 0 15rem;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(145deg, #322b24 0%, #1c1814 60%, #0d0b09 100%);
+
+    @media (min-width: 768px) { height: 100%; }
+  }
+
+  &__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+
+    &.bites-img--fallback { object-fit: contain; padding: 3rem; background: $fz-cream; }
+  }
+
+  &__shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(10, 8, 6, 0.35) 0%, rgba(10, 8, 6, 0) 30%, rgba(10, 8, 6, 0.15) 55%, rgba(10, 8, 6, 0.88) 100%);
+  }
+
+  &__hero {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.1rem 1.25rem 1.2rem;
+    color: #fff;
+
+    @media (min-width: 768px) { padding: 1.5rem 1.6rem 1.6rem; }
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.55rem;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.28rem 0.7rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(#fff, 0.2);
+      background: rgba(30, 26, 22, 0.52);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-family: $headings-font-family;
+    font-size: 1.7rem;
     font-weight: 800;
-    color: $bites-ink-faint;
-    transition: color 0.15s ease, background 0.15s ease;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 
-    &:hover:not(.is-active) {
-      color: $bites-ink-soft;
-    }
+    @media (min-width: 768px) { font-size: 2.1rem; }
+  }
 
-    &:focus-visible {
-      outline: 2px solid $fuzo-yellow;
-      outline-offset: 2px;
-    }
+  // ── Panel ────────────────────────────────────────────────────────────────
+  &__panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.25rem 0;
 
-    &.is-active {
-      background: var(--fz-surface);
-      color: $bites-ink;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    @media (min-width: 768px) { padding: 1.4rem 1.6rem 0; }
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.9rem;
+
+    @media (min-width: 768px) { padding-right: 3rem; } // clear the close button
+
+    span {
+      padding: 0.28rem 0.75rem;
+      border-radius: 9999px;
+      background: $fuzo-yellow-tint;
+      color: $fuzo-yellow-deep;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
   }
-}
 
-.bites-modal__content {
-  padding-bottom: 1.5rem;
-}
-
-.bites-modal__fallback-text {
-  color: $bites-ink-soft;
-  font-size: 0.875rem;
-  line-height: 1.6;
-}
-
-.bites-ingredient-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  li {
+  &__tabs {
     display: flex;
+    gap: 0.3rem;
+    padding: 0.3rem;
+    margin-bottom: 0.9rem;
+    border-radius: 9999px;
+    background: $fz-cream;
+    border: 1px solid $fz-border;
+
+    @media (min-width: 768px) { margin-right: 0; }
+
+    button {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.55rem 0.4rem;
+      border: 0;
+      border-radius: 9999px;
+      background: transparent;
+      color: $fz-ink-soft;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: background 0.2s $fz-ease, color 0.15s ease, box-shadow 0.2s ease;
+
+      &:hover:not(.is-active) { color: $fz-ink; }
+      &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+      &.is-active {
+        background: $fuzo-yellow;
+        color: $fuzo-yellow-ink;
+        box-shadow: 0 4px 12px -2px rgba($fuzo-yellow-deep, 0.45);
+      }
+    }
+  }
+
+  &__count {
+    min-width: 1.25rem;
+    padding: 0 0.3rem;
+    border-radius: 9999px;
+    background: rgba($fz-ink, 0.08);
+    font-size: 0.64rem;
+    font-weight: 800;
+    line-height: 1.25rem;
+
+    .is-active & { background: rgba($fz-ink, 0.12); }
+  }
+
+  &__content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0.1rem 0.15rem 1.1rem;
+    margin: 0 -0.15rem;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: $fz-border transparent;
+  }
+
+  &__hint {
+    margin: 0 0 0.55rem;
+    font-size: 0.72rem;
+    color: $fz-ink-soft;
+  }
+
+  &__fallback {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: $fz-ink-soft;
+  }
+
+  // Tick-off ingredient list.
+  &__ingredients {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid $fz-border;
+      border-radius: 14px;
+      background: $fz-paper;
+      color: $fz-ink;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: left;
+      transition: background 0.15s ease, border-color 0.15s ease;
+
+      &:hover { border-color: rgba($fuzo-yellow-deep, 0.5); }
+      &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 1px; }
+
+      &.is-checked {
+        background: $fz-cream;
+        color: $fz-ink-soft;
+        text-decoration: line-through;
+        text-decoration-color: rgba($fz-ink, 0.35);
+      }
+    }
+  }
+
+  &__tick {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    background: $bites-surface-muted;
-    border-radius: $bites-radius-lg;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: $bites-ink-soft;
+    justify-content: center;
+    border: 2px solid $fz-border;
+    color: $fuzo-yellow-ink;
 
-    &::before {
-      content: '';
-      width: 0.375rem;
-      height: 0.375rem;
-      border-radius: 50%;
-      background: $fuzo-yellow;
-      flex-shrink: 0;
+    .is-checked & { background: $fuzo-yellow; border-color: $fuzo-yellow; }
+  }
+
+  // Numbered timeline of steps.
+  &__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      position: relative;
+      display: flex;
+      gap: 0.85rem;
+      padding-bottom: 1rem;
+
+      // connector line between numbers
+      &:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        left: 13px;
+        top: 30px;
+        bottom: 2px;
+        width: 2px;
+        border-radius: 2px;
+        background: $fz-border;
+      }
+    }
+
+    p {
+      margin: 0.2rem 0 0;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: $fz-ink;
     }
   }
-}
 
-.bites-step-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-
-  li {
-    display: flex;
-    gap: 0.75rem;
-    padding: 0.875rem 1rem;
-    background: $bites-surface-muted;
-    border-radius: $bites-radius-lg;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: $bites-ink-soft;
-    line-height: 1.5;
-  }
-}
-
-.bites-step-list__num {
-  flex-shrink: 0;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  background: $fuzo-yellow;
-  color: $fuzo-yellow-ink;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.6875rem;
-  font-weight: 900;
-}
-
-.bites-nutrition-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-}
-
-.bites-nutrition-item {
-  background: $bites-surface-muted;
-  border-radius: $bites-radius-lg;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.bites-nutrition-item__amount {
-  font-size: 1.375rem;
-  font-weight: 900;
-  color: $bites-ink;
-
-  small {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    color: $bites-ink-faint;
-    text-transform: uppercase;
-    margin-left: 0.25rem;
-  }
-}
-
-.bites-nutrition-item__name {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: $bites-ink-faint;
-}
-
-.bites-modal__footer {
-  padding: 1rem 1.5rem 1.5rem;
-  flex-shrink: 0;
-  border-top: 1px solid $bites-border;
-
-  @media (min-width: 48rem) {
-    grid-column: 2;
-    grid-row: 2;
-  }
-}
-
-.bites-save-btn {
-  width: 100%;
-  padding: 0.875rem;
-  border-radius: $bites-radius-pill;
-  border: none;
-  background: $bites-ink;
-  color: var(--fz-bg);
-  font-weight: 800;
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
-
-  &:hover {
-    opacity: 0.9;
-  }
-
-  &:focus-visible {
-    outline: 2px solid $fuzo-yellow;
-    outline-offset: 2px;
-  }
-
-  &.is-saved {
+  &__step-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: $fuzo-yellow;
     color: $fuzo-yellow-ink;
+    font-size: 0.75rem;
+    font-weight: 900;
+    box-shadow: 0 3px 8px -2px rgba($fuzo-yellow-deep, 0.5);
   }
+
+  &__nutrition {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+
+    .fz-recipe__hint { grid-column: 1 / -1; margin: 0.2rem 0 0; }
+  }
+
+  &__nutrient {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.9rem 1rem;
+    border-radius: 16px;
+    border: 1px solid $fz-border;
+    background: $fz-paper;
+    box-shadow: $fz-shadow-sm;
+    border-left: 4px solid $fuzo-yellow;
+
+    &--protein { border-left-color: $chili; }
+    &--fat { border-left-color: $turmeric; }
+    &--carbohydrates { border-left-color: $lime; }
+  }
+
+  &__nutrient-amount {
+    font-family: $headings-font-family;
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+    color: $fz-ink;
+
+    small {
+      margin-left: 0.2rem;
+      font-family: var(--body-font);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: $fz-ink-soft;
+    }
+  }
+
+  &__nutrient-name {
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: $fz-ink-soft;
+  }
+
+  // Sticky footer.
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 0 calc(1rem + env(safe-area-inset-bottom));
+    border-top: 1px solid $fz-border;
+    background: $fz-paper;
+
+    @media (min-width: 768px) { padding-bottom: 1.25rem; }
+  }
+
+  &__save {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    height: 48px;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.9rem;
+    font-weight: 800;
+    box-shadow: 0 6px 18px -4px rgba($fuzo-yellow-deep, 0.55);
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover { background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
+    &:active { transform: scale(0.98); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+    &.is-saved { background: $fz-ink; color: $fuzo-yellow; box-shadow: $fz-shadow-sm; }
+  }
+
+  &__share {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $fz-border;
+    background: $fz-paper;
+    color: $fz-ink;
+    box-shadow: $fz-shadow-sm;
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover { background: $fuzo-yellow-tint; transform: translateY(-1px); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-recipe, .fz-recipe__dialog { animation: none; }
+}
+
+// ===========================================================================
+// Design-system alignment (dashboard + Discover). Recipe tiles ARE the
+// dashboard's .fz-dash-card (see _dashboard.scss) - only the grid, the save
+// button and the image fallback live here. Controls use the shared paper/pill
+// look; the active/saved state is yellow.
+// ===========================================================================
+.bites-search__input {
+  background: $fz-paper;
+  border-color: rgba($fz-border, 0.9);
+  box-shadow: $fz-shadow-sm;
+  &:focus { border-color: $fuzo-yellow; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); }
+}
+.bites-filter-toggle {
+  background: $fz-paper;
+  border-color: rgba($fz-border, 0.9);
+  box-shadow: $fz-shadow-sm;
+  &.is-active { background: $fz-ink; border-color: $fz-ink; color: $fuzo-yellow; }
+}
+.bites-filter-panel {
+  background: $fz-paper;
+  border-color: rgba($fz-border, 0.7);
+  border-radius: 22px;
+  box-shadow: $fz-shadow-card;
+}
+.bites-chip {
+  background: $fz-paper;
+  border-color: rgba($fz-border, 0.9);
+  &:hover { border-color: $fuzo-yellow; background: $fuzo-yellow-tint; }
+}
+
+// Recipe grid of dashboard cards.
+.bites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1.1rem;
+  padding: 0.25rem 0 1.25rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+}
+
+.bites-tile {
+  // Frosted save button, top-right (the time chip sits top-left).
+  &__save {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(#fff, 0.18);
+    background: rgba(30, 26, 22, 0.52);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover { transform: scale(1.08); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow; outline-offset: 2px; }
+    &.is-saved { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; }
+  }
+
+  .fz-dash-card__sub { display: inline-flex; align-items: center; }
+
+  // Broken recipe photo -> the plate glyph on cream, not a stretched icon.
+  .bites-img--fallback { object-fit: contain; padding: 2.5rem; background: $fz-cream; }
+}
+
+.bites-empty__reset { background: $fuzo-yellow; color: $fuzo-yellow-ink; box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35); }
+.bites-pagination button {
+  background: $fz-paper;
+  border-color: rgba($fz-border, 0.9);
+  box-shadow: $fz-shadow-sm;
+  &:hover:not(:disabled) { background: $fuzo-yellow-tint; border-color: $fuzo-yellow; }
 }

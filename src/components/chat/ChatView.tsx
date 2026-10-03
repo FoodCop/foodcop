@@ -11,6 +11,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { MessageSquareLock, SquarePen } from 'lucide-react';
 import {
   ChatService,
@@ -29,6 +30,7 @@ import FoodCardDetailModal from '@/components/profile/FoodCardDetailModal';
 import { createClient } from '@/lib/supabase/client';
 import type { AuthUser } from '@/types/auth';
 import type { AppItem } from '@/types/appItem';
+import { fuzoLinkForItem } from '@/lib/share/itemLinks';
 import ChatInbox, { threadKey } from './ChatInbox';
 import ChatThread, { DialogShell, type UiMessage } from './ChatThread';
 import NewChatModal from './NewChatModal';
@@ -67,6 +69,7 @@ export const ChatView = ({
 }) => {
   const userId = authUser.id;
 
+  const router = useRouter();
   const [threads, setThreads] = useState<InboxThread[]>([]);
   const [friends, setFriends] = useState<ChatContact[]>([]);
   const [requests, setRequests] = useState<IncomingRequest[]>([]);
@@ -426,9 +429,11 @@ export const ChatView = ({
       setNotice({ title: 'Card unavailable', body: 'This card was deleted, or its owner has made their profile private.' });
       return;
     }
+    // Recipes, trims and places open on that exact item (same links the share sheet uses).
+    const link = fuzoLinkForItem(item);
+    if (link) return router.push(link);
     if (id.startsWith('recipe')) return setTab('bites');
     if (id.startsWith('video')) return setTab('trims');
-    if (item.placeId || typeof item.lat === 'number') return setTab('scout');
     setNotice({ title: 'Nothing to open', body: 'This item doesn’t have a page to open.' });
   };
 

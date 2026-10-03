@@ -1,4 +1,4 @@
-// Tako / Chef AI: floating FAB + assistant overlay, combining FUZO_V3/js/
+// Tako / Chef AI: assistant overlay (opened from the navbar's FUZO logo), combining FUZO_V3/js/
 // tako.js's landing screen (greeting, search, moods, quick discovery) with
 // legacy React's structured chat engine (legacy/fuzoapp/src/features/chef).
 // Light theme, consistent with the rest of the app's flat white-surface look
@@ -11,33 +11,6 @@ $tako-border: #ece7dd;
 $tako-ink: #1c1917;
 $tako-muted: #57534e;
 $tako-faint: #a8a29e;
-
-// ---------------------------------------------------------------------------
-// FAB
-// ---------------------------------------------------------------------------
-
-.tako-fab {
-  position: fixed;
-  bottom: 85px;
-  right: 18px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, $fuzo-yellow, $fuzo-yellow-deep);
-  box-shadow: 0 4px 16px rgba($fuzo-yellow-deep, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $fuzo-yellow-ink;
-  z-index: 1000;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba($fuzo-yellow-deep, 0.6);
-  }
-}
 
 // ---------------------------------------------------------------------------
 // Shell (overlay + page variants)

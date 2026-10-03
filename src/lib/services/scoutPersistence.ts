@@ -17,6 +17,8 @@ export interface ScoutFindData {
   photos?: string[];
   timings?: Record<string, string>;
   rating?: number;
+  /** Google place this pin was dropped on - lets Scout link it to a FUZO restaurant. */
+  placeId?: string | null;
 }
 
 export const ScoutPersistence = {
@@ -45,7 +47,7 @@ export const ScoutPersistence = {
         console.warn('Scout find post persistence skipped:', postError.message);
       }
 
-      const { error: datasetError } = await supabase.from('fuzo_locations').insert({
+      const row = {
         user_id: userId,
         source_post_id: createdPost?.id || null,
         location_name: find.name,
@@ -59,7 +61,12 @@ export const ScoutPersistence = {
         photos: find.photos || [],
         timings: find.timings || {},
         rating: find.rating || 0,
-      });
+      };
+      let { error: datasetError } = await supabase.from('fuzo_locations').insert({ ...row, place_id: find.placeId ?? null });
+      // place_id needs 20261002000000_restaurant_location_and_pins.sql - never lose the pin without it.
+      if (datasetError && /place_id/i.test(datasetError.message)) {
+        ({ error: datasetError } = await supabase.from('fuzo_locations').insert(row));
+      }
 
       if (datasetError) {
         console.warn('Scout find global dataset persistence failed:', datasetError.message);

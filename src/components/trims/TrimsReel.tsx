@@ -1,12 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Mousewheel } from 'swiper/modules';
 import 'swiper/css';
 import { PlateService } from '@/lib/services/plateService';
 import { TrimLikesService } from '@/lib/services/trimLikesService';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { Bookmark, Heart, MoreVertical, Play, Share2, Volume2, VolumeX } from 'lucide-react';
+import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
 
 // Ported from Soziety's reels.html: a full-bleed vertical video swiper with a
 // like/comment/share/more action rail per slide. Real video files (not mock
@@ -37,6 +39,29 @@ export default function TrimsReel() {
   // which slide's ⋮ button opened it - tracked here so its Save action acts
   // on the right trim.
   const [activeTrimId, setActiveTrimId] = useState<number | null>(null);
+
+  // Player state: only the visible slide plays (others pause - saves battery
+  // and data), one global mute toggle, tap-to-pause, and a progress bar.
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [muted, setMuted] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  useEffect(() => {
+    videoRefs.current.forEach((video, i) => {
+      if (!video) return;
+      video.muted = muted;
+      if (i === activeIndex && !paused) video.play().catch(() => {});
+      else video.pause();
+    });
+  }, [activeIndex, paused, muted]);
+
+  const onSlideChange = useCallback((index: number) => {
+    setActiveIndex(index);
+    setPaused(false);
+    setProgress(0);
+  }, []);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -106,48 +131,99 @@ export default function TrimsReel() {
     }
   };
 
-  const share = async (id: number) => {
-    const url = `${window.location.origin}/trims#${id}`;
-    if (navigator.share) {
-      await navigator.share({ title: 'FUZO Trim', url }).catch(() => {});
-    } else {
-      await navigator.clipboard.writeText(url);
-    }
-  };
+  // Share asks where: FUZO friends/groups or other apps (ShareSheet).
+  const [sharing, setSharing] = useState<SharePayload | null>(null);
+  const share = (id: number) =>
+    setSharing({
+      title: `FUZO Trim ${id}`,
+      subtitle: 'Short food clip on FUZO',
+      url: `/dashboard?tab=trims&trim=${id}`,
+      text: 'Watch this food clip on FUZO',
+      item: { id: trimItemId(id), itemId: trimItemId(id), itemType: 'video', type: 'video', title: `FUZO Trim ${id}`, cat: 'Trim' },
+    });
 
   return (
     <>
-      <Swiper direction="vertical" modules={SWIPER_MODULES} mousewheel className="reel-swiper" slidesPerView={1}>
-        {VIDEOS.map((v) => {
+      <Swiper
+        direction="vertical"
+        modules={SWIPER_MODULES}
+        mousewheel
+        className="reel-swiper"
+        slidesPerView={1}
+        onSlideChange={(sw) => onSlideChange(sw.activeIndex)}
+        onSwiper={(sw) => {
+          // Shared links open on that clip: /dashboard?tab=trims&trim=<id> (or the older /trims#<id>).
+          const wanted = new URLSearchParams(window.location.search).get('trim') ?? window.location.hash.slice(1);
+          const idx = VIDEOS.findIndex((v) => String(v.id) === wanted);
+          if (idx > 0) sw.slideTo(idx, 0);
+        }}
+      >
+        {VIDEOS.map((v, i) => {
           const like = likes[v.id] ?? { liked: false, count: 0 };
+          const isSaved = saved.has(v.id);
+          const isActive = i === activeIndex;
           return (
             <SwiperSlide key={v.id}>
               <div className="reel-area">
-                <div className="reel-top">
-                  <span className="fw-bold">Trims</span>
+                <video
+                  ref={(el) => {
+                    videoRefs.current[i] = el;
+                  }}
+                  src={v.src}
+                  loop
+                  muted
+                  playsInline
+                  preload={Math.abs(i - activeIndex) <= 1 ? 'auto' : 'metadata'}
+                  onClick={() => setPaused((p) => !p)}
+                  onTimeUpdate={(e) => {
+                    if (!isActive) return;
+                    const el = e.currentTarget;
+                    if (el.duration) setProgress(el.currentTime / el.duration);
+                  }}
+                />
+                <span className="reel-area__shade" aria-hidden="true" />
+
+                {/* Top: position + sound */}
+                <div className="reel-hud">
+                  <span className="reel-hud__count">
+                    {i + 1} / {VIDEOS.length}
+                  </span>
+                  <button type="button" className="reel-hud__btn" onClick={() => setMuted((m) => !m)} aria-label={muted ? 'Turn sound on' : 'Turn sound off'}>
+                    {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                  </button>
                 </div>
 
-                <video src={v.src} autoPlay loop muted playsInline />
+                {isActive && paused && (
+                  <button type="button" className="reel-paused" onClick={() => setPaused(false)} aria-label="Play">
+                    <Play size={30} fill="currentColor" />
+                  </button>
+                )}
 
+                {/* Bottom: author + caption, and the action rail */}
                 <div className="reel-section">
-                  <div className="reel-user">
-                    <div
-                      className="rounded-circle bg-light d-flex align-items-center justify-content-center flex-shrink-0"
-                      style={{ width: 36, height: 36 }}
-                    >
-                      🍽️
+                  <div className="reel-info">
+                    <div className="reel-user">
+                      <span className="reel-user__avatar" aria-hidden="true">🍽️</span>
+                      <span className="reel-user__name">FUZO Trims</span>
+                      <button type="button" className="follow-btn">
+                        Follow
+                      </button>
                     </div>
-                    <button type="button" className="follow-btn">
-                      Follow
-                    </button>
+                    <p className="reel-caption">Short food clips from the FUZO community · Trim {v.id}</p>
                   </div>
 
                   <div className="reel-actions">
-                    <button type="button" className={`r-btn${like.liked ? ' liked' : ''}`} onClick={() => toggleLike(v.id)}>
-                      ♥<span>{like.count}</span>
+                    <button type="button" className={`r-btn${like.liked ? ' liked' : ''}`} onClick={() => toggleLike(v.id)} aria-pressed={like.liked} aria-label={like.liked ? 'Unlike' : 'Like'}>
+                      <span className="r-btn__icon"><Heart size={22} fill={like.liked ? 'currentColor' : 'none'} /></span>
+                      <span>{like.count}</span>
                     </button>
-                    <button type="button" className="r-btn" onClick={() => share(v.id)}>
-                      ↗<span>Share</span>
+                    <button type="button" className={`r-btn${isSaved ? ' liked' : ''}`} onClick={() => toggleSave(v.id)} aria-pressed={isSaved} aria-label={isSaved ? 'Remove from saved' : 'Save'}>
+                      <span className="r-btn__icon"><Bookmark size={20} fill={isSaved ? 'currentColor' : 'none'} /></span>
+                      <span>{isSaved ? 'Saved' : 'Save'}</span>
+                    </button>
+                    <button type="button" className="r-btn" onClick={() => share(v.id)} aria-label="Share">
+                      <span className="r-btn__icon"><Share2 size={20} /></span>
+                      <span>Share</span>
                     </button>
                     <button
                       type="button"
@@ -155,20 +231,30 @@ export default function TrimsReel() {
                       data-bs-toggle="offcanvas"
                       data-bs-target="#trimsMoreCanvas"
                       onClick={() => setActiveTrimId(v.id)}
+                      aria-label="More options"
                     >
-                      ⋮
+                      <span className="r-btn__icon"><MoreVertical size={20} /></span>
                     </button>
                   </div>
                 </div>
+
+                {isActive && (
+                  <span className="reel-progress" aria-hidden="true">
+                    <span style={{ transform: `scaleX(${progress})` }} />
+                  </span>
+                )}
+                {isActive && paused && <span className="visually-hidden">Paused</span>}
               </div>
             </SwiperSlide>
           );
         })}
       </Swiper>
 
-      <div className="offcanvas offcanvas-bottom" tabIndex={-1} id="trimsMoreCanvas">
+      <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
+
+      <div className="offcanvas offcanvas-bottom fz-reel-sheet" tabIndex={-1} id="trimsMoreCanvas" aria-labelledby="trimsMoreTitle">
         <div className="offcanvas-header">
-          <h6 className="offcanvas-title">Trim options</h6>
+          <h6 className="offcanvas-title" id="trimsMoreTitle">Trim options</h6>
           <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" />
         </div>
         <div className="offcanvas-body">
@@ -180,9 +266,6 @@ export default function TrimsReel() {
               onClick={() => activeTrimId !== null && toggleSave(activeTrimId)}
             >
               🔖 {activeTrimId !== null && saved.has(activeTrimId) ? 'Saved' : 'Save'}
-            </button>
-            <button type="button" className="list-group-item list-group-item-action" data-bs-dismiss="offcanvas">
-              ✂️ Edit
             </button>
             <button type="button" className="list-group-item list-group-item-action" data-bs-dismiss="offcanvas">
               🙈 Not interested

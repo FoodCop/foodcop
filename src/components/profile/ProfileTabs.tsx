@@ -8,16 +8,19 @@ import SettingsTab from './SettingsTab';
 import RestaurantMenuTab from './restaurant/RestaurantMenuTab';
 import RestaurantInfoTab from './restaurant/RestaurantInfoTab';
 import RestaurantGalleryTab from './restaurant/RestaurantGalleryTab';
+import RestaurantActivityTab from './restaurant/RestaurantActivityTab';
+import RestaurantDashboardTab from './restaurant/RestaurantDashboardTab';
 import type { FoodCardRecord } from '@/lib/types/foodCard';
 
 type PersonTab = 'settings' | 'activity' | 'dna';
-type BusinessTab = 'settings' | 'menu' | 'activity' | 'info' | 'gallery';
+type BusinessTab = 'settings' | 'menu' | 'activity' | 'info' | 'gallery' | 'dashboard';
 
 const EMPTY_STATE: Record<string, { emoji: string; text: string }> = {
   settings: { emoji: '⚙️', text: 'Settings unavailable' },
   menu: { emoji: '📜', text: 'No menu available' },
   info: { emoji: 'ℹ️', text: 'No info available' },
   gallery: { emoji: '🖼️', text: 'No gallery available' },
+  dashboard: { emoji: '🏪', text: 'Dashboard unavailable' },
   activity: { emoji: '💬', text: 'No recent activity to show.' },
 };
 
@@ -28,6 +31,7 @@ const TAB_LABEL: Record<string, string> = {
   activity: 'Activity',
   info: 'About & Hours',
   gallery: 'Gallery',
+  dashboard: 'Dashboard',
 };
 
 // Tab labels/copy ported verbatim from the old app's profile.html switchTab()
@@ -62,8 +66,12 @@ export default function ProfileTabs({
   onProfileUpdate?: (patch: Partial<Pick<DemoProfile, 'name' | 'handle'>>) => void;
 }) {
   const dnaVisible = isCurrentUser || showFoodDna;
-  const tabs: (PersonTab | BusinessTab)[] = profile.type === 'restaurant'
-    ? ['menu', 'activity', 'info', 'gallery']
+  const isRestaurant = profile.type === 'restaurant';
+  // Restaurants: the owner also gets the Dashboard (business details, hours, menu management).
+  const tabs: (PersonTab | BusinessTab)[] = isRestaurant
+    ? isCurrentUser
+      ? ['menu', 'activity', 'info', 'gallery', 'dashboard']
+      : ['menu', 'activity', 'info', 'gallery']
     : isCurrentUser
       ? ['activity', 'dna', 'settings']
       : dnaVisible
@@ -92,6 +100,8 @@ export default function ProfileTabs({
 
       {active === 'dna' ? (
         <FoodDnaSection {...tasteProfile} myCards={myCards} userId={userId} isOwner={isCurrentUser} />
+      ) : active === 'activity' && isRestaurant && userId ? (
+        <RestaurantActivityTab restaurantId={userId} restaurantName={profile.name} isOwner={isCurrentUser} />
       ) : active === 'activity' ? (
         <ActivityTab
           userId={userId}
@@ -101,10 +111,12 @@ export default function ProfileTabs({
           isLoadingCards={isLoadingCards}
           refetchCards={refetchCards}
         />
-      ) : active === 'menu' ? (
-        <RestaurantMenuTab categories={profile.menuCategories} />
-      ) : active === 'info' ? (
-        <RestaurantInfoTab info={profile.restaurantInfo} restaurantName={profile.name} />
+      ) : active === 'menu' && userId ? (
+        <RestaurantMenuTab restaurantId={userId} isOwner={isCurrentUser} onManage={() => setActive('dashboard')} />
+      ) : active === 'info' && userId ? (
+        <RestaurantInfoTab restaurantId={userId} restaurantName={profile.name} isOwner={isCurrentUser} />
+      ) : active === 'dashboard' && userId && isCurrentUser ? (
+        <RestaurantDashboardTab restaurantId={userId} restaurantName={profile.name} />
       ) : active === 'gallery' ? (
         <RestaurantGalleryTab photos={profile.galleryPhotos} />
       ) : active === 'settings' ? (

@@ -430,6 +430,15 @@ export const ChatService = {
   },
 
   // ── Inbox, unread, receipts ───────────────────────────────────────────────
+  /** Total unread messages across all chats (for the navbar dot) - counts only, no decryption. */
+  async unreadTotal(): Promise<number> {
+    const client = supabase;
+    if (!client) return 0;
+    const { data, error } = await client.rpc('get_chat_inbox');
+    if (error || !Array.isArray(data)) return 0;
+    return (data as Record<string, unknown>[]).reduce((sum, r) => sum + (Number(r.out_unread) || 0), 0);
+  },
+
   /** Every thread you're in, with the real last message (decrypted here) and unread count. */
   async getInbox(userId: string): Promise<ChatResult<InboxThread[]>> {
     const client = supabase;

@@ -14,7 +14,13 @@ import HighlightEditorModal from './HighlightEditorModal';
 import HighlightViewerModal from './HighlightViewerModal';
 import FoodCardDetailModal from './FoodCardDetailModal';
 import SavedItemDetailModal from './SavedItemDetailModal';
+import ShareSheet, { sharePayloadFromItem, type SharePayload } from '@/components/share/ShareSheet';
+import type { AppItem } from '@/types/appItem';
 import { SOCIAL_ICONS } from './settings/SocialLinksEditor';
+import { Stars, StatusPill, formatCount } from './restaurant/RestaurantBits';
+import RateRestaurantModal from './restaurant/RateRestaurantModal';
+import SocialLinksSheet from './SocialLinksSheet';
+import { useOpenStatus, useRestaurant } from '@/lib/hooks/useRestaurant';
 import { SOCIAL_META, SOCIAL_PLATFORMS, SocialLinksService, type SocialLinks } from '@/lib/services/socialLinksService';
 
 // The hero card flips to show the user's other social profiles - a mobile-only
@@ -101,8 +107,13 @@ export default function ProfileHero({
   const [viewingDetail, setViewingDetail] = useState<HighlightItemRef | null>(null);
 
   const isMobile = useIsMobile();
+  const isRestaurant = profile.type === 'restaurant';
+  const restaurant = useRestaurant(userId, isRestaurant);
+  const openStatus = useOpenStatus(isRestaurant ? restaurant.profile : null);
+  const [isRating, setIsRating] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const [socialLinks, setSocialLinks] = useState<SocialLinks>({});
+  const [editingSocials, setEditingSocials] = useState(false);
   const isFlipped = isMobile && flipped;
 
   useEffect(() => {
@@ -225,23 +236,9 @@ export default function ProfileHero({
     }
   };
 
-  const handleShareDetail = async (item: { name?: string; title?: string }) => {
-    const name = item.name || item.title || 'this find';
-    const text = `Check out ${name} on FUZO!`;
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({ title: 'FUZO', text });
-      } catch {
-        // user cancelled
-      }
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // clipboard fallback
-    }
-  };
+  // Share asks where: FUZO friends/groups or other apps (ShareSheet).
+  const [sharing, setSharing] = useState<SharePayload | null>(null);
+  const handleShareDetail = (item: AppItem) => setSharing(sharePayloadFromItem(item));
 
   // Convert real user highlights to carousel items
   const displayHighlights: DisplayHighlight[] = highlights.map((h) => ({
@@ -316,7 +313,7 @@ export default function ProfileHero({
       >
         <div className="fz-hero-full-banner__overlay" />
 
-        {/* Header: Top-Left Back Arrow with Centered Brand Logo */}
+        {/* Back arrow (the FUZO logo lives in the app navbar above). */}
         <header className="fz-hero-full-banner__nav">
           <button
             type="button"
@@ -327,9 +324,6 @@ export default function ProfileHero({
           >
             <ArrowLeft size={18} strokeWidth={2.5} />
           </button>
-          <Link href="/" className="fz-hero-full-banner__logo" aria-label="FUZO Home">
-            <img src="/fuzo_logo.svg" alt="FUZO" />
-          </Link>
         </header>
 
         {/* Bottom Profile Info & Actions */}
@@ -393,6 +387,34 @@ export default function ProfileHero({
 
               {profile.bio && <p className="fz-hero-full-banner__bio">{profile.bio}</p>}
 
+              {/* Desktop: social profiles as a row of brand icons (mobile shows them on the flip side). */}
+              {(linkedPlatforms.length > 0 || isOwnProfile) && (
+                <div className="fz-hero-socials">
+                  {linkedPlatforms.map((p) => {
+                    const Icon = SOCIAL_ICONS[p];
+                    const handle = socialLinks[p]!;
+                    return (
+                      <a
+                        key={p}
+                        className={`fz-hero-socials__link fz-social-badge fz-social-badge--${p}`}
+                        href={SOCIAL_META[p].urlFor(handle)}
+                        target="_blank"
+                        rel="noopener noreferrer me"
+                        aria-label={`${profile.name} on ${SOCIAL_META[p].label} (@${handle})`}
+                        title={`${SOCIAL_META[p].label} · @${handle}`}
+                      >
+                        <Icon size={15} />
+                      </a>
+                    );
+                  })}
+                  {isOwnProfile && (
+                    <button type="button" className="fz-hero-socials__add" onClick={() => setEditingSocials(true)}>
+                      <Plus size={13} strokeWidth={2.6} /> {linkedPlatforms.length ? 'Edit socials' : 'Add your socials'}
+                    </button>
+                  )}
+                </div>
+              )}
+
               {/* On mobile the stats row is the flip trigger (back = social profiles). */}
               <StatsRow
                 asButton={isMobile}
@@ -400,22 +422,39 @@ export default function ProfileHero({
                 label={`Show ${profile.name}'s social profiles`}
               >
                 {/* Post/bite counts would reveal a private profile's activity, so they're hidden until access is granted. */}
-                {!restricted && (
+                {isRestaurant ? (
                   <>
-                    <div className="fz-hero-full-banner__stat">
-                      <strong>{profile.bites}</strong>
-                      <span>Bites</span>
+                    {/* Restaurants: rating + review count + live open status. */}
+                    <div className="fz-hero-full-banner__stat fz-hero-full-banner__stat--rating">
+                      <strong>★ {restaurant.summary.count ? restaurant.summary.average.toFixed(1) : 'New'}</strong>
+                      {restaurant.summary.count > 0 && <Stars value={restaurant.summary.average} size={12} />}
                     </div>
                     <div className="fz-hero-full-banner__stat">
-                      <strong>{profile.posts}</strong>
-                      <span>Posts</span>
+                      <strong>{formatCount(restaurant.summary.count)}</strong>
+                      <span>{restaurant.summary.count === 1 ? 'Review' : 'Reviews'}</span>
+                    </div>
+                    {openStatus && <StatusPill status={openStatus} onDark />}
+                  </>
+                ) : (
+                  <>
+                    {!restricted && (
+                      <>
+                        <div className="fz-hero-full-banner__stat">
+                          <strong>{profile.bites}</strong>
+                          <span>Bites</span>
+                        </div>
+                        <div className="fz-hero-full-banner__stat">
+                          <strong>{profile.posts}</strong>
+                          <span>Posts</span>
+                        </div>
+                      </>
+                    )}
+                    <div className="fz-hero-full-banner__stat">
+                      <strong>{friendCount}</strong>
+                      <span>Friends</span>
                     </div>
                   </>
                 )}
-                <div className="fz-hero-full-banner__stat">
-                  <strong>{friendCount}</strong>
-                  <span>Friends</span>
-                </div>
                 {isMobile && (
                   <span className="fz-hero-full-banner__flip-hint" aria-hidden="true">
                     <Repeat2 size={13} strokeWidth={2.4} />
@@ -447,6 +486,11 @@ export default function ProfileHero({
                 <Link href={`/messages?userId=${userId}`} className="fz-hero-full-banner__btn-message">
                   Message
                 </Link>
+                {isRestaurant && (
+                  <button type="button" className="fz-hero-full-banner__btn-message" onClick={() => setIsRating(true)}>
+                    ★ Rate
+                  </button>
+                )}
               </>
             ) : isOwnProfile ? (
               <>
@@ -560,10 +604,7 @@ export default function ProfileHero({
                 key={p}
                 type="button"
                 className="fz-hero-flip__social fz-hero-flip__social--empty"
-                onClick={() => {
-                  setFlipped(false);
-                  onNavigate?.({ tab: 'settings' });
-                }}
+                onClick={() => setEditingSocials(true)}
               >
                 {content}
               </button>
@@ -578,6 +619,19 @@ export default function ProfileHero({
       </div>
 
       {uploadError && <div className="alert alert-danger small py-2 m-3">{uploadError}</div>}
+
+      {editingSocials && currentUserId && (
+        <SocialLinksSheet userId={currentUserId} onClose={() => setEditingSocials(false)} onSaved={setSocialLinks} />
+      )}
+
+      {isRating && isRestaurant && userId && currentUserId && (
+        <RateRestaurantModal
+          restaurantId={userId}
+          restaurantName={profile.name}
+          userId={currentUserId}
+          onClose={() => setIsRating(false)}
+        />
+      )}
 
       {/* ─────────────────────────────────────────────────────────────
           2. HIGHLIGHTS SECTION (3D FAN CAROUSEL)
@@ -728,6 +782,8 @@ export default function ProfileHero({
           onUpdated={() => setViewingDetail(null)}
         />
       )}
+
+      <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
 
       {/* Saved Item Details Modal */}
       {viewingDetail && viewingDetail.kind === 'saved' && (

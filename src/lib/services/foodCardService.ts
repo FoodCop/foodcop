@@ -120,6 +120,7 @@ export const foodCardService = {
           notes: input.caption || '',
           photos: input.imageUrl ? [input.imageUrl] : [],
           tags: input.tags.cuisine,
+          placeId: input.placeId ?? null,
         });
       } catch (dualWriteError) {
         console.warn('food_cards Scout map dual-write failed:', dualWriteError);

@@ -60,6 +60,8 @@ export interface ScoutPlace {
     weekday_text?: string[];
   };
   distanceText?: string;
+  /** Distance from the map centre, for the Distance sort. */
+  distanceMeters?: number;
   wheelchairAccessibleEntrance?: boolean;
   servesBeer?: boolean;
   servesWine?: boolean;

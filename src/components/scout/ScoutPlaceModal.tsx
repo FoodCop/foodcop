@@ -1,9 +1,13 @@
 'use client';
 
 import React from 'react';
-import { X, Star, Clock, MapPin, Bookmark, Share2, Navigation, Globe, Phone, Check, ChevronDown } from 'lucide-react';
+import { X, Star, Clock, MapPin, Bookmark, Share2, Navigation, Globe, Phone, Check, ChevronDown, Utensils } from 'lucide-react';
+import Link from 'next/link';
 import type { ScoutPlace } from '@/types/scout';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+import type { FuzoRestaurantLink } from '@/lib/services/restaurantService';
+import { DAY_LABELS, WEEK_ORDER, formatDay, getOpenStatus, hasAnyHours } from '@/lib/restaurant/hours';
+import { StatusPill } from '@/components/profile/restaurant/RestaurantBits';
 
 interface ScoutPlaceModalProps {
   place: ScoutPlace;
@@ -14,6 +18,8 @@ interface ScoutPlaceModalProps {
   onClose: () => void;
   onAction: (place: ScoutPlace, action: 'save' | 'share') => void;
   onContribute?: (place: ScoutPlace) => Promise<void>;
+  /** Set when this place is a FUZO restaurant - shows the "View on FUZO" strip. */
+  fuzoRestaurant?: FuzoRestaurantLink;
 }
 
 export const ScoutPlaceModal = ({
@@ -25,6 +31,7 @@ export const ScoutPlaceModal = ({
   onClose,
   onAction,
   onContribute,
+  fuzoRestaurant,
 }: ScoutPlaceModalProps) => {
 
   const containerRef = useFocusTrap(true);
@@ -34,6 +41,24 @@ export const ScoutPlaceModal = ({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const priceStr = place.priceLevel ? '$'.repeat(place.priceLevel) : null;
+  const [hoursOpen, setHoursOpen] = React.useState(false);
+
+  // One source of truth for open/closed in this popup: a FUZO restaurant's own
+  // hours win; otherwise Google's open_now; otherwise we honestly don't know.
+  const fuzoHasHours = !!fuzoRestaurant && hasAnyHours(fuzoRestaurant.hours);
+  const fuzoStatus = fuzoHasHours ? getOpenStatus(fuzoRestaurant!.hours, fuzoRestaurant!.timezone) : null;
+  const googleOpen = place.currentOpeningHours?.open_now;
+  const hoursState: { open: boolean | null; label: string } = fuzoStatus
+    ? { open: fuzoStatus.isOpen, label: fuzoStatus.detail ? `${fuzoStatus.label} · ${fuzoStatus.detail}` : fuzoStatus.label }
+    : typeof googleOpen === 'boolean'
+      ? { open: googleOpen, label: googleOpen ? 'Open now' : 'Closed' }
+      : { open: null, label: 'Hours not available' };
+  const weekly: { day: string; hours: string }[] = fuzoHasHours
+    ? WEEK_ORDER.map((d) => ({ day: DAY_LABELS[d], hours: formatDay(fuzoRestaurant!.hours[d]) }))
+    : (place.currentOpeningHours?.weekday_text ?? []).map((line) => {
+        const [day, ...rest] = line.split(': ');
+        return { day, hours: rest.join(': ') };
+      });
 
   return (
     <div
@@ -52,11 +77,15 @@ export const ScoutPlaceModal = ({
 
       {/* Hero Image */}
       <div className="scout-modal__hero">
-        <img
-          src={place.img}
-          alt={place.name}
-          onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800'; }}
-        />
+        {place.img ? (
+          <img
+            src={place.img}
+            alt={place.name}
+            onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800'; }}
+          />
+        ) : (
+          <span className="scout-modal__noimg" aria-hidden="true"><Utensils size={40} /></span>
+        )}
         <div className="scout-modal__hero-scrim" />
       </div>
 
@@ -77,11 +106,17 @@ export const ScoutPlaceModal = ({
             <>
               <h2 className="scout-modal__title">{place.name}</h2>
               <div className="scout-modal__rating-row">
-                <span style={{ fontWeight: 700, color: '#1c1917' }}>{place.rating}</span>
-                <div className="scout-modal__stars">
-                  {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill={i <= Math.floor(place.rating) ? "currentColor" : "none"} />)}
-                </div>
-                <span>({place.reviews?.toLocaleString()})</span>
+                {place.rating > 0 ? (
+                  <>
+                    <span style={{ fontWeight: 700, color: '#1c1917' }}>{Number(place.rating.toFixed(1))}</span>
+                    <div className="scout-modal__stars">
+                      {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill={i <= Math.floor(place.rating) ? "currentColor" : "none"} />)}
+                    </div>
+                    {place.reviews > 0 && <span>({place.reviews.toLocaleString()})</span>}
+                  </>
+                ) : (
+                  <span>No ratings yet</span>
+                )}
                 {priceStr && <span>· {priceStr}</span>}
               </div>
               <div className="scout-modal__cat">{place.cat}</div>
@@ -90,6 +125,25 @@ export const ScoutPlaceModal = ({
 
           {isLoadingDetails && <p className="scout-modal__loading">Updating live details...</p>}
         </div>
+
+        {/* This place is on FUZO: its own rating, live status and profile link. */}
+        {fuzoRestaurant && !place.isNewFind && (
+          <div className="scout-modal__fuzo">
+            <div className="scout-modal__fuzo-info">
+              <span className="scout-modal__fuzo-badge">★ On FUZO</span>
+              <span className="scout-modal__fuzo-rating">
+                {fuzoRestaurant.reviewCount > 0
+                  ? `${fuzoRestaurant.average.toFixed(1)} ★ · ${fuzoRestaurant.reviewCount.toLocaleString()} ${fuzoRestaurant.reviewCount === 1 ? 'review' : 'reviews'}`
+                  : 'New on FUZO'}
+              </span>
+              <StatusPill status={getOpenStatus(fuzoRestaurant.hours, fuzoRestaurant.timezone)} />
+            </div>
+            <Link href={`/profile/${fuzoRestaurant.restaurantId}`} className="scout-modal__fuzo-cta">
+              View on FUZO
+              <span className="scout-modal__fuzo-cta-sub">Menu, reviews &amp; posts</span>
+            </Link>
+          </div>
+        )}
 
         {/* Action Row */}
         {!place.isNewFind && (
@@ -192,16 +246,36 @@ export const ScoutPlaceModal = ({
                 <div className="scout-modal__info-row">
                   <Clock size={20} />
                   <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <button
+                      type="button"
+                      className="scout-modal__hours-toggle"
+                      onClick={() => weekly.length > 0 && setHoursOpen((v) => !v)}
+                      aria-expanded={hoursOpen}
+                      disabled={weekly.length === 0}
+                    >
                       <p>
-                        {place.currentOpeningHours?.open_now ? (
-                          <span className="scout-modal__open-now">Open now</span>
+                        {hoursState.open === true ? (
+                          <span className="scout-modal__open-now">{hoursState.label}</span>
+                        ) : hoursState.open === false ? (
+                          <span className="scout-modal__closed">{hoursState.label}</span>
                         ) : (
-                          <span className="scout-modal__closed">Closed</span>
+                          <span style={{ color: '#a8a29e' }}>{hoursState.label}</span>
                         )}
                       </p>
-                      <ChevronDown size={16} style={{ color: '#a8a29e' }} />
-                    </div>
+                      {weekly.length > 0 && (
+                        <ChevronDown size={16} style={{ color: '#a8a29e', transform: hoursOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.2s' }} />
+                      )}
+                    </button>
+                    {hoursOpen && (
+                      <ul className="scout-modal__hours-list">
+                        {weekly.map((w) => (
+                          <li key={w.day}>
+                            <span>{w.day}</span>
+                            <span>{w.hours}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
 

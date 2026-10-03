@@ -6,9 +6,7 @@ import { PlayCircle } from 'lucide-react';
 import type { FoodCardRecord } from '../../lib/types/foodCard';
 import { TYPE_META, familyOf } from '../../lib/types/foodCard';
 import { foodCardService } from '../../lib/services/foodCardService';
-import { PointsService } from '../../lib/services/pointsService';
-import { ChatService } from '../../lib/services/chatService';
-import FriendPickerModal, { type ShareTarget } from '../chat/FriendPickerModal';
+import ShareSheet, { type SharePayload } from '../share/ShareSheet';
 import { VideoPlayerModal } from '../ui/VideoPlayerModal';
 
 interface FoodCardDetailModalProps {
@@ -18,11 +16,10 @@ interface FoodCardDetailModalProps {
   onUpdated: (updated: FoodCardRecord) => void;
 }
 
-export default function FoodCardDetailModal({ card, currentUserId, onClose, onUpdated }: FoodCardDetailModalProps) {
+export default function FoodCardDetailModal({ card, onClose, onUpdated }: FoodCardDetailModalProps) {
   const [current, setCurrent] = useState(card);
   const [isPublishing, setIsPublishing] = useState(false);
-  const [showFriendPicker, setShowFriendPicker] = useState(false);
-  const [shareStatus, setShareStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [sharing, setSharing] = useState<SharePayload | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const meta = TYPE_META[current.card_type];
@@ -43,49 +40,23 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
     }
   };
 
-  const handlePickShareTarget = async (target: ShareTarget) => {
-    setShowFriendPicker(false);
-    setShareStatus('sending');
-
-    const item = {
-      id: current.id,
-      itemType: 'food_card' as const,
-      name: current.title,
-      caption: current.caption || undefined,
-      img: current.image_url || undefined,
-      cat: meta.label,
-    };
-
-    const sent =
-      target.type === 'group'
-        ? await ChatService.sendGroupSharedItemMessage({
-            groupId: target.group.id,
-            senderId: currentUserId,
-            item,
-          })
-        : await (async () => {
-            const conversation = await ChatService.getOrCreateConversation(currentUserId, target.friend.id);
-            if (!conversation.success || !conversation.data) return { success: false as const };
-            return ChatService.sendSharedItemMessage({
-              conversationId: conversation.data.id,
-              senderId: currentUserId,
-              item,
-            });
-          })();
-
-    if (!sent.success || !sent.data) {
-      setShareStatus('error');
-      return;
-    }
-
-    await PointsService.awardPoints({
-      actionType: 'share_card',
-      sourceType: 'share',
-      sourceId: sent.data.id,
+  // Share asks where: FUZO friends/groups or other apps (ShareSheet).
+  const openShare = () =>
+    setSharing({
+      title: current.title,
+      subtitle: meta.label,
+      image: current.image_url || undefined,
+      url: `/profile/${current.user_id}`,
+      text: `Check out "${current.title}" on FUZO`,
+      item: {
+        id: current.id,
+        itemType: 'food_card',
+        name: current.title,
+        caption: current.caption || undefined,
+        img: current.image_url || undefined,
+        cat: meta.label,
+      },
     });
-
-    setShareStatus('sent');
-  };
 
   return (
     <>
@@ -184,12 +155,6 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
                 </Link>
               )}
 
-              {shareStatus === 'sent' && (
-                <div className="alert alert-success mt-4 mb-0">Shared! They&rsquo;ll see it in Messages.</div>
-              )}
-              {shareStatus === 'error' && (
-                <div className="alert alert-danger mt-4 mb-0">Couldn&rsquo;t share that — try again.</div>
-              )}
             </div>
 
             <div className="modal-footer bg-light border-top-0 p-3 d-flex gap-2">
@@ -206,23 +171,16 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
               <button
                 type="button"
                 className="btn btn-primary flex-grow-1 fw-bold fz-on-accent rounded-pill"
-                onClick={() => setShowFriendPicker(true)}
-                disabled={shareStatus === 'sending'}
+                onClick={openShare}
               >
-                {shareStatus === 'sending' ? 'Sending...' : 'Share'}
+                Share
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {showFriendPicker && (
-        <FriendPickerModal
-          currentUserId={currentUserId}
-          onClose={() => setShowFriendPicker(false)}
-          onPick={handlePickShareTarget}
-        />
-      )}
+      <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
 
       {isPlaying && current.media_url && (
         <VideoPlayerModal

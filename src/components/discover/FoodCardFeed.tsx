@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Heart, Share2, X } from 'lucide-react';
+import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
 import { useAuth } from '../auth/AuthProvider';
 import {
   aggregateForUser,
@@ -83,9 +85,10 @@ export default function FoodCardFeed() {
     const t = setTimeout(() => {
       const node = containerRef.current;
       if (!node) return;
-      const nodeCards = Array.from(node.querySelectorAll<HTMLDivElement>('.tinder-card'));
+      const nodeCards = Array.from(node.querySelectorAll<HTMLElement>('.tinder-card'));
       nodeCards.forEach((cardEl, idx) => {
         const stackIdx = idx - currentIndex;
+        if (stackIdx >= 0) cardEl.style.animation = '';
         if (stackIdx < 0) {
           cardEl.style.display = 'none';
         } else if (stackIdx === 0) {
@@ -96,7 +99,8 @@ export default function FoodCardFeed() {
         } else if (stackIdx > 0 && stackIdx < 6) {
           cardEl.style.display = 'flex';
           cardEl.style.zIndex = `${cards.length - stackIdx}`;
-          cardEl.style.transform = `translateY(${stackIdx * 10}px) scale(${1 - stackIdx * 0.03}) rotate(0deg)`;
+          // Cards behind peek out below, slightly smaller.
+          cardEl.style.transform = `translateY(${stackIdx * 12}px) scale(${1 - stackIdx * 0.04}) rotate(0deg)`;
           cardEl.style.opacity = '1';
         } else {
           cardEl.style.display = 'none';
@@ -116,6 +120,32 @@ export default function FoodCardFeed() {
   // SwipeFeed.tsx's "liking is local-state only for now" TODO. Swipe-left
   // stays session-only (no skip-tracking table exists, and nothing asked for
   // one yet).
+  // Share asks where: FUZO friends/groups or other apps (ShareSheet).
+  const [sharing, setSharing] = useState<SharePayload | null>(null);
+  function shareCard(feedCard: FeedCard) {
+    const { card, author } = feedCard;
+    const meta = TYPE_META[card.card_type];
+    setSharing({
+      title: card.title,
+      subtitle: `${meta.label} · by ${author.displayName}`,
+      image: card.image_url ?? undefined,
+      url: `/profile/${author.id}`,
+      text: `Check out "${card.title}" by ${author.displayName} on FUZO`,
+      item: {
+        id: card.id,
+        itemId: card.id,
+        itemType: 'food_card', // chat opens it in the food-card viewer
+        type: meta.label,
+        title: card.title,
+        cat: meta.label,
+        img: card.image_url ?? undefined,
+        caption: card.caption ?? undefined,
+        author: author.displayName,
+        placeId: card.place_id ?? undefined,
+      },
+    });
+  }
+
   function persistLike(feedCard: FeedCard) {
     const family = familyOf(feedCard.card.card_type);
     PlateService.saveToPlate({
@@ -138,7 +168,7 @@ export default function FoodCardFeed() {
     setIsAnimating(true);
     const node = containerRef.current;
     if (!node) return;
-    const cardEls = Array.from(node.querySelectorAll<HTMLDivElement>('.tinder-card'));
+    const cardEls = Array.from(node.querySelectorAll<HTMLElement>('.tinder-card'));
     const currentCard = cardEls[currentIndex];
     if (!currentCard) return;
 
@@ -166,7 +196,7 @@ export default function FoodCardFeed() {
     }, 500);
   }
 
-  function onDragStart(clientX: number, idx: number, card: HTMLDivElement) {
+  function onDragStart(clientX: number, idx: number, card: HTMLElement) {
     if (idx !== currentIndex) return;
     dragInfo.current = { isDragging: true, startX: clientX, moveX: 0 };
     card.style.transition = 'none';
@@ -174,7 +204,7 @@ export default function FoodCardFeed() {
 
   function onDragMove(clientX: number) {
     if (!dragInfo.current.isDragging || isAnimating || currentIndex >= cards.length) return;
-    const cardElems = containerRef.current?.querySelectorAll<HTMLDivElement>('.tinder-card');
+    const cardElems = containerRef.current?.querySelectorAll<HTMLElement>('.tinder-card');
     if (!cardElems) return;
     const currentCard = cardElems[currentIndex];
     if (!currentCard) return;
@@ -197,7 +227,7 @@ export default function FoodCardFeed() {
   function onDragEnd() {
     if (!dragInfo.current.isDragging) return;
     dragInfo.current.isDragging = false;
-    const cardElems = containerRef.current?.querySelectorAll<HTMLDivElement>('.tinder-card');
+    const cardElems = containerRef.current?.querySelectorAll<HTMLElement>('.tinder-card');
     if (!cardElems) return;
     const currentCard = cardElems[currentIndex];
     if (!currentCard) return;
@@ -219,26 +249,35 @@ export default function FoodCardFeed() {
 
   if (loading) {
     return (
-      <div className="container text-center py-5 text-muted">
-        Finding discoveries for you…
+      <div className="feed">
+        <div className="feed__stage" role="status" aria-label="Finding discoveries for you">
+          <div className="feed-card feed-card--skeleton" />
+        </div>
+        <div className="feed__bar" aria-hidden="true">
+          <span className="feed__btn feed__btn--skip feed__btn--ghost" />
+          <span className="feed__count">&nbsp;</span>
+          <span className="feed__btn feed__btn--save feed__btn--ghost" />
+        </div>
       </div>
     );
   }
 
   if (!cards.length) {
     return (
-      <div className="container text-center py-5 text-muted">
-        No discoveries right now.
-        <br />
-        Check back later, or follow more people to see their food cards here.
+      <div className="feed-empty">
+        <div className="feed-empty__emoji" aria-hidden="true">🍽️</div>
+        <div className="feed-empty__title">No discoveries right now</div>
+        <p className="feed-empty__sub">Check back later, or follow more people to see their food cards here.</p>
       </div>
     );
   }
 
+  const done = currentIndex >= cards.length;
+
   return (
-    <div className="container">
+    <div className="feed">
       <div
-        className="tinder-container"
+        className="feed__stage tinder-container"
         ref={containerRef}
         onMouseMove={(e) => onDragMove(e.clientX)}
         onMouseUp={onDragEnd}
@@ -246,52 +285,95 @@ export default function FoodCardFeed() {
       >
         {cards.map((feedCard, idx) => {
           const meta = TYPE_META[feedCard.card.card_type];
+          const author = feedCard.author;
           return (
-            <div
+            <article
               key={feedCard.card.id}
-              className="tinder-card"
+              className="tinder-card feed-card"
               data-index={idx}
-              style={{
-                backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.75) 100%), url(${feedCard.card.image_url || ''})`,
-              }}
+              aria-hidden={idx !== currentIndex}
               onMouseDown={(e) => onDragStart(e.clientX, idx, e.currentTarget)}
               onTouchStart={(e) => onDragStart(e.touches[0].clientX, idx, e.currentTarget)}
               onTouchMove={(e) => onDragMove(e.touches[0].clientX)}
               onTouchEnd={onDragEnd}
             >
-              <div className="dislike">✕</div>
-              <div className="like">♥</div>
+              {feedCard.card.image_url ? (
+                <img className="feed-card__img" src={feedCard.card.image_url} alt="" draggable={false} loading={idx - currentIndex < 3 ? 'eager' : 'lazy'} />
+              ) : (
+                <span className="feed-card__img feed-card__img--empty" />
+              )}
+              <span className="feed-card__shade" />
 
-              <span className="feed-card-badge" style={{ backgroundColor: meta.color }}>
+              {/* Drag feedback stamps (opacity driven by the swipe handlers). */}
+              <div className="dislike feed-stamp feed-stamp--skip" aria-hidden="true">
+                <X size={16} strokeWidth={3} /> Skip
+              </div>
+              <div className="like feed-stamp feed-stamp--save" aria-hidden="true">
+                <Heart size={16} fill="currentColor" /> Save
+              </div>
+
+              <span className="feed-card-badge">
+                <span className="feed-card-badge__dot" style={{ backgroundColor: meta.color }} aria-hidden="true" />
                 {meta.emoji} {meta.label}
               </span>
 
-              <div className="card-info">
-                <h3>{feedCard.card.title}</h3>
-                <div className="feed-card-byline">by {feedCard.author.displayName}</div>
+              {idx === currentIndex && (
+                <button
+                  type="button"
+                  className="feed-card__share"
+                  aria-label="Share"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onClick={() => shareCard(feedCard)}
+                >
+                  <Share2 size={17} />
+                </button>
+              )}
+
+              <div className="feed-card__body">
+                <div className="feed-card__author">
+                  {author.avatarUrl ? (
+                    <img src={author.avatarUrl} alt="" draggable={false} />
+                  ) : (
+                    <span aria-hidden="true">{(author.displayName || '?').charAt(0).toUpperCase()}</span>
+                  )}
+                  <span className="feed-card__author-name">{author.displayName}</span>
+                </div>
+                <h3 className="feed-card__title">{feedCard.card.title}</h3>
+                {feedCard.card.caption && <p className="feed-card__caption">{feedCard.card.caption}</p>}
                 <div className="feed-meta">
                   {feedCard.card.tags?.cuisine?.[0] && <span>{feedCard.card.tags.cuisine[0]}</span>}
-                  <span className="feed-card-match-reason">{feedCard.matchReason}</span>
+                  {feedCard.matchReason && <span className="feed-card-match-reason">{feedCard.matchReason}</span>}
                 </div>
               </div>
-            </div>
+            </article>
           );
         })}
 
-        <div className="card-actions">
-          <button className="action-btn dislike-btn" onClick={() => handleSwipe('left')} type="button" aria-label="Skip">
-            ✕
-          </button>
-          <button className="action-btn like-btn" onClick={() => handleSwipe('right')} type="button" aria-label="Save">
-            ♥
-          </button>
-        </div>
+        {done && (
+          <div className="feed-done">
+            <div className="feed-done__emoji" aria-hidden="true">🎉</div>
+            <div className="feed-done__title">You&rsquo;re all caught up</div>
+            <p className="feed-done__sub">Check back later for more discoveries.</p>
+            <button type="button" className="feed-done__btn" onClick={() => setCurrentIndex(0)}>
+              Start over
+            </button>
+          </div>
+        )}
+      </div>
 
-        <div className="end-message" style={{ display: currentIndex >= cards.length ? 'block' : 'none' }}>
-          You&rsquo;re all caught up.
-          <br />
-          Check back later for more discoveries.
-        </div>
+      <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
+
+      <div className="feed__bar">
+        <button className="feed__btn feed__btn--skip" onClick={() => handleSwipe('left')} type="button" aria-label="Skip" disabled={done}>
+          <X size={16} strokeWidth={2.8} />
+        </button>
+        <span className="feed__count" aria-live="polite">
+          {done ? `${cards.length} / ${cards.length}` : `${currentIndex + 1} / ${cards.length}`}
+        </span>
+        <button className="feed__btn feed__btn--save" onClick={() => handleSwipe('right')} type="button" aria-label="Save" disabled={done}>
+          <Heart size={19} fill="currentColor" />
+        </button>
       </div>
     </div>
   );

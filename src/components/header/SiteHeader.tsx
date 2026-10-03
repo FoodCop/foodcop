@@ -2,262 +2,157 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { createPortal } from 'react-dom';
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
-import { primaryLinks, moreLinks, cuisines } from './navData';
+import { Bell, LogOut, MessageCircle, Trophy, User } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { CreateCardModal } from '@/components/create/CreateCardModal';
+import TakoAssistant from '@/components/tako/TakoAssistant';
 import { NotificationsService } from '@/lib/services/notificationsService';
+import { ChatService } from '@/lib/services/chatService';
 import { createClient } from '@/lib/supabase/client';
 
-// Nav drawer + dropdowns are driven entirely by React state, not Bootstrap's
-// JS (data-bs-toggle/dismiss). Bootstrap's offcanvas appends a full-viewport
-// backdrop div directly to <body>, outside React's tree - if a drawer link's
-// Next.js navigation unmounted the page while that close transition was still
-// in flight, the backdrop was orphaned and permanently blocked every click on
-// every page after (invisible, no console error). Plain state + our own
-// conditional classes/backdrop can't leak that way, since everything lives
-// inside this one persistent component.
+// The ONE navbar for the whole app (dashboard, Scout, Messages,
+// Notifications, Rewards, Profile...) - exactly the home (dashboard) bar from
+// the client's sketch: slim solid-gold bar, profile photo | FUZO logo (opens
+// Tako, the AI food assistant) | bell. The photo opens the account menu
+// (Profile, Leaderboard, Sign out); the bell opens Notifications +
+// Messages with real unread dots. Menus are plain React state (no Bootstrap
+// JS). Styles: _header.scss (.fz-topbar).
+
 export default function SiteHeader() {
   const { user } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<'cuisines' | 'more' | null>(null);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [menu, setMenu] = useState<'account' | 'inbox' | null>(null);
+  const [isTakoOpen, setIsTakoOpen] = useState(false);
+  const [unread, setUnread] = useState({ notifications: false, messages: 0 });
 
+  // Real unread state, refreshed on every page change.
   useEffect(() => {
-    if (!user?.id) {
-      setHasUnreadNotifications(false);
-      return;
-    }
+    if (!user?.id) return;
     let cancelled = false;
-    NotificationsService.hasUnread(user.id).then((result) => {
-      if (!cancelled) setHasUnreadNotifications(result);
+    Promise.all([NotificationsService.hasUnread(user.id), ChatService.unreadTotal()]).then(([notifications, messages]) => {
+      if (!cancelled) setUnread({ notifications, messages });
     });
     return () => {
       cancelled = true;
     };
   }, [user?.id, pathname]);
 
-  const closeAll = () => {
-    setDrawerOpen(false);
-    setOpenDropdown(null);
-    setProfileMenuOpen(false);
-  };
+  // Escape closes any open menu.
+  useEffect(() => {
+    if (!menu) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenu(null);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menu]);
+
+  const close = () => setMenu(null);
+  const toggle = (m: 'account' | 'inbox') => setMenu((cur) => (cur === m ? null : m));
 
   const handleSignOut = async () => {
-    closeAll();
+    close();
     const supabase = createClient();
     await supabase?.auth.signOut();
     router.push('/login');
   };
 
-  // The dashboard carries its own top bar + bottom dock (DashboardView).
-  if (pathname === '/dashboard') return null;
+  const signedIn = Boolean(user);
+  const showInboxDot = signedIn && (unread.notifications || unread.messages > 0);
+  const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
+  const displayName = (user?.user_metadata?.display_name as string | undefined) || user?.email?.split('@')[0] || 'You';
 
   return (
     <>
-    <nav className="navbar fz-navbar sticky-top">
-      <div className="container fz-navbar__row">
-        {/* Left slot - profile picture button, fixed-width so the centered
-            logo doesn't drift when this is empty (logged out). */}
-        <div className="fz-navbar__side fz-navbar__side--start">
-          {user && (
-            <div className="position-relative">
+      <header className="fz-topbar">
+        {/* Left: profile photo -> account menu */}
+        <div className="fz-topbar__side">
+          {signedIn ? (
+            <div className="fz-topbar__anchor">
               <button
                 type="button"
-                className="btn p-0 border-0 bg-transparent"
+                className="fz-topbar__avatar"
                 aria-label="Account menu"
-                aria-expanded={profileMenuOpen}
-                onClick={() => setProfileMenuOpen((v) => !v)}
+                aria-haspopup="menu"
+                aria-expanded={menu === 'account'}
+                onClick={() => toggle('account')}
               >
-                <div className="rounded-circle bg-light d-flex align-items-center justify-content-center overflow-hidden border fz-avatar-ring" style={{ width: 32, height: 32 }}>
-                  {user.user_metadata?.avatar_url ? (
-                    <img src={user.user_metadata.avatar_url} alt="Profile" className="w-100 h-100 object-fit-cover" />
-                  ) : (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                  )}
-                </div>
+                {avatarUrl ? <img src={avatarUrl} alt="" /> : <span>{displayName.charAt(0).toUpperCase()}</span>}
               </button>
-
-              {profileMenuOpen && (
+              {menu === 'account' && (
                 <>
-                  <div
-                    className="position-fixed top-0 start-0 w-100 h-100"
-                    style={{ zIndex: 1040 }}
-                    onClick={() => setProfileMenuOpen(false)}
-                  />
-                  <div
-                    className="position-absolute top-100 start-0 mt-2 bg-white rounded shadow-sm border py-1"
-                    style={{ zIndex: 1041, minWidth: 160 }}
-                  >
-                    <Link
-                      href="/profile"
-                      className="d-block px-3 py-2 text-dark text-decoration-none"
-                      onClick={() => setProfileMenuOpen(false)}
-                    >
-                      Profile
+                  <button type="button" className="fz-topbar__scrim" aria-label="Close menu" onClick={close} />
+                  <div className="fz-topbar__menu fz-topbar__menu--start" role="menu">
+                    <div className="fz-topbar__menu-head">
+                      <strong>{displayName}</strong>
+                      <span>{user?.email}</span>
+                    </div>
+                    <Link href="/profile" className="fz-topbar__menu-item" role="menuitem" onClick={close}>
+                      <span className="fz-topbar__menu-icon"><User size={16} /></span> Profile
                     </Link>
-                    <button
-                      type="button"
-                      className="d-block w-100 text-start bg-transparent border-0 px-3 py-2 text-dark"
-                      onClick={handleSignOut}
-                    >
-                      Sign Out
+                    <Link href="/leaderboard" className="fz-topbar__menu-item" role="menuitem" onClick={close}>
+                      <span className="fz-topbar__menu-icon"><Trophy size={16} /></span> Leaderboard
+                    </Link>
+                    <button type="button" className="fz-topbar__menu-item" role="menuitem" onClick={handleSignOut}>
+                      <span className="fz-topbar__menu-icon"><LogOut size={16} /></span> Sign out
                     </button>
                   </div>
                 </>
               )}
             </div>
-          )}
+          ) : null}
         </div>
 
-        <Link href="/dashboard" className="navbar-brand fz-navbar__brand" onClick={closeAll}>
-          <img src="/fuzo_logo.svg" alt="FUZO" className="navbar-brand-logo" />
-        </Link>
-
-        {/* Top Nav Icons */}
-        <div className="d-flex align-items-center gap-3 fz-navbar__side fz-navbar__side--end">
-          {user && (
-            <button
-              type="button"
-              onClick={() => setIsCreateOpen(true)}
-              className="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center p-0"
-              style={{ width: 32, height: 32 }}
-              aria-label="Create a food card"
-            >
-              <Plus size={18} />
-            </button>
-          )}
-          <Link href="/messages" className="text-dark position-relative" aria-label="Messages">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-            <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-              <span className="visually-hidden">New messages</span>
-            </span>
-          </Link>
-
-          <Link href="/notifications" className="text-dark position-relative" aria-label="Notifications">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-            {hasUnreadNotifications && (
-              <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                <span className="visually-hidden">New alerts</span>
-              </span>
-            )}
-          </Link>
-
-          {!user && (
-            <Link href="/login" className="btn fz-navbar__signin btn-sm rounded-pill fw-bold px-3">
-              Sign In
-            </Link>
-          )}
-
-          <button
-            className="navbar-toggler border-0 px-0"
-            type="button"
-            aria-expanded={drawerOpen}
-            aria-label="Toggle navigation"
-            onClick={() => setDrawerOpen((v) => !v)}
-          >
-            <span className="navbar-toggler-icon" />
+        {/* Centre: logo - opens Tako when signed in, goes home otherwise. */}
+        {signedIn ? (
+          <button type="button" className="fz-topbar__logo" onClick={() => { close(); setIsTakoOpen(true); }} aria-label="Ask Tako, your AI food assistant" title="Ask Tako">
+            <img src="/fuzo_logo.svg" alt="FUZO" />
           </button>
-        </div>
+        ) : (
+          <Link href="/" className="fz-topbar__logo" aria-label="FUZO home">
+            <img src="/fuzo_logo.svg" alt="FUZO" />
+          </Link>
+        )}
 
-        {drawerOpen && <div className="offcanvas-backdrop fade show" onClick={closeAll} />}
-
-        <div className={`offcanvas offcanvas-end${drawerOpen ? ' show' : ''}`} tabIndex={-1}>
-          <div className="offcanvas-header">
-            <img src="/fuzo_logo.svg" alt="FUZO" className="navbar-brand-logo" />
-            <button type="button" className="btn-close" aria-label="Close" onClick={closeAll} />
-          </div>
-
-          <div className="offcanvas-body d-flex flex-column w-100">
-            <ul className="navbar-nav me-auto mb-4">
-              {primaryLinks.map((link) => (
-                <li className="nav-item" key={link.href}>
-                  <Link href={link.href} className="nav-link fs-5 py-2" onClick={closeAll}>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-              <li className="nav-item mt-3 mb-2">
-                <span className="text-muted text-uppercase small fw-bold">More</span>
-              </li>
-              {moreLinks.map((link) => (
-                <li key={link.href} className="nav-item">
-                  <Link href={link.href} className="nav-link py-2" onClick={closeAll}>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-auto pt-3 border-top d-flex flex-column gap-2">
-              {user ? (
+        {/* Right: inbox (notifications + messages). */}
+        <div className="fz-topbar__side fz-topbar__side--end">
+          {signedIn ? (
+            <div className="fz-topbar__anchor">
+              <button
+                type="button"
+                className="fz-topbar__icon"
+                aria-label="Notifications and messages"
+                aria-haspopup="menu"
+                aria-expanded={menu === 'inbox'}
+                onClick={() => toggle('inbox')}
+              >
+                <Bell size={20} strokeWidth={2.2} />
+                {showInboxDot && <span className="fz-topbar__dot" aria-hidden="true" />}
+              </button>
+              {menu === 'inbox' && (
                 <>
-                  <button
-                    type="button"
-                    className="btn btn-primary w-100"
-                    onClick={() => { setIsCreateOpen(true); closeAll(); }}
-                  >
-                    + Create a Card
-                  </button>
-                  <Link href="/profile" className="btn btn-outline-primary w-100" onClick={closeAll}>
-                    Profile
-                  </Link>
-                  <button type="button" className="btn btn-outline-secondary w-100" onClick={handleSignOut}>
-                    Sign Out
-                  </button>
+                  <button type="button" className="fz-topbar__scrim" aria-label="Close menu" onClick={close} />
+                  <div className="fz-topbar__menu" role="menu">
+                    <Link href="/notifications" className="fz-topbar__menu-item" role="menuitem" onClick={close}>
+                      <span className="fz-topbar__menu-icon"><Bell size={16} /></span>
+                      Notifications
+                      {unread.notifications && <span className="fz-topbar__menu-badge">New</span>}
+                    </Link>
+                    <Link href="/messages" className="fz-topbar__menu-item" role="menuitem" onClick={close}>
+                      <span className="fz-topbar__menu-icon"><MessageCircle size={16} /></span>
+                      Messages
+                      {unread.messages > 0 && <span className="fz-topbar__menu-badge">{unread.messages > 99 ? '99+' : unread.messages}</span>}
+                    </Link>
+                  </div>
                 </>
-              ) : (
-                <Link href="/login" className="btn btn-primary w-100" onClick={closeAll}>
-                  Sign In
-                </Link>
               )}
             </div>
-
-            {/* Dev previews - drawer-only (mobile), not shown in the desktop inline navbar */}
-            <div className="d-lg-none mt-4 pt-3 border-top">
-              <div className="text-muted text-uppercase small fw-bold mb-2">Dev Previews</div>
-              <div className="d-flex flex-wrap gap-2">
-                <Link href="/login" className="btn btn-sm btn-outline-secondary" onClick={closeAll}>
-                  Login
-                </Link>
-                <Link href="/onboarding" className="btn btn-sm btn-outline-secondary" onClick={closeAll}>
-                  Onboarding
-                </Link>
-                <Link href="/profile" className="btn btn-sm btn-outline-secondary" onClick={closeAll}>
-                  Profile
-                </Link>
-                <Link href="/discover" className="btn btn-sm btn-outline-secondary" onClick={closeAll}>
-                  Discover
-                </Link>
-                <Link href="/trims" className="btn btn-sm btn-outline-secondary" onClick={closeAll}>
-                  Trims
-                </Link>
-              </div>
-            </div>
-          </div>
+          ) : (
+            <Link href="/login" className="fz-topbar__signin">Sign in</Link>
+          )}
         </div>
-      </div>
-    </nav>
+      </header>
 
-    {/* Portaled to <body>, not a child of this <nav> - position:fixed nested
-        inside a position:sticky ancestor (this nav's .sticky-top) is
-        unreliable on mobile Safari/Chrome, and was letting the sticky header
-        bleed through above the modal instead of being fully covered. */}
-    {isCreateOpen && createPortal(<CreateCardModal onClose={() => setIsCreateOpen(false)} />, document.body)}
+      {signedIn && <TakoAssistant variant="overlay" isOpen={isTakoOpen} onClose={() => setIsTakoOpen(false)} />}
     </>
   );
 }

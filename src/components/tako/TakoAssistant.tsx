@@ -16,8 +16,8 @@
  *     (which called a GeminiService.askTako method that doesn't exist
  *     anywhere) was dropped in favor of the proven structured-schema flow.
  *
- * Rendered by both TakoWidget (floating overlay) and the /ai-chef page,
- * via the `variant` prop.
+ * Rendered as an overlay, opened from the FUZO logo in the app navbar
+ * (SiteHeader); the `variant="page"` layout is kept for a full-page use.
  */
 
 import { useState, useEffect, useRef } from 'react';

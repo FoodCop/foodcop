@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Eye, EyeOff } from 'lucide-react';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import AuthBackHeader from '@/components/auth/AuthBackHeader';
+import { safeNextPath } from '@/lib/share/safeNext';
 
 // Adapted from Romio's SignIn/SignUp screens (merged into one toggle, matching
 // the old FUZO login.html's single-page sign-in/sign-up flow), wired to real
@@ -34,7 +35,9 @@ export default function LoginPage() {
       .select('is_onboarded')
       .eq('id', userId)
       .maybeSingle();
-    router.push(profile?.is_onboarded ? '/dashboard' : '/onboarding');
+    // Back to the shared link that sent them to login, if any.
+    const next = safeNextPath(new URLSearchParams(window.location.search).get('next'));
+    router.push(profile?.is_onboarded ? next ?? '/dashboard' : '/onboarding');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,7 +101,12 @@ export default function LoginPage() {
     }
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: {
+        redirectTo: (() => {
+          const next = safeNextPath(new URLSearchParams(window.location.search).get('next'));
+          return `${window.location.origin}/auth/callback${next ? `?next=${encodeURIComponent(next)}` : ''}`;
+        })(),
+      },
     });
   };
 

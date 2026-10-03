@@ -5,6 +5,7 @@ import type { AppItem } from '../../types/appItem';
 import PlateService from '../../lib/services/plateService';
 import { normalizeSavedItemForUI } from '../../lib/services/savedItems';
 import SavedItemDetailModal from './SavedItemDetailModal';
+import ShareSheet, { sharePayloadFromItem, type SharePayload } from '@/components/share/ShareSheet';
 import FoodCardDetailModal from './FoodCardDetailModal';
 import CreateCardModal from '../create/CreateCardModal';
 import { TYPE_META, type FoodCardFamily, type FoodCardRecord } from '../../lib/types/foodCard';
@@ -346,24 +347,9 @@ export default function ActivityTab({
     }
   };
 
-  const handleShare = async (item: AppItem) => {
-    const name = item.name || item.title || 'this find';
-    const text = `Check out ${name} on FUZO!`;
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({ title: 'FUZO', text });
-      } catch {
-        // native share sheet cancelled
-      }
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(text);
-      showToast('Copied to clipboard');
-    } catch {
-      showToast('Could not share right now');
-    }
-  };
+  // Share asks where: FUZO friends/groups or other apps (ShareSheet).
+  const [sharing, setSharing] = useState<SharePayload | null>(null);
+  const handleShare = (item: AppItem) => setSharing(sharePayloadFromItem(item));
 
   if (isLoadingCards || isLoadingSaved) {
     return (
@@ -716,6 +702,8 @@ export default function ActivityTab({
           })()}
         </div>
       )}
+
+      <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
 
       {selectedItem && (
         <SavedItemDetailModal

@@ -176,6 +176,14 @@ export const NotificationsService = {
     return (notifySocial && ((pendingCount || 0) > 0 || (acceptedCount || 0) > 0)) || (pointsCount || 0) > 0;
   },
 
+  /** When the user last opened Notifications (null = never) - items after it show as "New". */
+  async getSeenAt(): Promise<string | null> {
+    const client = createClient();
+    if (!client) return null;
+    const { data } = await client.from('my_private_profile').select('notifications_seen_at').maybeSingle();
+    return (data?.notifications_seen_at as string | null | undefined) ?? null;
+  },
+
   async markSeen(userId: string): Promise<void> {
     const client = createClient();
     if (!client) return;

@@ -1,0 +1,173 @@
+// ============================================================================
+// SCOUT MAP PINS (src/lib/scout/mapPins.ts) - food-app style markers, from the
+// client's reference: white pill + food icon (+ count for a group), the lead
+// place's name ("+N more") underneath, and a red tag for a real offer.
+// FUZO restaurants get the brand-yellow pill.
+// The element is positioned at the place's lat/lng; it's centred on the pill.
+// ============================================================================
+
+.fz-mpin {
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover { z-index: 9999 !important; }
+
+  // Pill
+  &__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 0.7rem;
+    border: 0;
+    border-radius: 9999px;
+    background: #fff;
+    color: $fz-ink;
+    font: inherit;
+    cursor: pointer;
+    box-shadow:
+      0 1px 2px rgba($fz-ink, 0.12),
+      0 4px 12px -2px rgba($fz-ink, 0.28);
+    transition: transform 0.18s $fz-ease, box-shadow 0.18s $fz-ease;
+
+    svg { flex-shrink: 0; }
+
+    b {
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+  }
+
+  &:hover &__pill {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow:
+      0 2px 4px rgba($fz-ink, 0.14),
+      0 10px 20px -4px rgba($fz-ink, 0.35);
+  }
+  &:active &__pill { transform: scale(0.96); }
+
+  // Single places: round pin, just the category icon.
+  &:not(.is-group) &__pill {
+    width: 40px;
+    padding: 0;
+  }
+
+  // Name (+N more) under the pill, with a white halo like map labels.
+  &__label {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    // Size to the text (not the narrow pill), wrapping only past ~130px.
+    width: max-content;
+    max-width: 130px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    color: $fz-ink;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-shadow:
+      0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff;
+    pointer-events: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  // Red offer tag above the pill.
+  &__tag {
+    position: absolute;
+    bottom: calc(100% - 6px);
+    left: 50%;
+    transform: translateX(-35%);
+    padding: 0.18rem 0.55rem;
+    border-radius: 9999px;
+    background: $chili;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    white-space: nowrap;
+    box-shadow: 0 3px 8px -2px rgba($chili, 0.6);
+    pointer-events: none;
+  }
+
+  // FUZO restaurants: brand-yellow pill (dark ink content) so they stand out.
+  // A single FUZO pin carries a ★ + icon, so it's a pill rather than a circle.
+  &.is-fuzo:not(.is-group) &__pill {
+    width: auto;
+    padding: 0 0.65rem;
+    gap: 0.2rem;
+  }
+  &.is-fuzo &__pill {
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow:
+      0 0 0 2px #fff,
+      0 4px 12px -2px rgba($fuzo-yellow-deep, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-mpin__pill { transition: none; }
+}
+
+// ── Map legend: each item is a toggle that filters the list + map ──────────
+.scout-legend__item {
+  padding: 0.15rem 0.45rem;
+  margin: -0.15rem -0.25rem;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  &:hover { background: rgba($fz-ink, 0.06); }
+  &.is-active {
+    background: $fuzo-yellow-tint;
+    border-color: $fuzo-yellow;
+    font-weight: 800;
+  }
+  &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+}
+
+// "Showing: Saved  ✕ All" chip above the filtered list.
+.scout-panel__source {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0 1rem 0.5rem;
+  padding: 0.4rem 0.4rem 0.4rem 0.75rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow-tint;
+  border: 1px solid rgba($fuzo-yellow, 0.6);
+  font-size: 0.78rem;
+  color: $fz-ink;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.2rem 0.6rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fz-paper;
+    color: $fz-ink;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}

@@ -60,6 +60,9 @@ export interface NearbyRestaurant {
   distanceMeters: number;
   matchesTaste: boolean;
   image?: string;
+  /** Coordinates, so the dashboard can open the place on Scout. */
+  lat?: number;
+  lng?: number;
 }
 
 export interface SuggestedVideo {
@@ -412,6 +415,8 @@ export async function getNearbyRestaurants(
       distanceMeters,
       matchesTaste: !!cuisineLower && haystack.includes(cuisineLower),
       image: photoReference ? buildPlacePhotoUrl(photoReference) : undefined,
+      lat: typeof placeLat === 'number' ? placeLat : undefined,
+      lng: typeof placeLng === 'number' ? placeLng : undefined,
     };
   });
 
