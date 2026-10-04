@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Bell, LogOut, MessageCircle, Trophy, User } from 'lucide-react';
+import { Bell, House, LogOut, MessageCircle, Trophy, User } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import TakoAssistant from '@/components/tako/TakoAssistant';
 import { NotificationsService } from '@/lib/services/notificationsService';
@@ -13,9 +13,10 @@ import { createClient } from '@/lib/supabase/client';
 // The ONE navbar for the whole app (dashboard, Scout, Messages,
 // Notifications, Rewards, Profile...) - exactly the home (dashboard) bar from
 // the client's sketch: slim solid-gold bar, profile photo | FUZO logo (opens
-// Tako, the AI food assistant) | bell. The photo opens the account menu
-// (Profile, Leaderboard, Sign out); the bell opens Notifications +
-// Messages with real unread dots. Menus are plain React state (no Bootstrap
+// Tako, the AI food assistant) | home + bell. Home (the house icon) goes
+// back to the dashboard from any page; it's lit while you're there. The photo
+// opens the account menu (Profile, Leaderboard, Sign out); the bell opens Notifications + Messages with real
+// unread dots. Menus are plain React state (no Bootstrap
 // JS). Styles: _header.scss (.fz-topbar).
 
 export default function SiteHeader() {
@@ -60,6 +61,7 @@ export default function SiteHeader() {
   const showInboxDot = signedIn && (unread.notifications || unread.messages > 0);
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
   const displayName = (user?.user_metadata?.display_name as string | undefined) || user?.email?.split('@')[0] || 'You';
+  const onHome = pathname === '/dashboard';
 
   return (
     <>
@@ -113,8 +115,20 @@ export default function SiteHeader() {
           </Link>
         )}
 
-        {/* Right: inbox (notifications + messages). */}
+        {/* Right: home (back to the dashboard from anywhere) + inbox (notifications + messages). */}
         <div className="fz-topbar__side fz-topbar__side--end">
+          {signedIn && (
+            <Link
+              href="/dashboard"
+              className={`fz-topbar__icon${onHome ? ' is-current' : ''}`}
+              aria-label="Home"
+              aria-current={onHome ? 'page' : undefined}
+              title="Home"
+              onClick={close}
+            >
+              <House size={20} strokeWidth={2.2} />
+            </Link>
+          )}
           {signedIn ? (
             <div className="fz-topbar__anchor">
               <button

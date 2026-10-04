@@ -39,6 +39,7 @@ import { Rail, SkeletonCards } from './Rail';
 import DashPlaceCard from './DashPlaceCard';
 import { useNearbyPlaces, type DashPlace } from './useNearbyPlaces';
 import { NearbyCities } from './NearbyCities';
+import { LocationChip } from './LocationChip';
 
 // Dashboard = the post-login home, laid out from the client's sketch (same
 // structure on phone and desktop):
@@ -191,7 +192,7 @@ export default function DashboardView() {
   }, [user]);
 
   // Restaurants (Google + FUZO) near the user's GPS location or saved home area.
-  const { loc, recommended, nearest, retryGps } = useNearbyPlaces({
+  const { loc, recommended, nearest, retryGps, setPickedLocation, chooseHomeArea } = useNearbyPlaces({
     enabled: tasteLoaded,
     topCuisine,
     radiusKm: settings.discoveryRadiusKm,
@@ -238,12 +239,6 @@ export default function DashboardView() {
     );
   }
 
-  const useMyLocation = usingHome ? (
-    <button type="button" className="fz-dash-rail__locate" onClick={retryGps}>
-      <LocateFixed size={13} /> Use my location
-    </button>
-  ) : null;
-
   return (
     <div className="fz-dash">
       {/* The top bar is the app-wide SiteHeader (same on every page). */}
@@ -267,6 +262,9 @@ export default function DashboardView() {
             </div>
           )}
 
+          {/* Which location For you uses - and a way to fix it when the browser's guess is wrong. */}
+          <LocationChip loc={loc} onUseCurrent={retryGps} onUseHome={chooseHomeArea} onPick={setPickedLocation} />
+
           <NearbyCities loc={loc} />
 
           <Rail
@@ -274,7 +272,6 @@ export default function DashboardView() {
             sub={restaurantSub('On FUZO & picked for your taste')}
             link={{ href: '/scout', label: 'Scout' }}
             previews={placePreviews(recommended)}
-            extraAction={useMyLocation}
           >
             {restaurantRail(recommended, 'match')}
           </Rail>

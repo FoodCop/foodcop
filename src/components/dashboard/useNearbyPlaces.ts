@@ -29,8 +29,40 @@ export type DashPlace = {
 
 export type LocationState =
   | { status: 'locating' }
-  | { status: 'ready'; source: 'gps' | 'home'; lat: number; lng: number }
+  | {
+      status: 'ready';
+      /** gps = this device's location, home = saved home area, picked = chosen on the map. */
+      source: 'gps' | 'home' | 'picked';
+      lat: number;
+      lng: number;
+      /** GPS accuracy in metres (large = a rough, network-based fix). */
+      accuracy?: number;
+      /** Address of a map-picked spot. */
+      label?: string;
+    }
   | { status: 'unavailable' };
+
+// A spot picked on the map is kept for this browser session, so moving
+// around the app doesn't snap back to a wrong GPS fix.
+const PICKED_KEY = 'fz-dash-picked-location';
+function readPicked(): { lat: number; lng: number; label?: string } | null {
+  try {
+    const raw = window.sessionStorage.getItem(PICKED_KEY);
+    if (!raw) return null;
+    const v = JSON.parse(raw);
+    return typeof v?.lat === 'number' && typeof v?.lng === 'number' ? v : null;
+  } catch {
+    return null;
+  }
+}
+function writePicked(v: { lat: number; lng: number; label?: string } | null) {
+  try {
+    if (v) window.sessionStorage.setItem(PICKED_KEY, JSON.stringify(v));
+    else window.sessionStorage.removeItem(PICKED_KEY);
+  } catch {
+    // storage unavailable - the choice just won't survive navigation
+  }
+}
 
 type Options = {
   enabled: boolean;
@@ -71,8 +103,16 @@ export function useNearbyPlaces({ enabled, topCuisine, radiusKm, hiddenGems, lux
   const [loc, setLoc] = useState<LocationState>({ status: 'locating' });
   const [places, setPlaces] = useState<DashPlace[] | null>(null);
 
-  // GPS first; if refused/unavailable fall back to the saved home area.
-  const locate = useCallback(() => {
+  // A spot picked on the map this session wins; otherwise GPS, and if that's
+  // refused/unavailable, the saved home area. `precise` = a fresh,
+  // high-accuracy fix (the "Use my current location" button).
+  const locate = useCallback((precise = false) => {
+    const picked = precise ? null : readPicked();
+    if (picked) {
+      // Async like the GPS path (locate runs inside the mount effect).
+      Promise.resolve().then(() => setLoc({ status: 'ready', source: 'picked', ...picked }));
+      return;
+    }
     const fallback = () =>
       homeCoords().then((home) => setLoc(home ? { status: 'ready', source: 'home', ...home } : { status: 'unavailable' }));
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
@@ -80,18 +120,37 @@ export function useNearbyPlaces({ enabled, topCuisine, radiusKm, hiddenGems, lux
       return;
     }
     navigator.geolocation.getCurrentPosition(
-      (pos) => setLoc({ status: 'ready', source: 'gps', lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      (pos) =>
+        setLoc({ status: 'ready', source: 'gps', lat: pos.coords.latitude, lng: pos.coords.longitude, accuracy: pos.coords.accuracy }),
       () => fallback(),
-      { timeout: 10000, maximumAge: 5 * 60 * 1000 },
+      precise ? { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 } : { timeout: 10000, maximumAge: 5 * 60 * 1000 },
     );
   }, []);
 
-  /** "Use my location" / "Try again" - re-asks for GPS. */
+  /** "Use my current location" - forgets a picked spot and asks the device again, precisely. */
   const retryGps = useCallback(() => {
+    writePicked(null);
     setLoc({ status: 'locating' });
     setPlaces(null);
-    locate();
+    locate(true);
   }, [locate]);
+
+  /** A spot chosen on the map. */
+  const setPickedLocation = useCallback((lat: number, lng: number, label?: string) => {
+    writePicked({ lat, lng, label });
+    setPlaces(null);
+    setLoc({ status: 'ready', source: 'picked', lat, lng, label });
+  }, []);
+
+  /** The saved home area (Settings > Profile). Resolves false if none is saved. */
+  const chooseHomeArea = useCallback(async () => {
+    const home = await homeCoords();
+    if (!home) return false;
+    writePicked(null);
+    setPlaces(null);
+    setLoc({ status: 'ready', source: 'home', ...home });
+    return true;
+  }, []);
 
   useEffect(() => {
     if (enabled) locate();
@@ -178,5 +237,5 @@ export function useNearbyPlaces({ enabled, topCuisine, radiusKm, hiddenGems, lux
   );
   const nearest = useMemo(() => (places ? [...places].sort((a, b) => a.distanceMeters - b.distanceMeters) : null), [places]);
 
-  return { loc, recommended, nearest, retryGps };
+  return { loc, recommended, nearest, retryGps, setPickedLocation, chooseHomeArea };
 }

@@ -921,9 +921,53 @@ $rail-pad-sm: 1rem;
   }
 
   &__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
     padding: 0 $rail-pad;
     margin-bottom: 0.9rem;
-    @media (max-width: 768px) { padding: 0 $rail-pad-sm; }
+    @media (max-width: 768px) { padding: 0 $rail-pad-sm; flex-wrap: wrap; }
+  }
+
+  &__heading { min-width: 0; }
+
+  // Cities | Countries switch (same pill segmented look as the dashboard tabs).
+  &__toggle {
+    flex-shrink: 0;
+    display: inline-flex;
+    gap: 0.2rem;
+    padding: 0.2rem;
+    border-radius: 9999px;
+    background: $fz-cream;
+    border: 1px solid $fz-border;
+
+    button {
+      padding: 0.35rem 0.85rem;
+      border: 0;
+      border-radius: 9999px;
+      background: transparent;
+      color: $fz-ink-soft;
+      font-size: 0.76rem;
+      font-weight: 800;
+      line-height: 1.2;
+      cursor: pointer;
+      transition: background 0.2s $fz-ease, color 0.15s ease, box-shadow 0.2s ease;
+
+      &:hover:not(.is-active) { color: $fz-ink; }
+      &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+      &.is-active {
+        background: $fuzo-yellow;
+        color: $fuzo-yellow-ink;
+        box-shadow: 0 3px 10px -2px rgba($fuzo-yellow-deep, 0.45);
+      }
+    }
+  }
+
+  &__empty {
+    margin: 0.5rem 0 1rem;
+    font-size: 0.85rem;
+    color: $fz-ink-soft;
   }
 
   &__title {
@@ -1016,6 +1060,25 @@ $rail-pad-sm: 1rem;
     color: $fuzo-yellow-deep;
   }
 
+  // Country flag, centred at the bottom of the round photo.
+  &__flag {
+    position: absolute;
+    left: 50%;
+    bottom: 5px;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 22px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fz-paper;
+    box-shadow: $fz-shadow-sm;
+    overflow: hidden;
+
+    img { width: 20px; height: 14px; object-fit: cover; border-radius: 2px; }
+  }
+
   // "You're here" chip on the closest city.
   &__here {
     position: absolute;
@@ -1071,4 +1134,137 @@ $rail-pad-sm: 1rem;
 @media (prefers-reduced-motion: reduce) {
   .fz-dash-city__photo, .fz-dash-city__photo img { transition: none; }
   .fz-dash-city--ghost .fz-dash-city__photo, .fz-dash-city--ghost .fz-dash-city__name { animation: none; }
+}
+
+// ── Location chip (LocationChip.tsx) ───────────────────────────────────────
+// "📍 Near Bang Rak, Bangkok · Change" - which location For you uses, with a
+// menu to fix it (current location / home area / pick on map).
+.fz-dash-loc {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1.25rem;
+  padding: 0.6rem 0.65rem 0.6rem 0.75rem;
+  background: $fz-paper;
+  border: 1px solid rgba($fz-border, 0.8);
+  border-radius: 9999px;
+  box-shadow: $fz-shadow-sm;
+
+  @media (max-width: 768px) { margin-top: 1rem; }
+
+  &__icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+
+    &.is-approx { background: rgba($turmeric, 0.18); color: mix($fz-ink, $turmeric, 35%); }
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+
+    strong {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: $fz-ink;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    span {
+      font-size: 0.74rem;
+      color: $fz-ink-soft;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &.is-approx { color: mix($fz-ink, $turmeric, 35%); font-weight: 700; }
+    }
+  }
+
+  &__anchor { position: relative; flex-shrink: 0; }
+
+  &__change {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.42rem 0.85rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fz-ink;
+    color: $fuzo-yellow;
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease;
+
+    &:hover { transform: translateY(-1px); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    border: 0;
+    background: transparent;
+    cursor: default;
+  }
+
+  &__menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 41;
+    width: 270px;
+    padding: 0.4rem;
+    background: $fz-paper;
+    border: 1px solid rgba($fz-border, 0.9);
+    border-radius: 18px;
+    box-shadow: $fz-shadow-card-hover;
+    animation: fz-dash-pop 0.22s $fz-ease;
+  }
+
+  &__item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.6rem;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: $fz-ink;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover { background: $fz-cream; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: -2px; }
+
+    > span:last-child { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+    strong { font-size: 0.86rem; font-weight: 800; }
+    small { font-size: 0.72rem; color: $fz-ink-soft; }
+  }
+
+  &__item-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-ink;
+  }
 }

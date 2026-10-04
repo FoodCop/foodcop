@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { COUNTRIES } from '@/lib/geo/countries';
 
 const GOOGLE_API_KEY = process.env.VITE_GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
@@ -6,6 +7,9 @@ const GOOGLE_API_KEY = process.env.VITE_GOOGLE_MAPS_API_KEY || process.env.NEXT_
 // stop every dashboard visit re-running ~17 Places calls for the same area).
 const CITY_CACHE = new Map<string, { at: number; payload: unknown }>();
 const CITY_CACHE_TTL = 12 * 60 * 60 * 1000;
+// Country photo references (per ISO code) for "Explore countries" - they don't
+// change, so one Places lookup per country per server instance.
+const COUNTRY_PHOTO_CACHE = new Map<string, string | null>();
 
 export async function POST(req: Request, { params }: { params: Promise<{ action: string }> }) {
   if (!GOOGLE_API_KEY) {
@@ -123,6 +127,42 @@ export async function POST(req: Request, { params }: { params: Promise<{ action:
       CITY_CACHE.set(cacheKey, { at: Date.now(), payload });
       if (CITY_CACHE.size > 500) CITY_CACHE.delete(CITY_CACHE.keys().next().value as string);
       return NextResponse.json(payload);
+    }
+
+    // "Explore countries" on the dashboard: countries from the built-in list
+    // (src/lib/geo/countries.ts), nearest first from the user, their own
+    // country left out, each with a Google Places photo of the country.
+    if (action === 'countries') {
+      const lat = Number(body.latitude);
+      const lng = Number(body.longitude);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) {
+        return NextResponse.json({ error: 'Invalid location' }, { status: 400 });
+      }
+      const exclude = typeof body.excludeCode === 'string' ? body.excludeCode.toUpperCase() : '';
+      const toRad = (d: number) => (d * Math.PI) / 180;
+      const km = (a: number, b: number) => {
+        const s = Math.sin(toRad(a - lat) / 2) ** 2 + Math.cos(toRad(lat)) * Math.cos(toRad(a)) * Math.sin(toRad(b - lng) / 2) ** 2;
+        return 2 * 6371 * Math.asin(Math.sqrt(s));
+      };
+      const nearest = COUNTRIES.filter((c) => c.code !== exclude)
+        .map((c) => ({ ...c, distanceKm: Math.round(km(c.lat, c.lng)) }))
+        .sort((a, b) => a.distanceKm - b.distanceKm)
+        .slice(0, 16);
+
+      const photoFor = async (name: string, code: string): Promise<string | null> => {
+        if (COUNTRY_PHOTO_CACHE.has(code)) return COUNTRY_PHOTO_CACHE.get(code)!;
+        try {
+          const res = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(name)}&key=${GOOGLE_API_KEY}`);
+          const data = await res.json();
+          const ref: string | null = data.results?.[0]?.photos?.[0]?.photo_reference ?? null;
+          COUNTRY_PHOTO_CACHE.set(code, ref);
+          return ref;
+        } catch {
+          return null;
+        }
+      };
+      const countries = await Promise.all(nearest.map(async (c) => ({ ...c, photoRef: await photoFor(c.name, c.code) })));
+      return NextResponse.json({ countries });
     }
 
     if (action === 'details') {
