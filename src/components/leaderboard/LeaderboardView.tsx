@@ -44,7 +44,15 @@ const initialsOf = (name: string) =>
 
 type AllTimeStats = { points: number; level: number };
 
-export default function LeaderboardView() {
+export default function LeaderboardView({
+  embedded = false,
+  onShowRewards,
+}: {
+  /** Inside the Leaderboard & Rewards page: that page's header carries the title. */
+  embedded?: boolean;
+  /** "See how to earn points" switches to the Rewards tab. */
+  onShowRewards?: () => void;
+} = {}) {
   const { user } = useAuth();
   const [scope, setScope] = useState<LeaderboardScope>('global');
   const [period, setPeriod] = useState<LeaderboardPeriod>('all');
@@ -94,19 +102,23 @@ export default function LeaderboardView() {
   const retry = useCallback(() => setRetryNonce((n) => n + 1), []);
 
   return (
-    <div className="fz-lb">
+    <div className={`fz-lb${embedded ? ' fz-lb--embedded' : ''}`}>
       {/* Full-width hero: title + controls on the left, podium on the right. */}
       <section className="fz-lb-hero">
         <div className="fz-lb__inner fz-lb-hero__grid">
           <div className="fz-lb-hero__intro">
-            <div className="fz-lb-head">
-              <div className="fz-lb-head__icon" aria-hidden><Trophy size={26} /></div>
-              <div>
-                <div className="fz-lb-eyebrow">Community</div>
-                <h1 className="fz-lb-title">Leaderboard</h1>
-              </div>
-            </div>
-            <p className="fz-lb-sub">See who’s cooking, exploring and sharing the most on FUZO.</p>
+            {!embedded && (
+              <>
+                <div className="fz-lb-head">
+                  <div className="fz-lb-head__icon" aria-hidden><Trophy size={26} /></div>
+                  <div>
+                    <div className="fz-lb-eyebrow">Community</div>
+                    <h1 className="fz-lb-title">Leaderboard</h1>
+                  </div>
+                </div>
+                <p className="fz-lb-sub">See who’s cooking, exploring and sharing the most on FUZO.</p>
+              </>
+            )}
 
             <div className="fz-lb-controls">
               <div className="fz-profile-tabs fz-lb-scope" role="tablist" aria-label="Leaderboard scope">
@@ -168,7 +180,7 @@ export default function LeaderboardView() {
               <button type="button" className="fz-lb-btn" onClick={retry}>Try again</button>
             </div>
           ) : rows.length === 0 ? (
-            <EmptyBoard scope={scope} periodLabel={periodLabel} period={period} />
+            <EmptyBoard scope={scope} periodLabel={periodLabel} period={period} onShowRewards={onShowRewards} />
           ) : listRows.length > 0 ? (
             <ol className="fz-lb-list" aria-label="Rankings">
               {listRows.map((row, i) => (
@@ -327,7 +339,7 @@ function RecentPoints({ entries }: { entries: PointsHistoryEntry[] | null }) {
   );
 }
 
-function EmptyBoard({ scope, period, periodLabel }: { scope: LeaderboardScope; period: LeaderboardPeriod; periodLabel: string }) {
+function EmptyBoard({ scope, period, periodLabel, onShowRewards }: { scope: LeaderboardScope; period: LeaderboardPeriod; periodLabel: string; onShowRewards?: () => void }) {
   if (scope === 'friends') {
     return (
       <div className="fz-empty-state">
@@ -343,7 +355,11 @@ function EmptyBoard({ scope, period, periodLabel }: { scope: LeaderboardScope; p
       <div className="fz-empty-state__icon">🏆</div>
       <div className="fz-empty-state__title">{period === 'all' ? 'No one has scored yet' : `No points earned ${periodLabel.toLowerCase()}`}</div>
       <div className="fz-empty-state__sub">Publish a card or share one with a friend - you could be first.</div>
-      <Link href="/rewards" className="fz-lb-btn">See how to earn points</Link>
+      {onShowRewards ? (
+        <button type="button" className="fz-lb-btn" onClick={onShowRewards}>See how to earn points</button>
+      ) : (
+        <Link href="/leaderboard?tab=rewards" className="fz-lb-btn">See how to earn points</Link>
+      )}
     </div>
   );
 }

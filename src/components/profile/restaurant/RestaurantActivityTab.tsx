@@ -221,9 +221,9 @@ function PostComposer({ restaurantId, onCancel, onPosted }: { restaurantId: stri
   return (
     <div className="card border shadow-sm mb-4 rounded-4">
       <div className="card-body p-3">
-        <div className="d-flex gap-2 overflow-auto pb-2 mb-2" style={{ scrollbarWidth: 'none' }}>
+        <div className="fz-activity-subtabs fz-activity-subtabs--inline mb-2" role="group" aria-label="Post type">
           {POST_KINDS.map((k) => (
-            <button key={k} type="button" className={`btn btn-sm rounded-pill text-nowrap ${kind === k ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setKind(k)}>
+            <button key={k} type="button" className={`fz-activity-subtab fz-activity-subtab--sm${kind === k ? ' fz-activity-subtab--active' : ''}`} aria-pressed={kind === k} onClick={() => setKind(k)}>
               {POST_KIND_LABEL[k]}
             </button>
           ))}

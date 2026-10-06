@@ -1,13 +1,17 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Bookmark, Check, Settings2, Utensils } from 'lucide-react';
 import { useRestaurant } from '@/lib/hooks/useRestaurant';
 import type { MenuItem } from '@/lib/services/restaurantService';
 import { MenuItemCard } from './RestaurantBits';
+import PlateService from '@/lib/services/plateService';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 interface RestaurantMenuTabProps {
   restaurantId: string;
+  /** Shown on the saved dish in My Plate ("at <restaurant>"). */
+  restaurantName?: string;
   isOwner?: boolean;
   /** Owner only: jump to the Dashboard tab to add/edit items. */
   onManage?: () => void;
@@ -18,7 +22,8 @@ type DietFilter = 'all' | 'veg' | 'nonveg' | 'available';
 // Customer-facing menu, now backed by the restaurant's real menu_items
 // (managed from the Dashboard tab). Same layout as before: category pills,
 // quick filters, then the dish card grid.
-export default function RestaurantMenuTab({ restaurantId, isOwner = false, onManage }: RestaurantMenuTabProps) {
+export default function RestaurantMenuTab({ restaurantId, restaurantName, isOwner = false, onManage }: RestaurantMenuTabProps) {
+  const { user } = useAuth();
   const { loaded, menu, profile } = useRestaurant(restaurantId);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [dietFilter, setDietFilter] = useState<DietFilter>('all');
@@ -48,18 +53,58 @@ export default function RestaurantMenuTab({ restaurantId, isOwner = false, onMan
     setTimeout(() => setToastMessage(null), 2400);
   };
 
-  const toggleSaveDish = (dish: MenuItem) => {
-    setSavedDishes((prev) => {
-      const next = new Set(prev);
-      if (next.has(dish.id)) {
-        next.delete(dish.id);
-        showToast(`Removed "${dish.name}" from your plate.`);
-      } else {
-        next.add(dish.id);
-        showToast(`Saved "${dish.name}" to your plate!`);
-      }
-      return next;
+  // Which of this menu's dishes are already on the user's plate.
+  const userId = user?.id ?? null;
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    PlateService.listSavedItems().then((res) => {
+      if (cancelled || !res.success) return;
+      setSavedDishes(new Set((res.data ?? []).filter((s) => s.item_type === 'dish').map((s) => s.item_id)));
     });
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  // Saves to saved_items (type "dish") - it shows up on My Plate under Dishes.
+  const toggleSaveDish = async (dish: MenuItem) => {
+    if (!userId) {
+      showToast('Sign in to save dishes to your plate.');
+      return;
+    }
+    const wasSaved = savedDishes.has(dish.id);
+    const flip = (on: boolean) =>
+      setSavedDishes((prev) => {
+        const next = new Set(prev);
+        if (on) next.add(dish.id);
+        else next.delete(dish.id);
+        return next;
+      });
+    flip(!wasSaved);
+    const res = wasSaved
+      ? await PlateService.removeFromPlate({ itemId: dish.id, itemType: 'dish' })
+      : await PlateService.saveToPlate({
+          itemId: dish.id,
+          itemType: 'dish',
+          metadata: {
+            title: dish.name,
+            image: dish.image_url ?? undefined,
+            cat: dish.category,
+            description: dish.description ?? undefined,
+            price: dish.price,
+            currency,
+            is_veg: dish.is_veg,
+            restaurantId,
+            restaurantName: restaurantName ?? undefined,
+          },
+        });
+    if (!res.success) {
+      flip(wasSaved);
+      showToast(res.error || 'Could not update your plate - try again.');
+      return;
+    }
+    showToast(wasSaved ? `Removed "${dish.name}" from your plate.` : `Saved "${dish.name}" to your plate!`);
   };
 
   if (!loaded) {
@@ -97,22 +142,27 @@ export default function RestaurantMenuTab({ restaurantId, isOwner = false, onMan
       {/* Category Pills & quick filters */}
       <div className="fz-menu-nav-wrap mb-4">
         <div className="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
-          <div className="d-flex gap-2 overflow-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+          {/* Same pills as the person profile's Activity sections. */}
+          <div className="fz-activity-subtabs fz-activity-subtabs--inline" role="group" aria-label="Menu sections">
             <button
               type="button"
-              className={`btn btn-sm rounded-pill ${selectedCategory === 'all' ? 'btn-primary' : 'btn-outline-secondary'}`}
+              className={`fz-activity-subtab${selectedCategory === 'all' ? ' fz-activity-subtab--active' : ''}`}
+              aria-pressed={selectedCategory === 'all'}
               onClick={() => setSelectedCategory('all')}
             >
-              Full Menu ({menu.length})
+              <span>Full Menu</span>
+              <span className="fz-activity-subtab__count">({menu.length})</span>
             </button>
             {categories.map((cat) => (
               <button
                 key={cat.name}
                 type="button"
-                className={`btn btn-sm rounded-pill text-nowrap ${selectedCategory === cat.name ? 'btn-primary' : 'btn-outline-secondary'}`}
+                className={`fz-activity-subtab${selectedCategory === cat.name ? ' fz-activity-subtab--active' : ''}`}
+                aria-pressed={selectedCategory === cat.name}
                 onClick={() => setSelectedCategory(cat.name)}
               >
-                {cat.name} ({cat.count})
+                <span>{cat.name}</span>
+                <span className="fz-activity-subtab__count">({cat.count})</span>
               </button>
             ))}
           </div>
@@ -123,7 +173,7 @@ export default function RestaurantMenuTab({ restaurantId, isOwner = false, onMan
           )}
         </div>
 
-        <div className="d-flex gap-2 overflow-auto pb-1" style={{ fontSize: '0.8rem', scrollbarWidth: 'none' }}>
+        <div className="fz-activity-subtabs fz-activity-subtabs--inline" role="group" aria-label="Filter dishes">
           {(
             [
               ['all', 'All'],
@@ -135,8 +185,8 @@ export default function RestaurantMenuTab({ restaurantId, isOwner = false, onMan
             <button
               key={key}
               type="button"
-              className={`badge border text-decoration-none py-1 px-2 ${dietFilter === key ? 'bg-dark text-white border-dark' : 'bg-light text-secondary border-secondary-subtle'}`}
-              style={{ cursor: 'pointer', fontWeight: 500 }}
+              className={`fz-activity-subtab fz-activity-subtab--sm${dietFilter === key ? ' fz-activity-subtab--active' : ''}`}
+              aria-pressed={dietFilter === key}
               onClick={() => setDietFilter(key)}
             >
               {label}

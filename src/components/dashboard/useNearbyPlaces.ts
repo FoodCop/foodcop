@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { getNearbyRestaurants, type NearbyRestaurant } from '@/lib/services/recommendationService';
 import { RestaurantService, type FuzoRestaurantLink } from '@/lib/services/restaurantService';
 import { getOpenStatus, type OpenStatus } from '@/lib/restaurant/hours';
+import { directionsUrl, mapUrl } from '@/lib/maps/placeLinks';
 
 // Restaurants for the dashboard rows, from two real sources merged into one
 // list: Google Places near the user, and FUZO restaurant accounts (their own
@@ -22,8 +23,11 @@ export type DashPlace = {
   distanceMeters: number;
   vicinity: string;
   matchesTaste: boolean;
+  /** Tapping the card: Scout centred on the place with its pop-up (FUZO profile if it has no map position). */
   href: string;
   external: boolean;
+  /** Scout with the route from the user's location - the card's Directions button. */
+  directionsHref: string | null;
   fuzo?: { status: OpenStatus | null; offer: string | null; reviewCount: number };
 };
 
@@ -187,8 +191,11 @@ export function useNearbyPlaces({ enabled, topCuisine, radiusKm, hiddenGems, lux
         distanceMeters: g?.distanceMeters ?? (r.lat != null && r.lng != null ? haversine(here, { lat: r.lat, lng: r.lng }) : Infinity),
         vicinity: r.address || g?.vicinity || r.cuisines.join(' · '),
         matchesTaste: g?.matchesTaste ?? cuisineMatch(r),
-        href: `/profile/${r.restaurantId}`,
+        href:
+          mapUrl({ name: r.name, placeId: r.placeId ?? g?.placeId, lat: r.lat ?? g?.lat, lng: r.lng ?? g?.lng, restaurantId: r.restaurantId }) ??
+          `/profile/${r.restaurantId}`,
         external: false,
+        directionsHref: directionsUrl({ name: r.name, placeId: r.placeId ?? g?.placeId, lat: r.lat ?? g?.lat, lng: r.lng ?? g?.lng }),
         fuzo: { status: getOpenStatus(r.hours, r.timezone), offer: r.offerTitle, reviewCount: r.reviewCount },
       });
 
@@ -206,6 +213,7 @@ export function useNearbyPlaces({ enabled, topCuisine, radiusKm, hiddenGems, lux
               matchesTaste: g.matchesTaste,
               href: scoutUrl(g),
               external: false,
+              directionsHref: directionsUrl({ name: g.name, placeId: g.placeId, lat: g.lat, lng: g.lng }),
             };
       });
       // FUZO restaurants Google didn't return (or that aren't on Google at all).

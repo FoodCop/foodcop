@@ -4,6 +4,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { Star, ChevronRight, ChevronUp, Utensils, X } from 'lucide-react';
 import type { ScoutPlace, ScoutFilter } from '@/types/scout';
 import { getMatchPercentage } from '@/lib/scout/scoutLogic';
+import { SourceBadge, placeOrigin } from './SourceBadge';
 
 interface ScoutDiscoveryPanelProps {
   places: ScoutPlace[];
@@ -215,6 +216,7 @@ const PlaceCard = ({ place, onSelect }: { place: ScoutPlace; onSelect: (p: Scout
         ) : (
           <span className="scout-place-card__noimg" aria-hidden="true"><Utensils size={18} /></span>
         )}
+        <SourceBadge origin={placeOrigin(place)} className="scout-place-card__badge" />
       </div>
       <div className="scout-place-card__body">
         <div className="scout-place-card__source">

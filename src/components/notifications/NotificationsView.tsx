@@ -199,7 +199,7 @@ export default function NotificationsView() {
         ) : (
           <>
             {filter !== 'friends' && weekPoints > 0 && (
-              <Link href="/rewards" className="fz-notif__summary">
+              <Link href="/leaderboard?tab=rewards" className="fz-notif__summary">
                 <span className="fz-notif__summary-icon"><Trophy size={20} /></span>
                 <span className="fz-notif__summary-text">
                   <strong>+{weekPoints} points this week</strong>

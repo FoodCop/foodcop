@@ -22,17 +22,21 @@ export async function POST(req: Request, { params }: { params: Promise<{ action:
     const body = await req.json().catch(() => ({}));
 
     if (action === 'nearby') {
-      const { latitude, longitude, radius = 5000, type = 'restaurant' } = body;
-      const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&type=${type}&key=${GOOGLE_API_KEY}`;
+      const { latitude, longitude, radius = 5000, type = 'restaurant', pagetoken } = body;
+      // Google gives 20 per page; pagetoken fetches pages 2 and 3 (up to 60).
+      const url = pagetoken
+        ? `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${encodeURIComponent(pagetoken)}&key=${GOOGLE_API_KEY}`
+        : `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&type=${type}&key=${GOOGLE_API_KEY}`;
       const res = await fetch(url);
       const data = await res.json();
       return NextResponse.json(data);
     }
 
     if (action === 'textsearch') {
-      const { query, location, radius = 50000 } = body;
+      const { query, location, radius = 50000, pagetoken } = body;
       let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}`;
-      if (location?.lat && location?.lng) {
+      if (pagetoken) url = `https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${encodeURIComponent(pagetoken)}&key=${GOOGLE_API_KEY}`;
+      else if (location?.lat && location?.lng) {
         url += `&location=${location.lat},${location.lng}&radius=${radius}`;
       }
       const res = await fetch(url);
@@ -174,20 +178,72 @@ export async function POST(req: Request, { params }: { params: Promise<{ action:
     }
 
     if (action === 'search-along-route') {
-      // Basic implementation for search along route:
-      // In a real scenario you might sample points along the polyline.
-      // For simplicity, we just do a text search around the origin or destination
-      // matching the query, or use the Routes API if advanced functionality is needed.
-      const { polyline, query, origin, destination } = body;
-      
-      // Fallback: search around the destination if provided
-      let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}`;
-      if (destination?.lat && destination?.lng) {
-        url += `&location=${destination.lat},${destination.lng}&radius=5000`;
+      // Real along-the-route search (Places API New: searchText +
+      // searchAlongRouteParameters) - places close to the whole route line,
+      // not just around one end. Returned in the legacy result shape so the
+      // client's toScoutPlace() reads it like any other search.
+      const { polyline } = body as { polyline?: string };
+      if (!polyline) return NextResponse.json({ error: 'polyline is required' }, { status: 400 });
+      type NewPlace = {
+        id: string;
+        displayName?: { text?: string };
+        location?: { latitude: number; longitude: number };
+        rating?: number;
+        userRatingCount?: number;
+        formattedAddress?: string;
+        shortFormattedAddress?: string;
+        types?: string[];
+        photos?: Array<{ name?: string }>;
+      };
+      // Google returns 20 per page (up to 3 pages per query), so several
+      // food queries are merged: restaurants (3 pages) + cafes + street food.
+      const search = async (textQuery: string, pages: number): Promise<NewPlace[]> => {
+        const out: NewPlace[] = [];
+        let pageToken: string | undefined;
+        for (let page = 0; page < pages; page++) {
+          const res = await fetch('https://places.googleapis.com/v1/places:searchText', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Goog-Api-Key': GOOGLE_API_KEY,
+              'X-Goog-FieldMask':
+                'places.id,places.displayName,places.location,places.rating,places.userRatingCount,places.formattedAddress,places.shortFormattedAddress,places.types,places.photos.name,nextPageToken',
+            },
+            body: JSON.stringify({ textQuery, pageSize: 20, searchAlongRouteParameters: { polyline: { encodedPolyline: polyline } }, ...(pageToken ? { pageToken } : {}) }),
+          });
+          const data = (await res.json()) as { places?: NewPlace[]; nextPageToken?: string; error?: { message?: string } };
+          if (!res.ok) {
+            if (page === 0 && textQuery === 'restaurants') throw new Error(data.error?.message || 'Search along route failed');
+            break;
+          }
+          out.push(...(data.places ?? []));
+          if (!data.nextPageToken) break;
+          pageToken = data.nextPageToken;
+        }
+        return out;
+      };
+      let found: NewPlace[][];
+      try {
+        found = await Promise.all([search('restaurants', 3), search('cafes', 1), search('street food', 1)]);
+      } catch (err) {
+        return NextResponse.json({ error: err instanceof Error ? err.message : 'Search along route failed' }, { status: 502 });
       }
-      const res = await fetch(url);
-      const data = await res.json();
-      return NextResponse.json(data);
+      const seen = new Set<string>();
+      const results = found
+        .flat()
+        .filter((pl) => pl.location && !seen.has(pl.id) && seen.add(pl.id))
+        .map((pl) => ({
+          place_id: pl.id,
+          name: pl.displayName?.text || 'Place',
+          geometry: { location: { lat: pl.location!.latitude, lng: pl.location!.longitude } },
+          rating: pl.rating,
+          user_ratings_total: pl.userRatingCount,
+          vicinity: pl.shortFormattedAddress || pl.formattedAddress,
+          types: pl.types,
+          // Places (New) photo resource name - the client builds the media URL.
+          photo_name: pl.photos?.[0]?.name,
+        }));
+      return NextResponse.json({ results, status: 'OK' });
     }
 
     return NextResponse.json({ error: `Action ${action} not supported` }, { status: 400 });

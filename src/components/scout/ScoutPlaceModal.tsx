@@ -8,6 +8,8 @@ import { useFocusTrap } from '@/hooks/useFocusTrap';
 import type { FuzoRestaurantLink } from '@/lib/services/restaurantService';
 import { DAY_LABELS, WEEK_ORDER, formatDay, getOpenStatus, hasAnyHours } from '@/lib/restaurant/hours';
 import { StatusPill } from '@/components/profile/restaurant/RestaurantBits';
+import { useRestaurant } from '@/lib/hooks/useRestaurant';
+import { RestaurantService, type RestaurantReview } from '@/lib/services/restaurantService';
 
 interface ScoutPlaceModalProps {
   place: ScoutPlace;
@@ -20,10 +22,21 @@ interface ScoutPlaceModalProps {
   onContribute?: (place: ScoutPlace) => Promise<void>;
   /** Set when this place is a FUZO restaurant - shows the "View on FUZO" strip. */
   fuzoRestaurant?: FuzoRestaurantLink;
+  /** In-app directions on Scout's map; without it Directions opens Google Maps. */
+  onDirections?: (place: ScoutPlace) => void;
 }
 
+/** "3 days ago" for FUZO review dates. */
+const timeAgo = (iso: string) => {
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  if (days < 1) return 'Today';
+  if (days === 1) return 'Yesterday';
+  if (days < 30) return `${days} days ago`;
+  return new Date(iso).toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+};
+
 export const ScoutPlaceModal = ({
-  place,
+  place: rawPlace,
   modalTab,
   setModalTab,
   isLoadingDetails,
@@ -32,7 +45,58 @@ export const ScoutPlaceModal = ({
   onAction,
   onContribute,
   fuzoRestaurant,
+  onDirections,
 }: ScoutPlaceModalProps) => {
+
+  // FUZO restaurants: their own details (owner's Dashboard), menu photos and
+  // FUZO reviews come first; Google's data only fills what's missing.
+  const restaurantId = fuzoRestaurant?.restaurantId;
+  const { profile: fuzoProfile, summary: fuzoSummary } = useRestaurant(restaurantId, !!restaurantId && !rawPlace.isNewFind);
+  const [fuzoReviews, setFuzoReviews] = React.useState<RestaurantReview[]>([]);
+  React.useEffect(() => {
+    if (!restaurantId) return;
+    let cancelled = false;
+    RestaurantService.listReviews(restaurantId, 20).then((res) => {
+      if (!cancelled && res.success) setFuzoReviews(res.data ?? []);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [restaurantId]);
+
+  const place: ScoutPlace = React.useMemo(() => {
+    if (!fuzoRestaurant || rawPlace.isNewFind) return rawPlace;
+    const p = fuzoProfile;
+    const services = p?.services ?? [];
+    const has = (key: string) => (services.length ? services.includes(key) : undefined);
+    // The owner's gallery first (then the banner and diners' review photos) -
+    // menu dish photos belong to the menu, not the place's photos.
+    const fuzoPhotos = [
+      ...(p?.gallery ?? []).map((g) => g.url),
+      fuzoRestaurant.bannerUrl,
+      ...fuzoReviews.flatMap((r) => r.photos ?? []),
+    ].filter((u): u is string => !!u);
+    const rated = fuzoSummary.count > 0;
+    return {
+      ...rawPlace,
+      name: fuzoRestaurant.name || rawPlace.name,
+      img: fuzoRestaurant.bannerUrl || p?.gallery?.[0]?.url || fuzoRestaurant.avatarUrl || rawPlace.img,
+      cat: p?.cuisines?.length ? p.cuisines.join(' · ') : rawPlace.cat,
+      rating: rated ? fuzoSummary.average : rawPlace.rating,
+      reviews: rated ? fuzoSummary.count : rawPlace.reviews,
+      priceLevel: p?.price_tier ? p.price_tier.length : rawPlace.priceLevel,
+      editorialSummary: p?.description || p?.tagline || rawPlace.editorialSummary,
+      address: p?.address || fuzoRestaurant.address || rawPlace.address,
+      phone: p?.phone || rawPlace.phone,
+      website: p?.website || rawPlace.website,
+      dineIn: has('dine_in') ?? rawPlace.dineIn,
+      takeout: has('takeaway') ?? rawPlace.takeout,
+      delivery: has('delivery') ?? rawPlace.delivery,
+      reservable: has('reservations') ?? rawPlace.reservable,
+      photos: [...new Set([...fuzoPhotos, ...(rawPlace.photos ?? [])])],
+    };
+  }, [rawPlace, fuzoRestaurant, fuzoProfile, fuzoReviews, fuzoSummary]);
+  const amenities = fuzoRestaurant && !rawPlace.isNewFind ? fuzoProfile?.amenities ?? [] : [];
 
   const containerRef = useFocusTrap(true);
   const [editedName, setEditedName] = React.useState(place.name);
@@ -151,6 +215,10 @@ export const ScoutPlaceModal = ({
             <button
               className="scout-modal__action scout-modal__action--primary"
               onClick={() => {
+                if (onDirections) {
+                  onDirections(place);
+                  return;
+                }
                 const params = new URLSearchParams({ api: '1', destination: `${place.lat},${place.lng}` });
                 if (place.placeId) params.set('destination_place_id', place.placeId);
                 window.open(`https://www.google.com/maps/dir/?${params.toString()}`, '_blank', 'noopener,noreferrer');
@@ -351,6 +419,37 @@ export const ScoutPlaceModal = ({
                 </div>
               </div>
 
+              {fuzoReviews.length > 0 && (
+                <>
+                  <h3 className="scout-modal__section-title">On FUZO</h3>
+                  {fuzoReviews.map((r) => (
+                    <div key={r.id} className="scout-modal__review">
+                      <div className="scout-modal__review-user">
+                        <div className="scout-modal__review-avatar">
+                          {r.author?.avatarUrl ? <img src={r.author.avatarUrl} alt="" /> : (r.author?.name || 'F').charAt(0)}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 14, fontWeight: 500 }}>{r.author?.name || 'FUZO user'}</div>
+                          <div style={{ fontSize: 12, color: '#a8a29e' }}>{timeAgo(r.created_at)}</div>
+                        </div>
+                      </div>
+                      <div className="scout-modal__stars">
+                        {[1, 2, 3, 4, 5].map((star) => <Star key={star} size={12} fill={star <= r.rating ? 'currentColor' : 'none'} />)}
+                      </div>
+                      {r.body && <p className="scout-modal__review-text">{r.body}</p>}
+                      {r.photos?.length > 0 && (
+                        <div className="scout-modal__review-photos">
+                          {r.photos.map((src) => <img key={src} src={src} alt="" loading="lazy" />)}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {(place.userReviews || []).length > 0 && <h3 className="scout-modal__section-title">From Google</h3>}
+                </>
+              )}
+              {fuzoRestaurant && fuzoReviews.length === 0 && (place.userReviews || []).length === 0 && (
+                <p className="scout-modal__empty-photos">No reviews yet - be the first on its FUZO page.</p>
+              )}
               {(place.userReviews || []).map((review) => (
                 <div key={`${review.user}-${review.time}`} className="scout-modal__review">
                   <div className="scout-modal__review-user">
@@ -395,8 +494,42 @@ export const ScoutPlaceModal = ({
                       <span className={place.dineIn ? '' : 'is-off'}>Dine-in</span>
                     </div>
                   )}
+                  {place.reservable !== undefined && (
+                    <div className="scout-modal__flag" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      {place.reservable ? <Check size={16} className="is-yes" /> : <X size={16} className="is-no" />}
+                      <span className={place.reservable ? '' : 'is-off'}>Reservations</span>
+                    </div>
+                  )}
+                  {place.dineIn === undefined && place.takeout === undefined && place.delivery === undefined && place.reservable === undefined && (
+                    <span className="scout-modal__muted">Not listed yet.</span>
+                  )}
                 </div>
               </div>
+
+              {(amenities.length > 0 || (fuzoProfile?.cuisines?.length ?? 0) > 0) && (
+                <>
+                  <div className="scout-modal__divider" />
+                  {amenities.length > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      <h3 className="scout-modal__section-title">Amenities</h3>
+                      <div className="scout-modal__flag-grid">
+                        {amenities.map((a) => (
+                          <div key={a} className="scout-modal__flag" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <Check size={16} className="is-yes" />
+                            <span>{a}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {(fuzoProfile?.cuisines?.length ?? 0) > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: amenities.length ? 16 : 0 }}>
+                      <h3 className="scout-modal__section-title">Cuisines</h3>
+                      <p className="scout-modal__summary" style={{ margin: 0 }}>{fuzoProfile!.cuisines.join(' · ')}</p>
+                    </div>
+                  )}
+                </>
+              )}
 
               {(place.servesBeer !== undefined || place.servesWine !== undefined || place.servesVegetarianFood !== undefined) && (
                 <>

@@ -426,6 +426,32 @@ $rail-pad-sm: 1rem;
 }
 
 // ── Cards: the Profile's activity-card look ────────────────────────────────
+// Round frosted button on a photo card (Home's Directions, My Plate's
+// Directions / Remove): 38px with a 44px hit area.
+// (The caller positions it - the ::after hit area needs it positioned.)
+@mixin dash-card-fab {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 26, 22, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(#fff, 0.25);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s $fz-ease, background 0.2s ease, color 0.2s ease;
+
+  &::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; }
+  &:hover { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; transform: scale(1.06); }
+  &:active { transform: scale(0.94); }
+  &:focus-visible { outline: 2px solid $fuzo-yellow; outline-offset: 2px; }
+}
+
 .fz-dash-card {
   position: relative;
   display: block;
@@ -788,24 +814,16 @@ $rail-pad-sm: 1rem;
     &:hover svg { color: $fuzo-yellow-deep; transform: translateY(-1px); }
     svg { transition: transform 0.2s $fz-ease, color 0.2s ease; }
     &:focus-visible { outline: 2px solid $fz-ink; outline-offset: -2px; border-radius: 12px; }
-  }
 
-  // "My Plate is coming soon" bubble above the dock.
-  &__note {
-    position: absolute;
-    left: 50%;
-    bottom: calc(100% + 0.6rem);
-    transform: translateX(-50%);
-    padding: 0.45rem 0.85rem;
-    border-radius: 9999px;
-    background: $fz-ink;
-    color: #fff;
-    font-size: 0.78rem;
-    font-weight: 700;
-    line-height: 1.2;
-    white-space: nowrap;
-    box-shadow: 0 8px 20px -8px rgba($fz-ink, 0.6);
-    animation: fz-dock-note 0.25s $fz-ease;
+    // The page you're on (the dock is shared by Home, Explore, My Plate, Rewards).
+    &[aria-current='page'] {
+      height: calc(100% - 10px);
+      margin: 0 2px;
+      border-radius: 9999px;
+      background: rgba($fuzo-yellow, 0.3);
+      color: $fz-ink;
+      svg { color: mix(#000, $fuzo-yellow, 35%); }
+    }
   }
 
   // Raised centre Home button breaking out of the bar, like the sketch.
@@ -846,17 +864,11 @@ $rail-pad-sm: 1rem;
   .fz-dash-dock__item > span,
   .fz-dash-tabs,
   .fz-dash-tabs__label,
-  .fz-dash-dock__note,
+  .fz-dash-card__dir,
   .fz-dash-seeall,
   .fz-dash-seeall__photo { transition: none; }
   .fz-dash-rail__track--grid > * { animation: none; }
   .fz-dash-card--skeleton { animation: none; }
-  .fz-dash-dock__note { animation: none; }
-}
-
-@keyframes fz-dock-note {
-  from { opacity: 0; transform: translate(-50%, 6px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 // ── Location notice actions + "Use my location" ────────────────────────────
@@ -926,6 +938,28 @@ $rail-pad-sm: 1rem;
   @media (hover: hover) {
     &--fuzo:hover { box-shadow: 0 0 0 2px $fuzo-yellow, $fz-shadow-dark-hover; }
   }
+
+  // Card = a div with a stretched link (details) + a Directions button (map),
+  // so the button isn't nested inside the link.
+  &__link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    &:focus-visible { outline: none; }
+  }
+  &:has(> .fz-dash-card__link:focus-visible) { outline: 3px solid $fuzo-yellow; outline-offset: 3px; }
+
+  &__dir {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    z-index: 2;
+    @include dash-card-fab;
+  }
+
+  // The offer tag moves under the Directions button.
+  &--has-dir &__offer { top: calc(0.6rem + 46px); max-width: calc(100% - 1.4rem); }
 
   &--static { cursor: default; }
   @media (hover: hover) {

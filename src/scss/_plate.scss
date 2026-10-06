@@ -1,0 +1,419 @@
+// ============================================================================
+// MY PLATE (/my-plate, MyPlateView.tsx). Same clean style as Profile: off-white page with a
+// light navbar-gold wash at the top, solid white panels, ink text, yellow only
+// for the main action.
+// ============================================================================
+
+$plate-page: #f6f4ef;
+$plate-max: 1280px;
+
+@mixin plate-page($bg: linear-gradient(180deg, rgba($fz-navbar-gold, 0.16) 0, rgba($fz-navbar-gold, 0) 320px) $plate-page) {
+  min-height: calc(100dvh - #{$fz-topbar-h});
+  background: $bg;
+  color: $fz-ink;
+  // Bottom room for the floating app dock.
+  padding: clamp(1rem, 3vw, 1.75rem) 0 calc(7rem + env(safe-area-inset-bottom));
+}
+
+@mixin plate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba($fz-ink, 0.12);
+  background: #fff;
+  color: $fz-ink;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s $fz-ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover { color: $fz-ink; background: $fuzo-yellow-tint; border-color: $fuzo-yellow-deep; transform: translateY(-1px); }
+  &:active { transform: translateY(0); }
+  &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &:disabled { opacity: 0.7; cursor: progress; }
+
+  &--primary {
+    border-color: transparent;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 8px 18px -8px rgba($fuzo-yellow-deep, 0.8);
+    &:hover { background: mix(#fff, $fuzo-yellow, 15%); border-color: transparent; color: $fuzo-yellow-ink; }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// My Plate page
+// ---------------------------------------------------------------------------
+.fz-plate {
+  // Same page colour as Home, so My Plate reads as part of it.
+  @include plate-page($dash-page);
+
+  &__wrap {
+    max-width: $plate-max;
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 3vw, 2rem);
+  }
+
+  &__btn { @include plate-btn; }
+
+  // ---- Header ----
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.1rem;
+  }
+
+  &__back {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: $fz-ink;
+    border: 1px solid rgba($fz-ink, 0.1);
+    box-shadow: $fz-shadow-sm;
+    transition: transform 0.2s $fz-ease, background 0.2s ease;
+
+    &:hover { background: $fuzo-yellow; color: $fuzo-yellow-ink; transform: translateX(-2px); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__title-block { flex: 1 1 auto; min-width: 0; }
+
+  &__title {
+    margin: 0;
+    font-family: var(--body-font), $font-family-sans-serif;
+    font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+
+  &__lede {
+    margin: 0.15rem 0 0;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: $fz-ink-soft;
+  }
+
+  // ---- Search + sort ----
+  // Search icon + sort on the right of the header.
+  &__tools {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__icon-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba($fz-ink, 0.1);
+    background: #fff;
+    color: $fz-ink;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    &:hover { background: $fuzo-yellow-tint; border-color: $fuzo-yellow-deep; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__search {
+    flex: 1 1 auto;
+    min-width: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 46px;
+    padding: 0 0.5rem 0 0.95rem;
+    border-radius: 9999px;
+    background: #fff;
+    border: 1px solid rgba($fz-ink, 0.1);
+    color: $fz-ink-soft;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus-within { border-color: $fuzo-yellow-deep; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      border: 0;
+      background: transparent;
+      color: $fz-ink;
+      font-size: 0.95rem;
+      outline: none;
+
+      &::-webkit-search-cancel-button { display: none; }
+    }
+  }
+
+  &__search-clear {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($fz-ink, 0.06);
+    color: $fz-ink;
+    cursor: pointer;
+    &:hover { background: rgba($fz-ink, 0.12); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 1px; }
+  }
+
+  // Compact sort: icon + short label, the native select keeps it accessible.
+  &__sort {
+    flex: 0 0 auto;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    color: $fz-ink;
+
+    > svg {
+      position: absolute;
+      left: 0.85rem;
+      pointer-events: none;
+    }
+
+    select {
+      height: 46px;
+      padding: 0 2rem 0 2.3rem;
+      border-radius: 9999px;
+      border: 1px solid rgba($fz-ink, 0.1);
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23241f16' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.8rem center;
+      appearance: none;
+      color: $fz-ink;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+
+      &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+    }
+  }
+
+  // ---- Filter chips (wrap, never clip) ----
+  &__chips {
+    scroll-margin-top: calc(#{$fz-topbar-h} + 0.75rem);
+    display: flex;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 2px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+
+    @media (max-width: 767.98px) {
+      margin-left: calc(-1 * clamp(1rem, 3vw, 2rem));
+      margin-right: calc(-1 * clamp(1rem, 3vw, 2rem));
+      padding-left: clamp(1rem, 3vw, 2rem);
+      padding-right: clamp(1rem, 3vw, 2rem);
+      mask-image: linear-gradient(90deg, #000 calc(100% - 2rem), transparent);
+    }
+  }
+
+  &__chip {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 40px;
+    padding: 0 0.6rem 0 0.85rem;
+    border-radius: 9999px;
+    border: 1px solid rgba($fz-ink, 0.1);
+    background: #fff;
+    color: $fz-ink;
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+    &:hover { border-color: $fuzo-yellow-deep; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+    &[aria-pressed='true'] {
+      background: $fz-ink;
+      border-color: $fz-ink;
+      color: #fff;
+      .fz-plate__chip-count { background: $fuzo-yellow; color: $fuzo-yellow-ink; }
+    }
+  }
+
+  &__chip-count {
+    min-width: 24px;
+    padding: 0.12rem 0.45rem;
+    border-radius: 9999px;
+    background: rgba($fz-ink, 0.07);
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  // ---- Empty / error / signed-out ----
+  &__state {
+    @include fz-clean-panel;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    max-width: 520px;
+    margin: 1.5rem auto 0;
+    padding: 2.25rem 1.5rem;
+    border-radius: 24px;
+    text-align: center;
+
+    h2 { margin: 0.5rem 0 0; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; }
+    p { margin: 0 0 0.75rem; color: $fz-ink-soft; font-size: 0.92rem; line-height: 1.5; max-width: 34ch; }
+
+    &--compact { margin-top: 0.5rem; padding: 1.75rem 1.25rem; }
+  }
+
+  &__state-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+  }
+
+  &__state-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  // ---- Undo toast ----
+  &__toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(5.5rem + env(safe-area-inset-bottom)); // above the app dock
+    z-index: 1040;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    max-width: calc(100% - 2rem);
+    padding: 0.55rem 0.55rem 0.55rem 1.1rem;
+    border-radius: 9999px;
+    background: $fz-ink;
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    box-shadow: 0 14px 30px -12px rgba($fz-ink, 0.7);
+    translate: -50% 0;
+
+    > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    &:not(:has(.fz-plate__toast-undo)) { padding-right: 1.1rem; }
+  }
+
+  &__toast-undo {
+    flex-shrink: 0;
+    min-height: 36px;
+    padding: 0 0.95rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    &:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  }
+}
+
+// ---- Saved item card: Home's fz-dash-card + My Plate extras ----
+.fz-plate-card {
+  // A <button> opens recipes / feed finds in the sheet.
+  button.fz-dash-card__link {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  // No photo: a kind-tinted gradient with the kind's icon.
+  &__ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 3.5rem;
+    color: rgba(#fff, 0.85);
+
+    &--places { background: linear-gradient(145deg, mix(#fff, $chili, 10%), mix(#000, $chili, 35%)); }
+    &--recipes { background: linear-gradient(145deg, $turmeric, mix(#000, $turmeric, 40%)); }
+    &--feed { background: linear-gradient(145deg, $sky, mix(#000, $sky, 45%)); }
+    &--trims { background: linear-gradient(145deg, #3a3129, #14110d); }
+    &--other { background: linear-gradient(145deg, $fuzo-yellow, $fuzo-yellow-deep); }
+    &--dishes { background: linear-gradient(145deg, mix(#fff, $chili, 15%), mix(#000, $turmeric, 30%)); }
+  }
+
+  &__when {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: rgba(#fff, 0.7);
+  }
+
+  // Directions (places) + Remove, top-right.
+  &__fabs {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    z-index: 2;
+    display: flex;
+    gap: 0.4rem;
+  }
+  &__fab { position: relative; @include dash-card-fab; }
+  &__fab--remove:hover { background: $chili; border-color: $chili; color: #fff; }
+
+  // The kind chip leaves room for the buttons.
+  .fz-dash-card__chip { max-width: calc(100% - 7rem); }
+}
+
+@keyframes fz-plate-pulse {
+  50% { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-plate__back,
+  .fz-plate__btn,
+  .fz-plate__icon-btn,
+  .fz-plate-card__fab { transition: none; }
+}
+
+// Narrow phones: the title stays on one line and sort becomes an icon-only
+// round button like search (the native select still opens and announces the
+// current order).
+.fz-plate__title { white-space: nowrap; }
+@media (max-width: 439.98px) {
+  .fz-plate__sort {
+    select {
+      width: 46px;
+      padding: 0;
+      color: transparent;
+      background-image: none;
+    }
+    > svg { left: 50%; translate: -50% 0; width: 18px; height: 18px; }
+  }
+}

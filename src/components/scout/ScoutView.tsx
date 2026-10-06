@@ -40,10 +40,14 @@ import {
   getDistanceInMeters,
   extractSuggestionText
 } from '@/lib/scout/scoutLogic';
-import { getDistanceToPolyline } from '@/lib/scout/geometryUtils';
 import { ScoutDiscoveryPanel } from './ScoutDiscoveryPanel';
 import { ScoutPlaceModal } from './ScoutPlaceModal';
-import { ScoutRoutePlanner } from './ScoutRoutePlanner';
+import { ScoutDirectionsPanel } from './ScoutDirectionsPanel';
+import { useScoutDirections, type DirRoute } from './useScoutDirections';
+import { useScoutNavigation } from './useScoutNavigation';
+import { ScoutNavigation } from './ScoutNavigation';
+import { ScoutPickOverlay } from './ScoutPickOverlay';
+import { googleDirectionsUrl } from '@/lib/maps/placeLinks';
 import { ScoutAddPinModal } from './ScoutAddPinModal';
 import { ActivityEventService } from '@/lib/services/activityEventService';
 import { RestaurantService, type FuzoRestaurantLink } from '@/lib/services/restaurantService';
@@ -74,14 +78,11 @@ export default function ScoutView() {
   // Bumped to open the mobile list sheet when a legend item is tapped.
   const [panelOpenSignal, setPanelOpenSignal] = useState(0);
   // Deep link from the dashboard: open this place once its area has loaded.
-  const [pendingPlace, setPendingPlace] = useState<{ placeId?: string; name: string; lat: number; lng: number } | null>(null);
+  const [pendingPlace, setPendingPlace] = useState<{ placeId?: string; restaurantId?: string; name: string; lat: number; lng: number } | null>(null);
   const [sharing, setSharing] = useState<SharePayload | null>(null);
   const [actionToast, setActionToast] = useState<string | null>(null);
 
-  const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState(false);
   const [isAddPinModalOpen, setIsAddPinModalOpen] = useState(false);
-  const [isCalculatingRoute, setIsCalculatingRoute] = useState(false);
-  const [currentRoute, setCurrentRoute] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [placeSuggestions, setPlaceSuggestions] = useState<Array<{ text: string; placeId: string }>>([]);
@@ -104,8 +105,76 @@ export default function ScoutView() {
   // --- Refs ---
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<MapLike | null>(null);
-  const routePolylineRef = useRef<any>(null);
-  const routeMarkersRef = useRef<any[]>([]);
+  // In-app directions (route from the user's location, like Google Maps).
+  const directions = useScoutDirections(mapInstanceRef, isMapReady);
+  const startDirectionsRef = useRef(directions.start);
+  useEffect(() => {
+    startDirectionsRef.current = directions.start;
+  }, [directions.start]);
+  // Restaurants along the route (a stable array from state - the status object is rebuilt every render).
+  const alongPlaces = directions.alongStatus.status === 'ready' ? directions.alongStatus.places : null;
+  const picking = !!directions.pick;
+
+  // Phones: the panel folds to one line so the whole route shows.
+  const [dirCollapsed, setDirCollapsed] = useState(false);
+  const toggleDirCollapsed = () => {
+    setDirCollapsed((c) => !c);
+    // Re-fit once the sheet has its new height.
+    requestAnimationFrame(() => requestAnimationFrame(directions.refit));
+  };
+
+  // In-app turn-by-turn (Directions' Start). Keeps the last ready route so the
+  // banner doesn't blank while a reroute is being fetched.
+  const readyRoute = directions.status.status === 'ready' ? directions.status.route : null;
+  const [navRoute, setNavRoute] = useState<DirRoute | null>(null);
+  if (readyRoute && readyRoute !== navRoute) setNavRoute(readyRoute);
+  const nav = useScoutNavigation({
+    route: navRoute,
+    mapRef: mapInstanceRef,
+    destName: directions.target?.name ?? 'your destination',
+    onReroute: directions.rerouteFrom,
+  });
+  const startNav = () => {
+    directions.setNavigating(true);
+    nav.start();
+  };
+  // Start from a chosen place: navigation needs the user's own position, so
+  // switch From to "Your location" and start once that route is ready.
+  const pendingNav = useRef(false);
+  const onStartDirections = () => {
+    if (directions.from.kind !== 'gps') {
+      pendingNav.current = true;
+      directions.setFrom({ kind: 'gps' });
+    } else startNav();
+  };
+  const routeReadyFromGps = directions.status.status === 'ready' && directions.from.kind === 'gps';
+  const startDirectionsNav = useRef(startNav);
+  useEffect(() => {
+    startDirectionsNav.current = startNav;
+  });
+  useEffect(() => {
+    if (pendingNav.current && routeReadyFromGps) {
+      pendingNav.current = false;
+      startDirectionsNav.current();
+    }
+  }, [routeReadyFromGps]);
+  const exitNav = () => {
+    nav.stop();
+    directions.setNavigating(false);
+    requestAnimationFrame(directions.refit);
+  };
+
+  const closeDirections = () => {
+    if (nav.active) exitNav();
+    setDirCollapsed(false);
+    directions.close();
+    // Drop dir=1 so a refresh doesn't reopen it.
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('dir')) {
+      url.searchParams.delete('dir');
+      window.history.replaceState(window.history.state, '', url.toString());
+    }
+  };
   const activeMarkersRef = useRef<any[]>([]);
   const requestSeq = useRef(0);
   const mounted = useRef(true);
@@ -169,6 +238,28 @@ export default function ScoutView() {
       if (result.success && result.data?.results && result.data.results.length > 0) {
         const transformed = result.data.results.map((r, i) => toScoutPlace(r, i, MAPS_API_KEY));
         setMainMapPlaces(transformed);
+
+        // Google sends 20 per page: load pages 2-3 in the background (up to 60).
+        // A token is only valid ~2s after it's issued, so wait and retry once.
+        let token = result.data.next_page_token;
+        const kind = query ? 'textsearch' : 'nearby';
+        for (let page = 2; token && page <= 3; page++) {
+          await new Promise((r) => setTimeout(r, 2000));
+          if (!shouldApplyLatestRequest(mounted, seq, requestSeq)) return;
+          let more = await PlacesService.nextPage(kind, token);
+          if (more.success && more.data?.status === 'INVALID_REQUEST') {
+            await new Promise((r) => setTimeout(r, 1500));
+            more = await PlacesService.nextPage(kind, token);
+          }
+          if (!shouldApplyLatestRequest(mounted, seq, requestSeq)) return;
+          if (!more.success || !more.data?.results?.length) break;
+          const extra = more.data.results.map((r, i) => toScoutPlace(r, i + page * 20, MAPS_API_KEY));
+          setMainMapPlaces((prev) => {
+            const ids = new Set(prev.map((p) => p.placeId || p.id));
+            return [...prev, ...extra.filter((p) => !ids.has(p.placeId || p.id))];
+          });
+          token = more.data.next_page_token;
+        }
       } else {
         if (result.data?.status === 'ZERO_RESULTS') {
           setMainMapPlaces([]);
@@ -402,87 +493,6 @@ export default function ScoutView() {
     }
   };
 
-  const handleCalculateRoute = async (origin: string, destination: string) => {
-    setIsCalculatingRoute(true);
-    try {
-      const result = await PlacesService.getDirections(origin, destination);
-      if (result.success && result.data?.routes?.[0]) {
-        const route = result.data.routes[0];
-        setCurrentRoute(route);
-
-        const google = getGoogleMaps();
-        if (google && mapInstanceRef.current) {
-          if (routePolylineRef.current) {
-            routePolylineRef.current.setMap(null);
-            routePolylineRef.current = null;
-          }
-          routeMarkersRef.current.forEach(m => m.setMap(null));
-          routeMarkersRef.current = [];
-
-          const polylinePath = (google as any).geometry.encoding.decodePath(route.polyline.encodedPolyline);
-          const pathPoints = polylinePath.map((p: any) => ({
-            lat: typeof p.lat === 'function' ? p.lat() : p.lat,
-            lng: typeof p.lng === 'function' ? p.lng() : p.lng
-          }));
-
-          routePolylineRef.current = new google.Polyline({
-            path: polylinePath,
-            geodesic: true,
-            strokeColor: '#e8472b',
-            strokeOpacity: 0.9,
-            strokeWeight: 6,
-            map: mapInstanceRef.current
-          });
-
-          const bounds = new google.LatLngBounds();
-          pathPoints.forEach((pt: any) => bounds.extend(pt));
-          mapInstanceRef.current.fitBounds(bounds);
-
-          const searchResult = await PlacesService.searchAlongRoute(route.polyline.encodedPolyline, 'restaurants');
-          let combinedResults: ScoutPlace[] = [];
-
-          if (searchResult.success && searchResult.data?.results) {
-            combinedResults = searchResult.data.results.map((r, i) => toScoutPlace(r, i, MAPS_API_KEY));
-          }
-
-          const MAX_DETOUR_METERS = 500;
-          const localAlongRoute = mainMapPlaces.filter(p => {
-            if (!p.lat || !p.lng) return false;
-            return getDistanceToPolyline({ lat: p.lat, lng: p.lng }, pathPoints) <= MAX_DETOUR_METERS;
-          });
-
-          const seen = new Set();
-          const finalPlaces = [...combinedResults, ...localAlongRoute].filter(p => {
-            const id = p.placeId || p.id || p.name;
-            if (seen.has(id)) return false;
-            seen.add(id);
-            return true;
-          });
-
-          setMainMapPlaces(finalPlaces);
-          setIsRoutePlannerOpen(false);
-        }
-      } else {
-        const errorMsg = result.error || 'No route found between these points.';
-        alert(`Route Error: ${errorMsg}`);
-      }
-    } catch (err) {
-      console.error('Route error:', err);
-    } finally {
-      setIsCalculatingRoute(false);
-    }
-  };
-
-  const handleClearRoute = () => {
-    setCurrentRoute(null);
-    if (routePolylineRef.current) {
-      routePolylineRef.current.setMap(null);
-      routePolylineRef.current = null;
-    }
-    routeMarkersRef.current.forEach(m => m.setMap(null));
-    routeMarkersRef.current = [];
-    if (mapInstanceRef.current) fetchPlaces(mapInstanceRef.current);
-  };
 
   const showActionToast = (message: string) => {
     setActionToast(message);
@@ -684,16 +694,19 @@ export default function ScoutView() {
       const linkLat = Number(params.get('lat'));
       const linkLng = Number(params.get('lng'));
       const deepLink = params.has('lat') && Number.isFinite(linkLat) && Number.isFinite(linkLng)
-        ? { placeId: params.get('place') || undefined, name: params.get('name') || 'Place', lat: linkLat, lng: linkLng }
+        ? { placeId: params.get('place') || undefined, restaurantId: params.get('rid') || undefined, name: params.get('name') || 'Place', lat: linkLat, lng: linkLng }
         : null;
       // view=area (e.g. a city from the dashboard): just centre on it and show
       // its food spots - no single-place popup.
       const areaOnly = params.get('view') === 'area';
+      // dir=1 (a Directions button): draw the route from the user's location instead of the popup.
+      const wantsDirections = params.get('dir') === '1';
       if (deepLink) {
         map.setCenter({ lat: deepLink.lat, lng: deepLink.lng });
         map.setZoom(areaOnly ? 14 : 16);
         setMapZoom(areaOnly ? 14 : 16);
-        if (!areaOnly) setPendingPlace(deepLink);
+        if (wantsDirections && !areaOnly) startDirectionsRef.current(deepLink);
+        else if (!areaOnly) setPendingPlace(deepLink);
       }
 
       fetchPlaces(map);
@@ -770,7 +783,11 @@ export default function ScoutView() {
     // Food-app style pins: nearby places merge into one pill with a count and
     // "Name +N more"; FUZO restaurants lead their group and show any real offer.
     const map = mapInstanceRef.current;
-    const groups = groupPlaces(shownPlaces, mapZoom, (p) => !!fuzoLinkFor(p));
+    // While directions are open only the route shows (like Google Maps) - plus
+    // the restaurants along it when "Food along the way" is on.
+    // (No pins at all while choosing a spot on the map - just the centre pin.)
+    const pinPlaces = directions.open ? (picking ? [] : alongPlaces ?? []) : shownPlaces;
+    const groups = groupPlaces(pinPlaces, mapZoom, (p) => !!fuzoLinkFor(p));
     const markers: { setMap: (m: unknown) => void }[] = groups.map((group) => {
       const leadFuzo = fuzoLinkFor(group.lead);
       const tag = group.places.map((p) => fuzoLinkFor(p)?.offerTitle).find(Boolean) ?? null;
@@ -801,7 +818,8 @@ export default function ScoutView() {
       );
     });
 
-    if (userLocation) {
+    // While directions are open the route draws its own blue "you are here" dot.
+    if (userLocation && !directions.open) {
       const userMarker = new google.Marker({
         position: userLocation,
         map: mapInstanceRef.current,
@@ -834,7 +852,7 @@ export default function ScoutView() {
       // per pinnedPlace change) or on unmount.
       activeMarkersRef.current.push(pinnedMarker);
     }
-  }, [isMapReady, shownPlaces, pinnedPlace, userLocation, fuzoLinkFor, mapZoom]);
+  }, [isMapReady, shownPlaces, pinnedPlace, userLocation, fuzoLinkFor, mapZoom, directions.open, alongPlaces, picking]);
 
   // --- Deep link: open the linked place once its area has loaded ---
   // (adjust-state-during-render, so it runs exactly once after the first fetch
@@ -848,12 +866,16 @@ export default function ScoutView() {
     Math.abs(mapCenter.lat - pendingPlace.lat) < 0.0005 &&
     Math.abs(mapCenter.lng - pendingPlace.lng) < 0.0005
   ) {
-    const found = pendingPlace.placeId ? activePlaces.find((p) => p.placeId === pendingPlace.placeId) : undefined;
+    // A FUZO restaurant (rid) keeps its marker id, so its pop-up shows "View on FUZO".
+    const fuzoId = pendingPlace.restaurantId ? `fuzo-rest-${pendingPlace.restaurantId}` : null;
+    const found =
+      (fuzoId ? activePlaces.find((p) => p.id === fuzoId) : undefined) ??
+      (pendingPlace.placeId ? activePlaces.find((p) => p.placeId === pendingPlace.placeId) : undefined);
     setSelectedPlace(
       found ?? {
-        id: pendingPlace.placeId || `link-${pendingPlace.lat},${pendingPlace.lng}`,
+        id: fuzoId || pendingPlace.placeId || `link-${pendingPlace.lat},${pendingPlace.lng}`,
         placeId: pendingPlace.placeId,
-        markerSource: 'google',
+        markerSource: fuzoId ? 'fuzo' : 'google',
         name: pendingPlace.name,
         cat: 'Restaurant',
         rating: 0,
@@ -902,7 +924,7 @@ export default function ScoutView() {
   // --- Legend Counts ---
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div className={`scout-root${nav.active ? ' is-navigating' : ''}${directions.pick ? ' is-picking' : ''}`} style={{ position: 'relative', width: '100%', height: '100%' }}>
       {/* Map canvas */}
       <div ref={mapRef} style={{ position: 'absolute', inset: 0, zIndex: 0 }} id="scout-map" />
 
@@ -936,7 +958,7 @@ export default function ScoutView() {
               </button>
             </form>
             <div className="scout-search__divider" />
-            <button onClick={() => setIsRoutePlannerOpen(true)} className="scout-search__route-btn">
+            <button type="button" onClick={directions.openPlanner} className="scout-search__route-btn" aria-label="Directions" title="Directions">
               <div className="scout-search__route-icon">
                 <Navigation size={16} />
               </div>
@@ -961,7 +983,8 @@ export default function ScoutView() {
           )}
         </div>
 
-        {/* Legend */}
+        {/* Legend (hidden while directions are open - the panel takes that spot) */}
+        {!directions.open && (
         <div className="scout-legend">
           {(
             [
@@ -983,6 +1006,7 @@ export default function ScoutView() {
             </button>
           ))}
         </div>
+        )}
       </div>
 
       {/* FAB cluster */}
@@ -1009,14 +1033,49 @@ export default function ScoutView() {
       </div>
 
       {/* Overlay panels */}
-      <ScoutRoutePlanner
-        isVisible={isRoutePlannerOpen}
-        onClose={() => setIsRoutePlannerOpen(false)}
-        onCalculateRoute={handleCalculateRoute}
-        onClear={handleClearRoute}
-        isCalculating={isCalculatingRoute}
-      />
-
+      {nav.active && directions.target ? (
+        <ScoutNavigation
+          destName={directions.target.name}
+          nextManeuver={nav.nextManeuver}
+          nextText={nav.nextText}
+          thenText={nav.thenText}
+          toTurn={nav.toTurn}
+          remainingM={nav.remainingM}
+          remainingS={nav.remainingS}
+          hasFix={!!nav.pos}
+          gpsError={nav.gpsError}
+          arrived={nav.arrived}
+          muted={nav.muted}
+          following={nav.following}
+          googleHref={googleDirectionsUrl(directions.target, { mode: directions.mode, navigate: true })}
+          onToggleMute={nav.toggleMute}
+          onRecenter={nav.recenter}
+          onExit={exitNav}
+        />
+      ) : directions.pick ? (
+        <ScoutPickOverlay pick={directions.pick} onConfirm={directions.confirmPick} onCancel={directions.cancelPick} />
+      ) : directions.open ? (
+        <ScoutDirectionsPanel
+          target={directions.target}
+          from={directions.from}
+          gps={directions.gps}
+          mode={directions.mode}
+          onModeChange={directions.setMode}
+          onTargetChange={directions.setTarget}
+          onFromChange={directions.setFrom}
+          status={directions.status}
+          alongWay={directions.alongWay}
+          onAlongWayChange={directions.setAlongWay}
+          alongStatus={directions.alongStatus}
+          onSelectPlace={setSelectedPlace}
+          onRetry={directions.retry}
+          onClose={closeDirections}
+          onStart={onStartDirections}
+          collapsed={dirCollapsed}
+          onToggleCollapsed={toggleDirCollapsed}
+          onPickOnMap={directions.startPick}
+        />
+      ) : (
       <ScoutDiscoveryPanel
         places={shownPlaces}
         openSignal={panelOpenSignal}
@@ -1028,6 +1087,7 @@ export default function ScoutView() {
         onDistanceChangeEnd={() => { if (mapInstanceRef.current) fetchPlaces(mapInstanceRef.current, searchQuery); }}
         onClose={() => { }}
       />
+      )}
 
       {selectedPlace && (
         <ScoutPlaceModal
@@ -1039,13 +1099,17 @@ export default function ScoutView() {
           fuzoRestaurant={fuzoLinkFor(selectedPlace)}
           onClose={() => setSelectedPlace(null)}
           onAction={handleAction}
+          onDirections={(p) => {
+            setSelectedPlace(null);
+            directions.start({ name: p.name, lat: p.lat, lng: p.lng, placeId: p.placeId });
+          }}
         />
       )}
 
       <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
 
       {actionToast && (
-        <div className="toast show position-fixed bottom-0 start-50 translate-middle-x mb-5 bg-dark text-white rounded-pill px-3 py-2 shadow" style={{ zIndex: 1050 }}>
+        <div className="toast show position-fixed start-50 translate-middle-x bg-dark text-white rounded-pill px-3 py-2 shadow" style={{ zIndex: 1050, bottom: 'calc(5.5rem + env(safe-area-inset-bottom))' }}>
           {actionToast}
         </div>
       )}

@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Calendar, CheckCircle2, Clock, ExternalLink, Globe, MapPin, MessageSquare, Navigation, Phone, Sparkles, Star, Users } from 'lucide-react';
+import { CheckCircle2, Clock, ExternalLink, Globe, MapPin, MessageSquare, Navigation, Phone, Sparkles, Star } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useOpenStatus, useRestaurant } from '@/lib/hooks/useRestaurant';
 import { DAY_KEYS, DAY_LABELS, WEEK_ORDER, formatDay, hasAnyHours } from '@/lib/restaurant/hours';
 import { RestaurantService, type RestaurantReview } from '@/lib/services/restaurantService';
 import RateRestaurantModal from './RateRestaurantModal';
+import { directionsUrl } from '@/lib/maps/placeLinks';
+import { SERVICE_OPTIONS } from '@/lib/services/restaurantService';
 import { Stars, StatusPill, formatCount } from './RestaurantBits';
 
 interface RestaurantInfoTabProps {
@@ -22,9 +24,6 @@ interface RestaurantInfoTabProps {
 export default function RestaurantInfoTab({ restaurantId, restaurantName, isOwner = false }: RestaurantInfoTabProps) {
   const { loaded, profile, summary } = useRestaurant(restaurantId);
   const status = useOpenStatus(profile);
-  const [reservationGuests, setReservationGuests] = useState('2');
-  const [reservationDate, setReservationDate] = useState('Today, 8:00 PM');
-  const [reserved, setReserved] = useState(false);
 
   if (!loaded) {
     return (
@@ -36,10 +35,8 @@ export default function RestaurantInfoTab({ restaurantId, restaurantName, isOwne
     );
   }
 
-  const handleReserve = (e: React.FormEvent) => {
-    e.preventDefault();
-    setReserved(true);
-  };
+  // In-app route from the user's location (Scout), once the restaurant is on the map.
+  const fuzoDirections = directionsUrl({ name: restaurantName, placeId: profile?.place_id ?? undefined, lat: profile?.lat, lng: profile?.lng });
 
   // "Today" in the restaurant's own timezone.
   let todayKey: string = DAY_KEYS[new Date().getDay()];
@@ -93,14 +90,28 @@ export default function RestaurantInfoTab({ restaurantId, restaurantName, isOwne
             </>
           )}
         </div>
+        {profile?.description && (
+          <p className="text-dark mt-3 mb-0" style={{ fontSize: '0.92rem', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+            {profile.description}
+          </p>
+        )}
+        {!!profile?.services?.length && (
+          <ul className="fz-rservices" aria-label="Service options">
+            {SERVICE_OPTIONS.filter((o) => profile.services!.includes(o.key)).map((o) => (
+              <li key={o.key}>
+                <CheckCircle2 size={14} aria-hidden="true" /> {o.label}
+              </li>
+            ))}
+          </ul>
+        )}
         {!hasDetails && isOwner && (
-          <div className="small text-muted mt-2">Add your tagline, cuisines and price range in the Dashboard tab.</div>
+          <div className="small text-muted mt-2">Add your tagline, about, cuisines, price range and service options in the Dashboard tab.</div>
         )}
       </div>
 
       <div className="row g-4">
-        {/* Left Column: Hours, Location, Amenities, Reviews */}
-        <div className="col-12 col-md-7">
+        {/* Hours, Location, Amenities, Reviews */}
+        <div className="col-12">
           {/* Operating Hours */}
           <div className="card border mb-4 shadow-sm">
             <div className="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between py-2 px-3">
@@ -151,15 +162,22 @@ export default function RestaurantInfoTab({ restaurantId, restaurantName, isOwne
                   <h6 className="mb-1 fw-bold">{restaurantName}</h6>
                   <p className="text-muted small mb-0">{profile?.address || 'Address not listed yet.'}</p>
                 </div>
-                {directionsQuery && (profile?.address || profile?.place_id) && (
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(directionsQuery)}${profile?.place_id ? `&query_place_id=${encodeURIComponent(profile.place_id)}` : ''}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-sm btn-primary rounded-pill d-flex align-items-center gap-1 text-nowrap"
-                  >
+                {fuzoDirections ? (
+                  <Link href={fuzoDirections} className="btn btn-sm btn-primary rounded-pill d-flex align-items-center gap-1 text-nowrap">
                     <Navigation size={13} /> Get Directions
-                  </a>
+                  </Link>
+                ) : (
+                  directionsQuery &&
+                  (profile?.address || profile?.place_id) && (
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(directionsQuery)}${profile?.place_id ? `&query_place_id=${encodeURIComponent(profile.place_id)}` : ''}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-sm btn-primary rounded-pill d-flex align-items-center gap-1 text-nowrap"
+                    >
+                      <Navigation size={13} /> Get Directions
+                    </a>
+                  )
                 )}
               </div>
 
@@ -208,69 +226,8 @@ export default function RestaurantInfoTab({ restaurantId, restaurantName, isOwne
           <ReviewsCard restaurantId={restaurantId} restaurantName={restaurantName} isOwner={isOwner} />
         </div>
 
-        {/* Right Column: Interactive Table Reservation Card (unchanged) */}
-        <div className="col-12 col-md-5">
-          <div className="card border-0 shadow-lg text-white" style={{ background: '#241f16', borderRadius: '1rem' }}>
-            <div className="card-body p-4">
-              <div className="d-flex align-items-center gap-2 mb-2">
-                <Calendar size={18} className="text-warning" />
-                <h5 className="card-title fw-bold mb-0 text-white">Reserve a Table</h5>
-              </div>
-              <p className="small text-white-50 mb-4">Instant dining confirmation with priority seating.</p>
-
-              {reserved ? (
-                <div className="text-center py-4">
-                  <div className="display-4 mb-2">🎉</div>
-                  <h6 className="fw-bold text-warning">Reservation Requested!</h6>
-                  <p className="small text-white-50 mb-3">
-                    Table for {reservationGuests} guests on {reservationDate}. The restaurant will confirm shortly via SMS.
-                  </p>
-                  <button type="button" className="btn btn-sm btn-outline-light rounded-pill px-3" onClick={() => setReserved(false)}>
-                    Modify Request
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleReserve} className="d-flex flex-column gap-3">
-                  <div>
-                    <label className="form-label small text-white-50 mb-1 d-flex align-items-center gap-1">
-                      <Users size={13} /> Party Size
-                    </label>
-                    <select className="form-select form-select-sm bg-dark text-white border-secondary" value={reservationGuests} onChange={(e) => setReservationGuests(e.target.value)}>
-                      <option value="1">1 Person (Solo bar dining)</option>
-                      <option value="2">2 Guests (Couple / Date)</option>
-                      <option value="4">4 Guests (Dining table)</option>
-                      <option value="6">6 Guests (Courtyard group)</option>
-                      <option value="8+">8+ Guests (Chef tasting feast)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="form-label small text-white-50 mb-1 d-flex align-items-center gap-1">
-                      <Clock size={13} /> Time & Seating
-                    </label>
-                    <select className="form-select form-select-sm bg-dark text-white border-secondary" value={reservationDate} onChange={(e) => setReservationDate(e.target.value)}>
-                      <option value="Today, 7:30 PM">Today, 7:30 PM (Courtyard)</option>
-                      <option value="Today, 8:00 PM">Today, 8:00 PM (Dining Room)</option>
-                      <option value="Today, 9:00 PM">Today, 9:00 PM (Late Seating)</option>
-                      <option value="Tomorrow, 1:00 PM">Tomorrow, 1:00 PM (Lunch)</option>
-                      <option value="Tomorrow, 8:30 PM">Tomorrow, 8:30 PM (Dinner)</option>
-                    </select>
-                  </div>
-
-                  <div className="pt-2">
-                    <button type="submit" className="btn btn-primary w-100 fw-bold py-2 rounded-pill">
-                      Confirm Table Request
-                    </button>
-                  </div>
-
-                  <div className="text-center" style={{ fontSize: '0.72rem', color: '#837a68' }}>
-                    Free cancellation up to 2 hours prior · No booking fee
-                  </div>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
+        {/* "Reserve a Table" is hidden until real booking exists - the old form
+            showed a confirmation without sending anything (client, 2026-10-06). */}
       </div>
     </div>
   );

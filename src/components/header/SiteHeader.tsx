@@ -1,29 +1,27 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Bell, House, LogOut, MessageCircle, Trophy, User } from 'lucide-react';
+import { Bell, House, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import TakoAssistant from '@/components/tako/TakoAssistant';
 import { NotificationsService } from '@/lib/services/notificationsService';
 import { ChatService } from '@/lib/services/chatService';
-import { createClient } from '@/lib/supabase/client';
 
 // The ONE navbar for the whole app (dashboard, Scout, Messages,
 // Notifications, Rewards, Profile...) - exactly the home (dashboard) bar from
 // the client's sketch: slim solid-gold bar, profile photo | FUZO logo (opens
 // Tako, the AI food assistant) | home + bell. Home (the house icon) goes
 // back to the dashboard from any page; it's lit while you're there. The photo
-// opens the account menu (Profile, Leaderboard, Sign out); the bell opens Notifications + Messages with real
+// opens your profile (Sign out is in Profile > Settings); the bell opens Notifications + Messages with real
 // unread dots. Menus are plain React state (no Bootstrap
 // JS). Styles: _header.scss (.fz-topbar).
 
 export default function SiteHeader() {
   const { user } = useAuth();
   const pathname = usePathname();
-  const router = useRouter();
-  const [menu, setMenu] = useState<'account' | 'inbox' | null>(null);
+  const [menu, setMenu] = useState<'inbox' | null>(null);
   const [isTakoOpen, setIsTakoOpen] = useState(false);
   const [unread, setUnread] = useState({ notifications: false, messages: 0 });
 
@@ -48,14 +46,7 @@ export default function SiteHeader() {
   }, [menu]);
 
   const close = () => setMenu(null);
-  const toggle = (m: 'account' | 'inbox') => setMenu((cur) => (cur === m ? null : m));
-
-  const handleSignOut = async () => {
-    close();
-    const supabase = createClient();
-    await supabase?.auth.signOut();
-    router.push('/login');
-  };
+  const toggle = (m: 'inbox') => setMenu((cur) => (cur === m ? null : m));
 
   const signedIn = Boolean(user);
   const showInboxDot = signedIn && (unread.notifications || unread.messages > 0);
@@ -66,41 +57,12 @@ export default function SiteHeader() {
   return (
     <>
       <header className="fz-topbar">
-        {/* Left: profile photo -> account menu */}
+        {/* Left: profile photo -> your profile (Sign out lives in Profile > Settings). */}
         <div className="fz-topbar__side">
           {signedIn ? (
-            <div className="fz-topbar__anchor">
-              <button
-                type="button"
-                className="fz-topbar__avatar"
-                aria-label="Account menu"
-                aria-haspopup="menu"
-                aria-expanded={menu === 'account'}
-                onClick={() => toggle('account')}
-              >
-                {avatarUrl ? <img src={avatarUrl} alt="" /> : <span>{displayName.charAt(0).toUpperCase()}</span>}
-              </button>
-              {menu === 'account' && (
-                <>
-                  <button type="button" className="fz-topbar__scrim" aria-label="Close menu" onClick={close} />
-                  <div className="fz-topbar__menu fz-topbar__menu--start" role="menu">
-                    <div className="fz-topbar__menu-head">
-                      <strong>{displayName}</strong>
-                      <span>{user?.email}</span>
-                    </div>
-                    <Link href="/profile" className="fz-topbar__menu-item" role="menuitem" onClick={close}>
-                      <span className="fz-topbar__menu-icon"><User size={16} /></span> Profile
-                    </Link>
-                    <Link href="/leaderboard" className="fz-topbar__menu-item" role="menuitem" onClick={close}>
-                      <span className="fz-topbar__menu-icon"><Trophy size={16} /></span> Leaderboard
-                    </Link>
-                    <button type="button" className="fz-topbar__menu-item" role="menuitem" onClick={handleSignOut}>
-                      <span className="fz-topbar__menu-icon"><LogOut size={16} /></span> Sign out
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
+            <Link href="/profile" className="fz-topbar__avatar" aria-label="Your profile" title="Your profile">
+              {avatarUrl ? <img src={avatarUrl} alt="" /> : <span>{displayName.charAt(0).toUpperCase()}</span>}
+            </Link>
           ) : null}
         </div>
 

@@ -509,3 +509,85 @@ $lb-hero-bg: linear-gradient(135deg, mix(#fff, $fz-ink-card, 7%) 0%, $fz-ink-car
   .fz-lb-you-card__level span:last-child { display: none; }
   .fz-lb-row { gap: 0.7rem; padding: 0.7rem 0.85rem; }
 }
+
+// ---------------------------------------------------------------------------
+// Leaderboard & Rewards (LeaderboardRewardsView.tsx, client 2026-10-06): one
+// page. The dark header band holds the title + the Leaderboard | Rewards tabs;
+// the Leaderboard tab continues that band (filters + podium), Rewards sits on
+// the cream page below.
+// ---------------------------------------------------------------------------
+.fz-lbr {
+  background: $lb-page-bg;
+  min-height: 100vh;
+  padding-bottom: calc(6rem + env(safe-area-inset-bottom)); // room for the app dock
+}
+
+.fz-lbr-head {
+  background: $lb-hero-bg;
+  color: #fff;
+  padding: 1.75rem 0 1.25rem;
+
+  @media (min-width: 992px) { padding-top: 2.5rem; }
+
+  .fz-lb-sub { line-height: 1.5; }
+}
+
+// Big two-way switch on the dark band - distinct from the smaller
+// Global / Friends pills inside the Leaderboard.
+.fz-lbr-tabs {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+  width: min(100%, 26rem);
+  margin-top: 1.25rem;
+  padding: 0.3rem;
+  border-radius: 9999px;
+  background: rgba(#fff, 0.08);
+  border: 1px solid rgba(#fff, 0.14);
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: 9999px;
+    background: transparent;
+    color: rgba(#fff, 0.78);
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+
+    &:hover { color: #fff; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow; outline-offset: 2px; }
+    &.is-active {
+      background: $fuzo-yellow;
+      color: $fuzo-yellow-ink;
+      box-shadow: 0 6px 16px -6px rgba($fuzo-yellow, 0.7);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__btn { transition: none; }
+  }
+}
+
+// The Leaderboard inside the page: the header above already has the title, so
+// its own band starts straight with the filters, and the page handles spacing.
+.fz-lb--embedded {
+  min-height: 0;
+  padding-bottom: 0;
+  background: transparent;
+
+  .fz-lb-hero { padding-top: 0.25rem; }
+}
+
+// Inside Leaderboard & Rewards the app dock floats at the bottom, so the
+// sticky "Your rank" bar (below desktop) stops above it.
+.fz-lb--embedded .fz-lb-you-card {
+  bottom: calc(5.25rem + env(safe-area-inset-bottom));
+  z-index: 5;
+}

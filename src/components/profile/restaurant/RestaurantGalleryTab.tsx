@@ -3,27 +3,51 @@
 import { useMemo, useState } from 'react';
 import { Camera, Image as ImageIcon, X } from 'lucide-react';
 import type { GalleryPhoto } from '../demoProfile';
+import { useRestaurant } from '@/lib/hooks/useRestaurant';
 
 interface RestaurantGalleryTabProps {
-  photos?: GalleryPhoto[];
+  /** The restaurant whose gallery (restaurant_profiles.gallery, set in the Dashboard) to show. */
+  restaurantId: string;
+  isOwner?: boolean;
+  onManage?: () => void;
 }
 
-export default function RestaurantGalleryTab({ photos = [] }: RestaurantGalleryTabProps) {
+export default function RestaurantGalleryTab({ restaurantId, isOwner = false, onManage }: RestaurantGalleryTabProps) {
+  const { loaded, profile } = useRestaurant(restaurantId);
+  const photos: GalleryPhoto[] = useMemo(
+    () => (profile?.gallery ?? []).map((p, i) => ({ id: `${i}-${p.url}`, url: p.url, title: p.caption ?? '', category: p.category })),
+    [profile?.gallery],
+  );
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const [activePhoto, setActivePhoto] = useState<GalleryPhoto | null>(null);
 
-  const categories = ['All', 'Food', 'Ambience', 'Interior', 'Bar'];
+  const categories = ['All', ...['Food', 'Ambience', 'Interior', 'Bar'].filter((c) => photos.some((p) => p.category === c))];
 
   const filteredPhotos = useMemo(() => {
     if (selectedFilter === 'All') return photos;
     return photos.filter((p) => p.category === selectedFilter);
   }, [photos, selectedFilter]);
 
+  if (!loaded) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Loading gallery…</span>
+        </div>
+      </div>
+    );
+  }
+
   if (photos.length === 0) {
     return (
       <div className="text-center py-5 text-muted">
         <Camera size={36} className="mb-2 opacity-50" />
-        <div>No gallery photos uploaded yet.</div>
+        <div className="mb-3">No gallery photos uploaded yet.</div>
+        {isOwner && onManage && (
+          <button type="button" className="btn btn-sm btn-primary rounded-pill fw-bold px-3" onClick={onManage}>
+            Add photos in Dashboard
+          </button>
+        )}
       </div>
     );
   }
@@ -31,17 +55,17 @@ export default function RestaurantGalleryTab({ photos = [] }: RestaurantGalleryT
   return (
     <div className="fz-restaurant-gallery py-3">
       {/* Category Pills */}
-      <div className="d-flex gap-2 overflow-auto mb-4 pb-1" style={{ scrollbarWidth: 'none' }}>
+      <div className="fz-activity-subtabs fz-activity-subtabs--inline mb-4" role="group" aria-label="Photo categories">
         {categories.map((cat) => (
           <button
             key={cat}
             type="button"
-            className={`btn btn-sm rounded-pill px-3 ${
-              selectedFilter === cat ? 'btn-primary' : 'btn-outline-secondary'
-            }`}
+            className={`fz-activity-subtab${selectedFilter === cat ? ' fz-activity-subtab--active' : ''}`}
+            aria-pressed={selectedFilter === cat}
             onClick={() => setSelectedFilter(cat)}
           >
-            {cat} {cat === 'All' ? `(${photos.length})` : ''}
+            <span>{cat}</span>
+            {cat === 'All' && <span className="fz-activity-subtab__count">({photos.length})</span>}
           </button>
         ))}
       </div>

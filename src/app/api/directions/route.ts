@@ -15,15 +15,26 @@ export async function POST(req: Request) {
       headers: {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': GOOGLE_API_KEY,
-        'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline',
+        // Steps + localized texts ("22 mins", "1.7 km") + step ends for the in-app Directions / navigation on Scout.
+        'X-Goog-FieldMask': [
+          'routes.duration',
+          'routes.distanceMeters',
+          'routes.polyline.encodedPolyline',
+          'routes.localizedValues',
+          'routes.legs.steps.navigationInstruction',
+          'routes.legs.steps.localizedValues',
+          // In-app navigation: where each step ends and how long it is.
+          'routes.legs.steps.endLocation',
+          'routes.legs.steps.distanceMeters',
+        ].join(','),
       },
       body: JSON.stringify(body),
     });
 
     const data = await res.json();
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Directions API Error:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Internal Server Error' }, { status: 500 });
   }
 }

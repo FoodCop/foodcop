@@ -98,6 +98,8 @@ export default function ProfileTabs({
         ))}
       </div>
 
+      {/* Restaurant tabs: Bootstrap buttons re-skinned to the profile's FUZO buttons (.fz-rtabs in _restaurant.scss). */}
+      <div className={isRestaurant ? 'fz-rtabs' : undefined}>
       {active === 'dna' ? (
         <FoodDnaSection {...tasteProfile} myCards={myCards} userId={userId} isOwner={isCurrentUser} />
       ) : active === 'activity' && isRestaurant && userId ? (
@@ -112,13 +114,13 @@ export default function ProfileTabs({
           refetchCards={refetchCards}
         />
       ) : active === 'menu' && userId ? (
-        <RestaurantMenuTab restaurantId={userId} isOwner={isCurrentUser} onManage={() => setActive('dashboard')} />
+        <RestaurantMenuTab restaurantId={userId} restaurantName={profile.name} isOwner={isCurrentUser} onManage={() => setActive('dashboard')} />
       ) : active === 'info' && userId ? (
         <RestaurantInfoTab restaurantId={userId} restaurantName={profile.name} isOwner={isCurrentUser} />
       ) : active === 'dashboard' && userId && isCurrentUser ? (
         <RestaurantDashboardTab restaurantId={userId} restaurantName={profile.name} />
       ) : active === 'gallery' ? (
-        <RestaurantGalleryTab photos={profile.galleryPhotos} />
+        <RestaurantGalleryTab restaurantId={userId ?? ''} isOwner={isCurrentUser} onManage={() => setActive('dashboard')} />
       ) : active === 'settings' ? (
         <SettingsTab onProfileUpdate={onProfileUpdate} />
       ) : (
@@ -127,6 +129,7 @@ export default function ProfileTabs({
           <div>{EMPTY_STATE[active].text}</div>
         </div>
       )}
+      </div>
     </div>
   );
 }

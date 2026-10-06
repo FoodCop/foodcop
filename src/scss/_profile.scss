@@ -1892,3 +1892,57 @@
     &__print { transition: none; }
   }
 }
+
+// Inline variants of the Activity section pills (restaurant Menu sections,
+// diet filters, post types) - same look, no big bottom gap; --sm is a
+// smaller pill for secondary filters.
+.fz-activity-subtabs--inline { margin-bottom: 0.6rem; padding-bottom: 2px; }
+.fz-activity-subtab--sm {
+  min-height: 34px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.78rem;
+}
+
+// ---------------------------------------------------------------------------
+// Hero fixes for other people's / restaurant profiles (client, 2026-10-06)
+// ---------------------------------------------------------------------------
+.fz-phero {
+  // The handle line stays on one line, so a separator dot can never start a
+  // new line; long parts shorten with an ellipsis.
+  &__handle {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
+    > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; flex-shrink: 1; }
+    > .fz-phero__dot { flex-shrink: 0; overflow: visible; }
+    > span:first-child { flex-shrink: 0; max-width: 70%; }
+  }
+
+  &__actions:empty { display: none; }
+
+  // Open / closed reads like the other tiles (dot + bold text), not a pill in a box.
+  // (Doubled class beats .fz-open-pill.is-open, which loads later.)
+  &__tile--status .fz-open-pill.fz-open-pill {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 0.95rem;
+    font-weight: 800;
+    gap: 0.4rem;
+  }
+  &__tile--status .fz-open-pill__dot { width: 9px; height: 9px; }
+
+  // Phones: Follow / Message / Rate get their own full-width row under the
+  // name instead of squeezing it into three lines.
+  @container (max-width: 519.98px) {
+    &__head { flex-wrap: wrap; }
+    &__actions {
+      flex: 1 1 100%;
+      margin-top: 0.75rem;
+    }
+    &__follow { flex: 1; }
+    &__tile--status .fz-open-pill.fz-open-pill { font-size: 0.8rem; }
+  }
+}
+// Menu: the section row and the filter row sit close together.
+.fz-menu-nav-wrap .fz-activity-subtabs--inline { margin-bottom: 0; }

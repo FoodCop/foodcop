@@ -120,12 +120,14 @@ Measured fits: 375×667 and up on phones, 768×1024, 1024×768, 1366×768, 1440�
 Every control is 44px+. The previous dark full-bleed banner hero (and the earlier Airbnb-style card) are gone.
 
 ## Dashboard (`src/scss/_dashboard.scss`, `DashboardView.tsx`)
-Built from the client's sketch, one layout for phone + desktop. Top bar = the app-wide navbar (see Navbar below). Then a sticky frosted tab bar `HomeTabs` (For you · Bites · Feed · Trims, yellow sliding thumb, ARIA tabs + arrow keys) that switches sections IN PLACE - URL `?tab=` synced via history.pushState, sections lazy-loaded with next/dynamic, Bites/Feed kept mounted once opened, Trims unmounted on leave. For you = horizontal rails of 3:4 photo cards (dark scrim, frosted chips): Recommended Restaurants (FUZO restaurants first, then taste match), Near You (closest first) - both merge Google places with FUZO restaurant accounts via `useNearbyPlaces` (FUZO cards: gold "On FUZO" chip + yellow ring, real offer tag, live open status, link to the FUZO profile; plain Google places open on Scout via `/scout?place=<place_id>&lat=&lng=&name=` - Scout centres there, opens the place popup and doesn't jump to the user's location; location = GPS, else saved home area, else a notice with Use my location / Set home area), **Location chip** (`LocationChip.tsx`, top of For you): "📍 Near <area, city>" + where it came from (current location · home area · chosen on the map; a GPS fix coarser than ~3 km is flagged "Approximate - not right? Change it" in turmeric), with a Change menu: Use my current location (fresh high-accuracy fix), Use my home area, Pick on map (`LocationPickerModal`; the pick is kept for the browser session). Shown as "Location not set" when nothing is known. Every For you row follows it. **Explore <country>’s cities** (top of For you, `NearbyCities.tsx`): round city photos (white ring, raised) with name + distance, nearest first, "You're here" chip on the closest; data from `/api/places/cities` (reverse-geocoded country + Google `locality` results at the user's spot and two rings ~60/200 km out, other-country towns dropped, cached 12h per ~10 km area); tap = Scout centred on that city (`/scout?view=area&lat=&lng=&name=`, no single-place popup). A yellow pill **Cities | Countries** switch (top-right of the panel, under the title on phones) flips it to **Explore countries**: other countries nearest first from the built-in list `src/lib/geo/countries.ts` (ISO code, name, best-known food city + coords), the user's own country left out, Google Places photo per country (`/api/places/countries`, cached per country) with a small flag chip (flagcdn image - Windows can't draw flag emoji); tap = Scout centred on that country's food city. Hidden when location is unavailable. Your Taste (recipes - open `RecipeDetailModal`, shared with Bites), Watch & Cook (YouTube, hidden when empty). Each rail is a raised paper panel (like Highlights) showing 4 cards + a "See all" card (fanned stack of 3 photos + "+N more" pill) that expands the rail into a grid in place ("Show less" collapses). Desktop fits 4 + See all exactly, so no arrows/sideways scroll there. Compact floating glass dock at the bottom (≤390×52, 55% paper + blur, content shows through), with five slots (client, 2026-10-06):
+Built from the client's sketch, one layout for phone + desktop. Top bar = the app-wide navbar (see Navbar below). Then a sticky frosted tab bar `HomeTabs` (For you · Bites · Feed · Trims, yellow sliding thumb, ARIA tabs + arrow keys) that switches sections IN PLACE - URL `?tab=` synced via history.pushState, sections lazy-loaded with next/dynamic, Bites/Feed kept mounted once opened, Trims unmounted on leave. For you = horizontal rails of 3:4 photo cards (dark scrim, frosted chips): Recommended Restaurants (FUZO restaurants first, then taste match), Near You (closest first) - both merge Google places with FUZO restaurant accounts via `useNearbyPlaces` (FUZO cards: gold "On FUZO" chip + yellow ring, real offer tag, live open status; tapping any card (Google place or FUZO restaurant, client 2026-10-06) opens it on Scout with its pop-up, and a FUZO restaurant's pop-up has "View on FUZO" for its full profile. There is no separate place page: `/place/<id>` was built and then removed at the client's request. FUZO cards pass `rid=<restaurantId>` so the pop-up recognises them. Every card also has a round frosted **Directions** button (top-right, 38px + 44px hit area; the offer tag moves under it) that opens Scout's in-app directions (`/scout?...&dir=1`, see Scout directions below). `/scout?place=<place_id>&lat=&lng=&name=` without `dir` still centres on the place and opens its popup. The card is a div with a stretched map link + the button, so they're never nested (links built by `src/lib/maps/placeLinks.ts`); location = GPS, else saved home area, else a notice with Use my location / Set home area), **Location chip** (`LocationChip.tsx`, top of For you): "📍 Near <area, city>" + where it came from (current location · home area · chosen on the map; a GPS fix coarser than ~3 km is flagged "Approximate - not right? Change it" in turmeric), with a Change menu: Use my current location (fresh high-accuracy fix), Use my home area, Pick on map (`LocationPickerModal`; the pick is kept for the browser session). Shown as "Location not set" when nothing is known. Every For you row follows it. **Explore <country>’s cities** (top of For you, `NearbyCities.tsx`): round city photos (white ring, raised) with name + distance, nearest first, "You're here" chip on the closest; data from `/api/places/cities` (reverse-geocoded country + Google `locality` results at the user's spot and two rings ~60/200 km out, other-country towns dropped, cached 12h per ~10 km area); tap = Scout centred on that city (`/scout?view=area&lat=&lng=&name=`, no single-place popup). A yellow pill **Cities | Countries** switch (top-right of the panel, under the title on phones) flips it to **Explore countries**: other countries nearest first from the built-in list `src/lib/geo/countries.ts` (ISO code, name, best-known food city + coords), the user's own country left out, Google Places photo per country (`/api/places/countries`, cached per country) with a small flag chip (flagcdn image - Windows can't draw flag emoji); tap = Scout centred on that country's food city. Hidden when location is unavailable. Your Taste (recipes - open `RecipeDetailModal`, shared with Bites), Watch & Cook (YouTube, hidden when empty). Each rail is a raised paper panel (like Highlights) showing 4 cards + a "See all" card (fanned stack of 3 photos + "+N more" pill) that expands the rail into a grid in place ("Show less" collapses). Desktop fits 4 + See all exactly, so no arrows/sideways scroll there. Compact floating glass dock at the bottom (≤390×52, 55% paper + blur, content shows through), with five slots (client, 2026-10-06):
 - **Explore** (Scout).
 - **Create:** a plain + icon like the other items; opens CreateCardModal.
 - **Home:** the raised yellow centre button. It goes to "For you" and scrolls to the top.
-- **My Plate:** salad icon; a placeholder that shows a "My Plate is coming soon" bubble until its feature is specified.
-- **Rewards.**
+- **My Plate:** salad icon; opens `/my-plate` (see My Plate below).
+
+**One dock on four pages (client, 2026-10-06):** the dock is the shared `AppDock` (`src/components/nav/AppDock.tsx`) on Home, Explore (/scout), My Plate and Leaderboard & Rewards. The page you're on gets a soft yellow pill behind its item (`aria-current="page"`). Home's centre button scrolls Home back to For you; elsewhere it links to /dashboard. Create opens CreateCardModal anywhere. Each page leaves bottom room for it: My Plate pads 7rem; Scout's phone bottom sheets (discovery + directions) pad `$scout-dock-clearance` (4.5rem); toasts sit above it. Scroll-compact comes from the shared `useScrollCompact()`.
+- **Rankings** (trophy): opens Leaderboard & Rewards (`/leaderboard`).
 
 The navbar hides its house icon on /dashboard, since the dock's Home covers it there. Every other page keeps it as the way home.
 
@@ -134,10 +136,111 @@ The navbar hides its house icon on /dashboard, since the dock's Home covers it t
 - Scrolling up, or being within 80px of the top, brings the labels back.
 - The labels stay in the DOM, so screen readers still read them. The thumb re-measures as tabs resize.
 
+## My Plate (`/my-plate`, `MyPlateView.tsx`, `src/scss/_plate.scss`)
+Everything the user has saved anywhere (saved_items: places from Home/Scout, dishes from restaurant menus, recipes from Bites, Feed likes, Trims, chat cards), in the Profile page style (off-white page + light gold wash, white clean panels).
+- **Header (launch cleanup, client 2026-10-06):** back to Home + "My Plate" + one short line ("20 saved"). No eyebrow, no count tiles: they duplicated the chips.
+- **Search + sort (client, 2026-10-06):** two round icon buttons on the right of the header.
+  - **Search:** tapping 🔍 expands a search field across the header row (the title fades out, the field grows from the right, autofocus). × or Esc closes it and clears the search. It matches title + subtitle.
+  - **Sort:** a pill (⇅ Newest / Oldest / A-Z, native select). Below 440px it is icon-only, like search.
+  - The title never wraps.
+- **Filter chips:** native buttons with `aria-pressed` and counts, on one row. Only kinds you have saved something in show (no "Trims 0"). On phones the row runs edge to edge and scrolls sideways with a fade at the end. The pressed chip is ink with a yellow count.
+- **Looks like Home (client, 2026-10-06):** same page colour, and the sections and cards are Home's own `Rail` panels and `fz-dash-card` dark photo cards.
+- **All view:** one Home `Rail` per kind (title + "N saved"): 4 cards, then the fanned "See all" stack that expands the section into a grid in place.
+- **Filtered view / search:** one rail panel already expanded into Home's grid.
+- **Card:** Home's dark full-bleed photo card (or a kind-tinted gradient with the kind icon; Trims get Home's yellow play button). It shows the title, a rating chip (places), the subtitle (address / time + serves / author + cuisine) and "Saved 3d ago". The kind chip appears only in mixed search results, since a section already names its kind. Round frosted buttons sit top-right, side by side (shared `dash-card-fab` mixin). The whole card opens the item via a stretched link or button:
+  - places: Scout with the place's pop-up (FUZO restaurants: `rid`, so "View on FUZO" shows);
+  - recipes / feed / other: `SavedItemDetailModal`;
+  - trims: `/trims`.
+- **Card actions:** places get a **Directions** button (Scout directions). Every card has a **Remove** button (turns chili on hover), which removes optimistically and shows a toast with **Undo** (re-saves the same metadata).
+- **States:** loading (a rail panel of Home's skeleton cards), an error with Try again, a signed-out prompt, an empty state with Explore / Browse recipes, and a no-match state with Show everything.
+
+## Scout directions (`useScoutDirections.ts`, `ScoutDirectionsPanel.tsx`, `usePlaceSearch.ts`, `.scout-dir` in `_scout.scss`)
+Client decisions (2026-10-06): Directions shows the route on FUZO's own map, like Google Maps. It **replaced the old Route Planner** (removed, along with its red route line and fake along-route search).
+- **Opened by:** `/scout?...&dir=1` (Home cards, My Plate), the place popup's Directions (filled in), or the arrow button by Scout's search (empty, cursor in "To").
+- **From / To fields:** From is "Your location" by default; tap it to search any place (with a "Your location" option to go back). To is tap-to-search. Both lists end with **Choose on map** (client, 2026-10-06), which works like this:
+  - A pin is fixed at the map centre (`ScoutPickOverlay.tsx`, `.scout-pick`): blue for the start, red for the destination.
+  - Drag the map under it, or tap a spot to move it there.
+  - The card shows the address under the pin, reverse-geocoded each time the map settles, with "Set as starting point / destination" and Cancel.
+  - A pinned start is a `{ kind: 'point' }` origin.
+  - The search bar, map buttons and food pins hide while picking. Both use Google autocomplete biased to the user's area (debounced 300ms; Enter picks the first result, Esc cancels).
+- **Route:** the Routes API via `/api/directions` (the field mask includes steps + localized texts; `languageCode` comes from the browser). Car / Bike (TWO_WHEELER) / Walk.
+- **Map:** a blue route line (#2f7de1) on a dark casing, a white-ringed blue dot at the start and a red pin at the end (both taken from the route, so searched places need no coordinates). The route is fitted above the sheet's real height on phones and right of the card on desktop. The usual food pins, legend and discovery panel hide while it's open and come back on close, which also drops `dir=1` from the URL.
+- **Panel:** a bottom sheet on phones (≤60dvh, scrolls) and a 380px card top-left on desktop. It shows the time (big) + distance + arrival time, **Start** (yellow, in-app navigation below), a small round Google Maps hand-off next to it, **Food along the way**, and collapsible Steps with maneuver icons.
+- **Fold (phones, client 2026-10-06):** a grip handle on top of the sheet folds it to one line (time · distance · to <place> + Start + close), so the whole route shows. The route re-fits to the new sheet height. Tap the line or the handle to unfold.
+- **Navigation (Start, client 2026-10-06):** turn-by-turn inside FUZO (`useScoutNavigation.ts`, `ScoutNavigation.tsx`).
+  - **Map:** follows the live position (`watchPosition`, zoom 17). Dragging the map stops following and shows "Re-centre".
+  - **Top banner:** road-sign green (#1f6f43), with the turn arrow, the distance to the turn **measured along the route line**, the instruction, and "Then: …".
+  - **Bottom bar:** time left, distance, arrival time, Mute, a Google Maps hand-off, and red Exit.
+  - **Progress:** steps advance when the route position passes each turn point.
+  - **Voice:** speaks each next instruction (`speechSynthesis`, the user's language).
+  - **Off route:** more than 60 m off the line for 2 fixes → "Recalculating", then a new route from here (15 s cooldown).
+  - **Arrival:** within 30 m of the end, the banner switches to "You've arrived".
+  - **While navigating:** the screen is kept awake (Wake Lock). The search bar, map buttons, app dock (`body.fz-navigating`) and the route's start dot hide.
+  - **Start from a chosen place** switches From to your location first, since navigation needs where you really are.
+- **Food along the way:** a switch (`role="switch"`). On = real along-the-route search: Places API (New) `searchText` + `searchAlongRouteParameters`, via `/api/places/search-along-route`. Google gives 20 per page, so the endpoint merges "restaurants" (3 pages) + "cafes" + "street food" and de-duplicates them: about 70 spots on a 4–5 km city route. These show near the route line as map pins plus a list (photo, rating, address); tapping either opens the place popup.
+- **States:** pick a destination, finding your location, location blocked (suggests choosing a start place), finding the route, and no route for this mode.
+
+## Scout map counts + legend (client, 2026-10-06)
+- **Origin badge on place cards (client, 2026-10-06):** a round white 20px badge in the bottom-right corner of each card photo (`SourceBadge.tsx`, `.scout-source-badge`), on the places list and the Directions "Food along the way" list.
+  - **Google's multicolour "G":** places from Google.
+  - **The FUZO "F" mark** (`public/images/brand/fuzo-mark.png`, trimmed to a 96px square): places created on FUZO, i.e. restaurant accounts and community pins.
+  - Saved places count as Google when they have a Google place id.
+  - The badge is labelled for screen readers ("From Google" / "On FUZO").
+- **More places:** Google's nearby / text search returns 20 per page. Scout shows page 1 immediately, then loads pages 2–3 in the background via `next_page_token` (≈2s wait per page, one retry), up to 60, de-duplicated.
+- **Legend:** the legend (Nearby / FUZO / Saved) no longer covers the places panel's radius slider:
+  - from 1100px it sits beside the search bar;
+  - from 768–1099px the desktop panel starts lower (8.5rem).
+- **Dock:** the desktop panel and Directions card stop above the app dock.
+
+## Leaderboard & Rewards (`/leaderboard`, `LeaderboardRewardsView.tsx`, client 2026-10-06)
+The Leaderboard and Rewards pages are merged into one page. `/rewards` redirects to `/leaderboard?tab=rewards`.
+- **Header:** a dark band (the leaderboard hero colour) with "Community", the title "Leaderboard & Rewards", a one-line intro, and a big two-way tab switch (🏆 Leaderboard | 🏅 Rewards; yellow active pill, `role="tablist"`). The tab is kept in the URL (`?tab=rewards`).
+- **Leaderboard tab:** `LeaderboardView embedded`. Its own title is dropped, and the dark band continues with the Global / Friends + period filters and the podium. "See how to earn points" switches tabs. On phones the sticky "Your rank" bar sits above the app dock.
+- **Rewards tab:** `RewardsView embedded`. Its own header and "See where you rank" link are dropped (it's the other tab). The level card title is white on the dark card (it was dark-on-dark).
+- **Links:** Notifications and the Food DNA "View all rewards" point to `?tab=rewards`.
+- **Navbar:** the profile photo opens your profile directly. The old Profile / Leaderboard / Sign out menu is removed, and Sign out is in Profile → Settings.
+
 ## Profile world map (`ProfileFoodMap.tsx`, `.fz-world-map` in `_profile.scss`)
 Client reference: flat world map, light-blue sea (#e6eef8), soft grey land, dark teal dots (#1d4a5c) per pinned place. Opens on exactly one world across the card (fractional zoom = log2(width/256)), 2:1 canvas. Below zoom 5 = labels/roads hidden; from zoom 5 = real Google map detail in the same palette. Frosted "World" / "My places" pills top-right, "N places" pill bottom-left; empty state floats over the world map. gestureHandling cooperative (page scroll isn't hijacked).
 
 ## Restaurant view (`src/components/profile/restaurant/*`, `_restaurant.scss`)
+**Same buttons as a person's profile (client, 2026-10-06):** a restaurant profile shares the hero and the main tab bar with person profiles, and the controls inside its tabs match too.
+- **Section pills:** Menu sections ("Full Menu (n)"), diet filters and post types use the person profile's Activity section pills (`fz-activity-subtab`: white pill, ink when pressed, `aria-pressed`).
+  - Inline variant: `fz-activity-subtabs--inline`.
+  - Smaller secondary filters: `--sm`.
+- **Other Bootstrap buttons:** everything else inside the restaurant tabs is re-skinned by the `.fz-rtabs` wrapper (from ProfileTabs).
+  - `btn-primary`: FUZO yellow pill, like Follow (never Bootstrap blue).
+  - Outline buttons: white pill with a yellow-tint hover.
+  - Inputs: rounded, with a yellow focus ring.
+
+**Restaurant fixes (client, 2026-10-06):**
+- **Saving works after a remove (fix, 2026-10-06):** `PlateService.saveToPlate` is a plain upsert. The old 24h idempotency cache (`idempotencyService.ts`, now deleted) skipped any re-save of an item removed within a day, so the button said Saved but nothing reached My Plate.
+- **Save to Plate on a dish is real.** It writes `saved_items` with `item_type: 'dish'` (metadata: name, photo, price + currency, veg, restaurantId / name).
+  - The saved state loads from the user's plate.
+  - Signed out, it says to sign in.
+  - My Plate has a **Dishes** section ("at <restaurant> · price"); tapping one opens the restaurant.
+  - Profile Activity counts dishes as food (Recipes).
+- **Get Directions** (About & Hours) opens FUZO's in-app directions. Google Maps is used only when the restaurant has no map position.
+- **Gallery filters** use the section pills.
+- **About + service options (client, 2026-10-06; migration `20261006000000_restaurant_about_services.sql`):** `restaurant_profiles.description` (≤1500 characters) and `services` (dine_in / takeaway / delivery / reservations).
+  - **Dashboard:** the owner fills them under Tagline (About textarea with a counter; service options as toggle pills).
+  - **Before the migration:** saving keeps everything else and says About / services need `npx supabase db push`.
+  - **Profile:** About & Hours shows the description and green service chips.
+- **Scout pop-up for FUZO restaurants reads FUZO first** (Google only fills gaps), via `useRestaurant` + `listReviews`:
+  - Name, banner/avatar, cuisines, FUZO rating + count, price tier.
+  - About text (description or tagline), address, phone, website, live open/closed from FUZO hours.
+  - Service options (incl. Reservations).
+  - Photos: the owner's gallery → banner → diners' review photos → Google's. Menu dish photos stay in the Menu tab; they are not place photos.
+  - Reviews: "On FUZO" reviews with author, time, stars and photos, then "From Google".
+  - About tab: Amenities + Cuisines.
+- **Photo gallery (client, 2026-10-06; migration `20261006010000_restaurant_gallery.sql`):** `restaurant_profiles.gallery` holds up to 40 `{ url, category: Food | Ambience | Interior | Bar, caption? }`.
+  - **Dashboard → Photo gallery:** the owner uploads several photos at once and sets each one's category and caption, or removes it. Changes save immediately. Before the migration it says the gallery needs `npx supabase db push`.
+  - **Profile Gallery tab:** reads this gallery (it was never connected before and was always empty). Only categories with photos get a filter pill. When the owner has no photos yet, it offers an "Add photos in Dashboard" button.
+- **"Reserve a Table" is hidden** (client decision). The old form showed "Reservation Requested… confirm via SMS" without sending anything. About & Hours now uses the full width (Hours, Location, Amenities, Reviews). Bring it back only with real booking requests the restaurant can accept or decline.
+- **Phone hero for other people / restaurants:**
+  - Follow / Message / Rate move to their own full-width row under the name (Follow stretches).
+  - The handle line never wraps, so no orphan "•".
+  - The open / closed tile reads as a dot + bold text like the other tiles, not a pill in a box.
 Business profiles (`users.profile_type = 'business'`). Data: `restaurantService.ts` + shared store `useRestaurant(id)` (header and tabs stay in sync) over `supabase/migrations/20261001000000_restaurant_features.sql` (restaurant_profiles, menu_items, restaurant_reviews + restaurant_rating_summary view, restaurant_posts). Header: rating (★ avg + stars), review count and live `StatusPill` replace Bites/Posts/Friends; visitors get "★ Rate". Open/closed is computed in `src/lib/restaurant/hours.ts` from the saved hours in the restaurant's timezone (overnight + 24h supported), re-evaluated every minute. Tabs: Menu (real items, Veg/Non-veg/Available filters) · Activity (Restaurant Posts | Mentions & Tags = customers' food_cards at the linked Google place_id + written reviews) · About & Hours (+ Ratings & Reviews) · Gallery · Dashboard (owner only: details, Google listing link, hours, currency/timezone, menu manager with live `MenuItemCard` preview). Existing markup/look kept; only small additions (`.fz-stars`, `.fz-open-pill`, `.fz-veg-mark`, unavailable dish state).
 Discovery on Scout: `RestaurantService.findByPlaceIds()` checks which visible Google places are linked (restaurant_profiles.place_id) to a FUZO restaurant. Those get a yellow pin with an ink star (drawn above other pins) and, in `ScoutPlaceModal`, a `.scout-modal__fuzo` strip: "★ On FUZO" badge, FUZO rating + review count, live `StatusPill`, yellow "View on FUZO" → `/profile/<id>`.
 Restaurants also set their own map location in the Dashboard ("Location on map": taken from the linked Google listing, or dropped with `LocationPickerModal`) -> `restaurant_profiles.lat/lng` (migration 20261002000000). Scout loads FUZO restaurants inside its search area via `RestaurantService.listInArea()` and shows them with the FUZO pin even if Google doesn't list them. Community pins (`fuzo_locations`) load for the current search area (not a global 50), carry `place_id` (linking them to a FUZO restaurant at the same place), and never show an invented rating ("No ratings yet" / "New").
@@ -158,7 +261,7 @@ Item links live in `src/lib/share/itemLinks.ts` (`fuzoLinkForItem`) - the share 
 Profile language on the #f6f5f2 page: heading-font title, `.fz-profile-tab` filter pills (All · Friends (red count of pending requests) · Points), a cream→yellow-tint "+N points this week" card linking to Rewards, then raised paper lists: Friend requests first (avatar via `ChatAvatar`, yellow Accept / paper Decline), then day groups New (since `notifications_seen_at`, yellow-tint rows + yellow dot) / Today / Yesterday / This week / Earlier. Point rows = yellow-tint icon tile per action + yellow "+N" chip; repeated awards for the same action on the same day merge ("Shared 3 cards with friends · +30"). Friend rows link to the profile.
 
 ## Navbar (`src/components/header/SiteHeader.tsx`, `_header.scss`)
-ONE navbar on every main-app page (Profile has NO navbar - client, 2026-10-06; its hero back arrow is a link to the home screen (/dashboard); onboarding/DNA quiz stay chrome-free too) - exactly the home bar from the client sketch: slim ~52px solid gold (`$fz-navbar-gold`), ink-ringed profile photo | FUZO logo | home + bell. No hamburger. Home (house icon) = back to the dashboard from any page (hidden on /dashboard itself, where the dock has Home). Photo = account menu (Profile, Leaderboard, Sign out; Rewards is the dashboard dock); logo = opens Tako (the only Tako entry point - the floating FAB is gone); bell = Notifications + Messages with real unread state (`NotificationsService.hasUnread`, `ChatService.unreadTotal`). Logged out: logo -> home, "Sign in" pill. Leaderboard is also reachable from Rewards ("See where you rank" card). Create a card = the dashboard dock's yellow +.
+ONE navbar on every main-app page (Profile has NO navbar - client, 2026-10-06; its hero back arrow is a link to the home screen (/dashboard); onboarding/DNA quiz stay chrome-free too) - exactly the home bar from the client sketch: slim ~52px solid gold (`$fz-navbar-gold`), ink-ringed profile photo | FUZO logo | home + bell. No hamburger. Home (house icon) = back to the dashboard from any page (hidden on /dashboard itself, where the dock has Home). Photo = your profile (no menu; Sign out is in Profile → Settings); logo = opens Tako (the only Tako entry point - the floating FAB is gone); bell = Notifications + Messages with real unread state (`NotificationsService.hasUnread`, `ChatService.unreadTotal`). Logged out: logo -> home, "Sign in" pill. Leaderboard & Rewards is the dock's Rankings item. Create a card = the dock's +.
 Removed routes: `/discover` and `/ai-chef` (Bites/Feed/Trims are dashboard tabs; Tako opens from the logo). `/trims` only redirects old links to `/dashboard?tab=trims&trim=<id>`.
 
 ## Social profiles (`socialLinksService.ts`, `SocialLinksEditor.tsx`, `SocialLinksSheet.tsx`)

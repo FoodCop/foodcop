@@ -296,7 +296,7 @@ export default function FoodDnaSection({
       </div>
 
       {/* ── Story 3: achievements ─────────────────────────────────────── */}
-      <StoryHeading eyebrow="Achievements" title="What you’ve accomplished" action={<Link href="/rewards" className="fz-dna-link">View all rewards</Link>} />
+      <StoryHeading eyebrow="Achievements" title="What you’ve accomplished" action={<Link href="/leaderboard?tab=rewards" className="fz-dna-link">View all rewards</Link>} />
       <BadgeShelf badges={badges} />
 
       {/* ── Next bite CTA ─────────────────────────────────────────────── */}

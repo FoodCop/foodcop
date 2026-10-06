@@ -1,9 +1,20 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Clock, Copy, Crosshair, Edit3, Loader2, MapPin, Plus, Search, Store, Trash2, Utensils } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import { Clock, Copy, Crosshair, Edit3, Images, Loader2, MapPin, Plus, Search, Store, Trash2, Utensils, X } from 'lucide-react';
 import { patchRestaurant, refreshRestaurant, useOpenStatus, useRestaurant } from '@/lib/hooks/useRestaurant';
-import { RestaurantService, type MenuItem, type RestaurantProfile } from '@/lib/services/restaurantService';
+import {
+  GALLERY_CATEGORIES,
+  GALLERY_MAX,
+  RestaurantService,
+  SERVICE_OPTIONS,
+  isMissingAboutColumns,
+  isMissingGalleryColumn,
+  type GalleryCategory,
+  type MenuItem,
+  type RestaurantGalleryPhoto,
+  type RestaurantProfile,
+} from '@/lib/services/restaurantService';
 import { PlacesService, type ScoutPlaceRaw } from '@/lib/services/placesService';
 import { DAY_LABELS, DEFAULT_DAY, WEEK_ORDER, type DayKey, type WeeklyHours } from '@/lib/restaurant/hours';
 import MenuItemEditor from './MenuItemEditor';
@@ -53,6 +64,7 @@ export default function RestaurantDashboardTab({ restaurantId, restaurantName }:
         </div>
       )}
       <BusinessDetails restaurantId={restaurantId} restaurantName={restaurantName} profile={profile} />
+      <GalleryManager restaurantId={restaurantId} gallery={profile?.gallery ?? []} />
       <MenuManager restaurantId={restaurantId} menu={menu} currency={profile?.currency ?? 'USD'} />
     </div>
   );
@@ -83,7 +95,7 @@ function BusinessDetails({ restaurantId, restaurantName, profile }: { restaurant
   const save = async () => {
     setSaving(true);
     setMessage(null);
-    const res = await RestaurantService.saveProfile(restaurantId, {
+    const base = {
       place_id: form.place_id,
       place_name: form.place_name,
       tagline: form.tagline.trim() || null,
@@ -98,14 +110,29 @@ function BusinessDetails({ restaurantId, restaurantName, profile }: { restaurant
       currency: form.currency,
       lat: form.lat,
       lng: form.lng,
+    };
+    let res = await RestaurantService.saveProfile(restaurantId, {
+      ...base,
+      description: form.description.trim() || null,
+      services: form.services,
     });
+    // Database not updated yet: save everything else, and say what's waiting.
+    let aboutPending = false;
+    if (!res.success && isMissingAboutColumns(res.error)) {
+      aboutPending = true;
+      res = await RestaurantService.saveProfile(restaurantId, base);
+    }
     setSaving(false);
     if (!res.success) {
       setMessage({ ok: false, text: res.error ?? 'Could not save.' });
       return;
     }
     await refreshRestaurant(restaurantId, 'profile');
-    setMessage({ ok: true, text: 'Saved. Your open/closed status is now live.' });
+    setMessage(
+      aboutPending
+        ? { ok: false, text: 'Saved, except "About" and service options - they need the database update (npx supabase db push).' }
+        : { ok: true, text: 'Saved. Your open/closed status is now live.' },
+    );
   };
 
   return (
@@ -187,6 +214,21 @@ function BusinessDetails({ restaurantId, restaurantName, profile }: { restaurant
             <label className="fw-bold text-dark mb-1 d-block" htmlFor="rp-tagline">Tagline</label>
             <input id="rp-tagline" className="form-control form-control-sm" maxLength={200} value={form.tagline} onChange={(e) => set('tagline', e.target.value)} placeholder="One line about your place" />
           </div>
+          <div className="col-12">
+            <label className="fw-bold text-dark mb-1 d-block" htmlFor="rp-about">
+              About <span className="text-muted fw-normal">(shown on your profile and the map)</span>
+            </label>
+            <textarea
+              id="rp-about"
+              className="form-control form-control-sm"
+              rows={4}
+              maxLength={1500}
+              value={form.description}
+              onChange={(e) => set('description', e.target.value)}
+              placeholder="Your story, signature dishes, the vibe - what should diners know?"
+            />
+            <div className="small text-muted text-end mt-1">{form.description.length}/1500</div>
+          </div>
           <div className="col-12 col-md-8">
             <label className="fw-bold text-dark mb-1 d-block" htmlFor="rp-cuisines">Cuisines <span className="text-muted fw-normal">(comma separated)</span></label>
             <input id="rp-cuisines" className="form-control form-control-sm" value={form.cuisines} onChange={(e) => set('cuisines', e.target.value)} placeholder="North Indian, Mughlai" />
@@ -223,6 +265,25 @@ function BusinessDetails({ restaurantId, restaurantName, profile }: { restaurant
           <div className="col-12">
             <label className="fw-bold text-dark mb-1 d-block" htmlFor="rp-amen">Amenities <span className="text-muted fw-normal">(comma separated)</span></label>
             <input id="rp-amen" className="form-control form-control-sm" value={form.amenities} onChange={(e) => set('amenities', e.target.value)} placeholder="Outdoor seating, Wi-Fi, Parking" />
+          </div>
+          <div className="col-12">
+            <span className="fw-bold text-dark mb-1 d-block" id="rp-services">Service options</span>
+            <div className="fz-activity-subtabs fz-activity-subtabs--inline" role="group" aria-labelledby="rp-services">
+              {SERVICE_OPTIONS.map(({ key, label }) => {
+                const on = form.services.includes(key);
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    className={`fz-activity-subtab fz-activity-subtab--sm${on ? ' fz-activity-subtab--active' : ''}`}
+                    aria-pressed={on}
+                    onClick={() => set('services', on ? form.services.filter((s) => s !== key) : [...form.services, key])}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -276,6 +337,135 @@ function BusinessDetails({ restaurantId, restaurantName, profile }: { restaurant
   );
 }
 
+// ── Photo gallery ─────────────────────────────────────────────────────────
+// What diners see in the profile's Gallery tab and the map pop-up's Photos.
+// Changes save straight away (upload, category, caption, remove).
+function GalleryManager({ restaurantId, gallery }: { restaurantId: string; gallery: RestaurantGalleryPhoto[] }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const persist = async (next: RestaurantGalleryPhoto[], done: string) => {
+    const res = await RestaurantService.saveProfile(restaurantId, { gallery: next });
+    if (!res.success) {
+      setMessage({
+        ok: false,
+        text: isMissingGalleryColumn(res.error)
+          ? 'The gallery needs the database update first (npx supabase db push).'
+          : res.error ?? 'Could not save the gallery.',
+      });
+      return false;
+    }
+    await refreshRestaurant(restaurantId, 'profile');
+    setMessage({ ok: true, text: done });
+    return true;
+  };
+
+  const addFiles = async (files: FileList | null) => {
+    if (!files?.length) return;
+    const room = GALLERY_MAX - gallery.length;
+    const picked = Array.from(files).slice(0, Math.max(0, room));
+    if (!picked.length) {
+      setMessage({ ok: false, text: `The gallery holds up to ${GALLERY_MAX} photos.` });
+      return;
+    }
+    setMessage(null);
+    const added: RestaurantGalleryPhoto[] = [];
+    for (let i = 0; i < picked.length; i++) {
+      setBusy(`Uploading ${i + 1} of ${picked.length}…`);
+      const res = await RestaurantService.uploadImage(picked[i]);
+      if (res.success && res.data) added.push({ url: res.data, category: 'Food' });
+    }
+    setBusy(null);
+    if (!added.length) {
+      setMessage({ ok: false, text: 'Those photos could not be uploaded - try again.' });
+      return;
+    }
+    await persist([...gallery, ...added], `${added.length} photo${added.length === 1 ? '' : 's'} added.`);
+  };
+
+  const update = (i: number, patch: Partial<RestaurantGalleryPhoto>) =>
+    persist(gallery.map((p, idx) => (idx === i ? { ...p, ...patch } : p)), 'Gallery updated.');
+  const remove = (i: number) => persist(gallery.filter((_, idx) => idx !== i), 'Photo removed.');
+
+  return (
+    <div className="card border shadow-sm mb-4">
+      <div className="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between py-2 px-3">
+        <div className="d-flex align-items-center gap-2 fw-semibold">
+          <Images size={16} className="text-warning-emphasis" />
+          <span>Photo gallery</span>
+          <span className="text-muted fw-normal small">
+            {gallery.length}/{GALLERY_MAX}
+          </span>
+        </div>
+        <button
+          type="button"
+          className="btn btn-sm btn-primary rounded-pill px-3 d-flex align-items-center gap-1"
+          onClick={() => fileRef.current?.click()}
+          disabled={!!busy || gallery.length >= GALLERY_MAX}
+        >
+          {busy ? <Loader2 size={14} className="scout-spin" /> : <Plus size={14} />} Add photos
+        </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="d-none"
+          onChange={(e) => {
+            addFiles(e.target.files);
+            e.target.value = '';
+          }}
+        />
+      </div>
+      <div className="card-body p-3">
+        <p className="small text-muted mb-3">Shown in your Gallery tab and on the map when people open your place. Your best food, the space, the bar.</p>
+        {busy && <div className="small text-muted mb-2" role="status">{busy}</div>}
+        {message && <div className={`small mb-2 ${message.ok ? 'text-success' : 'text-danger'}`} role="status">{message.text}</div>}
+        {gallery.length === 0 ? (
+          <div className="text-center text-muted small py-4 rounded-3 border" style={{ borderStyle: 'dashed' }}>
+            No photos yet - add a few so diners can see your place.
+          </div>
+        ) : (
+          <ul className="fz-gallery-manager">
+            {gallery.map((photo, i) => (
+              <li key={`${photo.url}-${i}`} className="fz-gallery-manager__item">
+                <div className="fz-gallery-manager__thumb">
+                  <img src={photo.url} alt={photo.caption || `Gallery photo ${i + 1}`} loading="lazy" />
+                  <button type="button" className="fz-gallery-manager__remove" onClick={() => remove(i)} aria-label={`Remove photo ${i + 1}`} title="Remove">
+                    <X size={14} />
+                  </button>
+                </div>
+                <select
+                  className="form-select form-select-sm"
+                  value={photo.category}
+                  onChange={(e) => update(i, { category: e.target.value as GalleryCategory })}
+                  aria-label={`Category for photo ${i + 1}`}
+                >
+                  {GALLERY_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+                <input
+                  className="form-control form-control-sm"
+                  defaultValue={photo.caption ?? ''}
+                  maxLength={80}
+                  placeholder="Caption (optional)"
+                  aria-label={`Caption for photo ${i + 1}`}
+                  onBlur={(e) => {
+                    const caption = e.target.value.trim();
+                    if (caption !== (photo.caption ?? '')) update(i, { caption: caption || undefined });
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function toForm(p: RestaurantProfile | null) {
   const hours: WeeklyHours = {};
   WEEK_ORDER.forEach((d) => (hours[d] = p?.hours?.[d] ?? { ...DEFAULT_DAY, closed: !p }));
@@ -289,6 +479,8 @@ function toForm(p: RestaurantProfile | null) {
     phone: p?.phone ?? '',
     website: p?.website ?? '',
     amenities: (p?.amenities ?? []).join(', '),
+    description: p?.description ?? '',
+    services: (p?.services ?? []) as string[],
     hours,
     timezone: p?.timezone && p.timezone !== 'UTC' ? p.timezone : browserTz(),
     currency: p?.currency ?? 'USD',

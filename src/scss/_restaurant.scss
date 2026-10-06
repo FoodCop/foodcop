@@ -235,3 +235,138 @@
     color: $fz-ink-soft;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Restaurant tabs use the same button language as a person's profile (client,
+// 2026-10-06): no Bootstrap blue. Main actions = FUZO yellow pill (like
+// Follow), secondary = white pill with a yellow-tint hover, inputs get the
+// yellow focus ring.
+// ---------------------------------------------------------------------------
+.fz-rtabs {
+  .btn {
+    border-radius: 9999px;
+    font-weight: 700;
+    transition: transform 0.2s $fz-ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; box-shadow: none; }
+  }
+
+  .btn-primary {
+    background: $fuzo-yellow;
+    border-color: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 6px 16px -6px rgba($fuzo-yellow-deep, 0.7);
+    &:hover,
+    &:active,
+    &:focus {
+      background: mix(#fff, $fuzo-yellow, 15%);
+      border-color: mix(#fff, $fuzo-yellow, 15%);
+      color: $fuzo-yellow-ink;
+    }
+    &:hover { transform: translateY(-1px); }
+    &:disabled { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; opacity: 0.6; }
+  }
+
+  .btn-outline-secondary,
+  .btn-outline-dark {
+    background: #fff;
+    border: 1px solid rgba($fz-ink, 0.14);
+    color: $fz-ink;
+    &:hover,
+    &:active,
+    &:focus {
+      background: $fuzo-yellow-tint;
+      border-color: $fuzo-yellow-deep;
+      color: $fz-ink;
+    }
+  }
+
+  .btn-outline-light {
+    border-color: rgba(#fff, 0.6);
+    &:hover { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; }
+  }
+
+  .btn-dark {
+    background: $fz-ink;
+    border-color: $fz-ink;
+    &:hover { background: mix(#fff, $fz-ink, 12%); border-color: mix(#fff, $fz-ink, 12%); }
+  }
+
+  .btn-link { color: $fz-ink; font-weight: 700; &:hover { color: $fuzo-yellow-deep; } }
+  .btn-link.text-danger { color: $chili !important; }
+
+  .badge.bg-warning { background: $fuzo-yellow !important; color: $fuzo-yellow-ink !important; }
+
+  .form-control,
+  .form-select {
+    border-radius: 12px;
+    border-color: rgba($fz-ink, 0.14);
+    &:focus { border-color: $fuzo-yellow-deep; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.3); }
+  }
+
+  .spinner-border.text-warning { color: $fuzo-yellow-deep !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; &:hover { transform: none; } }
+  }
+}
+
+// Service options under the restaurant's About (owner ticks them in the Dashboard).
+.fz-rservices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 9999px;
+    background: $lime-tint;
+    color: mix(#000, $lime, 45%);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+}
+
+// Owner's gallery manager (Dashboard): thumbnail + category + caption per photo.
+.fz-gallery-manager {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__item { display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; }
+
+  &__thumb {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    overflow: hidden;
+    background: $fz-ink;
+    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  }
+
+  &__remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 16, 12, 0.6);
+    color: #fff;
+    cursor: pointer;
+    &:hover { background: $chili; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow; outline-offset: 2px; }
+  }
+}

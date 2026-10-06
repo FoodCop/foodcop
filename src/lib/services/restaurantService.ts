@@ -29,7 +29,37 @@ export interface RestaurantProfile {
   /** Where the restaurant is on the map (set in the Dashboard). */
   lat?: number | null;
   lng?: number | null;
+  /** Longer "About" write-up (the tagline is one line). Needs migration 20261006000000. */
+  description?: string | null;
+  /** Service options the owner ticks - see SERVICE_OPTIONS. */
+  services?: string[];
+  /** The owner's photo gallery (migration 20261006010000). */
+  gallery?: RestaurantGalleryPhoto[];
 }
+
+export const GALLERY_CATEGORIES = ['Food', 'Ambience', 'Interior', 'Bar'] as const;
+export type GalleryCategory = (typeof GALLERY_CATEGORIES)[number];
+export interface RestaurantGalleryPhoto {
+  url: string;
+  category: GalleryCategory;
+  caption?: string;
+}
+export const GALLERY_MAX = 40;
+
+/** True when a save failed only because the gallery column doesn't exist yet. */
+export const isMissingGalleryColumn = (error?: string) => !!error && /gallery/i.test(error) && /column|schema cache|PGRST204/i.test(error);
+
+/** Service options a restaurant can offer (restaurant_profiles.services). */
+export const SERVICE_OPTIONS = [
+  { key: 'dine_in', label: 'Dine-in' },
+  { key: 'takeaway', label: 'Takeaway' },
+  { key: 'delivery', label: 'Delivery' },
+  { key: 'reservations', label: 'Reservations' },
+] as const;
+export type ServiceKey = (typeof SERVICE_OPTIONS)[number]['key'];
+
+/** True when a save failed only because the About / services columns don't exist yet. */
+export const isMissingAboutColumns = (error?: string) => !!error && /description|services/i.test(error) && /column|schema cache|PGRST204/i.test(error);
 
 export interface MenuItem {
   id: string;

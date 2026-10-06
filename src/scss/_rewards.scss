@@ -152,6 +152,8 @@ $rewards-done: #4d7c0f;
 }
 
 .rewards-level-info__name {
+  margin: 0 0 0.2rem;
+  color: #fff; // it sits on the dark level card (was inheriting dark heading ink)
   font-size: 1.125rem;
   font-weight: 900;
   text-transform: uppercase;

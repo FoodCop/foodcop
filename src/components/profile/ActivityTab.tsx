@@ -48,7 +48,7 @@ const FAMILY_TO_CATEGORY: Record<FoodCardFamily, SubCategoryKey> = {
 };
 
 const savedItemCategory = (item: AppItem): SubCategoryKey => {
-  if (item.id?.startsWith('recipe-') || item.itemType === 'recipe') return 'recipes';
+  if (item.id?.startsWith('recipe-') || item.itemType === 'recipe' || item.itemType === 'dish') return 'recipes';
   if (item.id?.startsWith('video-') || item.itemType === 'video') return 'videos';
   if (item.id?.startsWith('post-') || item.itemType === 'post') return 'posts';
   return 'places';

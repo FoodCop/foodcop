@@ -5,23 +5,19 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
-  ChartNoAxesColumn,
   Clock,
-  Compass,
   Film,
   Flame,
   Home,
-  House,
   LocateFixed,
   MapPin,
   Play,
-  Plus,
-  Salad,
   UtensilsCrossed,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { createClient } from '@/lib/supabase/client';
-import { CreateCardModal } from '@/components/create/CreateCardModal';
+import AppDock from '@/components/nav/AppDock';
+import { useScrollCompact } from '@/lib/hooks/useScrollCompact';
 import { ScoutAddPinModal } from '@/components/scout/ScoutAddPinModal';
 import { VideoPlayerModal } from '@/components/ui/VideoPlayerModal';
 import { RecipeDetailModal, useRecipeSaves } from '@/components/bites/RecipeDetailModal';
@@ -108,38 +104,9 @@ export default function DashboardView() {
   const [videos, setVideos] = useState<SuggestedVideo[]>([]);
   const [loadingVideos, setLoadingVideos] = useState(true);
 
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  // My Plate is a placeholder until its own feature lands - tapping shows a short note.
-  const [plateNote, setPlateNote] = useState(false);
-  const plateNoteTimer = useRef<number | undefined>(undefined);
-  const showPlateNote = () => {
-    setPlateNote(true);
-    window.clearTimeout(plateNoteTimer.current);
-    plateNoteTimer.current = window.setTimeout(() => setPlateNote(false), 2200);
-  };
-
   // Scrolling down shrinks the tab bar + dock to icons only; scrolling up (or
   // reaching the top) brings the labels back.
-  const [compact, setCompact] = useState(false);
-  useEffect(() => {
-    let lastY = window.scrollY;
-    let frame = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const y = window.scrollY;
-        if (y < 80) setCompact(false);
-        else if (y - lastY > 6) setCompact(true);
-        else if (lastY - y > 6) setCompact(false);
-        if (Math.abs(y - lastY) > 6 || y < 80) lastY = y;
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(frame);
-    };
-  }, []);
+  const compact = useScrollCompact();
 
   // Dock Home: back to "For you" at the top of the page.
   const goHome = () => {
@@ -403,34 +370,8 @@ export default function DashboardView() {
       </main>
 
       {/* ── Bottom dock: Explore | Create | raised Home | My Plate | Rewards ── */}
-      <nav className={`fz-dash-dock${compact ? ' is-compact' : ''}`} aria-label="Quick actions">
-        <Link href="/scout" className="fz-dash-dock__item">
-          <Compass size={18} strokeWidth={2.1} />
-          <span>Explore</span>
-        </Link>
-        <button type="button" className="fz-dash-dock__item" onClick={() => setIsCreateOpen(true)} aria-label="Create a food card">
-          <Plus size={19} strokeWidth={2.3} />
-          <span>Create</span>
-        </button>
-        <button type="button" className="fz-dash-dock__home" onClick={goHome} aria-label="Home" aria-current={active === 'foryou' ? 'page' : undefined}>
-          <House size={21} strokeWidth={2.3} />
-        </button>
-        <button type="button" className="fz-dash-dock__item" onClick={showPlateNote} aria-label="My Plate (coming soon)">
-          <Salad size={18} strokeWidth={2.1} />
-          <span>My Plate</span>
-        </button>
-        <Link href="/rewards" className="fz-dash-dock__item">
-          <ChartNoAxesColumn size={18} strokeWidth={2.4} />
-          <span>Rewards</span>
-        </Link>
-        {plateNote && (
-          <span className="fz-dash-dock__note" role="status">
-            My Plate is coming soon
-          </span>
-        )}
-      </nav>
+      <AppDock compact={compact} onHome={goHome} homeActive={active === 'foryou'} />
 
-      {isCreateOpen && <CreateCardModal onClose={() => setIsCreateOpen(false)} />}
       {isPinModalOpen && (
         <ScoutAddPinModal
           cardType="RESTAURANT_VISIT"
