@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -66,19 +65,10 @@ export default function ProfileHero({
   /** Fired when a follow/accept/unfollow changes the relationship, so the page can re-check access. */
   onRelationshipChange?: (state: FriendRelationshipState) => void;
 }) {
-  const router = useRouter();
   const { user } = useAuth();
   const currentUserId = user?.id;
   const isOtherUser = !!userId && !!currentUserId && userId !== currentUserId;
   const isOwnProfile = !!currentUserId && !isOtherUser;
-
-  const handleBack = () => {
-    if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back();
-    } else {
-      router.push('/dashboard');
-    }
-  };
 
   const [relationship, setRelationship] = useState<{ state: FriendRelationshipState; requestId: string | null }>({
     state: 'none',
@@ -324,15 +314,10 @@ export default function ProfileHero({
       <section className="fz-phero fz-hero-flip__face" inert={flipped}>
         {/* Banner photo: back (top-left) + change-banner camera (bottom-right, own profile). */}
         <div className="fz-phero__banner" style={{ backgroundImage: `url(${bannerUrl || '/images/profile/hero_banner.jpg'})` }}>
-          <button
-            type="button"
-            onClick={handleBack}
-            className="fz-phero__icon-btn fz-phero__back"
-            aria-label="Back to previous screen"
-            title="Back"
-          >
+          {/* Profile has no navbar - this is the way home (the dashboard). */}
+          <Link href="/dashboard" className="fz-phero__icon-btn fz-phero__back" aria-label="Back to home" title="Home">
             <ArrowLeft size={20} strokeWidth={2.4} />
-          </button>
+          </Link>
           {isOwnProfile && (
             <>
               <button

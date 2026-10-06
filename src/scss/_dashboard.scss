@@ -56,6 +56,8 @@ $dash-gutter: 1rem;
   background: linear-gradient(180deg, $dash-page 70%, rgba($dash-page, 0));
 
   @media (min-width: 992px) { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
+  // Match the body's narrower phone gutter, or the bar pokes 4px past the screen.
+  @media (max-width: 768px) { margin: 0 -0.75rem; padding-left: 0.75rem; padding-right: 0.75rem; }
 }
 
 .fz-dash-tabs {
@@ -72,6 +74,22 @@ $dash-gutter: 1rem;
   border: 1px solid rgba($fz-border, 0.8);
   border-radius: 9999px;
   box-shadow: $fz-shadow-card;
+  transition: max-width 0.35s $fz-ease;
+
+  // Scrolling down: icons only (labels fold away, still read by screen readers).
+  &.is-compact {
+    max-width: 15rem;
+    .fz-dash-tabs__tab { gap: 0; }
+    .fz-dash-tabs__label { max-width: 0; opacity: 0; }
+  }
+
+  &__label {
+    display: inline-block;
+    max-width: 7rem;
+    overflow: hidden;
+    line-height: 1.2;
+    transition: max-width 0.3s $fz-ease, opacity 0.2s ease;
+  }
 
   &__thumb {
     position: absolute;
@@ -102,7 +120,7 @@ $dash-gutter: 1rem;
     font-weight: 700;
     white-space: nowrap;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, gap 0.3s $fz-ease;
 
     svg { flex-shrink: 0; }
     &:hover { color: $fz-ink; }
@@ -699,7 +717,7 @@ $rail-pad-sm: 1rem;
   &:hover { background: $fuzo-yellow-tint; transform: translateY(-1px); }
 }
 
-// ── Bottom dock: Explore | + | Rewards ─────────────────────────────────────
+// ── Bottom dock: Explore | Create | raised Home | My Plate | Rewards ────────
 .fz-dash-dock {
   position: fixed;
   left: 50%;
@@ -707,10 +725,10 @@ $rail-pad-sm: 1rem;
   z-index: 70;
   transform: translateX(-50%);
   // Compact, see-through glass pill: content shows through, blurred.
-  width: min(300px, calc(100% - 2rem));
-  height: 50px;
+  width: min(390px, calc(100% - 1.5rem));
+  height: 52px;
   display: grid;
-  grid-template-columns: 1fr 64px 1fr;
+  grid-template-columns: 1fr 1fr 62px 1fr 1fr;
   align-items: center;
   padding: 0 0.35rem;
   background: rgba($fz-paper, 0.55);
@@ -722,6 +740,17 @@ $rail-pad-sm: 1rem;
     inset 0 1px 0 rgba(#fff, 0.7),
     0 2px 6px rgba($fz-ink, 0.06),
     0 12px 28px -10px rgba($fz-ink, 0.3);
+  transition: width 0.35s $fz-ease, height 0.35s $fz-ease;
+
+  // Scrolling down: a slimmer, icon-only dock (labels fold away but stay in
+  // the DOM for screen readers).
+  &.is-compact {
+    width: min(300px, calc(100% - 1.5rem));
+    height: 44px;
+    .fz-dash-dock__item { gap: 0; }
+    .fz-dash-dock__item > span { max-height: 0; opacity: 0; }
+    .fz-dash-dock__home { width: 44px; height: 44px; margin-top: -16px; }
+  }
 
   &__item {
     display: flex;
@@ -730,6 +759,13 @@ $rail-pad-sm: 1rem;
     justify-content: center;
     gap: 0.2rem;
     height: 100%;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
     line-height: 1; // the page's tall inherited line-height pushed icons out of the slim bar
     color: rgba($fz-ink, 0.82); // darker than ink-soft: stays readable on the see-through glass
     font-size: 0.56rem;
@@ -737,18 +773,43 @@ $rail-pad-sm: 1rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     text-decoration: none;
-    transition: color 0.2s ease, transform 0.2s $fz-ease;
+    transition: color 0.2s ease, transform 0.2s $fz-ease, gap 0.3s $fz-ease;
 
     svg { flex-shrink: 0; }
-    span { display: block; line-height: 1; }
+    > span {
+      display: block;
+      line-height: 1;
+      max-height: 1em;
+      overflow: hidden;
+      transition: max-height 0.3s $fz-ease, opacity 0.2s ease;
+    }
 
     &:hover { color: $fz-ink; }
     &:hover svg { color: $fuzo-yellow-deep; transform: translateY(-1px); }
     svg { transition: transform 0.2s $fz-ease, color 0.2s ease; }
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: -2px; border-radius: 12px; }
   }
 
-  // Raised centre button breaking out of the bar, like the sketch.
-  &__create {
+  // "My Plate is coming soon" bubble above the dock.
+  &__note {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 0.6rem);
+    transform: translateX(-50%);
+    padding: 0.45rem 0.85rem;
+    border-radius: 9999px;
+    background: $fz-ink;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    box-shadow: 0 8px 20px -8px rgba($fz-ink, 0.6);
+    animation: fz-dock-note 0.25s $fz-ease;
+  }
+
+  // Raised centre Home button breaking out of the bar, like the sketch.
+  &__home {
     justify-self: center;
     width: 48px;
     height: 48px;
@@ -764,13 +825,12 @@ $rail-pad-sm: 1rem;
     box-shadow:
       0 8px 20px -4px rgba($fuzo-yellow-deep, 0.65),
       0 2px 4px rgba($fz-ink, 0.15);
-    transition: transform 0.3s $fz-ease, box-shadow 0.3s $fz-ease;
+    transition: transform 0.3s $fz-ease, box-shadow 0.3s $fz-ease, width 0.35s $fz-ease, height 0.35s $fz-ease, margin 0.35s $fz-ease;
 
     svg { transition: transform 0.35s $fz-ease; }
     &:hover {
       transform: translateY(-3px);
       box-shadow: 0 14px 28px -6px rgba($fuzo-yellow-deep, 0.75), 0 2px 4px rgba($fz-ink, 0.15);
-      svg { transform: rotate(90deg); }
     }
     &:active { transform: translateY(0) scale(0.95); }
     &:focus-visible { outline: 3px solid $fz-ink; outline-offset: 2px; }
@@ -781,12 +841,22 @@ $rail-pad-sm: 1rem;
   .fz-dash-card,
   .fz-dash-card__img,
   .fz-dash-card__play,
-  .fz-dash-dock__create,
-  .fz-dash-dock__create svg,
+  .fz-dash-dock,
+  .fz-dash-dock__home,
+  .fz-dash-dock__item > span,
+  .fz-dash-tabs,
+  .fz-dash-tabs__label,
+  .fz-dash-dock__note,
   .fz-dash-seeall,
   .fz-dash-seeall__photo { transition: none; }
   .fz-dash-rail__track--grid > * { animation: none; }
   .fz-dash-card--skeleton { animation: none; }
+  .fz-dash-dock__note { animation: none; }
+}
+
+@keyframes fz-dock-note {
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 // ── Location notice actions + "Use my location" ────────────────────────────

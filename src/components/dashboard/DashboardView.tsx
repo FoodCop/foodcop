@@ -11,10 +11,12 @@ import {
   Film,
   Flame,
   Home,
+  House,
   LocateFixed,
   MapPin,
   Play,
   Plus,
+  Salad,
   UtensilsCrossed,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -107,6 +109,44 @@ export default function DashboardView() {
   const [loadingVideos, setLoadingVideos] = useState(true);
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  // My Plate is a placeholder until its own feature lands - tapping shows a short note.
+  const [plateNote, setPlateNote] = useState(false);
+  const plateNoteTimer = useRef<number | undefined>(undefined);
+  const showPlateNote = () => {
+    setPlateNote(true);
+    window.clearTimeout(plateNoteTimer.current);
+    plateNoteTimer.current = window.setTimeout(() => setPlateNote(false), 2200);
+  };
+
+  // Scrolling down shrinks the tab bar + dock to icons only; scrolling up (or
+  // reaching the top) brings the labels back.
+  const [compact, setCompact] = useState(false);
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let frame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (y < 80) setCompact(false);
+        else if (y - lastY > 6) setCompact(true);
+        else if (lastY - y > 6) setCompact(false);
+        if (Math.abs(y - lastY) > 6 || y < 80) lastY = y;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  // Dock Home: back to "For you" at the top of the page.
+  const goHome = () => {
+    selectTab('foryou');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  };
   const [activeVideo, setActiveVideo] = useState<SuggestedVideo | null>(null);
 
   // Restaurant-pin prompt for business profiles - null = not yet known.
@@ -245,7 +285,7 @@ export default function DashboardView() {
       <main className="fz-dash__body">
         {/* ── For you · Bites · Feed · Trims (switch in place) ─────────── */}
         <div ref={tabsAnchorRef} className="fz-dash-tabs-wrap">
-          <HomeTabs tabs={TABS} active={active} onChange={selectTab} />
+          <HomeTabs tabs={TABS} active={active} onChange={selectTab} compact={compact} />
         </div>
 
         {/* For you */}
@@ -362,19 +402,32 @@ export default function DashboardView() {
         )}
       </main>
 
-      {/* ── Bottom dock: Explore | + | Rewards ───────────────────────── */}
-      <nav className="fz-dash-dock" aria-label="Quick actions">
+      {/* ── Bottom dock: Explore | Create | raised Home | My Plate | Rewards ── */}
+      <nav className={`fz-dash-dock${compact ? ' is-compact' : ''}`} aria-label="Quick actions">
         <Link href="/scout" className="fz-dash-dock__item">
           <Compass size={18} strokeWidth={2.1} />
           <span>Explore</span>
         </Link>
-        <button type="button" className="fz-dash-dock__create" onClick={() => setIsCreateOpen(true)} aria-label="Create a food card">
-          <Plus size={22} strokeWidth={2.6} />
+        <button type="button" className="fz-dash-dock__item" onClick={() => setIsCreateOpen(true)} aria-label="Create a food card">
+          <Plus size={19} strokeWidth={2.3} />
+          <span>Create</span>
+        </button>
+        <button type="button" className="fz-dash-dock__home" onClick={goHome} aria-label="Home" aria-current={active === 'foryou' ? 'page' : undefined}>
+          <House size={21} strokeWidth={2.3} />
+        </button>
+        <button type="button" className="fz-dash-dock__item" onClick={showPlateNote} aria-label="My Plate (coming soon)">
+          <Salad size={18} strokeWidth={2.1} />
+          <span>My Plate</span>
         </button>
         <Link href="/rewards" className="fz-dash-dock__item">
           <ChartNoAxesColumn size={18} strokeWidth={2.4} />
           <span>Rewards</span>
         </Link>
+        {plateNote && (
+          <span className="fz-dash-dock__note" role="status">
+            My Plate is coming soon
+          </span>
+        )}
       </nav>
 
       {isCreateOpen && <CreateCardModal onClose={() => setIsCreateOpen(false)} />}

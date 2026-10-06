@@ -107,7 +107,6 @@ $fz-topbar-h: 52px;
     &:hover { background: rgba($fz-ink, 0.1); }
     &[aria-expanded="true"] { background: $fz-ink; color: $fz-navbar-gold; }
     // Home icon while you're on the dashboard.
-    &.is-current { background: rgba($fz-ink, 0.12); }
     &:focus-visible { outline: 2px solid $fz-ink; outline-offset: 2px; }
   }
 

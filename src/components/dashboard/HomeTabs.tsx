@@ -8,17 +8,21 @@ export type HomeTab<K extends string> = { key: K; label: string; icon: LucideIco
 // Segmented tab bar for the dashboard (For you · Bites · Feed · Trims).
 // Accessible tabs pattern: role=tablist/tab, roving tabIndex, arrow keys +
 // Home/End move focus and select. A yellow "thumb" slides under the active
-// tab (measured from the DOM so labels of any length line up).
+// tab (measured from the DOM so labels of any length line up). `compact`
+// (while the page scrolls down) collapses it to icons only - the labels stay
+// in the DOM, so screen readers still announce them.
 export default function HomeTabs<K extends string>({
   tabs,
   active,
   onChange,
   idPrefix = 'home',
+  compact = false,
 }: {
   tabs: HomeTab<K>[];
   active: K;
   onChange: (key: K) => void;
   idPrefix?: string;
+  compact?: boolean;
 }) {
   const listRef = useRef<HTMLDivElement>(null);
   const [thumb, setThumb] = useState<{ left: number; width: number } | null>(null);
@@ -34,7 +38,12 @@ export default function HomeTabs<K extends string>({
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(list);
-    return () => ro.disconnect();
+    // Tabs change width while the labels collapse/expand - follow them.
+    list.addEventListener('transitionend', measure);
+    return () => {
+      ro.disconnect();
+      list.removeEventListener('transitionend', measure);
+    };
   }, [active, tabs.length]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -51,7 +60,7 @@ export default function HomeTabs<K extends string>({
   };
 
   return (
-    <div className="fz-dash-tabs" role="tablist" aria-label="Home sections" ref={listRef} onKeyDown={onKeyDown}>
+    <div className={`fz-dash-tabs${compact ? ' is-compact' : ''}`} role="tablist" aria-label="Home sections" ref={listRef} onKeyDown={onKeyDown}>
       {thumb && <span className="fz-dash-tabs__thumb" style={{ transform: `translateX(${thumb.left}px)`, width: thumb.width }} aria-hidden="true" />}
       {tabs.map(({ key, label, icon: Icon }) => {
         const selected = key === active;
@@ -69,7 +78,7 @@ export default function HomeTabs<K extends string>({
             onClick={() => onChange(key)}
           >
             <Icon size={16} strokeWidth={2.3} aria-hidden="true" />
-            <span>{label}</span>
+            <span className="fz-dash-tabs__label">{label}</span>
           </button>
         );
       })}

@@ -1746,3 +1746,149 @@
     cursor: pointer;
   }
 }
+
+// ============================================================================
+// PHONE "ALL" VIEW - each Activity section as a fanned stack of photos
+// (ActivityTab SectionStack). A hand of up to 4 playing cards fanned from the
+// bottom + "See all" + count; tapping opens that section's own tab.
+// ============================================================================
+.fz-activity-section--stack .fz-activity-section__head {
+  margin-bottom: 0.4rem;
+}
+
+.fz-activity-stack {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.35rem 0.25rem 0.15rem;
+  border: 0;
+  border-radius: 18px;
+  background: none;
+  color: $fz-ink;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus-visible { outline: 3px solid $fuzo-yellow; outline-offset: 3px; }
+
+  &__pile {
+    position: relative;
+    flex-shrink: 0;
+    width: 168px;
+    height: 132px;
+  }
+
+  // Each print rotates around a point below the pile, so together they fan
+  // out like cards held in a hand.
+  &__print {
+    position: absolute;
+    left: calc(50% - 40px);
+    top: 10px;
+    width: 80px;
+    height: 104px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 3px solid #fff;
+    background: $fz-cream;
+    box-shadow: 0 8px 18px -6px rgba($fz-ink, 0.45);
+    transform-origin: 50% 135%;
+    transition: transform 0.4s $fz-ease;
+
+    &--blank { background: linear-gradient(145deg, $fuzo-yellow-tint, $fz-cream); }
+  }
+
+  // Fan angles by how many prints there are (keeps 2-3 cards centred too).
+  &__pile--1 .fz-activity-stack__print--1 { transform: rotate(-3deg); }
+
+  &__pile--2 {
+    .fz-activity-stack__print--1 { transform: rotate(-9deg); }
+    .fz-activity-stack__print--2 { transform: rotate(9deg); }
+  }
+
+  &__pile--3 {
+    .fz-activity-stack__print--1 { transform: rotate(-15deg); }
+    .fz-activity-stack__print--2 { transform: rotate(0deg); }
+    .fz-activity-stack__print--3 { transform: rotate(15deg); }
+  }
+
+  &__pile--4 {
+    .fz-activity-stack__print--1 { transform: rotate(-21deg); }
+    .fz-activity-stack__print--2 { transform: rotate(-7deg); }
+    .fz-activity-stack__print--3 { transform: rotate(7deg); }
+    .fz-activity-stack__print--4 { transform: rotate(21deg); }
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  &__label {
+    font-family: $headings-font-family;
+    font-size: 1.3rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+  }
+
+  &__count {
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  &__go {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fz-cream;
+    border: 1px solid $fz-border;
+    color: $fz-ink;
+  }
+
+  // Tap / hover: the hand spreads a little wider.
+  &:active,
+  &:hover {
+    .fz-activity-stack__pile--4 {
+      .fz-activity-stack__print--1 { transform: rotate(-27deg); }
+      .fz-activity-stack__print--2 { transform: rotate(-9deg); }
+      .fz-activity-stack__print--3 { transform: rotate(9deg); }
+      .fz-activity-stack__print--4 { transform: rotate(27deg); }
+    }
+    .fz-activity-stack__pile--3 {
+      .fz-activity-stack__print--1 { transform: rotate(-20deg); }
+      .fz-activity-stack__print--3 { transform: rotate(20deg); }
+    }
+    .fz-activity-stack__pile--2 {
+      .fz-activity-stack__print--1 { transform: rotate(-13deg); }
+      .fz-activity-stack__print--2 { transform: rotate(13deg); }
+    }
+  }
+
+  // Smallest phones: slightly smaller hand.
+  @media (max-width: 359.98px) {
+    gap: 0.6rem;
+    &__pile { width: 140px; height: 116px; }
+    &__print { left: calc(50% - 34px); width: 68px; height: 90px; }
+    &__label { font-size: 1.15rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__print { transition: none; }
+  }
+}

@@ -115,14 +115,14 @@ export default function SiteHeader() {
           </Link>
         )}
 
-        {/* Right: home (back to the dashboard from anywhere) + inbox (notifications + messages). */}
+        {/* Right: home (back to the dashboard from anywhere - not shown on the
+            dashboard itself, whose bottom dock has Home) + inbox. */}
         <div className="fz-topbar__side fz-topbar__side--end">
-          {signedIn && (
+          {signedIn && !onHome && (
             <Link
               href="/dashboard"
-              className={`fz-topbar__icon${onHome ? ' is-current' : ''}`}
+              className="fz-topbar__icon"
               aria-label="Home"
-              aria-current={onHome ? 'page' : undefined}
               title="Home"
               onClick={close}
             >

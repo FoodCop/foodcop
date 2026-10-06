@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback, useRef, useSyncExternalStore } from 'react';
 import type { AppItem } from '../../types/appItem';
 import PlateService from '../../lib/services/plateService';
 import { normalizeSavedItemForUI } from '../../lib/services/savedItems';
@@ -11,7 +11,7 @@ import CreateCardModal from '../create/CreateCardModal';
 import { TYPE_META, type FoodCardFamily, type FoodCardRecord } from '../../lib/types/foodCard';
 import { useAuth } from '../auth/AuthProvider';
 import ProfileFoodMap, { type ProfileMapPlace } from './ProfileFoodMap';
-import { ChevronDown, ChevronUp, Grid3x3, MapPin, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronUp, Grid3x3, MapPin, Plus } from 'lucide-react';
 
 export type ActivityCategory = 'all' | 'places' | 'recipes' | 'videos' | 'posts';
 export type SubCategoryKey = 'places' | 'recipes' | 'videos' | 'posts';
@@ -108,6 +108,47 @@ function useCardColumns() {
     };
   }, [el]);
   return [setEl, cols] as const;
+}
+
+// Phones get a compact "All" view: each section is a fanned stack of a few
+// photos (like a hand of playing cards) that opens that section's own tab.
+const PHONE_QUERY = '(max-width: 768px)';
+function subscribePhone(onChange: () => void) {
+  const mq = window.matchMedia(PHONE_QUERY);
+  mq.addEventListener('change', onChange);
+  return () => mq.removeEventListener('change', onChange);
+}
+function useIsPhone() {
+  return useSyncExternalStore(subscribePhone, () => window.matchMedia(PHONE_QUERY).matches, () => false);
+}
+
+const STACK_SIZE = 4;
+const tilePhoto = (tile: ActivityTile): string | null =>
+  tile.kind === 'card' ? tile.item.image_url || tile.item.media_url || null : tile.item.img || null;
+
+function SectionStack({ tiles, label, onOpen }: { tiles: ActivityTile[]; label: string; onOpen: () => void }) {
+  const photos = tiles.map(tilePhoto).filter((p): p is string => !!p).slice(0, STACK_SIZE);
+  const count = tiles.length;
+  return (
+    <button type="button" className="fz-activity-stack" onClick={onOpen} aria-label={`See all ${count} in ${label}`}>
+      <span className={`fz-activity-stack__pile fz-activity-stack__pile--${Math.max(photos.length, 1)}`} aria-hidden="true">
+        {photos.length > 0 ? (
+          photos.map((src, i) => (
+            <img key={i} src={src} alt="" loading="lazy" className={`fz-activity-stack__print fz-activity-stack__print--${i + 1}`} />
+          ))
+        ) : (
+          <span className="fz-activity-stack__print fz-activity-stack__print--1 fz-activity-stack__print--blank" />
+        )}
+      </span>
+      <span className="fz-activity-stack__text">
+        <span className="fz-activity-stack__label">See all</span>
+        <span className="fz-activity-stack__count">{count} {count === 1 ? 'item' : 'items'}</span>
+      </span>
+      <span className="fz-activity-stack__go" aria-hidden="true">
+        <ChevronRight size={18} strokeWidth={2.6} />
+      </span>
+    </button>
+  );
 }
 
 function formatTimeAgo(dateString?: string | null): string {
@@ -272,6 +313,15 @@ export default function ActivityTab({
   const [activeTab, setActiveTab] = useState<ActivityCategory>(initialCategory ?? 'all');
   // Limits are counted in rows so every row is full whatever the column count.
   const [containerRef, cols] = useCardColumns();
+  const isPhone = useIsPhone();
+  const subtabsRef = useRef<HTMLDivElement>(null);
+  // Open one section's own tab (from a phone section stack) and bring it into view.
+  const openSection = (key: SubCategoryKey) => {
+    setActiveTab(key);
+    setCategoryRows(2);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    subtabsRef.current?.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+  };
   const rowSize = cols === 1 ? 3 : cols;
   const [sectionRows, setSectionRows] = useState<Record<SubCategoryKey, number>>({
     places: 1,
@@ -409,7 +459,7 @@ export default function ActivityTab({
   return (
     <div ref={containerRef} className="fz-activity-container">
       {/* Sub-tabs inside Activity */}
-      <div className="fz-activity-subtabs">
+      <div ref={subtabsRef} className="fz-activity-subtabs">
         {CATEGORIES.map(({ key, label }) => {
           const count =
             key === 'all'
@@ -467,6 +517,20 @@ export default function ActivityTab({
             const hasMore = limit < secTiles.length;
             const isExpanded = limit > rowSize && !hasMore;
             const catMeta = CATEGORIES.find((c) => c.key === secKey);
+
+            if (isPhone) {
+              return (
+                <div key={secKey} className="fz-activity-section fz-activity-section--stack">
+                  <div className="fz-activity-section__head">
+                    <h4 className="fz-activity-section__title">
+                      <span>{SECTION_LABELS[secKey]}</span>
+                      <span className="fz-activity-section__count">{secTiles.length}</span>
+                    </h4>
+                  </div>
+                  <SectionStack tiles={secTiles} label={catMeta?.label ?? SECTION_LABELS[secKey]} onOpen={() => openSection(secKey)} />
+                </div>
+              );
+            }
 
             return (
               <div key={secKey} className="fz-activity-section">
