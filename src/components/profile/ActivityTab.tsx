@@ -71,6 +71,45 @@ const SECTION_LABELS: Record<SubCategoryKey, string> = {
   posts: 'Food Reviews & Notes',
 };
 
+// Cards are highlight-sized (CSS: repeat(auto-fill, var(--hl-w))), so the
+// number per row depends on the width - read it back from the rendered grid so
+// "show more" always adds whole rows. Card width also follows the viewport
+// height, hence the window resize listener next to the ResizeObserver.
+// First guess before the grid exists (mirrors --hl-h/--hl-w in _profile.scss and
+// the panel paddings), so the first paint already shows about the right count.
+function guessColumns() {
+  if (typeof window === 'undefined') return 4;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const phone = vw <= 768;
+  const cardH = phone ? Math.min(240, Math.max(150, Math.min(vh * 0.26, vw * 0.54))) : Math.min(310, Math.max(190, vh * 0.29));
+  const gap = phone ? 12 : 16;
+  const width = Math.min(vw, 1480) - (phone ? 53 : 93);
+  return Math.max(1, Math.floor((width + gap) / (cardH * 0.73 + gap)));
+}
+
+function useCardColumns() {
+  const [el, setEl] = useState<HTMLDivElement | null>(null);
+  const [cols, setCols] = useState(guessColumns);
+  useEffect(() => {
+    if (!el) return;
+    const measure = () => {
+      const grid = el.querySelector('.fz-activity-grid');
+      if (!grid) return;
+      const tracks = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
+      if (tracks > 0) setCols(tracks);
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [el]);
+  return [setEl, cols] as const;
+}
+
 function formatTimeAgo(dateString?: string | null): string {
   if (!dateString) return 'recently';
   const time = new Date(dateString).getTime();
@@ -231,13 +270,16 @@ export default function ActivityTab({
   const currentUserId = user?.id;
 
   const [activeTab, setActiveTab] = useState<ActivityCategory>(initialCategory ?? 'all');
-  const [sectionLimits, setSectionLimits] = useState<Record<SubCategoryKey, number>>({
-    places: 3,
-    recipes: 3,
-    videos: 3,
-    posts: 3,
+  // Limits are counted in rows so every row is full whatever the column count.
+  const [containerRef, cols] = useCardColumns();
+  const rowSize = cols === 1 ? 3 : cols;
+  const [sectionRows, setSectionRows] = useState<Record<SubCategoryKey, number>>({
+    places: 1,
+    recipes: 1,
+    videos: 1,
+    posts: 1,
   });
-  const [categoryLimit, setCategoryLimit] = useState<number>(6);
+  const [categoryRows, setCategoryRows] = useState(2);
   const [placesView, setPlacesView] = useState<'grid' | 'map'>('grid');
 
   const [savedItems, setSavedItems] = useState<AppItem[]>([]);
@@ -245,12 +287,6 @@ export default function ActivityTab({
   const [selectedItem, setSelectedItem] = useState<AppItem | null>(null);
   const [selectedCard, setSelectedCard] = useState<FoodCardRecord | null>(null);
   const [creatingFamily, setCreatingFamily] = useState<FoodCardFamily | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => setToastMessage(null), 2500);
-  };
 
   const refetchSaved = useCallback(async () => {
     try {
@@ -371,7 +407,7 @@ export default function ActivityTab({
   }
 
   return (
-    <div className="fz-activity-container">
+    <div ref={containerRef} className="fz-activity-container">
       {/* Sub-tabs inside Activity */}
       <div className="fz-activity-subtabs">
         {CATEGORIES.map(({ key, label }) => {
@@ -387,7 +423,7 @@ export default function ActivityTab({
               className={`fz-activity-subtab${activeTab === key ? ' fz-activity-subtab--active' : ''}`}
               onClick={() => {
                 setActiveTab(key);
-                setCategoryLimit(6);
+                setCategoryRows(2);
               }}
             >
               <span>{label}</span>
@@ -426,10 +462,10 @@ export default function ActivityTab({
             const secTiles = tiles.filter((t) => t.category === secKey);
             if (secTiles.length === 0) return null;
 
-            const limit = sectionLimits[secKey] ?? 3;
+            const limit = (sectionRows[secKey] ?? 1) * rowSize;
             const visibleTiles = secTiles.slice(0, limit);
             const hasMore = limit < secTiles.length;
-            const isExpanded = limit > 3 && !hasMore;
+            const isExpanded = limit > rowSize && !hasMore;
             const catMeta = CATEGORIES.find((c) => c.key === secKey);
 
             return (
@@ -465,12 +501,13 @@ export default function ActivityTab({
                     <button
                       type="button"
                       className="fz-activity-section__view-all ms-1"
+                      aria-label={`View all ${catMeta?.label}`}
                       onClick={() => {
                         setActiveTab(secKey);
-                        setCategoryLimit(6);
+                        setCategoryRows(2);
                       }}
                     >
-                      View all in {catMeta?.label} →
+                      View all<span className="d-none d-sm-inline"> in {catMeta?.label}</span> →
                     </button>
                   </div>
                 </div>
@@ -501,16 +538,16 @@ export default function ActivityTab({
                   </div>
                 )}
 
-                {placesView === 'grid' && secTiles.length > 3 && (
+                {placesView === 'grid' && secTiles.length > rowSize && (
                   <div className="d-flex justify-content-center mt-3">
                     {hasMore ? (
                       <button
                         type="button"
                         className="fz-show-more-btn"
                         onClick={() =>
-                          setSectionLimits((prev) => ({
+                          setSectionRows((prev) => ({
                             ...prev,
-                            [secKey]: (prev[secKey] ?? 3) + 3,
+                            [secKey]: (prev[secKey] ?? 1) + 1,
                           }))
                         }
                       >
@@ -523,9 +560,9 @@ export default function ActivityTab({
                         type="button"
                         className="fz-show-more-btn"
                         onClick={() =>
-                          setSectionLimits((prev) => ({
+                          setSectionRows((prev) => ({
                             ...prev,
-                            [secKey]: 3,
+                            [secKey]: 1,
                           }))
                         }
                       >
@@ -558,9 +595,13 @@ export default function ActivityTab({
         <div className="fz-activity-panel">
           {(() => {
             const filteredTiles = tiles.filter((t) => t.category === activeTab);
+            // The owner's "+ New" card takes the last slot, so rows still end flush.
+            const createSlot = isCurrentUser && rowSize > 1 ? 1 : 0;
+            const categoryLimit = categoryRows * rowSize - createSlot;
+            const initialLimit = 2 * rowSize - createSlot;
             const visibleTiles = filteredTiles.slice(0, categoryLimit);
             const hasMore = categoryLimit < filteredTiles.length;
-            const isExpanded = categoryLimit > 6 && !hasMore;
+            const isExpanded = categoryLimit > initialLimit && !hasMore;
             const catMeta = CATEGORIES.find((c) => c.key === activeTab);
 
             if (filteredTiles.length === 0) {
@@ -673,13 +714,13 @@ export default function ActivityTab({
                   </div>
                 )}
 
-                {(! (activeTab === 'places' && placesView === 'map')) && filteredTiles.length > 6 && (
+                {(! (activeTab === 'places' && placesView === 'map')) && filteredTiles.length > initialLimit && (
                   <div className="d-flex justify-content-center mt-4">
                     {hasMore ? (
                       <button
                         type="button"
                         className="fz-show-more-btn"
-                        onClick={() => setCategoryLimit((prev) => prev + 6)}
+                        onClick={() => setCategoryRows((prev) => prev + 2)}
                       >
                         <span>Show more {catMeta?.label}</span>
                         <span className="opacity-75">({filteredTiles.length - categoryLimit} remaining)</span>
@@ -689,7 +730,7 @@ export default function ActivityTab({
                       <button
                         type="button"
                         className="fz-show-more-btn"
-                        onClick={() => setCategoryLimit(6)}
+                        onClick={() => setCategoryRows(2)}
                       >
                         <span>Show less</span>
                         <ChevronUp size={15} />
@@ -736,15 +777,6 @@ export default function ActivityTab({
             refetchCards();
           }}
         />
-      )}
-
-      {toastMessage && (
-        <div
-          className="toast show position-fixed bottom-0 start-50 translate-middle-x mb-5 bg-dark text-white rounded-pill px-3 py-2 shadow"
-          style={{ zIndex: 1050 }}
-        >
-          {toastMessage}
-        </div>
       )}
     </div>
   );

@@ -122,14 +122,6 @@
   }
 }
 
-// ── Hero: rating stat ──────────────────────────────────────────────────────
-.fz-hero-full-banner__stat--rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  strong { color: $fuzo-yellow; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .fz-open-pill.is-open .fz-open-pill__dot { animation: none; }
 }

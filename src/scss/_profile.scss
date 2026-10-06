@@ -5,7 +5,14 @@
 // ============================================================================
 
 // ── Shell ──
+// --hl-h / --hl-w: THE profile card size, shared by the Highlights reel and the
+// Activity cards (client: every card the same size as a highlight). Height is
+// viewport-aware; on phones it's also capped by width so two cards fit a row.
 .profile-shell {
+  --hl-h: clamp(190px, 29vh, 310px);
+  --hl-w: calc(var(--hl-h) * 0.73);
+  @media (max-width: 768px) { --hl-h: clamp(150px, min(26vh, 54vw), 240px); }
+
   margin: 0 auto;
   background: #f6f5f2;
   min-height: 100vh;
@@ -65,313 +72,420 @@
 }
 
 // ============================================================================
-// FULL-BLEED HERO BANNER & INTEGRATED TOP NAV
+// PROFILE HERO CARD (ProfileHero.tsx) - client mockup, same on phone + desktop
+// A white card: rounded banner photo (back + change-banner buttons on it), a
+// gold-ring avatar overlapping the banner, name + LEVEL pill + edit button,
+// handle · role, then stat tiles and the yellow SOCIALS pill (flips the card).
+// One stacked layout at every size (client's choice). The banner height is the
+// smaller of the mockup's ratio and ~22% of the screen height, and the tiles +
+// SOCIALS stay on one line, so the Highlights reel fits the first screen too.
 // ============================================================================
-.fz-hero-full-banner {
+.fz-phero {
+  // Banner height - also used to keep the avatar clear of the back button.
+  --banner: clamp(130px, min(56cqi, 22vh), 260px);
+  container-type: inline-size;
   position: relative;
-  width: 100%;
-  min-height: 420px;
-  background-size: cover;
-  background-position: center 30%;
-  background-repeat: no-repeat;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba($fz-border, 0.7);
+  border-radius: 28px;
 
-  // Dark overlay gradient matching the screenshot moody dark aesthetic
-  &__overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(10, 8, 6, 0.72) 0%,
-      rgba(10, 8, 6, 0.3) 30%,
-      rgba(10, 8, 6, 0.7) 70%,
-      rgba(10, 8, 6, 0.94) 100%
-    );
-    z-index: 1;
-    pointer-events: none;
-  }
+  @media (max-width: 768px) { border-radius: 24px; }
 
-  // Top Centered Brand Logo
-  &__nav {
+  // ---- Banner ----------------------------------------------------------------
+  &__banner {
     position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem 2rem 0.5rem 2rem;
-    width: 100%;
-    margin: 0 auto;
-
-    @media (max-width: 768px) {
-      padding: 1.25rem 1rem 0.5rem 1rem;
-    }
+    height: var(--banner);
+    border-radius: inherit;
+    background-color: $fz-ink;
+    background-size: cover;
+    background-position: center 35%;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 0 0 1px rgba($fz-ink, 0.06);
   }
 
-  &__logo {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-
-    &:hover {
-      transform: scale(1.05);
-      opacity: 0.95;
-    }
-
-    img {
-      height: 28px;
-      filter: brightness(0) invert(1);
-    }
-  }
-
-  // Top-Left Back Arrow Button
-  &__back-btn {
+  &__icon-btn {
     position: absolute;
-    left: 2rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(20, 16, 12, 0.52);
+    background: rgba(20, 16, 12, 0.42);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #fff;
     cursor: pointer;
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-    z-index: 20;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s $fz-ease, background 0.2s ease, color 0.2s ease;
 
-    &:hover {
-      background: $fuzo-yellow;
-      color: #241f16;
-      border-color: $fuzo-yellow;
-      transform: translateY(-50%) scale(1.08);
-      box-shadow: 0 6px 18px rgba(241, 199, 77, 0.45);
-    }
+    &:hover { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fz-ink; transform: scale(1.06); }
+    &:active { transform: scale(0.94); }
+    &:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    &:disabled { opacity: 0.7; cursor: progress; }
+  }
+  &__back { top: 0.85rem; left: 0.85rem; }
+  &__banner-btn { right: 0.85rem; bottom: 0.85rem; }
 
-    &:active {
-      transform: translateY(-50%) scale(0.94);
-    }
-
-    @media (max-width: 768px) {
-      left: 1rem;
-      width: 36px;
-      height: 36px;
-    }
+  // ---- Body: avatar / head / stats -------------------------------------------
+  &__body {
+    --avatar: clamp(92px, 28cqi, 128px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'avatar' 'head' 'stats';
+    padding: 0 clamp(0.9rem, 4cqi, 1.5rem) clamp(0.95rem, 4cqi, 1.4rem);
   }
 
-  // Bottom Content Area
-  &__bottom {
+  &__avatar {
+    grid-area: avatar;
     position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 2rem 3rem 2.5rem 3rem;
-    width: 100%;
-    margin: 0 auto;
-
-    @media (max-width: 768px) {
-      padding: 1.5rem 1.25rem;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1.5rem;
-    }
-  }
-
-  &__profile-info {
-    display: flex;
-    align-items: center;
-    gap: 1.35rem;
-
-    @media (max-width: 600px) {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-  }
-
-  &__avatar-wrap {
-    position: relative;
-    width: 92px;
-    height: 92px;
+    z-index: 2;
+    width: var(--avatar);
+    height: var(--avatar);
+    // Mostly over the banner, a little below it (as in the mockup) - but never
+    // higher than 4.5rem below the banner top, where the back button sits.
+    margin-top: calc(-1 * min(var(--avatar) * 0.86, var(--banner) - 4.5rem));
+    margin-bottom: 0.6rem;
+    padding: 4px;
     border-radius: 50%;
-    padding: 3px;
-    background: linear-gradient(135deg, #f1c74d, #e8b938, #f1c74d);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-    flex-shrink: 0;
+    background: linear-gradient(135deg, mix(#fff, $fuzo-yellow, 20%), $fuzo-yellow 55%, $fuzo-yellow-deep);
+    box-shadow: 0 10px 24px -6px rgba($fz-ink, 0.45);
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
-      border: 2px solid #141210;
+      display: block;
+      background: $fz-ink;
     }
   }
 
   &__avatar-btn {
     position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 28px;
-    height: 28px;
+    right: 2%;
+    bottom: 3%;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: #1f1d1a;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #ffffff;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    background: #1f1d1a;
+    border: 2px solid #fff;
+    color: #fff;
     cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: background 0.2s ease, color 0.2s ease;
+
+    // 44px hit area around the 36px badge.
+    &::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; }
+    &:hover { background: $fuzo-yellow; color: $fz-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
   }
 
-  &__text-meta {
+  &__head {
+    grid-area: head;
     display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+    align-items: flex-start;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  &__id {
+    flex: 1;
+    min-width: 0;
   }
 
   &__name-row {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
     flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.7rem;
   }
 
   &__name {
-    font-size: 1.95rem;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: -0.02em;
     margin: 0;
-    line-height: 1.1;
-    font-family: $headings-font-family;
+    font-family: var(--body-font), $font-family-sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.55rem, 7.4cqi, 2.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    color: $fz-ink;
+    overflow-wrap: anywhere;
   }
 
-  &__level-badge {
-    background: #f1c74d;
-    color: #18181b;
-    font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    padding: 2.5px 9px;
-    border-radius: 9999px;
-    line-height: 1.2;
+  &__level {
     display: inline-flex;
     align-items: center;
+    gap: 0.35rem;
+    padding: 0.38rem 0.8rem;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, mix(#fff, $fuzo-yellow, 35%), mix(#fff, $fuzo-yellow, 12%));
+    color: $fz-ink;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(#fff, 0.6), 0 2px 6px rgba($fuzo-yellow-deep, 0.3);
   }
 
-  &__subtitle {
-    color: rgba(255, 255, 255, 0.72);
+  &__handle {
+    margin: 0.4rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 0.55rem;
+    min-width: 0;
+    font-size: clamp(0.88rem, 3.7cqi, 1rem);
+    line-height: 1.35;
+    color: $fz-ink-soft;
+
+    > span { overflow-wrap: anywhere; }
+  }
+  &__dot { font-size: 0.7em; opacity: 0.8; }
+
+  &__bio {
+    margin: 0.4rem 0 0;
+    max-width: 42rem;
     font-size: 0.88rem;
-    font-weight: 400;
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
+    line-height: 1.45;
+    color: mix($fz-ink, $fz-ink-soft, 45%);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
   }
 
-  &__dot {
-    opacity: 0.5;
-  }
-
-  &__stats-row {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 0.2rem;
-  }
-
-  &__stat {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.72);
-
-    strong {
-      color: #ffffff;
-      font-weight: 800;
-      margin-right: 0.35rem;
-      font-size: 0.95rem;
-    }
-  }
-
-  // Right Actions (Follow, Message)
   &__actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     flex-shrink: 0;
   }
 
-  &__btn-follow {
-    background: #f1c74d;
-    color: #18181b;
-    border: none;
-    border-radius: 9999px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    padding: 0.6rem 1.75rem;
-    cursor: pointer;
-    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-    box-shadow: 0 4px 14px rgba(241, 199, 77, 0.3);
-
-    &:hover {
-      background: #f7d36b;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(241, 199, 77, 0.4);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-  }
-
-  &__btn-message {
-    background: rgba(24, 22, 20, 0.85);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 9999px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 0.6rem 1.6rem;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.15s ease;
+  &__square-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    background: #f7f6f3;
+    border: 1px solid $fz-border;
+    color: $fz-ink;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: $fz-shadow-sm;
+    transition: transform 0.2s $fz-ease, background 0.2s ease, border-color 0.2s ease;
 
-    &:hover {
-      background: rgba(36, 33, 30, 0.95);
-      border-color: rgba(255, 255, 255, 0.35);
-      color: #ffffff;
-      transform: translateY(-1px);
-    }
+    &:hover { background: $fuzo-yellow-tint; border-color: $fuzo-yellow-deep; color: $fz-ink; transform: translateY(-2px); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
 
-    &:active {
-      transform: translateY(0);
+  &__follow {
+    min-height: 46px;
+    padding: 0 1.3rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fz-ink;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 6px 16px -6px rgba($fuzo-yellow-deep, 0.7);
+    transition: transform 0.2s $fz-ease, background 0.2s ease;
+
+    &:hover { background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-2px); }
+    &:disabled { opacity: 0.7; cursor: progress; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  // ---- Stat tiles + Socials ---------------------------------------------------
+  // Tiles + SOCIALS always share one line (SOCIALS as tall as the tiles).
+  &__stats {
+    grid-area: stats;
+    display: flex;
+    align-items: stretch;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+  }
+
+  &__tiles {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+  }
+
+  // Narrow cards (phones): just icon + count side by side; the label stays for
+  // screen readers only. 520px+ shows the full mockup tile with its label.
+  &__tile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    position: relative;
+    min-width: 0;
+    min-height: 46px;
+    padding: 0.35rem 0.25rem;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid rgba($fz-border, 0.95);
+    box-shadow: $fz-shadow-sm;
+    text-align: center;
+  }
+
+  &__tile-icon {
+    flex-shrink: 0;
+    &--bites { color: $turmeric; }
+    &--posts { color: $chili; }
+    &--friends { color: mix(#000, $sky, 15%); }
+    &--meetups { color: mix(#000, $lime, 12%); }
+  }
+
+  &__tile-text {
+    display: flex;
+    flex-direction: column;
+    align-items: inherit;
+    min-width: 0;
+    max-width: 100%;
+
+    strong {
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: $fz-ink;
     }
+    span {
+      font-size: 0.72rem;
+      line-height: 1.25;
+      color: $fz-ink-soft;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+  }
+
+  // Narrow: an icon-only yellow button (name via aria-label); 520px+: the mockup's pill.
+  &__socials {
+    position: relative;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 52px;
+    min-height: 46px;
+    padding: 0 0.85rem;
+    border: 0;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, mix(#fff, $fuzo-yellow, 22%), $fuzo-yellow);
+    color: $fz-ink;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(#fff, 0.5), 0 10px 22px -8px rgba($fuzo-yellow-deep, 0.75);
+    transition: transform 0.2s $fz-ease, box-shadow 0.2s $fz-ease;
+
+    &:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(#fff, 0.5), 0 14px 26px -8px rgba($fuzo-yellow-deep, 0.85); }
+    &:active { transform: translateY(0); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 3px; }
+  }
+
+  @container (max-width: 519.98px) {
+    &__tile-text span,
+    &__socials-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+    &__tile-text strong { font-size: 1rem; }
+  }
+
+  // Room for a row: icon beside the number/label, SOCIALS pill at the end.
+  @container (min-width: 520px) {
+    &__stats { gap: 0.55rem; }
+    &__tiles { gap: 0.55rem; }
+    &__socials { padding: 0 1.3rem; font-size: 0.92rem; }
+    &__tile {
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      padding: 0.55rem 0.7rem;
+      text-align: left;
+    }
+    &__tile-text { align-items: flex-start; }
+    // Keep the edit pencil next to the name instead of across the card.
+    &__id { flex: 0 1 auto; }
+  }
+
+  // Desktop (card 1100px+): the stacked mockup left big empty gaps (name far
+  // from its pencil, tiles stretched) and the avatar rode up into the back
+  // button on the short banner. Here: avatar half over the banner (clear of the
+  // back button), name + LEVEL + pencil grouped, compact tiles + SOCIALS on the
+  // right of the same row.
+  @container (min-width: 1100px) {
+    &__body {
+      --avatar: 120px;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas: 'avatar head stats';
+      column-gap: 1.25rem;
+      align-items: center;
+      padding: 0 1.75rem 1.1rem;
+    }
+    &__avatar { align-self: start; margin-top: calc(var(--avatar) * -0.5); margin-bottom: 0; }
+    &__head { padding-top: 0.75rem; }
+    &__name { font-size: clamp(1.6rem, 2.4cqi, 2.1rem); }
+    &__stats { margin-top: 0; padding-top: 0.75rem; }
+    &__tiles { grid-auto-columns: minmax(108px, auto); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__icon-btn,
+    &__square-btn,
+    &__follow,
+    &__socials { transition: none; &:hover { transform: none; } }
   }
 }
 
 // ============================================================================
 // HIGHLIGHTS SECTION & 3D FAN CAROUSEL
 // ============================================================================
+// Card size is one variable (--hl-h, viewport-height aware); width, fan offsets
+// and the stage height all derive from it, so the whole reel scales together.
 .fz-highlights-section {
+  // --hl-h / --hl-w come from .profile-shell (shared with the Activity cards).
+  --hl-step: calc(var(--hl-w) * 0.86);
+
   background: #f6f5f2;
-  padding: 2.75rem 1.5rem 3.25rem 1.5rem;
+  padding: 1rem 1.5rem 1.15rem;
   width: 100%;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    --hl-step: calc(var(--hl-w) * 0.74);
+    padding: 0.8rem 0.75rem 0.9rem;
+  }
 
   &__inner {
     max-width: 1200px;
@@ -382,12 +496,19 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1.5rem;
-    padding: 0 2rem;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+    padding: 0 0.5rem;
+    min-height: 40px;
 
-    @media (max-width: 768px) {
-      padding: 0 0.5rem;
-    }
+    @media (max-width: 768px) { padding: 0 0.25rem; margin-bottom: 0.25rem; }
+  }
+
+  &__heading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    min-width: 0;
   }
 
   &__label {
@@ -396,42 +517,59 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: #8c857b;
+    flex-shrink: 0;
+  }
+
+  // "2 of 5 · Goa Trip" - also the screen-reader live region for the arrows.
+  &__now {
+    font-size: 0.82rem;
+    line-height: 1.3;
+    color: $fz-ink-soft;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+
+    @media (max-width: 575px) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
   }
 
   &__nav-btns {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
+    flex-shrink: 0;
   }
 
   &__add-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    height: 34px;
-    padding: 0 0.85rem;
+    height: 36px;
+    padding: 0 0.9rem;
     border-radius: 9999px;
     border: 1px solid rgba(0, 0, 0, 0.08);
     background: #e8e6e1;
     color: #44403c;
     font-size: 0.78rem;
+    line-height: 1;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s ease;
 
-    &:hover {
-      background: #dedcd6;
-      transform: scale(1.03);
-    }
-
-    &:active {
-      transform: scale(0.97);
-    }
+    &:hover { background: #dedcd6; transform: scale(1.03); }
+    &:active { transform: scale(0.97); }
   }
 
   &__nav-btn {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     border: none;
     background: #e8e6e1;
@@ -442,34 +580,33 @@
     cursor: pointer;
     transition: all 0.15s ease;
 
-    &:hover {
-      background: #dedcd6;
-      transform: scale(1.05);
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
+    &:hover { background: #dedcd6; transform: scale(1.05); }
+    &:active { transform: scale(0.95); }
   }
 
-  // 3D Carousel Stage
+  &__add-btn,
+  &__nav-btn {
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  // 3D Carousel Stage - swipeable on touch (pan-y keeps vertical page scroll).
   &__carousel-stage {
     position: relative;
-    height: 380px;
+    height: calc(var(--hl-h) + 1.1rem);
     perspective: 1200px;
     display: flex;
     align-items: center;
     justify-content: center;
     user-select: none;
-    margin: 0.5rem 0 1.5rem 0;
+    touch-action: pan-y;
   }
 
   // Individual 3D Card
   &__card {
     position: absolute;
-    width: 255px;
-    height: 350px;
-    border-radius: 22px;
+    width: var(--hl-w);
+    height: var(--hl-h);
+    border-radius: 20px;
     overflow: hidden;
     background: #000000;
     box-shadow: 0 15px 35px -8px rgba(0, 0, 0, 0.4);
@@ -480,11 +617,16 @@
                 filter 0.45s cubic-bezier(0.25, 1, 0.5, 1);
     transform-origin: center center;
 
+    @media (max-width: 768px) { border-radius: 16px; }
+
+    &:focus-visible { outline: 3px solid $fuzo-yellow; outline-offset: 3px; }
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      -webkit-user-drag: none;
     }
 
     // Progressive frosted blur layer over the lower half of the image
@@ -508,11 +650,10 @@
       inset: 0;
       background: linear-gradient(
         180deg,
-        rgba(0, 0, 0, 0) 25%,
-        rgba(0, 0, 0, 0.18) 45%,
-        rgba(0, 0, 0, 0.7) 68%,
-        #000000 92%,
-        #000000 100%
+        rgba(0, 0, 0, 0) 30%,
+        rgba(0, 0, 0, 0.18) 48%,
+        rgba(0, 0, 0, 0.7) 70%,
+        #000000 94%
       );
       z-index: 2;
       pointer-events: none;
@@ -523,24 +664,31 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 1.5rem 1.25rem 1.25rem 1.25rem;
+      padding: 1rem 1rem 0.95rem;
       z-index: 3;
       color: #ffffff;
       text-align: left;
+
+      @media (max-width: 768px) { padding: 0.75rem 0.75rem 0.7rem; }
     }
 
     &__title {
-      font-size: 1.22rem;
+      font-size: clamp(0.95rem, 0.8rem + 0.45vw, 1.15rem);
       font-weight: 700;
       color: #ffffff;
-      margin: 0 0 0.2rem 0;
+      margin: 0 0 0.15rem 0;
       letter-spacing: -0.01em;
       line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     &__subtitle {
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.76rem;
+      line-height: 1.3;
+      color: rgba(255, 255, 255, 0.75);
       margin: 0;
       font-weight: 400;
     }
@@ -550,41 +698,29 @@
       z-index: 10;
       opacity: 1;
       transform: translateX(0) scale(1) translateZ(0);
-      box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
       filter: brightness(1);
     }
 
-    &--left-1 {
-      z-index: 6;
-      opacity: 0.95;
-      transform: translateX(-220px) scale(0.91) rotateY(6deg);
-      box-shadow: 0 18px 36px -8px rgba(0, 0, 0, 0.45);
-      filter: blur(1.5px) brightness(0.85);
-    }
-
+    &--left-1,
     &--right-1 {
       z-index: 6;
       opacity: 0.95;
-      transform: translateX(220px) scale(0.91) rotateY(-6deg);
-      box-shadow: 0 18px 36px -8px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.45);
       filter: blur(1.5px) brightness(0.85);
     }
+    &--left-1 { transform: translateX(calc(var(--hl-step) * -1)) scale(0.91) rotateY(6deg); }
+    &--right-1 { transform: translateX(var(--hl-step)) scale(0.91) rotateY(-6deg); }
 
-    &--left-2 {
-      z-index: 3;
-      opacity: 0.78;
-      transform: translateX(-440px) scale(0.81) rotateY(10deg);
-      box-shadow: 0 10px 25px -6px rgba(0, 0, 0, 0.35);
-      filter: blur(2.5px) brightness(0.72);
-    }
-
+    &--left-2,
     &--right-2 {
       z-index: 3;
       opacity: 0.78;
-      transform: translateX(440px) scale(0.81) rotateY(-10deg);
       box-shadow: 0 10px 25px -6px rgba(0, 0, 0, 0.35);
       filter: blur(2.5px) brightness(0.72);
     }
+    &--left-2 { transform: translateX(calc(var(--hl-step) * -2)) scale(0.81) rotateY(10deg); }
+    &--right-2 { transform: translateX(calc(var(--hl-step) * 2)) scale(0.81) rotateY(-10deg); }
 
     &--hidden {
       z-index: 0;
@@ -592,17 +728,92 @@
       pointer-events: none;
       transform: translateX(0) scale(0.5);
     }
+
+    // Loading placeholder - same footprint as a real card, so nothing shifts.
+    &--skeleton {
+      cursor: default;
+      background: linear-gradient(100deg, #ece6d8 30%, #f6f1e6 50%, #ece6d8 70%) 0 0 / 200% 100%;
+      box-shadow: none;
+      filter: none;
+      animation: fz-hl-shimmer 1.3s linear infinite;
+    }
   }
 
-  // Caption underneath the cards
-  &__caption {
-    text-align: center;
-    font-size: 0.825rem;
-    color: #8c857b;
-    margin: 0.75rem 0 0 0;
+  // Compact empty state (own profile, no highlights yet): one row, not a tall box.
+  &__empty {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    border: 1.5px dashed rgba($fz-ink, 0.16);
+    background: $fz-cream;
+  }
+
+  &__empty-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-ink;
+  }
+
+  &__empty-text {
+    flex: 1 1 14rem;
+    min-width: 0;
+
+    strong {
+      display: block;
+      font-size: 0.95rem;
+      line-height: 1.3;
+      color: $fz-ink;
+    }
+    span {
+      display: block;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: $fz-ink-soft;
+    }
+  }
+
+  &__empty-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    padding: 0 1.15rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35);
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease, box-shadow 0.2s $fz-ease;
+
+    &:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba($fuzo-yellow, 0.45); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+    @media (max-width: 480px) { flex: 1 1 100%; }
   }
 }
 
+@keyframes fz-hl-shimmer {
+  to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-highlights-section__card { transition: opacity 0.2s ease; }
+  .fz-highlights-section__card--skeleton { animation: none; }
+}
 
 // ============================================================================
 // TAB NAVIGATION – pill style matching screenshot exactly
@@ -749,8 +960,10 @@
 .fz-activity-section {
   &__head {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
+    gap: 0.35rem 0.75rem;
     margin-bottom: 1.1rem;
     padding-bottom: 0.4rem;
     border-bottom: 1px solid rgba(36, 31, 22, 0.08);
@@ -764,6 +977,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-width: 0;
     letter-spacing: -0.01em;
   }
 
@@ -783,7 +997,11 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    // 44px tap target without changing the header's height.
+    padding: 0.8rem 0;
+    margin: -0.8rem 0;
     transition: all 0.15s ease;
 
     &:hover {
@@ -820,27 +1038,23 @@
 }
 
 .fz-activity-grid {
+  // Highlight-sized cards, as many per row as the width allows (ActivityTab
+  // reads the column count back to show whole rows).
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, var(--hl-w, 220px));
+  // Centred: leftover width becomes equal side padding, never a middle gap.
+  justify-content: center;
+  gap: 1rem;
   padding: 0.25rem 0 0.5rem;
 
-  @media (max-width: 991px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
-  }
-
-  @media (max-width: 576px) {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
+  @media (max-width: 768px) { gap: 0.75rem; }
 }
 
 // Screenshot-matching full-bleed food card
 .fz-activity-card {
   position: relative;
-  aspect-ratio: 3 / 3.8;
-  border-radius: 22px;
+  height: var(--hl-h, 300px);
+  border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
   background: #181512;
@@ -851,6 +1065,9 @@
   text-align: left;
   display: flex;
   flex-direction: column;
+  // Text inside scales with the card's own width (cqi), not the screen.
+  container-type: inline-size;
+  @media (max-width: 768px) { border-radius: 16px; }
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease;
 
   &:hover {
@@ -883,33 +1100,38 @@
   // Top-left frosted category badge (RESTAURANT, RECIPE, STREET FOOD, etc.)
   &__badge {
     position: absolute;
-    top: 1.1rem;
-    left: 1.1rem;
+    top: clamp(0.55rem, 6cqi, 1.1rem);
+    left: clamp(0.55rem, 6cqi, 1.1rem);
     z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    padding: 0.35rem 0.85rem;
+    display: inline-block;
+    max-width: calc(100% - 1.1rem);
+    padding: clamp(0.22rem, 2cqi, 0.35rem) clamp(0.5rem, 5cqi, 0.85rem);
     background: rgba(30, 26, 22, 0.52);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 9999px;
     color: #ffffff;
-    font-size: 0.68rem;
+    font-size: clamp(0.56rem, 3.6cqi, 0.68rem);
+    line-height: 1.3;
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   // Top-right draft pill if applicable
   &__draft-badge {
     position: absolute;
-    top: 1.1rem;
-    right: 1.1rem;
+    top: clamp(0.55rem, 6cqi, 1.1rem);
+    right: clamp(0.55rem, 6cqi, 1.1rem);
     z-index: 2;
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.65rem;
+    line-height: 1.3;
+    padding: 0.22rem 0.6rem;
     background: rgba(225, 95, 35, 0.88);
     backdrop-filter: blur(8px);
     border-radius: 9999px;
@@ -925,7 +1147,7 @@
     position: absolute;
     inset: auto 0 0 0;
     z-index: 2;
-    padding: 3.5rem 1.25rem 1.25rem 1.25rem;
+    padding: clamp(2rem, 22cqi, 3.5rem) clamp(0.7rem, 7cqi, 1.25rem) clamp(0.7rem, 7cqi, 1.25rem);
     background: linear-gradient(
       180deg,
       rgba(0, 0, 0, 0) 0%,
@@ -942,7 +1164,7 @@
 
   &__title {
     color: #ffffff;
-    font-size: 1.18rem;
+    font-size: clamp(0.86rem, 6.4cqi, 1.18rem);
     font-weight: 700;
     letter-spacing: -0.01em;
     line-height: 1.25;
@@ -954,13 +1176,12 @@
   }
 
   &__subtitle {
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: clamp(0.68rem, 4.6cqi, 0.82rem);
+    line-height: 1.35;
     font-weight: 400;
     margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -969,8 +1190,8 @@
 
   // Create card slot for profile owner
   &--create {
-    aspect-ratio: 3 / 3.8;
-    border-radius: 22px;
+    height: var(--hl-h, 300px);
+    border-radius: 20px;
     background: #fbf7ee;
     border: 2px dashed rgba(36, 31, 22, 0.2);
     display: flex;
@@ -1388,14 +1609,6 @@
 }
 
 // ── Private profile (Instagram-style) ──
-.fz-hero-full-banner__bio {
-  margin: 0.15rem 0 0.1rem;
-  max-width: 34rem;
-  font-size: 0.88rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.85);
-}
-
 .fz-private-notice {
   display: flex;
   flex-direction: column;

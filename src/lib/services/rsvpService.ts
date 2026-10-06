@@ -55,11 +55,26 @@ export const RSVPService = {
     }
 
     const counts = {
-      going: data.filter((r: any) => r.status === 'going').length,
-      maybe: data.filter((r: any) => r.status === 'maybe').length,
-      not_going: data.filter((r: any) => r.status === 'not_going').length,
+      going: data.filter((r: { status: string }) => r.status === 'going').length,
+      maybe: data.filter((r: { status: string }) => r.status === 'maybe').length,
+      not_going: data.filter((r: { status: string }) => r.status === 'not_going').length,
     };
 
     return { success: true, data: counts, raw: data };
-  }
+  },
+
+  /** How many meetups this user said they're "going" to (their own RSVPs - shown on their own profile). */
+  async countGoing(userId: string): Promise<{ success: boolean; data?: number; error?: string }> {
+    const client = supabase;
+    if (!client) return { success: false, error: 'Supabase unavailable' };
+
+    const { count, error } = await client
+      .from('event_rsvps')
+      .select('message_id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('status', 'going');
+
+    if (error) return { success: false, error: error.message };
+    return { success: true, data: count ?? 0 };
+  },
 };

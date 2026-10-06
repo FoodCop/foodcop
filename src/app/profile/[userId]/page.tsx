@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProfileHeader from '@/components/profile/ProfileHeader';
-import ProfileHero, { type ProfileNavTarget } from '@/components/profile/ProfileHero';
+import ProfileHero from '@/components/profile/ProfileHero';
 import ProfileTabs from '@/components/profile/ProfileTabs';
 import PrivateProfileNotice from '@/components/profile/PrivateProfileNotice';
 import type { DemoProfile } from '@/components/profile/demoProfile';
@@ -45,7 +45,6 @@ export default function UserProfilePage() {
     [myCards],
   );
   const postsCount = useMemo(() => myCards.filter((c) => c.status === 'PUBLISHED').length, [myCards]);
-  const [navOverride, setNavOverride] = useState<{ target: ProfileNavTarget; nonce: number } | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -132,14 +131,11 @@ export default function UserProfilePage() {
   }
 
   const profileWithBites = { ...profile, bites: bitesCount, posts: postsCount };
-  const effectiveInitialTab = navOverride ? (navOverride.target.tab === 'settings' ? 'settings' : 'activity') : undefined;
-  const effectiveInitialCategory = navOverride?.target.tab === 'activity' ? navOverride.target.category : undefined;
 
   return (
     <div className="profile-shell">
-      <ProfileHero profile={profileWithBites} userId={userId} onNavigate={(target) => setNavOverride({ target, nonce: Date.now() })} onRelationshipChange={() => setAccessNonce((n) => n + 1)} />
+      <ProfileHero profile={profileWithBites} userId={userId} onRelationshipChange={() => setAccessNonce((n) => n + 1)} />
       <ProfileTabs
-        key={navOverride?.nonce ?? 'initial'}
         profile={profileWithBites}
         userId={userId}
         isCurrentUser={isCurrentUser}
@@ -147,8 +143,6 @@ export default function UserProfilePage() {
         myCards={myCards}
         isLoadingCards={isLoadingCards}
         refetchCards={refetchCards}
-        initialTab={effectiveInitialTab}
-        initialActivityCategory={effectiveInitialCategory}
       />
     </div>
   );

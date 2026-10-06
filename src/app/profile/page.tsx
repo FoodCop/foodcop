@@ -2,8 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import ProfileHeader from '@/components/profile/ProfileHeader';
-import ProfileHero, { type ProfileNavTarget } from '@/components/profile/ProfileHero';
+import ProfileHero from '@/components/profile/ProfileHero';
 import ProfileTabs from '@/components/profile/ProfileTabs';
 import type { UserProfile } from '@/components/profile/demoProfile';
 import type { FoodDnaRealData } from '@/components/profile/FoodDnaSection';
@@ -59,8 +58,6 @@ function ProfilePageContent() {
     [myCards],
   );
 
-  const [navOverride, setNavOverride] = useState<{ target: ProfileNavTarget; nonce: number } | null>(null);
-  const handleNavigate = (target: ProfileNavTarget) => setNavOverride({ target, nonce: Date.now() });
 
   useEffect(() => {
     const supabase = createClient();
@@ -167,20 +164,16 @@ function ProfilePageContent() {
 
   const profile: UserProfile = { ...realProfile, bites: bitesCount, posts: postsCount };
 
-  const effectiveInitialTab = navOverride ? (navOverride.target.tab === 'settings' ? 'settings' : 'activity') : initialTab;
-  const effectiveInitialCategory =
-    navOverride?.target.tab === 'activity' ? navOverride.target.category : initialActivityCategory;
 
   return (
     <div className="profile-shell">
-      <ProfileHero profile={profile} userId={currentUserId} onNavigate={handleNavigate} />
+      <ProfileHero profile={profile} userId={currentUserId} />
       <ProfileTabs
-        key={navOverride?.nonce ?? 'real-profile'}
         userId={currentUserId}
         profile={profile}
         tasteProfile={tasteProfile}
-        initialActivityCategory={effectiveInitialCategory}
-        initialTab={effectiveInitialTab}
+        initialActivityCategory={initialActivityCategory}
+        initialTab={initialTab}
         myCards={myCards}
         isLoadingCards={isLoadingCards}
         refetchCards={refetchCards}

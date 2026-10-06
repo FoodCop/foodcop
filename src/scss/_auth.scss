@@ -224,3 +224,506 @@ $auth-radius-pill: 9999px;
   font-size: 0.8125rem;
   letter-spacing: 0.15em;
 }
+
+// ============================================================================
+// LOGIN / SIGN UP (src/app/(auth)/login/page.tsx) - .fz-auth
+// Desktop: dark brand panel (food photo + logo + tagline + 3 reasons) beside
+// a cream column with a raised paper form card. Phone: the panel becomes a
+// short photo header and the card overlaps it. Card: Sign in | Create account
+// pill switch, icon inputs, strength bars when signing up, yellow CTA.
+// (The older .auth-* classes above are still used by reset-password.)
+// ============================================================================
+.fz-auth {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  background: $fz-cream;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  // ── Brand panel ─────────────────────────────────────────────────────────
+  &__brand {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    background: $fz-ink;
+    color: #fff;
+
+    // Desktop: pinned to the screen, so its text stays visible while a tall
+    // form scrolls on short laptop screens.
+    @media (min-width: 901px) {
+      position: sticky;
+      top: 0;
+      height: 100dvh;
+      align-self: start;
+    }
+
+    @media (max-width: 900px) { min-height: 240px; }
+  }
+
+  &__brand-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  &__brand-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(10, 8, 6, 0.55) 0%, rgba(10, 8, 6, 0.15) 35%, rgba(10, 8, 6, 0.75) 75%, rgba(10, 8, 6, 0.92) 100%);
+  }
+
+  &__brand-inner {
+    width: 100%;
+    max-width: 30rem;
+    padding: 3rem 3rem 3.5rem;
+
+    @media (max-width: 900px) { padding: 1.5rem 1.25rem 3.5rem; }
+  }
+
+  &__brand-logo {
+    width: auto;
+    height: 30px;
+    margin-bottom: 1.5rem;
+    filter: brightness(0) invert(1);
+
+    @media (max-width: 900px) { height: 24px; margin-bottom: 0.75rem; }
+  }
+
+  &__brand-title {
+    margin: 0;
+    font-family: $headings-font-family;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #fff;
+
+    @media (max-width: 900px) { font-size: 2rem; }
+  }
+
+  &__brand-sub {
+    margin: 0.75rem 0 1.5rem;
+    max-width: 24rem;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: rgba(#fff, 0.82);
+
+    @media (max-width: 900px) { display: none; }
+  }
+
+  &__points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: rgba(#fff, 0.92);
+    }
+
+    span {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: $fuzo-yellow;
+      color: $fuzo-yellow-ink;
+    }
+
+    @media (max-width: 900px) { display: none; }
+  }
+
+  // ── Form column ─────────────────────────────────────────────────────────
+  &__main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1.5rem;
+
+    @media (max-width: 900px) {
+      align-items: flex-start;
+      padding: 0 1rem 2.5rem;
+    }
+  }
+
+  &__card {
+    width: 100%;
+    max-width: 26rem;
+    padding: 1.75rem 1.75rem 2rem;
+    background: $fz-paper;
+    border: 1px solid rgba($fz-border, 0.8);
+    border-radius: 28px;
+    box-shadow: $fz-shadow-card;
+
+    @media (max-width: 900px) {
+      margin-top: -2rem; // overlaps the photo header
+      position: relative;
+      padding: 1.4rem 1.25rem 1.6rem;
+      border-radius: 24px;
+    }
+  }
+
+  &__back {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 1.1rem;
+    padding: 0.3rem 0.75rem 0.3rem 0.55rem;
+    border-radius: 9999px;
+    background: $fz-cream;
+    border: 1px solid $fz-border;
+    color: $fz-ink;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover { background: $fuzo-yellow-tint; color: $fz-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__switch {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    margin-bottom: 1.25rem;
+    border-radius: 9999px;
+    background: $fz-cream;
+    border: 1px solid $fz-border;
+
+    button {
+      position: relative;
+      flex: 1;
+      min-height: 40px;
+      padding: 0.55rem 0.5rem;
+      border: 0;
+      border-radius: 9999px;
+      background: transparent;
+      color: $fz-ink-soft;
+      font-size: 0.86rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: color 0.15s ease;
+
+      &:hover:not(.is-active) { color: $fz-ink; }
+      &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+      &.is-active { color: $fuzo-yellow-ink; }
+    }
+  }
+
+  // Yellow pill that slides between the two options (Framer Motion layoutId).
+  &__switch-thumb {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    box-shadow: 0 4px 12px -3px rgba($fuzo-yellow-deep, 0.5);
+  }
+
+  &__switch-label { position: relative; }
+
+  &__title {
+    margin: 0;
+    font-family: $headings-font-family;
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: $fz-ink;
+  }
+
+  &__sub {
+    margin: 0.35rem 0 1.4rem;
+    font-size: 0.92rem;
+    color: $fz-ink-soft;
+  }
+
+  &__field { margin-bottom: 1rem; }
+
+  // "Forgot password?" sits beside the Password label but comes after the
+  // input in the DOM, so Tab goes email → password → forgot.
+  &__field--password { position: relative; }
+  &__forgot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    line-height: 1.3; // same as the label, so both sit on one line
+  }
+
+  &__field label {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-size: 0.8rem;
+    line-height: 1.3; // the page's inherited 30px line-height misaligned the "Forgot password?" link
+    font-weight: 800;
+    color: $fz-ink;
+  }
+
+  // Icon + input inside one pill.
+  &__input {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    > svg {
+      position: absolute;
+      left: 1rem;
+      color: $fz-ink-soft;
+      pointer-events: none;
+      transition: color 0.15s ease;
+    }
+
+    input {
+      width: 100%;
+      height: 50px;
+      padding: 0 1.1rem 0 2.75rem;
+      border-radius: 9999px;
+      border: 1.5px solid $fz-border;
+      background: $fz-cream;
+      color: $fz-ink;
+      font-size: 0.95rem;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+
+      &::placeholder { color: mix($fz-ink-soft, #fff, 75%); }
+
+      &:focus {
+        outline: none;
+        border-color: $fuzo-yellow;
+        background: $fz-paper;
+        box-shadow: 0 0 0 4px rgba($fuzo-yellow, 0.2);
+      }
+
+      // Browser autofill: keep the cream instead of the blue tint.
+      &:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 40px $fz-cream inset;
+        -webkit-text-fill-color: $fz-ink;
+      }
+    }
+
+    &:focus-within > svg { color: $fuzo-yellow-deep; }
+  }
+
+  &__eye {
+    position: absolute;
+    right: 0.3rem;
+    width: 44px; // touch target
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: $fz-ink-soft;
+    cursor: pointer;
+
+    &:hover { background: rgba($fz-ink, 0.06); color: $fz-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 1px; }
+  }
+
+  .fz-auth__input:has(.fz-auth__eye) input { padding-right: 3rem; }
+
+  // Password strength (sign up).
+  &__strength {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 0.45rem;
+    padding-left: 0.4rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: $fz-ink-soft;
+  }
+
+  &__bars {
+    display: inline-flex;
+    gap: 3px;
+
+    i {
+      width: 22px;
+      height: 5px;
+      border-radius: 9999px;
+      background: $fz-border;
+    }
+
+    &[data-score='1'] i:nth-child(-n + 1) { background: $chili; }
+    &[data-score='2'] i:nth-child(-n + 2) { background: $turmeric; }
+    &[data-score='3'] i:nth-child(-n + 3) { background: $fuzo-yellow-deep; }
+    &[data-score='4'] i { background: $lime; }
+  }
+
+  &__note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 14px;
+    font-size: 0.84rem;
+    line-height: 1.4;
+
+    svg { flex-shrink: 0; margin-top: 1px; }
+
+    &--error { background: rgba($chili, 0.08); border: 1px solid rgba($chili, 0.25); color: mix($fz-ink, $chili, 35%); }
+    &--warn { background: $fuzo-yellow-tint; border: 1px solid rgba($fuzo-yellow, 0.5); color: $fz-ink; }
+  }
+
+  &__cta {
+    width: 100%;
+    height: 52px;
+    margin-top: 0.35rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -6px rgba($fuzo-yellow-deep, 0.6);
+    transition: transform 0.2s $fz-ease, background 0.15s ease, box-shadow 0.2s $fz-ease;
+
+    svg { transition: transform 0.2s $fz-ease; }
+    &:hover:not(:disabled) { background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
+    &:hover:not(:disabled) svg { transform: translateX(3px); }
+    &:active:not(:disabled) { transform: scale(0.98); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+    &:disabled { opacity: 0.65; cursor: default; }
+  }
+
+  &__divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.25rem 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: $fz-ink-soft;
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: $fz-border;
+    }
+  }
+
+  &__google {
+    width: 100%;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border: 1.5px solid $fz-border;
+    border-radius: 9999px;
+    background: $fz-paper;
+    color: $fz-ink;
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    img { width: 18px; height: 18px; }
+    &:hover { background: $fz-cream; border-color: mix($fz-border, $fz-ink, 85%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__guest {
+    display: block;
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    border: 0;
+    background: none;
+    color: $fz-ink-soft;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover:not(:disabled) { color: $fz-ink; text-decoration: underline; text-decoration-color: $fuzo-yellow; text-underline-offset: 3px; }
+    &:disabled { opacity: 0.6; }
+  }
+
+  &__link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: $fz-ink;
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-color: $fuzo-yellow;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    cursor: pointer;
+
+    // Bigger tap area (≥44px) without moving the layout.
+    &--small { font-size: 0.78rem; padding: 0.875rem 0; margin: -0.875rem 0; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__alt {
+    margin: 1rem 0 0;
+    text-align: center;
+    font-size: 0.86rem;
+    color: $fz-ink-soft;
+  }
+
+  &__done {
+    text-align: center;
+
+    p { margin: 0 0 1.25rem; font-size: 0.92rem; line-height: 1.5; color: $fz-ink; }
+  }
+
+  &__done-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0.25rem auto 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-auth__cta, .fz-auth__cta svg { transition: none; }
+}
+
+// Entrance (CSS, so it runs before JavaScript - never hidden while hydrating).
+@keyframes fz-auth-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes fz-auth-slide { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
+
+.fz-auth__card { animation: fz-auth-rise 0.45s $fz-ease both; }
+.fz-auth__brand-inner { animation: fz-auth-rise 0.6s $fz-ease both; }
+.fz-auth__points li { animation: fz-auth-slide 0.45s $fz-ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-auth__card, .fz-auth__brand-inner, .fz-auth__points li { animation: none; }
+}

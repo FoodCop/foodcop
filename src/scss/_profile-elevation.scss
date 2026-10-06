@@ -7,6 +7,16 @@
 // specificity. Shadows come from the $fz-shadow-* tokens in _variables.scss.
 // ============================================================================
 
+// Clean solid panel (client: no glass, no heavy yellow): crisp white, a fine
+// ink hairline and a soft layered shadow.
+@mixin fz-clean-panel {
+  background: #fff;
+  border: 1px solid rgba($fz-ink, 0.07);
+  box-shadow:
+    0 1px 2px rgba($fz-ink, 0.04),
+    0 10px 28px -14px rgba($fz-ink, 0.18);
+}
+
 @mixin fz-raised($rest: $fz-shadow-card, $hover: $fz-shadow-card-hover, $lift: -3px) {
   box-shadow: $rest;
   transition: transform 0.3s $fz-ease, box-shadow 0.3s $fz-ease, border-color 0.2s ease, background 0.2s ease;
@@ -20,56 +30,84 @@
 }
 
 .profile-shell {
-  // Slightly deeper page tone so paper cards separate from it.
-  background: mix($fz-cream, #efeae0, 40%);
+  // Soft warm off-white page with a light wash of the navbar's gold at the
+  // very top (ties the page to the brand colour without tinting everything).
+  background:
+    linear-gradient(180deg, rgba(#ffc909, 0.16) 0, rgba(#ffc909, 0) 320px),
+    #f6f4ef;
   // Top gap lives on the shell as padding, not as the hero's margin-top - a
   // child's top margin collapses through the shell, which left the white
   // <body> showing as a strip above the hero card.
-  padding-top: 1.25rem;
-  @media (min-width: 1480px) { padding-top: 1.5rem; }
-  @media (max-width: 768px) { padding-top: 0.75rem; }
+  --shell-pt: 0.85rem;
+  @media (min-width: 1480px) { --shell-pt: 1.1rem; }
+  @media (max-width: 768px) { --shell-pt: 0.5rem; }
+  padding-top: var(--shell-pt);
 
-  // ---- Hero banner: inset from the page edges as one big floating card -----
-  .fz-hero-full-banner {
-    width: auto;
+  // ---- First screen = profile card + Highlights, nothing else (client) -----
+  // The top block fills the viewport and the banner takes up the spare height,
+  // so the Activity tabs start right below the fold. Only when the Highlights
+  // panel is there - otherwise the banner would balloon to full screen.
+  .fz-profile-top:has(> .fz-highlights-section) {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - var(--shell-pt));
+    padding-bottom: var(--shell-pt);
+
+    // Auto side margins would shrink flex items to their content width, so
+    // centre them with computed margins instead (same 1440px max width).
+    > .fz-hero-flip,
+    > .fz-highlights-section {
+      --side: 1.25rem;
+      @media (max-width: 768px) { --side: 0.75rem; }
+      margin-left: max(var(--side), (100% - 1440px) / 2);
+      margin-right: max(var(--side), (100% - 1440px) / 2);
+    }
+    .fz-hero-flip {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .fz-hero-flip__inner {
+      flex: 1 0 auto;
+      grid-template-rows: minmax(0, 1fr);
+    }
+    .fz-phero {
+      display: flex;
+      flex-direction: column;
+    }
+    .fz-phero__banner {
+      flex: 1 0 auto;
+      height: auto;
+      min-height: var(--banner);
+    }
+  }
+
+  // ---- Hero card: inset from the page edges, same width as Highlights ------
+  .fz-hero-flip {
     max-width: 1440px;
     margin: 0 auto;
-    border-radius: 28px;
-    // Clip the cover photo + overlay to the rounded corners (Safari needs the
-    // isolation for overflow:hidden + border-radius on a transformed child).
-    isolation: isolate;
-    // Biggest card on the page = deepest shadow: hairline edge, contact
-    // shadow, and a long soft drop so it floats well above the cream page.
-    box-shadow:
-      0 0 0 1px rgba($fz-ink, 0.1),
-      0 2px 4px rgba($fz-ink, 0.14),
-      0 16px 32px -8px rgba($fz-ink, 0.32),
-      0 40px 80px -24px rgba($fz-ink, 0.5);
-
     @media (max-width: 1480px) { margin-left: 1.25rem; margin-right: 1.25rem; }
-    @media (max-width: 768px) {
-      margin-left: 0.75rem;
-      margin-right: 0.75rem;
-      border-radius: 22px;
-    }
+    @media (max-width: 768px) { margin-left: 0.75rem; margin-right: 0.75rem; }
+  }
+  .fz-phero {
+    box-shadow:
+      0 0 0 1px rgba($fz-ink, 0.04),
+      0 2px 4px rgba($fz-ink, 0.06),
+      0 18px 40px -16px rgba($fz-ink, 0.28);
   }
 
   // ---- Highlights: a paper card matching the hero's width -------------------
   .fz-highlights-section {
     width: auto;
     max-width: 1440px;
-    margin: 1.5rem auto 0;
-    background: $fz-paper;
-    border: 1px solid rgba($fz-border, 0.7);
+    margin: 0.85rem auto 0;
+    @include fz-clean-panel;
     border-radius: 28px;
-    box-shadow: $fz-shadow-card;
 
     @media (max-width: 1480px) { margin-left: 1.25rem; margin-right: 1.25rem; }
     @media (max-width: 768px) {
-      margin: 1rem 0.75rem 0;
+      margin: 0.6rem 0.75rem 0;
       border-radius: 22px;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
     }
   }
 
@@ -79,7 +117,7 @@
     align-items: center;
     gap: 0.55rem;
     font-family: $headings-font-family;
-    font-size: 1.35rem;
+    font-size: 1.2rem;
     font-weight: 800;
     letter-spacing: 0.01em;
     line-height: 1.1;
@@ -94,7 +132,7 @@
       box-shadow: 0 2px 6px rgba($fuzo-yellow-deep, 0.45);
     }
 
-    @media (max-width: 768px) { font-size: 1.15rem; }
+    @media (max-width: 768px) { font-size: 1.05rem; }
   }
 
   // Header controls - must contrast with the paper card they sit on.
@@ -148,7 +186,7 @@
   .fz-profile-tabs {
     width: fit-content;
     max-width: 100%;
-    margin: 1.75rem 0 1.5rem;
+    margin: 1.25rem 0 1.1rem;
     padding: 0.4rem;
     gap: 0.3rem;
     background: rgba($fz-paper, 0.86);
@@ -180,15 +218,13 @@
 
   .fz-activity-section,
   .fz-activity-panel {
-    background: $fz-paper;
-    border: 1px solid rgba($fz-border, 0.7);
+    @include fz-clean-panel;
     border-radius: 28px;
     padding: 1.5rem 1.6rem 1.25rem;
-    box-shadow: $fz-shadow-card;
 
     @media (max-width: 768px) {
       border-radius: 22px;
-      padding: 1.1rem 1rem 1rem;
+      padding: 1.1rem 0.85rem 1rem;
     }
   }
 

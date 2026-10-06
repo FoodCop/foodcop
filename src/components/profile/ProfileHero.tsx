@@ -3,7 +3,27 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowUpRight, Camera, ChevronLeft, ChevronRight, Loader2, Plus, Repeat2, RotateCcw } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  CalendarCheck,
+  Camera,
+  ChevronLeft,
+  ChevronRight,
+  Crown,
+  FileText,
+  Hamburger,
+  Loader2,
+  MessageCircle,
+  MessageSquareText,
+  Pencil,
+  Plus,
+  Repeat2,
+  RotateCcw,
+  Star,
+  Users,
+} from 'lucide-react';
 import { type UserProfile } from './demoProfile';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { createClient } from '@/lib/supabase/client';
@@ -17,29 +37,13 @@ import SavedItemDetailModal from './SavedItemDetailModal';
 import ShareSheet, { sharePayloadFromItem, type SharePayload } from '@/components/share/ShareSheet';
 import type { AppItem } from '@/types/appItem';
 import { SOCIAL_ICONS } from './settings/SocialLinksEditor';
-import { Stars, StatusPill, formatCount } from './restaurant/RestaurantBits';
+import { StatusPill, formatCount } from './restaurant/RestaurantBits';
 import RateRestaurantModal from './restaurant/RateRestaurantModal';
 import SocialLinksSheet from './SocialLinksSheet';
 import { useOpenStatus, useRestaurant } from '@/lib/hooks/useRestaurant';
+import { RSVPService } from '@/lib/services/rsvpService';
 import { SOCIAL_META, SOCIAL_PLATFORMS, SocialLinksService, type SocialLinks } from '@/lib/services/socialLinksService';
 
-// The hero card flips to show the user's other social profiles - a mobile-only
-// interaction (desktop keeps the wide banner with its Edit Profile / Banner buttons).
-const MOBILE_QUERY = '(max-width: 768px)';
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia(MOBILE_QUERY);
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, []);
-  return isMobile;
-}
-
-export type ActivityCategory = 'places' | 'recipes' | 'videos' | 'posts';
-export type ProfileNavTarget = { tab: 'settings' } | { tab: 'activity'; category: ActivityCategory };
 
 interface DisplayHighlight {
   id: string;
@@ -52,13 +56,11 @@ interface DisplayHighlight {
 export default function ProfileHero({
   profile,
   userId,
-  onNavigate,
   restricted = false,
   onRelationshipChange,
 }: {
   profile: UserProfile;
   userId?: string;
-  onNavigate?: (target: ProfileNavTarget) => void;
   /** Private profile the viewer can't see into yet: header + Follow/Message only, no highlights or post counts. */
   restricted?: boolean;
   /** Fired when a follow/accept/unfollow changes the relationship, so the page can re-check access. */
@@ -78,8 +80,6 @@ export default function ProfileHero({
     }
   };
 
-  const [theme, setTheme] = useState<'auto' | 'light' | 'dark'>('light');
-
   const [relationship, setRelationship] = useState<{ state: FriendRelationshipState; requestId: string | null }>({
     state: 'none',
     requestId: null,
@@ -87,14 +87,18 @@ export default function ProfileHero({
   const [friendCount, setFriendCount] = useState(profile.friends ?? 0);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  useEffect(() => {
-    if (typeof profile.friends === 'number') {
-      setFriendCount(profile.friends);
-    }
-  }, [profile.friends]);
-
   const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl || '/images/profile/avatar.jpg');
   const [bannerUrl, setBannerUrl] = useState(profile.bannerUrl || '/images/profile/hero_banner.jpg');
+
+  // Follow new values from the page (friend count, avatar/banner) - adjusted
+  // during render rather than in an effect, so there's no extra render pass.
+  const [seenProps, setSeenProps] = useState({ friends: profile.friends, avatar: profile.avatarUrl, banner: profile.bannerUrl });
+  if (seenProps.friends !== profile.friends || seenProps.avatar !== profile.avatarUrl || seenProps.banner !== profile.bannerUrl) {
+    setSeenProps({ friends: profile.friends, avatar: profile.avatarUrl, banner: profile.bannerUrl });
+    if (seenProps.friends !== profile.friends && typeof profile.friends === 'number') setFriendCount(profile.friends);
+    if (profile.avatarUrl) setAvatarUrl(profile.avatarUrl);
+    if (profile.bannerUrl) setBannerUrl(profile.bannerUrl);
+  }
   const [uploadingKind, setUploadingKind] = useState<'avatar' | 'banner' | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -106,7 +110,6 @@ export default function ProfileHero({
   const [viewingHighlight, setViewingHighlight] = useState<ProfileHighlight | null>(null);
   const [viewingDetail, setViewingDetail] = useState<HighlightItemRef | null>(null);
 
-  const isMobile = useIsMobile();
   const isRestaurant = profile.type === 'restaurant';
   const restaurant = useRestaurant(userId, isRestaurant);
   const openStatus = useOpenStatus(isRestaurant ? restaurant.profile : null);
@@ -114,7 +117,8 @@ export default function ProfileHero({
   const [flipped, setFlipped] = useState(false);
   const [socialLinks, setSocialLinks] = useState<SocialLinks>({});
   const [editingSocials, setEditingSocials] = useState(false);
-  const isFlipped = isMobile && flipped;
+  // Meetups you're going to (own profile only - RSVPs are visible just inside each chat).
+  const [meetups, setMeetups] = useState<number | null>(null);
 
   useEffect(() => {
     if (!userId) return;
@@ -128,6 +132,17 @@ export default function ProfileHero({
   }, [userId]);
 
   const linkedPlatforms = SOCIAL_PLATFORMS.filter((p) => socialLinks[p]);
+
+  useEffect(() => {
+    if (!isOwnProfile || isRestaurant || !userId) return;
+    let cancelled = false;
+    RSVPService.countGoing(userId).then((res) => {
+      if (!cancelled) setMeetups(res.success ? (res.data ?? 0) : null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOwnProfile, isRestaurant, userId]);
 
   // Active card index for the 3D Fan Carousel (default index 1 is "Ramen Week", front and center)
   const [activeIndex, setActiveIndex] = useState(1);
@@ -144,13 +159,9 @@ export default function ProfileHero({
   }, [userId, restricted]);
 
   useEffect(() => {
-    refetchHighlights();
+    // Deferred a microtask so the loading flag isn't set synchronously inside the effect.
+    Promise.resolve().then(refetchHighlights);
   }, [refetchHighlights]);
-
-  useEffect(() => {
-    if (profile.avatarUrl) setAvatarUrl(profile.avatarUrl);
-    if (profile.bannerUrl) setBannerUrl(profile.bannerUrl);
-  }, [profile.avatarUrl, profile.bannerUrl]);
 
   useEffect(() => {
     if (!isOtherUser || !currentUserId || !userId) return;
@@ -250,20 +261,24 @@ export default function ProfileHero({
   }));
 
   const totalItems = displayHighlights.length;
-  const activeItem = totalItems > 0 ? displayHighlights[((activeIndex % totalItems) + totalItems) % totalItems] : null;
+  // activeIndex can outlive a shorter list (e.g. after deleting a highlight) - always wrap it.
+  const activeSlot = totalItems > 0 ? ((activeIndex % totalItems) + totalItems) % totalItems : 0;
+  const activeItem = totalItems > 0 ? displayHighlights[activeSlot] : null;
+  const pannedAt = useRef(0);
 
+  const wrap = (i: number) => ((i % totalItems) + totalItems) % totalItems;
   const handlePrev = () => {
     if (totalItems <= 1) return;
-    setActiveIndex((prev) => (prev - 1 + totalItems) % totalItems);
+    setActiveIndex((prev) => wrap(wrap(prev) - 1));
   };
 
   const handleNext = () => {
     if (totalItems <= 1) return;
-    setActiveIndex((prev) => (prev + 1) % totalItems);
+    setActiveIndex((prev) => wrap(wrap(prev) + 1));
   };
 
   const handleCardClick = (index: number) => {
-    if (index === activeIndex) {
+    if (index === activeSlot) {
       const item = displayHighlights[index];
       if (item?.raw) {
         setViewingHighlight(item.raw);
@@ -287,7 +302,7 @@ export default function ProfileHero({
 
   // Compute 3D positioning class for fan layout
   const getCardClass = (index: number) => {
-    let diff = index - activeIndex;
+    let diff = index - activeSlot;
     if (diff > totalItems / 2) diff -= totalItems;
     if (diff < -totalItems / 2) diff += totalItems;
 
@@ -300,248 +315,223 @@ export default function ProfileHero({
   };
 
   return (
-    <div>
+    <div className="fz-profile-top">
       {/* ─────────────────────────────────────────────────────────────
           1. FULL-BLEED HERO BANNER WITH INTEGRATED NAV
       ───────────────────────────────────────────────────────────── */}
-      <div className={`fz-hero-flip${isFlipped ? ' is-flipped' : ''}`}>
+      <div className={`fz-hero-flip${flipped ? ' is-flipped' : ''}`}>
       <div className="fz-hero-flip__inner">
-      <section
-        className="fz-hero-full-banner fz-hero-flip__face"
-        style={{ backgroundImage: `url(${bannerUrl || '/images/profile/hero_banner.jpg'})` }}
-        inert={isFlipped}
-      >
-        <div className="fz-hero-full-banner__overlay" />
-
-        {/* Back arrow (the FUZO logo lives in the app navbar above). */}
-        <header className="fz-hero-full-banner__nav">
+      <section className="fz-phero fz-hero-flip__face" inert={flipped}>
+        {/* Banner photo: back (top-left) + change-banner camera (bottom-right, own profile). */}
+        <div className="fz-phero__banner" style={{ backgroundImage: `url(${bannerUrl || '/images/profile/hero_banner.jpg'})` }}>
           <button
             type="button"
             onClick={handleBack}
-            className="fz-hero-full-banner__back-btn"
+            className="fz-phero__icon-btn fz-phero__back"
             aria-label="Back to previous screen"
-            title="Back to previous screen"
+            title="Back"
           >
-            <ArrowLeft size={18} strokeWidth={2.5} />
+            <ArrowLeft size={20} strokeWidth={2.4} />
           </button>
-        </header>
-
-        {/* Bottom Profile Info & Actions */}
-        <div className="fz-hero-full-banner__bottom">
-          <div className="fz-hero-full-banner__profile-info">
-            {/* Avatar with Gold Ring */}
-            <div className="fz-hero-full-banner__avatar-wrap">
-              <img
-                src={avatarUrl || '/images/profile/avatar.jpg'}
-                alt={profile.name}
-                onError={(e) => applyFallbackAvatar(e.currentTarget)}
-                // A broken URL can fail before hydration attaches onError - check on mount too.
-                ref={(img) => {
-                  if (img && img.complete && img.naturalWidth === 0) applyFallbackAvatar(img);
+          {isOwnProfile && (
+            <>
+              <button
+                type="button"
+                className="fz-phero__icon-btn fz-phero__banner-btn"
+                onClick={() => bannerInputRef.current?.click()}
+                disabled={uploadingKind === 'banner'}
+                aria-label="Change banner photo"
+                title="Change banner photo"
+              >
+                {uploadingKind === 'banner' ? <Loader2 size={18} className="scout-spin" /> : <Camera size={18} />}
+              </button>
+              <input
+                ref={bannerInputRef}
+                type="file"
+                accept="image/*"
+                className="d-none"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleImageUpload(file, 'banner');
+                  e.target.value = '';
                 }}
               />
-              {isOwnProfile && (
-                <>
-                  <button
-                    type="button"
-                    className="fz-hero-full-banner__avatar-btn"
-                    onClick={() => avatarInputRef.current?.click()}
-                    disabled={uploadingKind === 'avatar'}
-                    aria-label="Change profile picture"
-                  >
-                    {uploadingKind === 'avatar' ? <Loader2 size={13} className="scout-spin" /> : <Camera size={13} />}
-                  </button>
-                  <input
-                    ref={avatarInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="d-none"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleImageUpload(file, 'avatar');
-                      e.target.value = '';
-                    }}
-                  />
-                </>
-              )}
-            </div>
+            </>
+          )}
+        </div>
 
-            {/* Name, Level, Handle, Location, Stats */}
-            <div className="fz-hero-full-banner__text-meta">
-              <div className="fz-hero-full-banner__name-row">
-                <h1 className="fz-hero-full-banner__name">{profile.name}</h1>
-                <span className="fz-hero-full-banner__level-badge">LEVEL {profile.level ?? 1}</span>
-              </div>
-
-              <div className="fz-hero-full-banner__subtitle">
-                <span>@{profile.handle}</span>
-                <span className="fz-hero-full-banner__dot">·</span>
-                <span>{profile.role}</span>
-                {profile.location && (
-                  <>
-                    <span className="fz-hero-full-banner__dot">·</span>
-                    <span>{profile.location}</span>
-                  </>
-                )}
-              </div>
-
-              {profile.bio && <p className="fz-hero-full-banner__bio">{profile.bio}</p>}
-
-              {/* Desktop: social profiles as a row of brand icons (mobile shows them on the flip side). */}
-              {(linkedPlatforms.length > 0 || isOwnProfile) && (
-                <div className="fz-hero-socials">
-                  {linkedPlatforms.map((p) => {
-                    const Icon = SOCIAL_ICONS[p];
-                    const handle = socialLinks[p]!;
-                    return (
-                      <a
-                        key={p}
-                        className={`fz-hero-socials__link fz-social-badge fz-social-badge--${p}`}
-                        href={SOCIAL_META[p].urlFor(handle)}
-                        target="_blank"
-                        rel="noopener noreferrer me"
-                        aria-label={`${profile.name} on ${SOCIAL_META[p].label} (@${handle})`}
-                        title={`${SOCIAL_META[p].label} · @${handle}`}
-                      >
-                        <Icon size={15} />
-                      </a>
-                    );
-                  })}
-                  {isOwnProfile && (
-                    <button type="button" className="fz-hero-socials__add" onClick={() => setEditingSocials(true)}>
-                      <Plus size={13} strokeWidth={2.6} /> {linkedPlatforms.length ? 'Edit socials' : 'Add your socials'}
-                    </button>
-                  )}
-                </div>
-              )}
-
-              {/* On mobile the stats row is the flip trigger (back = social profiles). */}
-              <StatsRow
-                asButton={isMobile}
-                onClick={() => setFlipped(true)}
-                label={`Show ${profile.name}'s social profiles`}
-              >
-                {/* Post/bite counts would reveal a private profile's activity, so they're hidden until access is granted. */}
-                {isRestaurant ? (
-                  <>
-                    {/* Restaurants: rating + review count + live open status. */}
-                    <div className="fz-hero-full-banner__stat fz-hero-full-banner__stat--rating">
-                      <strong>★ {restaurant.summary.count ? restaurant.summary.average.toFixed(1) : 'New'}</strong>
-                      {restaurant.summary.count > 0 && <Stars value={restaurant.summary.average} size={12} />}
-                    </div>
-                    <div className="fz-hero-full-banner__stat">
-                      <strong>{formatCount(restaurant.summary.count)}</strong>
-                      <span>{restaurant.summary.count === 1 ? 'Review' : 'Reviews'}</span>
-                    </div>
-                    {openStatus && <StatusPill status={openStatus} onDark />}
-                  </>
-                ) : (
-                  <>
-                    {!restricted && (
-                      <>
-                        <div className="fz-hero-full-banner__stat">
-                          <strong>{profile.bites}</strong>
-                          <span>Bites</span>
-                        </div>
-                        <div className="fz-hero-full-banner__stat">
-                          <strong>{profile.posts}</strong>
-                          <span>Posts</span>
-                        </div>
-                      </>
-                    )}
-                    <div className="fz-hero-full-banner__stat">
-                      <strong>{friendCount}</strong>
-                      <span>Friends</span>
-                    </div>
-                  </>
-                )}
-                {isMobile && (
-                  <span className="fz-hero-full-banner__flip-hint" aria-hidden="true">
-                    <Repeat2 size={13} strokeWidth={2.4} />
-                    Socials
-                  </span>
-                )}
-              </StatsRow>
-            </div>
-          </div>
-
-          {/* Action Buttons (Follow / Message) */}
-          <div className="fz-hero-full-banner__actions">
-            {isOtherUser ? (
+        <div className="fz-phero__body">
+          {/* Avatar with gold ring, overlapping the banner */}
+          <div className="fz-phero__avatar">
+            <img
+              src={avatarUrl || DEFAULT_AVATAR}
+              alt={profile.name}
+              onError={(e) => applyFallbackAvatar(e.currentTarget)}
+              // A broken URL can fail before hydration attaches onError - check on mount too.
+              ref={(img) => {
+                if (img && img.complete && img.naturalWidth === 0) applyFallbackAvatar(img);
+              }}
+            />
+            {isOwnProfile && (
               <>
                 <button
                   type="button"
-                  className="fz-hero-full-banner__btn-follow"
-                  onClick={handleFollowClick}
-                  disabled={isUpdating}
+                  className="fz-phero__avatar-btn"
+                  onClick={() => avatarInputRef.current?.click()}
+                  disabled={uploadingKind === 'avatar'}
+                  aria-label="Change profile picture"
+                  title="Change profile picture"
                 >
-                  {relationship.state === 'none'
-                    ? 'Follow'
-                    : relationship.state === 'incoming-pending'
-                    ? 'Accept'
-                    : relationship.state === 'outgoing-pending'
-                    ? 'Requested'
-                    : 'Following'}
-                </button>
-                <Link href={`/messages?userId=${userId}`} className="fz-hero-full-banner__btn-message">
-                  Message
-                </Link>
-                {isRestaurant && (
-                  <button type="button" className="fz-hero-full-banner__btn-message" onClick={() => setIsRating(true)}>
-                    ★ Rate
-                  </button>
-                )}
-              </>
-            ) : isOwnProfile ? (
-              <>
-                <button
-                  type="button"
-                  className="fz-hero-full-banner__btn-follow"
-                  onClick={() => onNavigate?.({ tab: 'settings' })}
-                >
-                  Edit Profile
-                </button>
-                <button
-                  type="button"
-                  className="fz-hero-full-banner__btn-message"
-                  onClick={() => bannerInputRef.current?.click()}
-                  disabled={uploadingKind === 'banner'}
-                >
-                  {uploadingKind === 'banner' ? <Loader2 size={14} className="scout-spin me-1" /> : null}
-                  Banner
+                  {uploadingKind === 'avatar' ? <Loader2 size={15} className="scout-spin" /> : <Camera size={15} />}
                 </button>
                 <input
-                  ref={bannerInputRef}
+                  ref={avatarInputRef}
                   type="file"
                   accept="image/*"
                   className="d-none"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
-                    if (file) handleImageUpload(file, 'banner');
+                    if (file) handleImageUpload(file, 'avatar');
                     e.target.value = '';
                   }}
                 />
               </>
-            ) : (
-              // Default / demo preview mode matching the screenshot exactly
-              <>
-                <button type="button" className="fz-hero-full-banner__btn-follow">
-                  Follow
-                </button>
-                <button type="button" className="fz-hero-full-banner__btn-message">
-                  Message
-                </button>
-              </>
             )}
+          </div>
+
+          {/* Name + level, handle · role, bio | edit / follow actions */}
+          <div className="fz-phero__head">
+            <div className="fz-phero__id">
+              <div className="fz-phero__name-row">
+                <h1 className="fz-phero__name">{profile.name}</h1>
+                <span className="fz-phero__level">
+                  <Crown size={14} strokeWidth={2.4} aria-hidden="true" />
+                  LEVEL {profile.level ?? 1}
+                </span>
+              </div>
+              <p className="fz-phero__handle">
+                <span>@{profile.handle}</span>
+                <span className="fz-phero__dot" aria-hidden="true">•</span>
+                <span>{profile.role}</span>
+                {profile.location && (
+                  <>
+                    <span className="fz-phero__dot" aria-hidden="true">•</span>
+                    <span>{profile.location}</span>
+                  </>
+                )}
+              </p>
+              {profile.bio && <p className="fz-phero__bio">{profile.bio}</p>}
+            </div>
+
+            <div className="fz-phero__actions">
+              {isOtherUser ? (
+                <>
+                  <button type="button" className="fz-phero__follow" onClick={handleFollowClick} disabled={isUpdating}>
+                    {relationship.state === 'none'
+                      ? 'Follow'
+                      : relationship.state === 'incoming-pending'
+                      ? 'Accept'
+                      : relationship.state === 'outgoing-pending'
+                      ? 'Requested'
+                      : 'Following'}
+                  </button>
+                  <Link href={`/messages?userId=${userId}`} className="fz-phero__square-btn" aria-label={`Message ${profile.name}`} title="Message">
+                    <MessageCircle size={19} />
+                  </Link>
+                  {isRestaurant && (
+                    <button type="button" className="fz-phero__square-btn" onClick={() => setIsRating(true)} aria-label={`Rate ${profile.name}`} title="Rate">
+                      <Star size={19} />
+                    </button>
+                  )}
+                </>
+              ) : null}
+            </div>
+          </div>
+
+          {/* Stat tiles + Socials (flips the card to the user's social profiles) */}
+          <div className="fz-phero__stats">
+            <ul className="fz-phero__tiles">
+              {isRestaurant ? (
+                <>
+                  <li className="fz-phero__tile">
+                    <Star size={20} className="fz-phero__tile-icon fz-phero__tile-icon--bites" aria-hidden="true" />
+                    <span className="fz-phero__tile-text">
+                      <strong>{restaurant.summary.count ? restaurant.summary.average.toFixed(1) : 'New'}</strong>
+                      <span>Rating</span>
+                    </span>
+                  </li>
+                  <li className="fz-phero__tile">
+                    <MessageSquareText size={20} className="fz-phero__tile-icon fz-phero__tile-icon--posts" aria-hidden="true" />
+                    <span className="fz-phero__tile-text">
+                      <strong>{formatCount(restaurant.summary.count)}</strong>
+                      <span>{restaurant.summary.count === 1 ? 'Review' : 'Reviews'}</span>
+                    </span>
+                  </li>
+                  {openStatus && (
+                    <li className="fz-phero__tile fz-phero__tile--status">
+                      <StatusPill status={openStatus} />
+                    </li>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* Post/bite counts would reveal a private profile's activity, so they're hidden until access is granted. */}
+                  {!restricted && (
+                    <>
+                      <li className="fz-phero__tile">
+                        <Hamburger size={20} className="fz-phero__tile-icon fz-phero__tile-icon--bites" aria-hidden="true" />
+                        <span className="fz-phero__tile-text">
+                          <strong>{profile.bites}</strong>
+                          <span>Bites</span>
+                        </span>
+                      </li>
+                      <li className="fz-phero__tile">
+                        <FileText size={20} className="fz-phero__tile-icon fz-phero__tile-icon--posts" aria-hidden="true" />
+                        <span className="fz-phero__tile-text">
+                          <strong>{profile.posts}</strong>
+                          <span>Posts</span>
+                        </span>
+                      </li>
+                    </>
+                  )}
+                  <li className="fz-phero__tile">
+                    <Users size={20} className="fz-phero__tile-icon fz-phero__tile-icon--friends" aria-hidden="true" />
+                    <span className="fz-phero__tile-text">
+                      <strong>{friendCount}</strong>
+                      <span>Friends</span>
+                    </span>
+                  </li>
+                  {/* Meetups you're going to - RSVPs are private to each chat, so only shown to you. */}
+                  {isOwnProfile && meetups !== null && (
+                    <li className="fz-phero__tile">
+                      <CalendarCheck size={20} className="fz-phero__tile-icon fz-phero__tile-icon--meetups" aria-hidden="true" />
+                      <span className="fz-phero__tile-text">
+                        <strong>{meetups}</strong>
+                        <span>Meetups</span>
+                      </span>
+                    </li>
+                  )}
+                </>
+              )}
+            </ul>
+            <button
+              type="button"
+              className="fz-phero__socials"
+              onClick={() => setFlipped(true)}
+              aria-label={`Show ${profile.name}'s social profiles`}
+            >
+              <Repeat2 size={20} strokeWidth={2.4} aria-hidden="true" />
+              <span className="fz-phero__socials-label">Socials</span>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Back of the card (mobile only): the user's other social profiles. */}
+      {/* Back of the card (the Socials button flips to it): the user's other social profiles. */}
       <section
         className="fz-hero-flip__face fz-hero-flip__back"
         aria-label={`${profile.name}'s social profiles`}
-        inert={!isFlipped}
+        inert={!flipped}
       >
         <div
           className="fz-hero-flip__back-bg"
@@ -562,6 +552,17 @@ export default function ProfileHero({
             <span className="fz-hero-flip__back-eyebrow">Find me on</span>
             <strong>{profile.name}</strong>
           </div>
+          {isOwnProfile && (
+            <button
+              type="button"
+              className="fz-hero-flip__back-close"
+              onClick={() => setEditingSocials(true)}
+              aria-label="Edit your social profiles"
+              title="Edit socials"
+            >
+              <Pencil size={15} strokeWidth={2.4} />
+            </button>
+          )}
           <button
             type="button"
             className="fz-hero-flip__back-close"
@@ -636,44 +637,56 @@ export default function ProfileHero({
       {/* ─────────────────────────────────────────────────────────────
           2. HIGHLIGHTS SECTION (3D FAN CAROUSEL)
       ───────────────────────────────────────────────────────────── */}
-      {restricted ? null : displayHighlights.length === 0 ? (
+      {restricted ? null : isLoadingHighlights && highlights.length === 0 ? (
+        // Same footprint as the real reel, so the page doesn't jump when it loads.
+        <section className="fz-highlights-section" aria-busy="true" aria-label="Loading highlights">
+          <div className="fz-highlights-section__inner">
+            <div className="fz-highlights-section__header">
+              <span className="fz-highlights-section__label">HIGHLIGHTS</span>
+            </div>
+            <div className="fz-highlights-section__carousel-stage" aria-hidden="true">
+              {['left-1', 'right-1', 'center'].map((pos) => (
+                <div key={pos} className={`fz-highlights-section__card fz-highlights-section__card--${pos} fz-highlights-section__card--skeleton`} />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : displayHighlights.length === 0 ? (
         isOwnProfile ? (
-          <section className="fz-highlights-section py-3">
+          <section className="fz-highlights-section">
             <div className="fz-highlights-section__inner">
               <div className="fz-highlights-section__header">
                 <span className="fz-highlights-section__label">HIGHLIGHTS</span>
               </div>
-              <div
-                className="p-4 text-center rounded-3 border d-flex flex-column align-items-center justify-content-center my-2"
-                style={{ background: '#fffefb', borderColor: '#ece4d0' }}
-              >
-                <div
-                  className="rounded-circle d-flex align-items-center justify-content-center mb-2"
-                  style={{ width: 44, height: 44, background: '#fbf7ec' }}
-                >
-                  <Plus size={20} className="text-warning-emphasis" />
+              <div className="fz-highlights-section__empty">
+                <span className="fz-highlights-section__empty-icon" aria-hidden="true">
+                  <Plus size={20} />
+                </span>
+                <div className="fz-highlights-section__empty-text">
+                  <strong>Create your first highlight reel</strong>
+                  <span>Curate your top food finds, favourite spots and dining moments.</span>
                 </div>
-                <h6 className="fw-bold mb-1 text-dark">Create Your First Highlight Reel</h6>
-                <p className="text-muted small mb-3" style={{ maxWidth: 420 }}>
-                  Curate your top food discoveries, favorite spots, and dining moments into a showcase reel.
-                </p>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-primary rounded-pill px-3 d-flex align-items-center gap-1"
-                  onClick={() => setEditingHighlight('new')}
-                >
-                  <Plus size={15} /> Create Highlight
+                <button type="button" className="fz-highlights-section__empty-btn" onClick={() => setEditingHighlight('new')}>
+                  <Plus size={15} /> Create highlight
                 </button>
               </div>
             </div>
           </section>
         ) : null
       ) : (
-        <section className="fz-highlights-section">
+        <section className="fz-highlights-section" aria-roledescription="carousel" aria-label="Highlights">
           <div className="fz-highlights-section__inner">
-            {/* Header with HIGHLIGHTS and round arrow buttons */}
+            {/* Header: title + current card (also announced) + Add / arrows */}
             <div className="fz-highlights-section__header">
-              <span className="fz-highlights-section__label">HIGHLIGHTS</span>
+              <div className="fz-highlights-section__heading">
+                <span className="fz-highlights-section__label">HIGHLIGHTS</span>
+                {activeItem && (
+                  <span className="fz-highlights-section__now" aria-live="polite">
+                    {totalItems > 1 ? `${activeSlot + 1} of ${totalItems} · ` : ''}
+                    {activeItem.title}
+                  </span>
+                )}
+              </div>
               <div className="fz-highlights-section__nav-btns">
                 {isOwnProfile && (
                   <button
@@ -710,19 +723,44 @@ export default function ProfileHero({
               </div>
             </div>
 
-            {/* 3D Fan Carousel Stage */}
-            <div className="fz-highlights-section__carousel-stage">
+            {/* 3D Fan Carousel Stage - swipe left/right on touch (Framer Motion pan). */}
+            <motion.div
+              className="fz-highlights-section__carousel-stage"
+              onPanStart={() => {
+                pannedAt.current = Date.now();
+              }}
+              onPanEnd={(_, info) => {
+                pannedAt.current = Date.now();
+                if (Math.abs(info.offset.x) < 40 || Math.abs(info.offset.x) < Math.abs(info.offset.y)) return;
+                if (info.offset.x < 0) handleNext();
+                else handlePrev();
+              }}
+            >
               {displayHighlights.map((item, index) => {
                 const cardClass = getCardClass(index);
+                const isCenter = cardClass === 'fz-highlights-section__card--center';
                 return (
                   <div
                     key={item.id}
                     className={`fz-highlights-section__card ${cardClass}`}
-                    onClick={() => handleCardClick(index)}
-                    role="button"
-                    tabIndex={0}
+                    onClick={() => {
+                      // A swipe ends with a click on whichever card was under the finger - ignore it.
+                      if (Date.now() - pannedAt.current < 350) return;
+                      handleCardClick(index);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleCardClick(index);
+                      }
+                    }}
+                    // Only the front card is a keyboard stop; the arrows move between cards.
+                    role={isCenter ? 'button' : undefined}
+                    tabIndex={isCenter ? 0 : -1}
+                    aria-label={isCenter ? `Open highlight: ${item.title}` : undefined}
+                    aria-hidden={isCenter ? undefined : true}
                   >
-                    <img src={item.cover_image_url} alt={item.title} />
+                    <img src={item.cover_image_url} alt="" draggable={false} />
                     {/* Progressive blur gradient & dark fade overlays */}
                     <div className="fz-highlights-section__card__blur" />
                     <div className="fz-highlights-section__card__gradient" />
@@ -733,14 +771,7 @@ export default function ProfileHero({
                   </div>
                 );
               })}
-            </div>
-
-            {/* Caption underneath the cards */}
-            {activeItem && (
-              <p className="fz-highlights-section__caption">
-                Click a card or use the arrows — {activeItem.title}
-              </p>
-            )}
+            </motion.div>
           </div>
         </section>
       )}
@@ -801,24 +832,4 @@ export default function ProfileHero({
 const DEFAULT_AVATAR = '/images/profile/avatar.jpg';
 function applyFallbackAvatar(img: HTMLImageElement) {
   if (!img.src.endsWith(DEFAULT_AVATAR)) img.src = DEFAULT_AVATAR;
-}
-
-// Stats row - a real <button> on mobile (it flips the hero card), a plain div elsewhere.
-function StatsRow({
-  asButton,
-  onClick,
-  label,
-  children,
-}: {
-  asButton: boolean;
-  onClick: () => void;
-  label: string;
-  children: React.ReactNode;
-}) {
-  if (!asButton) return <div className="fz-hero-full-banner__stats-row">{children}</div>;
-  return (
-    <button type="button" className="fz-hero-full-banner__stats-row fz-hero-full-banner__stats-row--btn" onClick={onClick} aria-label={label}>
-      {children}
-    </button>
-  );
 }
