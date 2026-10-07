@@ -9,7 +9,7 @@ import { DAY_KEYS, DAY_LABELS, WEEK_ORDER, formatDay, hasAnyHours } from '@/lib/
 import { RestaurantService, type RestaurantReview } from '@/lib/services/restaurantService';
 import RateRestaurantModal from './RateRestaurantModal';
 import { directionsUrl } from '@/lib/maps/placeLinks';
-import { SERVICE_OPTIONS } from '@/lib/services/restaurantService';
+import { SERVICE_OPTIONS, verifiedPlaceId } from '@/lib/services/restaurantService';
 import { Stars, StatusPill, formatCount } from './RestaurantBits';
 
 interface RestaurantInfoTabProps {
@@ -36,7 +36,8 @@ export default function RestaurantInfoTab({ restaurantId, restaurantName, isOwne
   }
 
   // In-app route from the user's location (Scout), once the restaurant is on the map.
-  const fuzoDirections = directionsUrl({ name: restaurantName, placeId: profile?.place_id ?? undefined, lat: profile?.lat, lng: profile?.lng });
+  const placeId = verifiedPlaceId(profile);
+  const fuzoDirections = directionsUrl({ name: restaurantName, placeId: placeId ?? undefined, lat: profile?.lat, lng: profile?.lng });
 
   // "Today" in the restaurant's own timezone.
   let todayKey: string = DAY_KEYS[new Date().getDay()];
@@ -168,9 +169,9 @@ export default function RestaurantInfoTab({ restaurantId, restaurantName, isOwne
                   </Link>
                 ) : (
                   directionsQuery &&
-                  (profile?.address || profile?.place_id) && (
+                  (profile?.address || placeId) && (
                     <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(directionsQuery)}${profile?.place_id ? `&query_place_id=${encodeURIComponent(profile.place_id)}` : ''}`}
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(directionsQuery)}${placeId ? `&query_place_id=${encodeURIComponent(placeId)}` : ''}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-sm btn-primary rounded-pill d-flex align-items-center gap-1 text-nowrap"

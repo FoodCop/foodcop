@@ -14,6 +14,8 @@ import { MediaUploadService } from './mediaUploadService';
 export interface RestaurantProfile {
   user_id: string;
   place_id: string | null;
+  /** Set by FUZO staff once the owner is confirmed to own this Google place. */
+  place_verified?: boolean;
   place_name: string | null;
   tagline: string | null;
   cuisines: string[];
@@ -150,6 +152,15 @@ export interface FuzoRestaurantLink {
   /** Title of the restaurant's latest Offer post (last 30 days) - the red tag on Scout pins. */
   offerTitle: string | null;
 }
+
+/**
+ * The Google place a restaurant is linked to, but only once FUZO has verified
+ * the link (security review, 2026-10-07). Unverified links don't pull in
+ * customers' posts about that place or point directions at it, so a new
+ * account can't pass itself off as an existing restaurant.
+ */
+export const verifiedPlaceId = (profile: Pick<RestaurantProfile, 'place_id' | 'place_verified'> | null | undefined): string | null =>
+  profile && profile.place_verified !== false ? profile.place_id ?? null : null;
 
 type ProfileRow = { user_id: string; place_id: string | null; place_verified?: boolean | null; hours: unknown; timezone: string | null; lat?: number | null; lng?: number | null; address?: string | null; cuisines?: string[] | null };
 

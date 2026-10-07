@@ -38,6 +38,11 @@ async function downscaleImage(blob: Blob, maxSide = 1600): Promise<Blob> {
 // data URL fingerprint -> hosted URL, so re-sharing the same photo doesn't upload it again.
 const hostedImageCache = new Map<string, string>();
 
+
+// Unguessable file names (security review, 2026-10-07): uploads are served
+// from public buckets, so a file's URL is the only thing protecting it - a
+// timestamp plus 6 random characters could be guessed.
+const uploadId = () => crypto.randomUUID();
 export const MediaUploadService = {
   async uploadVideo(file: File): Promise<ServiceResult<string>> {
     const supabase = createClient();
@@ -52,7 +57,7 @@ export const MediaUploadService = {
     }
 
     const extension = file.name.split('.').pop()?.toLowerCase() || 'mp4';
-    const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
+    const path = `${userId}/${uploadId()}.${extension}`;
 
     const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file, {
       contentType: file.type || 'video/mp4',
@@ -95,7 +100,7 @@ export const MediaUploadService = {
     if (!type) return { success: false, error: `Unsupported photo type (${blob.type || 'unknown'})` };
 
     const extension = type === 'image/png' ? 'png' : type === 'image/webp' ? 'webp' : 'jpg';
-    const path = `${userId}/shared-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
+    const path = `${userId}/shared-${uploadId()}.${extension}`;
 
     // food-card-media is the intended home (needs 20260920000000_food_card_images_bucket.sql to accept
     // images); until that runs, fall back to profile-media, which already accepts jpeg/png/webp.
@@ -162,7 +167,7 @@ export const MediaUploadService = {
     }
 
     const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-    const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
+    const path = `${userId}/${uploadId()}.${extension}`;
 
     const { error: uploadError } = await supabase.storage.from(FOOD_MOMENTS_BUCKET).upload(path, file, {
       contentType: file.type || 'image/jpeg',

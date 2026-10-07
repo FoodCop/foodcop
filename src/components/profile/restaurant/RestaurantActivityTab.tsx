@@ -6,6 +6,7 @@ import { Calendar, Camera, ExternalLink, Heart, Loader2, Megaphone, Plus, Star, 
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useRestaurant } from '@/lib/hooks/useRestaurant';
 import {
+  verifiedPlaceId,
   POST_KINDS,
   POST_KIND_LABEL,
   RestaurantService,
@@ -56,7 +57,7 @@ export default function RestaurantActivityTab({ restaurantId, restaurantName, is
       {tab === 'posts' ? (
         <PostsFeed restaurantId={restaurantId} restaurantName={restaurantName} isOwner={isOwner} />
       ) : loaded ? (
-        <MentionsFeed restaurantId={restaurantId} placeId={profile?.place_id ?? null} isOwner={isOwner} />
+        <MentionsFeed restaurantId={restaurantId} placeId={verifiedPlaceId(profile)} isOwner={isOwner} />
       ) : (
         <Spinner />
       )}
