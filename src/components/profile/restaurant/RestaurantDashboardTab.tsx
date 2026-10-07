@@ -519,7 +519,7 @@ function PlaceLinker({ placeName, onPick, onClear, defaultQuery }: { placeName: 
       {placeName ? (
         <div className="d-flex align-items-center justify-content-between gap-2">
           <span className="small">
-            Linked to <strong>{placeName}</strong>. Customer posts at this place appear in Mentions &amp; Tags.
+            Linked to <strong>{placeName}</strong>. Customer posts at this place appear in Mentions &amp; Tags. FUZO checks that you own this listing before your details replace Google&apos;s on the map.
           </span>
           <button type="button" className="btn btn-sm btn-outline-secondary rounded-pill" onClick={onClear}>Change</button>
         </div>

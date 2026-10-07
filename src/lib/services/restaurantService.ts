@@ -151,7 +151,7 @@ export interface FuzoRestaurantLink {
   offerTitle: string | null;
 }
 
-type ProfileRow = { user_id: string; place_id: string | null; hours: unknown; timezone: string | null; lat?: number | null; lng?: number | null; address?: string | null; cuisines?: string[] | null };
+type ProfileRow = { user_id: string; place_id: string | null; place_verified?: boolean | null; hours: unknown; timezone: string | null; lat?: number | null; lng?: number | null; address?: string | null; cuisines?: string[] | null };
 
 /** Attach name/photo (business accounts only) + rating to restaurant_profiles rows. */
 async function toLinks(rows: ProfileRow[]): Promise<FuzoRestaurantLink[]> {
@@ -191,7 +191,10 @@ async function toLinks(rows: ProfileRow[]): Promise<FuzoRestaurantLink[]> {
       reviewCount: rating?.review_count ?? 0,
       hours: (r.hours ?? {}) as WeeklyHours,
       timezone: r.timezone || 'UTC',
-      placeId: r.place_id ?? null,
+      // Only a verified link takes over a Google place on Scout (its name,
+      // contact details, Reserve / Order). Unverified restaurants still show as
+      // their own pin. (Before the place_verified column exists it's undefined.)
+      placeId: r.place_verified === false ? null : r.place_id ?? null,
       lat: typeof r.lat === 'number' ? r.lat : null,
       lng: typeof r.lng === 'number' ? r.lng : null,
       address: r.address ?? null,

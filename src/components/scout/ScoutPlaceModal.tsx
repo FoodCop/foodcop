@@ -408,9 +408,9 @@ export const ScoutPlaceModal = ({
                 <div className="scout-modal__menu-link-wrap">
                   <p className="scout-modal__menu-hint">Looking for the menu?</p>
                   <a
-                    href={place.menuLink || place.website}
+                    href={place.menuLink || withScheme(place.website)}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="scout-modal__menu-link"
                   >
                     View website menu
