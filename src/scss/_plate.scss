@@ -8,7 +8,7 @@ $plate-page: #f6f4ef;
 $plate-max: 1280px;
 
 @mixin plate-page($bg: linear-gradient(180deg, rgba($fz-navbar-gold, 0.16) 0, rgba($fz-navbar-gold, 0) 320px) $plate-page) {
-  min-height: calc(100dvh - #{$fz-topbar-h});
+  min-height: calc(100dvh - #{$fz-topbar-space});
   background: $bg;
   color: $fz-ink;
   // Bottom room for the floating app dock.
@@ -52,8 +52,8 @@ $plate-max: 1280px;
 // My Plate page
 // ---------------------------------------------------------------------------
 .fz-plate {
-  // Same page colour as Home, so My Plate reads as part of it.
-  @include plate-page($dash-page);
+  // The app-wide gradient (end of _header.scss) shows through, like every page.
+  @include plate-page(transparent);
 
   &__wrap {
     max-width: $plate-max;
@@ -212,7 +212,7 @@ $plate-max: 1280px;
 
   // ---- Filter chips (wrap, never clip) ----
   &__chips {
-    scroll-margin-top: calc(#{$fz-topbar-h} + 0.75rem);
+    scroll-margin-top: calc(#{$fz-topbar-gap} + 0.75rem);
     display: flex;
     gap: 0.45rem;
     margin-bottom: 1.25rem;

@@ -63,7 +63,7 @@ function fitRoute(map: MapLike, g: MapsApi, path: unknown[]) {
   path.forEach((p) => bounds.extend(p));
   const phone = window.innerWidth < 768;
   const sheet = document.querySelector<HTMLElement>('.scout-dir')?.offsetHeight ?? 330;
-  map.fitBounds(bounds, phone ? { top: 90, right: 40, bottom: sheet + 24, left: 40 } : { top: 90, right: 90, bottom: 60, left: 450 });
+  map.fitBounds(bounds, phone ? { top: 150, right: 40, bottom: sheet + 24, left: 40 } : { top: 160, right: 90, bottom: 60, left: 450 }); // top: floating navbar + search
 }
 
 const mapsApi = () => (window as unknown as { google?: { maps?: MapsApi } }).google?.maps ?? null;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { buildPlacePhotoUrl } from '@/lib/scout/scoutLogic';
 import type { LocationState } from './useNearbyPlaces';
@@ -42,7 +42,11 @@ const scoutAreaLink = (name: string, lat: number, lng: number) =>
 /** Small flag image (Windows can't draw flag emoji, so no 🇹🇭 here). */
 const flagSrc = (code: string) => `https://flagcdn.com/w40/${code.toLowerCase()}.png`;
 
-export function NearbyCities({ loc }: { loc: LocationState }) {
+export function NearbyCities({ loc, locationSlot }: {
+  loc: LocationState;
+  /** Shown on the right of the header: Home's compact location control (client, 2026-10-07). */
+  locationSlot?: ReactNode;
+}) {
   const [mode, setMode] = useState<Mode>('cities');
   // Results are keyed by the location they were fetched for, so a new
   // location shows the loading state again without a reset effect.
@@ -123,6 +127,11 @@ export function NearbyCities({ loc }: { loc: LocationState }) {
           <h2 id="fz-dash-cities-title" className="fz-dash-cities__title">{title}</h2>
           {sub && <p className="fz-dash-cities__sub">{sub}</p>}
         </div>
+        {locationSlot && <div className="fz-dash-cities__loc">{locationSlot}</div>}
+      </div>
+
+      {/* Cities | Countries on its own row under the title. */}
+      <div className="fz-dash-cities__modes">
         <div className="fz-dash-cities__toggle" role="tablist" aria-label="Explore by">
           {(['cities', 'countries'] as const).map((m) => (
             <button

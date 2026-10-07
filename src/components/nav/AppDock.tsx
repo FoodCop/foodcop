@@ -7,9 +7,10 @@ import { Compass, House, Plus, Salad, Trophy } from 'lucide-react';
 import { CreateCardModal } from '@/components/create/CreateCardModal';
 import { useScrollCompact } from '@/lib/hooks/useScrollCompact';
 
-// The floating glass dock shared by Home, Explore (Scout), My Plate and
-// Leaderboard & Rewards: Explore · Create · Home (raised yellow centre) · My Plate · Leaderboard.
-// The current page's item is highlighted. Scrolling down folds it to icons only.
+// The bottom bar shared by Home, Explore (Scout), My Plate and Leaderboard &
+// Rewards (client, 2026-10-06, Feoy reference): a white bar along the bottom
+// with Explore · Create · (Home, raised yellow centre) · My Plate · Rankings.
+// The current page's item is highlighted.
 export default function AppDock({
   compact: compactProp,
   onHome,
@@ -30,30 +31,31 @@ export default function AppDock({
 
   return (
     <>
-      <nav className={`fz-dash-dock${compact ? ' is-compact' : ''}`} aria-label="Quick actions">
+      <nav className={`fz-dash-dock${compact ? ' is-compact' : ''}`} aria-label="Main">
         <Link href="/scout" className="fz-dash-dock__item" aria-current={current('/scout')}>
-          <Compass size={18} strokeWidth={2.1} />
+          <Compass size={20} strokeWidth={2.1} />
           <span>Explore</span>
         </Link>
         <button type="button" className="fz-dash-dock__item" onClick={() => setIsCreateOpen(true)} aria-label="Create a food card">
-          <Plus size={19} strokeWidth={2.3} />
+          <Plus size={20} strokeWidth={2.2} />
           <span>Create</span>
         </button>
+        {/* Home is the raised yellow button in the notch (client, 2026-10-07). */}
         {onHome ? (
-          <button type="button" className="fz-dash-dock__home" onClick={onHome} aria-label="Home" aria-current={homeActive ? 'page' : undefined}>
-            <House size={21} strokeWidth={2.3} />
+          <button type="button" className="fz-dash-dock__fab" onClick={onHome} aria-label="Home" aria-current={homeActive ? 'page' : undefined}>
+            <House size={24} strokeWidth={2.3} />
           </button>
         ) : (
-          <Link href="/dashboard" className="fz-dash-dock__home" aria-label="Home" aria-current={onDashboard ? 'page' : undefined}>
-            <House size={21} strokeWidth={2.3} />
+          <Link href="/dashboard" className="fz-dash-dock__fab" aria-label="Home" aria-current={onDashboard ? 'page' : undefined}>
+            <House size={24} strokeWidth={2.3} />
           </Link>
         )}
         <Link href="/my-plate" className="fz-dash-dock__item" aria-current={current('/my-plate')}>
-          <Salad size={18} strokeWidth={2.1} />
+          <Salad size={20} strokeWidth={2.1} />
           <span>My Plate</span>
         </Link>
         <Link href="/leaderboard" className="fz-dash-dock__item" aria-current={current('/leaderboard')} aria-label="Leaderboard and rewards">
-          <Trophy size={18} strokeWidth={2.2} />
+          <Trophy size={20} strokeWidth={2.1} />
           <span>Rankings</span>
         </Link>
       </nav>

@@ -7,7 +7,7 @@
 // ============================================================================
 
 .reel-swiper {
-  height: calc(100dvh - 56px); // standalone /trims: minus the sticky navbar
+  height: calc(100dvh - #{$fz-topbar-space}); // standalone /trims: minus the navbar
   overflow: hidden;
   background: $fz-ink;
 }

@@ -3,8 +3,8 @@
 // card language: 22px photo cards with the dark elevation, frosted badge,
 // author row, heading-font title, frosted chips, SAVE/SKIP drag stamps, and a
 // separate action bar (Skip · progress · Save) under the stack. The swipe
-// mechanics live in the component (they move `.tinder-card` / `.like` /
-// `.dislike` directly).
+// mechanics live in the component (they move `.tinder-card` and fade the
+// `[data-stamp]` Nope / Like / Share / Save stamps directly).
 // ============================================================================
 
 .feed {
@@ -59,16 +59,21 @@
     &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 3px; }
     &:disabled { opacity: 0.4; cursor: default; }
 
-    &--skip {
-      width: 36px;
-      height: 36px;
+    // Dislike · Share · Save are small paper buttons, Like is the big one.
+    &--nope,
+    &--share,
+    &--save {
+      width: 38px;
+      height: 38px;
       background: $fz-paper;
       color: $fz-ink;
       box-shadow: $fz-shadow-sm;
     }
-    &--save {
-      width: 42px;
-      height: 42px;
+    &--share { color: mix(#000, $sky, 15%); }
+    &--save { color: $fuzo-yellow-deep; }
+    &--like {
+      width: 44px;
+      height: 44px;
       background: $fuzo-yellow;
       border-color: $fuzo-yellow;
       color: $fuzo-yellow-ink;
@@ -107,7 +112,7 @@
   color: #fff;
   cursor: grab;
   user-select: none;
-  touch-action: pan-y;
+  touch-action: none; // up/down are swipes too, so the card owns every drag direction
   box-shadow: $fz-shadow-dark;
   transition: transform 0.3s $fz-ease, box-shadow 0.3s ease;
 
@@ -308,8 +313,12 @@
   background: rgba(10, 8, 6, 0.35);
   backdrop-filter: blur(4px);
 
-  &--save { right: 1.2rem; top: 3.9rem; color: $fuzo-yellow; transform: rotate(10deg); }
-  &--skip { left: 1.2rem; top: 3.9rem; color: #fff; transform: rotate(-10deg); }
+  // Like Tinder, a stamp shows on the side opposite the throw (dragging right
+  // reveals LIKE top-left); Share / Save sit centred low / high.
+  &--like { left: 1.2rem; top: 3.9rem; color: $lime; transform: rotate(-10deg); }
+  &--nope { right: 1.2rem; top: 3.9rem; color: $chili; transform: rotate(10deg); }
+  &--share { left: 50%; top: auto; bottom: 7rem; color: $sky; translate: -50% 0; }
+  &--save { left: 50%; top: 4.5rem; color: $fuzo-yellow; translate: -50% 0; }
 }
 
 @keyframes swipeRight {
@@ -317,6 +326,43 @@
 }
 @keyframes swipeLeft {
   to { transform: translateX(-200%) rotate(-30deg); opacity: 0; }
+}
+@keyframes swipeUp {
+  to { transform: translateY(-160%) scale(0.9); opacity: 0; }
+}
+@keyframes swipeDown {
+  to { transform: translateY(160%) scale(0.9); opacity: 0; }
+}
+
+// Confirmation pill ("Saved to My Plate", "Liked") above the action bar.
+.feed__notice {
+  position: relative;
+  z-index: 11;
+  align-self: center;
+  margin: -3.6rem auto 0.9rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  background: $fz-ink;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px -8px rgba($fz-ink, 0.6);
+  width: max-content;
+  max-width: calc(100% - 2rem);
+}
+
+// First-visit "how to swipe" hint under the bar.
+.feed__hint {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 0.9rem;
+  margin: 0.6rem 0 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: $fz-ink-soft;
+
+  span { display: inline-flex; align-items: center; gap: 0.2rem; }
 }
 
 // ── End + empty states ─────────────────────────────────────────────────────
@@ -362,3 +408,6 @@
 @media (prefers-reduced-motion: reduce) {
   .feed-card--skeleton, .feed__btn--ghost { animation: none; }
 }
+
+// Focus ring for keyboard swiping (arrow keys on the card stack).
+.feed__stage:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 4px; border-radius: 24px; }

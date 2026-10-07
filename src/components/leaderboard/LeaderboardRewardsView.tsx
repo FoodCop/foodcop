@@ -33,17 +33,16 @@ export default function LeaderboardRewardsView() {
   return (
     <div className="fz-lbr">
       <header className="fz-lbr-head">
-        <div className="fz-lb__inner">
-          <div className="fz-lb-head">
-            <div className="fz-lb-head__icon" aria-hidden>
-              <Trophy size={26} />
-            </div>
-            <div>
-              <div className="fz-lb-eyebrow">Community</div>
-              <h1 className="fz-lb-title">Leaderboard &amp; Rewards</h1>
+        <div className="fz-lb__inner fz-lbr-head__row">
+          <div className="fz-lbr-head__title">
+            <span className="fz-lbr-head__icon" aria-hidden="true">
+              <Trophy size={22} strokeWidth={2.2} />
+            </span>
+            <div className="fz-lbr-head__text">
+              <h1 className="fz-lbr-head__h1">Leaderboard &amp; Rewards</h1>
+              <p className="fz-lbr-head__sub">Climb the ranks and unlock badges as you cook, explore and share.</p>
             </div>
           </div>
-          <p className="fz-lb-sub">Climb the ranks and unlock badges for every card you cook, explore and share.</p>
 
           <div className="fz-lbr-tabs" role="tablist" aria-label="Leaderboard and rewards">
             {TABS.map(({ key, label, icon: Icon }) => (
@@ -57,7 +56,7 @@ export default function LeaderboardRewardsView() {
                 className={`fz-lbr-tabs__btn${tab === key ? ' is-active' : ''}`}
                 onClick={() => pick(key)}
               >
-                <Icon size={17} aria-hidden="true" />
+                <Icon size={16} aria-hidden="true" />
                 {label}
               </button>
             ))}

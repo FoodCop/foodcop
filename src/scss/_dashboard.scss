@@ -12,7 +12,7 @@ $dash-gutter: 1rem;
 
 .fz-dash {
   min-height: 100vh;
-  background: $dash-page;
+  background: transparent; // the app-wide gradient (end of _header.scss) shows through
   // Room for the floating dock.
   padding-bottom: calc(6rem + env(safe-area-inset-bottom));
 
@@ -46,7 +46,7 @@ $dash-gutter: 1rem;
 // slides to the active tab. Sections switch in place - no navigation.
 .fz-dash-tabs-wrap {
   position: sticky;
-  top: calc(52px + env(safe-area-inset-top));
+  top: calc(#{$fz-topbar-gap} + env(safe-area-inset-top)); // the navbar scrolls away, so it sticks at the top gap
   z-index: 50;
   padding: 0.75rem 0 0.25rem;
   margin: 0 (-$dash-gutter);
@@ -137,7 +137,10 @@ $dash-gutter: 1rem;
 
 // Panels fade/slide in on switch.
 .fz-dash-panel {
-  animation: fz-dash-panel-in 0.35s $fz-ease both;
+  // `backwards`, not `both`: once it has faded in, nothing (no leftover
+  // transform) stays on the panel - a kept transform broke the glass cards'
+  // blur inside it, making Home's sections look whiter than My Plate's.
+  animation: fz-dash-panel-in 0.35s $fz-ease backwards;
 
   &[hidden] { display: none; }
 

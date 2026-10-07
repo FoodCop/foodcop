@@ -14,7 +14,7 @@
   @media (max-width: 768px) { --hl-h: clamp(150px, min(26vh, 54vw), 240px); }
 
   margin: 0 auto;
-  background: #f6f5f2;
+  background: transparent; // the app-wide glow shows through
   min-height: 100vh;
   width: 100%;
 }

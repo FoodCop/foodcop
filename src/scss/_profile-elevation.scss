@@ -32,9 +32,9 @@
 .profile-shell {
   // Soft warm off-white page with a light wash of the navbar's gold at the
   // very top (ties the page to the brand colour without tinting everything).
-  background:
-    linear-gradient(180deg, rgba(#ffc909, 0.16) 0, rgba(#ffc909, 0) 320px),
-    #f6f4ef;
+  // Transparent: the app-wide moving glow (_header.scss) shows through
+  // (client, 2026-10-06; was an off-white page with a light gold wash).
+  background: transparent;
   // Top gap lives on the shell as padding, not as the hero's margin-top - a
   // child's top margin collapses through the shell, which left the white
   // <body> showing as a strip above the hero card.

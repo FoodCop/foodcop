@@ -121,14 +121,15 @@ export default function LeaderboardView({
             )}
 
             <div className="fz-lb-controls">
-              <div className="fz-profile-tabs fz-lb-scope" role="tablist" aria-label="Leaderboard scope">
+              {/* Who: Global / Friends - the same segmented control as the time filter. */}
+              <div className="fz-lb-seg fz-lb-seg--scope" role="tablist" aria-label="Leaderboard scope">
                 {SCOPES.map((s) => (
                   <button
                     key={s.value}
                     type="button"
                     role="tab"
                     aria-selected={scope === s.value}
-                    className={`fz-profile-tab${scope === s.value ? ' fz-profile-tab--active' : ''}`}
+                    className={`fz-lb-seg__btn${scope === s.value ? ' is-active' : ''}`}
                     onClick={() => setScope(s.value)}
                   >
                     {s.label}
@@ -242,7 +243,7 @@ function Podium({ rows, period }: { rows: LeaderboardRow[]; period: LeaderboardP
         if (!row) return <div key={`empty-${i}`} className="fz-lb-pod fz-lb-pod--empty" aria-hidden />;
         const first = row.rank === rows[0].rank;
         return (
-          <ProfileLink key={row.userId} row={row} className={`fz-lb-pod${first ? ' is-first' : ''}${row.isMe ? ' is-me' : ''}`}>
+          <ProfileLink key={row.userId} row={row} className={`fz-lb-pod fz-lb-pod--rank-${Math.min(row.rank, 3)}${first ? ' is-first' : ''}${row.isMe ? ' is-me' : ''}`}>
             {first && <span className="fz-lb-pod__crown" aria-hidden>👑</span>}
             <span className="fz-lb-pod__ring"><Avatar row={row} size={first ? 96 : 72} /></span>
             <span className="fz-lb-pod__name">{row.displayName}{row.isMe && <span className="fz-lb-you"> · You</span>}</span>

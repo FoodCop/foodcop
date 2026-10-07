@@ -45,7 +45,7 @@ $tako-faint: #a8a29e;
 .tako-shell--page {
   position: fixed;
   inset: 0;
-  top: 56px;
+  top: calc(#{$fz-topbar-space} + 0.5rem); // under the navbar
 }
 
 .tako-shell__header {

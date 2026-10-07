@@ -37,11 +37,15 @@ export function LocationChip({
   onUseCurrent,
   onUseHome,
   onPick,
+  variant = 'card',
 }: {
   loc: LocationState;
   onUseCurrent: () => void;
   onUseHome: () => Promise<boolean>;
   onPick: (lat: number, lng: number, label?: string) => void;
+  /** 'card' = the full row (used when no location is set); 'inline' = a compact
+   *  "📍 Sherpur, Maghar ⌄" control in a section header (client, 2026-10-07). */
+  variant?: 'card' | 'inline';
 }) {
   const [open, setOpen] = useState(false);
   const [picking, setPicking] = useState(false);
@@ -95,6 +99,111 @@ export function LocationChip({
           ? `Approximate · within ~${Math.round((loc.accuracy ?? 0) / 1000)} km`
           : 'Your current location';
 
+  // The Change menu, shared by both looks.
+  const menu = open && (
+    <>
+      <button type="button" className="fz-dash-loc__scrim" aria-label="Close" onClick={() => setOpen(false)} />
+      <div className="fz-dash-loc__menu" role="menu">
+        <button
+          type="button"
+          role="menuitem"
+          className="fz-dash-loc__item"
+          onClick={() => {
+            setOpen(false);
+            onUseCurrent();
+          }}
+        >
+          <span className="fz-dash-loc__item-icon"><LocateFixed size={16} /></span>
+          <span>
+            <strong>Use my current location</strong>
+            <small>Ask this device again (precise)</small>
+          </span>
+        </button>
+        <button
+          type="button"
+          role="menuitem"
+          className="fz-dash-loc__item"
+          onClick={async () => {
+            const ok = await onUseHome();
+            if (ok) setOpen(false);
+            else setNoHome(true);
+          }}
+        >
+          <span className="fz-dash-loc__item-icon"><Home size={16} /></span>
+          <span>
+            <strong>Use my home area</strong>
+            <small>{noHome ? 'No home area saved - set it in Profile > Settings' : 'From your profile settings'}</small>
+          </span>
+        </button>
+        <button
+          type="button"
+          role="menuitem"
+          className="fz-dash-loc__item"
+          onClick={() => {
+            setOpen(false);
+            setPicking(true);
+          }}
+        >
+          <span className="fz-dash-loc__item-icon"><MapIcon size={16} /></span>
+          <span>
+            <strong>Pick on map</strong>
+            <small>Drop a pin anywhere</small>
+          </span>
+        </button>
+      </div>
+    </>
+  );
+
+  const picker = picking && (
+    <LocationPickerModal
+      initialLat={ready ? loc.lat : null}
+      initialLng={ready ? loc.lng : null}
+      onClose={() => setPicking(false)}
+      onConfirm={({ lat, lng }) => {
+        setPicking(false);
+        // The chip names the spot itself ("Bang Rak, Bangkok") - a full
+        // address would start with a street number.
+        onPick(lat, lng);
+      }}
+    />
+  );
+
+  const toggleMenu = () => {
+    setNoHome(false);
+    setOpen((v) => !v);
+  };
+
+  // Compact header control: "📍 Sherpur, Maghar ⌄" (opens the same menu).
+  if (variant === 'inline') {
+    const short = unknown ? 'Set location' : ready ? label ?? 'Near you' : 'Locating…';
+    const comma = short.indexOf(',');
+    const areaPart = comma > 0 ? short.slice(0, comma) : short;
+    const restPart = comma > 0 ? short.slice(comma) : '';
+    return (
+      <div className="fz-loc-inline">
+        <button
+          type="button"
+          className={`fz-loc-inline__btn${approx ? ' is-approx' : ''}`}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-label={`Location: ${short}. ${sourceText}. Change location`}
+          title={`${sourceText}${approx ? ' - not right? Change it' : ''}`}
+          onClick={toggleMenu}
+        >
+          <MapPin size={18} className="fz-loc-inline__pin" aria-hidden="true" />
+          <span className="fz-loc-inline__label">
+            {/* Narrow phones show just the area ("Sherpur"); wider screens the full "Sherpur, Maghar". */}
+            {areaPart}
+            {restPart && <span className="fz-loc-inline__rest">{restPart}</span>}
+          </span>
+          <ChevronDown size={16} className="fz-loc-inline__chev" aria-hidden="true" />
+        </button>
+        <div className="fz-dash-loc__anchor">{menu}</div>
+        {picker}
+      </div>
+    );
+  }
+
   return (
     <div className="fz-dash-loc">
       <span className={`fz-dash-loc__icon${approx || unknown ? ' is-approx' : ''}`} aria-hidden="true">
@@ -109,86 +218,13 @@ export function LocationChip({
       </span>
 
       <div className="fz-dash-loc__anchor">
-        <button
-          type="button"
-          className="fz-dash-loc__change"
-          aria-haspopup="menu"
-          aria-expanded={open}
-          onClick={() => {
-            setNoHome(false);
-            setOpen((v) => !v);
-          }}
-        >
+        <button type="button" className="fz-dash-loc__change" aria-haspopup="menu" aria-expanded={open} onClick={toggleMenu}>
           Change <ChevronDown size={14} />
         </button>
-        {open && (
-          <>
-            <button type="button" className="fz-dash-loc__scrim" aria-label="Close" onClick={() => setOpen(false)} />
-            <div className="fz-dash-loc__menu" role="menu">
-              <button
-                type="button"
-                role="menuitem"
-                className="fz-dash-loc__item"
-                onClick={() => {
-                  setOpen(false);
-                  onUseCurrent();
-                }}
-              >
-                <span className="fz-dash-loc__item-icon"><LocateFixed size={16} /></span>
-                <span>
-                  <strong>Use my current location</strong>
-                  <small>Ask this device again (precise)</small>
-                </span>
-              </button>
-              <button
-                type="button"
-                role="menuitem"
-                className="fz-dash-loc__item"
-                onClick={async () => {
-                  const ok = await onUseHome();
-                  if (ok) setOpen(false);
-                  else setNoHome(true);
-                }}
-              >
-                <span className="fz-dash-loc__item-icon"><Home size={16} /></span>
-                <span>
-                  <strong>Use my home area</strong>
-                  <small>{noHome ? 'No home area saved - set it in Profile > Settings' : 'From your profile settings'}</small>
-                </span>
-              </button>
-              <button
-                type="button"
-                role="menuitem"
-                className="fz-dash-loc__item"
-                onClick={() => {
-                  setOpen(false);
-                  setPicking(true);
-                }}
-              >
-                <span className="fz-dash-loc__item-icon"><MapIcon size={16} /></span>
-                <span>
-                  <strong>Pick on map</strong>
-                  <small>Drop a pin anywhere</small>
-                </span>
-              </button>
-            </div>
-          </>
-        )}
+        {menu}
       </div>
 
-      {picking && (
-        <LocationPickerModal
-          initialLat={ready ? loc.lat : null}
-          initialLng={ready ? loc.lng : null}
-          onClose={() => setPicking(false)}
-          onConfirm={({ lat, lng }) => {
-            setPicking(false);
-            // The chip names the spot itself ("Bang Rak, Bangkok") - a full
-            // address would start with a street number.
-            onPick(lat, lng);
-          }}
-        />
-      )}
+      {picker}
     </div>
   );
 }

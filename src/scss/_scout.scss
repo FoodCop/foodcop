@@ -33,6 +33,10 @@ $scout-radius-xl: 2rem;
 // Height of the floating app dock (52px + 1rem gap + a little air) - bottom sheets pad by this.
 $scout-dock-clearance: 4.5rem;
 
+// The map runs behind the floating navbar (client, 2026-10-06), so Scout's
+// floating controls, panels and pop-ups start below the navbar's space.
+$scout-top: calc(#{$fz-topbar-space} + env(safe-area-inset-top));
+
 $scout-z-map: 0;
 $scout-z-fab: 10;
 $scout-z-panel: 10;
@@ -68,7 +72,7 @@ $scout-z-wizard: 1100;
 
 .scout-search {
   position: absolute;
-  top: 1rem;
+  top: calc(#{$scout-top} + 1rem);
   left: 1rem;
   right: 5rem;
   z-index: $scout-z-chrome;
@@ -242,6 +246,19 @@ $scout-z-wizard: 1100;
   display: flex;
   align-items: center;
   gap: 0.375rem;
+  white-space: nowrap; // "Nearby (40)" never breaks across lines
+}
+
+// Phones: a little tighter so all three fit; scrolls sideways if they still don't.
+@media (max-width: 575.98px) {
+  .scout-legend {
+    max-width: 100%;
+    gap: 0.7rem;
+    padding: 0.45rem 0.8rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
 }
 
 .scout-legend__dot {
@@ -267,7 +284,7 @@ $scout-z-wizard: 1100;
 
 .scout-fabs {
   position: absolute;
-  top: 1rem;
+  top: calc(#{$scout-top} + 1rem);
   right: 1rem;
   z-index: $scout-z-fab;
   display: flex;
@@ -275,7 +292,7 @@ $scout-z-wizard: 1100;
   gap: 0.625rem;
 
   @include media-breakpoint-up(md) {
-    top: 1.5rem;
+    top: calc(#{$scout-top} + 1.5rem);
     right: 1.5rem;
   }
 }
@@ -354,14 +371,14 @@ $scout-z-wizard: 1100;
     display: flex;
     position: absolute;
     // Below the search bar + legend; from 1100px the legend sits beside the bar.
-    top: 8.5rem;
-    @media (min-width: 1100px) { top: 5rem; }
+    top: calc(#{$scout-top} + 8.5rem);
+    @media (min-width: 1100px) { top: calc(#{$scout-top} + 5rem); }
     left: 1.5rem;
     z-index: $scout-z-panel;
     width: 380px;
     // Stops above the floating app dock (56px navbar + top + dock clearance).
-    max-height: calc(100dvh - 56px - 8.5rem - #{$scout-dock-clearance});
-    @media (min-width: 1100px) { max-height: calc(100dvh - 56px - 5rem - #{$scout-dock-clearance}); }
+    max-height: calc(100dvh - #{$scout-top} - 8.5rem - #{$scout-dock-clearance});
+    @media (min-width: 1100px) { max-height: calc(100dvh - #{$scout-top} - 5rem - #{$scout-dock-clearance}); }
     flex-direction: column;
     @include scout-floating-surface($border-radius-lg);
     overflow: hidden;
@@ -629,6 +646,7 @@ $scout-z-wizard: 1100;
 .scout-modal {
   position: absolute;
   inset: 0;
+  top: $scout-top; // phones: full-screen below the floating navbar
   z-index: $scout-z-modal;
   background: #fff;
   display: flex;
@@ -637,7 +655,7 @@ $scout-z-wizard: 1100;
 
   @include media-breakpoint-up(md) {
     inset: auto;
-    top: 5rem;
+    top: calc(#{$scout-top} + 5rem);
     left: 416px;
     width: 400px;
     height: calc(100dvh - 160px);
@@ -1804,12 +1822,12 @@ $scout-route-blue: #2f7de1;
   color: $scout-ink;
 
   @include media-breakpoint-up(md) {
-    top: 5rem;
+    top: calc(#{$scout-top} + 5rem);
     bottom: auto;
     left: 1.5rem;
     right: auto;
     width: 380px;
-    max-height: calc(100dvh - 56px - 5rem - #{$scout-dock-clearance}); // above the app dock
+    max-height: calc(100dvh - #{$scout-top} - 5rem - #{$scout-dock-clearance}); // above the app dock
     padding: 1.15rem;
     @include scout-floating-surface($border-radius-lg);
   }
@@ -2359,7 +2377,7 @@ body.fz-navigating .fz-dash-dock { display: none; }
 .scout-nav {
   &__banner {
     position: absolute;
-    top: 0.75rem;
+    top: calc(#{$scout-top} + 0.75rem);
     left: 0.75rem;
     right: 0.75rem;
     z-index: $scout-z-chrome + 1;
@@ -2378,7 +2396,7 @@ body.fz-navigating .fz-dash-dock { display: none; }
       left: 1.5rem;
       right: auto;
       width: 420px;
-      top: 1.5rem;
+      top: calc(#{$scout-top} + 1.5rem);
     }
   }
 
@@ -2538,7 +2556,7 @@ body.fz-navigating .fz-dash-dock { display: none; }
 .scout-pick {
   &__hint {
     position: absolute;
-    top: 1rem;
+    top: calc(#{$scout-top} + 1rem);
     left: 50%;
     z-index: $scout-z-chrome;
     max-width: calc(100% - 2rem);
@@ -2599,7 +2617,7 @@ body.fz-navigating .fz-dash-dock { display: none; }
     @include media-breakpoint-up(md) {
       left: 1.5rem;
       right: auto;
-      top: 5rem;
+      top: calc(#{$scout-top} + 5rem);
       bottom: auto;
       width: 380px;
       padding: 1.15rem;

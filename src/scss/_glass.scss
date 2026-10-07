@@ -1,0 +1,214 @@
+// ============================================================================
+// GLASS CONTROLS (client, 2026-10-06)
+// The floating controls that sit on the page gradient share the navbar's
+// creamy frosted glass (`fz-glass`, _header.scss): Home's section pill, search
+// bars, filter toolbars and chips, on every page. Selected states keep their
+// own colour (yellow / ink) so they still read as selected. Loaded last so it
+// wins over each page's older paper/white look.
+// ============================================================================
+
+// ── Home: For you · Bites · Feed · Trims ──────────────────────────────────
+// No band behind the pill any more (it was a flat cream box with hard edges
+// on the gradient) - only the glass pill floats under the navbar.
+.fz-dash-tabs-wrap { background: none; }
+.fz-dash-tabs {
+  @include fz-glass;
+  border-radius: 9999px;
+}
+
+// ── Explore (Scout): search bar + source legend over the map ──────────────
+.scout-search__bar,
+.scout-legend {
+  @include fz-glass;
+}
+
+// ── Bites: search + filter button + filter chips ──────────────────────────
+.bites-search__input {
+  @include fz-glass(false);
+  &:focus { border-color: $fuzo-yellow; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); }
+}
+.bites-filter-toggle:not(.is-active) { @include fz-glass(false); }
+.bites-chip:not(.is-selected) { @include fz-glass(false); }
+
+// ── My Plate: search, sort, icon buttons, kind chips ──────────────────────
+.fz-plate__search,
+.fz-plate__icon-btn,
+.fz-plate__back,
+.fz-plate__chip:not([aria-pressed='true']) {
+  @include fz-glass(false);
+}
+.fz-plate__search:focus-within { border-color: $fuzo-yellow-deep; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); }
+// The sort select keeps its little chevron on top of the glass.
+.fz-plate__sort select {
+  @include fz-glass(false);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23241f16' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"),
+    var(--fz-glass-sheen);
+  background-repeat: no-repeat, no-repeat;
+  background-position: right 0.8rem center, 0 0;
+  background-color: var(--fz-glass-tint);
+}
+@media (max-width: 439.98px) {
+  // Icon-only sort on narrow phones: no chevron.
+  .fz-plate__sort select {
+    background-image: var(--fz-glass-sheen);
+  }
+}
+
+// ── App dock: same glass as the navbar and cards ─────────────────────────
+.fz-dash-dock { @include fz-glass; }
+
+// ── Profile: Activity | Food DNA tab bar ──────────────────────────────────
+.profile-shell .fz-profile-tabs { @include fz-glass; }
+
+// ── Leaderboard & Rewards: page switch + filter toolbar ───────────────────
+.fz-lbr-tabs,
+.fz-lb--embedded .fz-lb-controls {
+  @include fz-glass;
+}
+
+// ── Selected states on glass ──────────────────────────────────────────────
+// Yellow on the creamy-yellow glass was too faint, so on glass controls the
+// selected option is dark ink with white text - same as the Leaderboard
+// switch and My Plate's chips.
+.fz-dash-tabs__thumb {
+  background: $fz-ink;
+  box-shadow: 0 6px 16px -8px rgba($fz-ink, 0.6);
+}
+.fz-dash-tabs__tab.is-active { color: #fff; }
+.bites-chip.is-selected {
+  background: $fz-ink;
+  border-color: $fz-ink;
+  color: #fff;
+}
+
+// Dark theme: the sort chevron is drawn light (the ink one would vanish).
+html[data-theme='dark'] .fz-plate__sort select {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23f4efe4' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"),
+    var(--fz-glass-sheen);
+}
+@media (max-width: 439.98px) {
+  html[data-theme='dark'] .fz-plate__sort select { background-image: var(--fz-glass-sheen); }
+}
+
+// ============================================================================
+// GLASS CARDS (client, 2026-10-06): the white section cards on every page,
+// Profile included, are frosted glass instead of plain white - the moving
+// background glows show through, blurred. The blur sits on a ::before layer
+// (not the card itself) so the card never becomes the containing block for
+// fixed-position children like menus and modals. Dark theme: a denser frost
+// so the ink text inside stays readable on the black page.
+// ============================================================================
+:root {
+  // Clearly glass (client, 2026-10-06): a diagonal light sheen, brighter at
+  // the top-left edge and see-through towards the bottom-right, so the page
+  // and its yellow glow show through the blur.
+  // Same see-through yellow glass as the navbar / Home tabs / location card
+  // (client, 2026-10-06): the yellow page shows through every card.
+  // Whiter cream glass (client, 2026-10-06: preferred Home's earlier, whiter
+  // sections) - white 90% top-left to 72% bottom-right.
+  --fz-card-glass: #f6f5f2;
+  --fz-card-glass-fallback: #{rgba(#fff, 0.94)};
+  --fz-card-glass-border: #{rgba(#fff, 0.9)};
+  --fz-card-glass-edge: #{rgba(#fff, 0.35)};
+  --fz-card-glass-inner: #{rgba(#fff, 0.5)};
+}
+html[data-theme='dark'] {
+  --fz-card-glass: #f4f4f2;
+  --fz-card-glass-fallback: #{rgba(#fff, 0.96)};
+  --fz-card-glass-border: #{rgba(#fff, 0.28)};
+  --fz-card-glass-edge: transparent;
+  --fz-card-glass-inner: #{rgba(#fff, 0.6)};
+}
+
+// Floating card (client, 2026-10-06): pure white, a 1px #F2F2F2 border and a
+// soft three-layer shadow on all sides, so cards sit above the page instead
+// of blending into it. Big sections also get 28px corners + roomy padding in
+// _clean.scss. Dark: a near-white card with a deeper shadow.
+:root {
+  --fz-float-bg: #fff;
+  --fz-float-border: #f2f2f2;
+  --fz-float-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    0 0 1px rgba(0, 0, 0, 0.04);
+}
+html[data-theme='dark'] {
+  --fz-float-bg: #f4f4f2;
+  --fz-float-border: #{rgba(#fff, 0.06)};
+  --fz-float-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.6),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 0 1px rgba(255, 255, 255, 0.08);
+}
+@mixin fz-float-card {
+  background: var(--fz-float-bg);
+  border: 1px solid var(--fz-float-border);
+  box-shadow: var(--fz-float-shadow);
+}
+@mixin fz-glass-card($position: true) {
+  @if $position { position: relative; }
+  @include fz-float-card;
+}
+
+// Profile
+.profile-shell .fz-phero,
+.profile-shell .fz-highlights-section,
+.profile-shell .fz-activity-section,
+.profile-shell .fz-activity-panel,
+.fz-dna-card,
+.fz-settings-row,
+.fz-private-notice,
+// Home + My Plate (Home's rails)
+.fz-dash-rail,
+.fz-dash-notice,
+.fz-dash-cities,
+.fz-dash-loc,
+.fz-plate__state,
+// Leaderboard & Rewards
+.fz-lb-row,
+.fz-lb-recent,
+.rewards-level-card,
+.rewards-badge-card,
+.rewards-ach-card,
+// Notifications + Messages
+.fz-notif__list,
+.fz-chat {
+  @include fz-glass-card;
+}
+.fz-lb-you-card { @include fz-glass-card(false); } // keeps position: sticky
+.fz-dna-tile { @include fz-glass-card; }
+
+// Explore: the floating panels over the map (already absolutely placed).
+.scout-panel--mobile,
+.scout-dir {
+  @include fz-glass-card(false);
+}
+@include media-breakpoint-up(md) {
+  .scout-panel--desktop { @include fz-glass-card(false); }
+}
+
+// Blocks inside a glass card are a light see-through white, not solid
+// white - glass inside glass would just look muddy.
+.fz-chat-inbox,
+.fz-chat-pane,
+.fz-chat-thread__messages,
+.fz-chat-composer { background: transparent; }
+.scout-place-card { background: var(--fz-card-glass-inner); }
+
+// Home: "Explore <country>'s cities" - the round photos sit straight on the
+// glass panel (no tile behind each city - client, 2026-10-06); only the
+// Cities | Countries switch sits on the navbar glass.
+.fz-dash-cities__toggle { @include fz-glass(false); }
+// Dark theme: the switch sits inside a (white) card, so it stays light.
+html[data-theme='dark'] .fz-dash-cities__toggle {
+  background: rgba($fz-ink, 0.06);
+  border-color: rgba($fz-ink, 0.08);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+// Yellow text on the yellow glass card is too faint: the rank line goes ink.
+.rewards-level-info__rank { color: rgba($fz-ink, 0.78); }

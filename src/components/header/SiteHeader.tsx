@@ -52,7 +52,10 @@ export default function SiteHeader() {
   const showInboxDot = signedIn && (unread.notifications || unread.messages > 0);
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
   const displayName = (user?.user_metadata?.display_name as string | undefined) || user?.email?.split('@')[0] || 'You';
-  const onHome = pathname === '/dashboard';
+  // Pages with the bottom dock already have its Home button, so the navbar
+  // doesn't repeat it there.
+  const DOCK_PAGES = ['/dashboard', '/scout', '/my-plate', '/leaderboard', '/rewards'];
+  const hasDock = DOCK_PAGES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   return (
     <>
@@ -69,18 +72,20 @@ export default function SiteHeader() {
         {/* Centre: logo - opens Tako when signed in, goes home otherwise. */}
         {signedIn ? (
           <button type="button" className="fz-topbar__logo" onClick={() => { close(); setIsTakoOpen(true); }} aria-label="Ask Tako, your AI food assistant" title="Ask Tako">
-            <img src="/fuzo_logo.svg" alt="FUZO" />
+            <img className="fz-topbar__logo-img" src="/images/brand/fuzo-logo.png" alt="FUZO - Discover Food That Finds You" width={457} height={181} />
+            <img className="fz-topbar__logo-img fz-topbar__logo-img--dark" src="/images/brand/fuzo-logo-dark.png" alt="" aria-hidden="true" width={457} height={181} />
           </button>
         ) : (
           <Link href="/" className="fz-topbar__logo" aria-label="FUZO home">
-            <img src="/fuzo_logo.svg" alt="FUZO" />
+            <img className="fz-topbar__logo-img" src="/images/brand/fuzo-logo.png" alt="FUZO - Discover Food That Finds You" width={457} height={181} />
+            <img className="fz-topbar__logo-img fz-topbar__logo-img--dark" src="/images/brand/fuzo-logo-dark.png" alt="" aria-hidden="true" width={457} height={181} />
           </Link>
         )}
 
         {/* Right: home (back to the dashboard from anywhere - not shown on the
             dashboard itself, whose bottom dock has Home) + inbox. */}
         <div className="fz-topbar__side fz-topbar__side--end">
-          {signedIn && !onHome && (
+          {signedIn && !hasDock && (
             <Link
               href="/dashboard"
               className="fz-topbar__icon"

@@ -422,10 +422,12 @@ export default function ProfileHero({
                   </button>
                   <Link href={`/messages?userId=${userId}`} className="fz-phero__square-btn" aria-label={`Message ${profile.name}`} title="Message">
                     <MessageCircle size={19} />
+                    <span className="fz-phero__btn-label">Message</span>
                   </Link>
                   {isRestaurant && (
                     <button type="button" className="fz-phero__square-btn" onClick={() => setIsRating(true)} aria-label={`Rate ${profile.name}`} title="Rate">
                       <Star size={19} />
+                      <span className="fz-phero__btn-label">Rate</span>
                     </button>
                   )}
                 </>

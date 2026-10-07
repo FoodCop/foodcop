@@ -645,3 +645,18 @@ $rewards-done: #4d7c0f;
 
   &__go { flex-shrink: 0; color: $fz-ink-soft; }
 }
+
+// Light level card (client, 2026-10-06): the dark ink + yellow combination was
+// not liked - white card, ink text, yellow only for the progress ring / bar.
+.rewards-level-card {
+  background: #fff;
+  color: $fz-ink;
+  border: 1px solid rgba($fz-ink, 0.08);
+  box-shadow: 0 1px 2px rgba($fz-ink, 0.05), 0 14px 30px -16px rgba($fz-ink, 0.3);
+}
+.rewards-level-ring__num { color: $fz-ink; }
+.rewards-level-ring__tag { color: $fz-ink-soft; }
+.rewards-level-info__name { color: $fz-ink; }
+.rewards-level-info__rank { color: $fuzo-yellow-deep; }
+.rewards-level-info__xp { color: $fz-ink-soft; }
+.rewards-level-info__track { background: rgba($fz-ink, 0.08); }

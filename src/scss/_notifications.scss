@@ -6,8 +6,8 @@
 // ============================================================================
 
 .fz-notif {
-  min-height: calc(100dvh - 56px);
-  background: #f6f5f2;
+  min-height: calc(100dvh - #{$fz-topbar-space});
+  background: transparent; // app-wide gradient
   padding: 1.75rem 1rem 4rem;
 
   @media (min-width: 768px) { padding-top: 2.75rem; }

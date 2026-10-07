@@ -270,9 +270,18 @@ export default function DashboardView() {
           )}
 
           {/* Which location For you uses - and a way to fix it when the browser's guess is wrong. */}
-          <LocationChip loc={loc} onUseCurrent={retryGps} onUseHome={chooseHomeArea} onPick={setPickedLocation} />
+          {/* No location yet: the full card (the cities section is hidden then).
+              Otherwise the location is a compact control in the cities header. */}
+          {loc.status === 'unavailable' && (
+            <LocationChip loc={loc} onUseCurrent={retryGps} onUseHome={chooseHomeArea} onPick={setPickedLocation} />
+          )}
 
-          <NearbyCities loc={loc} />
+          <NearbyCities
+            loc={loc}
+            locationSlot={
+              <LocationChip variant="inline" loc={loc} onUseCurrent={retryGps} onUseHome={chooseHomeArea} onPick={setPickedLocation} />
+            }
+          />
 
           <Rail
             title="Recommended Restaurants"
