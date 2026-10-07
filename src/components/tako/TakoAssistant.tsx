@@ -37,6 +37,7 @@ import type { ChatMessage, ChefStructuredResponse, TakoAction, TakoGroup } from 
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { CreateCardModal } from '@/components/create/CreateCardModal';
 import { TakoMascot, type TakoMood } from './TakoMascot';
+import { GEMINI_MODEL } from '@/lib/ai/geminiModel';
 
 const parseChefResponse = (text: string): ChefStructuredResponse | null => {
   if (!text) return null;
@@ -133,7 +134,7 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
 
     try {
       const res = await GeminiService.generateContent({
-        model: 'gemini-2.5-flash',
+        model: GEMINI_MODEL,
         contents: outgoing,
         config: {
           systemInstruction: CHEF_SYSTEM_INSTRUCTION,

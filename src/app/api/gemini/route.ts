@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { GEMINI_MODEL } from '@/lib/ai/geminiModel';
 
 // Server-side Gemini proxy for Tako / Chef AI. Both legacy GeminiService
 // copies (React app + FUZO_V3) only knew how to reach a local Vite dev proxy
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing "contents" in request body.' }, { status: 400 });
   }
 
-  const model = body.model || 'gemini-2.5-flash';
+  const model = body.model || GEMINI_MODEL;
   const { systemInstruction, ...generationConfig } = body.config || {};
 
   const geminiBody: Record<string, unknown> = {

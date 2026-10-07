@@ -105,6 +105,20 @@ export const ScoutPlaceModal = ({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const priceStr = place.priceLevel ? '$'.repeat(place.priceLevel) : null;
+
+  // Reserve / Order links. Google's "website" for a place is often not a
+  // booking page (a chain homepage, a Facebook page, an expired domain), and
+  // one without "https://" opened as a broken page inside FUZO. So these go
+  // to the place's Google Maps page, which shows its real booking / ordering
+  // options - unless it's a FUZO restaurant whose owner entered their own site.
+  const withScheme = (url: string) => (/^https?:\/\//i.test(url) ? url : `https://${url}`);
+  const ownerWebsite = fuzoRestaurant && !rawPlace.isNewFind ? fuzoProfile?.website : null;
+  const mapsPlaceUrl = (() => {
+    const params = new URLSearchParams({ api: '1', query: [place.name, place.address].filter(Boolean).join(', ') });
+    if (place.placeId) params.set('query_place_id', place.placeId);
+    return `https://www.google.com/maps/search/?${params.toString()}`;
+  })();
+  const actionUrl = ownerWebsite ? withScheme(ownerWebsite) : mapsPlaceUrl;
   const [hoursOpen, setHoursOpen] = React.useState(false);
 
   // One source of truth for open/closed in this popup: a FUZO restaurant's own
@@ -243,7 +257,7 @@ export const ScoutPlaceModal = ({
           <div className="scout-modal__primary-actions">
             {place.reservable && (
               <button
-                onClick={() => window.open(place.website || `https://www.google.com/search?q=${encodeURIComponent(place.name + ' reservations')}`, '_blank')}
+                onClick={() => window.open(actionUrl, '_blank', 'noopener,noreferrer')}
                 className="scout-modal__reserve"
               >
                 <Bookmark size={16} /> Reserve a table
@@ -251,7 +265,7 @@ export const ScoutPlaceModal = ({
             )}
             {(place.takeout || place.delivery) && (
               <button
-                onClick={() => window.open(place.website || `https://www.google.com/search?q=${encodeURIComponent(place.name + ' order online')}`, '_blank')}
+                onClick={() => window.open(actionUrl, '_blank', 'noopener,noreferrer')}
                 className="scout-modal__order"
               >
                 Order online
