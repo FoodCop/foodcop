@@ -113,3 +113,33 @@ $enable-shadows: false;
 // mobile menu (its .side-bar was 465px / 600ms).
 $offcanvas-horizontal-width: 420px;
 $offcanvas-transition-duration: 0.45s;
+
+// ===== Pastel tiles (client, 2026-10-07) =====
+// Soft pastel backgrounds for picker tiles and chips (Tako's options, Create's
+// card types, cuisine / meal / diet / cooking chips), each item a different
+// colour in this order. Each pair is (background, hover). Selected chips still
+// turn solid FUZO yellow.
+$fz-pastels: (
+  ('#FFE6DA', '#FFD3BF'), // peach
+  ('#DDF3E4', '#C6EBD2'), // mint
+  ('#DDEBFB', '#C7DDF8'), // sky
+  ('#FFF2C9', '#FFE8A3'), // butter
+  ('#ECE5FC', '#DCD0FA'), // lavender
+  ('#FDE3EE', '#FACDE0'), // pink
+  ('#D9F3F1', '#BFEAE6'), // aqua
+  ('#FFEBD1', '#FFDCAE'), // apricot
+);
+
+// Sets --pastel / --pastel-hover on each item by its position among its
+// siblings; use them as `background: var(--pastel)`.
+@mixin fz-pastel-cycle {
+  --pastel: #{nth(nth($fz-pastels, 1), 1)};
+  --pastel-hover: #{nth(nth($fz-pastels, 1), 2)};
+
+  @for $i from 2 through length($fz-pastels) {
+    &:nth-child(#{length($fz-pastels)}n + #{$i}) {
+      --pastel: #{nth(nth($fz-pastels, $i), 1)};
+      --pastel-hover: #{nth(nth($fz-pastels, $i), 2)};
+    }
+  }
+}

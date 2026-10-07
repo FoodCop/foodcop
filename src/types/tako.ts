@@ -23,27 +23,27 @@ export interface ChatMessage {
   text: string;
 }
 
-export interface Mood {
+// Tako's landing screen (client, 2026-10-07): three big starting points
+// (Eat out / Cook / Explore); picking one opens its options underneath.
+// Each option either opens an app page, starts a Tako conversation with a
+// ready-made question, or opens Create a card.
+export type TakoAction =
+  | { type: 'navigate'; href: string }
+  | { type: 'prompt'; prompt: string }
+  | { type: 'create-card' };
+
+export interface TakoOption {
+  /** Colour illustration from /public/SVG. */
   icon: string;
   label: string;
-  prompt: string;
+  action: TakoAction;
 }
 
-// Quick Discovery actions are either a real in-app navigation, a conversation
-// starter handled by Tako itself, or (for features not built yet) a "coming
-// soon" notice - unlike tako.js's version, where every action was a no-op
-// toast regardless of type.
-export type QuickAction =
-  | { icon: string; label: string; color: string; type: 'navigate'; href: string }
-  | { icon: string; label: string; color: string; type: 'prompt'; prompt: string }
-  | { icon: string; label: string; color: string; type: 'create-card' }
-  | { icon: string; label: string; color: string; type: 'soon' };
-
-export interface QuickLink {
-  icon: string;
+export interface TakoGroup {
+  id: 'eat' | 'cook' | 'explore';
   label: string;
-  color: string;
-  type: 'navigate' | 'prompt';
-  href?: string;
-  prompt?: string;
+  sub: string;
+  /** Light and dark end of the 3D ball behind the group's icon. */
+  tint: [string, string];
+  options: TakoOption[];
 }

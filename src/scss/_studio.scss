@@ -1,36 +1,67 @@
-// Create Card studios: the master "+" type picker (CreateCardModal) and the
+// Create Card studios: the master Create picker (CreateCardModal) and the
 // three non-Restaurant family wizards (RecipeCardStudio/VideoCardStudio/
 // DiscoveryCardStudio), plus their shared primitives (StudioStepper,
-// NeuralReveal, FlavorSliders, TagChips). These were originally built with
-// Tailwind utility classNames (copying legacy SnapStudio's approach) - this
-// app has no Tailwind, so none of it rendered. Hand-ported here onto FUZO's
-// flat, brand-accented light look (same family as `_scout.scss`/`_bites.scss`/
-// `_dashboard.scss` - see `_dna.scss`'s comment on why claymorphism/dark
-// "studio" surfaces were dropped project-wide) rather than the dark theme
-// this was first ported with.
+// NeuralReveal, FlavorSliders, TagChips).
+// Clean look (client, 2026-10-07: "make Create like the rest of the site"):
+// the same white page as Home / My Plate, each step's content in a floating
+// card (the `fz-float-card` look, 28px corners), flat light-grey pills for inputs and
+// chips, FUZO yellow (ink text) for whatever is selected or the main action,
+// sentence-case headings in the body font - no more all-caps italic.
 // FlavorSliders/TagChips are shared with `.scout-wizard` (Restaurant family,
-// also light-themed - see the "Add-pin wizard" section of `_scout.scss`), so
-// their classes here need to read fine in both contexts.
+// see the "Add-pin wizard" section of `_scout.scss`), so their classes here
+// need to read fine in both contexts.
 
-$studio-ink: #1c1917;
-$studio-ink-soft: #57534e;
-$studio-muted: #78716c;
-$studio-muted-dim: #a8a29e;
-$studio-border: #ece9e6;
-$studio-border-soft: #f0efed;
-$studio-surface: #f7f6f4;
+$studio-ink: $fz-ink;
+$studio-muted: #6b6457;
+$studio-muted-dim: #8f8a80;
+// Grey pill colour as CSS variables, so dark mode can deepen it (its cards
+// are a near-white #f4f4f2 there, which #f2f1ee pills would vanish into).
+$studio-pill: var(--studio-pill);
+$studio-pill-hover: var(--studio-pill-hover);
+:root {
+  --studio-pill: #f2f1ee;
+  --studio-pill-hover: #e9e7e2;
+}
+html[data-theme='dark'] {
+  --studio-pill: #e4e2dc;
+  --studio-pill-hover: #d9d6cf;
+}
+$studio-line: #ecebe7;
 $studio-accent: $fuzo-yellow;
 $studio-accent-ink: $fuzo-yellow-ink; // text/icons ON a solid $studio-accent surface - see _variables.scss's 2026-07-29 note
-$studio-success: $lime;
 $studio-danger: $rose;
 
-$studio-radius-xl: 2rem;
-$studio-radius-pill: 3rem;
+$studio-card-radius: 28px;
+$studio-field-radius: 16px;
+$studio-max: 34rem;
 // Above Bootstrap's entire z-index scale (max is $zindex-toast: 1090) - this
 // is a full-screen dialog portaled to <body>, it must win over the sticky
-// navbar ($zindex-sticky: 1020) unconditionally, not just be positioned
-// correctly against the viewport.
+// navbar ($zindex-sticky: 1020) unconditionally.
 $studio-z: 1100;
+
+@mixin studio-focus {
+  &:focus-visible {
+    outline: 2px solid $fuzo-yellow-deep;
+    outline-offset: 2px;
+  }
+}
+
+// Same as `fz-float-card` (_glass.scss, which loads after this file): the
+// floating section card's white surface, hairline border and soft shadow.
+@mixin studio-float-card {
+  background: var(--fz-float-bg);
+  border: 1px solid var(--fz-float-border);
+  box-shadow: var(--fz-float-shadow);
+}
+
+@mixin studio-heading-type {
+  font-family: var(--body-font), $font-family-sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-transform: none;
+  font-style: normal;
+}
 
 // ---------------------------------------------------------------------------
 // Modal shell + header (CreateCardModal, RecipeCardStudio, VideoCardStudio,
@@ -50,50 +81,85 @@ $studio-z: 1100;
 }
 
 .studio-header {
-  padding: 2rem;
-  border-bottom: 1px solid $studio-border;
-  background: #fff;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 1rem clamp(1rem, 3vw, 2rem);
+  padding-top: calc(1rem + env(safe-area-inset-top));
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem;
   z-index: 30;
 }
 
+// The picker's title lines up with its cards (56rem column) on wide screens.
+.studio-header--picker {
+  max-width: calc(56rem + 2 * clamp(1rem, 3vw, 2rem));
+}
+
+.studio-header__titles {
+  min-width: 0;
+}
+
+// Small label above a heading: a pale-yellow pill ("📖 Recipe", "FUZO Studio").
 .studio-header__eyebrow {
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: $studio-muted-dim;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  align-self: center;
+  width: fit-content;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow-tint;
+  color: $fz-ink;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.studio-header .studio-header__eyebrow {
+  padding: 0;
+  background: none;
+  color: $studio-muted;
+  font-weight: 700;
 }
 
 .studio-header__title {
-  font-size: 1.5rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.03em;
-  font-style: italic;
-  line-height: 1;
-  margin-top: 0.25rem;
+  @include studio-heading-type;
+  margin: 0.1rem 0 0;
+  font-size: clamp(1.6rem, 4.5vw, 2.25rem);
+}
+
+.studio-header__sub {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $studio-muted;
 }
 
 .studio-close {
-  width: 3rem;
-  height: 3rem;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
-  background: $studio-border-soft;
-  border-radius: 1rem;
+  background: $studio-pill;
+  border-radius: 50%;
   border: 0;
   color: $studio-ink;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.2s ease, transform 0.2s $fz-ease;
+  @include studio-focus;
 
   &:hover {
-    background: $studio-border;
+    background: $fuzo-yellow;
+    color: $studio-accent-ink;
+  }
+  &:active {
+    transform: scale(0.94);
   }
 }
 
@@ -105,22 +171,23 @@ $studio-z: 1100;
 
 .studio-body--scroll {
   overflow-y: auto;
-  padding: 2rem;
+  padding: 0.5rem clamp(1rem, 3vw, 2rem) calc(2rem + env(safe-area-inset-bottom));
 }
 
 // ---------------------------------------------------------------------------
-// StudioStepper (src/components/ui/StudioStepper.tsx)
+// StudioStepper (src/components/ui/StudioStepper.tsx): small round steps,
+// yellow for the current one, a yellow check for the ones you've done.
 // ---------------------------------------------------------------------------
 
 .studio-stepper {
   flex: 1;
+  min-width: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  width: 100%;
-  max-width: 42rem;
+  max-width: 30rem;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding-bottom: 1.1rem;
 }
 
 .studio-stepper__step {
@@ -132,42 +199,42 @@ $studio-z: 1100;
 }
 
 .studio-stepper__dot {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 1rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 900;
-  border: 2px solid $studio-border;
-  background: $studio-surface;
-  color: $studio-muted-dim;
-  transition: all 0.3s ease;
+  font-size: 0.8rem;
+  font-weight: 800;
+  background: $studio-pill;
+  color: $studio-muted;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
 
   &.is-active {
-    background: $studio-ink;
-    border-color: $studio-ink;
-    color: #fff;
-    transform: scale(1.1);
+    background: $studio-accent;
+    color: $studio-accent-ink;
+    box-shadow: 0 0 0 4px rgba($fuzo-yellow, 0.25);
   }
 
   &.is-done {
-    background: $studio-success;
-    border-color: $studio-success;
-    color: #000;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
   }
 }
 
 .studio-stepper__label {
   position: absolute;
   top: 100%;
-  margin-top: 0.5rem;
+  margin-top: 0.3rem;
   white-space: nowrap;
-  font-size: 0.5625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+  font-size: 0.6875rem;
+  font-weight: 700;
   color: $studio-muted-dim;
   transition: color 0.3s ease;
 
@@ -178,10 +245,10 @@ $studio-z: 1100;
 
 .studio-stepper__connector {
   flex-grow: 1;
-  margin: 0 1rem;
+  margin: 1rem 0.5rem 0;
   height: 2px;
   border-radius: 9999px;
-  background: $studio-border;
+  background: $studio-line;
   overflow: hidden;
   position: relative;
 
@@ -189,9 +256,9 @@ $studio-z: 1100;
     content: '';
     position: absolute;
     inset: 0;
-    background: $studio-success;
+    background: $studio-accent;
     transform: translateX(-100%);
-    transition: transform 0.5s ease;
+    transition: transform 0.5s $fz-ease;
   }
 
   &.is-done::after {
@@ -206,40 +273,38 @@ $studio-z: 1100;
 .studio-reveal {
   position: absolute;
   inset: 0;
-  background: #fff;
+  background: inherit;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2rem;
   text-align: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .studio-reveal__icon {
-  color: $studio-accent;
+  width: 96px;
+  height: 96px;
+  padding: 24px;
+  border-radius: 50%;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-deep;
   animation: studio-pulse-fade 1.4s ease-in-out infinite;
 }
 
 .studio-reveal__title {
-  font-size: 2.5rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.04em;
-  font-style: italic;
-  line-height: 1;
+  @include studio-heading-type;
+  margin: 0;
+  font-size: clamp(1.6rem, 5vw, 2.25rem);
   color: $studio-ink;
-
-  @include media-breakpoint-up(md) {
-    font-size: 3rem;
-  }
 }
 
 .studio-reveal__footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .studio-reveal__dots {
@@ -249,8 +314,8 @@ $studio-z: 1100;
 }
 
 .studio-reveal__dot {
-  width: 0.375rem;
-  height: 0.375rem;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
   background: $studio-accent;
   animation: studio-bounce 1s infinite;
@@ -264,11 +329,10 @@ $studio-z: 1100;
 }
 
 .studio-reveal__subtitle {
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: $studio-muted-dim;
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $studio-muted;
 }
 
 @keyframes studio-pulse-fade {
@@ -276,7 +340,7 @@ $studio-z: 1100;
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.6;
   }
 }
 
@@ -290,37 +354,43 @@ $studio-z: 1100;
 }
 
 // ---------------------------------------------------------------------------
-// Generic step panel (identity/story/review content)
+// Step panel: the step's content sits in one floating card in the middle.
 // ---------------------------------------------------------------------------
 
-.studio-panel {
-  position: absolute;
-  inset: 0;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
+.studio-panel,
 .studio-panel--scroll {
   position: absolute;
   inset: 0;
-  padding: 2rem;
   overflow-y: auto;
+  padding: 0.75rem clamp(1rem, 3vw, 2rem) calc(2rem + env(safe-area-inset-bottom));
+}
+
+.studio-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
 }
 
 .studio-panel__inner {
-  max-width: 32rem;
+  @include studio-float-card;
+  max-width: $studio-max;
   width: 100%;
   margin: 0 auto;
+  padding: 1.5rem;
+  border-radius: $studio-card-radius;
+  color: $studio-ink;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.5rem;
+  animation: studio-rise 0.45s $fz-ease backwards;
+
+  @media (max-width: 480px) {
+    padding: 1.25rem;
+  }
 }
 
 .studio-panel__inner--wide {
-  max-width: 36rem;
+  max-width: 38rem;
 }
 
 .studio-panel__inner--center {
@@ -330,29 +400,36 @@ $studio-z: 1100;
 .studio-panel__group {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .studio-panel__head {
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .studio-heading {
-  font-size: 2.5rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.04em;
-  font-style: italic;
-  line-height: 1;
+  @include studio-heading-type;
+  margin: 0;
+  font-size: clamp(1.5rem, 4.5vw, 1.9rem);
   color: $studio-ink;
 }
 
 .studio-sub {
-  font-size: 0.8125rem;
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
   color: $studio-muted;
+}
+
+@keyframes studio-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -360,72 +437,90 @@ $studio-z: 1100;
 // ---------------------------------------------------------------------------
 
 .studio-field-label {
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: $studio-muted-dim;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: $studio-ink;
 }
 
 .studio-input {
   width: 100%;
-  background: $studio-surface;
-  border: 2px solid $studio-border;
-  padding: 1.25rem 1.5rem;
-  border-radius: $studio-radius-xl;
-  font-weight: 900;
+  background: $studio-pill;
+  border: 1px solid transparent;
+  padding: 0.9rem 1.1rem;
+  border-radius: $studio-field-radius;
+  font-weight: 600;
   font-size: 1rem;
   color: $studio-ink;
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 
   &::placeholder {
     color: $studio-muted-dim;
   }
 
   &:focus {
-    border-color: $studio-accent;
+    background: #fff;
+    border-color: $fuzo-yellow-deep;
+    box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35);
   }
 }
 
 .studio-textarea {
   @extend .studio-input;
-  font-weight: 600;
-  height: 8rem;
+  min-height: 8rem;
   resize: none;
+  line-height: 1.5;
 }
 
 .studio-cta {
   width: 100%;
-  padding: 1.5rem 0;
-  border-radius: $studio-radius-pill;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.8125rem;
+  min-height: 52px;
+  padding: 0 1.25rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  text-transform: none;
   border: 0;
   background: $studio-accent;
   color: $studio-accent-ink;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  box-shadow: 0 8px 18px -8px rgba($fuzo-yellow-deep, 0.8);
+  transition: transform 0.2s $fz-ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  @include studio-focus;
 
   &:hover:not(:disabled) {
-    transform: scale(1.01);
+    background: mix(#fff, $fuzo-yellow, 15%);
+    transform: translateY(-1px);
   }
   &:active:not(:disabled) {
-    transform: scale(0.97);
+    transform: scale(0.98);
   }
+  // Not ready yet: a faded yellow, so it still reads as the main action
+  // (a grey one looked like the Skip button next to it).
   &:disabled {
-    background: $studio-border-soft;
-    color: $studio-muted-dim;
+    background: mix(#fff, $fuzo-yellow, 55%);
+    color: rgba($fuzo-yellow-ink, 0.5);
+    box-shadow: none;
+    cursor: not-allowed;
   }
 }
 
 .studio-cta--ghost {
-  background: $studio-border-soft;
+  background: $studio-pill;
   color: $studio-ink;
+  box-shadow: none;
+
+  &:disabled {
+    background: $studio-pill;
+    color: $studio-muted-dim;
+  }
 
   &:hover:not(:disabled) {
-    background: $studio-border;
+    background: $studio-pill-hover;
   }
 }
 
@@ -439,7 +534,8 @@ $studio-z: 1100;
 }
 
 .studio-error-text {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: $studio-danger;
 }
 
@@ -448,30 +544,30 @@ $studio-z: 1100;
   align-items: center;
   gap: 0.75rem;
   color: $studio-muted-dim;
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+  font-size: 0.8125rem;
+  font-weight: 700;
 
   &::before,
   &::after {
     content: '';
     flex: 1;
     height: 1px;
-    background: $studio-border;
+    background: $studio-line;
   }
 }
 
 // ---------------------------------------------------------------------------
-// Photo upload square
+// Photo upload
 // ---------------------------------------------------------------------------
 
 .studio-photo-square {
   position: relative;
   aspect-ratio: 1;
-  border-radius: $studio-radius-xl;
+  max-height: 46dvh;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 22px;
   overflow: hidden;
-  border: 4px solid $studio-border;
 
   img {
     width: 100%;
@@ -482,10 +578,10 @@ $studio-z: 1100;
 
 .studio-photo-square__remove {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 40px;
+  height: 40px;
   background: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
   border: 0;
@@ -493,30 +589,49 @@ $studio-z: 1100;
   display: flex;
   align-items: center;
   justify-content: center;
+  @include studio-focus;
 }
 
 .studio-dropzone {
-  aspect-ratio: 1;
-  border-radius: $studio-radius-xl;
-  border: 2px dashed $studio-border;
+  aspect-ratio: 4 / 3;
+  max-height: 40dvh;
+  width: 100%;
+  border-radius: 22px;
+  border: 1.5px dashed rgba($fz-ink, 0.18);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
   cursor: pointer;
-  color: $studio-muted-dim;
-  background: $studio-border-soft;
-  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  color: $studio-muted;
+  background: $studio-pill;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+
+  > svg {
+    width: 64px;
+    height: 64px;
+    padding: 18px;
+    border-radius: 50%;
+    background: #fff;
+    color: $fuzo-yellow-deep;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  }
 
   input {
     display: none;
   }
 
+  &:hover,
   &.is-dragging {
-    border-color: $studio-accent;
-    background: rgba($studio-accent, 0.08);
+    border-color: $fuzo-yellow-deep;
+    background: $fuzo-yellow-tint;
     color: $studio-ink;
+  }
+
+  &:focus-within {
+    outline: 2px solid $fuzo-yellow-deep;
+    outline-offset: 2px;
   }
 }
 
@@ -525,98 +640,90 @@ $studio-z: 1100;
 }
 
 .studio-dropzone__label {
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .studio-thumb {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: $border-radius-lg;
-  border: 2px solid $studio-border;
+  border-radius: 22px;
 }
 
 // ---------------------------------------------------------------------------
-// Cuisine / chip grids
+// Chips: grey pills, yellow when picked (same as Bites / My Plate filters)
 // ---------------------------------------------------------------------------
 
 .studio-chip-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  gap: 0.5rem;
   max-height: 30dvh;
   overflow-y: auto;
-  padding-right: 0.5rem;
+  padding: 2px;
 }
 
-.studio-chip {
-  padding: 1rem 0;
-  border-radius: 1rem;
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border: 2px solid $studio-border;
-  background: $studio-surface;
-  color: $studio-muted;
+.studio-chip,
+.studio-tag-chip {
+  @include fz-pastel-cycle;
+  min-height: 40px;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  border: 0;
+  background: var(--pastel);
+  color: $studio-ink;
   text-align: center;
-  transition: all 0.15s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  @include studio-focus;
 
+  &:hover:not(.is-selected) {
+    background: var(--pastel-hover);
+  }
+  &:active {
+    transform: scale(0.97);
+  }
+
+  // Selected: solid yellow with a soft shadow, so it stands out from the
+  // butter-yellow pastel.
   &.is-selected {
     background: $studio-accent;
     color: $studio-accent-ink;
-    border-color: $studio-accent;
+    font-weight: 800;
+    box-shadow: 0 6px 14px -6px rgba($fuzo-yellow-deep, 0.9);
   }
 }
 
-// Flat wrapping chip row (tags, meal type, diet) — distinct from the 2-col
-// cuisine grid above, matches fuzo-food-card-demo.html's chip treatment.
 .studio-tag-groups {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .studio-tag-section {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 0.6rem;
 }
 
 .studio-tag-section__label {
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: $studio-muted-dim;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: 0;
+  color: $studio-ink;
 }
 
 .studio-tag-options {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-}
-
-.studio-tag-chip {
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border: 2px solid $studio-border;
-  background: $studio-surface;
-  color: $studio-muted;
-  transition: all 0.15s ease;
-
-  &.is-selected {
-    background: $studio-accent;
-    color: $studio-accent-ink;
-    border-color: $studio-accent;
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -626,14 +733,16 @@ $studio-z: 1100;
 .studio-rating {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .studio-rating__star {
   background: transparent;
   border: 0;
   padding: 0.25rem;
-  transition: transform 0.1s ease;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+  @include studio-focus;
 
   &:active {
     transform: scale(0.9);
@@ -652,16 +761,25 @@ $studio-z: 1100;
 
 .studio-ingredient-row__name {
   flex: 1;
-  background: $studio-surface;
-  border: 2px solid $studio-border;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
+  min-width: 0;
+  background: $studio-pill;
+  border: 1px solid transparent;
+  padding: 0.7rem 0.9rem;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: $studio-ink;
   outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+
+  &::placeholder {
+    color: $studio-muted-dim;
+  }
 
   &:focus {
-    border-color: $studio-accent;
+    background: #fff;
+    border-color: $fuzo-yellow-deep;
+    box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35);
   }
 }
 
@@ -678,65 +796,75 @@ $studio-z: 1100;
 }
 
 .studio-ingredient-row__remove {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: $studio-border-soft;
+  background: $studio-pill;
   border: 0;
   color: $studio-ink;
   display: flex;
   align-items: center;
   justify-content: center;
+  @include studio-focus;
 
   &:hover {
-    background: $studio-border;
+    background: $studio-pill-hover;
   }
 }
 
 .studio-add-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: $studio-muted;
-  background: transparent;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: 0;
+  color: $studio-ink;
+  background: $fuzo-yellow-tint;
   border: 0;
   align-self: flex-start;
+  @include studio-focus;
+
+  &:hover {
+    background: mix(#fff, $fuzo-yellow, 70%);
+  }
 }
 
 .studio-nutrition-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .studio-nutrition-item {
   text-align: center;
-  background: $studio-surface;
-  border-radius: 1rem;
+  background: $studio-pill;
+  border-radius: 16px;
   padding: 0.75rem 0;
 }
 
 .studio-nutrition-item__val {
   font-size: 1.125rem;
-  font-weight: 900;
+  font-weight: 800;
   color: $studio-ink;
 }
 
 .studio-nutrition-item__label {
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   font-weight: 700;
-  text-transform: uppercase;
-  color: $studio-muted-dim;
+  color: $studio-muted;
   margin-top: 0.125rem;
 }
 
 .studio-ingredient-list {
   list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
 }
@@ -744,10 +872,15 @@ $studio-z: 1100;
 .studio-ingredient-list__item {
   display: flex;
   justify-content: space-between;
-  font-size: 0.875rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px dashed $studio-border;
+  gap: 1rem;
+  font-size: 0.9rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid $studio-line;
   color: $studio-ink;
+
+  &:last-child {
+    border-bottom: 0;
+  }
 }
 
 .studio-ingredient-list__qty {
@@ -756,88 +889,109 @@ $studio-z: 1100;
 }
 
 // ---------------------------------------------------------------------------
-// FlavorSliders (src/components/create/shared/FlavorSliders.tsx) — also used
-// inside .scout-wizard__panel for the Restaurant family, so it needs to read
-// fine against both `.studio-panel` and `.scout-wizard__panel`'s backgrounds.
+// FlavorSliders (src/components/create/shared/FlavorSliders.tsx) - also used
+// inside .scout-wizard__panel for the Restaurant family.
 // ---------------------------------------------------------------------------
 
 .studio-flavor-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem 1.5rem;
+
+  @media (max-width: 360px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .studio-flavor-row {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.4rem;
 }
 
 .studio-flavor-row__head {
   display: flex;
   justify-content: space-between;
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  letter-spacing: 0;
   color: $studio-muted;
 }
 
 .studio-flavor-row__value {
   color: $studio-ink;
+  font-weight: 800;
+}
+
+// Grey track, round yellow thumb (Chrome draws the native track dark with a
+// light accent colour, so it's drawn by hand).
+@mixin studio-slider-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: $fuzo-yellow;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 }
 
 .studio-flavor-row__slider {
   width: 100%;
-  height: 0.375rem;
+  height: 6px;
+  margin: 7px 0;
   border-radius: 9999px;
-  background: $studio-border;
+  background: $studio-pill-hover;
   appearance: none;
+  -webkit-appearance: none;
   cursor: pointer;
-  accent-color: $studio-accent;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    @include studio-slider-thumb;
+  }
+  &::-moz-range-thumb {
+    @include studio-slider-thumb;
+  }
+  &:focus-visible {
+    outline: 2px solid $fuzo-yellow-deep;
+    outline-offset: 4px;
+  }
 }
 
 // ---------------------------------------------------------------------------
-// Success screen
+// Success screen: white page, the card you made, one yellow Done button.
 // ---------------------------------------------------------------------------
 
 .studio-success {
   position: fixed;
   inset: 0;
   z-index: $studio-z + 50;
-  background: $studio-success;
+  background: #fff;
+  color: $studio-ink;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
+  justify-content: safe center;
+  overflow-y: auto;
+  padding: 2rem 1rem calc(2rem + env(safe-area-inset-bottom));
   text-align: center;
-  gap: 2rem;
-}
-
-.studio-success__icon {
-  width: 10rem;
-  height: 10rem;
-  background: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $studio-success;
+  gap: 1.5rem;
 }
 
 .studio-success__card {
   width: 100%;
-  max-width: 20rem;
+  max-width: 18rem;
+  animation: studio-pop 0.6s $fz-ease backwards;
 }
 
 .studio-success__card-face {
   position: relative;
   aspect-ratio: 3 / 4;
-  border-radius: $studio-radius-xl;
+  border-radius: $studio-card-radius;
   overflow: hidden;
-  border: 4px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--fz-float-border);
+  box-shadow: var(--fz-float-shadow);
 
   img {
     position: absolute;
@@ -851,7 +1005,7 @@ $studio-z: 1100;
 .studio-success__card-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent 60%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 60%);
 }
 
 .studio-success__card-badge {
@@ -861,14 +1015,12 @@ $studio-z: 1100;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.35rem 0.6rem;
-  border-radius: $studio-radius-pill;
-  background: #fff;
-  color: darken($studio-success, 15%);
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  padding: 0.35rem 0.7rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-size: 0.75rem;
+  font-weight: 800;
 }
 
 .studio-success__card-info {
@@ -881,19 +1033,16 @@ $studio-z: 1100;
 
 .studio-success__card-type {
   display: block;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.6875rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 700;
   margin-bottom: 0.25rem;
 }
 
 .studio-success__card-title {
+  @include studio-heading-type;
   color: #fff;
-  font-weight: 900;
   font-size: 1.25rem;
-  line-height: 1.15;
   margin-bottom: 0.5rem;
 }
 
@@ -905,101 +1054,213 @@ $studio-z: 1100;
 
 .studio-success__card-tag {
   padding: 0.25rem 0.6rem;
-  border-radius: $studio-radius-pill;
-  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.22);
   color: #fff;
-  font-size: 0.625rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  font-size: 0.6875rem;
+  font-weight: 700;
 }
 
 .studio-success__heading {
-  font-size: 2.5rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.04em;
-  font-style: italic;
-  color: #fff;
-  line-height: 1;
+  @include studio-heading-type;
+  margin: 0;
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  color: $studio-ink;
 }
 
 .studio-success__btn {
-  width: 100%;
-  max-width: 28rem;
-  padding: 1.5rem 0;
-  background: #fff;
-  color: darken($studio-success, 15%);
-  border-radius: $studio-radius-pill;
-  border: 0;
-  font-weight: 900;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  @extend .studio-cta;
+  max-width: 22rem;
+}
+
+@keyframes studio-pop {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
 }
 
 // ---------------------------------------------------------------------------
-// CreateCardModal type-picker grid
+// CreateCardModal type picker: one floating card per family (icon, name,
+// one line about it), its types as grey tiles inside.
 // ---------------------------------------------------------------------------
 
 .studio-type-groups {
-  max-width: 48rem;
+  max-width: 56rem;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.25rem;
+}
+
+.studio-type-group {
+  @include studio-float-card;
+  border-radius: $studio-card-radius;
+  padding: 1.375rem 1.5rem 1.5rem;
+  color: $studio-ink;
+
+  @media (max-width: 480px) {
+    padding: 1.25rem;
+  }
+}
+
+.studio-type-group__head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+
+.studio-type-group__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-deep;
 }
 
 .studio-type-group__label {
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: $studio-muted-dim;
+  @include studio-heading-type;
   display: block;
-  margin-bottom: 1rem;
+  margin: 0;
+  font-size: 1.15rem;
+  color: $studio-ink;
+}
+
+.studio-type-group__sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: $studio-muted;
 }
 
 .studio-type-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
 
-  @include media-breakpoint-up(sm) {
-    grid-template-columns: repeat(3, 1fr);
-  }
   @include media-breakpoint-up(md) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 .studio-type-card {
+  @include fz-pastel-cycle;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  aspect-ratio: 1;
-  border-radius: $studio-radius-xl;
-  border: 2px solid $studio-border;
-  background: $studio-surface;
-  padding: 1rem;
-  transition: border-color 0.15s ease;
+  min-height: 104px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background: var(--pastel);
+  padding: 0.85rem 0.5rem;
+  color: $studio-ink;
+  text-align: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s $fz-ease;
+  @include studio-focus;
 
   &:hover {
-    border-color: $studio-accent;
+    background: var(--pastel-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.25);
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+
+  @include media-breakpoint-up(md) {
+    min-height: 124px;
+    padding: 1rem 0.75rem;
   }
 }
 
 .studio-type-card__emoji {
-  font-size: 2.25rem;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  @include media-breakpoint-up(md) {
+    width: 52px;
+    height: 52px;
+    font-size: 1.6rem;
+  }
 }
 
 .studio-type-card__label {
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-align: center;
-  color: $studio-ink-soft;
+  max-width: 100%;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: none;
+  letter-spacing: 0;
+  color: $studio-ink;
+  overflow-wrap: anywhere;
+
+  @include media-breakpoint-up(md) {
+    font-size: 0.875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-panel__inner,
+  .studio-success__card,
+  .studio-reveal__icon,
+  .studio-reveal__dot {
+    animation: none;
+  }
+  .studio-type-card,
+  .studio-cta,
+  .studio-close {
+    transition: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Dark mode: black page, light text on it; the floating cards keep their
+// light surface (same as every other page), so text inside them stays ink.
+// ---------------------------------------------------------------------------
+
+html[data-theme='dark'] {
+  .studio-modal,
+  .studio-success {
+    background: #000;
+    color: #f5f5f5;
+  }
+  .studio-header__title,
+  .studio-reveal__title,
+  .studio-success__heading,
+  .studio-stepper__label.is-active {
+    color: #f5f5f5;
+  }
+  .studio-header .studio-header__eyebrow,
+  .studio-header__sub,
+  .studio-reveal__subtitle {
+    color: #a3a3a3;
+  }
+  .studio-close,
+  .studio-stepper__dot:not(.is-active):not(.is-done) {
+    background: #1c1c1c;
+    color: #f5f5f5;
+  }
+  .studio-close:hover {
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+  }
+  .studio-stepper__connector {
+    background: #262626;
+  }
 }

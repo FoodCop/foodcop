@@ -242,8 +242,8 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
     <div className="scout-wizard">
       {/* Header */}
       <header className="scout-wizard__header">
-        <button onClick={onClose} className="scout-wizard__close">
-          <X size={24} />
+        <button type="button" onClick={onClose} className="scout-wizard__close" aria-label="Close">
+          <X size={20} />
         </button>
         {/* Stepper */}
         <div className="scout-wizard__stepper">
@@ -278,7 +278,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
               <h2 className="scout-wizard__heading">Find the Spot</h2>
               <p className="scout-wizard__hint">Search for a restaurant or address</p>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div className="scout-wizard__search-field">
                 <Search size={20} />
                 <input
@@ -326,8 +326,8 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
             <div className="scout-wizard__panel-header">
               <h2 className="scout-wizard__heading">The Spot</h2>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label className="scout-wizard__field-label">Restaurant Name</label>
                 <input
                   autoFocus
@@ -337,7 +337,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
                   className="scout-wizard__text-input"
                 />
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label className="scout-wizard__field-label">Cuisine</label>
                 <div className="scout-wizard__cuisine-grid">
                   {CUISINES.map((c) => (
@@ -367,7 +367,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
 
         {/* STEP 3: PHOTOS */}
         {currentStep === 3 && (
-          <div className="scout-wizard__panel" style={{ minHeight: '100%' }}>
+          <div className="scout-wizard__panel">
             <div className="scout-wizard__panel-header">
               <h2 className="scout-wizard__heading">Media</h2>
             </div>
@@ -416,7 +416,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
               <h2 className="scout-wizard__heading">Taste Profile</h2>
               <p className="scout-wizard__hint">Powers Discover&apos;s flavor matching for this spot</p>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <TagChips value={tags} onChange={setTags} categories={['meal_type', 'diet']} showPriceLevel />
               <FlavorSliders value={flavorProfile} onChange={setFlavorProfile} />
             </div>
@@ -433,7 +433,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
             <div className="scout-wizard__panel-header" style={{ gap: 0 }}>
               <h2 className="scout-wizard__heading">Insights</h2>
             </div>
-            <div style={{ display: 'grid', gap: 48 }}>
+            <div style={{ display: 'grid', gap: 24 }}>
               {/* Rating */}
               <div className="scout-wizard__rating-block">
                 <div className="scout-wizard__rating-stars">
@@ -446,7 +446,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
                 <p className="scout-wizard__hint">Master Rating</p>
               </div>
               {/* Review */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label className="scout-wizard__field-label">Personal Review</label>
                 <textarea
                   placeholder="Tell the community about your discovery..."
@@ -456,10 +456,10 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
                 />
               </div>
               {/* Hours */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 16 }}>
-                  <Clock size={16} style={{ color: '#cda941' }} />
-                  <span style={{ fontSize: 11, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#78716c' }}>Opening Hours</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div className="scout-wizard__hours-title">
+                  <Clock size={16} />
+                  <span className="scout-wizard__field-label">Opening hours</span>
                 </div>
                 <div className="scout-wizard__hours-card">
                   {Object.entries(details.hours).map(([day, time]) => (
