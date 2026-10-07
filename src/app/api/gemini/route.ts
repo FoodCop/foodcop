@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { GEMINI_MODEL } from '@/lib/ai/geminiModel';
 
 // Server-side Gemini proxy for Tako / Chef AI. Both legacy GeminiService
 // copies (React app + FUZO_V3) only knew how to reach a local Vite dev proxy
@@ -21,6 +22,7 @@ interface GeminiGenerationConfig {
 }
 
 interface GeminiRouteBody {
+  /** Ignored - see below. Kept so existing callers' bodies still type-check. */
   model?: string;
   contents: unknown;
   config?: GeminiGenerationConfig;
@@ -43,7 +45,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing "contents" in request body.' }, { status: 400 });
   }
 
-  const model = body.model || 'gemini-2.5-flash';
+  // Always the server's chosen model, never the one the browser sends
+  // (CodeQL js/request-forgery, 2026-10-07): a client-supplied name like
+  // "../../files/x" would otherwise send our API key to another Gemini endpoint.
+  const model = GEMINI_MODEL;
   const { systemInstruction, ...generationConfig } = body.config || {};
 
   const geminiBody: Record<string, unknown> = {
@@ -55,9 +60,10 @@ export async function POST(request: Request) {
   }
 
   try {
-    const response = await fetch(`${GEMINI_API_BASE}/${model}:generateContent?key=${apiKey}`, {
+    // The key goes in a header, not the URL, so it can't end up in URL logs.
+    const response = await fetch(`${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify(geminiBody),
     });
 

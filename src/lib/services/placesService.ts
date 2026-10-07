@@ -8,6 +8,9 @@
  * below), left over from the port and removed.
  */
 
+/** Routes API travel modes offered in FUZO's Directions panel. */
+export type TravelMode = 'DRIVE' | 'TWO_WHEELER' | 'WALK';
+
 export interface ScoutPlaceRaw {
   place_id?: string;
   id?: string;
@@ -85,7 +88,7 @@ async function makeRequest<T>(path: string, payload: unknown): Promise<ServiceRe
 }
 
 export const PlacesService = {
-  async searchNearby(latitude: number, longitude: number, radius = 5000): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string; error_message?: string }>> {
+  async searchNearby(latitude: number, longitude: number, radius = 5000): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string; error_message?: string; next_page_token?: string }>> {
     return makeRequest('/places/nearby', {
       latitude,
       longitude,
@@ -94,7 +97,12 @@ export const PlacesService = {
     });
   },
 
-  async searchByText(query: string, latitude: number, longitude: number, radius = 50000): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string; error_message?: string }>> {
+  /** Pages 2-3 of a nearby / text search (Google's next_page_token; ~2s before it's valid). */
+  async nextPage(kind: 'nearby' | 'textsearch', pagetoken: string): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string; next_page_token?: string }>> {
+    return makeRequest(`/places/${kind}`, { pagetoken });
+  },
+
+  async searchByText(query: string, latitude: number, longitude: number, radius = 50000): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string; error_message?: string; next_page_token?: string }>> {
     return makeRequest('/places/textsearch', {
       query,
       location: { lat: latitude, lng: longitude },
@@ -102,16 +110,17 @@ export const PlacesService = {
     });
   },
 
-  async searchAlongRoute(polyline: string, query: string, origin?: { lat: number; lng: number }, destination?: { lat: number; lng: number }): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string }>> {
-    return makeRequest('/places/search-along-route', {
-      polyline,
-      query,
-      origin,
-      destination
-    });
+  /** Places close to a route line (Directions' "Food along the way"). */
+  async searchAlongRoute(polyline: string, query = 'restaurants'): Promise<ServiceResult<{ results: (ScoutPlaceRaw & { photo_name?: string })[]; status?: string }>> {
+    return makeRequest('/places/search-along-route', { polyline, query });
   },
 
-  async getDirections(origin: string | { lat: number; lng: number }, destination: string | { lat: number; lng: number }): Promise<ServiceResult<{ routes: any[]; status: string }>> {
+
+  async getDirections(
+    origin: string | { lat: number; lng: number },
+    destination: string | { lat: number; lng: number },
+    travelMode: TravelMode = 'DRIVE',
+  ): Promise<ServiceResult<{ routes: any[]; status: string }>> {
     const parseWaypoint = (wp: string | { lat: number; lng: number }) => {
       if (typeof wp === 'object') {
         return { location: { latLng: { latitude: wp.lat, longitude: wp.lng } } };
@@ -122,17 +131,22 @@ export const PlacesService = {
       return { address: wp };
     };
 
+    // Traffic-aware routing and route modifiers only apply to motor vehicles -
+    // the Routes API rejects them for WALK.
+    const motor = travelMode === 'DRIVE' || travelMode === 'TWO_WHEELER';
     const payload = {
       origin: parseWaypoint(origin),
       destination: parseWaypoint(destination),
-      travelMode: 'DRIVE',
-      routingPreference: 'TRAFFIC_AWARE',
+      travelMode,
       computeAlternativeRoutes: false,
-      routeModifiers: {
-        avoidTolls: false,
-        avoidHighways: false,
-        avoidFerries: false
-      }
+      // Step texts follow the user's language (the API otherwise guesses from the route's region).
+      languageCode: typeof navigator !== 'undefined' && navigator.language ? navigator.language : 'en',
+      ...(motor
+        ? {
+            routingPreference: 'TRAFFIC_AWARE',
+            routeModifiers: { avoidTolls: false, avoidHighways: false, avoidFerries: false },
+          }
+        : {}),
     };
 
     return makeRequest('/directions', payload);

@@ -1,9 +1,8 @@
 import { createClient } from '../supabase/client';
-import { IdempotencyService } from './idempotencyService';
 
 const APP_TENANT_ID = '00000000-0000-4000-8000-000000000001';
 
-export type PlateItemType = 'restaurant' | 'recipe' | 'photo' | 'video' | 'other';
+export type PlateItemType = 'restaurant' | 'recipe' | 'photo' | 'video' | 'dish' | 'other';
 
 export interface SavedPlateItem {
   id: string;
@@ -106,32 +105,25 @@ export const PlateService = {
     }
 
     try {
-      const saved = await IdempotencyService.executeSaveOperation(
-        'save_to_plate',
-        params.itemId,
-        params.itemType,
-        async () => {
-          const { data, error } = await client
-            .from('saved_items')
-            .upsert({
-              user_id: user.id,
-              item_type: params.itemType,
-              item_id: params.itemId,
-              metadata: params.metadata || {},
-              tenant_id: APP_TENANT_ID,
-            }, {
-              onConflict: 'tenant_id,user_id,item_type,item_id',
-            })
-            .select()
-            .single();
-
-          if (error) {
-            throw new Error(error.message);
-          }
-
-          return data as SavedPlateItem;
-        },
-      );
+      // A plain upsert: saving the same item twice just updates it (unique on
+      // tenant/user/type/id). No idempotency cache here - it remembered a save
+      // for 24h, so saving again after a remove was silently skipped.
+      const { data, error } = await client
+        .from('saved_items')
+        .upsert(
+          {
+            user_id: user.id,
+            item_type: params.itemType,
+            item_id: params.itemId,
+            metadata: params.metadata || {},
+            tenant_id: APP_TENANT_ID,
+          },
+          { onConflict: 'tenant_id,user_id,item_type,item_id' },
+        )
+        .select()
+        .single();
+      if (error) throw new Error(error.message);
+      const saved = data as SavedPlateItem;
 
       return {
         success: true,

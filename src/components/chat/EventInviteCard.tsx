@@ -56,10 +56,12 @@ export const EventInviteCard = ({ messageId, userId, event, role, onRSVP }: Even
     <div className={`event-invite${isUser ? ' is-mine' : ''}`}>
       {/* Visual Header */}
       <div className="event-invite__media">
-        <img
-          src={event.img || 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80'}
-          alt="Event"
-        />
+        {event.img ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={event.img} alt="" referrerPolicy="no-referrer" />
+        ) : (
+          <div className="event-invite__media-fallback" aria-hidden />
+        )}
         <div className="event-invite__media-scrim" />
         <div className="event-invite__media-content">
           <div className="event-invite__media-tags">
@@ -67,7 +69,7 @@ export const EventInviteCard = ({ messageId, userId, event, role, onRSVP }: Even
             <span className="event-invite__media-brand">Fuzo Social</span>
           </div>
           <h3 className="event-invite__title">
-            {event.name || 'Culinary Meetup'}
+            {event.name || 'Meetup'}
           </h3>
         </div>
       </div>
@@ -79,13 +81,13 @@ export const EventInviteCard = ({ messageId, userId, event, role, onRSVP }: Even
             <p className="event-invite__field-label">When</p>
             <div className="event-invite__field-value">
               <Calendar size={12} />
-              <span>{event.eventDate || 'Sat, 12 Oct'}</span>
+              <span>{event.eventDate || 'Date to be confirmed'}</span>
             </div>
           </div>
           <div className="event-invite__field">
             <p className="event-invite__field-label">Time</p>
             <div className="event-invite__field-value">
-              <span>{event.eventTime || '19:00 PM'}</span>
+              <span>{event.eventTime || 'TBC'}</span>
             </div>
           </div>
         </div>
@@ -94,7 +96,7 @@ export const EventInviteCard = ({ messageId, userId, event, role, onRSVP }: Even
           <p className="event-invite__field-label">Location</p>
           <div className="event-invite__field-value">
             <MapPin size={12} />
-            <span>{event.eventLocation || 'Mama Mia\'s, Downtown'}</span>
+            <span>{event.eventLocation || 'Location to be confirmed'}</span>
           </div>
         </div>
 

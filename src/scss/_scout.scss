@@ -30,11 +30,18 @@ $scout-radius-pill: 9999px;
 $scout-radius-lg: 1.5rem;
 $scout-radius-xl: 2rem;
 
+// Height of the floating app dock (52px + 1rem gap + a little air) - bottom sheets pad by this.
+$scout-dock-clearance: 4.5rem;
+
+// The map runs behind the floating navbar (client, 2026-10-06), so Scout's
+// floating controls, panels and pop-ups start below the navbar's space.
+$scout-top: calc(#{$fz-topbar-space} + env(safe-area-inset-top));
+
 $scout-z-map: 0;
 $scout-z-fab: 10;
 $scout-z-panel: 10;
 $scout-z-chrome: 30;
-$scout-z-route-planner: 20;
+$scout-z-directions: 20;
 $scout-z-modal: 110;
 // Above Bootstrap's entire z-index scale (max is $zindex-toast: 1090) - this
 // is a full-screen dialog portaled to <body>, it must win over the sticky
@@ -65,7 +72,7 @@ $scout-z-wizard: 1100;
 
 .scout-search {
   position: absolute;
-  top: 1rem;
+  top: calc(#{$scout-top} + 1rem);
   left: 1rem;
   right: 5rem;
   z-index: $scout-z-chrome;
@@ -223,12 +230,35 @@ $scout-z-wizard: 1100;
   font-size: 0.6875rem;
   font-weight: 700;
   color: $scout-ink-soft;
+
+  // Desktop: the places panel starts right under the search bar, so the legend
+  // can't sit there. Wide screens: beside the search bar. Medium: the panel
+  // moves down instead (see .scout-panel--desktop).
+  @media (min-width: 1100px) {
+    position: absolute;
+    top: 0; // level with the search bar (same height; not centred on the block - suggestions grow it)
+    left: calc(100% + 0.75rem);
+    white-space: nowrap;
+  }
 }
 
 .scout-legend__item {
   display: flex;
   align-items: center;
   gap: 0.375rem;
+  white-space: nowrap; // "Nearby (40)" never breaks across lines
+}
+
+// Phones: a little tighter so all three fit; scrolls sideways if they still don't.
+@media (max-width: 575.98px) {
+  .scout-legend {
+    max-width: 100%;
+    gap: 0.7rem;
+    padding: 0.45rem 0.8rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
 }
 
 .scout-legend__dot {
@@ -254,7 +284,7 @@ $scout-z-wizard: 1100;
 
 .scout-fabs {
   position: absolute;
-  top: 1rem;
+  top: calc(#{$scout-top} + 1rem);
   right: 1rem;
   z-index: $scout-z-fab;
   display: flex;
@@ -262,7 +292,7 @@ $scout-z-wizard: 1100;
   gap: 0.625rem;
 
   @include media-breakpoint-up(md) {
-    top: 1.5rem;
+    top: calc(#{$scout-top} + 1.5rem);
     right: 1.5rem;
   }
 }
@@ -340,11 +370,15 @@ $scout-z-wizard: 1100;
   @include media-breakpoint-up(md) {
     display: flex;
     position: absolute;
-    top: 5rem;
+    // Below the search bar + legend; from 1100px the legend sits beside the bar.
+    top: calc(#{$scout-top} + 8.5rem);
+    @media (min-width: 1100px) { top: calc(#{$scout-top} + 5rem); }
     left: 1.5rem;
     z-index: $scout-z-panel;
     width: 380px;
-    max-height: calc(100dvh - 160px);
+    // Stops above the floating app dock (56px navbar + top + dock clearance).
+    max-height: calc(100dvh - #{$scout-top} - 8.5rem - #{$scout-dock-clearance});
+    @media (min-width: 1100px) { max-height: calc(100dvh - #{$scout-top} - 5rem - #{$scout-dock-clearance}); }
     flex-direction: column;
     @include scout-floating-surface($border-radius-lg);
     overflow: hidden;
@@ -365,8 +399,9 @@ $scout-z-wizard: 1100;
   box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
   border-top: 1px solid $scout-border;
   transition: height 0.3s ease-out;
-  height: 160px;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  // + room for the app dock floating over the bottom of the sheet.
+  height: calc(160px + #{$scout-dock-clearance});
+  padding-bottom: calc(1rem + #{$scout-dock-clearance} + env(safe-area-inset-bottom, 0px));
 
   &.is-expanded {
     height: 65dvh;
@@ -531,6 +566,7 @@ $scout-z-wizard: 1100;
 }
 
 .scout-place-card__image {
+  position: relative;
   width: 3.5rem;
   height: 3.5rem;
   border-radius: $border-radius;
@@ -604,202 +640,13 @@ $scout-z-wizard: 1100;
 }
 
 // ---------------------------------------------------------------------------
-// Route planner
-// ---------------------------------------------------------------------------
-
-.scout-route-planner {
-  position: absolute;
-  top: 5rem;
-  left: 1rem;
-  right: 1rem;
-  z-index: $scout-z-route-planner;
-  @include scout-floating-surface($border-radius-lg);
-  padding: 1.5rem;
-
-  @include media-breakpoint-up(md) {
-    left: 1.5rem;
-    right: auto;
-    width: 400px;
-    padding: 2rem;
-  }
-}
-
-.scout-route-planner__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-}
-
-.scout-route-planner__title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: $scout-ink-faint;
-
-  svg {
-    color: $scout-accent;
-  }
-}
-
-.scout-route-planner__close {
-  padding: 0.5rem;
-  background: $scout-surface-muted;
-  border-radius: 50%;
-  border: 0;
-  color: $scout-ink-soft;
-
-  &:hover {
-    background: $scout-border;
-  }
-}
-
-.scout-route-planner__fields {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  position: relative;
-}
-
-.scout-route-field {
-  position: relative;
-}
-
-.scout-route-field__marker {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 50%;
-  border: 2px solid $scout-saved;
-  background: rgba($scout-saved, 0.12);
-}
-
-.scout-route-field__pin {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  color: $scout-new-pin;
-}
-
-.scout-route-field__input {
-  width: 100%;
-  background: $scout-surface-muted;
-  padding: 1.25rem 1.5rem 1.25rem 3rem;
-  border-radius: $scout-radius-xl;
-  font-size: 0.875rem;
-  font-weight: 700;
-  outline: none;
-  border: 2px solid transparent;
-  transition: border-color 0.15s ease;
-  color: $scout-ink;
-
-  &:focus {
-    border-color: $scout-ink;
-  }
-}
-
-.scout-route-field__suggestions {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 0.25rem;
-  background: #fff;
-  border-radius: $border-radius;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-  border: 1px solid $scout-border;
-  overflow: hidden;
-  z-index: 30;
-}
-
-.scout-route-field__suggestion {
-  width: 100%;
-  text-align: left;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  color: #44403c;
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid $scout-surface-muted;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &:hover {
-    background: $scout-surface-muted;
-  }
-
-  span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-.scout-route-planner__actions {
-  margin-top: 2rem;
-  display: flex;
-  gap: 0.75rem;
-}
-
-.scout-route-planner__clear {
-  padding: 1rem 1.5rem;
-  background: $scout-surface-muted;
-  color: $scout-ink-faint;
-  border-radius: $border-radius-lg;
-  border: 0;
-  font-weight: 900;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-
-  &:hover {
-    color: $scout-ink-soft;
-  }
-}
-
-.scout-route-planner__submit {
-  flex-grow: 1;
-  background: $scout-ink;
-  color: #fff;
-  border-radius: $border-radius-lg;
-  border: 0;
-  font-weight: 900;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  transition: transform 0.1s ease, opacity 0.15s ease;
-
-  &:active {
-    transform: scale(0.96);
-  }
-  &:disabled {
-    opacity: 0.5;
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Place detail modal
 // ---------------------------------------------------------------------------
 
 .scout-modal {
   position: absolute;
   inset: 0;
+  top: $scout-top; // phones: full-screen below the floating navbar
   z-index: $scout-z-modal;
   background: #fff;
   display: flex;
@@ -808,7 +655,7 @@ $scout-z-wizard: 1100;
 
   @include media-breakpoint-up(md) {
     inset: auto;
-    top: 5rem;
+    top: calc(#{$scout-top} + 5rem);
     left: 416px;
     width: 400px;
     height: calc(100dvh - 160px);
@@ -1304,27 +1151,105 @@ $scout-z-wizard: 1100;
 
 // ---------------------------------------------------------------------------
 // Add-pin wizard (Restaurant family of Create Card, also reached standalone
-// from Scout's map long-press) — light theme, matching `_studio.scss`'s
-// Recipe/Video/Discovery studios rather than the dark theme this originally
-// shipped with. One exception: the live Google Map background (Step "Pin")
-// keeps its own dark map style + a dark scrim overlay for text legibility -
-// that's about the map imagery, not the wizard's chrome theme.
+// from Scout's map long-press). Clean look (client, 2026-10-07), same as the
+// Recipe/Video/Discovery studios in `_studio.scss`: white page, round step
+// dots (yellow = current), each step's content in one floating card, grey
+// fields and chips, yellow main buttons, sentence-case headings. The live
+// Google Map step keeps a dark scrim behind its buttons for legibility.
 // ---------------------------------------------------------------------------
 
-$scout-wizard-bg: #fff;
-$scout-wizard-ink: #1c1917;
-$scout-wizard-surface: #f7f6f4;
-$scout-wizard-border: #ece9e6;
-$scout-wizard-muted: #57534e;
-$scout-wizard-muted-dim: #a8a29e;
+$scout-wizard-ink: $fz-ink;
+$scout-wizard-pill: var(--studio-pill); // defined in _studio.scss (deeper in dark mode)
+$scout-wizard-pill-hover: var(--studio-pill-hover);
+$scout-wizard-line: #ecebe7;
+$scout-wizard-muted: #6b6457;
+$scout-wizard-muted-dim: #8f8a80;
 $scout-wizard-map-scrim: #0c0a09;
+
+@mixin scout-wizard-heading {
+  font-family: var(--body-font), $font-family-sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-transform: none;
+  font-style: normal;
+}
+
+@mixin scout-wizard-focus {
+  &:focus-visible {
+    outline: 2px solid $fuzo-yellow-deep;
+    outline-offset: 2px;
+  }
+}
+
+@mixin scout-wizard-btn {
+  min-height: 52px;
+  padding: 0 1.25rem;
+  border-radius: 9999px;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: transform 0.2s $fz-ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  @include scout-wizard-focus;
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+@mixin scout-wizard-btn-primary {
+  @include scout-wizard-btn;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  box-shadow: 0 8px 18px -8px rgba($fuzo-yellow-deep, 0.8);
+
+  &:hover:not(:disabled) {
+    background: mix(#fff, $fuzo-yellow, 15%);
+    transform: translateY(-1px);
+  }
+  &:disabled {
+    background: mix(#fff, $fuzo-yellow, 55%);
+    color: rgba($fuzo-yellow-ink, 0.5);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+@mixin scout-wizard-field {
+  width: 100%;
+  background: $scout-wizard-pill;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: $scout-wizard-ink;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+
+  &::placeholder {
+    color: $scout-wizard-muted-dim;
+  }
+  &:focus {
+    background: #fff;
+    border-color: $fuzo-yellow-deep;
+    box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35);
+  }
+}
 
 .scout-wizard {
   position: fixed;
   inset: 0;
   height: 100dvh;
   z-index: $scout-z-wizard;
-  background: $scout-wizard-bg;
+  background: #fff;
   color: $scout-wizard-ink;
   display: flex;
   flex-direction: column;
@@ -1332,45 +1257,60 @@ $scout-wizard-map-scrim: #0c0a09;
 }
 
 .scout-wizard__header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid $scout-wizard-border;
-  background: $scout-wizard-bg;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 1rem clamp(1rem, 3vw, 2rem);
+  padding-top: calc(1rem + env(safe-area-inset-top));
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-
-  @include media-breakpoint-up(md) {
-    padding: 2rem;
-  }
+  gap: 1rem;
+  flex-shrink: 0;
 }
 
+// Close sits on the right, like the other studios.
 .scout-wizard__close {
-  padding: 0.75rem;
-  background: $scout-wizard-surface;
-  border-radius: $border-radius;
+  order: 2;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: $scout-wizard-pill;
+  border-radius: 50%;
   border: 0;
   color: $scout-wizard-ink;
-  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+  @include scout-wizard-focus;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 
   &:hover {
-    background: $scout-wizard-border;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
   }
 }
 
 .scout-wizard__stepper {
+  flex: 1;
+  min-width: 0;
+  max-width: 34rem;
+  margin: 0 auto;
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-grow: 1;
-  max-width: 30rem;
-  overflow-x: auto;
+  align-items: flex-start;
+  padding-bottom: 1.1rem;
 }
 
 .scout-wizard__step {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
   flex-shrink: 0;
 }
 
@@ -1381,52 +1321,72 @@ $scout-wizard-map-scrim: #0c0a09;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.6875rem;
-  font-weight: 900;
-  background: $scout-wizard-border;
-  color: $scout-wizard-muted-dim;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: $scout-wizard-pill;
+  color: $scout-wizard-muted;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 
   &.is-done {
-    background: $scout-saved;
-    color: #000;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
   }
   &.is-current {
-    background: $scout-fuzo;
-    color: #000;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 0 0 4px rgba($fuzo-yellow, 0.25);
   }
 }
 
 .scout-wizard__step-label {
-  font-size: 0.5625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  position: absolute;
+  top: 100%;
+  margin-top: 0.3rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
   color: $scout-wizard-muted-dim;
   white-space: nowrap;
 
   &.is-current {
     color: $scout-wizard-ink;
   }
+
+  // Seven steps don't fit with labels on a phone: only the current one shows.
+  @media (max-width: 575.98px) {
+    &:not(.is-current) {
+      display: none;
+    }
+  }
 }
 
 .scout-wizard__step-connector {
   flex: 1;
+  min-width: 0.5rem;
   height: 2px;
-  min-width: 0.75rem;
-  background: $scout-wizard-border;
-  margin-bottom: 1rem;
+  margin: 0.8125rem 0.25rem 0;
+  border-radius: 9999px;
+  background: $scout-wizard-line;
   transition: background-color 0.3s ease;
 
   &.is-done {
-    background: $scout-saved;
+    background: $fuzo-yellow;
   }
 }
 
+// The step's card is centred when it fits and scrolls when it doesn't.
 .scout-wizard__body {
   flex-grow: 1;
   overflow-y: auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem clamp(1rem, 3vw, 2rem) calc(2rem + env(safe-area-inset-bottom));
+
+  &:has(> .scout-wizard__map) {
+    padding: 0;
+  }
 }
 
 .scout-wizard__error {
@@ -1435,72 +1395,95 @@ $scout-wizard-map-scrim: #0c0a09;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
+  width: max-content;
+  max-width: calc(100% - 2rem);
   background: $scout-new-pin;
   color: #fff;
-  padding: 0.75rem 1.5rem;
-  border-radius: $border-radius;
+  padding: 0.65rem 0.75rem 0.65rem 1.1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 
   button {
     background: transparent;
     border: 0;
     color: #fff;
+    display: inline-flex;
   }
 }
 
-.scout-wizard__panel {
-  max-width: 30rem;
-  margin: 0 auto;
-  min-height: 100%;
+.scout-wizard__panel,
+.scout-wizard__details-wrap {
+  background: var(--fz-float-bg);
+  border: 1px solid var(--fz-float-border);
+  box-shadow: var(--fz-float-shadow);
+  border-radius: 28px;
+  color: $scout-wizard-ink;
+  width: 100%;
+  max-width: 34rem;
+  margin: auto;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 2rem;
-  gap: 3rem;
+  gap: 1.5rem;
+  animation: scout-wizard-rise 0.45s $fz-ease backwards;
+
+  @media (max-width: 480px) {
+    padding: 1.25rem;
+  }
+}
+
+.scout-wizard__details-wrap {
+  max-width: 38rem;
+}
+
+@keyframes scout-wizard-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
 }
 
 .scout-wizard__panel-header {
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .scout-wizard__badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   align-self: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: $scout-radius-pill;
-  background: $scout-fuzo;
-  color: #1c1917;
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow-tint;
+  color: $scout-wizard-ink;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .scout-wizard__heading {
-  font-size: 2.5rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.05em;
-  font-style: italic;
-  line-height: 1;
+  @include scout-wizard-heading;
+  margin: 0;
+  font-size: clamp(1.5rem, 4.5vw, 1.9rem);
   color: $scout-wizard-ink;
-
-  @include media-breakpoint-up(md) {
-    font-size: 3rem;
-  }
 }
 
 .scout-wizard__hint {
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
   color: $scout-wizard-muted;
 }
 
@@ -1509,64 +1492,34 @@ $scout-wizard-map-scrim: #0c0a09;
 
   svg {
     position: absolute;
-    left: 1.5rem;
+    left: 1.1rem;
     top: 50%;
     transform: translateY(-50%);
     color: $scout-wizard-muted;
+    pointer-events: none;
   }
 }
 
 .scout-wizard__search-input {
-  width: 100%;
-  background: $scout-wizard-surface;
-  border: 2px solid $scout-wizard-border;
-  padding: 1.5rem 2rem 1.5rem 4rem;
-  border-radius: $scout-radius-xl;
-  font-weight: 700;
-  font-size: 1.125rem;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  outline: none;
-  color: $scout-wizard-ink;
-  transition: border-color 0.15s ease;
-
-  &:focus {
-    border-color: $scout-fuzo;
-  }
+  @include scout-wizard-field;
+  padding: 0.9rem 1.1rem 0.9rem 3rem;
 }
 
 .scout-wizard__cta {
+  @include scout-wizard-btn-primary;
   width: 100%;
-  padding: 1.5rem 0;
-  border-radius: $scout-radius-xl;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  border: 0;
-  transition: transform 0.1s ease;
-  background: $scout-wizard-surface;
-  color: $scout-wizard-muted;
 
-  &.is-ready {
-    background: $scout-wizard-ink;
-    color: #fff;
-
-    &:hover {
-      transform: scale(1.02);
-    }
-    &:active {
-      transform: scale(0.96);
-    }
+  // Faded yellow until there's something to search for.
+  &:not(.is-ready) {
+    background: mix(#fff, $fuzo-yellow, 55%);
+    color: rgba($fuzo-yellow-ink, 0.5);
+    box-shadow: none;
   }
 }
 
 .scout-wizard__map {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -1579,138 +1532,114 @@ $scout-wizard-map-scrim: #0c0a09;
 
 .scout-wizard__map-overlay {
   position: absolute;
-  inset: 0 0 0 0;
-  padding: 2rem;
-  padding-top: 5rem;
-  background: linear-gradient(to top, $scout-wizard-map-scrim, rgba(12, 10, 9, 0.9), transparent);
+  inset: auto 0 0 0;
+  padding: 5rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba($scout-wizard-map-scrim, 0.85), rgba($scout-wizard-map-scrim, 0.5) 60%, transparent);
   pointer-events: none;
 }
 
 .scout-wizard__map-overlay-inner {
-  max-width: 30rem;
+  max-width: 34rem;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   pointer-events: auto;
 }
 
 .scout-wizard__address {
+  margin: 0;
   text-align: center;
-  color: #d6d3d1;
+  color: #fff;
   font-weight: 700;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+  font-size: 0.875rem;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
-.scout-wizard__nav-row {
+.scout-wizard__nav-row,
+.scout-wizard__submit-row {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .scout-wizard__back {
-  width: 33%;
-  padding: 1.5rem 0;
-  background: $scout-wizard-surface;
+  @include scout-wizard-btn;
+  flex: 0 0 34%;
+  background: $scout-wizard-pill;
   color: $scout-wizard-ink;
-  border-radius: $scout-radius-xl;
-  border: 0;
-  font-weight: 900;
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
 
   &:hover {
-    background: $scout-wizard-border;
+    background: $scout-wizard-pill-hover;
   }
 }
 
-.scout-wizard__next {
+.scout-wizard__next,
+.scout-wizard__submit {
+  @include scout-wizard-btn-primary;
   flex-grow: 1;
-  padding: 1.5rem 0;
-  background: $scout-wizard-ink;
-  color: #fff;
-  border-radius: $scout-radius-xl;
-  border: 0;
-  font-weight: 900;
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-
-  &:disabled {
-    background: $scout-wizard-border;
-    color: $scout-wizard-muted;
-  }
 }
 
 .scout-wizard__field-label {
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: $scout-wizard-muted;
-  margin-left: 1.5rem;
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+  color: $scout-wizard-ink;
 }
 
 .scout-wizard__text-input {
-  width: 100%;
-  background: $scout-wizard-surface;
-  border: 2px solid $scout-wizard-border;
-  padding: 1.5rem 2rem;
-  border-radius: $scout-radius-xl;
-  font-weight: 900;
-  font-size: 1.125rem;
-  color: $scout-wizard-ink;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  outline: none;
-
-  &:focus {
-    border-color: $scout-fuzo;
-  }
+  @include scout-wizard-field;
+  padding: 0.9rem 1.1rem;
 }
 
 .scout-wizard__cuisine-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  max-height: 35dvh;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-height: 32dvh;
   overflow-y: auto;
-  padding-right: 0.5rem;
+  padding: 2px;
 }
 
 .scout-wizard__cuisine-chip {
-  padding: 1rem 0;
-  border-radius: $border-radius-lg;
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border: 2px solid $scout-wizard-border;
-  background: $scout-wizard-surface;
-  color: $scout-wizard-muted;
-  transition: all 0.15s ease;
+  @include fz-pastel-cycle;
+  min-height: 40px;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  border: 0;
+  background: var(--pastel);
+  color: $scout-wizard-ink;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  @include scout-wizard-focus;
 
+  &:hover:not(.is-selected) {
+    background: var(--pastel-hover);
+  }
   &.is-selected {
-    background: $scout-fuzo;
-    color: $scout-wizard-ink;
-    border-color: $scout-fuzo;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-weight: 800;
+    box-shadow: 0 6px 14px -6px rgba($fuzo-yellow-deep, 0.9);
   }
 }
 
 .scout-wizard__photos-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .scout-wizard__photo {
   position: relative;
   aspect-ratio: 1;
-  border-radius: $border-radius-lg;
+  border-radius: 20px;
   overflow: hidden;
-  border: 2px solid $scout-wizard-border;
 
   img {
     width: 100%;
@@ -1721,26 +1650,42 @@ $scout-wizard-map-scrim: #0c0a09;
 
 .scout-wizard__photo-remove {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  padding: 0.5rem;
-  background: $scout-new-pin;
-  border-radius: $border-radius;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
   border: 0;
   color: #fff;
+  @include scout-wizard-focus;
 }
 
 .scout-wizard__photo-add {
   aspect-ratio: 1;
-  border-radius: $border-radius-lg;
-  border: 2px dashed $scout-wizard-border;
+  border-radius: 20px;
+  border: 1.5px dashed rgba($fz-ink, 0.18);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
   cursor: pointer;
-  background: $scout-wizard-surface;
+  background: $scout-wizard-pill;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background: $fuzo-yellow-tint;
+    border-color: $fuzo-yellow-deep;
+  }
+  &:focus-within {
+    outline: 2px solid $fuzo-yellow-deep;
+    outline-offset: 2px;
+  }
 
   input {
     display: none;
@@ -1748,53 +1693,46 @@ $scout-wizard-map-scrim: #0c0a09;
 }
 
 .scout-wizard__photo-add-icon {
-  width: 3rem;
-  height: 3rem;
-  border-radius: $border-radius;
-  background: $scout-wizard-border;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $scout-wizard-muted;
+  color: $fuzo-yellow-deep;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
 .scout-wizard__photo-add-label {
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: $scout-wizard-muted;
-}
-
-.scout-wizard__details-wrap {
-  max-width: 37.5rem;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  gap: 3rem;
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+  color: $scout-wizard-ink;
 }
 
 .scout-wizard__rating-block {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 2rem 0;
-  background: $scout-wizard-surface;
-  border-radius: $scout-radius-xl;
+  gap: 0.5rem;
+  padding: 1.25rem 0;
+  background: $scout-wizard-pill;
+  border-radius: 20px;
 }
 
 .scout-wizard__rating-stars {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.35rem;
 
   button {
     background: transparent;
     border: 0;
-    transition: transform 0.1s ease;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: transform 0.15s ease;
+    @include scout-wizard-focus;
 
     &:active {
       transform: scale(0.9);
@@ -1803,80 +1741,78 @@ $scout-wizard-map-scrim: #0c0a09;
 }
 
 .scout-wizard__textarea {
-  width: 100%;
-  background: $scout-wizard-surface;
-  border: 2px solid $scout-wizard-border;
-  padding: 1.5rem 2rem;
-  border-radius: $scout-radius-xl;
-  font-weight: 500;
-  color: $scout-wizard-ink;
-  outline: none;
-  height: 10rem;
+  @include scout-wizard-field;
+  padding: 0.9rem 1.1rem;
+  min-height: 8rem;
+  line-height: 1.5;
   resize: none;
 }
 
+.scout-wizard__hours-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: $fuzo-yellow-deep;
+}
+
 .scout-wizard__hours-card {
-  background: $scout-wizard-surface;
-  border-radius: $scout-radius-xl;
-  padding: 1.5rem;
+  background: $scout-wizard-pill;
+  border-radius: 20px;
+  padding: 0.5rem 1.1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  border: 1px solid $scout-wizard-border;
 }
 
 .scout-wizard__hours-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
+  min-height: 44px;
+
+  & + & {
+    border-top: 1px solid $scout-wizard-line;
+  }
 }
 
 .scout-wizard__hours-day {
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  color: $scout-wizard-muted;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: $scout-wizard-ink;
 }
 
 .scout-wizard__hours-input {
   background: transparent;
   border: 0;
-  border-bottom: 1px solid $scout-wizard-border;
-  font-size: 0.6875rem;
-  font-weight: 700;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
   color: $scout-wizard-ink;
   text-align: right;
   outline: none;
-  padding: 0.25rem 0;
-  width: 8rem;
+  padding: 0.35rem 0.5rem;
+  width: 9rem;
+
+  &:focus {
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba($fuzo-yellow, 0.6);
+  }
 }
 
+// Back + Lock stay reachable at the bottom of the card while it scrolls.
 .scout-wizard__submit-row {
-  display: flex;
-  gap: 1rem;
   position: sticky;
-  bottom: 0;
-  background: $scout-wizard-bg;
-  padding: 1rem 0;
-}
+  bottom: -1.5rem;
+  margin: 0 -1.5rem -1.5rem;
+  padding: 1rem 1.5rem 1.5rem;
+  background: var(--fz-float-bg);
+  border-radius: 0 0 28px 28px;
 
-.scout-wizard__submit {
-  flex-grow: 1;
-  padding: 1.5rem 0;
-  background: $scout-wizard-ink;
-  color: #fff;
-  border-radius: $scout-radius-xl;
-  border: 0;
-  font-weight: 900;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-
-  &:disabled {
-    opacity: 0.6;
+  @media (max-width: 480px) {
+    bottom: -1.25rem;
+    margin: 0 -1.25rem -1.25rem;
+    padding: 1rem 1.25rem 1.25rem;
   }
 }
 
@@ -1884,67 +1820,1029 @@ $scout-wizard-map-scrim: #0c0a09;
   position: fixed;
   inset: 0;
   z-index: $scout-z-wizard + 50;
-  background: $scout-saved;
+  background: #fff;
+  color: $scout-wizard-ink;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 2rem 1rem;
   text-align: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .scout-wizard__success-icon {
-  width: 12rem;
-  height: 12rem;
-  background: #fff;
+  width: 8rem;
+  height: 8rem;
+  background: $fuzo-yellow;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $scout-saved;
-  box-shadow: 0 0 0 24px rgba(255, 255, 255, 0.2);
+  color: $fuzo-yellow-ink;
+  box-shadow: 0 0 0 16px $fuzo-yellow-tint;
+  animation: scout-wizard-pop 0.6s $fz-ease backwards;
+
+  svg {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+@keyframes scout-wizard-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
 }
 
 .scout-wizard__success-heading {
-  font-size: 3rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.05em;
-  font-style: italic;
-  color: #fff;
-  line-height: 1;
-
-  @include media-breakpoint-up(md) {
-    font-size: 4rem;
-  }
+  @include scout-wizard-heading;
+  margin: 0;
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  color: $scout-wizard-ink;
 }
 
 .scout-wizard__success-sub {
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 700;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  margin: 0;
+  color: $scout-wizard-muted;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .scout-wizard__success-btn {
-  margin-top: 2rem;
-  padding: 1.5rem 4rem;
-  background: #fff;
-  color: darken($scout-saved, 15%);
-  border-radius: $scout-radius-xl;
-  border: 0;
-  font-weight: 900;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  transition: transform 0.1s ease;
+  @include scout-wizard-btn-primary;
+  width: 100%;
+  max-width: 22rem;
+  margin-top: 0.5rem;
+}
 
-  &:hover {
-    transform: scale(1.05);
-  }
-  &:active {
-    transform: scale(0.96);
+@media (prefers-reduced-motion: reduce) {
+  .scout-wizard__panel,
+  .scout-wizard__details-wrap,
+  .scout-wizard__success-icon {
+    animation: none;
   }
 }
+
+html[data-theme='dark'] {
+  .scout-wizard,
+  .scout-wizard__success {
+    background: #000;
+  }
+  .scout-wizard__success-heading,
+  .scout-wizard__step-label.is-current {
+    color: #f5f5f5;
+  }
+  .scout-wizard__success-sub {
+    color: #a3a3a3;
+  }
+  .scout-wizard__close,
+  .scout-wizard__step-dot:not(.is-current):not(.is-done) {
+    background: #1c1c1c;
+    color: #f5f5f5;
+  }
+  .scout-wizard__close:hover {
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+  }
+  .scout-wizard__step-connector:not(.is-done) {
+    background: #262626;
+  }
+  .scout-wizard__success-icon {
+    box-shadow: 0 0 0 16px rgba($fuzo-yellow, 0.18);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Directions panel (ScoutDirectionsPanel.tsx) - route from "Your location" to
+// a place, like Google Maps. Replaces the discovery panel while open: bottom
+// sheet on phones, floating card on the left on desktop.
+// ---------------------------------------------------------------------------
+$scout-route-blue: #2f7de1;
+
+.scout-dir {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $scout-z-directions;
+  display: flex;
+  flex-direction: column;
+  max-height: 60dvh;
+  // Bottom padding clears the app dock floating over the sheet.
+  padding: 1rem 1rem calc(1rem + #{$scout-dock-clearance} + env(safe-area-inset-bottom, 0px));
+  background: #fff;
+  border-top-left-radius: $scout-radius-xl;
+  border-top-right-radius: $scout-radius-xl;
+  border-top: 1px solid $scout-border;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.14);
+  color: $scout-ink;
+
+  @include media-breakpoint-up(md) {
+    top: calc(#{$scout-top} + 5rem);
+    bottom: auto;
+    left: 1.5rem;
+    right: auto;
+    width: 380px;
+    max-height: calc(100dvh - #{$scout-top} - 5rem - #{$scout-dock-clearance}); // above the app dock
+    padding: 1.15rem;
+    @include scout-floating-surface($border-radius-lg);
+  }
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  // From / To fields (tap to search another place), like Google's trip header.
+  &__trip {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  &__field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    min-height: 42px;
+    padding: 0 0.8rem;
+    border: 1px solid $scout-border;
+    border-radius: 14px;
+    background: $scout-surface-muted;
+    color: $scout-ink;
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+
+    &:hover { border-color: $scout-ink-faint; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 1px; }
+    &--to .scout-dir__field-label:not(.is-empty) { font-weight: 800; }
+
+    &.is-editing {
+      cursor: text;
+      background: #fff;
+      border-color: $fuzo-yellow-deep;
+      box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.3);
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      height: 40px;
+      border: 0;
+      background: transparent;
+      color: $scout-ink;
+      font-size: 0.92rem;
+      outline: none;
+    }
+  }
+
+  &__field-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    &.is-empty { color: $scout-ink-faint; }
+  }
+
+  &__pin { flex-shrink: 0; color: $chili; }
+
+  &__suggest {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 5;
+    max-height: 240px;
+    margin: 0;
+    padding: 0.3rem;
+    list-style: none;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid $scout-border;
+    border-radius: 14px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      width: 100%;
+      min-height: 42px;
+      padding: 0.45rem 0.6rem;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: $scout-ink;
+      font-size: 0.86rem;
+      text-align: left;
+      cursor: pointer;
+
+      svg { flex-shrink: 0; color: $scout-ink-faint; }
+      span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      &:hover, &:focus-visible { background: $fuzo-yellow-tint; outline: none; }
+    }
+    li:first-child button svg.lucide-locate-fixed { color: $scout-route-blue; }
+  }
+
+  &__dot {
+    flex-shrink: 0;
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    background: $scout-route-blue;
+    box-shadow: 0 0 0 3px rgba($scout-route-blue, 0.22);
+  }
+
+  &__close {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $scout-surface-muted;
+    color: $scout-ink;
+    cursor: pointer;
+    &:hover { background: darken($scout-surface-muted, 5%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  // Car / Bike / Walk
+  &__modes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.35rem;
+    margin-top: 0.9rem;
+    padding: 0.25rem;
+    border-radius: 9999px;
+    background: $scout-surface-muted;
+    border: 1px solid $scout-border;
+  }
+
+  &__mode {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 40px;
+    border: 0;
+    border-radius: 9999px;
+    background: transparent;
+    color: $scout-ink-soft;
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+
+    &:hover { color: $scout-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 1px; }
+    &[aria-pressed='true'] {
+      background: $scout-ink;
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+    }
+  }
+
+  &__body {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.9rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  &__scroll { display: flex; flex-direction: column; }
+
+  // "Food along the way" switch
+  &__along {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    margin-top: 0.9rem;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid $scout-border;
+    border-radius: 16px;
+    background: $scout-surface-muted;
+    color: $scout-ink;
+    text-align: left;
+    cursor: pointer;
+
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+    &[aria-checked='true'] {
+      background: $fuzo-yellow-tint;
+      border-color: rgba($fuzo-yellow-deep, 0.5);
+      .scout-dir__switch { background: $fuzo-yellow-deep; }
+      .scout-dir__switch::after { transform: translateX(18px); }
+    }
+  }
+
+  &__along-icon {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $chili-tint;
+    color: $chili;
+  }
+
+  &__along-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    strong { font-size: 0.88rem; font-weight: 800; }
+    span { font-size: 0.76rem; color: $scout-ink-soft; }
+  }
+
+  &__switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 40px;
+    height: 22px;
+    border-radius: 9999px;
+    background: $scout-ink-faint;
+    transition: background 0.2s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+      transition: transform 0.2s $fz-ease;
+    }
+  }
+
+  &__along-count {
+    margin: 0.7rem 0 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: $scout-ink-soft;
+  }
+
+  &__spots {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__spot {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 0.35rem;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: $scout-ink;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover { background: $scout-surface-muted; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 1px; }
+
+  }
+
+  &__spot-photo {
+    position: relative;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+
+    > img {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+      background: $scout-surface-muted;
+    }
+  }
+
+  &__spot-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    strong { font-size: 0.86rem; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    span {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.76rem;
+      color: $scout-ink-soft;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      svg { flex-shrink: 0; color: $fuzo-yellow-deep; }
+    }
+  }
+
+  &__note {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0.6rem 0.15rem;
+    font-size: 0.9rem;
+    color: $scout-ink-soft;
+  }
+
+  &__problem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    p { margin: 0; font-size: 0.88rem; line-height: 1.45; color: $scout-ink-soft; }
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 40px;
+    padding: 0 1rem;
+    border: 1px solid $scout-border;
+    border-radius: 9999px;
+    background: #fff;
+    color: $scout-ink;
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    &:hover { background: $fuzo-yellow-tint; border-color: $fuzo-yellow-deep; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  &__time {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: mix(#000, $lime, 40%);
+  }
+
+  &__meta {
+    margin: 0.2rem 0 0;
+    font-size: 0.85rem;
+    color: $scout-ink-soft;
+  }
+
+  &__start {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 46px;
+    padding: 0 1.25rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 8px 18px -8px rgba($fuzo-yellow-deep, 0.85);
+    transition: transform 0.2s $fz-ease, background 0.2s ease;
+
+    &:hover { color: $fuzo-yellow-ink; background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
+    &:focus-visible { outline: 2px solid $scout-ink; outline-offset: 2px; }
+  }
+
+  &__steps-toggle {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 40px;
+    margin-top: 0.6rem;
+    padding: 0 0.2rem;
+    border: 0;
+    background: transparent;
+    color: $scout-route-blue;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+
+    svg { transition: transform 0.2s ease; }
+    svg.is-open { transform: rotate(180deg); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; border-radius: 6px; }
+  }
+
+  &__steps {
+    margin: 0.25rem 0 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden; // for the open/close height animation
+  }
+
+  &__step {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid $scout-border;
+    font-size: 0.88rem;
+    line-height: 1.35;
+
+    &--end .scout-dir__step-icon { background: $chili-tint; color: $chili; }
+  }
+
+  &__step-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($scout-route-blue, 0.1);
+    color: $scout-route-blue;
+  }
+
+  &__step-text { overflow-wrap: anywhere; white-space: pre-line; }
+  &__step-dist { font-size: 0.78rem; color: $scout-ink-faint; white-space: nowrap; }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__mode,
+    &__start,
+    &__field,
+    &__switch,
+    &__switch::after,
+    &__steps-toggle svg { transition: none; }
+    &__start:hover { transform: none; }
+  }
+}
+
+// ---- Directions: fold handle (phones) + folded one-line summary ----
+.scout-dir {
+  &__handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: calc(100% + 2rem);
+    min-height: 30px;
+    margin: -0.75rem -1rem 0.35rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: $scout-ink-faint;
+    cursor: pointer;
+
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: -4px; border-radius: 12px; }
+    // Desktop's card sits beside the map, nothing to fold.
+    @include media-breakpoint-up(md) { display: none; }
+  }
+
+  &__grip {
+    width: 40px;
+    height: 5px;
+    border-radius: 9999px;
+    background: #d6d3d1;
+  }
+
+  &__mini {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  &__mini-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.2rem 0;
+    border: 0;
+    background: transparent;
+    color: $scout-ink;
+    text-align: left;
+    cursor: pointer;
+
+    strong { font-size: 1rem; font-weight: 800; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    span { max-width: 100%; font-size: 0.8rem; color: $scout-ink-soft; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; border-radius: 8px; }
+  }
+  &__mini-time { color: mix(#000, $lime, 40%) !important; font-size: 1.15rem !important; }
+
+  // Start + the small Google Maps hand-off next to it.
+  &__go {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  &__gmaps {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $scout-border;
+    background: #fff;
+    color: $scout-ink-soft;
+    &:hover { color: $scout-ink; background: $scout-surface-muted; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__start { border: 0; cursor: pointer; }
+}
+
+// ---------------------------------------------------------------------------
+// In-app navigation (ScoutNavigation.tsx): next-turn banner on top, trip bar
+// at the bottom. The search bar, map buttons and app dock hide meanwhile.
+// ---------------------------------------------------------------------------
+.scout-root.is-navigating {
+  .scout-search,
+  .scout-fabs { display: none; }
+}
+body.fz-navigating .fz-dash-dock { display: none; }
+
+.scout-nav {
+  &__banner {
+    position: absolute;
+    top: calc(#{$scout-top} + 0.75rem);
+    left: 0.75rem;
+    right: 0.75rem;
+    z-index: $scout-z-chrome + 1;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.9rem 1rem;
+    border-radius: 22px;
+    background: #1f6f43; // road-sign green, readable at a glance
+    color: #fff;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+
+    &.is-arrived { background: $scout-ink; }
+
+    @include media-breakpoint-up(md) {
+      left: 1.5rem;
+      right: auto;
+      width: 420px;
+      top: calc(#{$scout-top} + 1.5rem);
+    }
+  }
+
+  &__turn {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(#fff, 0.16);
+  }
+
+  &__text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  &__dist {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  &__instruction {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__then {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__recenter {
+    position: absolute;
+    left: 50%;
+    bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px));
+    z-index: $scout-z-chrome;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border: 0;
+    border-radius: 9999px;
+    background: #fff;
+    color: $scout-route-blue;
+    font-size: 0.9rem;
+    font-weight: 800;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    translate: -50% 0;
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: $scout-z-chrome;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    border-top-left-radius: $scout-radius-xl;
+    border-top-right-radius: $scout-radius-xl;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.14);
+    color: $scout-ink;
+
+    @include media-breakpoint-up(md) {
+      left: 1.5rem;
+      right: auto;
+      bottom: 1.5rem;
+      width: 420px;
+      border-radius: $scout-radius-lg;
+    }
+  }
+
+  &__trip { min-width: 0; display: flex; flex-direction: column; }
+  &__eta { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.02em; color: mix(#000, $lime, 40%); line-height: 1.1; }
+  &__meta { font-size: 0.85rem; color: $scout-ink-soft; }
+
+  &__actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  &__icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $scout-border;
+    background: $scout-surface-muted;
+    color: $scout-ink;
+    cursor: pointer;
+    &[aria-pressed='true'] { background: $chili-tint; color: $chili; border-color: transparent; }
+    &:hover { color: $scout-ink; background: darken($scout-surface-muted, 4%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__exit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $chili;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    &:hover { background: mix(#000, $chili, 10%); }
+    &:focus-visible { outline: 2px solid $scout-ink; outline-offset: 2px; }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Choose on map (ScoutPickOverlay.tsx): a pin fixed at the map centre, a hint
+// on top and a confirm card at the bottom. Search + map buttons hide meanwhile.
+// ---------------------------------------------------------------------------
+.scout-root.is-picking {
+  .scout-search,
+  .scout-fabs { display: none; }
+}
+
+.scout-dir__suggest .scout-dir__suggest-map {
+  border-top: 1px solid $scout-border;
+  border-radius: 0 0 10px 10px;
+  font-weight: 700;
+  svg { color: $scout-route-blue; }
+}
+
+.scout-pick {
+  &__hint {
+    position: absolute;
+    top: calc(#{$scout-top} + 1rem);
+    left: 50%;
+    z-index: $scout-z-chrome;
+    max-width: calc(100% - 2rem);
+    margin: 0;
+    padding: 0.6rem 1rem;
+    border-radius: 9999px;
+    background: $scout-ink;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    translate: -50% 0;
+    width: max-content;
+  }
+
+  // The pin's tip sits exactly on the map centre.
+  &__pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: $scout-z-chrome;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    translate: -50% -100%;
+    color: $chili;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+
+    svg { fill: #fff; }
+    &--from { color: $scout-route-blue; }
+  }
+
+  &__shadow {
+    position: absolute;
+    bottom: -3px;
+    width: 10px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  &__card {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: $scout-z-chrome;
+    padding: 1.1rem 1rem calc(1rem + #{$scout-dock-clearance} + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    border-top-left-radius: $scout-radius-xl;
+    border-top-right-radius: $scout-radius-xl;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.14);
+    color: $scout-ink;
+
+    @include media-breakpoint-up(md) {
+      left: 1.5rem;
+      right: auto;
+      top: calc(#{$scout-top} + 5rem);
+      bottom: auto;
+      width: 380px;
+      padding: 1.15rem;
+      @include scout-floating-surface($border-radius-lg);
+    }
+  }
+
+  &__label {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $scout-ink-faint;
+  }
+
+  &__address {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.6rem;
+    margin: 0.3rem 0 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__cancel,
+  &__confirm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 46px;
+    padding: 0 1.1rem;
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__cancel {
+    border: 1px solid $scout-border;
+    background: #fff;
+    color: $scout-ink;
+    &:hover { background: $scout-surface-muted; }
+  }
+
+  &__confirm {
+    flex: 1;
+    border: 0;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 8px 18px -8px rgba($fuzo-yellow-deep, 0.85);
+    &:hover { background: mix(#fff, $fuzo-yellow, 15%); }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Place origin badge (SourceBadge.tsx): Google "G" or the FUZO mark in the
+// bottom-right corner of a place card's photo.
+// ---------------------------------------------------------------------------
+.scout-source-badge {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 20px;
+  height: 20px;
+  padding: 3px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+
+  svg,
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  &--fuzo { padding: 2px; }
+}
+
+// FUZO restaurant data in the place pop-up (client, 2026-10-06): reviewer
+// photos, review photo strip, and "not listed yet" notes.
+.scout-modal__review-avatar {
+  overflow: hidden;
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+.scout-modal__review-photos {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  overflow-x: auto;
+  img { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+}
+.scout-modal__muted { font-size: 0.85rem; color: $scout-ink-faint; }

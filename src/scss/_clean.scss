@@ -1,0 +1,573 @@
+// ============================================================================
+// CLEAN LOOK (client, 2026-10-06, Feoy reference): a plain white page, flat
+// light-grey pills for search / chips / tabs, FUZO yellow (dark text) for
+// whatever is selected, big sections sitting flat on the white with just
+// their titles, and a white bottom bar with a raised round yellow + in the
+// middle. Loaded last, after _glass.scss, so it wins.
+// ============================================================================
+
+$clean-pill: #f2f1ee;
+$clean-muted: #8f8a80;
+
+// ── Navbar: plain white, nothing around it ───────────────────────────────
+.fz-topbar {
+  background: #fff;
+  border: 0;
+  box-shadow: none;
+}
+html[data-theme='dark'] .fz-topbar { background: #000; }
+
+// ── Profile header sits flat on the page (Feoy's profile) ───────────────
+.profile-shell .fz-phero {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+// ── Floating section cards (client, 2026-10-06) ─────────────────────────
+// Every section-level block (Home's rails incl. My Plate's, Explore cities,
+// Profile Highlights + Activity sections, Food DNA cards) is a premium
+// floating card: pure white, 1px #F2F2F2 border, soft shadow on all four
+// sides (`fz-float-card`, _glass.scss), 28px corners, 20-24px inner padding,
+// 16-20px outside, and roomier heading -> subtitle -> cards spacing. Nothing
+// above them clips overflow, so the shadow shows on every side.
+.fz-dash-rail,
+.fz-dash-cities,
+.profile-shell .fz-highlights-section,
+.profile-shell .fz-activity-section,
+.profile-shell .fz-activity-panel,
+.fz-dna-card {
+  @include fz-float-card;
+  border-radius: 28px;
+}
+// Settings rows are a list: a shadow on every row would be noisy.
+.fz-settings-row { box-shadow: none; }
+
+// Home + My Plate rails and the cities panel: 22px top/bottom, 24px sides
+// (20px on phones), 20px between sections.
+.fz-dash-rail,
+.fz-dash-cities {
+  margin-top: 1.25rem;
+  padding-top: 1.375rem;
+  padding-bottom: 0.5rem;
+}
+.fz-dash-rail__head { padding-bottom: 1.1rem; }
+.fz-dash-rail__sub { margin-top: 0.4rem; }
+.fz-dash-rail__track { padding-top: 1.35rem; }
+.fz-dash-cities__head { margin-bottom: 1.1rem; }
+.fz-dash-cities__sub { margin-top: 0.4rem; }
+
+@media (max-width: 768px) {
+  .fz-dash__body { padding-left: 1rem; padding-right: 1rem; } // 16px outside
+  .fz-dash-rail,
+  .fz-dash-cities { border-radius: 28px; padding-top: 1.25rem; }
+  .fz-dash-rail__head { margin-left: 1.25rem; margin-right: 1.25rem; }
+  .fz-dash-rail__track {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    scroll-padding-inline: 1.25rem;
+  }
+  .fz-dash-cities__head,
+  .fz-dash-cities__track { padding-left: 1.25rem; padding-right: 1.25rem; }
+}
+
+// Profile sections: same card, 24px padding (20px on phones), 16px outside.
+.profile-shell .fz-activity-section,
+.profile-shell .fz-activity-panel { padding: 1.5rem; }
+.profile-shell .fz-highlights-section { padding: 1.375rem 1.5rem; }
+.fz-dna-card { padding: 1.375rem 1.5rem; }
+@media (max-width: 768px) {
+  .profile-shell .fz-activity-section,
+  .profile-shell .fz-activity-panel,
+  .profile-shell .fz-highlights-section,
+  .fz-dna-card { border-radius: 28px; padding: 1.25rem; }
+  .profile-shell .fz-profile-top:has(> .fz-highlights-section) > .fz-highlights-section,
+  .profile-shell .fz-highlights-section { margin-left: 1rem; margin-right: 1rem; }
+}
+
+// ── Selected = FUZO yellow with dark text (Feoy's orange, in our colour) ─
+.fz-dash-tabs__thumb {
+  top: 0;
+  bottom: 0; // full chip height (the bar no longer has inner padding)
+  background: $fuzo-yellow;
+  box-shadow: none;
+}
+.fz-dash-tabs__tab.is-active { color: $fz-ink; }
+.bites-chip.is-selected,
+.fz-plate__chip[aria-pressed='true'] {
+  background: $fuzo-yellow;
+  border-color: $fuzo-yellow;
+  color: $fz-ink;
+}
+.fz-lbr-tabs__btn.is-active {
+  background: $fuzo-yellow;
+  color: $fz-ink;
+  box-shadow: none;
+}
+
+// ── Home's For you / Bites / Feed / Trims: separate chips like Feoy's ────
+.fz-dash-tabs {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  gap: 0.5rem;
+}
+.fz-dash-tabs__tab {
+  background: $clean-pill;
+  border-radius: 9999px;
+  &.is-active { background: transparent; } // the yellow thumb shows through
+}
+html[data-theme='dark'] .fz-dash-tabs__tab:not(.is-active) { background: #1c1c1c; }
+
+// ── Bottom bar (AppDock) ─────────────────────────────────────────────────
+// A white bar along the bottom; a curved notch is cut out of its top edge
+// around the raised + (the bar is a masked ::before so the notch can be cut
+// without cutting the button). Items stay in a 520px band on wide screens.
+$dock-h: 64px;
+$dock-fab: 56px;
+.fz-dash-dock,
+.fz-dash-dock.is-compact {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: none;
+  width: 100%;
+  height: calc(#{$dock-h} + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: 1fr 1fr #{$dock-fab + 20px} 1fr 1fr;
+  align-items: stretch;
+  padding: 0 max(0.5rem, calc((100% - 520px) / 2)) env(safe-area-inset-bottom);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  filter: drop-shadow(0 -4px 14px rgba($fz-ink, 0.08));
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: #fff;
+    -webkit-mask: radial-gradient(circle 38px at 50% 0, transparent 37px, #000 38px);
+    mask: radial-gradient(circle 38px at 50% 0, transparent 37px, #000 38px);
+  }
+
+  .fz-dash-dock__item {
+    height: auto;
+    margin: 0;
+    gap: 0.25rem;
+    border-radius: 0;
+    color: $clean-muted;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+
+    > span { max-height: none; opacity: 1; }
+    &:hover { color: $fz-ink; }
+    &:hover svg { color: inherit; }
+
+    // The page you're on: a soft yellow column behind it, like Feoy.
+    &[aria-current='page'] {
+      height: auto;
+      margin: 0;
+      border-radius: 0;
+      background: linear-gradient(180deg, rgba($fuzo-yellow, 0.22), rgba($fuzo-yellow, 0.06));
+      color: $fz-ink;
+      font-weight: 800;
+      svg { color: $fuzo-yellow-deep; }
+    }
+  }
+
+  // The raised round Home button in the notch (a <button> on Home, a link elsewhere).
+  .fz-dash-dock__fab {
+    align-self: start;
+    justify-self: center;
+    width: $dock-fab;
+    height: $dock-fab;
+    margin-top: -($dock-fab * 0.5) + 4px;
+    border: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow;
+    color: $fz-ink;
+    box-shadow: 0 8px 20px -6px rgba($fuzo-yellow-deep, 0.7);
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease, box-shadow 0.2s $fz-ease;
+
+    text-decoration: none;
+
+    &:hover { transform: translateY(-2px); color: $fz-ink; }
+    &:active { transform: scale(0.95); }
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: 3px; }
+    // On Home itself: a white ring marks it as the current page.
+    &[aria-current='page'] { box-shadow: 0 0 0 4px #fff, 0 8px 20px -6px rgba($fuzo-yellow-deep, 0.7); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fz-dash-dock .fz-dash-dock__fab { transition: none; &:hover { transform: none; } }
+}
+
+html[data-theme='dark'] {
+  .fz-dash-dock {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    filter: drop-shadow(0 -4px 14px rgba(#000, 0.6));
+    &::before { background: #111; }
+  }
+  .fz-dash-dock .fz-dash-dock__item { color: #8a8a8a; }
+  .fz-dash-dock .fz-dash-dock__item[aria-current='page'] {
+    background: linear-gradient(180deg, rgba($fuzo-yellow, 0.2), rgba($fuzo-yellow, 0.04));
+    color: #fff;
+    svg { color: $fuzo-yellow; }
+  }
+  .fz-dash-dock .fz-dash-dock__fab:focus-visible { outline-color: $fuzo-yellow; }
+  .fz-dash-dock .fz-dash-dock__fab[aria-current='page'] { box-shadow: 0 0 0 4px #111, 0 8px 20px -6px rgba(#000, 0.7); }
+
+}
+
+// ── Profile header in Feoy's layout (client, 2026-10-06) ─────────────────
+// Full-width cover, centred avatar half over it, centred name + handle, a
+// plain stats row (number over label, thin dividers), then one centred row
+// of buttons: yellow Follow + grey Message (+ Rate) + grey Socials. Same
+// markup as before (uploads, follow, the Socials flip all unchanged); the
+// head and stats wrappers become `display: contents` so their children can
+// be laid out in one centred flow.
+.profile-shell {
+  // No gap above the cover: it starts at the very top of the page.
+  --shell-pt: 0px;
+  padding-top: 0;
+
+  // Full-bleed hero (the first-screen layout also sets side margins).
+  .fz-hero-flip,
+  .fz-profile-top:has(> .fz-highlights-section) > .fz-hero-flip {
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .fz-hero-flip__back { border-radius: 0 0 24px 24px; }
+
+  .fz-phero {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .fz-phero__banner {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  // Feoy's white round back button.
+  .fz-phero__back {
+    background: #fff;
+    border: 0;
+    color: $fz-ink;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .fz-phero__body {
+    --avatar: clamp(104px, 26cqi, 128px);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 0.6rem;
+    padding: 0 1rem 1.1rem;
+    text-align: center;
+  }
+  .fz-phero__head,
+  .fz-phero__stats { display: contents; }
+
+  .fz-phero__avatar {
+    order: 1;
+    margin: calc(var(--avatar) * -0.5) auto 0;
+    padding: 4px;
+    background: #fff;
+    box-shadow: 0 8px 22px -8px rgba($fz-ink, 0.35);
+    align-self: auto;
+  }
+
+  .fz-phero__id {
+    order: 2;
+    flex: 0 0 100%;
+    margin-top: 0.85rem;
+  }
+  .fz-phero__name-row { justify-content: center; }
+  .fz-phero__name {
+    font-weight: 600;
+    font-size: clamp(1.5rem, 6.4cqi, 2rem);
+    letter-spacing: -0.02em;
+  }
+  .fz-phero__level { padding: 0.3rem 0.65rem; font-size: 0.7rem; box-shadow: none; }
+  .fz-phero__handle { justify-content: center; margin-top: 0.3rem; }
+  .fz-phero__bio { margin: 0.45rem auto 0; max-width: 32rem; }
+
+  // Stats: number over label, thin dividers, no tiles or icons.
+  .fz-phero__tiles {
+    order: 3;
+    flex: 0 0 100%;
+    margin: 1.15rem 0 0;
+    // Keep the row ~440px wide, centred.
+    padding: 0 max(0px, calc(50% - 220px));
+    gap: 0;
+  }
+  .fz-phero__tile {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    min-height: 0;
+    padding: 0.15rem 0.5rem;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    text-align: center;
+    & + .fz-phero__tile { border-left: 1px solid #ebe9e4; }
+  }
+  .fz-phero__tile-icon { display: none; }
+  .fz-phero__tile-text {
+    align-items: center;
+    strong { font-size: 1.2rem; font-weight: 600; }
+    // Labels always show (the old phone tiles hid them).
+    span {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: hidden;
+      clip: auto;
+      margin-top: 0.15rem;
+      font-size: 0.78rem;
+    }
+  }
+
+  // One centred row of buttons under the stats.
+  .fz-phero__actions {
+    order: 4;
+    margin-top: 1.1rem;
+    gap: 0.6rem;
+  }
+  .fz-phero__follow {
+    min-width: 132px;
+    min-height: 46px;
+    box-shadow: none;
+  }
+  .fz-phero__square-btn,
+  .fz-phero__socials {
+    width: auto;
+    min-height: 46px;
+    padding: 0 1.15rem;
+    gap: 0.4rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $clean-pill;
+    color: $fz-ink;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: none;
+
+    &:hover { background: mix($fz-ink, $clean-pill, 8%); transform: none; box-shadow: none; }
+  }
+  .fz-phero__socials {
+    order: 5;
+    margin-top: 1.1rem;
+  }
+  // "Socials" label always shows (phones used to hide it).
+  .fz-phero__socials-label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+  }
+
+  // Activity | Food DNA: Feoy's underline tabs (Posts / Saved / Tagged).
+  .fz-profile-tabs {
+    width: 100%;
+    display: flex;
+    gap: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #ebe9e4;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .fz-profile-tab {
+    flex: 1 1 0;
+    padding: 0.75rem 0.5rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: $clean-muted;
+    font-weight: 600;
+    box-shadow: none;
+    &:hover:not(.fz-profile-tab--active) { background: transparent; color: $fz-ink; }
+  }
+  .fz-profile-tab--active,
+  .fz-profile-tab--active:hover {
+    position: relative;
+    background: transparent;
+    color: $fz-ink;
+    font-weight: 700;
+    box-shadow: none;
+  }
+  // The underline is its own 2px bar (an inset shadow left a 1px seam on phones).
+  .fz-profile-tab--active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: $fz-ink;
+  }
+}
+
+html[data-theme='dark'] .profile-shell {
+  .fz-phero__name,
+  .fz-phero__tile-text strong { color: #f5f5f5; }
+  .fz-phero__handle,
+  .fz-phero__tile-text span { color: #a3a3a3; }
+  .fz-phero__bio { color: #cfcfcf; }
+  .fz-phero__avatar { background: #000; }
+  .fz-phero__tile + .fz-phero__tile { border-left-color: rgba(#fff, 0.12); }
+  .fz-phero__square-btn,
+  .fz-phero__socials { background: #1c1c1c; color: #f5f5f5; }
+  .fz-profile-tabs { border-bottom-color: rgba(#fff, 0.12); }
+  .fz-profile-tab { color: #8a8a8a; &:hover:not(.fz-profile-tab--active) { color: #f5f5f5; } }
+  .fz-profile-tab--active,
+  .fz-profile-tab--active:hover { background: transparent; color: #f5f5f5; box-shadow: none; }
+  .fz-profile-tab--active::after { background: $fuzo-yellow; }
+}
+
+// Dark: the selected Activity filter pill goes yellow.
+html[data-theme='dark'] {
+  .fz-activity-subtab--active,
+  .fz-activity-subtab[aria-pressed='true'] {
+    background: $fuzo-yellow;
+    border-color: $fuzo-yellow;
+    color: $fz-ink;
+  }
+}
+
+// ── Explore cities header: compact location + Cities | Countries row ─────
+// (client, 2026-10-07) Title + subtitle on the left, "📍 Sherpur, Maghar ⌄" on
+// the right (LocationChip variant="inline"; opens the same Change menu), and
+// Cities | Countries on their own row below: a yellow pill for the selected
+// one, plain grey text for the other. Same on phone and desktop.
+.fz-dash-cities {
+  overflow: visible; // the location menu must not be clipped
+}
+.fz-dash-cities__track { border-radius: 0 0 28px 28px; } // clips the scroller to the card corners instead
+.fz-dash-cities__head,
+.fz-dash-cities__head[class] {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+.fz-dash-cities__heading { flex: 1 0 auto; min-width: 0; max-width: 100%; }
+// Title + subtitle stay on one line (the reference); the location gives way
+// first and truncates ("Dharamsh… ⌄").
+.fz-dash-cities__title,
+.fz-dash-cities__sub {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fz-dash-cities__loc { flex: 0 1 auto; min-width: 0; max-width: 48%; }
+@media (max-width: 480px) {
+  .fz-dash-cities__heading { flex-shrink: 1; }
+  // The chip keeps its natural width ("📍 Sherpur ⌄"); the heading gives way.
+  .fz-dash-cities__loc { flex-shrink: 0; max-width: 50%; }
+  .fz-loc-inline__btn { gap: 0.3rem; padding-left: 0.55rem; padding-right: 0.55rem; font-size: 0.86rem; }
+  .fz-loc-inline__rest { display: none; }
+}
+
+.fz-dash-cities__modes {
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+  @media (max-width: 768px) { padding: 0 1.25rem; }
+}
+.fz-dash-cities__toggle,
+html[data-theme='dark'] .fz-dash-cities__toggle {
+  // One grey track holding both options; the selected one is a yellow pill
+  // inside it (client reference, 2026-10-07).
+  display: inline-flex;
+  gap: 0;
+  padding: 4px;
+  border: 0;
+  border-radius: 9999px;
+  background: $clean-pill;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+
+  button {
+    min-height: 35px;
+    padding: 0.4rem 1.25rem;
+    border: 0;
+    border-radius: 9999px;
+    background: transparent;
+    color: $clean-muted;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: none;
+
+    &:hover:not(.is-active) { color: $fz-ink; }
+    &.is-active {
+      background: $fuzo-yellow;
+      color: $fz-ink;
+      box-shadow: 0 2px 6px -2px rgba($fuzo-yellow-deep, 0.55);
+    }
+  }
+}
+
+.fz-loc-inline {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+
+  .fz-dash-loc__anchor { position: static; }
+  .fz-dash-loc__menu { top: calc(100% + 0.4rem); right: 0; }
+}
+.fz-loc-inline__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: 100%;
+  min-height: 35px; // same height as Home's chips
+  padding: 0.25rem 0.75rem 0.25rem 0.7rem;
+  border: 0;
+  border-radius: 9999px;
+  // Pale cream-yellow pill with bold text (client reference, 2026-10-07).
+  background: mix(#fff, $fuzo-yellow, 86%);
+  border: 1px solid mix(#fff, $fuzo-yellow, 72%);
+  box-shadow: 0 4px 12px -6px rgba($fuzo-yellow-deep, 0.45);
+  color: $fz-ink;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover { background: mix(#fff, $fuzo-yellow, 78%); }
+  &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &.is-approx .fz-loc-inline__pin { color: $turmeric; }
+}
+.fz-loc-inline__pin { flex-shrink: 0; color: $fuzo-yellow-deep; }
+.fz-loc-inline__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fz-loc-inline__chev { flex-shrink: 0; color: $fz-ink; }

@@ -1,16 +1,10 @@
-// Tako / Chef AI landing-screen data. Ported from FUZO_V3/js/tako.js's
-// MOODS/QUICK_ACTIONS/getGreeting, with changes:
-//   - emoji-in-img-string glyphs replaced with real /SVG/... icon paths
-//     throughout (renders consistently across devices, unlike native emoji);
-//     Quick Discovery/Quick Links icons render as white silhouettes on solid
-//     colour badges (see _tako.scss)
-//   - every mood/action now does something real (navigates to an existing
-//     route, or starts a real Tako conversation) instead of tako.js's
-//     toast-only stubs. "Create Content" has no destination yet (Snap studio
-//     isn't ported), so it's flagged 'soon' rather than linking nowhere.
+// Tako / Chef AI data: the landing screen's three starting points and their
+// options (TAKO_GROUPS - every option opens a real page, starts a real Tako
+// conversation or opens Create a card; icons are the colour illustrations in
+// /public/SVG), the greeting, and the chat's structured-response setup.
 // CHEF_SUGGESTED_PROMPTS is unchanged from
 // legacy/fuzoapp/src/features/chef/constants/prompts.ts.
-import type { Mood, QuickAction, QuickLink } from '@/types/tako';
+import type { TakoAction, TakoGroup } from '@/types/tako';
 
 export const CHEF_SUGGESTED_PROMPTS = [
   "What can I cook with salmon?",
@@ -19,32 +13,56 @@ export const CHEF_SUGGESTED_PROMPTS = [
   "Protein-rich dinner for two",
 ] as const;
 
-export const MOODS: Mood[] = [
-  { icon: '/SVG/social/Smile.svg', label: 'Happy', prompt: "I'm feeling happy, what should I eat?" },
-  { icon: '/SVG/food/BURGER.svg', label: 'Comfort Food', prompt: 'I want some comfort food' },
-  { icon: '/SVG/social/Gift.svg', label: 'Celebrating', prompt: "I'm celebrating, suggest something special to eat" },
-  { icon: '/SVG/food/COFFEE.svg', label: 'Coffee', prompt: 'Recommend a great coffee spot or drink' },
-  { icon: '/SVG/social/Fire.svg', label: 'Spicy', prompt: 'I want something spicy' },
-  { icon: '/SVG/food/SUSHI.svg', label: 'Sushi', prompt: "I'm craving sushi" },
-  { icon: '/SVG/food/NOODLE.svg', label: 'Ramen', prompt: "I'm craving ramen" },
-  { icon: '/SVG/social/Star.svg', label: 'Surprise Me', prompt: 'Surprise me with a food idea' },
-];
+const prompt = (text: string): TakoAction => ({ type: 'prompt', prompt: text });
+const go = (href: string): TakoAction => ({ type: 'navigate', href });
 
-export const QUICK_ACTIONS: QuickAction[] = [
-  { icon: '/SVG/social/Location.svg', label: 'Find Somewhere To Eat', color: '#E8472B', type: 'prompt', prompt: 'Find me somewhere good to eat nearby' },
-  { icon: '/SVG/social/Home.svg', label: 'Cook Tonight', color: '#F2A93B', type: 'prompt', prompt: 'What should I cook tonight?' },
-  { icon: '/SVG/social/Video.svg', label: 'Watch Trims', color: '#9B7FD4', type: 'navigate', href: '/trims' },
-  { icon: '/SVG/social/Camera.svg', label: 'Create Content', color: '#EC4899', type: 'create-card' },
-  { icon: '/SVG/map/Radar.svg', label: 'Explore Nearby', color: '#22C55E', type: 'navigate', href: '/scout' },
-  { icon: '/SVG/social/Team.svg', label: 'Plan With My Crew', color: '#5B9BD5', type: 'navigate', href: '/messages' },
-  { icon: '/SVG/social/Earth.svg', label: 'Explore A Cuisine', color: '#F59E0B', type: 'prompt', prompt: 'Suggest a cuisine for me to explore' },
-  { icon: '/SVG/social/Gift.svg', label: 'Surprise Me', color: '#8B5CF6', type: 'prompt', prompt: 'Surprise me with a food idea' },
-];
-
-export const QUICK_LINKS: QuickLink[] = [
-  { icon: '/SVG/social/Location.svg', label: 'Restaurants', color: '#E8472B', type: 'navigate', href: '/scout' },
-  { icon: '/SVG/social/Book.svg', label: 'Recipes', color: '#F2A93B', type: 'prompt', prompt: 'Suggest a recipe for me' },
-  { icon: '/SVG/social/Play.svg', label: 'More Videos', color: '#EC4899', type: 'navigate', href: '/trims' },
+// Landing screen (client, 2026-10-07): the old Food Mood / Quick Discovery /
+// Quick Links lists, regrouped under three starting points.
+export const TAKO_GROUPS: TakoGroup[] = [
+  {
+    id: 'eat',
+    label: 'Eat out',
+    sub: 'Places near you',
+    tint: ['#FF9A76', '#E8472B'],
+    options: [
+      { icon: '/SVG/social/Location.svg', label: 'Somewhere to eat', action: prompt('Find me somewhere good to eat nearby') },
+      { icon: '/SVG/map/Radar.svg', label: 'Explore the map', action: go('/scout') },
+      { icon: '/SVG/food/COFFEE.svg', label: 'Coffee spot', action: prompt('Recommend a great coffee spot or drink') },
+      { icon: '/SVG/food/NACHOS.svg', label: 'Street food', action: prompt('Find me great street food nearby') },
+      { icon: '/SVG/social/Gift.svg', label: 'Celebrating', action: prompt("I'm celebrating, suggest something special to eat") },
+      { icon: '/SVG/social/Team.svg', label: 'Plan with my crew', action: go('/messages') },
+    ],
+  },
+  {
+    id: 'cook',
+    label: 'Cook',
+    sub: 'Recipes & ideas',
+    tint: ['#FFD66B', '#F2A93B'],
+    options: [
+      { icon: '/SVG/social/Home.svg', label: 'Cook tonight', action: prompt('What should I cook tonight?') },
+      { icon: '/SVG/social/Book.svg', label: 'A recipe for me', action: prompt('Suggest a recipe for me') },
+      { icon: '/SVG/food/SANDWICH.svg', label: 'Quick breakfast', action: prompt('Quick 15-min breakfast ideas') },
+      { icon: '/SVG/food/CURRY%20RICE.svg', label: 'Dinner for two', action: prompt('Protein-rich dinner for two') },
+      { icon: '/SVG/food/SALAD.svg', label: 'Something healthy', action: prompt('Suggest a healthy salad or bowl') },
+      { icon: '/SVG/social/Camera.svg', label: 'Share what I made', action: { type: 'create-card' } },
+    ],
+  },
+  {
+    id: 'explore',
+    label: 'Explore',
+    sub: 'Moods & videos',
+    tint: ['#C4AEF5', '#8B5CF6'],
+    options: [
+      { icon: '/SVG/social/Smile.svg', label: 'Feeling happy', action: prompt("I'm feeling happy, what should I eat?") },
+      { icon: '/SVG/food/BURGER.svg', label: 'Comfort food', action: prompt('I want some comfort food') },
+      { icon: '/SVG/social/Fire.svg', label: 'Something spicy', action: prompt('I want something spicy') },
+      { icon: '/SVG/food/SUSHI.svg', label: 'Sushi', action: prompt("I'm craving sushi") },
+      { icon: '/SVG/food/NOODLE.svg', label: 'Ramen', action: prompt("I'm craving ramen") },
+      { icon: '/SVG/social/Earth.svg', label: 'A new cuisine', action: prompt('Suggest a cuisine for me to explore') },
+      { icon: '/SVG/social/Video.svg', label: 'Watch Trims', action: go('/dashboard?tab=trims') },
+      { icon: '/SVG/social/Star.svg', label: 'Surprise me', action: prompt('Surprise me with a food idea') },
+    ],
+  },
 ];
 
 // System prompt + structured response schema, unchanged from
@@ -101,8 +119,9 @@ export const CHEF_RESPONSE_SCHEMA = {
 
 export function getGreeting(): { title: string; sub: string } {
   const hour = new Date().getHours();
-  if (hour < 11) return { title: 'Good Morning!', sub: 'Coffee or breakfast?' };
-  if (hour < 15) return { title: 'Good Afternoon!', sub: 'Looking for lunch nearby?' };
-  if (hour < 18) return { title: 'Good Evening!', sub: 'Need a quick snack?' };
-  return { title: 'Good Evening!', sub: 'Comfort food tonight?' };
+  if (hour < 5) return { title: 'Up late?', sub: 'A midnight snack, maybe?' };
+  if (hour < 11) return { title: 'Good morning!', sub: 'Coffee or breakfast?' };
+  if (hour < 15) return { title: 'Good afternoon!', sub: 'Looking for lunch nearby?' };
+  if (hour < 18) return { title: 'Good evening!', sub: 'Need a quick snack?' };
+  return { title: 'Good evening!', sub: 'Comfort food tonight?' };
 }

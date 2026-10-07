@@ -1,9 +1,15 @@
-// Trims (short video) reel, hand-ported from Soziety's reels.html/style.css
-// ".reel-*" rules - full-bleed vertical video swiper with an action rail.
+// ============================================================================
+// TRIMS (TrimsReel.tsx) - vertical short-video reel, rebuilt on the FUZO
+// language: full-bleed video under top/bottom scrims, a frosted HUD (n / N +
+// sound), tap-to-pause with a yellow play button, author + caption block,
+// frosted round action rail (yellow when liked/saved), thin yellow progress
+// bar. Only the visible slide plays.
+// ============================================================================
 
 .reel-swiper {
-  height: calc(100dvh - 56px); // minus the sticky navbar
+  height: calc(100dvh - #{$fz-topbar-space}); // standalone /trims: minus the navbar
   overflow: hidden;
+  background: $fz-ink;
 }
 
 .reel-area {
@@ -12,90 +18,254 @@
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  overflow: hidden;
   background: #000;
 
   video {
+    display: block;
     height: 100%;
     width: 100%;
     object-fit: cover;
+    cursor: pointer;
+  }
+
+  &__shade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 8, 6, 0.55) 0%,
+      rgba(10, 8, 6, 0) 18%,
+      rgba(10, 8, 6, 0) 55%,
+      rgba(10, 8, 6, 0.85) 100%
+    );
   }
 }
 
-.reel-top {
+// ── Top HUD ────────────────────────────────────────────────────────────────
+.reel-hud {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 15px;
-  z-index: 9;
+  top: 0.9rem;
+  left: 0.9rem;
+  right: 0.9rem;
+  z-index: 3;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  color: #fff;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), transparent);
+  justify-content: space-between;
+  pointer-events: none;
+
+  &__count,
+  &__btn {
+    pointer-events: auto;
+    background: rgba(30, 26, 22, 0.52);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(#fff, 0.18);
+    color: #fff;
+  }
+
+  &__count {
+    padding: 0.25rem 0.7rem;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover { transform: scale(1.06); background: rgba(30, 26, 22, 0.7); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow; outline-offset: 2px; }
+  }
 }
 
+// Paused: big yellow play button in the middle.
+.reel-paused {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  width: 72px;
+  height: 72px;
+  border: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 4px;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  cursor: pointer;
+  box-shadow: 0 10px 30px -6px rgba($fuzo-yellow-deep, 0.7);
+  animation: fz-reel-pop 0.25s $fz-ease both;
+}
+@keyframes fz-reel-pop {
+  from { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+// ── Bottom: author/caption + action rail ───────────────────────────────────
 .reel-section {
   position: absolute;
-  bottom: 20px;
   left: 0;
-  z-index: 1;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  padding: 15px;
-  width: 100%;
+  gap: 1rem;
+  padding: 1rem 0.9rem 1.4rem;
+}
+
+.reel-info {
+  flex: 1;
+  min-width: 0;
+  color: #fff;
 }
 
 .reel-user {
   display: flex;
   align-items: center;
-  flex: 1;
-  color: #fff;
-  gap: 8px;
+  gap: 0.55rem;
+  margin-bottom: 0.5rem;
+
+  &__avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: $fz-paper;
+    border: 2px solid $fuzo-yellow;
+    font-size: 1.05rem;
+  }
+
+  &__name {
+    font-weight: 800;
+    font-size: 0.92rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.reel-caption {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: rgba(#fff, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .follow-btn {
-  border: 1px solid $fuzo-yellow;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 9999px;
+  padding: 0.3rem 0.95rem;
+  background: $fuzo-yellow;
   color: $fuzo-yellow-ink;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: $border-radius-sm;
-  text-align: center;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35);
+  transition: background 0.15s ease, transform 0.2s $fz-ease;
 
-  &.following {
-    background-color: $fuzo-yellow;
-    border-color: $fuzo-yellow;
-    color: $fuzo-yellow-ink;
-  }
+  &:hover { background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
+  &.following { background: rgba(30, 26, 22, 0.6); color: #fff; box-shadow: none; }
 }
 
 .reel-actions {
   display: flex;
-  align-items: center;
   flex-direction: column;
-  gap: 18px;
+  align-items: center;
+  gap: 0.85rem;
 
   .r-btn {
-    color: #fff;
-    text-align: center;
-    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    border: 0;
     background: none;
-    border: none;
-    line-height: 1;
+    color: #fff;
+    cursor: pointer;
 
-    span {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      margin-top: 4px;
+    > span:not(.r-btn__icon) {
+      margin-top: 0.25rem;
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
     }
 
-    &.liked {
-      color: $fuzo-yellow;
-    }
+    &:focus-visible { outline: none; }
+    &:focus-visible .r-btn__icon { outline: 2px solid $fuzo-yellow; outline-offset: 2px; }
+    &:hover .r-btn__icon { transform: scale(1.08); }
+    &:active .r-btn__icon { transform: scale(0.94); }
+    &.liked .r-btn__icon { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; }
   }
+
+  .r-btn__icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(30, 26, 22, 0.52);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(#fff, 0.18);
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+  }
+}
+
+// Thin yellow progress bar along the bottom edge of the playing video.
+.reel-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: 3px;
+  background: rgba(#fff, 0.2);
+
+  span {
+    display: block;
+    height: 100%;
+    background: $fuzo-yellow;
+    transform-origin: left center;
+    transition: transform 0.25s linear;
+  }
+}
+
+// "More" bottom sheet in the app's look.
+.fz-reel-sheet {
+  border-radius: 22px 22px 0 0;
+  background: $fz-paper;
+
+  .list-group-item { border-color: $fz-border; font-weight: 600; }
+  .list-group-item-action:hover { background: $fuzo-yellow-tint; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-paused { animation: none; }
+  .reel-progress span { transition: none; }
 }

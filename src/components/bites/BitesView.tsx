@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { Search, SlidersHorizontal, Clock, Users, X, List, ChefHat, PieChart, Bookmark } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Search, SlidersHorizontal, Clock, Users, Bookmark } from 'lucide-react';
 import { fetchCuratedRecipes, type CuratedRecipe } from '@/lib/recipes/curatedRecipes';
 import { BITE_DIET_FILTERS, BITE_CUISINE_FILTERS, matchesFilter } from './constants/filters';
-import { PlateService } from '@/lib/services/plateService';
-import { useAuth } from '@/components/auth/AuthProvider';
+import { RecipeDetailModal, handleImageError, useRecipeSaves, type RecipeModalTab } from './RecipeDetailModal';
 
 // Bites: the Discover tab's recipe finder. Sourced entirely from
 // public/data/curatedRecipes.json via fetchCuratedRecipes() - filtered/
@@ -17,10 +16,11 @@ import { useAuth } from '@/components/auth/AuthProvider';
 // recipe survives reload and shows up in Profile Activity's Recipes filter.
 
 const PAGE_SIZE = 12;
-const KEY_NUTRIENTS = ['Calories', 'Protein', 'Fat', 'Carbohydrates'];
+
+type ModalTab = RecipeModalTab;
 
 export function BitesView() {
-  const { user } = useAuth();
+  const viewRef = useRef<HTMLDivElement>(null);
   const [recipes, setRecipes] = useState<CuratedRecipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
@@ -28,8 +28,10 @@ export function BitesView() {
   const [activeCuisine, setActiveCuisine] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(0);
-  const [selected, setSelected] = useState<CuratedRecipe | null>(null);
-  const [saved, setSaved] = useState<Set<number>>(new Set());
+  const [modalState, setModalState] = useState<{ recipe: CuratedRecipe; tab: ModalTab } | null>(null);
+  const { saved, toggleSave } = useRecipeSaves();
+
+  const openModal = (recipe: CuratedRecipe, tab: ModalTab) => setModalState({ recipe, tab });
 
   useEffect(() => {
     let cancelled = false;
@@ -37,26 +39,15 @@ export function BitesView() {
       if (cancelled) return;
       setRecipes(all);
       setLoading(false);
+      // Shared recipe links (/dashboard?tab=bites&recipe=<id>) open that recipe.
+      const sharedId = Number(new URLSearchParams(window.location.search).get('recipe'));
+      const shared = sharedId ? all.find((r) => r.id === sharedId) : undefined;
+      if (shared) setModalState({ recipe: shared, tab: 'ingredients' });
     });
     return () => {
       cancelled = true;
     };
   }, []);
-
-  // Load which recipes the signed-in user has already saved, so the toggle
-  // reflects real state instead of always starting unsaved.
-  useEffect(() => {
-    if (!user?.id) return;
-    (async () => {
-      const result = await PlateService.listSavedItems();
-      if (result.success && result.data) {
-        const ids = new Set(
-          result.data.filter((i) => i.item_type === 'recipe').map((i) => Number(i.item_id)),
-        );
-        setSaved(ids);
-      }
-    })();
-  }, [user?.id]);
 
   useEffect(() => {
     setPage(0);
@@ -80,49 +71,15 @@ export function BitesView() {
     });
   }, [recipes, query, dietFilter, cuisineFilter]);
 
-  // Prefer showing the tag that actually matched the search (e.g. "Dinner")
-  // over whatever happens to be first in the recipe's raw dishTypes array,
-  // so the card visibly reflects what was searched for instead of showing
-  // an unrelated tag like "Lunch" or "Main course" first.
-  const cardTags = (recipe: CuratedRecipe) => {
-    const q = query.trim().toLowerCase();
-    if (!q) return recipe.dishTypes.slice(0, 2);
-    const matched = recipe.dishTypes.filter((t) => t.toLowerCase().includes(q));
-    const rest = recipe.dishTypes.filter((t) => !t.toLowerCase().includes(q));
-    return [...matched, ...rest].slice(0, 2);
-  };
-
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageItems = filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
 
-  const toggleSave = async (recipe: CuratedRecipe) => {
-    const id = recipe.id;
-    const wasSaved = saved.has(id);
-
-    // Optimistic toggle, reverted below if the write fails.
-    setSaved((prev) => {
-      const next = new Set(prev);
-      if (wasSaved) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-
-    const result = wasSaved
-      ? await PlateService.removeFromPlate({ itemId: String(id), itemType: 'recipe' })
-      : await PlateService.saveToPlate({
-          itemId: String(id),
-          itemType: 'recipe',
-          metadata: { title: recipe.title, image: recipe.image, cat: 'Recipe' },
-        });
-
-    if (!result.success) {
-      setSaved((prev) => {
-        const next = new Set(prev);
-        if (wasSaved) next.add(id);
-        else next.delete(id);
-        return next;
-      });
-    }
+  // Prev/Next only move the `page` index - without this the grid re-renders
+  // in place and, on a tall page, the user stays scrolled wherever they were,
+  // which reads as "nothing happened".
+  const goToPage = (next: number) => {
+    setPage(next);
+    viewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const resetFilters = () => {
@@ -132,7 +89,7 @@ export function BitesView() {
   };
 
   return (
-    <div className="bites-view">
+    <div className="bites-view" ref={viewRef}>
       <div className="bites-controls">
         <div className="bites-search">
           <Search size={18} className="bites-search__icon" />
@@ -202,41 +159,65 @@ export function BitesView() {
       ) : (
         <>
           <div className="bites-grid">
-            {pageItems.map((recipe) => (
-              <button type="button" key={recipe.id} className="bites-card" onClick={() => setSelected(recipe)}>
-                <div className="bites-card__image" style={{ backgroundImage: `url(${recipe.image})` }}>
-                  <div className="bites-card__badges">
-                    <span className="bites-card__badge">
-                      <Clock size={12} /> {recipe.readyInMinutes}m
-                    </span>
-                    <span className="bites-card__badge">
-                      <Users size={12} /> {recipe.servings}
-                    </span>
-                  </div>
-                </div>
-                <div className="bites-card__body">
-                  <h3 className="bites-card__title">{recipe.title}</h3>
-                  <div className="bites-card__tags">
-                    {cardTags(recipe).map((t) => (
-                      <span key={t} className="bites-card__tag">
-                        {t}
+            {pageItems.map((recipe) => {
+              const isSaved = saved.has(recipe.id);
+              // Same card as the dashboard's For you rows (fz-dash-card): full-bleed
+              // photo, dark scrim, frosted chips, title on the photo.
+              return (
+                <div
+                  key={recipe.id}
+                  role="button"
+                  tabIndex={0}
+                  className="fz-dash-card bites-tile"
+                  aria-label={`Open recipe: ${recipe.title}`}
+                  onClick={() => openModal(recipe, 'ingredients')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openModal(recipe, 'ingredients');
+                    }
+                  }}
+                >
+                  <img className="fz-dash-card__img" src={recipe.image} alt="" loading="lazy" onError={handleImageError} />
+                  <span className="fz-dash-card__shade" />
+                  <span className="fz-dash-card__chip">
+                    <Clock size={11} /> {recipe.readyInMinutes}m
+                  </span>
+                  <button
+                    type="button"
+                    className={`bites-tile__save${isSaved ? ' is-saved' : ''}`}
+                    aria-label={isSaved ? 'Remove from saved recipes' : 'Save recipe'}
+                    aria-pressed={isSaved}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleSave(recipe);
+                    }}
+                  >
+                    <Bookmark size={15} fill={isSaved ? 'currentColor' : 'none'} />
+                  </button>
+                  <span className="fz-dash-card__body">
+                    <span className="fz-dash-card__title">{recipe.title}</span>
+                    <span className="fz-dash-card__meta">
+                      <span className="fz-dash-card__sub">
+                        <Users size={11} className="me-1" />
+                        {recipe.servings} servings{recipe.dishTypes[0] ? ` · ${recipe.dishTypes[0]}` : ''}
                       </span>
-                    ))}
-                  </div>
+                    </span>
+                  </span>
                 </div>
-              </button>
-            ))}
+              );
+            })}
           </div>
 
           {totalPages > 1 && (
             <div className="bites-pagination">
-              <button type="button" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
+              <button type="button" disabled={page === 0} onClick={() => goToPage(page - 1)}>
                 Prev
               </button>
               <span>
                 {page + 1} / {totalPages}
               </span>
-              <button type="button" disabled={page >= totalPages - 1} onClick={() => setPage((p) => p + 1)}>
+              <button type="button" disabled={page >= totalPages - 1} onClick={() => goToPage(page + 1)}>
                 Next
               </button>
             </div>
@@ -244,12 +225,21 @@ export function BitesView() {
         </>
       )}
 
-      {selected && (
-        <BitesRecipeModal
-          recipe={selected}
-          saved={saved.has(selected.id)}
-          onToggleSave={() => toggleSave(selected)}
-          onClose={() => setSelected(null)}
+      {modalState && (
+        <RecipeDetailModal
+          recipe={modalState.recipe}
+          initialTab={modalState.tab}
+          saved={saved.has(modalState.recipe.id)}
+          onToggleSave={() => toggleSave(modalState.recipe)}
+          onClose={() => {
+            setModalState(null);
+            // Drop a shared link's ?recipe= so a refresh doesn't reopen it.
+            const url = new URL(window.location.href);
+            if (url.searchParams.has('recipe')) {
+              url.searchParams.delete('recipe');
+              window.history.replaceState(window.history.state, '', url);
+            }
+          }}
         />
       )}
     </div>
@@ -258,114 +248,10 @@ export function BitesView() {
 
 function BitesSkeletonGrid() {
   return (
-    <div className="bites-grid">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="bites-card bites-card--skeleton" />
+    <div className="bites-grid" aria-hidden="true">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <span key={i} className="fz-dash-card fz-dash-card--skeleton" />
       ))}
-    </div>
-  );
-}
-
-function BitesRecipeModal({
-  recipe,
-  saved,
-  onToggleSave,
-  onClose,
-}: {
-  recipe: CuratedRecipe;
-  saved: boolean;
-  onToggleSave: () => void;
-  onClose: () => void;
-}) {
-  const [tab, setTab] = useState<'ingredients' | 'steps' | 'nutrition'>('ingredients');
-  const keyNutrients = (recipe.nutrition?.nutrients ?? []).filter((n) => KEY_NUTRIENTS.includes(n.name));
-
-  return (
-    <div role="dialog" aria-modal="true" aria-label={recipe.title} className="bites-modal-backdrop" onClick={onClose}>
-      <div className="bites-modal" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className="bites-modal__close" onClick={onClose} aria-label="Close recipe details">
-          <X size={20} />
-        </button>
-
-        <div className="bites-modal__image" style={{ backgroundImage: `url(${recipe.image})` }}>
-          <div className="bites-modal__image-overlay">
-            <h2 className="bites-modal__title">{recipe.title}</h2>
-          </div>
-        </div>
-
-        <div className="bites-modal__body">
-          <div className="bites-modal__stats">
-            <span>
-              <Clock size={14} /> {recipe.readyInMinutes} min
-            </span>
-            <span>
-              <Users size={14} /> {recipe.servings} servings
-            </span>
-          </div>
-
-          <div className="bites-modal__tabs">
-            <button type="button" className={tab === 'ingredients' ? 'is-active' : ''} onClick={() => setTab('ingredients')}>
-              <List size={14} /> Ingredients
-            </button>
-            <button type="button" className={tab === 'steps' ? 'is-active' : ''} onClick={() => setTab('steps')}>
-              <ChefHat size={14} /> Steps
-            </button>
-            <button type="button" className={tab === 'nutrition' ? 'is-active' : ''} onClick={() => setTab('nutrition')}>
-              <PieChart size={14} /> Nutrition
-            </button>
-          </div>
-
-          <div className="bites-modal__content">
-            {tab === 'ingredients' &&
-              (recipe.extendedIngredients.length > 0 ? (
-                <ul className="bites-ingredient-list">
-                  {recipe.extendedIngredients.map((ing, i) => (
-                    <li key={i}>{ing.original}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="bites-modal__fallback-text">No ingredient list available.</p>
-              ))}
-
-            {tab === 'steps' &&
-              (recipe.analyzedInstructions.length > 0 ? (
-                <ol className="bites-step-list">
-                  {recipe.analyzedInstructions.map((step) => (
-                    <li key={step.number}>
-                      <span className="bites-step-list__num">{step.number}</span>
-                      {step.step}
-                    </li>
-                  ))}
-                </ol>
-              ) : (
-                <p className="bites-modal__fallback-text">{recipe.instructions.replace(/<[^>]+>/g, '')}</p>
-              ))}
-
-            {tab === 'nutrition' &&
-              (keyNutrients.length > 0 ? (
-                <div className="bites-nutrition-grid">
-                  {keyNutrients.map((n) => (
-                    <div key={n.name} className="bites-nutrition-item">
-                      <span className="bites-nutrition-item__amount">
-                        {Math.round(n.amount)}
-                        <small>{n.unit}</small>
-                      </span>
-                      <span className="bites-nutrition-item__name">{n.name}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="bites-modal__fallback-text">No nutrition data available.</p>
-              ))}
-          </div>
-        </div>
-
-        <div className="bites-modal__footer">
-          <button type="button" className={`bites-save-btn${saved ? ' is-saved' : ''}`} onClick={onToggleSave}>
-            <Bookmark size={18} fill={saved ? 'currentColor' : 'none'} /> {saved ? 'Saved' : 'Save Recipe'}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

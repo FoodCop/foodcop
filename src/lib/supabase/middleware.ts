@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { safeNextPath } from '@/lib/share/safeNext';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -43,20 +44,34 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const protectedRoutes = ['/messages', '/profile', '/dashboard', '/notifications', '/dna-quiz'];
-  const isProtectedRoute = protectedRoutes.some(route => request.nextUrl.pathname.startsWith(route));
+  const protectedRoutes = ['/messages', '/dashboard', '/notifications', '/dna-quiz'];
+  const isProtectedRoute =
+    protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route)) ||
+    request.nextUrl.pathname === '/profile';
   
   if (isProtectedRoute && !user) {
     // no user, potentially respond by redirecting the user to the login page
+    // Remember where they were going (e.g. a shared recipe/trim link) so
+    // login can send them straight back there.
     const url = request.nextUrl.clone();
     url.pathname = '/login';
+    url.search = '';
+    url.searchParams.set('next', `${request.nextUrl.pathname}${request.nextUrl.search}`);
     return NextResponse.redirect(url);
   }
   
   // If user is logged in and tries to access login, redirect to dashboard
   if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/')) {
+    const next = request.nextUrl.pathname === '/login' ? safeNextPath(request.nextUrl.searchParams.get('next')) : null;
     const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
+    url.search = '';
+    if (next) {
+      const target = new URL(next, request.nextUrl.origin);
+      url.pathname = target.pathname;
+      url.search = target.search;
+    } else {
+      url.pathname = '/dashboard';
+    }
     return NextResponse.redirect(url);
   }
 

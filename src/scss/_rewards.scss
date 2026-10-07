@@ -152,6 +152,8 @@ $rewards-done: #4d7c0f;
 }
 
 .rewards-level-info__name {
+  margin: 0 0 0.2rem;
+  color: #fff; // it sits on the dark level card (was inheriting dark heading ink)
   font-size: 1.125rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -597,3 +599,64 @@ $rewards-done: #4d7c0f;
     color: darken(#ef4444, 10%);
   }
 }
+
+// "See where you rank" -> /leaderboard, under the level card.
+.rewards-leaderboard-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 1rem 1rem 0;
+  padding: 0.9rem 1.1rem;
+  border-radius: 20px;
+  background: linear-gradient(120deg, $fz-cream 0%, $fuzo-yellow-tint 100%);
+  border: 1px solid rgba($fuzo-yellow, 0.45);
+  box-shadow: $fz-shadow-card;
+  color: $fz-ink;
+  text-decoration: none;
+  transition: transform 0.2s $fz-ease, box-shadow 0.2s $fz-ease;
+
+  &:hover { color: $fz-ink; transform: translateY(-2px); box-shadow: $fz-shadow-card-hover; }
+  &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 6px 14px -4px rgba($fuzo-yellow-deep, 0.55);
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    line-height: 1.3;
+
+    strong { font-family: $headings-font-family; font-size: 1.15rem; font-weight: 800; }
+    span { font-size: 0.78rem; color: $fz-ink-soft; }
+  }
+
+  &__go { flex-shrink: 0; color: $fz-ink-soft; }
+}
+
+// Light level card (client, 2026-10-06): the dark ink + yellow combination was
+// not liked - white card, ink text, yellow only for the progress ring / bar.
+.rewards-level-card {
+  background: #fff;
+  color: $fz-ink;
+  border: 1px solid rgba($fz-ink, 0.08);
+  box-shadow: 0 1px 2px rgba($fz-ink, 0.05), 0 14px 30px -16px rgba($fz-ink, 0.3);
+}
+.rewards-level-ring__num { color: $fz-ink; }
+.rewards-level-ring__tag { color: $fz-ink-soft; }
+.rewards-level-info__name { color: $fz-ink; }
+.rewards-level-info__rank { color: $fuzo-yellow-deep; }
+.rewards-level-info__xp { color: $fz-ink-soft; }
+.rewards-level-info__track { background: rgba($fz-ink, 0.08); }

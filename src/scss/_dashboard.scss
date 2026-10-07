@@ -1,593 +1,1377 @@
-// Dashboard: the post-login landing page (/dashboard). Reskinned onto an
-// image-forward, badge-on-scrim card language per real food-delivery-app
-// reference screenshots (user-provided), adapted onto FUZO's own brand
-// tokens rather than the reference's literal colors - see the plan doc for
-// the full reference -> FUZO mapping. Three real-data rails (recommended
-// recipes, nearby restaurants w/ real Places photos, suggested videos)
-// still driven off recommendationService.ts.
+// ============================================================================
+// DASHBOARD (DashboardView.tsx) - laid out from the client's sketch, one design
+// for phone and desktop: top bar (profile | FUZO -> Tako bot | inbox bell),
+// For you/Bites/Feed/Trims tabs (in place), horizontal card rails, floating bottom dock with
+// a raised + button. Built on the Profile design language: cream page, paper
+// surfaces, photo-first cards with dark scrims, pills, $fz-shadow-* elevation.
+// ============================================================================
 
-$dash-ink: #1c1917;
-$dash-ink-soft: #57534e;
-$dash-ink-faint: #a8a29e;
-$dash-border: #f0efed;
-$dash-surface-muted: #fafaf9;
+$dash-page: mix($fz-cream, #efeae0, 40%);
+$dash-max: 1280px;
+$dash-gutter: 1rem;
 
-.dashboard-view {
-  padding: 0 1rem 3rem;
-  max-width: 72rem;
+.fz-dash {
+  min-height: 100vh;
+  background: transparent; // the app-wide gradient (end of _header.scss) shows through
+  // Room for the floating dock.
+  padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+
+  &__body {
+    max-width: $dash-max;
+    margin: 0 auto;
+    padding: 0 $dash-gutter;
+
+    @media (min-width: 992px) { padding: 0 2rem; }
+    @media (max-width: 768px) { padding: 0 0.75rem; }
+  }
+
+  &__signin {
+    padding: 4rem 1rem;
+    text-align: center;
+    color: $fz-ink-soft;
+  }
+}
+
+// ── Top bar ────────────────────────────────────────────────────────────────
+// Same solid gold bar as the site-wide navbar ($fz-navbar-gold, _header.scss) -
+// client wants the dashboard header to keep that colour.
+
+@keyframes fz-dash-pop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+// ── For you · Bites · Feed · Trims tabs (HomeTabs.tsx) ────────────────────
+// A frosted segmented control that sticks under the top bar; a yellow thumb
+// slides to the active tab. Sections switch in place - no navigation.
+.fz-dash-tabs-wrap {
+  position: sticky;
+  top: calc(#{$fz-topbar-gap} + env(safe-area-inset-top)); // the navbar scrolls away, so it sticks at the top gap
+  z-index: 50;
+  padding: 0.75rem 0 0.25rem;
+  margin: 0 (-$dash-gutter);
+  padding-left: $dash-gutter;
+  padding-right: $dash-gutter;
+  // Fade the content scrolling underneath.
+  background: linear-gradient(180deg, $dash-page 70%, rgba($dash-page, 0));
+
+  @media (min-width: 992px) { margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
+  // Match the body's narrower phone gutter, or the bar pokes 4px past the screen.
+  @media (max-width: 768px) { margin: 0 -0.75rem; padding-left: 0.75rem; padding-right: 0.75rem; }
+}
+
+.fz-dash-tabs {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  max-width: 600px;
   margin: 0 auto;
-}
-
-// ---------------------------------------------------------------------------
-// Hero greeting band
-// ---------------------------------------------------------------------------
-
-.dashboard-hero {
-  margin: 0 -1rem 1.5rem;
-  padding: 2rem 1.25rem 1.75rem;
-  // Direction B keeps the hero band restrained (paper, not a flood-fill) -
-  // the fuzo-yellow tint moves to the nudge card below instead, which is
-  // now the visually distinct element on this band.
-  background: $fz-paper;
-  color: $dash-ink;
-}
-
-.dashboard-hero__title {
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin-bottom: 0.25rem;
-}
-
-.dashboard-hero__sub {
-  font-size: 0.875rem;
-  color: rgba($dash-ink, 0.75);
-}
-
-.dashboard-hero__nudge {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  background: $fuzo-yellow-tint;
-  border: 1px solid rgba($fuzo-yellow-deep, 0.35);
-  border-radius: 1.25rem;
-  padding: 1rem 1.25rem;
-  margin-top: 1.25rem;
-}
-
-.dashboard-nudge__text {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: $dash-ink;
-}
-
-.dashboard-nudge__sub {
-  font-size: 0.8rem;
-  color: $dash-ink-soft;
-  margin-top: 0.15rem;
-}
-
-.dashboard-nudge__cta {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: $fuzo-yellow;
-  color: $fuzo-yellow-ink;
-  border: none;
+  padding: 0.35rem;
+  background: rgba($fz-paper, 0.92);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba($fz-border, 0.8);
   border-radius: 9999px;
-  padding: 0.55rem 1rem;
-  font-size: 0.8rem;
-  font-weight: 800;
-  white-space: nowrap;
-}
+  box-shadow: $fz-shadow-card;
+  transition: max-width 0.35s $fz-ease;
 
-// ---------------------------------------------------------------------------
-// Quick-nav pills
-// ---------------------------------------------------------------------------
-
-.dashboard-quicknav {
-  display: flex;
-  gap: 0.6rem;
-  overflow-x: auto;
-  padding: 1rem 0 0.25rem;
-  margin-bottom: 0.25rem;
-}
-
-.dashboard-quicknav__pill {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.55rem 1rem;
-  border-radius: 9999px;
-  background: $dash-surface-muted;
-  border: 1px solid $dash-border;
-  color: $dash-ink;
-  font-size: 0.8rem;
-  font-weight: 700;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: background-color 0.15s ease, color 0.15s ease;
-
-  &:hover {
-    border-color: $dash-ink;
+  // Scrolling down: icons only (labels fold away, still read by screen readers).
+  &.is-compact {
+    max-width: 15rem;
+    .fz-dash-tabs__tab { gap: 0; }
+    .fz-dash-tabs__label { max-width: 0; opacity: 0; }
   }
 
-  &.is-active {
-    background: $dash-ink;
-    border-color: $dash-ink;
-    color: #fff;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Search + veg toggle
-// ---------------------------------------------------------------------------
-
-.dashboard-search {
-  display: flex;
-  gap: 0.6rem;
-  margin: 1rem 0;
-}
-
-.dashboard-search__bar {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid $dash-border;
-  background: #fff;
-  color: $dash-ink-faint;
-  min-width: 0;
-
-  &:focus-within {
-    border-color: $fuzo-yellow-deep;
-    color: $fuzo-yellow-deep;
+  &__label {
+    display: inline-block;
+    max-width: 7rem;
+    overflow: hidden;
+    line-height: 1.2;
+    transition: max-width 0.3s $fz-ease, opacity 0.2s ease;
   }
 
-  input {
-    flex: 1 1 auto;
+  &__thumb {
+    position: absolute;
+    top: 0.35rem;
+    bottom: 0.35rem;
+    left: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    box-shadow: inset 0 1px 0 rgba(#fff, 0.45), 0 6px 16px -4px rgba($fuzo-yellow-deep, 0.6);
+    transition: transform 0.35s $fz-ease, width 0.35s $fz-ease;
+  }
+
+  &__tab {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
     min-width: 0;
-    border: none;
-    outline: none;
-    font-size: 0.85rem;
-    color: $dash-ink;
-    background: transparent;
+    padding: 0.6rem 0.5rem;
+    border: 0;
+    border-radius: 9999px;
+    background: none;
+    color: $fz-ink-soft;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.2s ease, gap 0.3s $fz-ease;
 
-    &::placeholder {
-      color: $dash-ink-faint;
+    svg { flex-shrink: 0; }
+    &:hover { color: $fz-ink; }
+    &.is-active { color: $fuzo-yellow-ink; }
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: 2px; }
+
+    @media (max-width: 420px) {
+      font-size: 0.8rem;
+      gap: 0.3rem;
+      svg { width: 14px; height: 14px; }
     }
   }
 }
 
-.dashboard-veg-toggle {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.6rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid $dash-border;
-  background: #fff;
-  color: $dash-ink-faint;
-  font-size: 0.8rem;
-  font-weight: 700;
+// Panels fade/slide in on switch.
+.fz-dash-panel {
+  // `backwards`, not `both`: once it has faded in, nothing (no leftover
+  // transform) stays on the panel - a kept transform broke the glass cards'
+  // blur inside it, making Home's sections look whiter than My Plate's.
+  animation: fz-dash-panel-in 0.35s $fz-ease backwards;
 
-  &.is-active {
-    background: rgba($lime, 0.12);
-    border-color: $lime;
-    color: $lime;
+  &[hidden] { display: none; }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 40vh;
+    color: $fz-ink-soft;
+    font-size: 0.88rem;
+    font-weight: 600;
   }
 }
 
-// ---------------------------------------------------------------------------
-// Section-jump pills
-// ---------------------------------------------------------------------------
-
-.dashboard-jumpnav {
-  display: flex;
-  gap: 1.25rem;
-  border-bottom: 1px solid $dash-border;
-  margin-bottom: 1.25rem;
+@keyframes fz-dash-panel-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
 }
 
-.dashboard-jumpnav button {
-  padding: 0 0 0.6rem;
-  border: none;
-  border-bottom: 2px solid transparent;
-  background: transparent;
-  color: $dash-ink-faint;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  margin-bottom: -1px;
-
-  &:hover {
-    color: $dash-ink-soft;
-  }
-
-  &.is-active {
-    color: $dash-ink;
-    border-bottom-color: $fuzo-yellow;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Rewards promo banner
-// ---------------------------------------------------------------------------
-
-.dashboard-promo {
+// ── Business nudge ─────────────────────────────────────────────────────────
+.fz-dash-nudge {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  background: $dash-ink;
-  border-radius: 1.25rem;
-  padding: 1.1rem 1.4rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 22px;
+  background: $fz-ink-card;
   color: #fff;
-  text-decoration: none;
+  box-shadow: $fz-shadow-dark;
 
-  &:hover {
-    color: #fff;
-    opacity: 0.94;
+  div { display: flex; flex-direction: column; gap: 0.15rem; }
+  strong { font-size: 0.9rem; }
+  span { font-size: 0.78rem; color: $fz-ink-card-soft; }
+
+  button {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-weight: 800;
+    font-size: 0.8rem;
+    box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35);
   }
 }
 
-.dashboard-promo__title {
-  font-size: 0.95rem;
-  font-weight: 800;
+// ── Rails: each one is a raised paper panel, like Profile's Highlights ─────
+$rail-pad: 1.5rem;
+$rail-pad-sm: 1rem;
+
+.fz-dash-rail {
+  margin-top: 1.5rem;
+  padding: 1.35rem 0 0.35rem;
+  background: $fz-paper;
+  border: 1px solid rgba($fz-border, 0.7);
+  border-radius: 28px;
+  box-shadow: $fz-shadow-card;
+  // Clip the horizontal scroller to the panel's rounded corners.
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    margin-top: 1.1rem;
+    padding-top: 1.1rem;
+    border-radius: 22px;
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0 $rail-pad 0.9rem;
+    margin: 0 $rail-pad;
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: 1px solid $fz-border;
+
+    @media (max-width: 768px) { margin: 0 $rail-pad-sm; padding-bottom: 0.75rem; }
+  }
+
+  &__heading { min-width: 0; }
+
+  // Same heading as the Profile's section titles: yellow accent bar + heading font.
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    font-family: $headings-font-family;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+    color: $fz-ink;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &::before {
+      content: '';
+      flex-shrink: 0;
+      width: 5px;
+      height: 1.1em;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, $fuzo-yellow, $fuzo-yellow-deep);
+      box-shadow: 0 2px 6px rgba($fuzo-yellow-deep, 0.45);
+    }
+
+    @media (max-width: 768px) { font-size: 1.15rem; }
+  }
+
+  &__sub {
+    margin: 0.25rem 0 0 calc(5px + 0.55rem);
+    font-size: 0.76rem;
+    color: $fz-ink-soft;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  // "Scout >" / "Map >" - yellow pill like the Profile's primary actions.
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.1rem;
+    padding: 0.35rem 0.65rem 0.35rem 0.85rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba($fuzo-yellow, 0.35);
+    transition: transform 0.2s $fz-ease, box-shadow 0.2s ease, background 0.15s ease;
+
+    &:hover {
+      color: $fuzo-yellow-ink;
+      background: mix(#fff, $fuzo-yellow, 15%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba($fuzo-yellow, 0.45);
+    }
+  }
+
+  // Scroll arrows - mouse devices only; touch just swipes. Cream like the Highlights arrows.
+  &__arrow {
+    display: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $fz-border;
+    background: $fz-cream;
+    color: $fz-ink;
+    box-shadow: $fz-shadow-sm;
+    transition: transform 0.2s $fz-ease, background 0.15s ease, box-shadow 0.2s ease;
+
+    &:hover { background: $fuzo-yellow-tint; border-color: $fuzo-yellow-deep; transform: translateY(-2px); box-shadow: $fz-shadow-card-hover; }
+    @media (hover: hover) and (min-width: 768px) { display: inline-flex; }
+  }
+
+  // Horizontal track inside the panel - padded so card shadows + hover lift show.
+  &__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: clamp(158px, 44vw, 230px);
+    gap: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: $rail-pad;
+    padding: 1.1rem $rail-pad 1.5rem;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+
+    @media (max-width: 768px) {
+      gap: 0.8rem;
+      scroll-padding-inline: $rail-pad-sm;
+      padding: 0.9rem $rail-pad-sm 1.25rem;
+    }
+
+    &--wide { grid-auto-columns: clamp(240px, 74vw, 340px); }
+
+    // Desktop: 4 cards + the "See all" card fit exactly - no sideways scroll.
+    @media (min-width: 992px) {
+      grid-auto-columns: calc((100% - 4 * 1rem) / 5);
+      &--wide { grid-auto-columns: calc((100% - 2 * 1rem) / 3); }
+    }
+
+    // A notice / empty message isn't a card - let it use the full row width.
+    &:has(> .fz-dash-notice, > .fz-dash-rail__empty) { display: block; }
+  }
+
+  // Nothing to scroll -> no arrows (notice/empty rows, and card rows on desktop
+  // where 4 cards + "See all" fit the panel).
+  &:has(.fz-dash-notice, .fz-dash-rail__empty) .fz-dash-rail__arrow { display: none; }
+  @media (min-width: 992px) {
+    &:not(:has(.fz-dash-rail__track--wide)) .fz-dash-rail__arrow { display: none; }
+  }
+
+  &__empty {
+    grid-column: 1 / -1;
+    width: min(100%, 560px);
+    margin: 0 auto;
+    text-align: center;
+    padding: 1.1rem 1.2rem;
+    border-radius: 18px;
+    background: $fz-cream;
+    border: 1px dashed rgba($fz-ink, 0.14);
+    color: $fz-ink-soft;
+    font-size: 0.85rem;
+  }
 }
 
-.dashboard-promo__level {
-  color: $fuzo-yellow-pale;
-}
-
-.dashboard-promo__sub {
-  font-size: 0.78rem;
-  color: rgba(#fff, 0.7);
-  margin-top: 0.15rem;
-}
-
-.dashboard-promo__cta {
-  flex-shrink: 0;
-  font-size: 0.8rem;
-  font-weight: 800;
-  background: $fuzo-yellow;
-  color: $fuzo-yellow-ink;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  white-space: nowrap;
-}
-
-// ---------------------------------------------------------------------------
-// Category shortcuts
-// ---------------------------------------------------------------------------
-
-.dashboard-categories {
+// Location-off notice: a tidy strip inside the rail panel instead of a tall card.
+.fz-dash-notice {
+  grid-column: 1 / -1;
   display: flex;
-  gap: 1.1rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1.75rem;
-}
-
-.dashboard-categories__item {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
-  border: none;
-  background: none;
-  width: 4.25rem;
+  gap: 0.85rem;
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: 0.85rem 0.9rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, mix(#fff, $fuzo-yellow-tint, 40%), $fz-cream);
+  border: 1px solid $fz-border;
+  box-shadow: $fz-shadow-sm;
+
+  &__icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fz-paper;
+    border: 2px solid $fuzo-yellow;
+    color: $fz-ink;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+
+    strong { font-size: 0.88rem; color: $fz-ink; }
+    span { font-size: 0.76rem; color: $fz-ink-soft; line-height: 1.35; }
+  }
+
+  &__btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.5rem 0.95rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35);
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover { background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
+    &:active { transform: scale(0.96); }
+  }
 }
 
-.dashboard-categories__icon {
-  width: 3.5rem;
-  height: 3.5rem;
+// ── Cards: the Profile's activity-card look ────────────────────────────────
+// Round frosted button on a photo card (Home's Directions, My Plate's
+// Directions / Remove): 38px with a 44px hit area.
+// (The caller positions it - the ::after hit area needs it positioned.)
+@mixin dash-card-fab {
+  width: 38px;
+  height: 38px;
+  padding: 0;
   border-radius: 50%;
-  border: 1.5px solid transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.55rem;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  // Rotating pastel tint, same family as _components.scss's .fz-tile - a
-  // row of category icons reads as one colorful system instead of one
-  // repeated hue.
-  &--1 { background: linear-gradient(135deg, $fuzo-yellow-tint, mix($fuzo-yellow, #fff, 30%)); }
-  &--2 { background: linear-gradient(135deg, $chili-tint, #ffcabb); }
-  &--3 { background: linear-gradient(135deg, $sky-tint, #bcdcf5); }
-  &--4 { background: linear-gradient(135deg, $lime-tint, #cfe8a4); }
-  &--5 { background: linear-gradient(135deg, $rose-tint, #f8c2d6); }
-}
-
-.dashboard-categories__label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: $dash-ink-soft;
-}
-
-.dashboard-categories__item.is-active {
-  // Selection now reads as a ring around the tile rather than swapping its
-  // pastel fill, so the tile keeps its own color identity either way.
-  .dashboard-categories__icon {
-    border-color: $fuzo-yellow-deep;
-  }
-  .dashboard-categories__label {
-    color: $fuzo-yellow-deep;
-  }
-}
-
-.dashboard-section {
-  margin-bottom: 2rem;
-}
-
-.dashboard-section__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.dashboard-section__title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: $dash-ink;
-}
-
-.dashboard-section__sub {
-  font-size: 0.8rem;
-  color: $dash-ink-faint;
-}
-
-a.dashboard-section__sub {
-  color: $dash-ink;
-  font-weight: 700;
-  text-decoration: underline;
-}
-
-.dashboard-empty {
-  padding: 1.5rem;
-  border: 1px dashed $dash-border;
-  border-radius: 1rem;
-  font-size: 0.85rem;
-  color: $dash-ink-faint;
-  text-align: center;
-}
-
-.dashboard-empty--location {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.dashboard-empty__icon {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  background: $fuzo-yellow-tint;
-  color: $fuzo-yellow-deep;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.75rem;
-}
-
-.dashboard-empty__cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: $fuzo-yellow;
-  color: $fuzo-yellow-ink;
-  border: none;
-  border-radius: 9999px;
-  padding: 0.55rem 1.1rem;
-  font-size: 0.8rem;
-  font-weight: 800;
+  justify-content: center;
+  background: rgba(30, 26, 22, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(#fff, 0.25);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s $fz-ease, background 0.2s ease, color 0.2s ease;
+
+  &::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; }
+  &:hover { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; transform: scale(1.06); }
+  &:active { transform: scale(0.94); }
+  &:focus-visible { outline: 2px solid $fuzo-yellow; outline-offset: 2px; }
 }
 
-// ---------------------------------------------------------------------------
-// Image-forward card (recipes + restaurants)
-// ---------------------------------------------------------------------------
-
-.dashboard-recipe-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.1rem;
-}
-
-.dashboard-card {
-  border-radius: 1.25rem;
-  overflow: hidden;
-  border: 1px solid $dash-border;
-  background: #fff;
-  text-align: left;
-}
-
-.dashboard-card__image {
+.fz-dash-card {
   position: relative;
-  height: 150px;
-  background-size: cover;
-  background-position: center;
-  background-color: $dash-surface-muted;
+  display: block;
+  aspect-ratio: 3 / 3.8;
+  scroll-snap-align: start;
+  border: 0;
+  padding: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(145deg, #322b24 0%, #1c1814 60%, #0d0b09 100%);
+  color: #fff;
+  text-align: left;
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+  box-shadow: $fz-shadow-dark;
+  transition: transform 0.3s $fz-ease, box-shadow 0.3s $fz-ease;
 
-  &::after {
-    content: '';
+  &--wide { aspect-ratio: 16 / 10; }
+
+  @media (hover: hover) {
+    &:hover {
+      color: #fff;
+      transform: translateY(-6px);
+      box-shadow: $fz-shadow-dark-hover;
+      .fz-dash-card__img { transform: scale(1.05); }
+    }
+  }
+  &:active { transform: translateY(-2px); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow; outline-offset: 3px; }
+
+  &__img {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.55) 100%);
-  }
-}
-
-.dashboard-card__badge {
-  position: absolute;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 0.25rem 0.55rem;
-  border-radius: 9999px;
-  white-space: nowrap;
-}
-
-.dashboard-card__badge--scrim {
-  left: 0.6rem;
-  bottom: 0.6rem;
-  background: rgba(#000, 0.55);
-  color: #fff;
-}
-
-.dashboard-card__badge--match {
-  right: 0.6rem;
-  top: 0.6rem;
-  background: $lime;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.dashboard-card__body {
-  padding: 0.75rem 0.9rem 0.9rem;
-}
-
-.dashboard-card__title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: $dash-ink;
-  line-height: 1.3;
-  margin-bottom: 0.35rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.dashboard-card__meta {
-  font-size: 0.75rem;
-  color: $dash-ink-faint;
-}
-
-.dashboard-card__pick {
-  display: inline-block;
-  font-size: 0.65rem;
-  font-weight: 800;
-  color: $fuzo-yellow-deep;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  background: $fuzo-yellow-tint;
-  padding: 0.2rem 0.55rem;
-  border-radius: 9999px;
-}
-
-.dashboard-card__meta-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.dashboard-card__rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  font-weight: 800;
-  color: $lime;
-  flex-shrink: 0;
-}
-
-.dashboard-card__vicinity {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-// ---------------------------------------------------------------------------
-// Video rail
-// ---------------------------------------------------------------------------
-
-.dashboard-video-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.dashboard-video-card {
-  border-radius: 1.25rem;
-  overflow: hidden;
-  border: 1px solid $dash-border;
-  background: #fff;
-  display: block;
-  padding: 0;
-  text-align: left;
-  cursor: pointer;
-}
-
-.dashboard-video-card__thumb {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  background: $dash-ink;
-  overflow: hidden;
-
-  img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    opacity: 0.85;
+    z-index: -2;
+    transition: transform 0.5s $fz-ease;
+
+    &--empty { background: linear-gradient(145deg, #3a3129, #1c1814); }
+  }
+
+  // Top + bottom scrim so both the badge and the title stay readable.
+  &__shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 8, 6, 0.4) 0%,
+      rgba(10, 8, 6, 0) 28%,
+      rgba(10, 8, 6, 0.15) 50%,
+      rgba(10, 8, 6, 0.82) 82%,
+      rgba(10, 8, 6, 0.95) 100%
+    );
+  }
+
+  // Frosted category badge, top-left (same as the Profile activity cards).
+  &__chip {
+    position: absolute;
+    top: 0.7rem;
+    left: 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+    max-width: calc(100% - 1.4rem);
+    padding: 0.28rem 0.65rem;
+    border-radius: 9999px;
+    background: rgba(30, 26, 22, 0.52);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &--gold {
+      background: $fuzo-yellow;
+      color: $fuzo-yellow-ink;
+      box-shadow: 0 4px 12px rgba($fuzo-yellow, 0.4);
+    }
+  }
+
+  &__body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.95rem 0.95rem 1rem;
+  }
+
+  &__title {
+    font-size: 0.98rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+
+  &__rating {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.68rem;
+    font-weight: 800;
+  }
+
+  &__sub {
+    font-size: 0.72rem;
+    color: rgba(#fff, 0.75);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &--gold { color: $fuzo-yellow-pale; font-weight: 700; }
+  }
+
+  &__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 6px 18px rgba($fuzo-yellow, 0.45);
+    transition: transform 0.3s $fz-ease;
+  }
+  &:hover .fz-dash-card__play { transform: translate(-50%, -60%) scale(1.08); }
+
+  // Loading placeholder with a warm shimmer.
+  &--skeleton {
+    cursor: default;
+    box-shadow: $fz-shadow-sm;
+    background: linear-gradient(100deg, #efe8d8 20%, #f8f4ea 40%, #efe8d8 60%);
+    background-size: 200% 100%;
+    animation: fz-dash-shimmer 1.3s linear infinite;
+    &:hover { transform: none; box-shadow: $fz-shadow-sm; }
   }
 }
 
-.dashboard-video-card__play {
-  position: absolute;
-  top: 50%;
+@keyframes fz-dash-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+// ── "See all" card: a fanned stack of the next photos ──────────────────────
+.fz-dash-seeall {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  aspect-ratio: 3 / 3.8;
+  scroll-snap-align: start;
+  padding: 0 0.75rem 1.1rem;
+  border: 1px solid rgba($fz-border, 0.9);
+  border-radius: 22px;
+  background: linear-gradient(180deg, $fz-paper 0%, $fz-cream 100%);
+  color: $fz-ink;
+  font: inherit;
+  cursor: pointer;
+  box-shadow: $fz-shadow-card;
+  transition: transform 0.3s $fz-ease, box-shadow 0.3s $fz-ease;
+
+  &--wide { aspect-ratio: 16 / 10; }
+
+  &__stack {
+    position: absolute;
+    left: 50%;
+    top: 12%;
+    width: 72%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+  }
+
+  &__photo {
+    position: absolute;
+    width: 60%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 4px solid #fff;
+    background: $fz-cream;
+    box-shadow: 0 6px 16px -4px rgba($fz-ink, 0.35);
+    transition: transform 0.4s $fz-ease;
+
+    // back, right, front - like a small pile of prints
+    &--1 { left: 20%; top: 0; transform: rotate(-4deg); z-index: 1; }
+    &--2 { right: 0; top: 14%; transform: rotate(8deg); z-index: 2; }
+    &--3 { left: 0; top: 24%; transform: rotate(-7deg); z-index: 3; }
+
+    &--blank { background: linear-gradient(145deg, $fuzo-yellow-tint, $fz-cream); }
+  }
+
+  &--wide &__stack { top: 8%; width: 46%; }
+
+  &__label {
+    position: relative;
+    font-family: $headings-font-family;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+  }
+
+  &__count {
+    position: relative;
+    padding: 0.12rem 0.55rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.66rem;
+    font-weight: 800;
+  }
+
+  // Hover / focus: lift and fan the prints out a little.
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: $fz-shadow-card-hover;
+
+    .fz-dash-seeall__photo--1 { transform: translate(0, -6px) rotate(-8deg); }
+    .fz-dash-seeall__photo--2 { transform: translate(6px, 0) rotate(14deg); }
+    .fz-dash-seeall__photo--3 { transform: translate(-6px, 4px) rotate(-12deg); }
+  }
+  &:active { transform: translateY(-2px); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow; outline-offset: 3px; }
+}
+
+// Expanded section: all cards in a wrapping grid (no sideways scroll).
+.fz-dash-rail__track--grid {
+  grid-auto-flow: row;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  overflow: visible;
+  scroll-snap-type: none;
+
+  @media (max-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+
+  &.fz-dash-rail__track--wide {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    @media (max-width: 768px) { grid-template-columns: 1fr; }
+  }
+
+  > * { animation: fz-dash-pop 0.35s $fz-ease both; }
+}
+
+.fz-dash-rail__less {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.35rem 0.75rem 0.35rem 0.85rem;
+  border: 1px solid $fz-border;
+  border-radius: 9999px;
+  background: $fz-cream;
+  color: $fz-ink;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: $fz-shadow-sm;
+  transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+  &:hover { background: $fuzo-yellow-tint; transform: translateY(-1px); }
+}
+
+// ── Bottom dock: Explore | Create | raised Home | My Plate | Rewards ────────
+.fz-dash-dock {
+  position: fixed;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 50%;
-  background: $fuzo-yellow;
-  color: $fuzo-yellow-ink;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  z-index: 70;
+  transform: translateX(-50%);
+  // Compact, see-through glass pill: content shows through, blurred.
+  width: min(390px, calc(100% - 1.5rem));
+  height: 52px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 62px 1fr 1fr;
+  align-items: center;
+  padding: 0 0.35rem;
+  background: rgba($fz-paper, 0.55);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border: 1px solid rgba(#fff, 0.6);
+  border-radius: 9999px;
+  box-shadow:
+    inset 0 1px 0 rgba(#fff, 0.7),
+    0 2px 6px rgba($fz-ink, 0.06),
+    0 12px 28px -10px rgba($fz-ink, 0.3);
+  transition: width 0.35s $fz-ease, height 0.35s $fz-ease;
+
+  // Scrolling down: a slimmer, icon-only dock (labels fold away but stay in
+  // the DOM for screen readers).
+  &.is-compact {
+    width: min(300px, calc(100% - 1.5rem));
+    height: 44px;
+    .fz-dash-dock__item { gap: 0; }
+    .fz-dash-dock__item > span { max-height: 0; opacity: 0; }
+    .fz-dash-dock__home { width: 44px; height: 44px; margin-top: -16px; }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    height: 100%;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    line-height: 1; // the page's tall inherited line-height pushed icons out of the slim bar
+    color: rgba($fz-ink, 0.82); // darker than ink-soft: stays readable on the see-through glass
+    font-size: 0.56rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s $fz-ease, gap 0.3s $fz-ease;
+
+    svg { flex-shrink: 0; }
+    > span {
+      display: block;
+      line-height: 1;
+      max-height: 1em;
+      overflow: hidden;
+      transition: max-height 0.3s $fz-ease, opacity 0.2s ease;
+    }
+
+    &:hover { color: $fz-ink; }
+    &:hover svg { color: $fuzo-yellow-deep; transform: translateY(-1px); }
+    svg { transition: transform 0.2s $fz-ease, color 0.2s ease; }
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: -2px; border-radius: 12px; }
+
+    // The page you're on (the dock is shared by Home, Explore, My Plate, Rewards).
+    &[aria-current='page'] {
+      height: calc(100% - 10px);
+      margin: 0 2px;
+      border-radius: 9999px;
+      background: rgba($fuzo-yellow, 0.3);
+      color: $fz-ink;
+      svg { color: mix(#000, $fuzo-yellow, 35%); }
+    }
+  }
+
+  // Raised centre Home button breaking out of the bar, like the sketch.
+  &__home {
+    justify-self: center;
+    width: 48px;
+    height: 48px;
+    margin-top: -20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba($fz-paper, 0.85);
+    background: linear-gradient(145deg, mix(#fff, $fuzo-yellow, 20%), $fuzo-yellow 55%, $fuzo-yellow-deep);
+    color: $fuzo-yellow-ink;
+    cursor: pointer;
+    box-shadow:
+      0 8px 20px -4px rgba($fuzo-yellow-deep, 0.65),
+      0 2px 4px rgba($fz-ink, 0.15);
+    transition: transform 0.3s $fz-ease, box-shadow 0.3s $fz-ease, width 0.35s $fz-ease, height 0.35s $fz-ease, margin 0.35s $fz-ease;
+
+    svg { transition: transform 0.35s $fz-ease; }
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px -6px rgba($fuzo-yellow-deep, 0.75), 0 2px 4px rgba($fz-ink, 0.15);
+    }
+    &:active { transform: translateY(0) scale(0.95); }
+    &:focus-visible { outline: 3px solid $fz-ink; outline-offset: 2px; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-dash-card,
+  .fz-dash-card__img,
+  .fz-dash-card__play,
+  .fz-dash-dock,
+  .fz-dash-dock__home,
+  .fz-dash-dock__item > span,
+  .fz-dash-tabs,
+  .fz-dash-tabs__label,
+  .fz-dash-card__dir,
+  .fz-dash-seeall,
+  .fz-dash-seeall__photo { transition: none; }
+  .fz-dash-rail__track--grid > * { animation: none; }
+  .fz-dash-card--skeleton { animation: none; }
+}
+
+// ── Location notice actions + "Use my location" ────────────────────────────
+.fz-dash-notice {
+  flex-wrap: wrap;
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+
+  &__link {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: $fz-ink;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    &:hover { color: $fuzo-yellow-deep; }
+  }
+}
+
+.fz-dash-rail__locate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid $fz-border;
+  border-radius: 9999px;
+  background: $fz-cream;
+  color: $fz-ink;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: $fz-shadow-sm;
+  transition: background 0.15s ease, transform 0.2s $fz-ease;
+
+  &:hover { background: $fuzo-yellow-tint; transform: translateY(-1px); }
+  @media (max-width: 480px) { span, & { font-size: 0.7rem; } }
+}
+
+// ── Card additions: FUZO offer tag, live status, static (non-clickable) ────
+.fz-dash-card {
+  &__offer {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    max-width: calc(100% - 7.5rem);
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    background: $chili;
+    color: #fff;
+    font-size: 0.64rem;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 0 3px 8px -2px rgba($chili, 0.6);
+  }
+
+  &__status { display: flex; }
+  &__status .fz-open-pill { font-size: 0.64rem; padding: 0.12rem 0.5rem; }
+
+  // A thin yellow ring marks FUZO restaurants among Google places.
+  &--fuzo { box-shadow: 0 0 0 2px $fuzo-yellow, $fz-shadow-dark; }
+  @media (hover: hover) {
+    &--fuzo:hover { box-shadow: 0 0 0 2px $fuzo-yellow, $fz-shadow-dark-hover; }
+  }
+
+  // Card = a div with a stretched link (details) + a Directions button (map),
+  // so the button isn't nested inside the link.
+  &__link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    &:focus-visible { outline: none; }
+  }
+  &:has(> .fz-dash-card__link:focus-visible) { outline: 3px solid $fuzo-yellow; outline-offset: 3px; }
+
+  &__dir {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    z-index: 2;
+    @include dash-card-fab;
+  }
+
+  // The offer tag moves under the Directions button.
+  &--has-dir &__offer { top: calc(0.6rem + 46px); max-width: calc(100% - 1.4rem); }
+
+  &--static { cursor: default; }
+  @media (hover: hover) {
+    &--static:hover { transform: none; box-shadow: $fz-shadow-dark; }
+    &--static:hover .fz-dash-card__img { transform: none; }
+  }
+}
+
+// ── Sections embedded in the dashboard (same components as /discover) ─────
+// Bites: the dashboard already provides the page gutter.
+.fz-dash-panel--bites {
+  padding-top: 1rem;
+  .bites-view { padding: 0; max-width: none; }
+}
+
+// Feed: the swipe stack sized to the space between the tabs, its action bar and the dock.
+.fz-dash-panel--feed {
+  // Fit card + action bar between the tab bar (~143px incl. the top bar) and
+  // the floating dock (~100px), so the Skip / Save buttons are never hidden.
+  .feed__stage {
+    height: clamp(240px, calc(100dvh - 262px), 620px);
+    min-height: 0;
+  }
+}
+
+// Trims: the reel lives in a rounded dark player card.
+.fz-dash-reel {
+  // Between the tab bar and the floating dock, whatever the screen height.
+  height: max(300px, calc(100dvh - 240px));
+  max-width: 480px;
+  margin: 1rem auto 0;
+  border-radius: 22px;
+  overflow: hidden;
+  isolation: isolate;
+  background: $fz-ink;
+  box-shadow: $fz-shadow-dark;
+
+  .reel-swiper { height: 100%; }
+  .reel-area { max-width: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-dash-panel { animation: none; }
+  .fz-dash-tabs__thumb { transition: none; }
+}
+
+// ── Explore <country>’s cities (NearbyCities.tsx) ────────────────────────────
+// Raised paper panel like the other rows; round city photos (white ring +
+// soft shadow) with the name and distance underneath, scrolling sideways.
+.fz-dash-cities {
+  margin-top: 1.5rem;
+  padding: 1.25rem 0 1rem;
+  background: $fz-paper;
+  border: 1px solid rgba($fz-border, 0.7);
+  border-radius: 28px;
+  box-shadow: $fz-shadow-card;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    margin-top: 1.1rem;
+    padding-top: 1.1rem;
+    border-radius: 22px;
+  }
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0 $rail-pad;
+    margin-bottom: 0.9rem;
+    @media (max-width: 768px) { padding: 0 $rail-pad-sm; flex-wrap: wrap; }
+  }
+
+  &__heading { min-width: 0; }
+
+  // Cities | Countries switch (same pill segmented look as the dashboard tabs).
+  &__toggle {
+    flex-shrink: 0;
+    display: inline-flex;
+    gap: 0.2rem;
+    padding: 0.2rem;
+    border-radius: 9999px;
+    background: $fz-cream;
+    border: 1px solid $fz-border;
+
+    button {
+      padding: 0.35rem 0.85rem;
+      border: 0;
+      border-radius: 9999px;
+      background: transparent;
+      color: $fz-ink-soft;
+      font-size: 0.76rem;
+      font-weight: 800;
+      line-height: 1.2;
+      cursor: pointer;
+      transition: background 0.2s $fz-ease, color 0.15s ease, box-shadow 0.2s ease;
+
+      &:hover:not(.is-active) { color: $fz-ink; }
+      &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+      &.is-active {
+        background: $fuzo-yellow;
+        color: $fuzo-yellow-ink;
+        box-shadow: 0 3px 10px -2px rgba($fuzo-yellow-deep, 0.45);
+      }
+    }
+  }
+
+  &__empty {
+    margin: 0.5rem 0 1rem;
+    font-size: 0.85rem;
+    color: $fz-ink-soft;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    font-family: $headings-font-family;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+    color: $fz-ink;
+
+    &::before {
+      content: '';
+      flex-shrink: 0;
+      width: 5px;
+      height: 1.1em;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, $fuzo-yellow, $fuzo-yellow-deep);
+      box-shadow: 0 2px 6px rgba($fuzo-yellow-deep, 0.45);
+    }
+
+    @media (max-width: 768px) { font-size: 1.15rem; }
+  }
+
+  &__sub {
+    margin: 0.25rem 0 0 calc(5px + 0.55rem);
+    font-size: 0.8rem;
+    line-height: 1.3;
+    color: $fz-ink-soft;
+  }
+
+  &__track {
+    display: flex;
+    gap: 1.1rem;
+    overflow-x: auto;
+    padding: 0.35rem $rail-pad 0.6rem;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: $rail-pad; // snap to the padded edge, not past it
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+
+    @media (max-width: 768px) { gap: 0.85rem; padding: 0.35rem $rail-pad-sm 0.6rem; scroll-padding-inline: $rail-pad-sm; }
+  }
+}
+
+.fz-dash-city {
+  flex: 0 0 auto;
+  width: 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  scroll-snap-align: start;
+  color: $fz-ink;
+  text-decoration: none;
+
+  @media (max-width: 768px) { width: 82px; }
+
+  &__photo {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, $fuzo-yellow-tint, mix($fuzo-yellow, #fff, 55%));
+    border: 3px solid $fz-paper;
+    box-shadow: $fz-shadow-card;
+    transition: transform 0.25s $fz-ease, box-shadow 0.25s $fz-ease;
+
+    @media (max-width: 768px) { width: 76px; height: 76px; }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s $fz-ease;
+    }
+  }
+
+  &__initial {
+    font-family: $headings-font-family;
+    font-size: 2rem;
+    font-weight: 800;
+    color: $fuzo-yellow-deep;
+  }
+
+  // Country flag, centred at the bottom of the round photo.
+  &__flag {
+    position: absolute;
+    left: 50%;
+    bottom: 5px;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 22px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fz-paper;
+    box-shadow: $fz-shadow-sm;
+    overflow: hidden;
+
+    img { width: 20px; height: 14px; object-fit: cover; border-radius: 2px; }
+  }
+
+  // "You're here" chip on the closest city.
+  &__here {
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+    transform: translateX(-50%);
+    padding: 0.12rem 0.45rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.55rem;
+    font-weight: 800;
+    line-height: 1.3;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba($fz-ink, 0.25);
+  }
+
+  &__name {
+    max-width: 100%;
+    margin-top: 0.15rem;
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__dist {
+    font-size: 0.7rem;
+    line-height: 1.2;
+    color: $fz-ink-soft;
+  }
+
+  &:hover { color: $fz-ink; }
+  &:hover &__photo { transform: translateY(-3px); box-shadow: $fz-shadow-card-hover; }
+  &:hover &__photo img { transform: scale(1.06); }
+  &:focus-visible { outline: none; }
+  &:focus-visible &__photo { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+  &--ghost {
+    .fz-dash-city__photo,
+    .fz-dash-city__name {
+      background: linear-gradient(100deg, #efe8d8 20%, #f8f4ea 40%, #efe8d8 60%);
+      background-size: 200% 100%;
+      animation: fz-feed-shimmer 1.3s linear infinite;
+    }
+    .fz-dash-city__name { width: 64px; height: 10px; border-radius: 9999px; margin-top: 0.4rem; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-dash-city__photo, .fz-dash-city__photo img { transition: none; }
+  .fz-dash-city--ghost .fz-dash-city__photo, .fz-dash-city--ghost .fz-dash-city__name { animation: none; }
+}
+
+// ── Location chip (LocationChip.tsx) ───────────────────────────────────────
+// "📍 Near Bang Rak, Bangkok · Change" - which location For you uses, with a
+// menu to fix it (current location / home area / pick on map).
+.fz-dash-loc {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1.25rem;
+  padding: 0.6rem 0.65rem 0.6rem 0.75rem;
+  background: $fz-paper;
+  border: 1px solid rgba($fz-border, 0.8);
+  border-radius: 9999px;
+  box-shadow: $fz-shadow-sm;
 
-  svg {
-    margin-left: 2px;
+  @media (max-width: 768px) { margin-top: 1rem; }
+
+  &__icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+
+    &.is-approx { background: rgba($turmeric, 0.18); color: mix($fz-ink, $turmeric, 35%); }
   }
-}
 
-.dashboard-video-card__body {
-  padding: 0.6rem 0.75rem 0.8rem;
-}
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
 
-.dashboard-video-card__title {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: $dash-ink;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+    strong {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: $fz-ink;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    span {
+      font-size: 0.74rem;
+      color: $fz-ink-soft;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
-.dashboard-video-card__channel {
-  font-size: 0.68rem;
-  color: $dash-ink-faint;
-  margin-top: 0.25rem;
+      &.is-approx { color: mix($fz-ink, $turmeric, 35%); font-weight: 700; }
+    }
+  }
+
+  &__anchor { position: relative; flex-shrink: 0; }
+
+  &__change {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.42rem 0.85rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fz-ink;
+    color: $fuzo-yellow;
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease;
+
+    &:hover { transform: translateY(-1px); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    border: 0;
+    background: transparent;
+    cursor: default;
+  }
+
+  &__menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 41;
+    width: 270px;
+    padding: 0.4rem;
+    background: $fz-paper;
+    border: 1px solid rgba($fz-border, 0.9);
+    border-radius: 18px;
+    box-shadow: $fz-shadow-card-hover;
+    animation: fz-dash-pop 0.22s $fz-ease;
+  }
+
+  &__item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.6rem;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: $fz-ink;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover { background: $fz-cream; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: -2px; }
+
+    > span:last-child { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+    strong { font-size: 0.86rem; font-weight: 800; }
+    small { font-size: 0.72rem; color: $fz-ink-soft; }
+  }
+
+  &__item-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-ink;
+  }
 }

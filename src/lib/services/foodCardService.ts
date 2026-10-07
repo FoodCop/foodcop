@@ -120,6 +120,7 @@ export const foodCardService = {
           notes: input.caption || '',
           photos: input.imageUrl ? [input.imageUrl] : [],
           tags: input.tags.cuisine,
+          placeId: input.placeId ?? null,
         });
       } catch (dualWriteError) {
         console.warn('food_cards Scout map dual-write failed:', dualWriteError);
@@ -151,6 +152,18 @@ export const foodCardService = {
     }
 
     return { success: true, data: (data || []) as FoodCardRecord[] };
+  },
+
+  /**
+   * One card by id. Row-level security decides whether the caller may see it (published cards of a
+   * viewable profile, or their own) - so a deleted card or a private profile simply comes back null.
+   */
+  async getCardById(cardId: string): Promise<ServiceResult<FoodCardRecord | null>> {
+    const supabase = createClient();
+    if (!supabase) return { success: false, error: 'Supabase is not configured' };
+    const { data, error } = await supabase.from('food_cards').select('*').eq('id', cardId).maybeSingle();
+    if (error) return { success: false, error: error.message };
+    return { success: true, data: (data as FoodCardRecord | null) ?? null };
   },
 
   // Promotes a DRAFT card to PUBLISHED (e.g. from the Activity tab's Your

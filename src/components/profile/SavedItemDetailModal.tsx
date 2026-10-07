@@ -39,6 +39,16 @@ export default function SavedItemDetailModal({
   const generatedRecipe = typeof metadata.generatedRecipe === 'object' && metadata.generatedRecipe !== null ? (metadata.generatedRecipe as Record<string, unknown>) : null;
   const recipeIngredients = Array.isArray(generatedRecipe?.ingredients) ? generatedRecipe?.ingredients as string[] : [];
   const recipeInstructions = typeof generatedRecipe?.instructions === 'string' ? generatedRecipe.instructions : '';
+  const readyInMinutes = Number.isFinite(Number(metadata.readyInMinutes)) ? Number(metadata.readyInMinutes) : null;
+  const servings = Number.isFinite(Number(metadata.servings)) ? Number(metadata.servings) : null;
+  const dishTypes = Array.isArray(metadata.dishTypes) ? (metadata.dishTypes as string[]) : [];
+  const nutrition = typeof metadata.nutrition === 'object' && metadata.nutrition !== null ? (metadata.nutrition as Record<string, unknown>) : null;
+  const keyNutrients = Array.isArray(nutrition?.nutrients)
+    ? (nutrition.nutrients as Array<{ name: string; amount: number; unit: string }>).filter((n) =>
+        ['Calories', 'Protein', 'Fat', 'Carbohydrates'].includes(n.name),
+      )
+    : [];
+  const hasDetails = readyInMinutes != null || servings != null || dishTypes.length > 0 || keyNutrients.length > 0;
 
   const isAlreadySaved = useMemo(() => savedItems.some((savedItem) => areSavedItemsEquivalent(savedItem, item)), [item, savedItems]);
 
@@ -122,7 +132,45 @@ export default function SavedItemDetailModal({
                 <div className="tab-content">
                   {activeTab === 'details' && (
                     <div className="p-3 bg-light rounded-3">
-                       <p className="mb-0 text-muted">More details about this recipe will appear here.</p>
+                      {hasDetails ? (
+                        <>
+                          {(readyInMinutes != null || servings != null) && (
+                            <div className="d-flex gap-4 mb-3">
+                              {readyInMinutes != null && (
+                                <div>
+                                  <div className="fw-bold">{readyInMinutes} min</div>
+                                  <small className="text-muted">Ready in</small>
+                                </div>
+                              )}
+                              {servings != null && (
+                                <div>
+                                  <div className="fw-bold">{servings}</div>
+                                  <small className="text-muted">Servings</small>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          {dishTypes.length > 0 && (
+                            <div className="d-flex flex-wrap gap-1 mb-3">
+                              {dishTypes.slice(0, 4).map((t) => (
+                                <span key={t} className="badge bg-secondary bg-opacity-25 text-dark fw-normal">{t}</span>
+                              ))}
+                            </div>
+                          )}
+                          {keyNutrients.length > 0 && (
+                            <div className="row g-2">
+                              {keyNutrients.map((n) => (
+                                <div key={n.name} className="col-6">
+                                  <div className="fw-bold">{Math.round(n.amount)}{n.unit}</div>
+                                  <small className="text-muted">{n.name}</small>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <p className="mb-0 text-muted">No details available for this recipe.</p>
+                      )}
                     </div>
                   )}
                   {activeTab === 'ingredients' && (

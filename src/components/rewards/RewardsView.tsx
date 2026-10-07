@@ -13,6 +13,8 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { ChevronRight, Trophy } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { ROLES } from '@/lib/rewards/gamificationData';
 import { getLevelProgress, isBadgeEarned, badgeProgress, roleEarnedCount, roleRankLabel, POINTS_PER_LEVEL } from '@/lib/rewards/progressionEngine';
@@ -36,17 +38,19 @@ const RingSvg = ({ fraction, size, stroke, color, trackColor }: { fraction: numb
   );
 };
 
-export default function RewardsView() {
+export default function RewardsView({
+  embedded = false,
+}: {
+  /** Inside the Leaderboard & Rewards page: that page has the title and the Leaderboard tab. */
+  embedded?: boolean;
+} = {}) {
   const { user } = useAuth();
   const [stats, setStats] = useState<UserPointsStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeRole, setActiveRole] = useState(ROLES[0].key);
 
   useEffect(() => {
-    if (!user?.id) {
-      setIsLoading(false);
-      return;
-    }
+    if (!user?.id) return; // signed out: nothing to load (see `loading` below)
     let cancelled = false;
     PointsService.getUserStats(user.id).then((result) => {
       if (cancelled) return;
@@ -58,10 +62,11 @@ export default function RewardsView() {
     };
   }, [user?.id]);
 
-  if (isLoading) {
+  const loading = !!user?.id && isLoading;
+  if (loading) {
     return (
       <div className="rewards-page text-center py-5">
-        <div className="spinner-border text-primary" role="status">
+        <div className="spinner-border text-warning" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
@@ -79,16 +84,18 @@ export default function RewardsView() {
 
   return (
     <div className="rewards-page">
-      {/* HEADER */}
-      <header className="rewards-header">
-        <h2 className="rewards-header__title">Rewards & Rank</h2>
-        <p className="rewards-header__sub">Your level grows from every card you publish and share.</p>
-      </header>
+      {/* HEADER (the Leaderboard & Rewards page carries its own) */}
+      {!embedded && (
+        <header className="rewards-header">
+          <h2 className="rewards-header__title">Rewards & Rank</h2>
+          <p className="rewards-header__sub">Your level grows from every card you publish and share.</p>
+        </header>
+      )}
 
       {/* LEVEL CARD */}
       <div className="rewards-level-card">
         <div className="rewards-level-ring">
-          <RingSvg fraction={pct} size={80} stroke={8} color="#f5d882" trackColor="#292524" />
+          <RingSvg fraction={pct} size={80} stroke={8} color="#d4ad41" trackColor="#efeae0" />
           <div className="rewards-level-ring__face">
             <span className="rewards-level-ring__num">{level}</span>
             <span className="rewards-level-ring__tag">Level</span>
@@ -105,6 +112,18 @@ export default function RewardsView() {
           </div>
         </div>
       </div>
+
+      {/* Leaderboard: see how your points compare (it's the other tab when embedded). */}
+      {!embedded && (
+      <Link href="/leaderboard" className="rewards-leaderboard-link">
+        <span className="rewards-leaderboard-link__icon"><Trophy size={20} /></span>
+        <span className="rewards-leaderboard-link__text">
+          <strong>See where you rank</strong>
+          <span>Compare your points with friends and everyone on FUZO.</span>
+        </span>
+        <ChevronRight size={18} className="rewards-leaderboard-link__go" />
+      </Link>
+      )}
 
       {/* ROLE SWITCHER */}
       <div className="rewards-role-row scout-hide-scrollbar">

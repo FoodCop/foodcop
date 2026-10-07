@@ -61,6 +61,42 @@ $lime-tint: #e8f3d6;
 $sky-tint: #dcedfb;
 $rose-tint: #fde3ec;
 
+// Dark "hero card" surface (Food Personality, Your Next Bite, etc. on the
+// redesigned Profile) - $fz-ink itself, not a separate cold navy, so it
+// reads as "this brand's dark mode" rather than a clashing second palette.
+$fz-ink-card: $fz-ink;
+$fz-ink-card-soft: mix(#fff, $fz-ink, 55%); // secondary text ON $fz-ink-card
+
+// ===== Elevation ("cards pop off the screen") =====
+// Layered warm shadows tinted with $fz-ink (never cold grey/black): a tight
+// contact shadow + a soft ambient drop + a long diffuse falloff. The inset top
+// highlight gives light surfaces a subtle raised "lip". Used by
+// src/scss/_profile-elevation.scss; reuse these on other pages instead of
+// hand-writing new box-shadows.
+$fz-ease: cubic-bezier(0.16, 1, 0.3, 1);
+$fz-shadow-sm:
+  0 1px 2px rgba($fz-ink, 0.06),
+  0 4px 10px -2px rgba($fz-ink, 0.1);
+$fz-shadow-card:
+  inset 0 1px 0 rgba(#fff, 0.7),
+  0 1px 2px rgba($fz-ink, 0.06),
+  0 6px 14px -4px rgba($fz-ink, 0.12),
+  0 18px 36px -14px rgba($fz-ink, 0.2);
+$fz-shadow-card-hover:
+  inset 0 1px 0 rgba(#fff, 0.7),
+  0 2px 4px rgba($fz-ink, 0.06),
+  0 14px 26px -8px rgba($fz-ink, 0.18),
+  0 32px 56px -18px rgba($fz-ink, 0.3);
+// Dark / photo cards need a deeper shadow to separate from the cream page.
+$fz-shadow-dark:
+  0 2px 4px rgba($fz-ink, 0.12),
+  0 12px 24px -6px rgba($fz-ink, 0.28),
+  0 28px 52px -16px rgba($fz-ink, 0.4);
+$fz-shadow-dark-hover:
+  0 4px 8px rgba($fz-ink, 0.14),
+  0 20px 36px -8px rgba($fz-ink, 0.34),
+  0 42px 72px -20px rgba($fz-ink, 0.46);
+
 $font-family-sans-serif: var(--body-font), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
   Helvetica, Arial, sans-serif;
 $headings-font-family: var(--heading-font), $font-family-sans-serif;
@@ -77,3 +113,33 @@ $enable-shadows: false;
 // mobile menu (its .side-bar was 465px / 600ms).
 $offcanvas-horizontal-width: 420px;
 $offcanvas-transition-duration: 0.45s;
+
+// ===== Pastel tiles (client, 2026-10-07) =====
+// Soft pastel backgrounds for picker tiles and chips (Tako's options, Create's
+// card types, cuisine / meal / diet / cooking chips), each item a different
+// colour in this order. Each pair is (background, hover). Selected chips still
+// turn solid FUZO yellow.
+$fz-pastels: (
+  ('#FFE6DA', '#FFD3BF'), // peach
+  ('#DDF3E4', '#C6EBD2'), // mint
+  ('#DDEBFB', '#C7DDF8'), // sky
+  ('#FFF2C9', '#FFE8A3'), // butter
+  ('#ECE5FC', '#DCD0FA'), // lavender
+  ('#FDE3EE', '#FACDE0'), // pink
+  ('#D9F3F1', '#BFEAE6'), // aqua
+  ('#FFEBD1', '#FFDCAE'), // apricot
+);
+
+// Sets --pastel / --pastel-hover on each item by its position among its
+// siblings; use them as `background: var(--pastel)`.
+@mixin fz-pastel-cycle {
+  --pastel: #{nth(nth($fz-pastels, 1), 1)};
+  --pastel-hover: #{nth(nth($fz-pastels, 1), 2)};
+
+  @for $i from 2 through length($fz-pastels) {
+    &:nth-child(#{length($fz-pastels)}n + #{$i}) {
+      --pastel: #{nth(nth($fz-pastels, $i), 1)};
+      --pastel-hover: #{nth(nth($fz-pastels, $i), 2)};
+    }
+  }
+}

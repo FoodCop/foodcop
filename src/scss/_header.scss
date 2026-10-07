@@ -1,4 +1,46 @@
-// SiteHeader / offcanvas nav styling.
+// ============================================================================
+// THE APP NAVBAR (SiteHeader.tsx) - one bar on every page. Client sketch:
+// slim (~52px) solid gold bar, ink-ringed profile photo | FUZO logo (opens
+// Tako) | home + bell (Notifications + Messages). The dashboard's
+// sticky tab bar sits right under it (top: 52px).
+// ============================================================================
+
+// Client request: the marketing homepage's gold (--gold in home.css) rather
+// than $fuzo-yellow, so the bar matches the homepage's gold sections.
+$fz-navbar-gold: #ffc909;
+
+// Creamy frosted glass (client, 2026-10-06) - the navbar's surface, shared by
+// the floating controls that sit on the page gradient (Home's section pill,
+// search bars, filter toolbars and chips). Solid cream where blur isn't supported.
+// The surface is CSS variables (set on :root, swapped for dark glass under
+// html[data-theme='dark'] at the end of this file) so one mixin serves both themes.
+$fz-glass-fallback: #fff8e6;
+// Clean flat surfaces (client, 2026-10-06, Feoy reference - replaced the
+// glass): controls are solid light-grey pills with no border, shadow or blur.
+// The names stay `fz-glass*` so every control using the mixin follows along.
+:root {
+  --fz-glass-fallback: #f2f1ee;
+  --fz-glass-sheen: none;
+  --fz-glass-tint: transparent;
+  --fz-glass-border: transparent;
+  --fz-glass-hi: transparent;
+  --fz-glass-shadow: transparent;
+  --fz-glass-ink: #{$fz-ink};
+}
+@mixin fz-glass($shadow: true) {
+  background: var(--fz-glass-fallback);
+  border: 1px solid var(--fz-glass-border);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+$fz-topbar-h: 52px;
+// Small gap sticky bars keep from the top of the screen once the navbar has
+// scrolled away (the navbar itself is a full-width bar, not floating).
+$fz-topbar-gap: 0.6rem;
+// Height of the navbar (notch space not included - callers add it): full-height
+// views below it offset by this.
+$fz-topbar-space: 59px;
 
 .navbar-brand-logo {
   height: 28px;
@@ -6,69 +48,367 @@
   object-fit: contain;
 }
 
-// Direction B swaps the flat white/shadow chrome for the warm paper base +
-// hairline border used everywhere else in the rebrand (.fz-card, etc.),
-// instead of a drop shadow.
-.fz-navbar {
-  background-color: $fz-paper;
-  border-bottom: 1px solid $fz-border;
-}
-
-.fz-avatar-ring {
-  border-color: $fz-border !important;
-}
-
-// Header row: profile avatar (left) / logo (center) / icons+menu (right).
-// Below `lg` the logo is true-centered via a grid (the outer two columns
-// share a fixed width so an empty left slot - logged out, no avatar -
-// doesn't pull the logo off-center). At `lg+` this reverts to a plain
-// flex row (brand-left, icons-right) - the client's centering request was
-// specifically about the mobile header, not the wider inline navbar.
-.fz-navbar__row {
-  display: flex;
+// Only at the top of the page (client, 2026-10-06): it scrolls away with the
+// content instead of staying pinned.
+.fz-topbar {
+  position: relative;
+  z-index: 1030;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.fz-navbar__side {
-  flex-shrink: 0;
-}
-
-.fz-navbar__brand {
+  min-height: $fz-topbar-h;
+  // Full-width bar, not floating (client, 2026-10-06): flush with the top and
+  // sides, square corners. The contents stay within 1320px on wide screens,
+  // and the top padding clears the phone notch.
+  width: 100%;
   margin: 0;
-}
+  padding:
+    calc(0.4rem + env(safe-area-inset-top))
+    max(1rem, calc((100% - 1320px) / 2 + 0.75rem))
+    0.4rem;
+  border-radius: 0;
+  // The shared glass, with only a hairline + soft shadow underneath.
+  @include fz-glass;
+  border-width: 0 0 1px;
+  box-shadow: 0 1px 0 rgba(#fff, 0.6) inset, 0 8px 24px -14px rgba($fz-ink, 0.3);
 
-@include media-breakpoint-down(lg) {
-  .fz-navbar__row {
-    display: grid;
-    // Outer columns size to their own content (avatar vs. the wider
-    // create/messages/notifications/menu cluster) rather than a fixed
-    // width, so the logo centers in whatever space is actually left over
-    // instead of risking the two sides overlapping it.
-    grid-template-columns: auto 1fr auto;
+  &__side {
+    display: flex;
     align-items: center;
-  }
-
-  .fz-navbar__side--start {
+    gap: 0.25rem;
     justify-self: start;
-    min-width: 2.5rem;
+
+    &--end { justify-self: end; }
   }
 
-  .fz-navbar__brand {
-    justify-self: center;
+  &__anchor { position: relative; }
+
+  &__avatar {
+    width: 36px;
+    height: 36px;
+    padding: 2px;
+    border: 0;
+    border-radius: 50%;
+    background: $fz-ink;
+    box-shadow: 0 3px 8px rgba($fz-ink, 0.25);
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease;
+
+    img,
+    span {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid $fz-navbar-gold;
+      object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $fz-ink;
+      color: $fuzo-yellow;
+      font-family: $headings-font-family;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    &:hover { transform: scale(1.05); }
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: 2px; }
   }
 
-  .fz-navbar__side--end {
-    justify-self: end;
+  // Logo doubles as the entry point to Tako, the AI bot.
+  &__logo {
+    display: flex;
+    align-items: center;
+    padding: 0.2rem 0.5rem;
+    border: 0;
+    border-radius: 9999px;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    // The FUZO logo with its tagline (client, 2026-10-07): fuzo-logo.png has a
+    // black tagline for the light bar, fuzo-logo-dark.png a white one for dark.
+    // Tall enough that "Discover Food That Finds You." stays legible.
+    img { height: 40px; width: auto; display: block; }
+    @media (min-width: 768px) { img { height: 44px; } }
+    .fz-topbar__logo-img--dark { display: none; }
+    &:hover { background: rgba($fz-ink, 0.08); }
+    &:active { transform: scale(0.96); }
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: 2px; }
+  }
+
+  &__icon {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: $fz-ink;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover { background: rgba($fz-ink, 0.1); }
+    &[aria-expanded="true"] { background: $fz-ink; color: $fz-navbar-gold; }
+    // Home icon while you're on the dashboard.
+    &:focus-visible { outline: 2px solid $fz-ink; outline-offset: 2px; }
+  }
+
+  &__dot {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: $chili;
+    border: 2px solid $fz-navbar-gold;
+  }
+
+  &__signin {
+    padding: 0.38rem 0.95rem;
+    border-radius: 9999px;
+    background: $fz-ink;
+    color: $fuzo-yellow;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-decoration: none;
+    &:hover { color: #fff; }
+  }
+
+  &__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    border: 0;
+    background: transparent;
+    cursor: default;
+  }
+
+  &__menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 2;
+    width: 230px;
+    padding: 0.4rem;
+    background: $fz-paper;
+    border: 1px solid rgba($fz-border, 0.9);
+    border-radius: 18px;
+    box-shadow: $fz-shadow-card-hover;
+    animation: fz-topbar-pop 0.22s $fz-ease;
+
+    &--start { right: auto; left: 0; }
+  }
+
+  &__menu-head {
+    display: flex;
+    flex-direction: column;
+    padding: 0.45rem 0.65rem 0.6rem;
+    margin-bottom: 0.25rem;
+    border-bottom: 1px solid $fz-border;
+    line-height: 1.3;
+
+    strong { font-size: 0.9rem; color: $fz-ink; }
+    span { font-size: 0.74rem; color: $fz-ink-soft; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+
+  &__menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.65rem;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: $fz-ink;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: left;
+    text-decoration: none;
+
+    &:hover { background: $fz-cream; color: $fz-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: -2px; }
+  }
+
+  &__menu-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-ink;
+  }
+
+  &__menu-badge {
+    margin-left: auto;
+    padding: 0.1rem 0.45rem;
+    border-radius: 9999px;
+    background: $chili;
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 800;
   }
 }
 
-// Frosted-glass slide-in panel (Ekomart's .side-bar used
-// backdrop-filter: blur(7px) on the panel itself) - only applies below `lg`,
-// where the offcanvas actually slides in; at `lg+` it's just the inline navbar.
-@include media-breakpoint-down(lg) {
-  #siteNavOffcanvas.offcanvas-end {
-    background-color: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(7px);
+@keyframes fz-topbar-pop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-topbar__menu { animation: none; }
+}
+
+// ---------------------------------------------------------------------------
+// App page background - "Blinkit style" (client, 2026-10-06; replaced the food
+// doodles, beige + bottom glow, yellow wave, soft glows and linear gradient).
+// Every app page with the navbar, plus Profile (not the marketing landing
+// page): one solid Blinkit yellow over the whole page - no gradient, no
+// pattern, no animation (client, 2026-10-06). The cards carry the design.
+// Dark theme: plain pure black.
+// ---------------------------------------------------------------------------
+$fz-app-page: #f6f6f3;
+$fz-app-yellow: #f8cb46;
+// Profile too (client, 2026-10-06), though it has no navbar.
+$fz-app-glow: 'html:has(.fz-topbar, .profile-shell):not(:has(.v6-page))';
+:root {
+  --fz-app-base: #{$fz-app-page};
+  // Plain white page (client, 2026-10-06, Feoy reference).
+  --fz-app-top: #fff;
+  --fz-app-top-fade: #{mix($fz-app-yellow, $fz-app-page, 45%)};
+}
+#{$fz-app-glow} {
+  // Solid, no gradient (client, 2026-10-06): the whole page is Blinkit yellow.
+  background: var(--fz-app-top);
+
+  body { background: transparent; }
+}
+
+// Text straight on the yellow page: the usual soft grey is too faint there,
+// so secondary lines go to a softened ink, and the yellow loading spinner
+// turns ink (it would vanish). Light theme only.
+#{$fz-app-glow}:not([data-theme='dark']) {
+  .fz-plate__lede,
+  .fz-lbr-head__sub,
+  .fz-notif__sub,
+  .rewards-section__count,
+  .fz-lbr .fz-empty-state__sub { color: rgba($fz-ink, 0.72); }
+  .spinner-border.text-warning { color: $fz-ink !important; }
+}
+
+// Landing page: the floating bar floats over the dark hero (like over the
+// Explore map) instead of leaving a light strip above it. Absolute, so it
+// scrolls away with the page like everywhere else.
+body:has(.v6-page) .fz-topbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+// ---------------------------------------------------------------------------
+// DARK THEME (client, 2026-10-06): Profile -> Settings -> Appearance (Light /
+// Dark / System), on every app page including Profile. The inline script in app/layout.tsx sets
+// html[data-theme='dark'] before paint. Per the client, dark mode swaps the
+// page's yellow for pure black (no brown tint): plain black page, dark smoky
+// glass for the navbar and glass controls, light text on the page itself.
+// Section cards are frosted glass (see _glass.scss), a lighter frost in dark
+// so the ink text inside them stays readable; photo cards keep their look.
+// ---------------------------------------------------------------------------
+$fz-dark-base: #000;
+$fz-dark-text: #f5f5f5;
+$fz-dark-soft: #a3a3a3;
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --fz-app-base: #{$fz-dark-base};
+  // Pure black, not brown (client, 2026-10-06): plain black, no yellow zone.
+  --fz-app-top: #000;
+  --fz-app-top-fade: #000;
+
+  --fz-glass-fallback: #1c1c1c;
+  --fz-glass-sheen: none;
+  --fz-glass-tint: transparent;
+  --fz-glass-border: transparent;
+  --fz-glass-hi: transparent;
+  --fz-glass-shadow: transparent;
+  --fz-glass-ink: #{$fz-dark-text};
+
+  body { color: $fz-dark-text; }
+
+  // Navbar contents on dark glass.
+  .fz-topbar {
+    .fz-topbar__logo-img { display: none; }
+    .fz-topbar__logo-img--dark { display: block; }
+    &__logo:hover,
+    &__icon:hover { background: rgba(#fff, 0.1); }
+    &__icon { color: $fz-dark-text; }
+    &__icon[aria-expanded='true'] { background: $fz-navbar-gold; color: $fz-ink; }
+    &__dot { border-color: #161616; }
+    &__avatar { background: #000; }
+    &__signin { background: $fz-navbar-gold; color: $fz-ink; }
+    &__logo:focus-visible,
+    &__icon:focus-visible,
+    &__avatar:focus-visible { outline-color: $fz-navbar-gold; }
   }
+
+  // Text that sits straight on the page (not inside a card).
+  .fz-plate__title,
+  .fz-lbr-head__h1,
+  .fz-notif__title,
+  .fz-plate__back,
+  .fz-plate__icon-btn,
+  .fz-plate__chip:not([aria-pressed='true']),
+  .fz-plate__search,
+  .fz-plate__search input,
+  .fz-plate__sort select,
+  .bites-search__input,
+  .bites-filter-toggle:not(.is-active),
+  .bites-chip:not(.is-selected),
+  .fz-dash-tabs__tab:not(.is-active),
+  .fz-lbr-tabs__btn:not(.is-active),
+  .scout-search__bar,
+  .scout-search__bar input,
+  .scout-legend { color: $fz-dark-text; }
+  .fz-plate__lede,
+  .fz-lbr-head__sub,
+  .fz-notif__sub { color: $fz-dark-soft; }
+  .fz-plate__search input::placeholder,
+  .bites-search__input::placeholder,
+  .scout-search__bar input::placeholder { color: $fz-dark-soft; }
+
+  .fz-lbr .fz-empty-state__title,
+  .rewards-section__title { color: $fz-dark-text; }
+  .fz-lbr .fz-empty-state__sub,
+  .rewards-section__count { color: $fz-dark-soft; }
+
+  // App dock: the same smoky glass as the navbar.
+  .fz-dash-dock {
+    background: rgba(#161616, 0.62);
+    border-color: rgba(#fff, 0.1);
+    box-shadow: inset 0 1px 0 rgba(#fff, 0.08), 0 12px 28px -10px rgba(#000, 0.7);
+  }
+  .fz-dash-dock__item {
+    color: rgba($fz-dark-text, 0.8);
+    &:hover { color: #fff; }
+    &:focus-visible { outline-color: $fz-navbar-gold; }
+    &[aria-current='page'] {
+      background: rgba($fz-navbar-gold, 0.22);
+      color: #fff;
+      svg { color: $fz-navbar-gold; }
+    }
+  }
+
+  // Selected options on dark glass flip to brand yellow + ink (ink on dark
+  // glass would vanish).
+  .fz-dash-tabs__thumb { background: $fz-navbar-gold; box-shadow: 0 6px 16px -8px rgba($fz-navbar-gold, 0.6); }
+  .fz-dash-tabs__tab.is-active { color: $fz-ink; }
+  .bites-chip.is-selected { background: $fz-navbar-gold; border-color: $fz-navbar-gold; color: $fz-ink; }
+  .fz-lbr-tabs__btn.is-active { background: $fz-navbar-gold; color: $fz-ink; }
 }

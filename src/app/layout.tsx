@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import Script from "next/script";
-import { barlowCondensed, hankenGrotesk } from "@/lib/font";
+import { barlow, barlowCondensed, hankenGrotesk } from "@/lib/font";
 
 // Master stylesheet (Bootstrap + our own variables/partials) - the ONE design
 // system for the whole app. See docs/plan: components are being re-skinned
@@ -19,6 +19,7 @@ import "swiper/css/free-mode";
 
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/server";
+import { THEME_SCRIPT } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "FUZO",
@@ -39,7 +40,17 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const { data } = await supabase.auth.getUser();
 
   return (
-    <html lang="en" className={`${barlowCondensed.variable} ${hankenGrotesk.variable}`}>
+    <html
+      lang="en"
+      className={`${barlowCondensed.variable} ${hankenGrotesk.variable} ${barlow.variable}`}
+      // The theme script below sets data-theme before React hydrates.
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Light / Dark / System (src/lib/theme.ts): applied before first
+            paint so dark-mode users never see a light flash. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>
         <AuthProvider initialUser={data.user}>
           {children}

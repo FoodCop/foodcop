@@ -54,3 +54,6 @@ next-env.d.ts
 
 # Allow example env
 !.env.example
+
+# throwaway Playwright verification scripts (contain demo credentials)
+*.tmp.mjs

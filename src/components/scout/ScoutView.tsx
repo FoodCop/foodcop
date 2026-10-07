@@ -20,12 +20,10 @@ import { Search, X, RefreshCw, Navigation, Locate, MapPin } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { PlacesService } from '@/lib/services/placesService';
 import { PlateService } from '@/lib/services/plateService';
-import { ChatService } from '@/lib/services/chatService';
-import { PointsService } from '@/lib/services/pointsService';
 import { normalizeItemForPlateSave } from '@/lib/services/savedItems';
 import { UserSettingsService } from '@/lib/services/userSettingsService';
 import { useAuth } from '../auth/AuthProvider';
-import FriendPickerModal, { type ShareTarget } from '../chat/FriendPickerModal';
+import ShareSheet, { type SharePayload } from '../share/ShareSheet';
 import type { AppItem } from '@/types/appItem';
 import type { ScoutPlace, ScoutFilter, MapLike } from '@/types/scout';
 import { getGoogleMaps } from '@/types/scout';
@@ -36,16 +34,25 @@ import {
   calculateNeuralMatch,
   sortPlaces,
   filterPlaces,
+  chipSort,
   mergePlaceDetails,
   shouldApplyLatestRequest,
   getDistanceInMeters,
   extractSuggestionText
 } from '@/lib/scout/scoutLogic';
-import { getDistanceToPolyline } from '@/lib/scout/geometryUtils';
 import { ScoutDiscoveryPanel } from './ScoutDiscoveryPanel';
 import { ScoutPlaceModal } from './ScoutPlaceModal';
-import { ScoutRoutePlanner } from './ScoutRoutePlanner';
+import { ScoutDirectionsPanel } from './ScoutDirectionsPanel';
+import { useScoutDirections, type DirRoute } from './useScoutDirections';
+import { useScoutNavigation } from './useScoutNavigation';
+import { ScoutNavigation } from './ScoutNavigation';
+import { ScoutPickOverlay } from './ScoutPickOverlay';
+import { googleDirectionsUrl } from '@/lib/maps/placeLinks';
 import { ScoutAddPinModal } from './ScoutAddPinModal';
+import { ActivityEventService } from '@/lib/services/activityEventService';
+import { RestaurantService, type FuzoRestaurantLink } from '@/lib/services/restaurantService';
+import { getOpenStatus, hasAnyHours } from '@/lib/restaurant/hours';
+import { buildPinElement, createHtmlMarker, groupPlaces } from '@/lib/scout/mapPins';
 
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
 
@@ -60,14 +67,22 @@ export default function ScoutView() {
   const [modalTab, setModalTab] = useState('overview');
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [isMapReady, setIsMapReady] = useState(false);
+  // Current zoom - pins regroup as it changes.
+  const [mapZoom, setMapZoom] = useState(13);
   const [savedPlaceIds, setSavedPlaceIds] = useState<Set<string>>(new Set());
-  const [shareTargetPlace, setShareTargetPlace] = useState<ScoutPlace | null>(null);
+  // The user's saved places, rebuilt from saved_items metadata (so "Saved"
+  // shows all of them, even ones outside the current search area).
+  const [savedPlaces, setSavedPlaces] = useState<ScoutPlace[]>([]);
+  // Legend filter: which group the list + map show. Tapping the active one again = all.
+  const [sourceView, setSourceView] = useState<'all' | 'google' | 'fuzo' | 'saved'>('all');
+  // Bumped to open the mobile list sheet when a legend item is tapped.
+  const [panelOpenSignal, setPanelOpenSignal] = useState(0);
+  // Deep link from the dashboard: open this place once its area has loaded.
+  const [pendingPlace, setPendingPlace] = useState<{ placeId?: string; restaurantId?: string; name: string; lat: number; lng: number } | null>(null);
+  const [sharing, setSharing] = useState<SharePayload | null>(null);
   const [actionToast, setActionToast] = useState<string | null>(null);
 
-  const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState(false);
   const [isAddPinModalOpen, setIsAddPinModalOpen] = useState(false);
-  const [isCalculatingRoute, setIsCalculatingRoute] = useState(false);
-  const [currentRoute, setCurrentRoute] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [placeSuggestions, setPlaceSuggestions] = useState<Array<{ text: string; placeId: string }>>([]);
@@ -90,8 +105,76 @@ export default function ScoutView() {
   // --- Refs ---
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<MapLike | null>(null);
-  const routePolylineRef = useRef<any>(null);
-  const routeMarkersRef = useRef<any[]>([]);
+  // In-app directions (route from the user's location, like Google Maps).
+  const directions = useScoutDirections(mapInstanceRef, isMapReady);
+  const startDirectionsRef = useRef(directions.start);
+  useEffect(() => {
+    startDirectionsRef.current = directions.start;
+  }, [directions.start]);
+  // Restaurants along the route (a stable array from state - the status object is rebuilt every render).
+  const alongPlaces = directions.alongStatus.status === 'ready' ? directions.alongStatus.places : null;
+  const picking = !!directions.pick;
+
+  // Phones: the panel folds to one line so the whole route shows.
+  const [dirCollapsed, setDirCollapsed] = useState(false);
+  const toggleDirCollapsed = () => {
+    setDirCollapsed((c) => !c);
+    // Re-fit once the sheet has its new height.
+    requestAnimationFrame(() => requestAnimationFrame(directions.refit));
+  };
+
+  // In-app turn-by-turn (Directions' Start). Keeps the last ready route so the
+  // banner doesn't blank while a reroute is being fetched.
+  const readyRoute = directions.status.status === 'ready' ? directions.status.route : null;
+  const [navRoute, setNavRoute] = useState<DirRoute | null>(null);
+  if (readyRoute && readyRoute !== navRoute) setNavRoute(readyRoute);
+  const nav = useScoutNavigation({
+    route: navRoute,
+    mapRef: mapInstanceRef,
+    destName: directions.target?.name ?? 'your destination',
+    onReroute: directions.rerouteFrom,
+  });
+  const startNav = () => {
+    directions.setNavigating(true);
+    nav.start();
+  };
+  // Start from a chosen place: navigation needs the user's own position, so
+  // switch From to "Your location" and start once that route is ready.
+  const pendingNav = useRef(false);
+  const onStartDirections = () => {
+    if (directions.from.kind !== 'gps') {
+      pendingNav.current = true;
+      directions.setFrom({ kind: 'gps' });
+    } else startNav();
+  };
+  const routeReadyFromGps = directions.status.status === 'ready' && directions.from.kind === 'gps';
+  const startDirectionsNav = useRef(startNav);
+  useEffect(() => {
+    startDirectionsNav.current = startNav;
+  });
+  useEffect(() => {
+    if (pendingNav.current && routeReadyFromGps) {
+      pendingNav.current = false;
+      startDirectionsNav.current();
+    }
+  }, [routeReadyFromGps]);
+  const exitNav = () => {
+    nav.stop();
+    directions.setNavigating(false);
+    requestAnimationFrame(directions.refit);
+  };
+
+  const closeDirections = () => {
+    if (nav.active) exitNav();
+    setDirCollapsed(false);
+    directions.close();
+    // Drop dir=1 so a refresh doesn't reopen it.
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('dir')) {
+      url.searchParams.delete('dir');
+      window.history.replaceState(window.history.state, '', url.toString());
+    }
+  };
   const activeMarkersRef = useRef<any[]>([]);
   const requestSeq = useRef(0);
   const mounted = useRef(true);
@@ -155,6 +238,28 @@ export default function ScoutView() {
       if (result.success && result.data?.results && result.data.results.length > 0) {
         const transformed = result.data.results.map((r, i) => toScoutPlace(r, i, MAPS_API_KEY));
         setMainMapPlaces(transformed);
+
+        // Google sends 20 per page: load pages 2-3 in the background (up to 60).
+        // A token is only valid ~2s after it's issued, so wait and retry once.
+        let token = result.data.next_page_token;
+        const kind = query ? 'textsearch' : 'nearby';
+        for (let page = 2; token && page <= 3; page++) {
+          await new Promise((r) => setTimeout(r, 2000));
+          if (!shouldApplyLatestRequest(mounted, seq, requestSeq)) return;
+          let more = await PlacesService.nextPage(kind, token);
+          if (more.success && more.data?.status === 'INVALID_REQUEST') {
+            await new Promise((r) => setTimeout(r, 1500));
+            more = await PlacesService.nextPage(kind, token);
+          }
+          if (!shouldApplyLatestRequest(mounted, seq, requestSeq)) return;
+          if (!more.success || !more.data?.results?.length) break;
+          const extra = more.data.results.map((r, i) => toScoutPlace(r, i + page * 20, MAPS_API_KEY));
+          setMainMapPlaces((prev) => {
+            const ids = new Set(prev.map((p) => p.placeId || p.id));
+            return [...prev, ...extra.filter((p) => !ids.has(p.placeId || p.id))];
+          });
+          token = more.data.next_page_token;
+        }
       } else {
         if (result.data?.status === 'ZERO_RESULTS') {
           setMainMapPlaces([]);
@@ -172,18 +277,32 @@ export default function ScoutView() {
   }, [filter.maxDistance]);
 
   // --- Data Fetching: Source B (Community FUZO Pins) ---
+  // Community pins (fuzo_locations) inside the current search area - not a
+  // random global 50. No invented ratings: a pin only carries what its author saved.
   const loadFuzo = useCallback(async () => {
     const supabase = createClient();
-    if (!supabase) return;
-    const { data } = await supabase.from('fuzo_locations').select('*').limit(50);
+    if (!supabase || !mapCenter) return;
+    const radius = filter.maxDistance;
+    const dLat = radius / 111320;
+    const dLng = radius / (111320 * Math.max(0.01, Math.cos((mapCenter.lat * Math.PI) / 180)));
+    const { data } = await supabase
+      .from('fuzo_locations')
+      .select('*')
+      .gte('latitude', mapCenter.lat - dLat)
+      .lte('latitude', mapCenter.lat + dLat)
+      .gte('longitude', mapCenter.lng - dLng)
+      .lte('longitude', mapCenter.lng + dLng)
+      .order('created_at', { ascending: false })
+      .limit(200);
     if (data) {
       setCommunitySnapPlaces(data.map((row, i) => ({
         id: `fuzo-${row.id || i}`,
+        placeId: row.place_id || undefined,
         markerSource: 'fuzo' as const,
         name: row.location_name || row.restaurant_name || 'FUZO Discovery',
-        cat: row.cuisine || 'Spot',
-        rating: 4.5,
-        reviews: 12,
+        cat: row.cuisine || 'Community pin',
+        rating: Number(row.rating) > 0 ? Number(row.rating) : 0,
+        reviews: 0,
         address: row.address || '',
         phone: '',
         website: '',
@@ -197,7 +316,49 @@ export default function ScoutView() {
         photos: row.photos || []
       })));
     }
-  }, []);
+  }, [mapCenter, filter.maxDistance]);
+
+  // ── A: FUZO restaurants with their own map location in the search area ──
+  // Shown even when Google doesn't return them (or they aren't on Google).
+  const [areaRestaurants, setAreaRestaurants] = useState<FuzoRestaurantLink[]>([]);
+  useEffect(() => {
+    if (!mapCenter) return;
+    let cancelled = false;
+    RestaurantService.listInArea(mapCenter, filter.maxDistance).then((res) => {
+      if (!cancelled) setAreaRestaurants(res.data ?? []);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [mapCenter, filter.maxDistance]);
+
+  const restaurantPlaces = useMemo<ScoutPlace[]>(
+    () =>
+      areaRestaurants
+        .filter((r) => r.lat != null && r.lng != null)
+        .map((r) => ({
+          id: `fuzo-rest-${r.restaurantId}`,
+          placeId: r.placeId ?? undefined,
+          markerSource: 'fuzo' as const,
+          name: r.name,
+          cat: r.cuisines.length ? r.cuisines.join(' · ') : 'Restaurant',
+          rating: r.average,
+          reviews: r.reviewCount,
+          address: r.address || '',
+          phone: '',
+          website: '',
+          img: r.bannerUrl || r.avatarUrl || '',
+          lat: r.lat as number,
+          lng: r.lng as number,
+          ...(hasAnyHours(r.hours) ? { currentOpeningHours: { open_now: !!getOpenStatus(r.hours, r.timezone)?.isOpen } } : {}),
+          vibe: [],
+          timings: {},
+          menu: [],
+          userReviews: [],
+          photos: [],
+        })),
+    [areaRestaurants],
+  );
 
   useEffect(() => {
     loadFuzo();
@@ -211,24 +372,82 @@ export default function ScoutView() {
     const addUnique = (places: ScoutPlace[], checkDistance: boolean = false) => {
       for (const p of places) {
         let distStr = '';
+        let distMeters: number | undefined;
         if (mapCenter) {
           const dist = getDistanceInMeters(mapCenter.lat, mapCenter.lng, p.lat, p.lng);
           if (checkDistance && dist > filter.maxDistance) continue;
           distStr = dist < 1000 ? `${Math.round(dist)} m` : `${(dist / 1000).toFixed(1)} km`;
+          distMeters = dist;
         }
         const key = p.placeId || p.id;
         if (!seen.has(key)) {
           seen.add(key);
-          merged.push({ ...p, matchPercentage: calculateNeuralMatch(p), distanceText: distStr });
+          merged.push({ ...p, matchPercentage: calculateNeuralMatch(p), distanceText: distStr, distanceMeters: distMeters });
         }
       }
     };
 
     addUnique(mainMapPlaces, true);
+    addUnique(restaurantPlaces, true);
     addUnique(communitySnapPlaces, true);
 
-    return sortPlaces(filterPlaces(merged, filter), filter.sortBy);
-  }, [mainMapPlaces, communitySnapPlaces, filter, mapCenter]);
+    return sortPlaces(filterPlaces(merged, filter), chipSort(filter));
+  }, [mainMapPlaces, restaurantPlaces, communitySnapPlaces, filter, mapCenter]);
+
+  // --- FUZO restaurants on the map ---
+  // Google places whose place_id is linked to a FUZO restaurant account (the
+  // restaurant links it in its Dashboard) get a FUZO pin and a "View on FUZO"
+  // button in the place popup. Looked up in batches, cached per place_id.
+  const [fuzoByPlace, setFuzoByPlace] = useState<Map<string, FuzoRestaurantLink>>(() => new Map());
+  const restaurantById = useMemo(() => new Map(areaRestaurants.map((r) => [`fuzo-rest-${r.restaurantId}`, r])), [areaRestaurants]);
+  const fuzoLinkFor = useCallback(
+    (place: ScoutPlace): FuzoRestaurantLink | undefined =>
+      restaurantById.get(place.id) ?? (place.placeId ? fuzoByPlace.get(place.placeId) ?? areaRestaurants.find((r) => r.placeId === place.placeId) : undefined),
+    [restaurantById, fuzoByPlace, areaRestaurants],
+  );
+
+  const sourceCounts = useMemo(() => {
+    const counts = { google: 0, fuzo: 0, saved: savedPlaces.length };
+    activePlaces.forEach(p => {
+      const src = p.markerSource || 'google';
+      if (src === 'google' || src === 'fuzo') counts[src]++;
+    });
+    return counts;
+  }, [activePlaces, savedPlaces]);
+
+  // What the list + map show for the selected legend group.
+  const shownPlaces = useMemo(() => {
+    if (sourceView === 'all') return activePlaces;
+    if (sourceView === 'saved') {
+      return savedPlaces.map((p) => {
+        if (!mapCenter) return p;
+        const dist = getDistanceInMeters(mapCenter.lat, mapCenter.lng, p.lat, p.lng);
+        return { ...p, distanceMeters: dist, distanceText: dist < 1000 ? `${Math.round(dist)} m` : `${(dist / 1000).toFixed(1)} km` };
+      });
+    }
+    return activePlaces.filter((p) => (p.markerSource || 'google') === sourceView);
+  }, [sourceView, activePlaces, savedPlaces, mapCenter]);
+
+  const pickSource = (src: 'google' | 'fuzo' | 'saved') => {
+    setSourceView((cur) => (cur === src ? 'all' : src));
+    setPanelOpenSignal((n) => n + 1);
+  };
+  const checkedPlaceIdsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const fresh = activePlaces
+      .map((p) => p.placeId)
+      .filter((id): id is string => !!id && !checkedPlaceIdsRef.current.has(id));
+    if (fresh.length === 0) return;
+    fresh.forEach((id) => checkedPlaceIdsRef.current.add(id));
+    let cancelled = false;
+    RestaurantService.findByPlaceIds(fresh).then((res) => {
+      if (cancelled || !res.data || res.data.size === 0) return;
+      setFuzoByPlace((prev) => new Map([...prev, ...res.data!]));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activePlaces]);
 
   // --- Spatial Callbacks ---
   const handleMapClick = useCallback((e: any) => {
@@ -256,6 +475,7 @@ export default function ScoutView() {
   const handleSearch = (e?: React.FormEvent, explicitQuery?: string) => {
     if (e) e.preventDefault();
     const queryToUse = explicitQuery || searchQuery;
+    if (queryToUse.trim()) ActivityEventService.track({ type: 'search', metadata: { query: queryToUse.trim() } });
     if (mapInstanceRef.current) {
       fetchPlaces(mapInstanceRef.current, queryToUse);
     }
@@ -273,87 +493,6 @@ export default function ScoutView() {
     }
   };
 
-  const handleCalculateRoute = async (origin: string, destination: string) => {
-    setIsCalculatingRoute(true);
-    try {
-      const result = await PlacesService.getDirections(origin, destination);
-      if (result.success && result.data?.routes?.[0]) {
-        const route = result.data.routes[0];
-        setCurrentRoute(route);
-
-        const google = getGoogleMaps();
-        if (google && mapInstanceRef.current) {
-          if (routePolylineRef.current) {
-            routePolylineRef.current.setMap(null);
-            routePolylineRef.current = null;
-          }
-          routeMarkersRef.current.forEach(m => m.setMap(null));
-          routeMarkersRef.current = [];
-
-          const polylinePath = (google as any).geometry.encoding.decodePath(route.polyline.encodedPolyline);
-          const pathPoints = polylinePath.map((p: any) => ({
-            lat: typeof p.lat === 'function' ? p.lat() : p.lat,
-            lng: typeof p.lng === 'function' ? p.lng() : p.lng
-          }));
-
-          routePolylineRef.current = new google.Polyline({
-            path: polylinePath,
-            geodesic: true,
-            strokeColor: '#e8472b',
-            strokeOpacity: 0.9,
-            strokeWeight: 6,
-            map: mapInstanceRef.current
-          });
-
-          const bounds = new google.LatLngBounds();
-          pathPoints.forEach((pt: any) => bounds.extend(pt));
-          mapInstanceRef.current.fitBounds(bounds);
-
-          const searchResult = await PlacesService.searchAlongRoute(route.polyline.encodedPolyline, 'restaurants');
-          let combinedResults: ScoutPlace[] = [];
-
-          if (searchResult.success && searchResult.data?.results) {
-            combinedResults = searchResult.data.results.map((r, i) => toScoutPlace(r, i, MAPS_API_KEY));
-          }
-
-          const MAX_DETOUR_METERS = 500;
-          const localAlongRoute = mainMapPlaces.filter(p => {
-            if (!p.lat || !p.lng) return false;
-            return getDistanceToPolyline({ lat: p.lat, lng: p.lng }, pathPoints) <= MAX_DETOUR_METERS;
-          });
-
-          const seen = new Set();
-          const finalPlaces = [...combinedResults, ...localAlongRoute].filter(p => {
-            const id = p.placeId || p.id || p.name;
-            if (seen.has(id)) return false;
-            seen.add(id);
-            return true;
-          });
-
-          setMainMapPlaces(finalPlaces);
-          setIsRoutePlannerOpen(false);
-        }
-      } else {
-        const errorMsg = result.error || 'No route found between these points.';
-        alert(`Route Error: ${errorMsg}`);
-      }
-    } catch (err) {
-      console.error('Route error:', err);
-    } finally {
-      setIsCalculatingRoute(false);
-    }
-  };
-
-  const handleClearRoute = () => {
-    setCurrentRoute(null);
-    if (routePolylineRef.current) {
-      routePolylineRef.current.setMap(null);
-      routePolylineRef.current = null;
-    }
-    routeMarkersRef.current.forEach(m => m.setMap(null));
-    routeMarkersRef.current = [];
-    if (mapInstanceRef.current) fetchPlaces(mapInstanceRef.current);
-  };
 
   const showActionToast = (message: string) => {
     setActionToast(message);
@@ -363,16 +502,46 @@ export default function ScoutView() {
   // Load which places the signed-in user has already saved, so the modal's
   // Save button can reflect real state (filled/labeled "Saved") instead of
   // always looking unsaved.
+  const loadSaved = useCallback(async () => {
+    const result = await PlateService.listSavedItems();
+    if (!result.success || !result.data) return;
+    const items = result.data.filter((i) => i.item_type === 'restaurant');
+    setSavedPlaceIds(new Set(items.map((i) => i.item_id)));
+    setSavedPlaces(
+      items
+        .map((i, idx) => {
+          const m = i.metadata as Record<string, unknown>;
+          const lat = Number(m.lat);
+          const lng = Number(m.lng);
+          if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+          return toSavedScoutPlace(
+            {
+              id: i.item_id,
+              name: String(m.name || m.title || 'Saved place'),
+              cat: typeof m.cat === 'string' ? m.cat : 'Restaurant',
+              img: typeof m.image === 'string' ? m.image : '',
+              lat,
+              lng,
+              placeId: typeof m.placeId === 'string' ? m.placeId : undefined,
+              address: typeof m.address === 'string' ? m.address : '',
+              rating: Number(m.rating) || 0,
+              reviews: Number(m.reviews) || 0,
+              phone: typeof m.phone === 'string' ? m.phone : '',
+              website: typeof m.website === 'string' ? m.website : '',
+              vibe: Array.isArray(m.vibe) ? (m.vibe as string[]) : [],
+            } as AppItem,
+            idx,
+          );
+        })
+        .filter((p): p is ScoutPlace => p !== null),
+    );
+  }, []);
+
   useEffect(() => {
     if (!user?.id) return;
-    (async () => {
-      const result = await PlateService.listSavedItems();
-      if (result.success && result.data) {
-        const ids = new Set(result.data.filter((i) => i.item_type === 'restaurant').map((i) => i.item_id));
-        setSavedPlaceIds(ids);
-      }
-    })();
-  }, [user?.id]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch; state is set after the request resolves
+    loadSaved();
+  }, [user?.id, loadSaved]);
 
   // Seed the distance filter's default from Settings' Discovery Radius
   // (previously always a hardcoded 5km) - only on initial load, so it
@@ -406,7 +575,17 @@ export default function ScoutView() {
 
   const handleAction = async (place: ScoutPlace, action: 'save' | 'share') => {
     if (action === 'share') {
-      setShareTargetPlace(place);
+      // Asks where: FUZO friends/groups or other apps. The link opens Scout on this place.
+      const params = new URLSearchParams({ name: place.name, lat: String(place.lat), lng: String(place.lng) });
+      if (place.placeId) params.set('place', place.placeId);
+      setSharing({
+        title: place.name,
+        subtitle: place.address || place.cat,
+        image: place.img || undefined,
+        url: `/scout?${params.toString()}`,
+        text: `Check out ${place.name} on FUZO`,
+        item: toAppItem(place),
+      });
       return;
     }
 
@@ -422,6 +601,7 @@ export default function ScoutView() {
           return next;
         });
         showActionToast(`Removed ${place.name} from your saved places`);
+        loadSaved();
       } else {
         showActionToast(result.error || 'Could not remove from saved places');
       }
@@ -437,41 +617,10 @@ export default function ScoutView() {
     if (result.success) {
       setSavedPlaceIds((prev) => new Set(prev).add(place.id));
       showActionToast(`Saved ${place.name} to your places`);
+      loadSaved();
     } else {
       showActionToast(result.error === 'User not authenticated' ? 'Sign in to save places' : (result.error || 'Could not save this place'));
     }
-  };
-
-  const handlePickShareTarget = async (target: ShareTarget) => {
-    const place = shareTargetPlace;
-    setShareTargetPlace(null);
-    if (!place || !user?.id) return;
-
-    const item = toAppItem(place);
-    const sent =
-      target.type === 'group'
-        ? await ChatService.sendGroupSharedItemMessage({
-            groupId: target.group.id,
-            senderId: user.id,
-            item,
-          })
-        : await (async () => {
-            const conversation = await ChatService.getOrCreateConversation(user.id, target.friend.id);
-            if (!conversation.success || !conversation.data) return { success: false as const };
-            return ChatService.sendSharedItemMessage({
-              conversationId: conversation.data.id,
-              senderId: user.id,
-              item,
-            });
-          })();
-
-    if (!sent.success || !sent.data) {
-      showActionToast('Could not share this place. Please try again.');
-      return;
-    }
-
-    await PointsService.awardPoints({ actionType: 'share_card', sourceType: 'share', sourceId: sent.data.id });
-    showActionToast(`Shared ${place.name} with ${target.type === 'group' ? target.group.name : target.friend.name}`);
   };
 
   // --- Map Initialization ---
@@ -540,12 +689,38 @@ export default function ScoutView() {
       mapInstanceRef.current = map;
       setIsMapReady(true);
 
+      // /scout?place=<google place_id>&lat=&lng=&name= (from the dashboard).
+      const params = new URLSearchParams(window.location.search);
+      const linkLat = Number(params.get('lat'));
+      const linkLng = Number(params.get('lng'));
+      const deepLink = params.has('lat') && Number.isFinite(linkLat) && Number.isFinite(linkLng)
+        ? { placeId: params.get('place') || undefined, restaurantId: params.get('rid') || undefined, name: params.get('name') || 'Place', lat: linkLat, lng: linkLng }
+        : null;
+      // view=area (e.g. a city from the dashboard): just centre on it and show
+      // its food spots - no single-place popup.
+      const areaOnly = params.get('view') === 'area';
+      // dir=1 (a Directions button): draw the route from the user's location instead of the popup.
+      const wantsDirections = params.get('dir') === '1';
+      if (deepLink) {
+        map.setCenter({ lat: deepLink.lat, lng: deepLink.lng });
+        map.setZoom(areaOnly ? 14 : 16);
+        setMapZoom(areaOnly ? 14 : 16);
+        if (wantsDirections && !areaOnly) startDirectionsRef.current(deepLink);
+        else if (!areaOnly) setPendingPlace(deepLink);
+      }
+
       fetchPlaces(map);
       map.addListener('click', handleMapClick);
+      map.addListener('zoom_changed', () => {
+        const z = map.getZoom();
+        if (typeof z === 'number') setMapZoom(Math.round(z));
+      });
 
       navigator.geolocation.getCurrentPosition((p) => {
         const pos = { lat: p.coords.latitude, lng: p.coords.longitude };
         setUserLocation(pos);
+        // Opened on a specific place? Show the blue dot, but stay on that place.
+        if (deepLink) return;
         map.setCenter(pos);
         fetchPlaces(map);
       }, () => {});
@@ -581,14 +756,8 @@ export default function ScoutView() {
   }, [handleMapClick]);
 
   // --- Marker Rendering ---
-  // Brand-mapped source colors (kept distinct from each other for legend
-  // legibility): sky = Nearby/Google, turmeric = FUZO community, lime = Saved.
-  const MARKER_COLORS: Record<string, string> = {
-    google: '#5b9bd5',
-    fuzo: '#f2a93b',
-    saved: '#8fbb2a',
-  };
-
+  // Place pins are HTML pills (src/lib/scout/mapPins.ts); this teardrop icon
+  // is only used for the user's own location marker.
   const getPinIcon = (google: any, color: string, isUser = false) => {
     const width = isUser ? 36 : 28;
     const height = isUser ? 48 : 38;
@@ -611,18 +780,46 @@ export default function ScoutView() {
     activeMarkersRef.current.forEach(m => m.setMap(null));
     activeMarkersRef.current = [];
 
-    const markers = activePlaces.map(place => {
-      const color = MARKER_COLORS[place.markerSource || 'google'] || '#3b82f6';
-      const marker = new google.Marker({
-        position: { lat: place.lat, lng: place.lng },
-        map: mapInstanceRef.current,
-        icon: getPinIcon(google, color, false)
-      });
-      marker.addListener('click', () => setSelectedPlace(place));
-      return marker;
+    // Food-app style pins: nearby places merge into one pill with a count and
+    // "Name +N more"; FUZO restaurants lead their group and show any real offer.
+    const map = mapInstanceRef.current;
+    // While directions are open only the route shows (like Google Maps) - plus
+    // the restaurants along it when "Food along the way" is on.
+    // (No pins at all while choosing a spot on the map - just the centre pin.)
+    const pinPlaces = directions.open ? (picking ? [] : alongPlaces ?? []) : shownPlaces;
+    const groups = groupPlaces(pinPlaces, mapZoom, (p) => !!fuzoLinkFor(p));
+    const markers: { setMap: (m: unknown) => void }[] = groups.map((group) => {
+      const leadFuzo = fuzoLinkFor(group.lead);
+      const tag = group.places.map((p) => fuzoLinkFor(p)?.offerTitle).find(Boolean) ?? null;
+      const el = buildPinElement(group, { isFuzo: !!leadFuzo, tag });
+      return createHtmlMarker(
+        google,
+        map,
+        { lat: group.lat, lng: group.lng },
+        el,
+        () => {
+          if (group.places.length === 1) {
+            setSelectedPlace(group.lead);
+            return;
+          }
+          // Zoom into the group; if it's all one spot (or already zoomed in), open the lead.
+          const lats = group.places.map((p) => p.lat);
+          const lngs = group.places.map((p) => p.lng);
+          const spread = Math.max(Math.max(...lats) - Math.min(...lats), Math.max(...lngs) - Math.min(...lngs));
+          if (spread < 0.0003 || mapZoom >= 18) {
+            setSelectedPlace(group.lead);
+            return;
+          }
+          const bounds = new google.LatLngBounds();
+          group.places.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
+          map.fitBounds(bounds, 80);
+        },
+        leadFuzo ? 500 : tag ? 400 : 100 + group.places.length,
+      );
     });
 
-    if (userLocation) {
+    // While directions are open the route draws its own blue "you are here" dot.
+    if (userLocation && !directions.open) {
       const userMarker = new google.Marker({
         position: userLocation,
         map: mapInstanceRef.current,
@@ -632,7 +829,7 @@ export default function ScoutView() {
       markers.push(userMarker);
     }
 
-    activeMarkersRef.current = markers;
+    activeMarkersRef.current = markers as typeof activeMarkersRef.current;
 
     if (pinnedPlace) {
       const pinnedMarker = new google.Marker({
@@ -655,7 +852,49 @@ export default function ScoutView() {
       // per pinnedPlace change) or on unmount.
       activeMarkersRef.current.push(pinnedMarker);
     }
-  }, [isMapReady, activePlaces, pinnedPlace, userLocation]);
+  }, [isMapReady, shownPlaces, pinnedPlace, userLocation, fuzoLinkFor, mapZoom, directions.open, alongPlaces, picking]);
+
+  // --- Deep link: open the linked place once its area has loaded ---
+  // (adjust-state-during-render, so it runs exactly once after the first fetch
+  // around the linked spot finishes). If Google didn't return it in the nearby
+  // results, open it from its place_id - the detail fetch below fills it in.
+  if (
+    pendingPlace &&
+    isMapReady &&
+    !isLoading &&
+    mapCenter &&
+    Math.abs(mapCenter.lat - pendingPlace.lat) < 0.0005 &&
+    Math.abs(mapCenter.lng - pendingPlace.lng) < 0.0005
+  ) {
+    // A FUZO restaurant (rid) keeps its marker id, so its pop-up shows "View on FUZO".
+    const fuzoId = pendingPlace.restaurantId ? `fuzo-rest-${pendingPlace.restaurantId}` : null;
+    const found =
+      (fuzoId ? activePlaces.find((p) => p.id === fuzoId) : undefined) ??
+      (pendingPlace.placeId ? activePlaces.find((p) => p.placeId === pendingPlace.placeId) : undefined);
+    setSelectedPlace(
+      found ?? {
+        id: fuzoId || pendingPlace.placeId || `link-${pendingPlace.lat},${pendingPlace.lng}`,
+        placeId: pendingPlace.placeId,
+        markerSource: fuzoId ? 'fuzo' : 'google',
+        name: pendingPlace.name,
+        cat: 'Restaurant',
+        rating: 0,
+        reviews: 0,
+        address: '',
+        phone: '',
+        website: '',
+        vibe: [],
+        img: '',
+        lat: pendingPlace.lat,
+        lng: pendingPlace.lng,
+        timings: {},
+        menu: [],
+        userReviews: [],
+        photos: [],
+      },
+    );
+    setPendingPlace(null);
+  }
 
   // --- Detail Fetching ---
   useEffect(() => {
@@ -683,17 +922,9 @@ export default function ScoutView() {
   }, [selectedPlace?.id]);
 
   // --- Legend Counts ---
-  const sourceCounts = useMemo(() => {
-    const counts = { google: 0, fuzo: 0, saved: 0 };
-    activePlaces.forEach(p => {
-      const src = p.markerSource || 'google';
-      if (src in counts) counts[src as keyof typeof counts]++;
-    });
-    return counts;
-  }, [activePlaces]);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div className={`scout-root${nav.active ? ' is-navigating' : ''}${directions.pick ? ' is-picking' : ''}`} style={{ position: 'relative', width: '100%', height: '100%' }}>
       {/* Map canvas */}
       <div ref={mapRef} style={{ position: 'absolute', inset: 0, zIndex: 0 }} id="scout-map" />
 
@@ -727,7 +958,7 @@ export default function ScoutView() {
               </button>
             </form>
             <div className="scout-search__divider" />
-            <button onClick={() => setIsRoutePlannerOpen(true)} className="scout-search__route-btn">
+            <button type="button" onClick={directions.openPlanner} className="scout-search__route-btn" aria-label="Directions" title="Directions">
               <div className="scout-search__route-icon">
                 <Navigation size={16} />
               </div>
@@ -752,21 +983,30 @@ export default function ScoutView() {
           )}
         </div>
 
-        {/* Legend */}
+        {/* Legend (hidden while directions are open - the panel takes that spot) */}
+        {!directions.open && (
         <div className="scout-legend">
-          <div className="scout-legend__item">
-            <span className="scout-legend__dot scout-legend__dot--google" />
-            <span>Nearby ({sourceCounts.google})</span>
-          </div>
-          <div className="scout-legend__item">
-            <span className="scout-legend__dot scout-legend__dot--fuzo" />
-            <span>FUZO ({sourceCounts.fuzo})</span>
-          </div>
-          <div className="scout-legend__item">
-            <span className="scout-legend__dot scout-legend__dot--saved" />
-            <span>Saved ({sourceCounts.saved})</span>
-          </div>
+          {(
+            [
+              ['google', 'Nearby'],
+              ['fuzo', 'FUZO'],
+              ['saved', 'Saved'],
+            ] as const
+          ).map(([src, label]) => (
+            <button
+              key={src}
+              type="button"
+              className={`scout-legend__item${sourceView === src ? ' is-active' : ''}`}
+              aria-pressed={sourceView === src}
+              onClick={() => pickSource(src)}
+              title={sourceView === src ? 'Show all places' : `Show only ${label}`}
+            >
+              <span className={`scout-legend__dot scout-legend__dot--${src}`} />
+              <span>{label} ({sourceCounts[src]})</span>
+            </button>
+          ))}
         </div>
+        )}
       </div>
 
       {/* FAB cluster */}
@@ -793,22 +1033,61 @@ export default function ScoutView() {
       </div>
 
       {/* Overlay panels */}
-      <ScoutRoutePlanner
-        isVisible={isRoutePlannerOpen}
-        onClose={() => setIsRoutePlannerOpen(false)}
-        onCalculateRoute={handleCalculateRoute}
-        onClear={handleClearRoute}
-        isCalculating={isCalculatingRoute}
-      />
-
+      {nav.active && directions.target ? (
+        <ScoutNavigation
+          destName={directions.target.name}
+          nextManeuver={nav.nextManeuver}
+          nextText={nav.nextText}
+          thenText={nav.thenText}
+          toTurn={nav.toTurn}
+          remainingM={nav.remainingM}
+          remainingS={nav.remainingS}
+          hasFix={!!nav.pos}
+          gpsError={nav.gpsError}
+          arrived={nav.arrived}
+          muted={nav.muted}
+          following={nav.following}
+          googleHref={googleDirectionsUrl(directions.target, { mode: directions.mode, navigate: true })}
+          onToggleMute={nav.toggleMute}
+          onRecenter={nav.recenter}
+          onExit={exitNav}
+        />
+      ) : directions.pick ? (
+        <ScoutPickOverlay pick={directions.pick} onConfirm={directions.confirmPick} onCancel={directions.cancelPick} />
+      ) : directions.open ? (
+        <ScoutDirectionsPanel
+          target={directions.target}
+          from={directions.from}
+          gps={directions.gps}
+          mode={directions.mode}
+          onModeChange={directions.setMode}
+          onTargetChange={directions.setTarget}
+          onFromChange={directions.setFrom}
+          status={directions.status}
+          alongWay={directions.alongWay}
+          onAlongWayChange={directions.setAlongWay}
+          alongStatus={directions.alongStatus}
+          onSelectPlace={setSelectedPlace}
+          onRetry={directions.retry}
+          onClose={closeDirections}
+          onStart={onStartDirections}
+          collapsed={dirCollapsed}
+          onToggleCollapsed={toggleDirCollapsed}
+          onPickOnMap={directions.startPick}
+        />
+      ) : (
       <ScoutDiscoveryPanel
-        places={activePlaces}
+        places={shownPlaces}
+        openSignal={panelOpenSignal}
+        sourceLabel={sourceView === 'all' ? undefined : sourceView === 'google' ? 'Nearby' : sourceView === 'fuzo' ? 'FUZO' : 'Saved'}
+        onClearSource={() => setSourceView('all')}
         onPlaceSelect={handlePlaceSelect}
         filter={filter}
         onFilterChange={setFilter}
         onDistanceChangeEnd={() => { if (mapInstanceRef.current) fetchPlaces(mapInstanceRef.current, searchQuery); }}
         onClose={() => { }}
       />
+      )}
 
       {selectedPlace && (
         <ScoutPlaceModal
@@ -817,21 +1096,20 @@ export default function ScoutView() {
           setModalTab={setModalTab}
           isLoadingDetails={isLoadingDetails}
           isSaved={savedPlaceIds.has(selectedPlace.id)}
+          fuzoRestaurant={fuzoLinkFor(selectedPlace)}
           onClose={() => setSelectedPlace(null)}
           onAction={handleAction}
+          onDirections={(p) => {
+            setSelectedPlace(null);
+            directions.start({ name: p.name, lat: p.lat, lng: p.lng, placeId: p.placeId });
+          }}
         />
       )}
 
-      {shareTargetPlace && user?.id && (
-        <FriendPickerModal
-          currentUserId={user.id}
-          onClose={() => setShareTargetPlace(null)}
-          onPick={handlePickShareTarget}
-        />
-      )}
+      <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
 
       {actionToast && (
-        <div className="toast show position-fixed bottom-0 start-50 translate-middle-x mb-5 bg-dark text-white rounded-pill px-3 py-2 shadow" style={{ zIndex: 1050 }}>
+        <div className="toast show position-fixed start-50 translate-middle-x bg-dark text-white rounded-pill px-3 py-2 shadow" style={{ zIndex: 1050, bottom: 'calc(5.5rem + env(safe-area-inset-bottom))' }}>
           {actionToast}
         </div>
       )}

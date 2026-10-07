@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import gsap from 'gsap';
 import { createClient } from '@/lib/supabase/client';
 import {
   FLAVORS,
@@ -40,26 +41,115 @@ import { MultiChips, ToggleButton, toggleArr } from '@/components/ui/MultiChips'
 
 type Setter = (updater: (prev: OnboardingState) => OnboardingState) => void;
 
+// Presentational only - one hero image per screen, dropped in under
+// public/onboarding/<name>.png. Doesn't touch data.ts (the actual flow/
+// question logic) at all. Missing files fail silently via the <img>'s
+// onError below rather than showing a broken-image icon, so this is safe to
+// ship before every image exists.
+const SCREEN_IMAGES: Record<string, string> = {
+  PATH_SELECT: '/onboarding/path-select.png',
+  A_TYPE: '/onboarding/a-type.png',
+  A_FLAVORS: '/onboarding/a-flavors.png',
+  A_CUISINES: '/onboarding/a-cuisines.png',
+  A_DIETARY: '/onboarding/a-dietary.png',
+  A_QUIZ: '/onboarding/a-quiz.png',
+  B_TYPE: '/onboarding/b-type.png',
+  B_PROFILE: '/onboarding/b-profile.png',
+  B_SPECIALTY: '/onboarding/b-specialty.png',
+  B_PORTFOLIO: '/onboarding/b-portfolio.png',
+  B_AUDIENCE: '/onboarding/b-audience.png',
+  B_PREVIEW: '/onboarding/b-preview.png',
+  C_TYPE: '/onboarding/c-type.png',
+  C_PROFILE: '/onboarding/c-profile.png',
+  C_CUISINE: '/onboarding/c-cuisine.png',
+  C_MEDIA: '/onboarding/c-media.png',
+  C_IDENTITY: '/onboarding/c-identity.png',
+  C_FEATURES: '/onboarding/c-features.png',
+  C_MATCHING: '/onboarding/c-matching.png',
+  C_PREVIEW: '/onboarding/c-preview.png',
+};
+
+// A_RESULT's image depends on which persona computeResult() lands on, not
+// just the screen key - keyed by PERSONALITY[...].title since that's already
+// a stable, unique string per persona (see data.ts).
+const RESULT_IMAGES: Record<string, string> = {
+  'Flavor Explorer': '/onboarding/a-result-explorer.png',
+  'Comfort Craver': '/onboarding/a-result-comfort.png',
+  'Health Hero': '/onboarding/a-result-health.png',
+  'Trend Hunter': '/onboarding/a-result-trend.png',
+};
+
 export default function OnboardingWizard() {
   const router = useRouter();
   const [state, setState] = useState<OnboardingState>(initialOnboardingState);
   const [history, setHistory] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Slideshow transition: the *entire* card (not just its text) flies out on
+  // a 3D arc and the next one flies in from the opposite side - a coverflow/
+  // card-shuffle feel, not a plain crossfade. `mutate` is whatever state
+  // change actually advances the screen (goTo/goBack below); it only runs
+  // once the exit half has finished, so the content swap happens off-screen.
+  const animateTransition = (mutate: () => void, direction: 'forward' | 'backward') => {
+    const el = cardRef.current;
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      mutate();
+      window.scrollTo(0, 0);
+      return;
+    }
+    setIsAnimating(true);
+    const sign = direction === 'forward' ? -1 : 1;
+
+    gsap.to(el, {
+      x: sign * 44,
+      rotateY: sign * -12,
+      scale: 0.94,
+      opacity: 0,
+      duration: 0.4,
+      ease: 'power1.in',
+      onComplete: () => {
+        mutate();
+        window.scrollTo(0, 0);
+        gsap.fromTo(
+          el,
+          { x: sign * -44, rotateY: sign * 12, scale: 0.94, opacity: 0 },
+          {
+            x: 0,
+            rotateY: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.7,
+            ease: 'power2.out',
+            onComplete: () => setIsAnimating(false),
+          },
+        );
+      },
+    });
+  };
+
+  // One-time entrance for the very first card on mount, same easing as the
+  // step transitions so it doesn't feel like a different animation system.
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    gsap.fromTo(el, { y: 24, scale: 0.94, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.55, ease: 'power3.out' });
+  }, []);
 
   const goTo = (next: string) => {
-    setHistory((h) => [...h, state.screen]);
-    setState((s) => ({ ...s, screen: next }));
-    window.scrollTo(0, 0);
+    animateTransition(() => {
+      setHistory((h) => [...h, state.screen]);
+      setState((s) => ({ ...s, screen: next }));
+    }, 'forward');
   };
   const goBack = () => {
-    setHistory((h) => {
-      if (h.length === 0) return h;
-      const copy = [...h];
-      const prev = copy.pop()!;
+    if (history.length === 0) return;
+    const prev = history[history.length - 1];
+    animateTransition(() => {
+      setHistory((h) => h.slice(0, -1));
       setState((s) => ({ ...s, screen: prev }));
-      return copy;
-    });
-    window.scrollTo(0, 0);
+    }, 'backward');
   };
 
   const finalize = async () => {
@@ -124,7 +214,7 @@ export default function OnboardingWizard() {
   };
 
   const handleNext = async () => {
-    if (!canContinue(state)) return;
+    if (!canContinue(state) || isAnimating) return;
     const next = nextScreenFor(state);
     if (next === 'DONE') {
       setSaving(true);
@@ -139,6 +229,7 @@ export default function OnboardingWizard() {
   const total = courseTotal(state);
   const pct = total ? Math.round((idx / total) * 100) : 0;
   const showBack = history.length > 0;
+  const visualSrc = state.screen === 'A_RESULT' ? RESULT_IMAGES[computeResult(state).title] : SCREEN_IMAGES[state.screen];
 
   return (
     <div className="onboarding-page">
@@ -149,19 +240,26 @@ export default function OnboardingWizard() {
         <div className="onboarding-progress__fill" style={{ width: `${pct}%` }} />
       </div>
 
-      <div className="onboarding-card">
-        <Screen state={state} setState={setState} onSelectPath={(p) => setState((s) => ({ ...s, pathChoice: p }))} />
+      <div className="onboarding-card-stack">
+        <div className="onboarding-card-stack__layer onboarding-card-stack__layer--2" aria-hidden="true" />
+        <div className="onboarding-card-stack__layer onboarding-card-stack__layer--1" aria-hidden="true" />
+        <div className="onboarding-card" ref={cardRef}>
+          {visualSrc && <OnboardingVisual src={visualSrc} key={visualSrc} />}
+          <div className="onboarding-card__body">
+            <Screen state={state} setState={setState} onSelectPath={(p) => setState((s) => ({ ...s, pathChoice: p }))} />
+          </div>
+        </div>
       </div>
 
       <div className="onboarding-footer">
         {showBack ? (
-          <button className="onboarding-btn-back" onClick={goBack} type="button">
+          <button className="onboarding-btn-back" onClick={goBack} disabled={isAnimating} type="button">
             Back
           </button>
         ) : (
           <span />
         )}
-        <button className="onboarding-btn-next" onClick={handleNext} disabled={!canContinue(state) || saving} type="button">
+        <button className="onboarding-btn-next" onClick={handleNext} disabled={!canContinue(state) || saving || isAnimating} type="button">
           {saving ? 'Saving…' : continueLabel(state)}
         </button>
       </div>
@@ -287,8 +385,10 @@ function Screen({
             <h2 className="onboarding-result__title">{r.title}</h2>
             <p className="onboarding-result__desc">{r.desc}</p>
           </div>
-          <PreviewRow label="Top flavors" value={state.a.flavors.join(' · ')} />
-          <PreviewRow label="Top cuisines" value={state.a.cuisines.join(' · ')} />
+          <div className="onboarding-preview">
+            <PreviewRow label="Top flavors" value={state.a.flavors.join(' · ')} />
+            <PreviewRow label="Top cuisines" value={state.a.cuisines.join(' · ')} />
+          </div>
         </>
       );
     }
@@ -356,11 +456,13 @@ function Screen({
         <>
           <h1 className="onboarding-title">Profile preview</h1>
           <p className="onboarding-subtitle">See how your profile will appear on FUZO.</p>
-          <PreviewRow label="Creator name" value={state.b.profile.name} />
-          <PreviewRow label="Type" value={state.b.type} />
-          <PreviewRow label="Location" value={state.b.profile.location} />
-          <PreviewRow label="Specialty" value={state.b.specialty.join(' · ')} />
-          <PreviewRow label="Audience" value={state.b.audience.join(' · ')} />
+          <div className="onboarding-preview">
+            <PreviewRow label="Creator name" value={state.b.profile.name} />
+            <PreviewRow label="Type" value={state.b.type} />
+            <PreviewRow label="Location" value={state.b.profile.location} />
+            <PreviewRow label="Specialty" value={state.b.specialty.join(' · ')} />
+            <PreviewRow label="Audience" value={state.b.audience.join(' · ')} />
+          </div>
         </>
       );
 
@@ -460,12 +562,14 @@ function Screen({
         <>
           <h1 className="onboarding-title">Business preview</h1>
           <p className="onboarding-subtitle">Preview your public profile.</p>
-          <PreviewRow label="Business name" value={state.c.profile.businessName} />
-          <PreviewRow label="Type" value={state.c.type} />
-          <PreviewRow label="Address" value={state.c.profile.address} />
-          <PreviewRow label="Cuisine" value={state.c.cuisine.join(' · ')} />
-          <PreviewRow label="Categories" value={state.c.categories.join(' · ')} />
-          <PreviewRow label="Identity" value={state.c.identity.join(' · ')} />
+          <div className="onboarding-preview">
+            <PreviewRow label="Business name" value={state.c.profile.businessName} />
+            <PreviewRow label="Type" value={state.c.type} />
+            <PreviewRow label="Address" value={state.c.profile.address} />
+            <PreviewRow label="Cuisine" value={state.c.cuisine.join(' · ')} />
+            <PreviewRow label="Categories" value={state.c.categories.join(' · ')} />
+            <PreviewRow label="Identity" value={state.c.identity.join(' · ')} />
+          </div>
         </>
       );
 
@@ -549,6 +653,46 @@ function PreviewRow({ label, value }: { label: string; value: string }) {
     <div className="onboarding-preview-row">
       <span className="onboarding-preview-row__label">{label}</span>
       <span className="onboarding-preview-row__value">{value || '—'}</span>
+    </div>
+  );
+}
+
+// Hides itself if the image 404s, so screens ship fine before every image
+// exists under public/onboarding/. Can't rely on <img onError> alone: on a
+// fast local 404 the browser can fire the error event before React finishes
+// attaching the listener (a well-known React/img race), so this also checks
+// img.complete && naturalWidth === 0 in a layout effect as a fallback for
+// failures that already resolved by the time this mounts. The parent keys
+// this component by src, so a screen/persona change remounts it with
+// broken reset to false instead of needing to reset it here.
+function OnboardingVisual({ src }: { src: string }) {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [broken, setBroken] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useLayoutEffect(() => {
+    const img = imgRef.current;
+    if (!img) return;
+    if (img.complete && img.naturalWidth === 0) {
+      setBroken(true);
+    } else if (img.complete) {
+      // Already cached by the time this mounts - onLoad won't fire again.
+      setLoaded(true);
+    }
+  }, []);
+
+  if (broken) return null;
+
+  return (
+    <div className="onboarding-card__visual">
+      <img
+        ref={imgRef}
+        src={src}
+        alt=""
+        className={loaded ? 'is-loaded' : undefined}
+        onLoad={() => setLoaded(true)}
+        onError={() => setBroken(true)}
+      />
     </div>
   );
 }

@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
-import { Star, ChevronRight, ChevronUp } from 'lucide-react';
+import { Star, ChevronRight, ChevronUp, Utensils, X } from 'lucide-react';
 import type { ScoutPlace, ScoutFilter } from '@/types/scout';
 import { getMatchPercentage } from '@/lib/scout/scoutLogic';
+import { SourceBadge, placeOrigin } from './SourceBadge';
 
 interface ScoutDiscoveryPanelProps {
   places: ScoutPlace[];
@@ -12,6 +13,11 @@ interface ScoutDiscoveryPanelProps {
   onFilterChange: (filter: ScoutFilter) => void;
   onDistanceChangeEnd: () => void;
   onClose: () => void;
+  /** Changes when a map-legend item is tapped - opens the mobile list sheet. */
+  openSignal?: number;
+  /** Set when the list is filtered to one legend group (Nearby / FUZO / Saved). */
+  sourceLabel?: string;
+  onClearSource?: () => void;
 }
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -26,8 +32,34 @@ export const ScoutDiscoveryPanel = ({
   filter,
   onFilterChange,
   onDistanceChangeEnd,
+  openSignal = 0,
+  sourceLabel,
+  onClearSource,
 }: ScoutDiscoveryPanelProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  // Open the mobile sheet when the legend asks (adjust-state-on-prop-change).
+  const [seenSignal, setSeenSignal] = useState(openSignal);
+  if (seenSignal !== openSignal) {
+    setSeenSignal(openSignal);
+    setIsExpanded(true);
+  }
+
+  const sourceChip = sourceLabel ? (
+    <div className="scout-panel__source">
+      <span>
+        Showing: <strong>{sourceLabel}</strong>
+      </span>
+      {onClearSource && (
+        <button type="button" onClick={onClearSource} aria-label="Show all places">
+          <X size={12} /> All
+        </button>
+      )}
+    </div>
+  ) : null;
+  const emptyText =
+    sourceLabel === 'Saved'
+      ? 'No saved places yet - tap Save on any place to keep it here.'
+      : 'No spots found in this area';
   const [dragStartY, setDragStartY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -115,7 +147,7 @@ export const ScoutDiscoveryPanel = ({
         >
           <div className="scout-panel__grip" />
           <div className="scout-panel__handle-label">
-            <span>{places.length} places nearby</span>
+            <span>{places.length} {sourceLabel ? `${sourceLabel.toLowerCase()} places` : 'places nearby'}</span>
             <ChevronUp size={14} className="scout-panel__chevron" />
           </div>
         </div>
@@ -126,10 +158,11 @@ export const ScoutDiscoveryPanel = ({
         </div>
 
         {filterChips}
+        {sourceChip}
 
         <div className="scout-panel__list scout-hide-scrollbar">
           {places.length === 0 ? (
-            <div className="scout-panel__empty">No spots found in this area</div>
+            <div className="scout-panel__empty">{emptyText}</div>
           ) : (
             places.map((place) => (
               <PlaceCard key={place.id} place={place} onSelect={onPlaceSelect} />
@@ -147,11 +180,12 @@ export const ScoutDiscoveryPanel = ({
 
         {filterChips}
 
-        <div className="scout-panel__count">{places.length} places discovered</div>
+        <div className="scout-panel__count">{places.length} {sourceLabel ? `${sourceLabel} places` : 'places discovered'}</div>
+        {sourceChip}
 
         <div className="scout-panel__list scout-hide-scrollbar">
           {places.length === 0 ? (
-            <div className="scout-panel__empty">No spots found in this area</div>
+            <div className="scout-panel__empty">{emptyText}</div>
           ) : (
             places.map((place) => (
               <PlaceCard key={place.id} place={place} onSelect={onPlaceSelect} />
@@ -172,11 +206,17 @@ const PlaceCard = ({ place, onSelect }: { place: ScoutPlace; onSelect: (p: Scout
   return (
     <button onClick={() => onSelect(place)} className="scout-place-card">
       <div className="scout-place-card__image">
-        <img
-          src={place.img}
-          alt={place.name}
-          onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=200'; }}
-        />
+        {/* Community pins / new FUZO restaurants may have no photo - never render src="". */}
+        {place.img ? (
+          <img
+            src={place.img}
+            alt={place.name}
+            onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=200'; }}
+          />
+        ) : (
+          <span className="scout-place-card__noimg" aria-hidden="true"><Utensils size={18} /></span>
+        )}
+        <SourceBadge origin={placeOrigin(place)} className="scout-place-card__badge" />
       </div>
       <div className="scout-place-card__body">
         <div className="scout-place-card__source">
@@ -186,10 +226,14 @@ const PlaceCard = ({ place, onSelect }: { place: ScoutPlace; onSelect: (p: Scout
         <p className="scout-place-card__name">{place.name}</p>
         <p className="scout-place-card__cat">{place.cat}</p>
         <div className="scout-place-card__meta">
-          <div className="scout-place-card__rating">
-            <Star size={11} fill="currentColor" />
-            <span>{place.rating?.toFixed(1) || 'N/A'}</span>
-          </div>
+          {place.rating > 0 ? (
+            <div className="scout-place-card__rating">
+              <Star size={11} fill="currentColor" />
+              <span>{place.rating.toFixed(1)}</span>
+            </div>
+          ) : (
+            <span>New</span>
+          )}
           {place.distanceText && <span>· {place.distanceText}</span>}
           <span className="scout-place-card__match">{getMatchPercentage(place)}%</span>
         </div>

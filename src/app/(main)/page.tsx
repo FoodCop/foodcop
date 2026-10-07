@@ -10,6 +10,7 @@ import TakoChat from '@/components/home/TakoChat';
 import Emotional from '@/components/home/Emotional';
 import FinalCTA from '@/components/home/FinalCTA';
 import HomeFooter from '@/components/home/HomeFooter';
+import StackScroll from '@/components/home/StackScroll';
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
       <HomeFooter />
 
       <V6Scripts />
+      <StackScroll />
     </div>
   );
 }

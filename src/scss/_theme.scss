@@ -1,0 +1,23 @@
+// FUZO's warm cream/ink theme tokens (light mode only - the app no longer
+// supports switching themes). Every custom page partial (_bites.scss and
+// friends) should use the --fz-* tokens below instead of hardcoded hex for
+// any surface/text/border color; brand accent colors ($fuzo-yellow, $chili,
+// etc.) stay literal.
+
+:root {
+  --fz-bg: #fbf7ec;
+  --fz-surface: #ffffff;
+  --fz-surface-muted: #fafaf9;
+  --fz-surface-hover: #f0efed;
+  --fz-ink: #241f16;
+  --fz-ink-soft: #837a68;
+  --fz-ink-faint: #a8a29e;
+  --fz-border: #ece4d0;
+  --fz-scrim: rgba(28, 25, 23, 0.55);
+}
+
+body {
+  background-color: var(--fz-bg);
+  color: var(--fz-ink);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}

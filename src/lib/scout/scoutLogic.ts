@@ -126,7 +126,10 @@ export const toScoutPlace = (result: any, index: number, mapsApiKey: string = MA
     timings: {},
     menu: [],
     userReviews: [],
-    photos: []
+    photos: [],
+    ...(typeof result.opening_hours?.open_now === 'boolean'
+      ? { currentOpeningHours: { open_now: result.opening_hours.open_now } }
+      : {}),
   };
 };
 
@@ -185,8 +188,11 @@ export const filterPlaces = (places: ScoutPlace[], filter: ScoutFilter): ScoutPl
   if (filter.type === 'top') {
     filtered = filtered.filter(p => p.rating >= 4.5);
   } else if (filter.type === 'open') {
-    filtered = filtered.filter(p => p.rating > 4.2);
+    // Real opening status only (Google's open_now, or a FUZO restaurant's own
+    // hours) - places whose hours are unknown aren't shown as open.
+    filtered = filtered.filter(p => p.currentOpeningHours?.open_now === true);
   }
+  // 'distance' doesn't filter - it changes the order (see chipSort).
 
   if (filter.rating > 0) {
     filtered = filtered.filter(p => p.rating >= filter.rating);
@@ -195,17 +201,21 @@ export const filterPlaces = (places: ScoutPlace[], filter: ScoutFilter): ScoutPl
   return filtered;
 };
 
+/** The chip picks the order: Top Rated = best first, Distance = nearest first. */
+export const chipSort = (filter: ScoutFilter): ScoutFilter['sortBy'] =>
+  filter.type === 'top' ? 'rating' : filter.type === 'distance' ? 'distance' : filter.sortBy;
+
 export const sortPlaces = (places: ScoutPlace[], sortBy: ScoutFilter['sortBy']): ScoutPlace[] => {
   const sorted = [...places];
   switch (sortBy) {
     case 'match':
       return sorted.sort((a, b) => (b.matchPercentage || 0) - (a.matchPercentage || 0));
     case 'rating':
-      return sorted.sort((a, b) => b.rating - a.rating);
+      return sorted.sort((a, b) => b.rating - a.rating || b.reviews - a.reviews);
     case 'reviews':
       return sorted.sort((a, b) => b.reviews - a.reviews);
     case 'distance':
-      return sorted;
+      return sorted.sort((a, b) => (a.distanceMeters ?? Infinity) - (b.distanceMeters ?? Infinity));
     default:
       return sorted;
   }

@@ -1,5 +1,6 @@
-import RewardsView from "@/components/rewards/RewardsView";
+import { redirect } from 'next/navigation';
 
+// Rewards now lives on the Leaderboard & Rewards page.
 export default function RewardsPage() {
-  return <RewardsView />;
+  redirect('/leaderboard?tab=rewards');
 }

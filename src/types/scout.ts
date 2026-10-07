@@ -60,6 +60,8 @@ export interface ScoutPlace {
     weekday_text?: string[];
   };
   distanceText?: string;
+  /** Distance from the map centre, for the Distance sort. */
+  distanceMeters?: number;
   wheelchairAccessibleEntrance?: boolean;
   servesBeer?: boolean;
   servesWine?: boolean;
@@ -90,6 +92,8 @@ export type MapLike = {
   getCenter: () => { lat: () => number; lng: () => number };
   panTo: (center: { lat: number; lng: number }) => void;
   setZoom: (zoom: number) => void;
+  getZoom: () => number | undefined;
+  setOptions: (options: Record<string, unknown>) => void;
   addListener: (eventName: string, handler: (event?: any) => void) => void;
   getBounds: () => LatLngBoundsLike | null;
 };
@@ -103,6 +107,13 @@ export type GoogleMapsLike = {
       disableDefaultUI?: boolean;
       streetViewControl?: boolean;
       mapTypeControl?: boolean;
+      minZoom?: number;
+      isFractionalZoomEnabled?: boolean;
+      zoomControl?: boolean;
+      clickableIcons?: boolean;
+      gestureHandling?: 'cooperative' | 'greedy' | 'none' | 'auto';
+      backgroundColor?: string;
+      restriction?: { latLngBounds: { north: number; south: number; west: number; east: number }; strictBounds?: boolean };
       fullscreenControl?: boolean;
       styles?: any[];
     }

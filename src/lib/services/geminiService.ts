@@ -10,6 +10,8 @@
  * /api/gemini Next.js route handler, which calls Gemini server-side.
  */
 
+import { GEMINI_MODEL } from '@/lib/ai/geminiModel';
+
 const GEMINI_PROXY_URL = '/api/gemini';
 
 export interface GeminiPart {
@@ -118,7 +120,7 @@ async function requestWithRetry(body: Record<string, unknown>, maxRetries = 3): 
 export const GeminiService = {
   async generateContent(request: GeminiGenerateRequest): Promise<GeminiServiceResult> {
     return requestWithRetry({
-      model: request.model || 'gemini-2.5-flash',
+      model: request.model || GEMINI_MODEL,
       contents: normalizeContents(request.contents),
       config: request.config || {},
     });
@@ -138,7 +140,7 @@ export const GeminiService = {
     }
 
     const result = await this.generateContent({
-      model: 'gemini-2.5-flash',
+      model: GEMINI_MODEL,
       contents: [{ role: 'user', parts }],
       config: {
         responseMimeType: 'application/json',
@@ -236,7 +238,7 @@ export const GeminiService = {
     }
 
     const result = await this.generateContent({
-      model: 'gemini-2.5-flash',
+      model: GEMINI_MODEL,
       contents: [{ role: 'user', parts }],
       config: {
         responseMimeType: 'application/json',

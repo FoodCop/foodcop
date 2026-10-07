@@ -1,76 +1,95 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Search, Clock, MapPin, Star, Play, Compass, UtensilsCrossed, Film, Bot, Leaf, Plus, LocateFixed } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import {
+  Clock,
+  Film,
+  Flame,
+  Home,
+  LocateFixed,
+  MapPin,
+  Play,
+  UtensilsCrossed,
+} from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { createClient } from '@/lib/supabase/client';
-import { CreateCardModal } from '@/components/create/CreateCardModal';
+import AppDock from '@/components/nav/AppDock';
+import { useScrollCompact } from '@/lib/hooks/useScrollCompact';
 import { ScoutAddPinModal } from '@/components/scout/ScoutAddPinModal';
 import { VideoPlayerModal } from '@/components/ui/VideoPlayerModal';
-import { PointsService } from '@/lib/services/pointsService';
-import { POINTS_PER_LEVEL } from '@/lib/rewards/progressionEngine';
+import { RecipeDetailModal, useRecipeSaves } from '@/components/bites/RecipeDetailModal';
+import { fetchCuratedRecipes, type CuratedRecipe } from '@/lib/recipes/curatedRecipes';
 import { UserSettingsService, DEFAULT_USER_SETTINGS, type UserSettings } from '@/lib/services/userSettingsService';
 import {
   aggregateForUser,
   getOnboardingPrefs,
   pickTopCuisine,
   getRecommendedRecipes,
-  getNearbyRestaurants,
   getSuggestedVideos,
-  type AggregateResult,
   type RecommendedRecipe,
-  type NearbyRestaurant,
   type SuggestedVideo,
 } from '@/lib/services/recommendationService';
+import HomeTabs, { type HomeTab } from './HomeTabs';
+import { Rail, SkeletonCards } from './Rail';
+import DashPlaceCard from './DashPlaceCard';
+import { useNearbyPlaces, type DashPlace } from './useNearbyPlaces';
+import { NearbyCities } from './NearbyCities';
+import { LocationChip } from './LocationChip';
 
-// 8 real FUZO taxonomy categories (src/lib/data/fuzoTaxonomy.json's
-// foodCategories.tags) with matching real icon assets copied from the
-// source /SVG/food/ library - filters the recipe rail by a title keyword
-// match, not a fabricated tag on data that doesn't carry one.
-const CATEGORY_SHORTCUTS = [
-  { label: 'Pizza', keyword: 'pizza', icon: '/SVG/food/PIZZA.svg' },
-  { label: 'Burger', keyword: 'burger', icon: '/SVG/food/BURGER.svg' },
-  { label: 'Sandwich', keyword: 'sandwich', icon: '/SVG/food/SANDWICH.svg' },
-  { label: 'Curry', keyword: 'curry', icon: '/SVG/food/CURRY RICE.svg' },
-  { label: 'Noodles', keyword: 'noodle', icon: '/SVG/food/NOODLE.svg' },
-  { label: 'Salad', keyword: 'salad', icon: '/SVG/food/SALAD.svg' },
-  { label: 'Soup', keyword: 'soup', icon: '/SVG/food/SOUP.svg' },
-  { label: 'Sushi', keyword: 'sushi', icon: '/SVG/food/SUSHI.svg' },
+// Dashboard = the post-login home, laid out from the client's sketch (same
+// structure on phone and desktop):
+//   top bar     the app-wide SiteHeader: profile photo | FUZO logo (Tako) | bell + menu
+//   tabs        For you · Bites · Feed · Trims - switch in place (no navigation), URL ?tab= kept in sync
+//   For you     Recommended Restaurants, Near You (Google + FUZO restaurants), Your Taste, Watch & Cook
+//   bottom dock Explore (Scout) | raised + (create a card) | Rewards
+// Styles: _dashboard.scss (top bar: _header.scss).
+
+type TabKey = 'foryou' | 'bites' | 'feed' | 'trims';
+const TABS: HomeTab<TabKey>[] = [
+  { key: 'foryou', label: 'For you', icon: Home },
+  { key: 'bites', label: 'Bites', icon: UtensilsCrossed },
+  { key: 'feed', label: 'Feed', icon: Flame },
+  { key: 'trims', label: 'Trims', icon: Film },
 ];
+const isTab = (v: string | null): v is TabKey => TABS.some((t) => t.key === v);
 
-const QUICK_NAV = [
-  { href: '/scout', label: 'Scout', icon: Compass },
-  { href: '/discover', label: 'Bites', icon: UtensilsCrossed },
-  { href: '/trims', label: 'Trims', icon: Film },
-  { href: '/rewards', label: 'Rewards', icon: Star },
-  { href: '/ai-chef', label: 'AI Chef', icon: Bot },
-];
+// Each section's code only loads the first time its tab is opened.
+function PanelLoading({ label }: { label: string }) {
+  return (
+    <div className="fz-dash-panel__loading" role="status">
+      <span className="spinner-border spinner-border-sm text-warning" aria-hidden="true" /> Loading {label}…
+    </div>
+  );
+}
+const BitesView = dynamic(() => import('@/components/bites/BitesView').then((m) => m.BitesView), { loading: () => <PanelLoading label="Bites" /> });
+const FoodCardFeed = dynamic(() => import('@/components/discover/FoodCardFeed'), { loading: () => <PanelLoading label="Feed" /> });
+const TrimsReel = dynamic(() => import('@/components/trims/TrimsReel'), { ssr: false, loading: () => <PanelLoading label="Trims" /> });
 
-const JUMP_SECTIONS = [
-  { key: 'recipes', label: 'Recipes' },
-  { key: 'restaurants', label: 'Restaurants' },
-  { key: 'videos', label: 'Videos' },
-] as const;
-type JumpSection = (typeof JUMP_SECTIONS)[number]['key'];
-
-const VEG_DIETS = new Set(['vegetarian', 'vegan']);
-
-// The post-login landing page. Three rails, each backed by real data:
-// recipes (aggregateForUser -> get_recommended_recipes RPC, or cuisine/diet
-// overlap with onboarding prefs for a brand-new user), restaurants (browser
-// geolocation -> PlacesService.searchNearby, now with real Places photos),
-// and videos (YouTubeService, keyed to the user's top cuisine). See
-// recommendationService.ts for how each rail decides what "matches your
-// taste" means. Reskinned onto an image-forward, badge-on-scrim card
-// language (reference: real food-delivery-app screenshots) - see
-// _dashboard.scss for the full styling rationale.
 export default function DashboardView() {
   const { user } = useAuth();
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const active: TabKey = isTab(tabParam) ? tabParam : 'foryou';
+  const tabsAnchorRef = useRef<HTMLDivElement>(null);
 
-  const [aggregate, setAggregate] = useState<AggregateResult | null>(null);
+  // Keep Bites/Feed mounted once opened, so switching back is instant and keeps
+  // their scroll/filter state. (Trims unmounts when you leave so videos stop.)
+  const [visited, setVisited] = useState<Set<TabKey>>(() => new Set([active]));
+  if (!visited.has(active)) setVisited(new Set(visited).add(active));
+
+  const selectTab = (key: TabKey) => {
+    if (key === active) return;
+    window.history.pushState(null, '', key === 'foryou' ? window.location.pathname : `?tab=${key}`);
+    // If the tab bar has scrolled under the top bar, bring the new section into view from its start.
+    const anchor = tabsAnchorRef.current;
+    if (anchor && anchor.getBoundingClientRect().top < 0) {
+      window.scrollTo({ top: window.scrollY + anchor.getBoundingClientRect().top - 60, behavior: 'smooth' });
+    }
+  };
+
   const [tasteLoaded, setTasteLoaded] = useState(false);
   const [topCuisine, setTopCuisine] = useState<string | undefined>(undefined);
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_USER_SETTINGS);
@@ -78,40 +97,31 @@ export default function DashboardView() {
 
   const [recipes, setRecipes] = useState<RecommendedRecipe[]>([]);
   const [loadingRecipes, setLoadingRecipes] = useState(true);
-
-  // null = not yet loaded (still requesting geolocation / fetching places).
-  const [restaurants, setRestaurants] = useState<NearbyRestaurant[] | null>(null);
-  const [geoDenied, setGeoDenied] = useState(false);
+  const [curatedById, setCuratedById] = useState<Map<number, CuratedRecipe>>(() => new Map());
+  const [openRecipe, setOpenRecipe] = useState<CuratedRecipe | null>(null);
+  const { saved: savedRecipes, toggleSave: toggleRecipeSave } = useRecipeSaves();
 
   const [videos, setVideos] = useState<SuggestedVideo[]>([]);
   const [loadingVideos, setLoadingVideos] = useState(true);
 
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  // Scrolling down shrinks the tab bar + dock to icons only; scrolling up (or
+  // reaching the top) brings the labels back.
+  const compact = useScrollCompact();
+
+  // Dock Home: back to "For you" at the top of the page.
+  const goHome = () => {
+    selectTab('foryou');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  };
   const [activeVideo, setActiveVideo] = useState<SuggestedVideo | null>(null);
 
-  // Restaurant-pin prompt (Group 2 item 12) - null = not yet known.
+  // Restaurant-pin prompt for business profiles - null = not yet known.
   const [isBusinessProfile, setIsBusinessProfile] = useState<boolean | null>(null);
   const [hasPinnedRestaurant, setHasPinnedRestaurant] = useState<boolean | null>(null);
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
 
-  const [rewardsStats, setRewardsStats] = useState<{ points: number; level: number } | null>(null);
-
-  const [searchText, setSearchText] = useState('');
-  const [vegOnly, setVegOnly] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState<JumpSection>('recipes');
-
-  const recipesRef = useRef<HTMLDivElement | null>(null);
-  const restaurantsRef = useRef<HTMLDivElement | null>(null);
-  const videosRef = useRef<HTMLDivElement | null>(null);
-  const sectionRefs: Record<JumpSection, RefObject<HTMLDivElement | null>> = {
-    recipes: recipesRef,
-    restaurants: restaurantsRef,
-    videos: videosRef,
-  };
-
-  // Taste aggregate + recipes + videos - all keyed off the user's own data,
-  // no location needed.
+  // Taste aggregate + recipes + videos - all keyed off the user's own data, no location needed.
   useEffect(() => {
     if (!user) return;
     let cancelled = false;
@@ -133,15 +143,15 @@ export default function DashboardView() {
         getOnboardingPrefs(user.id),
       ]);
       if (cancelled) return;
-      setAggregate(aggregateResult);
       setTasteLoaded(true);
-      setVegOnly(prefs.dietary.some((d) => VEG_DIETS.has(d.toLowerCase())));
       const cuisine = pickTopCuisine(aggregateResult, prefs.cuisines);
       setTopCuisine(cuisine);
 
-      const recipeResults = await getRecommendedRecipes(user.id, aggregateResult, prefs);
+      const [recipeResults, curated] = await Promise.all([getRecommendedRecipes(user.id, aggregateResult, prefs, 12), fetchCuratedRecipes()]);
       if (!cancelled) {
         setRecipes(recipeResults);
+        // Full recipes (ingredients/steps/nutrition) for the cards' detail view.
+        setCuratedById(new Map(curated.map((r) => [r.id, r])));
         setLoadingRecipes(false);
       }
 
@@ -150,11 +160,6 @@ export default function DashboardView() {
         setVideos(videoResults);
         setLoadingVideos(false);
       }
-
-      const statsResult = await PointsService.getUserStats(user.id);
-      if (!cancelled && statsResult.success && statsResult.data) {
-        setRewardsStats({ points: statsResult.data.points, level: statsResult.data.level });
-      }
     })();
 
     return () => {
@@ -162,12 +167,7 @@ export default function DashboardView() {
     };
   }, [user]);
 
-  // Restaurant-pin prompt: business-type profiles get nudged to pin their
-  // own place via the existing Scout Restaurant-family Create Card flow -
-  // every pin grows FUZO's own local-establishment dataset (the whole point
-  // of prompting, not just allowing it). Gated on card_type, not just "any
-  // food_cards exist," since a restaurant owner could have published a
-  // recipe card first without ever pinning their own place.
+  // Business profiles get nudged to pin their own place (grows FUZO's local dataset).
   useEffect(() => {
     if (!user) return;
     let cancelled = false;
@@ -183,7 +183,6 @@ export default function DashboardView() {
         setHasPinnedRestaurant(true);
         return;
       }
-
       const { data: pinnedCard } = await supabase
         .from('food_cards')
         .select('id')
@@ -199,291 +198,189 @@ export default function DashboardView() {
     };
   }, [user]);
 
-  // Nearby restaurants - waits for taste data (so matchesTaste is meaningful)
-  // and browser geolocation consent. Extracted so the empty-state's "Enable
-  // Location" button can retry the same request on demand, not just the
-  // one automatic attempt on load.
-  const requestLocation = () => {
-    if (typeof navigator === 'undefined' || !navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        setGeoDenied(false);
-        const results = await getNearbyRestaurants(position.coords.latitude, position.coords.longitude, topCuisine, {
-          radiusKm: settings.discoveryRadiusKm,
-          hiddenGems: settings.showHiddenGems,
-          luxury: dnaLuxury,
-        });
-        setRestaurants(results);
-      },
-      () => {
-        setGeoDenied(true);
-      },
-    );
-  };
+  // Restaurants (Google + FUZO) near the user's GPS location or saved home area.
+  const { loc, recommended, nearest, retryGps, setPickedLocation, chooseHomeArea } = useNearbyPlaces({
+    enabled: tasteLoaded,
+    topCuisine,
+    radiusKm: settings.discoveryRadiusKm,
+    hiddenGems: settings.showHiddenGems,
+    luxury: dnaLuxury,
+  });
 
-  useEffect(() => {
-    if (!tasteLoaded) return;
-    requestLocation();
-    // Deliberately runs once taste data is ready, not on every topCuisine change -
-    // re-requesting geolocation on every render would be a bad prompt experience.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasteLoaded]);
+  const placePreviews = (list: DashPlace[] | null) => list?.slice(0, 10).map((p) => p.image);
+  const usingHome = loc.status === 'ready' && loc.source === 'home';
+  const restaurantSub = (base: string) => (usingHome ? `${base} · near your home area` : base);
 
-  const visibleRecipes = useMemo(() => {
-    const search = searchText.trim().toLowerCase();
-    return recipes.filter((recipe) => {
-      if (search && !recipe.title.toLowerCase().includes(search)) return false;
-      if (activeCategory && !recipe.title.toLowerCase().includes(activeCategory)) return false;
-      if (vegOnly && !recipe.diets.some((d) => VEG_DIETS.has(d.toLowerCase()))) return false;
-      return true;
-    });
-  }, [recipes, searchText, activeCategory, vegOnly]);
-
-  const pointsToNextLevel = rewardsStats ? POINTS_PER_LEVEL - (rewardsStats.points % POINTS_PER_LEVEL) : 0;
-
-  const scrollToSection = (section: JumpSection) => {
-    setActiveSection(section);
-    sectionRefs[section].current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const restaurantRail = (list: DashPlace[] | null, lens: 'match' | 'distance') => {
+      if (loc.status === 'unavailable') {
+        return (
+          <div className="fz-dash-notice">
+            <span className="fz-dash-notice__icon">
+              <MapPin size={20} />
+            </span>
+            <span className="fz-dash-notice__text">
+              <strong>We don&apos;t know where you are yet</strong>
+              <span>Turn on location, or set your home area so we can show places near you.</span>
+            </span>
+            <span className="fz-dash-notice__actions">
+              <button type="button" className="fz-dash-notice__btn" onClick={retryGps}>
+                <LocateFixed size={14} /> Use my location
+              </button>
+              <Link href="/profile?tab=settings" className="fz-dash-notice__link">
+                Set home area
+              </Link>
+            </span>
+          </div>
+        );
+      }
+      if (list === null) return <SkeletonCards />;
+      if (list.length === 0) return <div className="fz-dash-rail__empty">No restaurants found nearby yet - try a bigger discovery radius in Settings.</div>;
+      return list.slice(0, 10).map((place) => <DashPlaceCard key={place.key} place={place} lens={lens} />);
   };
 
   if (!user) {
     return (
-      <div className="dashboard-view">
-        <div className="dashboard-empty">Sign in to see your recommendations.</div>
+      <div className="fz-dash">
+        <div className="fz-dash__signin">Sign in to see your recommendations.</div>
       </div>
     );
   }
 
-  const displayName = (user.user_metadata?.display_name as string | undefined) || user.email?.split('@')[0] || 'there';
-
   return (
-    <div className="dashboard-view">
-      {/* Hero greeting band */}
-      <div className="dashboard-hero">
-        <div className="dashboard-hero__title">Hey, {displayName} 👋</div>
-        <div className="dashboard-hero__sub">Recommendations tuned to your taste, wherever you are.</div>
+    <div className="fz-dash">
+      {/* The top bar is the app-wide SiteHeader (same on every page). */}
+      <main className="fz-dash__body">
+        {/* ── For you · Bites · Feed · Trims (switch in place) ─────────── */}
+        <div ref={tabsAnchorRef} className="fz-dash-tabs-wrap">
+          <HomeTabs tabs={TABS} active={active} onChange={selectTab} compact={compact} />
+        </div>
 
-        {isBusinessProfile && hasPinnedRestaurant === false ? (
-          <div className="dashboard-hero__nudge">
-            <div>
-              <div className="dashboard-nudge__text">Your restaurant isn&apos;t pinned yet.</div>
-              <div className="dashboard-nudge__sub">Pin your place so FUZO users can discover it on Scout — it only takes a minute.</div>
-            </div>
-            <button type="button" className="dashboard-nudge__cta" onClick={() => setIsPinModalOpen(true)}>
-              <MapPin size={14} /> Pin My Restaurant
-            </button>
-          </div>
-        ) : (
-          tasteLoaded && aggregate?.sampleSize === 0 && (
-            <div className="dashboard-hero__nudge">
+        {/* For you */}
+        <div role="tabpanel" id="home-panel-foryou" aria-labelledby="home-tab-foryou" hidden={active !== 'foryou'} className="fz-dash-panel">
+          {isBusinessProfile && hasPinnedRestaurant === false && (
+            <div className="fz-dash-nudge">
               <div>
-                <div className="dashboard-nudge__text">You haven&apos;t created any food cards yet.</div>
-                <div className="dashboard-nudge__sub">Recipes below are based on your onboarding preferences — create a card to sharpen them.</div>
+                <strong>Your restaurant isn&apos;t pinned yet.</strong>
+                <span>Pin your place so FUZO users can find it on Scout.</span>
               </div>
-              <button type="button" className="dashboard-nudge__cta" onClick={() => setIsCreateOpen(true)}>
-                <Plus size={14} /> Create a Card
+              <button type="button" onClick={() => setIsPinModalOpen(true)}>
+                <MapPin size={14} /> Pin it
               </button>
             </div>
-          )
-        )}
-      </div>
+          )}
 
-      {/* Quick-nav pills */}
-      <div className="dashboard-quicknav">
-        {QUICK_NAV.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className={`dashboard-quicknav__pill${pathname === href ? ' is-active' : ''}`}
-          >
-            <Icon size={16} />
-            {label}
-          </Link>
-        ))}
-      </div>
+          {/* Which location For you uses - and a way to fix it when the browser's guess is wrong. */}
+          {/* No location yet: the full card (the cities section is hidden then).
+              Otherwise the location is a compact control in the cities header. */}
+          {loc.status === 'unavailable' && (
+            <LocationChip loc={loc} onUseCurrent={retryGps} onUseHome={chooseHomeArea} onPick={setPickedLocation} />
+          )}
 
-      {/* Search + veg toggle */}
-      <div className="dashboard-search">
-        <div className="dashboard-search__bar">
-          <Search size={16} />
-          <input
-            type="text"
-            placeholder="Search your recommended recipes…"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+          <NearbyCities
+            loc={loc}
+            locationSlot={
+              <LocationChip variant="inline" loc={loc} onUseCurrent={retryGps} onUseHome={chooseHomeArea} onPick={setPickedLocation} />
+            }
           />
-        </div>
-        <button
-          type="button"
-          className={`dashboard-veg-toggle${vegOnly ? ' is-active' : ''}`}
-          onClick={() => setVegOnly((v) => !v)}
-          aria-pressed={vegOnly}
-        >
-          <Leaf size={14} />
-          Veg
-        </button>
-      </div>
 
-      {/* Section-jump pills */}
-      <div className="dashboard-jumpnav">
-        {JUMP_SECTIONS.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            className={activeSection === key ? 'is-active' : undefined}
-            onClick={() => scrollToSection(key)}
+          <Rail
+            title="Recommended Restaurants"
+            sub={restaurantSub('On FUZO & picked for your taste')}
+            link={{ href: '/scout', label: 'Scout' }}
+            previews={placePreviews(recommended)}
           >
-            {label}
-          </button>
-        ))}
-      </div>
+            {restaurantRail(recommended, 'match')}
+          </Rail>
 
-      {/* Real rewards promo banner */}
-      {rewardsStats && (
-        <Link href="/rewards" className="dashboard-promo">
-          <div>
-            <div className="dashboard-promo__title">
-              <span className="dashboard-promo__level">Level {rewardsStats.level}</span> · {pointsToNextLevel} pts to next level
-            </div>
-            <div className="dashboard-promo__sub">Publish and share cards to keep leveling up</div>
-          </div>
-          <span className="dashboard-promo__cta">View Rewards →</span>
-        </Link>
-      )}
+          <Rail title="Near You" sub={restaurantSub('Closest first')} link={{ href: '/scout', label: 'Map' }} previews={placePreviews(nearest)}>
+            {restaurantRail(nearest, 'distance')}
+          </Rail>
 
-      {/* Category shortcuts */}
-      <div className="dashboard-categories">
-        {CATEGORY_SHORTCUTS.map((cat, i) => (
-          <button
-            key={cat.keyword}
-            type="button"
-            className={`dashboard-categories__item${activeCategory === cat.keyword ? ' is-active' : ''}`}
-            onClick={() => setActiveCategory((prev) => (prev === cat.keyword ? null : cat.keyword))}
+          <Rail
+            title="Your Taste"
+            sub={topCuisine ? `Because you love ${topCuisine}` : 'Recipes matched to your flavour profile'}
+            previews={recipes.map((r) => r.image)}
           >
-            {/* Rotating pastel tint (1-5) - same tile system as _components.scss's .fz-tile,
-                kept as its own modifier here since this icon is round, not the square tile shape. */}
-            <span className={`dashboard-categories__icon dashboard-categories__icon--${(i % 5) + 1}`}>
-              <img src={cat.icon} alt="" />
-            </span>
-            <span className="dashboard-categories__label">{cat.label}</span>
-          </button>
-        ))}
-      </div>
-
-      <section className="dashboard-section" ref={recipesRef}>
-        <div className="dashboard-section__head">
-          <span className="dashboard-section__title">Recommended Recipes</span>
-          <span className="dashboard-section__sub">{aggregate?.sampleSize ? 'Matched to your flavor profile' : 'From your onboarding preferences'}</span>
-        </div>
-        {loadingRecipes ? (
-          <div className="dashboard-empty">Loading recipes…</div>
-        ) : visibleRecipes.length === 0 ? (
-          <div className="dashboard-empty">No recipe matches yet.</div>
-        ) : (
-          <div className="dashboard-recipe-grid">
-            {visibleRecipes.map((recipe) => (
-              <div key={recipe.id} className="dashboard-card">
-                <div className="dashboard-card__image" style={{ backgroundImage: `url(${recipe.image})` }}>
-                  <span className="dashboard-card__badge dashboard-card__badge--scrim">
-                    <Clock size={11} /> {recipe.readyInMinutes}m
-                  </span>
-                </div>
-                <div className="dashboard-card__body">
-                  <div className="dashboard-card__title">{recipe.title}</div>
-                  <span className="dashboard-card__pick">{recipe.matchReason}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section className="dashboard-section" ref={restaurantsRef}>
-        <div className="dashboard-section__head">
-          <span className="dashboard-section__title">Restaurants Near You</span>
-          <Link href="/scout" className="dashboard-section__sub">Open Scout →</Link>
-        </div>
-        {geoDenied ? (
-          <div className="dashboard-empty dashboard-empty--location">
-            <div className="dashboard-empty__icon">
-              <MapPin size={20} />
-            </div>
-            <p className="mb-3">Enable location access to see restaurants near you.</p>
-            <button type="button" className="dashboard-empty__cta" onClick={requestLocation}>
-              <LocateFixed size={14} /> Enable Location
-            </button>
-          </div>
-        ) : restaurants === null ? (
-          <div className="dashboard-empty">Finding restaurants near you…</div>
-        ) : restaurants.length === 0 ? (
-          <div className="dashboard-empty">No nearby restaurants found.</div>
-        ) : (
-          <div className="dashboard-recipe-grid">
-            {restaurants.slice(0, 6).map((place) => (
-              <div key={place.placeId || place.name} className="dashboard-card">
-                <div
-                  className="dashboard-card__image"
-                  style={place.image ? { backgroundImage: `url(${place.image})` } : undefined}
-                >
-                  {Number.isFinite(place.distanceMeters) && (
-                    <span className="dashboard-card__badge dashboard-card__badge--scrim">
-                      <MapPin size={11} /> {(place.distanceMeters / 1000).toFixed(1)} km
+            {loadingRecipes ? (
+              <SkeletonCards />
+            ) : recipes.length === 0 ? (
+              <div className="fz-dash-rail__empty">No recipe matches yet - create a card to teach FUZO your taste.</div>
+            ) : (
+              recipes.map((recipe) => {
+                const full = curatedById.get(recipe.id);
+                const inner = (
+                  <>
+                    <img className="fz-dash-card__img" src={recipe.image} alt="" loading="lazy" />
+                    <span className="fz-dash-card__shade" />
+                    <span className="fz-dash-card__chip">
+                      <Clock size={11} /> {recipe.readyInMinutes}m
                     </span>
-                  )}
-                  {place.matchesTaste && <span className="dashboard-card__badge dashboard-card__badge--match">Matches your taste</span>}
-                </div>
-                <div className="dashboard-card__body">
-                  <div className="dashboard-card__title">{place.name}</div>
-                  <div className="dashboard-card__meta">
-                    <span className="dashboard-card__meta-row">
-                      {place.rating != null && (
-                        <span className="dashboard-card__rating">
-                          <Star size={11} fill="currentColor" /> {place.rating}
-                        </span>
-                      )}
-                      <span className="dashboard-card__vicinity">{place.vicinity}</span>
+                    <span className="fz-dash-card__body">
+                      <span className="fz-dash-card__title">{recipe.title}</span>
+                      <span className="fz-dash-card__sub fz-dash-card__sub--gold">{recipe.matchReason}</span>
                     </span>
+                  </>
+                );
+                // Opens the full recipe (ingredients, steps, nutrition, save) when we have it.
+                return full ? (
+                  <button key={recipe.id} type="button" className="fz-dash-card" onClick={() => setOpenRecipe(full)} aria-label={`Open recipe: ${recipe.title}`}>
+                    {inner}
+                  </button>
+                ) : (
+                  <div key={recipe.id} className="fz-dash-card fz-dash-card--static">
+                    {inner}
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+                );
+              })
+            )}
+          </Rail>
 
-      <section className="dashboard-section" ref={videosRef}>
-        <div className="dashboard-section__head">
-          <span className="dashboard-section__title">Watch &amp; Cook</span>
-          <span className="dashboard-section__sub">{topCuisine ? `${topCuisine} on YouTube` : 'Trending recipes'}</span>
+          {(loadingVideos || videos.length > 0) && (
+            <Rail title="Watch & Cook" sub={topCuisine ? `${topCuisine} on YouTube` : 'Trending recipes'} wide previews={videos.map((v) => v.thumbnail)}>
+              {loadingVideos ? (
+                <SkeletonCards wide />
+              ) : (
+                videos.map((video) => (
+                  <button key={video.videoId} type="button" className="fz-dash-card fz-dash-card--wide" onClick={() => setActiveVideo(video)} aria-label={`Play: ${video.title}`}>
+                    {video.thumbnail && <img className="fz-dash-card__img" src={video.thumbnail} alt="" loading="lazy" />}
+                    <span className="fz-dash-card__shade" />
+                    <span className="fz-dash-card__play">
+                      <Play size={18} fill="currentColor" />
+                    </span>
+                    <span className="fz-dash-card__body">
+                      <span className="fz-dash-card__title">{video.title}</span>
+                      <span className="fz-dash-card__sub">{video.channelTitle}</span>
+                    </span>
+                  </button>
+                ))
+              )}
+            </Rail>
+          )}
         </div>
-        {loadingVideos ? (
-          <div className="dashboard-empty">Loading videos…</div>
-        ) : videos.length === 0 ? null : (
-          <div className="dashboard-video-grid">
-            {videos.map((video) => (
-              <button
-                key={video.videoId}
-                type="button"
-                onClick={() => setActiveVideo(video)}
-                className="dashboard-video-card"
-              >
-                <div className="dashboard-video-card__thumb">
-                  {video.thumbnail && <img src={video.thumbnail} alt="" />}
-                  <span className="dashboard-video-card__play">
-                    <Play size={18} fill="currentColor" />
-                  </span>
-                </div>
-                <div className="dashboard-video-card__body">
-                  <div className="dashboard-video-card__title">{video.title}</div>
-                  <div className="dashboard-video-card__channel">{video.channelTitle}</div>
-                </div>
-              </button>
-            ))}
+
+        {/* Bites / Feed stay mounted once opened; Trims only while active. */}
+        {visited.has('bites') && (
+          <div role="tabpanel" id="home-panel-bites" aria-labelledby="home-tab-bites" hidden={active !== 'bites'} className="fz-dash-panel fz-dash-panel--bites">
+            <BitesView />
           </div>
         )}
-      </section>
+        {visited.has('feed') && (
+          <div role="tabpanel" id="home-panel-feed" aria-labelledby="home-tab-feed" hidden={active !== 'feed'} className="fz-dash-panel fz-dash-panel--feed">
+            <FoodCardFeed />
+          </div>
+        )}
+        {active === 'trims' && (
+          <div role="tabpanel" id="home-panel-trims" aria-labelledby="home-tab-trims" className="fz-dash-panel fz-dash-panel--trims">
+            <div className="fz-dash-reel">
+              <TrimsReel />
+            </div>
+          </div>
+        )}
+      </main>
 
-      {isCreateOpen && <CreateCardModal onClose={() => setIsCreateOpen(false)} />}
+      {/* ── Bottom dock: Explore | Create | raised Home | My Plate | Rewards ── */}
+      <AppDock compact={compact} onHome={goHome} homeActive={active === 'foryou'} />
+
       {isPinModalOpen && (
         <ScoutAddPinModal
           cardType="RESTAURANT_VISIT"
@@ -496,6 +393,15 @@ export default function DashboardView() {
           title={activeVideo.title}
           mediaUrl={`https://www.youtube.com/watch?v=${activeVideo.videoId}`}
           onClose={() => setActiveVideo(null)}
+        />
+      )}
+      {openRecipe && (
+        <RecipeDetailModal
+          recipe={openRecipe}
+          initialTab="ingredients"
+          saved={savedRecipes.has(openRecipe.id)}
+          onToggleSave={() => toggleRecipeSave(openRecipe)}
+          onClose={() => setOpenRecipe(null)}
         />
       )}
     </div>

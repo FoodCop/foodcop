@@ -1,0 +1,335 @@
+// ============================================================================
+// NOTIFICATIONS (NotificationsView.tsx) - profile page language: warm page
+// background, heading-font title, .fz-profile-tab filter pills, a yellow
+// points summary card, raised paper rows (avatar or icon tile · text · time),
+// day-group labels, yellow "new" dots and +points chips.
+// ============================================================================
+
+.fz-notif {
+  min-height: calc(100dvh - #{$fz-topbar-space});
+  background: transparent; // app-wide gradient
+  padding: 1.75rem 1rem 4rem;
+
+  @media (min-width: 768px) { padding-top: 2.75rem; }
+
+  &__inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  &__head { margin-bottom: 1.1rem; }
+
+  &__title {
+    margin: 0;
+    font-family: $headings-font-family;
+    font-size: 2.3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: $fz-ink;
+
+    @media (min-width: 768px) { font-size: 2.8rem; }
+  }
+
+  &__sub {
+    margin: 0.4rem 0 0;
+    font-size: 0.9rem;
+    color: $fz-ink-soft;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+
+    .fz-profile-tab { gap: 0.4rem; box-shadow: $fz-shadow-sm; }
+    .fz-profile-tab:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__count {
+    min-width: 1.2rem;
+    padding: 0 0.3rem;
+    border-radius: 9999px;
+    background: $chili;
+    color: #fff;
+    font-size: 0.66rem;
+    font-weight: 800;
+    line-height: 1.2rem;
+  }
+
+  // Points this week -> Rewards.
+  &__summary {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+    padding: 0.95rem 1.1rem;
+    border-radius: 20px;
+    background: linear-gradient(120deg, $fz-cream 0%, $fuzo-yellow-tint 100%);
+    border: 1px solid rgba($fuzo-yellow, 0.45);
+    box-shadow: $fz-shadow-card;
+    color: $fz-ink;
+    text-decoration: none;
+    transition: transform 0.2s $fz-ease, box-shadow 0.2s $fz-ease;
+
+    &:hover { color: $fz-ink; transform: translateY(-2px); box-shadow: $fz-shadow-card-hover; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__summary-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 6px 14px -4px rgba($fuzo-yellow-deep, 0.55);
+  }
+
+  &__summary-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+
+    strong { font-family: $headings-font-family; font-size: 1.2rem; font-weight: 800; line-height: 1.1; }
+    span { font-size: 0.78rem; line-height: 1.35; color: $fz-ink-soft; }
+  }
+
+  &__summary-go {
+    flex-shrink: 0;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    background: $fz-ink;
+    color: $fuzo-yellow;
+    font-size: 0.74rem;
+    font-weight: 800;
+  }
+
+  &__section { margin-bottom: 1.5rem; }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.6rem 0.25rem;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $fz-ink-soft;
+
+    &--new { color: $fuzo-yellow-deep; }
+  }
+
+  &__label-count {
+    padding: 0 0.4rem;
+    border-radius: 9999px;
+    background: $chili;
+    color: #fff;
+    letter-spacing: 0;
+    line-height: 1.2rem;
+  }
+
+  // Rows sit in one raised paper card, divided by hairlines.
+  &__list {
+    overflow: hidden;
+    border-radius: 20px;
+    background: $fz-paper;
+    border: 1px solid rgba($fz-border, 0.8);
+    box-shadow: $fz-shadow-card;
+  }
+
+  &__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    color: $fz-ink;
+    text-decoration: none;
+    transition: background 0.15s ease;
+
+    & + & { border-top: 1px solid rgba($fz-border, 0.8); }
+
+    @at-root a#{&}:hover { background: $fz-cream; color: $fz-ink; }
+    @at-root a#{&}:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: -2px; }
+
+    &.is-new { background: rgba($fuzo-yellow-tint, 0.55); }
+
+    &--request {
+      flex-wrap: wrap;
+      @media (min-width: 560px) { flex-wrap: nowrap; }
+    }
+
+    &--ghost { pointer-events: none; }
+  }
+
+  &__avatar {
+    position: relative;
+    flex-shrink: 0;
+    display: inline-flex;
+    border-radius: 50%;
+    text-decoration: none;
+  }
+
+  // Small yellow mark on the avatar (e.g. "accepted").
+  &__badge {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    border: 2px solid $fz-paper;
+  }
+
+  // Icon tile for point awards.
+  &__icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.35;
+      color: $fz-ink;
+    }
+    strong { font-weight: 800; }
+    a { color: inherit; text-decoration: none; }
+    a:hover strong { text-decoration: underline; text-decoration-color: $fuzo-yellow; text-underline-offset: 3px; }
+  }
+
+  &__time {
+    font-size: 0.74rem;
+    line-height: 1.2;
+    color: $fz-ink-soft;
+  }
+
+  &__points {
+    flex-shrink: 0;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.78rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $fuzo-yellow-deep;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.45rem;
+    width: 100%;
+    padding-left: calc(44px + 0.85rem);
+
+    @media (min-width: 560px) { width: auto; padding-left: 0; }
+  }
+
+  &__btn {
+    padding: 0.42rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover:not(:disabled) { transform: translateY(-1px); }
+    &:disabled { opacity: 0.55; cursor: default; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+    &--accept {
+      border: 0;
+      background: $fuzo-yellow;
+      color: $fuzo-yellow-ink;
+      box-shadow: 0 4px 12px -2px rgba($fuzo-yellow-deep, 0.5);
+      &:hover:not(:disabled) { background: mix(#fff, $fuzo-yellow, 15%); }
+    }
+    &--decline {
+      border: 1px solid $fz-border;
+      background: $fz-paper;
+      color: $fz-ink;
+      &:hover:not(:disabled) { background: $fz-cream; }
+    }
+  }
+
+  // Loading placeholders.
+  &__ghost-icon,
+  &__ghost-lines span {
+    background: linear-gradient(100deg, #efe8d8 20%, #f8f4ea 40%, #efe8d8 60%);
+    background-size: 200% 100%;
+    animation: fz-feed-shimmer 1.3s linear infinite;
+  }
+  &__ghost-icon { width: 44px; height: 44px; border-radius: 14px; flex-shrink: 0; }
+  &__ghost-lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    span { display: block; height: 10px; border-radius: 9999px; }
+    span:first-child { width: 70%; }
+    span:last-child { width: 25%; }
+  }
+
+  &__empty {
+    padding: 3.5rem 1rem;
+    border-radius: 20px;
+    background: $fz-paper;
+    border: 1px solid rgba($fz-border, 0.8);
+    box-shadow: $fz-shadow-card;
+    text-align: center;
+  }
+  &__empty-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 0.8rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+  }
+  &__empty-title { font-weight: 800; font-size: 1.05rem; color: $fz-ink; }
+  &__empty-sub { margin: 0.35rem auto 0; max-width: 280px; font-size: 0.85rem; color: $fz-ink-soft; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-notif__ghost-icon, .fz-notif__ghost-lines span { animation: none; }
+  .fz-notif__summary, .fz-notif__btn { transition: none; }
+}
