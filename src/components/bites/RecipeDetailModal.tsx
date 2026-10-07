@@ -7,6 +7,7 @@ import type { CuratedRecipe } from '@/lib/recipes/curatedRecipes';
 import { PlateService } from '@/lib/services/plateService';
 import { useAuth } from '@/components/auth/AuthProvider';
 import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
+import { htmlToText } from '@/lib/utils/text';
 
 // Shared recipe pieces used by the Bites tab (BitesView) and the dashboard's
 // "Your Taste" row: the detail modal (ingredients / steps / nutrition + save)
@@ -84,7 +85,7 @@ export function useRecipeSaves() {
               instructions:
                 recipe.analyzedInstructions.length > 0
                   ? recipe.analyzedInstructions.map((step) => `${step.number}. ${step.step}`).join('\n')
-                  : recipe.instructions.replace(/<[^>]+>/g, ''),
+                  : htmlToText(recipe.instructions),
             },
           },
         });
@@ -258,7 +259,7 @@ function RecipeDetailDialog({
                   ))}
                 </ol>
               ) : (
-                <p className="fz-recipe__fallback">{recipe.instructions.replace(/<[^>]+>/g, '') || 'No steps available.'}</p>
+                <p className="fz-recipe__fallback">{htmlToText(recipe.instructions) || 'No steps available.'}</p>
               ))}
 
             {tab === 'nutrition' &&
