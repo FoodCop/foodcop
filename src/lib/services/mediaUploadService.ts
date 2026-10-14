@@ -15,12 +15,13 @@ const PROFILE_BUCKET = 'profile-media';
 const FOOD_MOMENTS_BUCKET = 'food-moments';
 
 // Big camera photos are shrunk before upload (max 1600px, JPEG) - faster, and keeps well under bucket size limits.
-async function downscaleImage(blob: Blob, maxSide = 1600): Promise<Blob> {
+// alwaysReencode: re-save even small photos, which also drops their EXIF data (e.g. the GPS spot it was taken).
+async function downscaleImage(blob: Blob, maxSide = 1600, alwaysReencode = false): Promise<Blob> {
   try {
     if (typeof createImageBitmap === 'undefined' || typeof document === 'undefined') return blob;
     const bitmap = await createImageBitmap(blob);
     const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
-    if (scale === 1 && blob.size < 1_500_000) { bitmap.close(); return blob; }
+    if (!alwaysReencode && scale === 1 && blob.size < 1_500_000) { bitmap.close(); return blob; }
     const canvas = document.createElement('canvas');
     canvas.width = Math.round(bitmap.width * scale);
     canvas.height = Math.round(bitmap.height * scale);
@@ -71,6 +72,29 @@ export const MediaUploadService = {
 
     const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
     return { success: true, data: data.publicUrl };
+  },
+
+  /**
+   * A photo for a Create flow post (camera shot or gallery pick, as a Blob).
+   * Shrunk to at most 1600px, stored under the user's own folder in
+   * food-card-media with an unguessable name, and returned as a public URL.
+   */
+  async uploadPostPhoto(photo: Blob): Promise<ServiceResult<string>> {
+    const supabase = createClient();
+    if (!supabase) return { success: false, error: 'Supabase is not configured' };
+    const { data: authData } = await supabase.auth.getUser();
+    const userId = authData?.user?.id;
+    if (!userId) return { success: false, error: 'You must be logged in to post a photo' };
+
+    // Always re-saved as JPEG: public photos must not carry the phone's EXIF
+    // data (the exact spot it was taken, the device).
+    const blob = await downscaleImage(photo, 1600, true);
+    if (blob.type !== 'image/jpeg') return { success: false, error: `This photo type can't be posted (${photo.type || 'unknown'}). Try a JPEG or PNG.` };
+    const path = `${userId}/post-${uploadId()}.jpg`;
+
+    const { error } = await supabase.storage.from(BUCKET).upload(path, blob, { contentType: 'image/jpeg', cacheControl: '31536000', upsert: false });
+    if (error) return { success: false, error: error.message };
+    return { success: true, data: supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl };
   },
 
   /**

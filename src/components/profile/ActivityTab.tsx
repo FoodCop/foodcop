@@ -198,6 +198,12 @@ function getCardBadgeLabel(cardType?: string): string {
       return 'RECOMMENDATION';
     case 'FOOD_COLLECTION':
       return 'COLLECTION';
+    case 'VIBE_PHOTO':
+      return 'VIBE';
+    case 'FOOD_PHOTO':
+      return 'FOOD';
+    case 'RESTAURANT_PHOTO':
+      return 'RESTAURANT';
     default:
       return cardType.replace(/_/g, ' ').toUpperCase();
   }
