@@ -1,5 +1,6 @@
 'use client';
 
+import { postSharePayload } from '@/lib/share/postShare';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Bookmark, Heart, Share2, X } from 'lucide-react';
 import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
@@ -162,26 +163,8 @@ export default function FoodCardFeed() {
   const [sharing, setSharing] = useState<SharePayload | null>(null);
   function shareCard(feedCard: FeedCard) {
     const { card, author } = feedCard;
-    const meta = TYPE_META[card.card_type];
-    setSharing({
-      title: card.title,
-      subtitle: `${meta.label} · by ${author.displayName}`,
-      image: card.image_url ?? undefined,
-      url: `/profile/${author.id}`,
-      text: `Check out "${card.title}" by ${author.displayName} on FUZO`,
-      item: {
-        id: card.id,
-        itemId: card.id,
-        itemType: 'food_card', // chat opens it in the food-card viewer
-        type: meta.label,
-        title: card.title,
-        cat: meta.label,
-        img: card.image_url ?? undefined,
-        caption: card.caption ?? undefined,
-        author: author.displayName,
-        placeId: card.place_id ?? undefined,
-      },
-    });
+    // The link opens the post itself (/post/<id>; sign-up first for new people).
+    setSharing(postSharePayload(card, author.displayName));
   }
 
   // Swipe down: save to My Plate (saved_items - the same pipeline as every other save).

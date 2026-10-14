@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Search, SlidersHorizontal, Clock, Users, Bookmark } from 'lucide-react';
-import { fetchCuratedRecipes, type CuratedRecipe } from '@/lib/recipes/curatedRecipes';
+import { Search, SlidersHorizontal, Clock, Users, Bookmark, ChefHat } from 'lucide-react';
+import { fetchCuratedRecipes, type BiteRecipe } from '@/lib/recipes/curatedRecipes';
+import { fetchCommunityRecipes } from '@/lib/recipes/communityRecipes';
 import { BITE_DIET_FILTERS, BITE_CUISINE_FILTERS, matchesFilter } from './constants/filters';
 import { RecipeDetailModal, handleImageError, useRecipeSaves, type RecipeModalTab } from './RecipeDetailModal';
 
@@ -21,27 +22,29 @@ type ModalTab = RecipeModalTab;
 
 export function BitesView() {
   const viewRef = useRef<HTMLDivElement>(null);
-  const [recipes, setRecipes] = useState<CuratedRecipe[]>([]);
+  const [recipes, setRecipes] = useState<BiteRecipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [activeDiet, setActiveDiet] = useState<string | null>(null);
   const [activeCuisine, setActiveCuisine] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
-  const [page, setPage] = useState(0);
-  const [modalState, setModalState] = useState<{ recipe: CuratedRecipe; tab: ModalTab } | null>(null);
-  const { saved, toggleSave } = useRecipeSaves();
+  const [modalState, setModalState] = useState<{ recipe: BiteRecipe; tab: ModalTab } | null>(null);
+  const { isSaved, toggleSave } = useRecipeSaves();
 
-  const openModal = (recipe: CuratedRecipe, tab: ModalTab) => setModalState({ recipe, tab });
+  const openModal = (recipe: BiteRecipe, tab: ModalTab) => setModalState({ recipe, tab });
 
   useEffect(() => {
     let cancelled = false;
-    fetchCuratedRecipes().then((all) => {
+    // FUZO members' recipes first (newest), then the curated set. A failed
+    // community load still shows the curated recipes.
+    Promise.all([fetchCommunityRecipes().catch(() => [] as BiteRecipe[]), fetchCuratedRecipes()]).then(([community, curated]) => {
       if (cancelled) return;
+      const all: BiteRecipe[] = [...community, ...curated];
       setRecipes(all);
       setLoading(false);
       // Shared recipe links (/dashboard?tab=bites&recipe=<id>) open that recipe.
-      const sharedId = Number(new URLSearchParams(window.location.search).get('recipe'));
-      const shared = sharedId ? all.find((r) => r.id === sharedId) : undefined;
+      const sharedId = new URLSearchParams(window.location.search).get('recipe');
+      const shared = sharedId ? all.find((r) => String(r.id) === sharedId) : undefined;
       if (shared) setModalState({ recipe: shared, tab: 'ingredients' });
     });
     return () => {
@@ -49,9 +52,11 @@ export function BitesView() {
     };
   }, []);
 
-  useEffect(() => {
-    setPage(0);
-  }, [query, activeDiet, activeCuisine]);
+  // Back to page 1 whenever the search or filters change (derived, no effect).
+  const filterKey = `${query}|${activeDiet ?? ''}|${activeCuisine ?? ''}`;
+  const [pageAt, setPageAt] = useState({ key: filterKey, page: 0 });
+  const page = pageAt.key === filterKey ? pageAt.page : 0;
+  const setPage = (next: number) => setPageAt({ key: filterKey, page: next });
 
   const dietFilter = BITE_DIET_FILTERS.find((f) => f.label === activeDiet) ?? null;
   const cuisineFilter = BITE_CUISINE_FILTERS.find((f) => f.label === activeCuisine) ?? null;
@@ -160,7 +165,7 @@ export function BitesView() {
         <>
           <div className="bites-grid">
             {pageItems.map((recipe) => {
-              const isSaved = saved.has(recipe.id);
+              const recipeSaved = isSaved(recipe);
               // Same card as the dashboard's For you rows (fz-dash-card): full-bleed
               // photo, dark scrim, frosted chips, title on the photo.
               return (
@@ -181,26 +186,40 @@ export function BitesView() {
                   <img className="fz-dash-card__img" src={recipe.image} alt="" loading="lazy" onError={handleImageError} />
                   <span className="fz-dash-card__shade" />
                   <span className="fz-dash-card__chip">
-                    <Clock size={11} /> {recipe.readyInMinutes}m
+                    {recipe.author ? (
+                      <>
+                        <ChefHat size={11} /> FUZO community
+                      </>
+                    ) : (
+                      <>
+                        <Clock size={11} /> {recipe.readyInMinutes}m
+                      </>
+                    )}
                   </span>
                   <button
                     type="button"
-                    className={`bites-tile__save${isSaved ? ' is-saved' : ''}`}
-                    aria-label={isSaved ? 'Remove from saved recipes' : 'Save recipe'}
-                    aria-pressed={isSaved}
+                    className={`bites-tile__save${recipeSaved ? ' is-saved' : ''}`}
+                    aria-label={recipeSaved ? 'Remove from saved recipes' : 'Save recipe'}
+                    aria-pressed={recipeSaved}
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleSave(recipe);
                     }}
                   >
-                    <Bookmark size={15} fill={isSaved ? 'currentColor' : 'none'} />
+                    <Bookmark size={15} fill={recipeSaved ? 'currentColor' : 'none'} />
                   </button>
                   <span className="fz-dash-card__body">
                     <span className="fz-dash-card__title">{recipe.title}</span>
                     <span className="fz-dash-card__meta">
                       <span className="fz-dash-card__sub">
-                        <Users size={11} className="me-1" />
-                        {recipe.servings} servings{recipe.dishTypes[0] ? ` · ${recipe.dishTypes[0]}` : ''}
+                        {recipe.author ? (
+                          <>By {recipe.author.name}{recipe.dishTypes[0] ? ` · ${recipe.dishTypes[0]}` : ''}</>
+                        ) : (
+                          <>
+                            <Users size={11} className="me-1" />
+                            {recipe.servings} servings{recipe.dishTypes[0] ? ` · ${recipe.dishTypes[0]}` : ''}
+                          </>
+                        )}
                       </span>
                     </span>
                   </span>
@@ -229,7 +248,7 @@ export function BitesView() {
         <RecipeDetailModal
           recipe={modalState.recipe}
           initialTab={modalState.tab}
-          saved={saved.has(modalState.recipe.id)}
+          saved={isSaved(modalState.recipe)}
           onToggleSave={() => toggleSave(modalState.recipe)}
           onClose={() => {
             setModalState(null);

@@ -4,6 +4,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
 import { createClient } from '@/lib/supabase/client';
+import { safeNextPath } from '@/lib/share/safeNext';
+import { takeNextAfterSignup } from '@/lib/share/afterSignup';
 import {
   FLAVORS,
   CUISINES,
@@ -210,7 +212,9 @@ export default function OnboardingWizard() {
         .eq('id', user.id);
     }
     await supabase.from('user_stats').upsert({ user_id: user.id }, { onConflict: 'user_id' });
-    router.push('/dashboard');
+    // Back to the shared link that asked them to sign up, if any.
+    const next = safeNextPath(new URLSearchParams(window.location.search).get('next')) ?? takeNextAfterSignup();
+    router.push(next ?? '/dashboard');
   };
 
   const handleNext = async () => {

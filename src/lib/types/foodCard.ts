@@ -50,6 +50,8 @@ export const FOOD_CARD_TYPES = [
   'RESTAURANT_VISIT', 'CAFE_VISIT', 'STREET_FOOD',
   'BITE_VIDEO',
   'FOOD_REVIEW', 'FOOD_EXPLORATION', 'FOOD_RECOMMENDATION', 'FOOD_COLLECTION',
+  // Camera Create flow (client, 2026-10-14). Recipes from it reuse RECIPE.
+  'VIBE_PHOTO', 'FOOD_PHOTO', 'RESTAURANT_PHOTO',
 ] as const;
 
 export type FoodCardType = (typeof FOOD_CARD_TYPES)[number];
@@ -77,6 +79,10 @@ export const TYPE_META: Record<FoodCardType, TypeMeta> = {
   FOOD_EXPLORATION: { label: 'Food Exploration', emoji: '🧭', family: 'discovery', color: '#3EB49A' },
   FOOD_RECOMMENDATION: { label: 'Recommendation', emoji: '💡', family: 'discovery', color: '#C67B2F' },
   FOOD_COLLECTION: { label: 'Collection', emoji: '📚', family: 'discovery', color: '#6A7B4E' },
+
+  VIBE_PHOTO: { label: 'Vibe', emoji: '✨', family: 'discovery', color: '#F28C6B' },
+  FOOD_PHOTO: { label: 'Food', emoji: '🍝', family: 'discovery', color: '#4FAE6E' },
+  RESTAURANT_PHOTO: { label: 'Restaurant', emoji: '🏪', family: 'restaurant', color: '#E0B33C' },
 };
 
 export const familyOf = (cardType: FoodCardType): FoodCardFamily => TYPE_META[cardType].family;
@@ -100,4 +106,25 @@ export interface FoodCardRecord {
   stats: { likes: number; saves: number };
   created_at: string;
   updated_at: string;
+  // Camera Create flow fields (20261014000000_create_flow_posts.sql). Optional:
+  // rows read before that migration runs don't have them.
+  /** Up to 5 photo URLs; image_url is the first. */
+  photos?: string[];
+  business_identity?: string[];
+  /** Must-Try Dish, Weird Combo, or the user's own. */
+  labels?: string[];
+  /** Home food - the only post without a location. */
+  is_home?: boolean;
+  place_name?: string | null;
+  address?: string | null;
+  /** The FUZO restaurant this post is at, if any. */
+  restaurant_id?: string | null;
+  /** A community-added restaurant (Create flow, Phase 7). */
+  community_place_id?: string | null;
+  /** The dish picked from that restaurant's FUZO menu, if any. */
+  menu_item_id?: string | null;
+  /** Recipe preparation steps. */
+  steps?: string[];
+  /** A draft's new-restaurant details (Phase 7), until it's published. */
+  new_place?: Record<string, unknown> | null;
 }

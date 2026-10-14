@@ -27,7 +27,6 @@
  */
 
 import { useState, useEffect, useRef, type CSSProperties } from 'react';
-import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowUp, ChefHat, ChevronDown, RotateCcw, Search, Sparkles, UtensilsCrossed, X, type LucideIcon } from 'lucide-react';
@@ -35,7 +34,7 @@ import { GeminiService } from '@/lib/services/geminiService';
 import { CHEF_SUGGESTED_PROMPTS, CHEF_SYSTEM_INSTRUCTION, CHEF_RESPONSE_SCHEMA, TAKO_GROUPS, getGreeting } from '@/lib/tako/prompts';
 import type { ChatMessage, ChefStructuredResponse, TakoAction, TakoGroup } from '@/types/tako';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
-import { CreateCardModal } from '@/components/create/CreateCardModal';
+import { CreateFlow } from '@/components/create/flow/CreateFlow';
 import { TakoMascot, type TakoMood } from './TakoMascot';
 import { GEMINI_MODEL } from '@/lib/ai/geminiModel';
 
@@ -449,10 +448,7 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
         </footer>
       )}
     </div>
-    {isCreateCardOpen && createPortal(
-      <CreateCardModal onClose={() => { setIsCreateCardOpen(false); onClose?.(); }} />,
-      document.body,
-    )}
+    {isCreateCardOpen && <CreateFlow onClose={() => { setIsCreateCardOpen(false); onClose?.(); }} />}
     </>
   );
 }

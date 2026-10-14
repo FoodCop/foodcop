@@ -785,6 +785,171 @@ $scout-z-wizard: 1100;
   margin-top: 0.125rem;
 }
 
+// Community-added restaurant: badge, votes and "Is it real?" (Phase 7)
+.scout-community {
+  margin: 0 1.25rem 1rem;
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgba($fuzo-yellow, 0.14);
+  border: 1px solid rgba($fuzo-yellow-deep, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+
+  &.is-verified {
+    background: $lime-tint;
+    border-color: rgba($lime, 0.45);
+  }
+}
+
+.scout-community__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 0.75rem;
+}
+
+.scout-community__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-size: 0.75rem;
+  font-weight: 800;
+
+  .is-verified & {
+    background: $fz-ink;
+    color: #fff;
+  }
+}
+
+.scout-community__count {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: $scout-ink-soft;
+}
+
+.scout-community__line,
+.scout-community__ask,
+.scout-community__hint,
+.scout-community__voted {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.scout-community__line {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: $fz-ink;
+  font-weight: 600;
+}
+
+.scout-community__ask {
+  font-weight: 700;
+  color: $fz-ink;
+}
+
+.scout-community__hint {
+  color: $scout-ink-soft;
+  font-weight: 600;
+}
+
+.scout-community__voted {
+  font-weight: 800;
+  color: $fz-ink;
+}
+
+.scout-community__progress {
+  height: 7px;
+  border-radius: 9999px;
+  background: rgba($fz-ink, 0.1);
+  overflow: hidden;
+
+  > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, $fuzo-yellow, $fuzo-yellow-deep);
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    > span {
+      transition: none;
+    }
+  }
+}
+
+.scout-community__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.scout-community__btn {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba($fz-ink, 0.15);
+  background: #fff;
+  color: $fz-ink;
+  font-weight: 800;
+  font-size: 0.85rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &.is-yes {
+    background: $fuzo-yellow;
+    border-color: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: $fz-shadow-sm;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba($fuzo-yellow-deep, 0.6);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// "N visits on FUZO" (posts made at the place, one per person per day)
+.scout-modal__visits {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-ink;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 .scout-modal__loading {
   font-size: 0.75rem;
   font-weight: 500;

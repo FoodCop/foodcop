@@ -1,0 +1,934 @@
+// Create flow (client, 2026-10-14; plan: docs/CREATE_FLOW_PLAN.md,
+// components in src/components/create/flow/). Create opens a full-screen
+// black camera like Instagram's; the steps after it ("What is this?", each
+// kind's details) use the app's clean look: white page, pastel tiles,
+// yellow for the main action.
+
+$cf-ink: $fz-ink;
+$cf-muted: #6b6457;
+$cf-line: #ecebe7;
+$cf-max: 40rem;
+
+@mixin cf-focus {
+  &:focus-visible {
+    outline: 2px solid $fuzo-yellow;
+    outline-offset: 3px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Shell
+// ---------------------------------------------------------------------------
+
+.cf {
+  position: fixed;
+  inset: 0;
+  z-index: 1100; // above the navbar and dock, like the old studios
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: $cf-ink;
+  overflow: hidden;
+}
+
+.cf--camera {
+  background: #000;
+  color: #fff;
+}
+
+.cf__head {
+  width: 100%;
+  max-width: calc(#{$cf-max} + 2rem);
+  margin: 0 auto;
+  padding: calc(0.75rem + env(safe-area-inset-top)) 1rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.cf__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 0;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cf-ink;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include cf-focus;
+
+  &:hover {
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+  }
+}
+
+.cf__titles {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cf__title {
+  margin: 0;
+  font-family: var(--body-font), $font-family-sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.cf__progress {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    width: 28px;
+    height: 4px;
+    border-radius: 9999px;
+    background: $cf-line;
+    transition: background-color 0.3s ease;
+
+    &.is-done {
+      background: $fuzo-yellow;
+    }
+  }
+}
+
+.cf__body {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.cf__step {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+}
+
+.cf--camera .cf__step {
+  overflow: hidden;
+}
+
+// ---------------------------------------------------------------------------
+// Camera
+// ---------------------------------------------------------------------------
+
+.cf-cam {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  color: #fff;
+}
+
+.cf-cam__top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: calc(0.75rem + env(safe-area-inset-top)) 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cf-cam__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include cf-focus;
+
+  &[aria-pressed='true'] {
+    color: $fuzo-yellow;
+  }
+}
+
+// "Drafts 2" - go back to an unfinished post (Phase 8)
+.cf-cam__drafts {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  padding: 0.35rem 0.85rem;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  backdrop-filter: blur(8px);
+
+  &:focus-visible {
+    outline: 3px solid $fuzo-yellow;
+    outline-offset: 2px;
+  }
+
+  + .cf-cam__count {
+    margin-left: 0;
+  }
+}
+
+.cf-cam__drafts-n {
+  min-width: 1.35rem;
+  padding: 0 0.35rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-size: 0.75rem;
+  line-height: 1.35rem;
+  text-align: center;
+}
+
+.cf-cam__count {
+  margin-left: auto;
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.4);
+  font-size: 0.8rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.cf-cam__view {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 0 0 24px 24px;
+  background: #111;
+
+  // Wider screens: the camera is a centred card, not a full-bleed view.
+  @media (min-width: 768px) {
+    margin-top: 4.5rem;
+    border-radius: 24px;
+  }
+}
+
+.cf-cam__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &.is-live {
+    opacity: 1;
+  }
+  &.is-mirrored {
+    transform: scaleX(-1);
+  }
+  &.is-hidden {
+    visibility: hidden;
+  }
+}
+
+.cf-cam__msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  p {
+    margin: 0;
+    max-width: 18rem;
+    line-height: 1.45;
+  }
+}
+
+.cf-cam__msg--fallback {
+  color: #fff;
+
+  > svg {
+    color: $fuzo-yellow;
+  }
+}
+
+.cf-cam__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 48px;
+  padding: 0 1.25rem;
+  border-radius: 9999px;
+  border: 0;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-weight: 800;
+  font-size: 0.95rem;
+  @include cf-focus;
+}
+
+.cf-cam__flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  pointer-events: none;
+}
+
+.cf-cam__notice {
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  translate: -50% 0;
+  z-index: 2;
+  max-width: calc(100% - 2rem);
+  padding: 0.55rem 1rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  width: max-content;
+}
+
+.cf-cam__tray {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 0;
+}
+
+.cf-cam__thumbs {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 6px 6px 2px 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.cf-cam__thumb {
+  position: relative;
+  flex: none;
+  width: 52px;
+  height: 52px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #fff;
+  }
+}
+
+.cf-cam__thumb-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 0;
+  background: #fff;
+  color: $cf-ink;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  @include cf-focus;
+}
+
+.cf-cam__next {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 44px;
+  padding: 0 0.9rem 0 1.15rem;
+  border-radius: 9999px;
+  border: 0;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-weight: 800;
+  font-size: 0.95rem;
+  @include cf-focus;
+}
+
+.cf-cam__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem 0.5rem;
+}
+
+.cf-cam__side {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include cf-focus;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    border-radius: 14px;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+.cf-cam__shutter {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  background: transparent;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include cf-focus;
+
+  span {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.15s ease, background-color 0.2s ease;
+  }
+
+  &:active:not(:disabled) span {
+    transform: scale(0.88);
+    background: $fuzo-yellow;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+  }
+}
+
+.cf-cam__modes {
+  display: flex;
+  justify-content: center;
+  gap: 1.75rem;
+  padding: 0.5rem 1rem calc(1rem + env(safe-area-inset-bottom));
+}
+
+.cf-cam__mode {
+  position: relative;
+  min-height: 40px;
+  padding: 0 0.25rem;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  @include cf-focus;
+
+  &.is-active {
+    color: #fff;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 2px;
+      width: 6px;
+      height: 6px;
+      translate: -50% 0;
+      border-radius: 50%;
+      background: $fuzo-yellow;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// "What is this?" + details (placeholder until each kind's phase)
+// ---------------------------------------------------------------------------
+
+.cf-kind,
+.cf-soon {
+  width: 100%;
+  max-width: calc(#{$cf-max} + 2rem);
+  margin: 0 auto;
+  padding: 0.5rem 1rem calc(2rem + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cf-kind__photos {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  li {
+    flex: none;
+    width: 76px;
+    aspect-ratio: 1;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--studio-pill, #f2f1ee);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.cf-kind__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 0.75rem;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+}
+
+// Compact illustrated cards like the cuisine grid (client reference,
+// 2026-10-14): the picture on its pastel blob, the name underneath.
+// Art: public/images/create/kind-*.webp. Picked = yellow pill + tick.
+.cf-kind__tile {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.1rem 0.4rem;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  color: $cf-ink;
+  text-align: center;
+  @include cf-focus;
+
+  &:hover .cf-kind__art img {
+    transform: translateY(-3px) scale(1.04);
+  }
+
+  &.is-selected .cf-kind__label {
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+  }
+}
+
+.cf-kind__art {
+  position: relative;
+  width: 100%;
+  max-width: 180px;
+  aspect-ratio: 1.2;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s $fz-ease;
+  }
+}
+
+.cf-kind__check {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+.cf-kind__label {
+  max-width: 100%;
+  padding: 0.1rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cf-soon__card {
+  background: var(--fz-float-bg);
+  border: 1px solid var(--fz-float-border);
+  box-shadow: var(--fz-float-shadow);
+  border-radius: 28px;
+  padding: 1.5rem;
+  color: $cf-ink;
+}
+
+.cf-soon__badge {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow-tint;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.cf-soon__title {
+  margin: 0.6rem 0 0.25rem;
+  font-family: var(--body-font), $font-family-sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.cf-soon__sub {
+  margin: 0 0 0.75rem;
+  color: $cf-muted;
+  font-weight: 600;
+}
+
+.cf-soon__list {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+
+  li::marker {
+    color: $fuzo-yellow-deep;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// "Discard post?" - bottom sheet on phones, centred card on wider screens
+// ---------------------------------------------------------------------------
+
+.cf-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+
+  @media (min-width: 640px) {
+    align-items: center;
+  }
+}
+
+.cf-confirm__sheet {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.5rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+  border-radius: 24px 24px 0 0;
+  background: #fff;
+  color: $cf-ink;
+  text-align: center;
+
+  @media (min-width: 640px) {
+    border-radius: 24px;
+    padding-bottom: 1.25rem;
+  }
+}
+
+.cf-confirm__title {
+  margin: 0;
+  font-family: var(--body-font), $font-family-sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.cf-confirm__text {
+  margin: 0.4rem 0 1.25rem;
+  color: $cf-muted;
+  font-weight: 600;
+}
+
+.cf-confirm__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cf-confirm__btn {
+  min-height: 48px;
+  border-radius: 9999px;
+  border: 0;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cf-ink;
+  font-weight: 800;
+  font-size: 0.95rem;
+  @include cf-focus;
+}
+
+.cf-confirm__btn--danger {
+  background: rgba($rose, 0.12);
+  color: darken($rose, 12%);
+}
+
+// Drafts (camera "Drafts" button)
+.cf-drafts {
+  text-align: left;
+  max-height: min(80dvh, 640px);
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-drafts__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.cf-drafts__close,
+.cf-drafts__delete {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cf-ink;
+  @include cf-focus;
+}
+
+.cf-drafts__delete:hover {
+  background: rgba($rose, 0.12);
+  color: darken($rose, 12%);
+}
+
+.cf-drafts__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cf-drafts__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cf-drafts__open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+  border: 0;
+  border-radius: 18px;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cf-ink;
+  text-align: left;
+  transition: transform 0.15s ease;
+  @include cf-focus;
+
+  &:active {
+    transform: scale(0.99);
+  }
+
+  > svg {
+    flex: none;
+    color: $cf-muted;
+  }
+}
+
+.cf-drafts__thumb {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #e4e2dc;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: $cf-muted;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.cf-drafts__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  span {
+    color: $cf-muted;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+.cf-drafts__confirm {
+  flex: 1;
+  min-height: 68px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 18px;
+  background: rgba($rose, 0.08);
+  font-weight: 800;
+
+  > span {
+    flex: 1 1 auto;
+  }
+}
+
+.cf-drafts__btn {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 9999px;
+  background: #fff;
+  color: $cf-ink;
+  font-weight: 800;
+  @include cf-focus;
+
+  &.is-danger {
+    background: darken($rose, 12%);
+    color: #fff;
+  }
+}
+
+.cf-drafts__error {
+  margin: 0.75rem 0 0;
+  color: darken($rose, 12%);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-kind__art img,
+  .cf-cam__video,
+  .cf-cam__shutter span {
+    transition: none;
+  }
+}
+
+// Dark mode: black page; tiles and cards keep their light surfaces.
+html[data-theme='dark'] {
+  .cf {
+    background: #000;
+    color: #f5f5f5;
+  }
+  .cf__icon {
+    background: #1c1c1c;
+    color: #f5f5f5;
+  }
+  .cf__progress li:not(.is-done) {
+    background: #262626;
+  }
+  .cf-confirm__sheet {
+    background: #161616;
+    color: #f5f5f5;
+  }
+  .cf__title,
+  .cf-confirm__title {
+    color: #f5f5f5;
+  }
+  .cf-confirm__text {
+    color: #a3a3a3;
+  }
+  .cf-confirm__btn,
+  .cf-drafts__open,
+  .cf-drafts__close,
+  .cf-drafts__delete {
+    background: #262626;
+    color: #f5f5f5;
+  }
+  .cf-drafts__thumb {
+    background: #333;
+  }
+  .cf-drafts__btn:not(.is-danger) {
+    background: #333;
+    color: #f5f5f5;
+  }
+  .cf-kind__tile {
+    color: #f5f5f5;
+  }
+}

@@ -7,7 +7,7 @@ import { normalizeSavedItemForUI } from '../../lib/services/savedItems';
 import SavedItemDetailModal from './SavedItemDetailModal';
 import ShareSheet, { sharePayloadFromItem, type SharePayload } from '@/components/share/ShareSheet';
 import FoodCardDetailModal from './FoodCardDetailModal';
-import CreateCardModal from '../create/CreateCardModal';
+import { CreateFlow } from '../create/flow/CreateFlow';
 import { TYPE_META, type FoodCardFamily, type FoodCardRecord } from '../../lib/types/foodCard';
 import { useAuth } from '../auth/AuthProvider';
 import ProfileFoodMap, { type ProfileMapPlace } from './ProfileFoodMap';
@@ -198,6 +198,12 @@ function getCardBadgeLabel(cardType?: string): string {
       return 'RECOMMENDATION';
     case 'FOOD_COLLECTION':
       return 'COLLECTION';
+    case 'VIBE_PHOTO':
+      return 'VIBE';
+    case 'FOOD_PHOTO':
+      return 'FOOD';
+    case 'RESTAURANT_PHOTO':
+      return 'RESTAURANT';
     default:
       return cardType.replace(/_/g, ' ').toUpperCase();
   }
@@ -337,6 +343,8 @@ export default function ActivityTab({
   const [selectedItem, setSelectedItem] = useState<AppItem | null>(null);
   const [selectedCard, setSelectedCard] = useState<FoodCardRecord | null>(null);
   const [creatingFamily, setCreatingFamily] = useState<FoodCardFamily | null>(null);
+  // Your own post opened in the Create flow (finish a draft / edit).
+  const [editingCard, setEditingCard] = useState<FoodCardRecord | null>(null);
 
   const refetchSaved = useCallback(async () => {
     try {
@@ -830,12 +838,31 @@ export default function ActivityTab({
             setSelectedCard(updated);
             refetchCards();
           }}
+          onEdit={(card) => {
+            setSelectedCard(null);
+            setEditingCard(card);
+          }}
+          onDeleted={() => refetchCards()}
+        />
+      )}
+
+      {editingCard && (
+        <CreateFlow
+          editCard={editingCard}
+          onSaved={() => refetchCards()}
+          onClose={() => {
+            setEditingCard(null);
+            refetchCards();
+          }}
         />
       )}
 
       {creatingFamily && (
-        <CreateCardModal
-          initialFamily={creatingFamily}
+        <CreateFlow
+          // Profile's "Add a recipe / place / video / post" opens the new
+          // Create flow with that kind pre-selected (videos: the Video tab).
+          initialKind={creatingFamily === 'recipe' ? 'recipe' : creatingFamily === 'restaurant' ? 'restaurant' : creatingFamily === 'discovery' ? 'food' : undefined}
+          initialMode={creatingFamily === 'video' ? 'video' : 'photo'}
           onClose={() => {
             setCreatingFamily(null);
             refetchCards();

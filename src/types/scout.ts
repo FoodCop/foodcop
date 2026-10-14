@@ -1,3 +1,5 @@
+import type { CommunityPlace } from '@/lib/services/communityPlacesService';
+
 // Ported from legacy/fuzoapp/src/features/scout/types/scoutUi.ts
 // Changes: none (pure types)
 
@@ -71,6 +73,8 @@ export interface ScoutPlace {
   servesDinner?: boolean;
   servesVegetarianFood?: boolean;
   menuLink?: string;
+  /** A restaurant FUZO members added (Community Added / Verified by Community). */
+  community?: CommunityPlace;
 }
 
 export type MarkerLike = {

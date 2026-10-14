@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, type ReactNode, type SyntheticEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Bookmark, Check, ChefHat, Clock, List, PieChart, Share2, Users, X } from 'lucide-react';
-import type { CuratedRecipe } from '@/lib/recipes/curatedRecipes';
+import { recipeSummary, type BiteRecipe } from '@/lib/recipes/curatedRecipes';
 import { PlateService } from '@/lib/services/plateService';
 import { useAuth } from '@/components/auth/AuthProvider';
 import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
@@ -34,7 +34,8 @@ export type RecipeModalTab = 'ingredients' | 'steps' | 'nutrition';
 /** Which recipes the signed-in user has saved, plus an optimistic save/unsave toggle. */
 export function useRecipeSaves() {
   const { user } = useAuth();
-  const [saved, setSaved] = useState<Set<number>>(new Set());
+  // Keyed by String(recipe.id): curated ids are numbers, members' recipes are "fuzo-<id>".
+  const [saved, setSaved] = useState<Set<string>>(new Set());
 
   // Load which recipes the signed-in user has already saved, so the toggle
   // reflects real state instead of always starting unsaved.
@@ -44,15 +45,15 @@ export function useRecipeSaves() {
       const result = await PlateService.listSavedItems();
       if (result.success && result.data) {
         const ids = new Set(
-          result.data.filter((i) => i.item_type === 'recipe').map((i) => Number(i.item_id)),
+          result.data.filter((i) => i.item_type === 'recipe').map((i) => String(i.item_id)),
         );
         setSaved(ids);
       }
     })();
   }, [user?.id]);
 
-  const toggleSave = useCallback(async (recipe: CuratedRecipe) => {
-    const id = recipe.id;
+  const toggleSave = useCallback(async (recipe: BiteRecipe) => {
+    const id = String(recipe.id);
     const wasSaved = saved.has(id);
 
     // Optimistic toggle, reverted below if the write fails.
@@ -64,9 +65,9 @@ export function useRecipeSaves() {
     });
 
     const result = wasSaved
-      ? await PlateService.removeFromPlate({ itemId: String(id), itemType: 'recipe' })
+      ? await PlateService.removeFromPlate({ itemId: id, itemType: 'recipe' })
       : await PlateService.saveToPlate({
-          itemId: String(id),
+          itemId: id,
           itemType: 'recipe',
           // Full recipe content, not just the tile summary - otherwise Profile's
           // SavedItemDetailModal (which reads metadata.generatedRecipe/nutrition/
@@ -100,11 +101,13 @@ export function useRecipeSaves() {
     }
   }, [saved]);
 
-  return { saved, toggleSave };
+  const isSaved = useCallback((recipe: BiteRecipe) => saved.has(String(recipe.id)), [saved]);
+
+  return { saved, isSaved, toggleSave };
 }
 
 export function RecipeDetailModal(props: {
-  recipe: CuratedRecipe;
+  recipe: BiteRecipe;
   initialTab: RecipeModalTab;
   saved: boolean;
   onToggleSave: () => void;
@@ -123,7 +126,7 @@ function RecipeDetailDialog({
   onToggleSave,
   onClose,
 }: {
-  recipe: CuratedRecipe;
+  recipe: BiteRecipe;
   initialTab: RecipeModalTab;
   saved: boolean;
   onToggleSave: () => void;
@@ -160,7 +163,7 @@ function RecipeDetailDialog({
   const openShare = () =>
     setSharing({
       title: recipe.title,
-      subtitle: `Recipe · ${recipe.readyInMinutes} min · ${recipe.servings} servings`,
+      subtitle: ['Recipe', recipeSummary(recipe)].filter(Boolean).join(' · '),
       image: recipe.image,
       url: `/dashboard?tab=bites&recipe=${recipe.id}`,
       text: `Try this recipe on FUZO: ${recipe.title}`,
@@ -172,7 +175,7 @@ function RecipeDetailDialog({
         title: recipe.title,
         cat: 'Recipe',
         img: recipe.image,
-        description: `${recipe.readyInMinutes} min · ${recipe.servings} servings`,
+        description: recipeSummary(recipe),
       },
     });
 
@@ -196,8 +199,9 @@ function RecipeDetailDialog({
           <span className="fz-recipe__shade" aria-hidden="true" />
           <div className="fz-recipe__hero">
             <div className="fz-recipe__chips">
-              <span><Clock size={12} /> {recipe.readyInMinutes} min</span>
-              <span><Users size={12} /> {recipe.servings} servings</span>
+              {recipe.readyInMinutes > 0 && <span><Clock size={12} /> {recipe.readyInMinutes} min</span>}
+              {recipe.servings > 0 && <span><Users size={12} /> {recipe.servings} servings</span>}
+              {recipe.author && <span><ChefHat size={12} /> By {recipe.author.name}</span>}
             </div>
             <h2 id="fz-recipe-title" className="fz-recipe__title">{recipe.title}</h2>
           </div>

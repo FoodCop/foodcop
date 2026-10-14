@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle2, Clock, ExternalLink, Globe, MapPin, MessageSquare, Navigation, Phone, Sparkles, Star } from 'lucide-react';
+import { CheckCircle2, Clock, ExternalLink, Footprints, Globe, MapPin, MessageSquare, Navigation, Phone, Sparkles, Star } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useOpenStatus, useRestaurant } from '@/lib/hooks/useRestaurant';
 import { DAY_KEYS, DAY_LABELS, WEEK_ORDER, formatDay, hasAnyHours } from '@/lib/restaurant/hours';
@@ -11,6 +11,7 @@ import RateRestaurantModal from './RateRestaurantModal';
 import { directionsUrl } from '@/lib/maps/placeLinks';
 import { SERVICE_OPTIONS, verifiedPlaceId } from '@/lib/services/restaurantService';
 import { Stars, StatusPill, formatCount } from './RestaurantBits';
+import { CommunityPhotosService } from '@/lib/services/communityPhotosService';
 
 interface RestaurantInfoTabProps {
   restaurantId: string;
@@ -24,6 +25,23 @@ interface RestaurantInfoTabProps {
 export default function RestaurantInfoTab({ restaurantId, restaurantName, isOwner = false }: RestaurantInfoTabProps) {
   const { loaded, profile, summary } = useRestaurant(restaurantId);
   const status = useOpenStatus(profile);
+
+  // Visits FUZO members made here: posts made at the restaurant (client,
+  // 2026-10-14; plan Phase 6). Counted by its FUZO id and verified Google place.
+  const visitPlaceId = loaded ? verifiedPlaceId(profile) : null;
+  const visitKey = loaded ? `${restaurantId}|${visitPlaceId ?? ''}` : null;
+  const [visits, setVisits] = useState<{ key: string; count: number | null } | null>(null);
+  useEffect(() => {
+    if (!visitKey) return;
+    let cancelled = false;
+    CommunityPhotosService.visitCount({ restaurantId, placeId: visitPlaceId }).then((count) => {
+      if (!cancelled) setVisits({ key: visitKey, count });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [visitKey, restaurantId, visitPlaceId]);
+  const visitCount = visits?.key === visitKey ? visits.count : null;
 
   if (!loaded) {
     return (
@@ -70,6 +88,12 @@ export default function RestaurantInfoTab({ restaurantId, restaurantName, isOwne
           </div>
 
           {status && <StatusPill status={status} />}
+
+          {!!visitCount && (
+            <span className="d-flex align-items-center gap-1 text-muted">
+              <Footprints size={14} aria-hidden="true" /> {formatCount(visitCount)} {visitCount === 1 ? 'visit' : 'visits'} on FUZO
+            </span>
+          )}
 
           {profile?.price_tier && (
             <>

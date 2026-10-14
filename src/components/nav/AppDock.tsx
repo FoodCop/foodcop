@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Compass, House, Plus, Salad, Trophy } from 'lucide-react';
-import { CreateCardModal } from '@/components/create/CreateCardModal';
+import { CreateFlow } from '@/components/create/flow/CreateFlow';
 import { useScrollCompact } from '@/lib/hooks/useScrollCompact';
 
 // The bottom bar shared by Home, Explore (Scout), My Plate and Leaderboard &
@@ -36,7 +36,7 @@ export default function AppDock({
           <Compass size={20} strokeWidth={2.1} />
           <span>Explore</span>
         </Link>
-        <button type="button" className="fz-dash-dock__item" onClick={() => setIsCreateOpen(true)} aria-label="Create a food card">
+        <button type="button" className="fz-dash-dock__item" onClick={() => setIsCreateOpen(true)} aria-label="Create a post">
           <Plus size={20} strokeWidth={2.2} />
           <span>Create</span>
         </button>
@@ -59,7 +59,7 @@ export default function AppDock({
           <span>Rankings</span>
         </Link>
       </nav>
-      {isCreateOpen && <CreateCardModal onClose={() => setIsCreateOpen(false)} />}
+      {isCreateOpen && <CreateFlow onClose={() => setIsCreateOpen(false)} />}
     </>
   );
 }

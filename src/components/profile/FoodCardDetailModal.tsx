@@ -2,25 +2,52 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { PlayCircle } from 'lucide-react';
+import { Loader2, Pencil, PlayCircle, Trash2 } from 'lucide-react';
 import type { FoodCardRecord } from '../../lib/types/foodCard';
 import { TYPE_META, familyOf } from '../../lib/types/foodCard';
 import { foodCardService } from '../../lib/services/foodCardService';
 import ShareSheet, { type SharePayload } from '../share/ShareSheet';
 import { VideoPlayerModal } from '../ui/VideoPlayerModal';
+import { PostService } from '../../lib/services/postService';
+import { canEditInCreate } from '../create/flow/fromCard';
+import { postSharePayload } from '../../lib/share/postShare';
 
 interface FoodCardDetailModalProps {
   card: FoodCardRecord;
   currentUserId: string;
   onClose: () => void;
   onUpdated: (updated: FoodCardRecord) => void;
+  /** Your own post: open it in the Create flow (finish a draft / edit). */
+  onEdit?: (card: FoodCardRecord) => void;
+  /** Your own post was deleted. */
+  onDeleted?: (id: string) => void;
 }
 
-export default function FoodCardDetailModal({ card, onClose, onUpdated }: FoodCardDetailModalProps) {
+export default function FoodCardDetailModal({ card, currentUserId, onClose, onUpdated, onEdit, onDeleted }: FoodCardDetailModalProps) {
   const [current, setCurrent] = useState(card);
   const [isPublishing, setIsPublishing] = useState(false);
   const [sharing, setSharing] = useState<SharePayload | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  // Edit / delete (client, 2026-10-14; plan Phase 8): only on your own posts.
+  const isOwner = !!currentUserId && currentUserId === current.user_id;
+  const editable = isOwner && !!onEdit && canEditInCreate(current);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    setDeleteError(null);
+    const res = await PostService.remove(current.id);
+    setDeleting(false);
+    if (!res.success) {
+      setDeleteError(res.error || 'Could not delete. Please try again.');
+      return;
+    }
+    onDeleted?.(current.id);
+    onClose();
+  };
 
   const meta = TYPE_META[current.card_type];
   const isVideo = current.card_type === 'BITE_VIDEO' && !!current.media_url;
@@ -41,22 +68,8 @@ export default function FoodCardDetailModal({ card, onClose, onUpdated }: FoodCa
   };
 
   // Share asks where: FUZO friends/groups or other apps (ShareSheet).
-  const openShare = () =>
-    setSharing({
-      title: current.title,
-      subtitle: meta.label,
-      image: current.image_url || undefined,
-      url: `/profile/${current.user_id}`,
-      text: `Check out "${current.title}" on FUZO`,
-      item: {
-        id: current.id,
-        itemType: 'food_card',
-        name: current.title,
-        caption: current.caption || undefined,
-        img: current.image_url || undefined,
-        cat: meta.label,
-      },
-    });
+  // The link opens the post itself (/post/<id>; sign-up first for new people).
+  const openShare = () => setSharing(postSharePayload(current));
 
   return (
     <>
@@ -157,8 +170,36 @@ export default function FoodCardDetailModal({ card, onClose, onUpdated }: FoodCa
 
             </div>
 
+            {confirmDelete ? (
+              <div className="modal-footer bg-light border-top-0 p-3 d-flex flex-wrap align-items-center gap-2" role="group" aria-label="Delete this post?">
+                <span className="fw-bold flex-grow-1">
+                  Delete this {current.status === 'DRAFT' ? 'draft' : 'post'}? This can&apos;t be undone.
+                </span>
+                <button type="button" className="btn btn-danger fw-bold rounded-pill px-3" onClick={handleDelete} disabled={deleting}>
+                  {deleting ? <Loader2 size={16} className="scout-spin me-1" aria-hidden="true" /> : null}
+                  Delete
+                </button>
+                <button type="button" className="btn btn-light border fw-bold rounded-pill px-3" onClick={() => setConfirmDelete(false)} disabled={deleting}>
+                  Keep
+                </button>
+                {deleteError && (
+                  <p className="w-100 mb-0 small text-danger fw-semibold" role="alert">
+                    {deleteError}
+                  </p>
+                )}
+              </div>
+            ) : (
             <div className="modal-footer bg-light border-top-0 p-3 d-flex gap-2">
-              {current.status === 'DRAFT' && (
+              {editable && (
+                <button
+                  type="button"
+                  className={`btn ${current.status === 'DRAFT' ? 'btn-dark' : 'btn-light border'} flex-grow-1 fw-bold rounded-pill d-inline-flex align-items-center justify-content-center gap-1`}
+                  onClick={() => onEdit?.(current)}
+                >
+                  <Pencil size={16} aria-hidden="true" /> {current.status === 'DRAFT' ? 'Finish draft' : 'Edit'}
+                </button>
+              )}
+              {current.status === 'DRAFT' && !editable && (
                 <button
                   type="button"
                   className="btn btn-dark flex-grow-1 fw-bold rounded-pill"
@@ -168,14 +209,28 @@ export default function FoodCardDetailModal({ card, onClose, onUpdated }: FoodCa
                   {isPublishing ? 'Publishing...' : 'Publish to Feed'}
                 </button>
               )}
-              <button
-                type="button"
-                className="btn btn-primary flex-grow-1 fw-bold fz-on-accent rounded-pill"
-                onClick={openShare}
-              >
-                Share
-              </button>
+              {current.status === 'PUBLISHED' && (
+                <button
+                  type="button"
+                  className="btn btn-primary flex-grow-1 fw-bold fz-on-accent rounded-pill"
+                  onClick={openShare}
+                >
+                  Share
+                </button>
+              )}
+              {isOwner && onDeleted && (
+                <button
+                  type="button"
+                  className="btn btn-light border rounded-pill d-inline-flex align-items-center justify-content-center"
+                  style={{ minWidth: 44, minHeight: 44 }}
+                  onClick={() => setConfirmDelete(true)}
+                  aria-label={current.status === 'DRAFT' ? 'Delete draft' : 'Delete post'}
+                >
+                  <Trash2 size={17} />
+                </button>
+              )}
             </div>
+            )}
           </div>
         </div>
       </div>

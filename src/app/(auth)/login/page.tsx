@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
@@ -8,6 +8,11 @@ import { useRouter } from 'next/navigation';
 import { AlertCircle, ArrowLeft, ArrowRight, Compass, Eye, EyeOff, Gift, Lock, Mail, MailCheck, User, Users } from 'lucide-react';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { safeNextPath } from '@/lib/share/safeNext';
+import { rememberNextAfterSignup, takeNextAfterSignup } from '@/lib/share/afterSignup';
+
+// ?mode=signup opens on Create account (e.g. a shared post's "Sign up to see it").
+const noSubscribe = () => () => {};
+const readWantsSignup = () => new URLSearchParams(window.location.search).get('mode') === 'signup';
 
 // Sign in / Create account / Reset password on one page, wired to Supabase
 // Auth (email + password, Google, guest). Layout (_auth.scss, .fz-auth):
@@ -37,7 +42,9 @@ const STRENGTH = ['Too short', 'Weak', 'Okay', 'Good', 'Strong'];
 export default function LoginPage() {
   const router = useRouter();
 
-  const [mode, setMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
+  const wantsSignup = useSyncExternalStore(noSubscribe, readWantsSignup, () => false);
+  const [modeChoice, setMode] = useState<'signin' | 'signup' | 'forgot' | null>(null);
+  const mode = modeChoice ?? (wantsSignup ? 'signup' : 'signin');
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -59,7 +66,13 @@ export default function LoginPage() {
       .maybeSingle();
     // Back to the shared link that sent them to login, if any.
     const next = safeNextPath(new URLSearchParams(window.location.search).get('next'));
-    router.push(profile?.is_onboarded ? next ?? '/dashboard' : '/onboarding');
+    if (profile?.is_onboarded) {
+      router.push(next ?? takeNextAfterSignup() ?? '/dashboard');
+      return;
+    }
+    // New here: onboarding first, then on to that link.
+    if (next) rememberNextAfterSignup(next);
+    router.push('/onboarding');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

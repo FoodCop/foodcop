@@ -16,6 +16,10 @@ interface LocationPickerModalProps {
   initialLng?: number | null;
   onConfirm: (result: { lat: number; lng: number; address: string }) => void;
   onClose: () => void;
+  /** Heading; defaults to "Set your location". */
+  title?: string;
+  /** Stacking order; the Create flow (z-index 1100) needs it above itself. */
+  zIndex?: number;
 }
 
 // Click-or-drag-to-pin location picker, reusing the same google.maps
@@ -24,7 +28,7 @@ interface LocationPickerModalProps {
 // Geolocation API, and confirming reverse-geocodes the pin via
 // google.maps.Geocoder so the caller gets a real address string, not just
 // raw coordinates.
-export default function LocationPickerModal({ initialLat, initialLng, onConfirm, onClose }: LocationPickerModalProps) {
+export default function LocationPickerModal({ initialLat, initialLng, onConfirm, onClose, title = 'Set your location', zIndex = 1080 }: LocationPickerModalProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
@@ -126,11 +130,11 @@ export default function LocationPickerModal({ initialLat, initialLng, onConfirm,
   };
 
   return createPortal(
-    <div className="modal show d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1080 }}>
+    <div className="modal show d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex }}>
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
           <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
-            <h6 className="fw-bold mb-0">Set your location</h6>
+            <h6 className="fw-bold mb-0">{title}</h6>
             <button type="button" className="btn-close" onClick={onClose} aria-label="Close" />
           </div>
           {MAPS_API_KEY ? (
