@@ -7,11 +7,14 @@ import type { AppItem } from '@/types/appItem';
  *   recipe (numeric curated id) -> Bites with that recipe open
  *   trim ("trim-<n>")           -> that clip in the dashboard's Trims tab
  *   place (lat/lng)             -> Scout centred on it, popup open
+ *   post (food_card uuid)       -> /post/<id>
  */
 export function fuzoLinkForItem(item: AppItem): string | null {
   const title = item.name || item.title || '';
   const type = (item.itemType || item.type || '').toLowerCase();
   const id = item.itemId || item.id || '';
+  // A FUZO post (food card): its own page.
+  if (type === 'food_card' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return `/post/${id}`;
   if (type.includes('recipe') && /^\d+$/.test(id)) return `/dashboard?tab=bites&recipe=${id}`;
   if (id.startsWith('trim-')) return `/dashboard?tab=trims&trim=${encodeURIComponent(id.slice(5))}`;
   if (item.lat != null && item.lng != null) {

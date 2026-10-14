@@ -32,7 +32,9 @@ export async function GET(request: Request) {
         .maybeSingle();
 
       const next = safeNextPath(searchParams.get('next'));
-      return NextResponse.redirect(`${origin}${profile?.is_onboarded ? next ?? '/dashboard' : '/onboarding'}`);
+      // New here: onboarding first, then on to the link that sent them (?next=).
+      const onboarding = next ? `/onboarding?next=${encodeURIComponent(next)}` : '/onboarding';
+      return NextResponse.redirect(`${origin}${profile?.is_onboarded ? next ?? '/dashboard' : onboarding}`);
     }
   }
 

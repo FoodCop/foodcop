@@ -343,6 +343,8 @@ export default function ActivityTab({
   const [selectedItem, setSelectedItem] = useState<AppItem | null>(null);
   const [selectedCard, setSelectedCard] = useState<FoodCardRecord | null>(null);
   const [creatingFamily, setCreatingFamily] = useState<FoodCardFamily | null>(null);
+  // Your own post opened in the Create flow (finish a draft / edit).
+  const [editingCard, setEditingCard] = useState<FoodCardRecord | null>(null);
 
   const refetchSaved = useCallback(async () => {
     try {
@@ -834,6 +836,22 @@ export default function ActivityTab({
           onClose={() => setSelectedCard(null)}
           onUpdated={(updated) => {
             setSelectedCard(updated);
+            refetchCards();
+          }}
+          onEdit={(card) => {
+            setSelectedCard(null);
+            setEditingCard(card);
+          }}
+          onDeleted={() => refetchCards()}
+        />
+      )}
+
+      {editingCard && (
+        <CreateFlow
+          editCard={editingCard}
+          onSaved={() => refetchCards()}
+          onClose={() => {
+            setEditingCard(null);
             refetchCards();
           }}
         />

@@ -249,9 +249,27 @@ export const PostService = {
   async remove(id: string): Promise<ServiceResult<null>> {
     const supabase = createClient();
     if (!supabase) return { success: false, error: 'Supabase is not configured' };
-    const { error } = await supabase.from('food_cards').delete().eq('id', id);
+    const { data: authData } = await supabase.auth.getUser();
+    const userId = authData?.user?.id;
+    if (!userId) return { success: false, error: 'Please sign in.' };
+    const { data: card } = await supabase.from('food_cards').select('photos, image_url').eq('id', id).eq('user_id', userId).maybeSingle();
+    const { data: gone, error } = await supabase.from('food_cards').delete().eq('id', id).eq('user_id', userId).select('id');
     if (error) return { success: false, error: error.message };
+    if (!gone?.length) return { success: false, error: 'This post was already deleted.' };
+    // Then its photos (best effort).
+    const urls = [...((card?.photos as string[] | null) ?? []), ...(card?.image_url ? [card.image_url as string] : [])];
+    await MediaUploadService.removePostPhotos([...new Set(urls)]);
     return { success: true, data: null };
+  },
+
+  /** The signed-in user's drafts (empty when signed out). */
+  async listMyDrafts(): Promise<ServiceResult<FoodCardRecord[]>> {
+    const supabase = createClient();
+    if (!supabase) return { success: false, error: 'Supabase is not configured' };
+    const { data: authData } = await supabase.auth.getUser();
+    const userId = authData?.user?.id;
+    if (!userId) return { success: true, data: [] };
+    return this.listDrafts(userId);
   },
 
   /** The user's unfinished camera posts, newest first. */

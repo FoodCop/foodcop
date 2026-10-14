@@ -34,7 +34,7 @@ export function RestaurantDetails({ photos, fields, onChange }: RestaurantDetail
     let cancelled = false;
     (async () => {
       for (const p of photos) {
-        if (p.source !== 'gallery') continue;
+        if (p.source !== 'gallery' || !p.file) continue;
         const gps = await readExifGps(p.file);
         if (gps) {
           if (!cancelled) setPhotoSpot(gps);

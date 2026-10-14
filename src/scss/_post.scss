@@ -1,0 +1,482 @@
+// ============================================================================
+// Shared post page /post/<id> (client, 2026-10-14; plan Phase 9) - PostView.tsx
+// Clean look: white page, one floating card (photos on top, details below).
+// Signed out: a "Sign up to see it" card with the blurred cover photo.
+// ============================================================================
+
+$post-ink: $fz-ink;
+$post-muted: #6b6457;
+$post-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+.fz-post {
+  min-height: calc(100dvh - #{$fz-topbar-space});
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem calc(2.5rem + env(safe-area-inset-bottom));
+  color: $post-ink;
+
+  &--gate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.fz-post__top {
+  margin-bottom: 0.75rem;
+}
+
+.fz-post__back {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--studio-pill, #f2f1ee);
+  color: $post-ink;
+
+  &:focus-visible {
+    outline: 3px solid rgba($fuzo-yellow-deep, 0.7);
+    outline-offset: 2px;
+  }
+}
+
+.fz-post__card {
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--fz-float-bg, #fff);
+  border: 1px solid var(--fz-float-border, #f2f2f2);
+  box-shadow: var(--fz-float-shadow);
+}
+
+// Photos: swipe sideways (scroll-snap), dots below
+.fz-post__photos {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-height: 70dvh;
+  width: 100%;
+  background: #ece8df;
+}
+
+.fz-post__track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  img {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    scroll-snap-align: start;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $fuzo-yellow;
+    outline-offset: -3px;
+  }
+}
+
+.fz-post__badge {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  background: rgba(30, 26, 22, 0.55);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fz-post__dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.75rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+
+  span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.55);
+    transition: width 0.25s $post-ease, background 0.25s ease;
+
+    &.is-on {
+      width: 18px;
+      border-radius: 9999px;
+      background: #fff;
+    }
+  }
+}
+
+.fz-post__body {
+  padding: 1.25rem 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  @media (min-width: 600px) {
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+}
+
+.fz-post__author {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: inherit;
+  text-decoration: none;
+  align-self: flex-start;
+  min-height: 44px;
+
+  > span:last-child {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+
+  strong {
+    font-weight: 800;
+  }
+
+  &:hover strong {
+    text-decoration: underline;
+  }
+}
+
+.fz-post__avatar {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-ink;
+  font-weight: 800;
+  box-shadow: 0 0 0 2px $fuzo-yellow;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.fz-post__title {
+  margin: 0;
+  font-family: var(--body-font), $font-family-sans-serif;
+  font-size: clamp(1.4rem, 5vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.fz-post__muted {
+  color: $post-muted;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.fz-post__place {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  align-self: flex-start;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow-tint;
+  color: $post-ink;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+
+  svg {
+    flex: none;
+    margin-top: 0.15rem;
+    color: $fuzo-yellow-ink;
+  }
+
+  &:hover {
+    background: mix($fuzo-yellow, #fff, 30%);
+  }
+}
+
+.fz-post__caption {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.fz-post__chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+
+  li {
+    padding: 0.3rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: $post-ink;
+    @include fz-pastel-cycle;
+    background: var(--pastel);
+  }
+}
+
+.fz-post__section {
+  h2 {
+    margin: 0.25rem 0 0.5rem;
+    font-family: var(--body-font), $font-family-sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+  }
+}
+
+.fz-post__ingredients {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0ede6;
+    font-weight: 600;
+  }
+}
+
+.fz-post__steps {
+  margin: 0;
+  padding-left: 1.4rem;
+  list-style: decimal;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  line-height: 1.5;
+
+  li::marker {
+    font-weight: 800;
+  }
+}
+
+.fz-post__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+
+  > * {
+    flex: 1 1 10rem;
+  }
+}
+
+.fz-post__btn {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.25rem;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--studio-pill, #f2f1ee);
+  color: $post-ink;
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: transform 0.15s $post-ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    color: $post-ink;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba($fuzo-yellow-deep, 0.7);
+    outline-offset: 2px;
+  }
+
+  &--primary {
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35);
+
+    &:hover {
+      color: $fuzo-yellow-ink;
+      box-shadow: 0 8px 20px rgba($fuzo-yellow, 0.45);
+    }
+  }
+}
+
+.fz-post__missing {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+
+  .fz-post__muted {
+    margin: 0 0 0.5rem;
+    max-width: 22rem;
+  }
+}
+
+// Loading
+.fz-post__card--skeleton .fz-post__photos,
+.fz-post__sk {
+  background: linear-gradient(90deg, #efece5 25%, #f7f5f0 50%, #efece5 75%);
+  background-size: 200% 100%;
+  animation: fz-post-shimmer 1.4s ease-in-out infinite;
+}
+
+.fz-post__sk {
+  display: block;
+  height: 1.4rem;
+  border-radius: 9999px;
+
+  &--sm {
+    width: 40%;
+  }
+
+  &--md {
+    width: 70%;
+  }
+}
+
+@keyframes fz-post-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+// Signed out: "Sign up to see it"
+.fz-post__gate {
+  width: 100%;
+  max-width: 26rem;
+  padding: 1.25rem 1.25rem 1.5rem;
+  border-radius: 28px;
+  text-align: center;
+  background: var(--fz-float-bg, #fff);
+  border: 1px solid var(--fz-float-border, #f2f2f2);
+  box-shadow: var(--fz-float-shadow);
+}
+
+.fz-post__gate-photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 1.1rem;
+  background: linear-gradient(135deg, $fuzo-yellow-tint, #f2d9c4);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(14px) saturate(1.1);
+    transform: scale(1.15);
+  }
+}
+
+.fz-post__gate-fallback {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba($fuzo-yellow, 0.55), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(#e7895a, 0.45), transparent 60%);
+}
+
+.fz-post__gate-lock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92);
+  color: $post-ink;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.fz-post__gate-eyebrow {
+  margin: 0 0 0.25rem;
+  color: $post-muted;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.fz-post__gate-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--body-font), $font-family-sans-serif;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.fz-post__gate-sub {
+  margin: 0 0 1.25rem;
+  color: $post-muted;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.fz-post__gate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-post__btn,
+  .fz-post__dots span {
+    transition: none;
+  }
+  .fz-post__card--skeleton .fz-post__photos,
+  .fz-post__sk {
+    animation: none;
+  }
+}
+
+// Dark mode: black page; the card stays light (like every floating card).
+html[data-theme='dark'] {
+  .fz-post__back {
+    background: #1c1c1c;
+    color: #f5f5f5;
+  }
+}

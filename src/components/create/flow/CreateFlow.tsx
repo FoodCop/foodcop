@@ -4,9 +4,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowLeft, Check, Footprints, Loader2, X } from 'lucide-react';
+import { ArrowLeft, Check, Footprints, Loader2, Share2, X } from 'lucide-react';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { PostService, missingForPublish, type PostInput } from '@/lib/services/postService';
+import { MediaUploadService } from '@/lib/services/mediaUploadService';
+import type { FoodCardRecord } from '@/lib/types/foodCard';
+import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
+import { postSharePayload } from '@/lib/share/postShare';
 import { CameraCapture } from './CameraCapture';
 import { KindPicker, KIND_OPTIONS } from './KindPicker';
 import { VibeDetails } from './VibeDetails';
@@ -14,13 +18,16 @@ import { FoodDetails } from './FoodDetails';
 import { RecipeDetails } from './RecipeDetails';
 import { RestaurantDetails } from './RestaurantDetails';
 import { placeFromDuplicate } from './placeFromDuplicate';
+import { DraftsSheet } from './DraftsSheet';
+import { fieldsOfCard, kindOfCard, photosOfCard } from './fromCard';
 import { emptyPostFields, type CreateKind, type CreateMode, type CreatePhoto, type CreateStep, type PostFields } from './types';
 
 // The Create flow (client, 2026-10-14; plan: docs/CREATE_FLOW_PLAN.md):
 // camera -> "What is this?" -> that kind's details -> Post. This component
 // holds the photos and answers, so Back never loses anything, and asks
-// before throwing away a post in progress. Built so far: the camera, the kind
-// step, Vibe, Food and Recipe posts; Restaurant arrives in a later phase.
+// before throwing away a post in progress. Also opens a saved post again
+// (Phase 8): a draft to finish (from the camera's Drafts, or the profile) or
+// a published post to edit (editCard).
 
 interface CreateFlowProps {
   onClose: () => void;
@@ -28,7 +35,20 @@ interface CreateFlowProps {
   initialKind?: CreateKind;
   /** Opens on a tab other than Photo (e.g. Profile's "Add a video"). */
   initialMode?: CreateMode;
+  /** A saved post to finish (draft) or edit (published). Opens on its details. */
+  editCard?: FoodCardRecord;
+  /** Called after a post is saved or deleted, so lists can refresh. */
+  onSaved?: () => void;
 }
+
+/** The saved post being edited: its id, status, and photos when opened. */
+type Editing = { id: string; status: 'DRAFT' | 'PUBLISHED'; originalPhotos: string[] };
+
+const editingOf = (card: FoodCardRecord): Editing => ({
+  id: card.id,
+  status: card.status,
+  originalPhotos: card.photos?.length ? card.photos : card.image_url ? [card.image_url] : [],
+});
 
 const STEPS: { id: CreateStep; label: string }[] = [
   { id: 'capture', label: 'Photos' },
@@ -58,17 +78,34 @@ const POSTED_TO: Record<CreateKind, string> = {
 
 type SaveState = { status: 'idle' } | { status: 'saving'; publishing: boolean } | { status: 'error'; message: string };
 
-export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: CreateFlowProps) {
+export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCard, onSaved }: CreateFlowProps) {
   const router = useRouter();
   const reduceMotion = useReducedMotion();
   const trapRef = useFocusTrap(true);
-  const [step, setStep] = useState<CreateStep>('capture');
+  const editKind = editCard ? kindOfCard(editCard) : null;
+  const [step, setStep] = useState<CreateStep>(editKind ? 'details' : 'capture');
   const [mode, setMode] = useState<CreateMode>(initialMode);
-  const [photos, setPhotos] = useState<CreatePhoto[]>([]);
-  const [kind, setKind] = useState<CreateKind | null>(initialKind ?? null);
-  const [fields, setFields] = useState<PostFields>(emptyPostFields);
+  const [photos, setPhotos] = useState<CreatePhoto[]>(() => (editCard && editKind ? photosOfCard(editCard) : []));
+  const [kind, setKind] = useState<CreateKind | null>(editKind ?? initialKind ?? null);
+  const [fields, setFields] = useState<PostFields>(() => (editCard && editKind ? fieldsOfCard(editCard) : emptyPostFields()));
+  const [editing, setEditing] = useState<Editing | null>(() => (editCard && editKind ? editingOf(editCard) : null));
+  const [draftsOpen, setDraftsOpen] = useState(false);
+  // The user's unfinished posts (camera "Drafts" button); not while editing.
+  const [drafts, setDrafts] = useState<FoodCardRecord[]>([]);
+  useEffect(() => {
+    if (editCard) return;
+    let cancelled = false;
+    PostService.listMyDrafts().then((res) => {
+      if (!cancelled && res.success) setDrafts(res.data ?? []);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [editCard]);
+  const editingPublished = editing?.status === 'PUBLISHED';
   const [save, setSave] = useState<SaveState>({ status: 'idle' });
-  const [result, setResult] = useState<{ published: boolean; visitAt?: string; addedPlace?: string } | null>(null);
+  const [result, setResult] = useState<{ published: boolean; edited?: boolean; visitAt?: string; addedPlace?: string; card?: FoodCardRecord } | null>(null);
+  const [sharing, setSharing] = useState<SharePayload | null>(null);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const [direction, setDirection] = useState(1);
 
@@ -77,7 +114,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
   useEffect(() => {
     photosRef.current = photos;
   }, [photos]);
-  useEffect(() => () => photosRef.current.forEach((p) => URL.revokeObjectURL(p.url)), []);
+  useEffect(() => () => photosRef.current.forEach((p) => p.file && URL.revokeObjectURL(p.url)), []);
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -91,9 +128,9 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
 
   const requestClose = useCallback(() => {
     if (saving) return;
-    if (step !== 'done' && photos.length > 0) setConfirmDiscard(true);
+    if (step !== 'done' && (photos.length > 0 || editing)) setConfirmDiscard(true);
     else onClose();
-  }, [saving, step, photos.length, onClose]);
+  }, [saving, step, photos.length, editing, onClose]);
 
   const goTo = (next: CreateStep) => {
     setDirection(STEPS.findIndex((s) => s.id === next) > STEPS.findIndex((s) => s.id === step) ? 1 : -1);
@@ -103,7 +140,8 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
   const goBack = () => {
     if (saving) return;
     setSave({ status: 'idle' });
-    if (step === 'details') goTo('kind');
+    // A saved post keeps its kind: Back goes to its photos.
+    if (step === 'details') goTo(editing ? 'capture' : 'kind');
     else if (step === 'kind') goTo('capture');
     else requestClose();
   };
@@ -114,19 +152,34 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
       // A map picker on top handles its own Escape.
       if (document.querySelector('.modal.show')) return;
       if (confirmDiscard) setConfirmDiscard(false);
+      else if (draftsOpen) setDraftsOpen(false);
       else requestClose();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [confirmDiscard, requestClose]);
+  }, [confirmDiscard, draftsOpen, requestClose]);
 
   const addPhotos = (added: CreatePhoto[]) => setPhotos((prev) => [...prev, ...added]);
   const removePhoto = (id: string) =>
     setPhotos((prev) => {
       const gone = prev.find((p) => p.id === id);
-      if (gone) URL.revokeObjectURL(gone.url);
+      if (gone?.file) URL.revokeObjectURL(gone.url);
       return prev.filter((p) => p.id !== id);
     });
+
+  // Finish a draft picked from the camera's Drafts list.
+  const openDraft = (card: FoodCardRecord) => {
+    const k = kindOfCard(card);
+    if (!k) return;
+    photos.forEach((p) => p.file && URL.revokeObjectURL(p.url));
+    setPhotos(photosOfCard(card));
+    setKind(k);
+    setFields(fieldsOfCard(card));
+    setEditing(editingOf(card));
+    setDraftsOpen(false);
+    setSave({ status: 'idle' });
+    goTo('details');
+  };
 
   const patchFields = (patch: Partial<PostFields>) => {
     setFields((f) => ({ ...f, ...patch }));
@@ -135,7 +188,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
 
   const toInput = (k: CreateKind): PostInput => ({
     kind: k,
-    photos: photos.map((p) => p.file),
+    photos: photos.map((p) => p.file ?? p.url),
     title: fields.title,
     caption: fields.caption,
     tags: fields.tags,
@@ -161,7 +214,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
       }
     }
     setSave({ status: 'saving', publishing: publish });
-    const res = await PostService.save(input, publish ? 'PUBLISHED' : 'DRAFT');
+    const res = await PostService.save(input, publish ? 'PUBLISHED' : 'DRAFT', editing?.id);
     if (!res.success) {
       if (res.duplicate) {
         // The new restaurant is already on the map: post to that place instead.
@@ -174,13 +227,20 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
       return;
     }
     setSave({ status: 'idle' });
-    setResult({ published: publish, addedPlace: publish && input.newPlace ? input.newPlace.name.trim() : undefined });
+    setResult({ published: publish, edited: editingPublished, addedPlace: publish && input.newPlace ? input.newPlace.name.trim() : undefined, card: res.data });
     setDirection(1);
     setStep('done');
+    onSaved?.();
+    // Photos taken out while editing are deleted from storage (best effort).
+    if (editing && res.data) {
+      const kept = new Set(res.data.photos?.length ? res.data.photos : res.data.image_url ? [res.data.image_url] : []);
+      MediaUploadService.removePostPhotos(editing.originalPhotos.filter((u) => !kept.has(u)));
+      setEditing({ ...editing, status: res.data.status, originalPhotos: [...kept] });
+    }
     // Posting from the place counts a visit there (checked by the database:
     // within 150 m, once a day). Runs after the done screen shows.
     const card = res.data;
-    const atPlace = publish && card && kind !== 'recipe' && !card.is_home && (card.place_id || card.restaurant_id || card.community_place_id);
+    const atPlace = publish && !editingPublished && card && kind !== 'recipe' && !card.is_home && (card.place_id || card.restaurant_id || card.community_place_id);
     if (atPlace) {
       const placeName = card.place_name || input.place?.name || 'this place';
       PostService.recordVisit(card.id).then((counted) => {
@@ -208,7 +268,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
             <ArrowLeft size={20} />
           </button>
           <div className="cf__titles">
-            <h1 className="cf__title">{step === 'kind' ? 'What is this?' : `${kindLabel} details`}</h1>
+            <h1 className="cf__title">{step === 'kind' ? 'What is this?' : editingPublished ? `Edit ${kindLabel.toLowerCase()}` : `${kindLabel} details`}</h1>
             <ol className="cf__progress" aria-label={`Step ${stepIndex + 1} of ${STEPS.length}`}>
               {STEPS.map((s, i) => (
                 <li key={s.id} className={i <= stepIndex ? 'is-done' : ''} aria-current={i === stepIndex ? 'step' : undefined}>
@@ -233,8 +293,10 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
                 photos={photos}
                 onAddPhotos={addPhotos}
                 onRemovePhoto={removePhoto}
-                onNext={() => goTo('kind')}
+                onNext={() => goTo(editing ? 'details' : 'kind')}
                 onClose={requestClose}
+                draftCount={editing ? 0 : drafts.length}
+                onOpenDrafts={() => setDraftsOpen(true)}
               />
             )}
 
@@ -295,9 +357,11 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
                   // eslint-disable-next-line @next/next/no-img-element
                   <img className="cf-done__photo" src={photos[0].url} alt="" />
                 )}
-                <h2 className="cf-done__title">{result.published ? 'Posted!' : 'Draft saved'}</h2>
+                <h2 className="cf-done__title">{result.edited ? 'Changes saved' : result.published ? 'Posted!' : 'Draft saved'}</h2>
                 <p className="cf-done__sub">
-                  {result.published
+                  {result.edited
+                    ? 'Your post is updated everywhere it shows.'
+                    : result.published
                     ? result.addedPlace
                       ? `${result.addedPlace} is on the map as Community Added, and your photos are on the Feed and your profile.`
                       : `Your ${kindLabel.toLowerCase()} is on ${POSTED_TO[kind]}.`
@@ -318,10 +382,15 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
                   </AnimatePresence>
                 </div>
                 <div className="cf-done__actions">
+                  {result.published && result.card && (
+                    <button type="button" className="cf-bar__post" onClick={() => setSharing(postSharePayload(result.card!))}>
+                      <Share2 size={18} aria-hidden="true" /> Share
+                    </button>
+                  )}
                   {result.published && (
                     <button
                       type="button"
-                      className="cf-bar__post"
+                      className="cf-bar__draft"
                       onClick={() => {
                         onClose();
                         router.push('/profile?activity=posts');
@@ -357,14 +426,18 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
             )}
           </AnimatePresence>
           <div className="cf-bar__row">
-            <button type="button" className="cf-bar__draft" onClick={() => submit(false)} disabled={saving}>
-              {saving && !save.publishing ? <Loader2 size={18} className="scout-spin" /> : null} Save draft
-            </button>
+            {!editingPublished && (
+              <button type="button" className="cf-bar__draft" onClick={() => submit(false)} disabled={saving}>
+                {saving && !save.publishing ? <Loader2 size={18} className="scout-spin" /> : null} Save draft
+              </button>
+            )}
             <button type="button" className="cf-bar__post" onClick={() => submit(true)} disabled={saving}>
               {saving && save.publishing ? (
                 <>
-                  <Loader2 size={18} className="scout-spin" /> Posting…
+                  <Loader2 size={18} className="scout-spin" /> {editingPublished ? 'Saving…' : 'Posting…'}
                 </>
+              ) : editingPublished ? (
+                'Save changes'
               ) : (
                 'Post'
               )}
@@ -372,6 +445,19 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
           </div>
         </div>
       )}
+
+      <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
+
+      <DraftsSheet
+        open={draftsOpen}
+        drafts={drafts}
+        onClose={() => setDraftsOpen(false)}
+        onOpenDraft={openDraft}
+        onDeleted={(id) => {
+          setDrafts((list) => list.filter((d) => d.id !== id));
+          onSaved?.();
+        }}
+      />
 
       <AnimatePresence>
         {confirmDiscard && (
@@ -394,9 +480,11 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 id="cf-confirm-title" className="cf-confirm__title">Discard post?</h2>
+              <h2 id="cf-confirm-title" className="cf-confirm__title">{editing ? 'Discard changes?' : 'Discard post?'}</h2>
               <p id="cf-confirm-text" className="cf-confirm__text">
-                Your {photos.length === 1 ? 'photo' : `${photos.length} photos`} and anything you&apos;ve filled in will be lost.
+                {editing
+                  ? `Changes you made won't be saved. Your ${editing.status === 'DRAFT' ? 'draft' : 'post'} stays as it was.`
+                  : `Your ${photos.length === 1 ? 'photo' : `${photos.length} photos`} and anything you've filled in will be lost.`}
               </p>
               <div className="cf-confirm__actions">
                 <button type="button" className="cf-confirm__btn cf-confirm__btn--danger" onClick={onClose}>

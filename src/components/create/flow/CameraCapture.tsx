@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Camera, ChevronRight, ImagePlus, Link2, SwitchCamera, Video, X, Zap, ZapOff } from 'lucide-react';
+import { Camera, ChevronRight, FileClock, ImagePlus, Link2, SwitchCamera, Video, X, Zap, ZapOff } from 'lucide-react';
 import { MAX_PHOTOS, type CreateMode, type CreatePhoto } from './types';
 
 // Step 1 of the Create flow: a full-screen camera like Instagram's. Live
@@ -22,6 +22,9 @@ interface CameraCaptureProps {
   onRemovePhoto: (id: string) => void;
   onNext: () => void;
   onClose: () => void;
+  /** Unfinished posts the user can go back to ("Drafts" button; hidden at 0). */
+  draftCount?: number;
+  onOpenDrafts?: () => void;
 }
 
 const MODES: { id: CreateMode; label: string }[] = [
@@ -32,7 +35,7 @@ const MODES: { id: CreateMode; label: string }[] = [
 
 const newId = () => crypto.randomUUID();
 
-export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemovePhoto, onNext, onClose }: CameraCaptureProps) {
+export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemovePhoto, onNext, onClose, draftCount = 0, onOpenDrafts }: CameraCaptureProps) {
   const reduceMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -220,6 +223,11 @@ export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemov
         {photoMode && status === 'live' && torchSupported && (
           <button type="button" className="cf-cam__icon" onClick={toggleTorch} aria-label={torchOn ? 'Turn flash off' : 'Turn flash on'} aria-pressed={torchOn}>
             {torchOn ? <Zap size={22} /> : <ZapOff size={22} />}
+          </button>
+        )}
+        {draftCount > 0 && onOpenDrafts && photos.length === 0 && (
+          <button type="button" className="cf-cam__drafts" onClick={onOpenDrafts}>
+            <FileClock size={16} aria-hidden="true" /> Drafts <span className="cf-cam__drafts-n">{draftCount}</span>
           </button>
         )}
         <span className="cf-cam__count" aria-live="polite">{photos.length}/{MAX_PHOTOS}</span>

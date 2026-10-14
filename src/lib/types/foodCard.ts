@@ -125,4 +125,6 @@ export interface FoodCardRecord {
   menu_item_id?: string | null;
   /** Recipe preparation steps. */
   steps?: string[];
+  /** A draft's new-restaurant details (Phase 7), until it's published. */
+  new_place?: Record<string, unknown> | null;
 }

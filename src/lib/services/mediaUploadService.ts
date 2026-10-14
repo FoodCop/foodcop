@@ -98,6 +98,29 @@ export const MediaUploadService = {
   },
 
   /**
+   * Best effort: deletes post photos the user removed (editing a post, or
+   * deleting it). Only the caller's own Create-flow uploads
+   * ("<their id>/post-<uuid>.jpg") are touched; storage rules check it too.
+   */
+  async removePostPhotos(urls: string[]): Promise<void> {
+    const supabase = createClient();
+    if (!supabase || !urls.length) return;
+    const { data: authData } = await supabase.auth.getUser();
+    const userId = authData?.user?.id;
+    if (!userId) return;
+    const marker = `/storage/v1/object/public/${BUCKET}/`;
+    const paths = urls
+      .map((u) => {
+        const i = u.indexOf(marker);
+        return i >= 0 ? decodeURIComponent(u.slice(i + marker.length).split('?')[0]) : null;
+      })
+      .filter((p): p is string => !!p && new RegExp(`^${userId}/post-[0-9a-f-]{36}[.]jpg$`, 'i').test(p));
+    if (!paths.length) return;
+    const { error } = await supabase.storage.from(BUCKET).remove(paths);
+    if (error) console.warn('Old post photos not removed:', error.message);
+  },
+
+  /**
    * Upload a photo that exists only as a data URL (how card photos are stored) and return a
    * durable public URL. Used when sharing a card in chat, where a multi-megabyte data URL can't
    * travel inside a message. Repeated shares of the same photo reuse the first upload.

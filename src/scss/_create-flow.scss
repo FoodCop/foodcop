@@ -167,6 +167,43 @@ $cf-max: 40rem;
   }
 }
 
+// "Drafts 2" - go back to an unfinished post (Phase 8)
+.cf-cam__drafts {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  padding: 0.35rem 0.85rem;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  backdrop-filter: blur(8px);
+
+  &:focus-visible {
+    outline: 3px solid $fuzo-yellow;
+    outline-offset: 2px;
+  }
+
+  + .cf-cam__count {
+    margin-left: 0;
+  }
+}
+
+.cf-cam__drafts-n {
+  min-width: 1.35rem;
+  padding: 0 0.35rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-size: 0.75rem;
+  line-height: 1.35rem;
+  text-align: center;
+}
+
 .cf-cam__count {
   margin-left: auto;
   padding: 0.3rem 0.7rem;
@@ -688,6 +725,163 @@ $cf-max: 40rem;
   color: darken($rose, 12%);
 }
 
+// Drafts (camera "Drafts" button)
+.cf-drafts {
+  text-align: left;
+  max-height: min(80dvh, 640px);
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-drafts__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.cf-drafts__close,
+.cf-drafts__delete {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cf-ink;
+  @include cf-focus;
+}
+
+.cf-drafts__delete:hover {
+  background: rgba($rose, 0.12);
+  color: darken($rose, 12%);
+}
+
+.cf-drafts__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cf-drafts__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cf-drafts__open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+  border: 0;
+  border-radius: 18px;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cf-ink;
+  text-align: left;
+  transition: transform 0.15s ease;
+  @include cf-focus;
+
+  &:active {
+    transform: scale(0.99);
+  }
+
+  > svg {
+    flex: none;
+    color: $cf-muted;
+  }
+}
+
+.cf-drafts__thumb {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #e4e2dc;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: $cf-muted;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.cf-drafts__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  span {
+    color: $cf-muted;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+.cf-drafts__confirm {
+  flex: 1;
+  min-height: 68px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 18px;
+  background: rgba($rose, 0.08);
+  font-weight: 800;
+
+  > span {
+    flex: 1 1 auto;
+  }
+}
+
+.cf-drafts__btn {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 9999px;
+  background: #fff;
+  color: $cf-ink;
+  font-weight: 800;
+  @include cf-focus;
+
+  &.is-danger {
+    background: darken($rose, 12%);
+    color: #fff;
+  }
+}
+
+.cf-drafts__error {
+  margin: 0.75rem 0 0;
+  color: darken($rose, 12%);
+  font-weight: 700;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cf-kind__art img,
   .cf-cam__video,
@@ -716,8 +910,18 @@ html[data-theme='dark'] {
   .cf-confirm__text {
     color: #a3a3a3;
   }
-  .cf-confirm__btn {
+  .cf-confirm__btn,
+  .cf-drafts__open,
+  .cf-drafts__close,
+  .cf-drafts__delete {
     background: #262626;
+    color: #f5f5f5;
+  }
+  .cf-drafts__thumb {
+    background: #333;
+  }
+  .cf-drafts__btn:not(.is-danger) {
+    background: #333;
     color: #f5f5f5;
   }
   .cf-kind__tile {

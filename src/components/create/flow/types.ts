@@ -17,11 +17,14 @@ export const MAX_PHOTOS = MAX_POST_PHOTOS;
 
 export interface CreatePhoto {
   id: string;
-  /** The image itself: a camera frame (JPEG) or the gallery file as picked (keeps its EXIF, e.g. GPS). */
-  file: Blob;
-  /** Object URL for previews; revoked when the photo is removed or the flow closes. */
+  /**
+   * The image itself: a camera frame (JPEG) or the gallery file as picked
+   * (keeps its EXIF, e.g. GPS). null for a photo already posted (editing).
+   */
+  file: Blob | null;
+  /** Object URL for previews (revoked when removed / on close), or the posted photo's URL. */
   url: string;
-  source: 'camera' | 'gallery';
+  source: 'camera' | 'gallery' | 'existing';
 }
 
 /** Everything the user fills in after the photos (kept by CreateFlow so Back never loses it). */
