@@ -6,9 +6,9 @@ import type { CardTags } from '@/lib/types/foodCard';
 // taxonomy.ts source yet (cooking_style, season) - mirrors fuzo-food-card-demo.html's
 // hardcoded TAG_DATA.COOKING_STYLE / TAG_DATA.SEASON, the concrete reference
 // this whole tagging shape is modeled on.
-const COOKING_STYLES = ['Grilled', 'Roasted', 'Fried', 'Steamed', 'Smoked', 'Baked'];
+export const COOKING_STYLES = ['Grilled', 'Roasted', 'Fried', 'Steamed', 'Smoked', 'Baked'];
 const SEASONS = ['Summer', 'Winter', 'Festival', 'Holiday'];
-const PRICE_LEVELS = ['$', '$$', '$$$', '$$$$'];
+export const PRICE_LEVELS = ['$', '$$', '$$$', '$$$$'];
 
 type MultiCategory = 'cuisine' | 'food_type' | 'meal_type' | 'cooking_style' | 'diet' | 'occasion' | 'season';
 

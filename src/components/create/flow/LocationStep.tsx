@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Crosshair, Loader2, MapPin, Navigation, Search, Store, X } from 'lucide-react';
+import { Camera, Crosshair, Loader2, MapPin, Navigation, Search, Store, X } from 'lucide-react';
 import LocationPickerModal from '@/components/profile/LocationPickerModal';
 import { PlacesService, type ScoutPlaceRaw } from '@/lib/services/placesService';
 import { RestaurantService } from '@/lib/services/restaurantService';
 import type { PostPlace } from '@/lib/services/postService';
+import type { GpsPoint } from '@/lib/utils/exifGps';
 
 // Where a post was taken (Create flow; client, 2026-10-14: "search for a
 // place using Scout, or drop a map pin"). Used by Vibe, Food and Restaurant
@@ -18,6 +19,8 @@ interface LocationStepProps {
   onChange: (place: PostPlace | null) => void;
   /** Heading above the field. */
   label?: string;
+  /** Where the photo was taken (EXIF GPS): places there are suggested first. */
+  photoSpot?: GpsPoint | null;
 }
 
 type Status = 'idle' | 'searching' | 'locating' | 'error';
@@ -39,7 +42,7 @@ const getPosition = () =>
     );
   });
 
-export function LocationStep({ value, onChange, label = 'Location' }: LocationStepProps) {
+export function LocationStep({ value, onChange, label = 'Location', photoSpot = null }: LocationStepProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PostPlace[]>([]);
   const [status, setStatus] = useState<Status>('idle');
@@ -49,6 +52,7 @@ export function LocationStep({ value, onChange, label = 'Location' }: LocationSt
   const here = useRef<{ lat: number; lng: number } | null>(null);
   const [herePos, setHerePos] = useState<{ lat: number; lng: number } | null>(null);
   const seq = useRef(0);
+  const [fromPhoto, setFromPhoto] = useState<PostPlace[] | null>(null);
 
   // Ask for the user's position once, quietly, to bias search results nearby.
   useEffect(() => {
@@ -57,6 +61,19 @@ export function LocationStep({ value, onChange, label = 'Location' }: LocationSt
       setHerePos(p);
     });
   }, []);
+
+  // Places where the photo was taken (once per photo spot).
+  useEffect(() => {
+    if (!photoSpot) return;
+    let cancelled = false;
+    PlacesService.searchNearby(photoSpot.lat, photoSpot.lng, 150).then((res) => {
+      if (cancelled) return;
+      setFromPhoto((res.data?.results ?? []).map(toPlace).filter((p): p is PostPlace => !!p).slice(0, 5));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [photoSpot]);
 
   const choose = async (place: PostPlace) => {
     setResults([]);
@@ -126,6 +143,42 @@ export function LocationStep({ value, onChange, label = 'Location' }: LocationSt
         </div>
       ) : (
         <>
+          {photoSpot && (
+            <div className="cf-fromphoto">
+              <p className="cf-fromphoto__title">
+                <Camera size={15} aria-hidden="true" /> From your photo&apos;s location
+              </p>
+              {fromPhoto === null ? (
+                <p className="cf-field__hint">
+                  <Loader2 size={14} className="scout-spin" aria-hidden="true" /> Looking for places there…
+                </p>
+              ) : fromPhoto.length === 0 ? (
+                <p className="cf-field__hint">We couldn&apos;t spot a restaurant there. Search for it, or use the photo&apos;s spot.</p>
+              ) : (
+                <ul className="cf-results" aria-label="Places where the photo was taken">
+                  {fromPhoto.map((r) => (
+                    <li key={`p-${r.placeId ?? ''}-${r.lat}-${r.lng}`}>
+                      <button type="button" className="cf-results__item" onClick={() => choose(r)}>
+                        <MapPin size={16} aria-hidden="true" />
+                        <span>
+                          <strong>{r.name}</strong>
+                          {r.address && <span>{r.address}</span>}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <button
+                type="button"
+                className="cf-chipbtn"
+                onClick={() => choose({ lat: photoSpot.lat, lng: photoSpot.lng, name: null, address: null, placeId: null })}
+              >
+                <Crosshair size={15} /> Use the photo&apos;s exact spot
+              </button>
+            </div>
+          )}
+
           <form
             className="cf-search"
             role="search"

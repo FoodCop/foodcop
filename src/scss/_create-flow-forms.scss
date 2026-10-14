@@ -330,6 +330,94 @@ $cff-max: 40rem;
   }
 }
 
+// At a place / At home
+.cf-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  padding: 4px;
+  border-radius: 9999px;
+  background: var(--studio-pill, #f2f1ee);
+}
+
+.cf-toggle__opt {
+  min-height: 44px;
+  border-radius: 9999px;
+  border: 0;
+  background: transparent;
+  color: $cff-ink;
+  font-weight: 800;
+  font-size: 0.92rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: background-color 0.2s ease;
+  @include cff-focus;
+
+  &.is-on {
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 4px 10px -4px rgba($fuzo-yellow-deep, 0.8);
+  }
+}
+
+// One-line text box (food name)
+.cf-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 1rem;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cff-ink;
+  font-size: 1rem;
+  font-weight: 600;
+  outline: none;
+
+  &::placeholder {
+    color: #8f8a80;
+  }
+
+  &:focus {
+    background: #fff;
+    border-color: $fuzo-yellow-deep;
+    box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35);
+  }
+}
+
+// Places where the photo was taken
+.cf-fromphoto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 18px;
+  background: rgba($fuzo-yellow, 0.1);
+
+  .cf-results {
+    width: 100%;
+  }
+
+  .cf-field__hint {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+}
+
+.cf-fromphoto__title {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: $fuzo-yellow-deep;
+}
+
 // Post / Save draft - pinned to the bottom of the screen.
 .cf-bar {
   position: absolute;
