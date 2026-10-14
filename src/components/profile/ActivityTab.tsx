@@ -7,7 +7,7 @@ import { normalizeSavedItemForUI } from '../../lib/services/savedItems';
 import SavedItemDetailModal from './SavedItemDetailModal';
 import ShareSheet, { sharePayloadFromItem, type SharePayload } from '@/components/share/ShareSheet';
 import FoodCardDetailModal from './FoodCardDetailModal';
-import CreateCardModal from '../create/CreateCardModal';
+import { CreateFlow } from '../create/flow/CreateFlow';
 import { TYPE_META, type FoodCardFamily, type FoodCardRecord } from '../../lib/types/foodCard';
 import { useAuth } from '../auth/AuthProvider';
 import ProfileFoodMap, { type ProfileMapPlace } from './ProfileFoodMap';
@@ -834,8 +834,11 @@ export default function ActivityTab({
       )}
 
       {creatingFamily && (
-        <CreateCardModal
-          initialFamily={creatingFamily}
+        <CreateFlow
+          // Profile's "Add a recipe / place / video / post" opens the new
+          // Create flow with that kind pre-selected (videos: the Video tab).
+          initialKind={creatingFamily === 'recipe' ? 'recipe' : creatingFamily === 'restaurant' ? 'restaurant' : creatingFamily === 'discovery' ? 'food' : undefined}
+          initialMode={creatingFamily === 'video' ? 'video' : 'photo'}
           onClose={() => {
             setCreatingFamily(null);
             refetchCards();
