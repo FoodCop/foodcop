@@ -1,0 +1,476 @@
+// Create flow - the details forms after "What is this?" (Vibe now; Food,
+// Recipe and Restaurant reuse these), the Post / Save draft bar and the
+// Posted screen. Components: src/components/create/flow/{VibeDetails,
+// LocationStep,ChipField,CreateFlow}.tsx. Clean look: each question is a
+// floating card, grey pill inputs, pastel chips, yellow for picked / Post.
+
+$cff-ink: $fz-ink;
+$cff-muted: #6b6457;
+$cff-max: 40rem;
+
+@mixin cff-focus {
+  &:focus-visible {
+    outline: 2px solid $fuzo-yellow-deep;
+    outline-offset: 3px;
+  }
+}
+
+.cf-details {
+  width: 100%;
+  max-width: calc(#{$cff-max} + 2rem);
+  margin: 0 auto;
+  padding: 0.5rem 1rem calc(7.5rem + env(safe-area-inset-bottom)); // room for the Post bar
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cf-field {
+  background: var(--fz-float-bg);
+  border: 1px solid var(--fz-float-border);
+  box-shadow: var(--fz-float-shadow);
+  border-radius: 24px;
+  padding: 1.1rem 1.1rem 1.2rem;
+  color: $cff-ink;
+  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.cf-field__label {
+  margin: 0;
+  font-family: var(--body-font), $font-family-sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.cf-field__req {
+  color: darken($rose, 8%);
+}
+
+.cf-field__hint {
+  margin: -0.35rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: $cff-muted;
+}
+
+// Place search
+.cf-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 52px;
+  padding: 0.35rem 0.35rem 0.35rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cff-muted;
+
+  &:focus-within {
+    background: #fff;
+    border-color: $fuzo-yellow-deep;
+    box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35);
+  }
+
+  > svg {
+    flex-shrink: 0;
+  }
+}
+
+.cf-search__input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  color: $cff-ink;
+  font-size: 1rem;
+  font-weight: 600;
+
+  &::placeholder {
+    color: #8f8a80;
+  }
+}
+
+.cf-search__go {
+  flex-shrink: 0;
+  min-height: 42px;
+  padding: 0 1rem;
+  border-radius: 9999px;
+  border: 0;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  @include cff-focus;
+
+  &:disabled {
+    background: mix(#fff, $fuzo-yellow, 55%);
+    color: rgba($fuzo-yellow-ink, 0.5);
+  }
+}
+
+.cf-loc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cf-chipbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0 0.95rem;
+  border-radius: 9999px;
+  border: 0;
+  background: $fuzo-yellow-tint;
+  color: $cff-ink;
+  font-size: 0.875rem;
+  font-weight: 800;
+  @include cff-focus;
+
+  &:hover:not(:disabled) {
+    background: mix(#fff, $fuzo-yellow, 65%);
+  }
+}
+
+.cf-results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cf-results__item {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 16px;
+  border: 0;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cff-ink;
+  text-align: left;
+  @include cff-focus;
+
+  > svg {
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+    color: $fuzo-yellow-deep;
+  }
+
+  > span {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  strong {
+    font-size: 0.92rem;
+    font-weight: 800;
+  }
+
+  > span > span {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $cff-muted;
+  }
+
+  &:hover {
+    background: $fuzo-yellow-tint;
+  }
+}
+
+// The chosen place
+.cf-place {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 18px;
+  background: $fuzo-yellow-tint;
+  border: 1px solid mix(#fff, $fuzo-yellow, 50%);
+}
+
+.cf-place__icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: $fuzo-yellow-deep;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-place__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+
+  strong {
+    font-size: 0.95rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+  }
+
+  > span {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $cff-muted;
+    overflow-wrap: anywhere;
+  }
+
+  > .cf-place__fuzo {
+    align-self: flex-start;
+    padding: 0.1rem 0.5rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+}
+
+.cf-place__clear {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 0;
+  background: #fff;
+  color: $cff-ink;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include cff-focus;
+}
+
+// "Add your own"
+.cf-custom {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cf-custom__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 1rem;
+  border-radius: 9999px;
+  border: 1.5px dashed rgba($cff-ink, 0.2);
+  background: transparent;
+  color: $cff-ink;
+  font-size: 0.92rem;
+  font-weight: 600;
+  outline: none;
+
+  &:focus {
+    border-style: solid;
+    border-color: $fuzo-yellow-deep;
+    box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35);
+  }
+}
+
+.cf-custom__add {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 0;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include cff-focus;
+
+  &:disabled {
+    background: var(--studio-pill, #f2f1ee);
+    color: #8f8a80;
+  }
+}
+
+.cf-textarea {
+  width: 100%;
+  min-height: 88px;
+  padding: 0.8rem 1rem;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cff-ink;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.45;
+  resize: vertical;
+  outline: none;
+
+  &:focus {
+    background: #fff;
+    border-color: $fuzo-yellow-deep;
+    box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35);
+  }
+}
+
+// Post / Save draft - pinned to the bottom of the screen.
+.cf-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  padding: 1.25rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, #fff 72%, rgba(#fff, 0));
+}
+
+.cf-bar__row {
+  width: 100%;
+  max-width: $cff-max;
+  margin: 0 auto;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.cf-bar__error {
+  max-width: $cff-max;
+  margin: 0 auto 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 14px;
+  background: #fde7ea;
+  color: darken($rose, 16%);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.cf-bar__draft,
+.cf-bar__post {
+  min-height: 52px;
+  padding: 0 1.25rem;
+  border-radius: 9999px;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-size: 1rem;
+  font-weight: 800;
+  @include cff-focus;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: progress;
+  }
+}
+
+.cf-bar__draft {
+  flex: 0 0 auto;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cff-ink;
+}
+
+.cf-bar__post {
+  flex: 1;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  box-shadow: 0 8px 18px -8px rgba($fuzo-yellow-deep, 0.8);
+}
+
+// Posted / Draft saved
+.cf-done {
+  min-height: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem calc(2rem + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.cf-done__icon {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 12px $fuzo-yellow-tint;
+}
+
+.cf-done__photo {
+  width: 100%;
+  max-width: 15rem;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 24px;
+  margin-top: 0.75rem;
+  box-shadow: var(--fz-float-shadow);
+}
+
+.cf-done__title {
+  margin: 0.5rem 0 0;
+  font-family: var(--body-font), $font-family-sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.cf-done__sub {
+  margin: 0;
+  color: $cff-muted;
+  font-weight: 600;
+}
+
+.cf-done__actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+
+  > button {
+    width: 100%;
+  }
+}
+
+html[data-theme='dark'] {
+  .cf-bar {
+    background: linear-gradient(to top, #000 72%, rgba(#000, 0));
+  }
+  .cf-bar__draft {
+    background: #262626;
+    color: #f5f5f5;
+  }
+  .cf-done__title {
+    color: #f5f5f5;
+  }
+  .cf-done__sub {
+    color: #a3a3a3;
+  }
+  .cf-done__icon {
+    box-shadow: 0 0 0 12px rgba($fuzo-yellow, 0.18);
+  }
+}
