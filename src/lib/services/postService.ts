@@ -67,7 +67,7 @@ export interface PostInput {
   isHome?: boolean;
   place?: PostPlace | null;
   menuItemId?: string | null;
-  /** Recipe ingredients as [quantity, unit, name]. */
+  /** Recipe ingredients as [name, quantity, unit] (same order as older recipe cards). */
   ingredients?: [string, string, string][];
   steps?: string[];
 }
@@ -97,7 +97,7 @@ export function missingForPublish(input: PostInput): string | null {
     case 'recipe':
       if (!input.title?.trim()) return 'Add the food name.';
       if (tags.cuisine.length === 0) return 'Pick a cuisine.';
-      if (!(input.ingredients ?? []).some((row) => row[2]?.trim())) return 'Add at least one ingredient.';
+      if (!(input.ingredients ?? []).some((row) => row[0]?.trim())) return 'Add at least one ingredient.';
       if (!(input.steps ?? []).some((s) => s.trim())) return 'Add at least one step.';
       return null;
     case 'restaurant':
@@ -147,7 +147,7 @@ export const PostService = {
       caption: input.caption?.trim() || null,
       tags: input.tags ?? emptyCardTags(),
       flavor_profile: input.flavorProfile ?? DEFAULT_FLAVOR,
-      ingredients: kind === 'recipe' ? (input.ingredients ?? []).filter((r) => r[2]?.trim()) : [],
+      ingredients: kind === 'recipe' ? (input.ingredients ?? []).filter((r) => r[0]?.trim()).map((r) => r.map((x) => x.trim()) as [string, string, string]) : [],
       steps: kind === 'recipe' ? (input.steps ?? []).map((s) => s.trim()).filter(Boolean).slice(0, 50) : [],
       photos,
       image_url: photos[0] ?? null,

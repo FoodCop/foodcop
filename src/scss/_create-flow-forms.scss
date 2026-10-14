@@ -418,6 +418,100 @@ $cff-max: 40rem;
   color: $fuzo-yellow-deep;
 }
 
+// Recipe: ingredient rows and numbered steps
+.cf-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cf-rows__add {
+  align-self: flex-start;
+}
+
+.cf-ingredient {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px 84px 36px;
+  gap: 0.4rem;
+  align-items: center;
+
+  .cf-input {
+    min-height: 44px;
+    padding: 0 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  // Narrow phones: the name gets its own line.
+  @media (max-width: 419.98px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 36px;
+
+    .cf-ingredient__name {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+.cf-row__remove {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 0;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cff-ink;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include cff-focus;
+
+  &:disabled {
+    opacity: 0.35;
+  }
+
+  &:hover:not(:disabled) {
+    background: #fde7ea;
+  }
+}
+
+.cf-step {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.cf-step__num {
+  width: 30px;
+  height: 30px;
+  margin-top: 0.45rem;
+  border-radius: 50%;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-step__text {
+  min-height: 64px;
+}
+
+.cf-step__tools {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .cf-row__remove {
+    width: 32px;
+    height: 32px;
+  }
+}
+
 // Post / Save draft - pinned to the bottom of the screen.
 .cf-bar {
   position: absolute;

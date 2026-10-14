@@ -11,13 +11,14 @@ import { CameraCapture } from './CameraCapture';
 import { KindPicker, KIND_OPTIONS } from './KindPicker';
 import { VibeDetails } from './VibeDetails';
 import { FoodDetails } from './FoodDetails';
+import { RecipeDetails } from './RecipeDetails';
 import { emptyPostFields, type CreateKind, type CreateMode, type CreatePhoto, type CreateStep, type PostFields } from './types';
 
 // The Create flow (client, 2026-10-14; plan: docs/CREATE_FLOW_PLAN.md):
 // camera -> "What is this?" -> that kind's details -> Post. This component
 // holds the photos and answers, so Back never loses anything, and asks
 // before throwing away a post in progress. Built so far: the camera, the kind
-// step, Vibe and Food posts; the other kinds' details arrive in later phases.
+// step, Vibe, Food and Recipe posts; Restaurant arrives in a later phase.
 
 interface CreateFlowProps {
   onClose: () => void;
@@ -34,14 +35,14 @@ const STEPS: { id: CreateStep; label: string }[] = [
 ];
 
 // Kinds whose details screen is built (the rest show what's coming).
-const READY_KINDS: CreateKind[] = ['vibe', 'food'];
+const READY_KINDS: CreateKind[] = ['vibe', 'food', 'recipe'];
 
 // What each kind will ask for - shown on the details step until that kind's
 // phase is built.
 const COMING_NEXT: Record<CreateKind, string[]> = {
   vibe: [],
   food: [],
-  recipe: ['Food name and cuisine', 'Ingredients and steps', 'Meal, Dietary, Cooking style, Flavour'],
+  recipe: [],
   restaurant: ['Pick the restaurant, or add a new one', 'Caption and tags', 'Photos go to its gallery'],
 };
 
@@ -241,6 +242,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
 
                 {kind === 'vibe' && <VibeDetails fields={fields} onChange={patchFields} />}
                 {kind === 'food' && <FoodDetails photos={photos} fields={fields} onChange={patchFields} />}
+                {kind === 'recipe' && <RecipeDetails fields={fields} onChange={patchFields} />}
 
                 {!detailsReady && (
                   <div className="cf-soon__card">

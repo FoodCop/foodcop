@@ -99,7 +99,7 @@ export default function DashboardView() {
   const [loadingRecipes, setLoadingRecipes] = useState(true);
   const [curatedById, setCuratedById] = useState<Map<number, CuratedRecipe>>(() => new Map());
   const [openRecipe, setOpenRecipe] = useState<CuratedRecipe | null>(null);
-  const { saved: savedRecipes, toggleSave: toggleRecipeSave } = useRecipeSaves();
+  const { isSaved: isRecipeSaved, toggleSave: toggleRecipeSave } = useRecipeSaves();
 
   const [videos, setVideos] = useState<SuggestedVideo[]>([]);
   const [loadingVideos, setLoadingVideos] = useState(true);
@@ -399,7 +399,7 @@ export default function DashboardView() {
         <RecipeDetailModal
           recipe={openRecipe}
           initialTab="ingredients"
-          saved={savedRecipes.has(openRecipe.id)}
+          saved={isRecipeSaved(openRecipe)}
           onToggleSave={() => toggleRecipeSave(openRecipe)}
           onClose={() => setOpenRecipe(null)}
         />
