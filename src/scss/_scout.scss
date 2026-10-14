@@ -785,6 +785,20 @@ $scout-z-wizard: 1100;
   margin-top: 0.125rem;
 }
 
+// "N visits on FUZO" (posts made at the place, one per person per day)
+.scout-modal__visits {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-ink;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 .scout-modal__loading {
   font-size: 0.75rem;
   font-weight: 500;

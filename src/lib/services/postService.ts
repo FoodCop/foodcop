@@ -42,6 +42,9 @@ const POINTS_ACTION: Record<PostKind, PointsActionType> = {
 /** Suggested tags for Food posts; users can add their own too. */
 export const SUGGESTED_LABELS = ['Must-Try Dish', 'Must-Try Spot', 'Weird Combo', 'Kitchen Trick'];
 
+/** Suggested tags for Restaurant posts; users can add their own too. */
+export const RESTAURANT_LABELS = ['Must-Try Spot', 'Hidden Gem', 'Great Ambience', 'Date Night', 'Family Friendly', 'Good Value'];
+
 export interface PostPlace {
   /** Google place id, when the place came from Google / Scout search. */
   placeId?: string | null;
@@ -84,7 +87,7 @@ export function missingForPublish(input: PostInput): string | null {
   if (input.photos.length === 0) return 'Add at least one photo.';
   if (input.photos.length > MAX_POST_PHOTOS) return `Up to ${MAX_POST_PHOTOS} photos per post.`;
   const home = input.kind === 'food' && !!input.isHome;
-  if (input.kind !== 'recipe' && !home && !input.place) return 'Add the location.';
+  if (input.kind !== 'recipe' && !home && !input.place) return input.kind === 'restaurant' ? 'Pick the restaurant.' : 'Add the location.';
   switch (input.kind) {
     case 'vibe':
       if (tags.meal_type.length === 0) return 'Pick a meal type.';
@@ -101,6 +104,8 @@ export function missingForPublish(input: PostInput): string | null {
       if (!(input.steps ?? []).some((s) => s.trim())) return 'Add at least one step.';
       return null;
     case 'restaurant':
+      // Only listed places for now; adding a new restaurant comes in Phase 7.
+      if (!input.place?.placeId && !input.place?.restaurantId) return 'Pick the restaurant from search.';
       return null;
   }
 }
@@ -181,6 +186,31 @@ export const PostService = {
       }
     }
     return { success: true, data: card };
+  },
+
+  /**
+   * Counts a visit to the post's place when the user is there right now
+   * (within 150 m, at most once a day - checked by the database). Only for
+   * published posts about a place; true when a new visit was counted.
+   */
+  async recordVisit(cardId: string): Promise<boolean> {
+    const supabase = createClient();
+    if (!supabase || typeof navigator === 'undefined' || !navigator.geolocation) return false;
+    const here = await new Promise<GeolocationCoordinates | null>((resolve) =>
+      navigator.geolocation.getCurrentPosition(
+        (p) => resolve(p.coords),
+        () => resolve(null),
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
+      ),
+    );
+    // A fix vaguer than the 150 m radius can't tell whether they're there.
+    if (!here || here.accuracy > 150) return false;
+    const { data, error } = await supabase.rpc('record_post_visit', { p_card_id: cardId, p_lat: here.latitude, p_lng: here.longitude });
+    if (error) {
+      console.warn('Visit not recorded:', error.message);
+      return false;
+    }
+    return data === true;
   },
 
   /** Deletes the user's own post (its create points are taken back by the database). */

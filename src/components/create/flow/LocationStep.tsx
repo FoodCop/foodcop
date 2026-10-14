@@ -21,6 +21,8 @@ interface LocationStepProps {
   label?: string;
   /** Where the photo was taken (EXIF GPS): places there are suggested first. */
   photoSpot?: GpsPoint | null;
+  /** Offer "Drop a pin" / "Use the photo's exact spot" (off when it must be a listed place). */
+  allowPin?: boolean;
 }
 
 type Status = 'idle' | 'searching' | 'locating' | 'error';
@@ -42,7 +44,7 @@ const getPosition = () =>
     );
   });
 
-export function LocationStep({ value, onChange, label = 'Location', photoSpot = null }: LocationStepProps) {
+export function LocationStep({ value, onChange, label = 'Location', photoSpot = null, allowPin = true }: LocationStepProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PostPlace[]>([]);
   const [status, setStatus] = useState<Status>('idle');
@@ -153,7 +155,7 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
                   <Loader2 size={14} className="scout-spin" aria-hidden="true" /> Looking for places there…
                 </p>
               ) : fromPhoto.length === 0 ? (
-                <p className="cf-field__hint">We couldn&apos;t spot a restaurant there. Search for it, or use the photo&apos;s spot.</p>
+                <p className="cf-field__hint">We couldn&apos;t spot a restaurant there. Search for it{allowPin ? <>, or use the photo&apos;s spot</> : null}.</p>
               ) : (
                 <ul className="cf-results" aria-label="Places where the photo was taken">
                   {fromPhoto.map((r) => (
@@ -169,13 +171,15 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
                   ))}
                 </ul>
               )}
-              <button
-                type="button"
-                className="cf-chipbtn"
-                onClick={() => choose({ lat: photoSpot.lat, lng: photoSpot.lng, name: null, address: null, placeId: null })}
-              >
-                <Crosshair size={15} /> Use the photo&apos;s exact spot
-              </button>
+              {allowPin && (
+                <button
+                  type="button"
+                  className="cf-chipbtn"
+                  onClick={() => choose({ lat: photoSpot.lat, lng: photoSpot.lng, name: null, address: null, placeId: null })}
+                >
+                  <Crosshair size={15} /> Use the photo&apos;s exact spot
+                </button>
+              )}
             </div>
           )}
 
@@ -205,9 +209,11 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
             <button type="button" className="cf-chipbtn" onClick={nearMe} disabled={status === 'locating'}>
               {status === 'locating' ? <Loader2 size={15} className="scout-spin" /> : <Navigation size={15} />} Places near me
             </button>
-            <button type="button" className="cf-chipbtn" onClick={() => setPinOpen(true)}>
-              <Crosshair size={15} /> Drop a pin
-            </button>
+            {allowPin && (
+              <button type="button" className="cf-chipbtn" onClick={() => setPinOpen(true)}>
+                <Crosshair size={15} /> Drop a pin
+              </button>
+            )}
           </div>
 
           {message && <p className="cf-field__hint" role="status">{message}</p>}

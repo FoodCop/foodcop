@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X, Star, Clock, MapPin, Bookmark, Share2, Navigation, Globe, Phone, Check, ChevronDown, Utensils } from 'lucide-react';
+import { X, Star, Clock, MapPin, Bookmark, Share2, Navigation, Globe, Phone, Check, ChevronDown, Utensils, Footprints } from 'lucide-react';
 import Link from 'next/link';
 import type { ScoutPlace } from '@/types/scout';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
@@ -10,6 +10,7 @@ import { DAY_LABELS, WEEK_ORDER, formatDay, getOpenStatus, hasAnyHours } from '@
 import { StatusPill } from '@/components/profile/restaurant/RestaurantBits';
 import { useRestaurant } from '@/lib/hooks/useRestaurant';
 import { RestaurantService, type RestaurantReview } from '@/lib/services/restaurantService';
+import { CommunityPhotosService } from '@/lib/services/communityPhotosService';
 
 interface ScoutPlaceModalProps {
   place: ScoutPlace;
@@ -64,8 +65,34 @@ export const ScoutPlaceModal = ({
     };
   }, [restaurantId]);
 
+  // Photos FUZO members posted here (Create -> Restaurant) and how many
+  // visits they made (client, 2026-10-14; plan Phase 6). Photos the
+  // restaurant's owner hid are left out.
+  const communityRef = React.useMemo(
+    () => ({ restaurantId: rawPlace.isNewFind ? null : restaurantId ?? null, placeId: rawPlace.isNewFind ? null : fuzoRestaurant?.placeId ?? rawPlace.placeId ?? null }),
+    [rawPlace.isNewFind, rawPlace.placeId, restaurantId, fuzoRestaurant?.placeId],
+  );
+  const communityKey = `${communityRef.restaurantId ?? ''}|${communityRef.placeId ?? ''}`;
+  const [community, setCommunity] = React.useState<{ key: string; photos: string[]; visits: number | null } | null>(null);
+  React.useEffect(() => {
+    if (!communityRef.restaurantId && !communityRef.placeId) return;
+    let cancelled = false;
+    Promise.all([CommunityPhotosService.list(communityRef, { limit: 30 }), CommunityPhotosService.visitCount(communityRef)]).then(([photos, visits]) => {
+      if (!cancelled) setCommunity({ key: communityKey, photos: photos.success ? (photos.data ?? []).map((p) => p.url) : [], visits });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [communityRef, communityKey]);
+  // Only this place's results (the pop-up can switch places).
+  const current = community?.key === communityKey ? community : null;
+  const communityPhotos = React.useMemo(() => current?.photos ?? [], [current]);
+  const visits = current?.visits ?? null;
+
   const place: ScoutPlace = React.useMemo(() => {
-    if (!fuzoRestaurant || rawPlace.isNewFind) return rawPlace;
+    if (!fuzoRestaurant || rawPlace.isNewFind) {
+      return communityPhotos.length ? { ...rawPlace, photos: [...new Set([...(rawPlace.photos ?? []), ...communityPhotos])] } : rawPlace;
+    }
     const p = fuzoProfile;
     const services = p?.services ?? [];
     const has = (key: string) => (services.length ? services.includes(key) : undefined);
@@ -75,6 +102,7 @@ export const ScoutPlaceModal = ({
       ...(p?.gallery ?? []).map((g) => g.url),
       fuzoRestaurant.bannerUrl,
       ...fuzoReviews.flatMap((r) => r.photos ?? []),
+      ...communityPhotos,
     ].filter((u): u is string => !!u);
     const rated = fuzoSummary.count > 0;
     return {
@@ -95,7 +123,7 @@ export const ScoutPlaceModal = ({
       reservable: has('reservations') ?? rawPlace.reservable,
       photos: [...new Set([...fuzoPhotos, ...(rawPlace.photos ?? [])])],
     };
-  }, [rawPlace, fuzoRestaurant, fuzoProfile, fuzoReviews, fuzoSummary]);
+  }, [rawPlace, fuzoRestaurant, fuzoProfile, fuzoReviews, fuzoSummary, communityPhotos]);
   const amenities = fuzoRestaurant && !rawPlace.isNewFind ? fuzoProfile?.amenities ?? [] : [];
 
   const containerRef = useFocusTrap(true);
@@ -198,6 +226,11 @@ export const ScoutPlaceModal = ({
                 {priceStr && <span>· {priceStr}</span>}
               </div>
               <div className="scout-modal__cat">{place.cat}</div>
+              {!!visits && (
+                <span className="scout-modal__visits">
+                  <Footprints size={13} aria-hidden="true" /> {visits.toLocaleString()} {visits === 1 ? 'visit' : 'visits'} on FUZO
+                </span>
+              )}
             </>
           )}
 

@@ -39,17 +39,17 @@ The Flavour meter is the existing 10 flavour sliders.
 
 ## Build phases (one draft PR, small commits)
 
-- [ ] **1. Camera entry**
-  - [ ] Full-screen camera with Photo · Video · URL tabs.
-  - [ ] Shutter, front/back switch, gallery picker, up to 5 photos.
-  - [ ] Permission fallback.
-  - [ ] "What is this?" step.
-  - [ ] Shared studio frame: progress, Back, keeps answers, discard check, drafts.
-- [ ] **2. Data model** (migration): post type (vibe / food / recipe / restaurant), multiple photos, business identity, custom tags, home flag, food name. Old cards keep working.
-- [ ] **3. Vibe post**
-- [ ] **4. Food post**, including place suggestions from photo GPS and food name from the restaurant menu.
-- [ ] **5. Recipe post**, including user recipes in Bites.
-- [ ] **6. Restaurant photo, existing restaurant**: community gallery photos (owner can remove) and the visit count rule.
+- [x] **1. Camera entry**
+  - [x] Full-screen camera with Photo · Video · URL tabs.
+  - [x] Shutter, front/back switch, gallery picker, up to 5 photos.
+  - [x] Permission fallback.
+  - [x] "What is this?" step.
+  - [x] Shared studio frame: progress, Back, keeps answers, discard check, drafts.
+- [x] **2. Data model** (migration): post type (vibe / food / recipe / restaurant), multiple photos, business identity, custom tags, home flag, food name. Old cards keep working.
+- [x] **3. Vibe post**
+- [x] **4. Food post**, including place suggestions from photo GPS and food name from the restaurant menu.
+- [x] **5. Recipe post**, including user recipes in Bites.
+- [x] **6. Restaurant photo, existing restaurant**: community gallery photos (owner can remove) and the visit count rule.
 - [ ] **7. Undiscovered restaurant**: duplicate check, Community Added status, voting (100 votes, 2/3).
 - [ ] **8. Edit / delete posts and drafts list.**
 - [ ] **9. Sharing**: chat plus a link with a sign-up prompt for people without an account.

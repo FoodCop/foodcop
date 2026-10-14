@@ -387,6 +387,26 @@ $cff-max: 40rem;
 }
 
 // Places where the photo was taken
+// A short info line inside a form (e.g. where restaurant photos go)
+.cf-note {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0.8rem 0.9rem;
+  border-radius: 18px;
+  background: var(--studio-pill, #f2f1ee);
+  color: $cff-muted;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.4;
+
+  svg {
+    flex: none;
+    margin-top: 0.1rem;
+  }
+}
+
 .cf-fromphoto {
   display: flex;
   flex-direction: column;
@@ -626,6 +646,25 @@ $cff-max: 40rem;
   font-weight: 600;
 }
 
+.cf-done__status:empty {
+  display: none;
+}
+
+// "Visit counted at <place>" (Restaurant / Food / Vibe posted from the place)
+.cf-done__visit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-ink;
+  font-size: 0.85rem;
+  font-weight: 700;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 .cf-done__actions {
   width: 100%;
   display: flex;
@@ -654,5 +693,9 @@ html[data-theme='dark'] {
   }
   .cf-done__icon {
     box-shadow: 0 0 0 12px rgba($fuzo-yellow, 0.18);
+  }
+  .cf-done__visit {
+    background: rgba($fuzo-yellow, 0.18);
+    color: $fuzo-yellow-pale;
   }
 }

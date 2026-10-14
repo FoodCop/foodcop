@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowLeft, Check, Loader2, X } from 'lucide-react';
+import { ArrowLeft, Check, Footprints, Loader2, X } from 'lucide-react';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { PostService, missingForPublish, type PostInput } from '@/lib/services/postService';
 import { CameraCapture } from './CameraCapture';
@@ -12,6 +12,7 @@ import { KindPicker, KIND_OPTIONS } from './KindPicker';
 import { VibeDetails } from './VibeDetails';
 import { FoodDetails } from './FoodDetails';
 import { RecipeDetails } from './RecipeDetails';
+import { RestaurantDetails } from './RestaurantDetails';
 import { emptyPostFields, type CreateKind, type CreateMode, type CreatePhoto, type CreateStep, type PostFields } from './types';
 
 // The Create flow (client, 2026-10-14; plan: docs/CREATE_FLOW_PLAN.md):
@@ -35,7 +36,7 @@ const STEPS: { id: CreateStep; label: string }[] = [
 ];
 
 // Kinds whose details screen is built (the rest show what's coming).
-const READY_KINDS: CreateKind[] = ['vibe', 'food', 'recipe'];
+const READY_KINDS: CreateKind[] = ['vibe', 'food', 'recipe', 'restaurant'];
 
 // What each kind will ask for - shown on the details step until that kind's
 // phase is built.
@@ -43,7 +44,7 @@ const COMING_NEXT: Record<CreateKind, string[]> = {
   vibe: [],
   food: [],
   recipe: [],
-  restaurant: ['Pick the restaurant, or add a new one', 'Caption and tags', 'Photos go to its gallery'],
+  restaurant: [],
 };
 
 // Where each kind shows up once posted (client spec).
@@ -51,7 +52,7 @@ const POSTED_TO: Record<CreateKind, string> = {
   vibe: 'the Feed and your profile',
   food: 'the Feed and your profile',
   recipe: 'the Feed, Bites and your profile',
-  restaurant: 'the Feed, your profile and the restaurant',
+  restaurant: "the Feed, your profile and the restaurant's gallery",
 };
 
 type SaveState = { status: 'idle' } | { status: 'saving'; publishing: boolean } | { status: 'error'; message: string };
@@ -66,7 +67,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
   const [kind, setKind] = useState<CreateKind | null>(initialKind ?? null);
   const [fields, setFields] = useState<PostFields>(emptyPostFields);
   const [save, setSave] = useState<SaveState>({ status: 'idle' });
-  const [result, setResult] = useState<{ published: boolean } | null>(null);
+  const [result, setResult] = useState<{ published: boolean; visitAt?: string } | null>(null);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const [direction, setDirection] = useState(1);
 
@@ -167,6 +168,15 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
     setResult({ published: publish });
     setDirection(1);
     setStep('done');
+    // Posting from the place counts a visit there (checked by the database:
+    // within 150 m, once a day). Runs after the done screen shows.
+    const place = input.place;
+    const atPlace = publish && res.data && place && kind !== 'recipe' && !(kind === 'food' && input.isHome);
+    if (atPlace && (place.placeId || place.restaurantId)) {
+      PostService.recordVisit(res.data!.id).then((counted) => {
+        if (counted) setResult((r) => (r ? { ...r, visitAt: place.name || 'this place' } : r));
+      });
+    }
   };
 
   const stepIndex = STEPS.findIndex((s) => s.id === step);
@@ -243,6 +253,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
                 {kind === 'vibe' && <VibeDetails fields={fields} onChange={patchFields} />}
                 {kind === 'food' && <FoodDetails photos={photos} fields={fields} onChange={patchFields} />}
                 {kind === 'recipe' && <RecipeDetails fields={fields} onChange={patchFields} />}
+                {kind === 'restaurant' && <RestaurantDetails photos={photos} fields={fields} onChange={patchFields} />}
 
                 {!detailsReady && (
                   <div className="cf-soon__card">
@@ -280,6 +291,20 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
                     ? `Your ${kindLabel.toLowerCase()} is on ${POSTED_TO[kind]}.`
                     : 'You can finish it later from your profile.'}
                 </p>
+                <div role="status" className="cf-done__status">
+                  <AnimatePresence>
+                    {result.visitAt && (
+                      <motion.span
+                        className="cf-done__visit"
+                        initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      >
+                        <Footprints size={15} aria-hidden="true" /> Visit counted at {result.visitAt}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
                 <div className="cf-done__actions">
                   {result.published && (
                     <button
