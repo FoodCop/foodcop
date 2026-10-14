@@ -53,5 +53,5 @@ The Flavour meter is the existing 10 flavour sliders.
 - [x] **7. Undiscovered restaurant**: duplicate check, Community Added status, voting (100 votes, 2/3).
 - [x] **8. Edit / delete posts and drafts list.**
 - [x] **9. Sharing**: chat plus a link with a sign-up prompt for people without an account.
-- [ ] **10. QA**: phones and desktop, dark mode, security review (database rules for votes, gallery, visits).
+- [x] **10. QA**: phones and desktop, dark mode, security review (database rules for votes, gallery, visits).
 - [ ] **Later**: Video and URL (requirements to come); restaurant ownership claim.

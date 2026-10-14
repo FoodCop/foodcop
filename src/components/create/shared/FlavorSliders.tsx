@@ -28,6 +28,8 @@ export const FlavorSliders: React.FC<FlavorSlidersProps> = ({ value, onChange })
             value={value[axis]}
             onChange={(e) => onChange({ ...value, [axis]: Number(e.target.value) })}
             className="studio-flavor-row__slider"
+            aria-label={axis}
+            aria-valuetext={`${value[axis]} out of 5`}
           />
         </div>
       ))}

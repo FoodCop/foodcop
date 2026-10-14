@@ -49,6 +49,11 @@ export const placeVisitKeys = (ref: PlaceRef): string[] => {
   return [restaurantId, placeId ? `g:${placeId}` : null, communityPlaceId ? `c:${communityPlaceId}` : null].filter((k): k is string => !!k);
 };
 
+// Visitor photos only ever come from FUZO's own storage (the database also
+// requires that; this guards rows saved before that rule existed).
+const STORAGE_PREFIX = `${(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').replace(/\/+$/, '')}/storage/v1/object/public/food-card-media/`;
+const isFuzoPhoto = (url: string) => !!process.env.NEXT_PUBLIC_SUPABASE_URL && url.startsWith(STORAGE_PREFIX);
+
 type CardRow = { id: string; user_id: string; caption: string | null; photos: string[] | null; image_url: string | null; created_at: string };
 
 export const CommunityPhotosService = {
@@ -93,7 +98,7 @@ export const CommunityPhotosService = {
     );
 
     const photos: CommunityPhoto[] = rows.flatMap((r) => {
-      const urls = r.photos?.length ? r.photos : r.image_url ? [r.image_url] : [];
+      const urls = (r.photos?.length ? r.photos : r.image_url ? [r.image_url] : []).filter(isFuzoPhoto);
       return urls.map((url) => ({
         key: `${r.id}|${url}`,
         cardId: r.id,
