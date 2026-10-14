@@ -11,6 +11,7 @@ import { StatusPill } from '@/components/profile/restaurant/RestaurantBits';
 import { useRestaurant } from '@/lib/hooks/useRestaurant';
 import { RestaurantService, type RestaurantReview } from '@/lib/services/restaurantService';
 import { CommunityPhotosService } from '@/lib/services/communityPhotosService';
+import { CommunityPlaceStrip } from './CommunityPlaceStrip';
 
 interface ScoutPlaceModalProps {
   place: ScoutPlace;
@@ -69,13 +70,17 @@ export const ScoutPlaceModal = ({
   // visits they made (client, 2026-10-14; plan Phase 6). Photos the
   // restaurant's owner hid are left out.
   const communityRef = React.useMemo(
-    () => ({ restaurantId: rawPlace.isNewFind ? null : restaurantId ?? null, placeId: rawPlace.isNewFind ? null : fuzoRestaurant?.placeId ?? rawPlace.placeId ?? null }),
-    [rawPlace.isNewFind, rawPlace.placeId, restaurantId, fuzoRestaurant?.placeId],
+    () => ({
+      restaurantId: rawPlace.isNewFind ? null : restaurantId ?? null,
+      placeId: rawPlace.isNewFind ? null : fuzoRestaurant?.placeId ?? rawPlace.placeId ?? null,
+      communityPlaceId: rawPlace.community?.id ?? null,
+    }),
+    [rawPlace.isNewFind, rawPlace.placeId, restaurantId, fuzoRestaurant?.placeId, rawPlace.community?.id],
   );
-  const communityKey = `${communityRef.restaurantId ?? ''}|${communityRef.placeId ?? ''}`;
+  const communityKey = `${communityRef.restaurantId ?? ''}|${communityRef.placeId ?? ''}|${communityRef.communityPlaceId ?? ''}`;
   const [community, setCommunity] = React.useState<{ key: string; photos: string[]; visits: number | null } | null>(null);
   React.useEffect(() => {
-    if (!communityRef.restaurantId && !communityRef.placeId) return;
+    if (!communityRef.restaurantId && !communityRef.placeId && !communityRef.communityPlaceId) return;
     let cancelled = false;
     Promise.all([CommunityPhotosService.list(communityRef, { limit: 30 }), CommunityPhotosService.visitCount(communityRef)]).then(([photos, visits]) => {
       if (!cancelled) setCommunity({ key: communityKey, photos: photos.success ? (photos.data ?? []).map((p) => p.url) : [], visits });
@@ -255,6 +260,9 @@ export const ScoutPlaceModal = ({
             </Link>
           </div>
         )}
+
+        {/* A restaurant FUZO members added: Community Added + the community check. */}
+        {place.community && !place.isNewFind && <CommunityPlaceStrip key={place.community.id} place={place.community} />}
 
         {/* Action Row */}
         {!place.isNewFind && (

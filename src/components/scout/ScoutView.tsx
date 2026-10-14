@@ -42,6 +42,7 @@ import {
 } from '@/lib/scout/scoutLogic';
 import { ScoutDiscoveryPanel } from './ScoutDiscoveryPanel';
 import { ScoutPlaceModal } from './ScoutPlaceModal';
+import { CommunityPlacesService, websiteHref, type CommunityPlace } from '@/lib/services/communityPlacesService';
 import { ScoutDirectionsPanel } from './ScoutDirectionsPanel';
 import { useScoutDirections, type DirRoute } from './useScoutDirections';
 import { useScoutNavigation } from './useScoutNavigation';
@@ -364,6 +365,44 @@ export default function ScoutView() {
     loadFuzo();
   }, [loadFuzo]);
 
+  // ── Community-added restaurants (Create -> Restaurant -> Add a new one) ──
+  const [communityAdded, setCommunityAdded] = useState<CommunityPlace[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    if (!mapCenter) return;
+    CommunityPlacesService.listInArea(mapCenter, filter.maxDistance).then((list) => {
+      if (!cancelled) setCommunityAdded(list);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [mapCenter, filter.maxDistance]);
+  const communityAddedPlaces = useMemo<ScoutPlace[]>(
+    () =>
+      communityAdded.map((c) => ({
+        id: `community-${c.id}`,
+        markerSource: 'fuzo' as const,
+        name: c.name,
+        cat: [c.category, ...c.cuisines].join(' · '),
+        rating: 0,
+        reviews: 0,
+        address: c.address || '',
+        phone: c.phone || '',
+        website: c.website ? websiteHref(c.website) : '',
+        img: '',
+        lat: c.lat,
+        lng: c.lng,
+        vibe: c.businessIdentity,
+        timings: {},
+        menu: [],
+        userReviews: [],
+        photos: [],
+        priceLevel: c.priceLevel ? c.priceLevel.length : undefined,
+        community: c,
+      })),
+    [communityAdded],
+  );
+
   // --- Merged Places ---
   const activePlaces = useMemo(() => {
     const seen = new Set<string>();
@@ -390,9 +429,10 @@ export default function ScoutView() {
     addUnique(mainMapPlaces, true);
     addUnique(restaurantPlaces, true);
     addUnique(communitySnapPlaces, true);
+    addUnique(communityAddedPlaces, true);
 
     return sortPlaces(filterPlaces(merged, filter), chipSort(filter));
-  }, [mainMapPlaces, restaurantPlaces, communitySnapPlaces, filter, mapCenter]);
+  }, [mainMapPlaces, restaurantPlaces, communitySnapPlaces, communityAddedPlaces, filter, mapCenter]);
 
   // --- FUZO restaurants on the map ---
   // Google places whose place_id is linked to a FUZO restaurant account (the

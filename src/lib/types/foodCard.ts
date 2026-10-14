@@ -119,6 +119,8 @@ export interface FoodCardRecord {
   address?: string | null;
   /** The FUZO restaurant this post is at, if any. */
   restaurant_id?: string | null;
+  /** A community-added restaurant (Create flow, Phase 7). */
+  community_place_id?: string | null;
   /** The dish picked from that restaurant's FUZO menu, if any. */
   menu_item_id?: string | null;
   /** Recipe preparation steps. */

@@ -29,6 +29,8 @@ export interface PlaceRef {
   restaurantId?: string | null;
   /** Google place id (use the restaurant's verified one). */
   placeId?: string | null;
+  /** A community-added place (Phase 7). */
+  communityPlaceId?: string | null;
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -38,12 +40,13 @@ const PLACE_ID = /^[A-Za-z0-9_-]{4,300}$/;
 const validRef = (ref: PlaceRef) => ({
   restaurantId: ref.restaurantId && UUID.test(ref.restaurantId) ? ref.restaurantId : null,
   placeId: ref.placeId && PLACE_ID.test(ref.placeId) ? ref.placeId : null,
+  communityPlaceId: ref.communityPlaceId && UUID.test(ref.communityPlaceId) ? ref.communityPlaceId : null,
 });
 
 /** Visit-count keys for a place (see place_visits.place_key). */
 export const placeVisitKeys = (ref: PlaceRef): string[] => {
-  const { restaurantId, placeId } = validRef(ref);
-  return [restaurantId, placeId ? `g:${placeId}` : null].filter((k): k is string => !!k);
+  const { restaurantId, placeId, communityPlaceId } = validRef(ref);
+  return [restaurantId, placeId ? `g:${placeId}` : null, communityPlaceId ? `c:${communityPlaceId}` : null].filter((k): k is string => !!k);
 };
 
 type CardRow = { id: string; user_id: string; caption: string | null; photos: string[] | null; image_url: string | null; created_at: string };
@@ -56,10 +59,16 @@ export const CommunityPhotosService = {
   async list(ref: PlaceRef, opts: { includeHidden?: boolean; limit?: number } = {}): Promise<ServiceResult<CommunityPhoto[]>> {
     const supabase = createClient();
     if (!supabase) return { success: false, error: 'Supabase is not configured' };
-    const { restaurantId, placeId } = validRef(ref);
-    if (!restaurantId && !placeId) return { success: true, data: [] };
+    const { restaurantId, placeId, communityPlaceId } = validRef(ref);
+    if (!restaurantId && !placeId && !communityPlaceId) return { success: true, data: [] };
 
-    const match = [restaurantId ? `restaurant_id.eq.${restaurantId}` : null, placeId ? `place_id.eq.${placeId}` : null].filter(Boolean).join(',');
+    const match = [
+      restaurantId ? `restaurant_id.eq.${restaurantId}` : null,
+      placeId ? `place_id.eq.${placeId}` : null,
+      communityPlaceId ? `community_place_id.eq.${communityPlaceId}` : null,
+    ]
+      .filter(Boolean)
+      .join(',');
     const { data, error } = await supabase
       .from('food_cards')
       .select('id, user_id, caption, photos, image_url, created_at')

@@ -50,7 +50,7 @@ The Flavour meter is the existing 10 flavour sliders.
 - [x] **4. Food post**, including place suggestions from photo GPS and food name from the restaurant menu.
 - [x] **5. Recipe post**, including user recipes in Bites.
 - [x] **6. Restaurant photo, existing restaurant**: community gallery photos (owner can remove) and the visit count rule.
-- [ ] **7. Undiscovered restaurant**: duplicate check, Community Added status, voting (100 votes, 2/3).
+- [x] **7. Undiscovered restaurant**: duplicate check, Community Added status, voting (100 votes, 2/3).
 - [ ] **8. Edit / delete posts and drafts list.**
 - [ ] **9. Sharing**: chat plus a link with a sign-up prompt for people without an account.
 - [ ] **10. QA**: phones and desktop, dark mode, security review (database rules for votes, gallery, visits).

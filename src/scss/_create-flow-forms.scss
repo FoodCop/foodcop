@@ -250,6 +250,18 @@ $cff-max: 40rem;
   }
 }
 
+// Same badge in search results ("Community Added")
+.cf-results__item > span > .cf-place__fuzo {
+  align-self: flex-start;
+  margin-top: 0.15rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 9999px;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
 .cf-place__clear {
   width: 36px;
   height: 36px;
@@ -387,6 +399,47 @@ $cff-max: 40rem;
 }
 
 // Places where the photo was taken
+// New restaurant: "Already on the map?" (similar name within ~150 m)
+.cf-dupes-live:empty {
+  display: none;
+}
+
+.cf-dupes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem;
+  border-radius: 20px;
+  background: rgba($fuzo-yellow, 0.16);
+  border: 1px solid rgba($fuzo-yellow-deep, 0.35);
+
+  .cf-field__hint {
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .cf-results__item {
+    background: #fff;
+  }
+}
+
+.cf-dupes__title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-weight: 800;
+  color: $cff-ink;
+}
+
+.cf-results__item > span > .cf-dupes__use {
+  margin-top: 0.2rem;
+  color: $fuzo-yellow-ink;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 // A short info line inside a form (e.g. where restaurant photos go)
 .cf-note {
   display: flex;

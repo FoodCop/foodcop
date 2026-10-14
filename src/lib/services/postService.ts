@@ -11,6 +11,7 @@
 import { createClient } from '@/lib/supabase/client';
 import { MediaUploadService } from '@/lib/services/mediaUploadService';
 import { PointsService, type PointsActionType } from '@/lib/services/pointsService';
+import { CommunityPlacesService, type NewPlaceFields, type PlaceDuplicate } from '@/lib/services/communityPlacesService';
 import type { ServiceResult } from '@/lib/types/serviceResult';
 import {
   DEFAULT_FLAVOR,
@@ -54,6 +55,8 @@ export interface PostPlace {
   lng: number;
   /** The FUZO restaurant account, when the place is on FUZO. */
   restaurantId?: string | null;
+  /** A community-added place (Phase 7). */
+  communityPlaceId?: string | null;
 }
 
 export interface PostInput {
@@ -73,6 +76,8 @@ export interface PostInput {
   /** Recipe ingredients as [name, quantity, unit] (same order as older recipe cards). */
   ingredients?: [string, string, string][];
   steps?: string[];
+  /** Restaurant posts: add this new restaurant to the map on publish. */
+  newPlace?: NewPlaceFields | null;
 }
 
 const clean = (values: string[] | undefined, maxLen: number, maxCount: number) =>
@@ -87,6 +92,13 @@ export function missingForPublish(input: PostInput): string | null {
   if (input.photos.length === 0) return 'Add at least one photo.';
   if (input.photos.length > MAX_POST_PHOTOS) return `Up to ${MAX_POST_PHOTOS} photos per post.`;
   const home = input.kind === 'food' && !!input.isHome;
+  if (input.kind === 'restaurant' && input.newPlace) {
+    const np = input.newPlace;
+    if (np.name.trim().length < 2) return 'Add the restaurant name.';
+    if (np.lat == null || np.lng == null) return 'Set the restaurant on the map.';
+    if (!np.category) return 'Pick a category.';
+    return null;
+  }
   if (input.kind !== 'recipe' && !home && !input.place) return input.kind === 'restaurant' ? 'Pick the restaurant.' : 'Add the location.';
   switch (input.kind) {
     case 'vibe':
@@ -105,7 +117,7 @@ export function missingForPublish(input: PostInput): string | null {
       return null;
     case 'restaurant':
       // Only listed places for now; adding a new restaurant comes in Phase 7.
-      if (!input.place?.placeId && !input.place?.restaurantId) return 'Pick the restaurant from search.';
+      if (!input.place?.placeId && !input.place?.restaurantId && !input.place?.communityPlaceId) return 'Pick the restaurant from search.';
       return null;
   }
 }
@@ -125,7 +137,11 @@ export const PostService = {
    * first checks missingForPublish(). Pass existingId to update a draft or
    * edit a published post.
    */
-  async save(input: PostInput, status: 'DRAFT' | 'PUBLISHED', existingId?: string): Promise<ServiceResult<FoodCardRecord>> {
+  async save(
+    input: PostInput,
+    status: 'DRAFT' | 'PUBLISHED',
+    existingId?: string,
+  ): Promise<ServiceResult<FoodCardRecord> & { duplicate?: PlaceDuplicate }> {
     const supabase = createClient();
     if (!supabase) return { success: false, error: 'Supabase is not configured' };
     const { data: authData } = await supabase.auth.getUser();
@@ -137,13 +153,25 @@ export const PostService = {
       if (missing) return { success: false, error: missing };
     }
 
+    const kind = input.kind;
+    const home = kind === 'food' && !!input.isHome;
+    const newPlace = kind === 'restaurant' ? input.newPlace ?? null : null;
+
+    // A new restaurant is added to the map when the post is published (the
+    // duplicate check runs first, so nothing is uploaded for a duplicate).
+    let place = home || kind === 'recipe' ? null : input.place ?? null;
+    if (newPlace) {
+      place = newPlace.lat != null && newPlace.lng != null ? { name: newPlace.name.trim(), address: newPlace.address.trim() || null, lat: newPlace.lat, lng: newPlace.lng } : null;
+      if (status === 'PUBLISHED') {
+        const added = await CommunityPlacesService.add(newPlace);
+        if (!added.success) return { success: false, error: added.error, duplicate: added.duplicate };
+        place = { ...place!, communityPlaceId: added.data };
+      }
+    }
+
     const uploaded = await uploadPhotos(input.photos.slice(0, MAX_POST_PHOTOS));
     if (!uploaded.success) return { success: false, error: uploaded.error };
     const photos = uploaded.data ?? [];
-
-    const kind = input.kind;
-    const home = kind === 'food' && !!input.isHome;
-    const place = home || kind === 'recipe' ? null : input.place ?? null;
 
     const row = {
       user_id: userId,
@@ -165,6 +193,10 @@ export const PostService = {
       lat: place?.lat ?? null,
       lng: place?.lng ?? null,
       restaurant_id: place?.restaurantId ?? null,
+      // Only sent when used, so other posts work before the Phase 7 migration.
+      ...(place?.communityPlaceId ? { community_place_id: place.communityPlaceId } : {}),
+      // Drafts keep the new restaurant's details until it's published.
+      ...(newPlace && status === 'DRAFT' ? { new_place: newPlace } : existingId && kind === 'restaurant' ? { new_place: null } : {}),
       menu_item_id: kind === 'food' && !home ? input.menuItemId ?? null : null,
       status,
       updated_at: new Date().toISOString(),

@@ -5,6 +5,7 @@ import { Camera, Crosshair, Loader2, MapPin, Navigation, Search, Store, X } from
 import LocationPickerModal from '@/components/profile/LocationPickerModal';
 import { PlacesService, type ScoutPlaceRaw } from '@/lib/services/placesService';
 import { RestaurantService } from '@/lib/services/restaurantService';
+import { CommunityPlacesService, namesMatch, type CommunityPlace } from '@/lib/services/communityPlacesService';
 import type { PostPlace } from '@/lib/services/postService';
 import type { GpsPoint } from '@/lib/utils/exifGps';
 
@@ -33,6 +34,8 @@ const toPlace = (r: ScoutPlaceRaw): PostPlace | null => {
   if (typeof lat !== 'number' || typeof lng !== 'number') return null;
   return { placeId: r.place_id ?? null, name: r.name, address: r.formatted_address || r.vicinity || null, lat, lng };
 };
+
+const fromCommunity = (c: CommunityPlace): PostPlace => ({ communityPlaceId: c.id, name: c.name, address: c.address, lat: c.lat, lng: c.lng });
 
 const getPosition = () =>
   new Promise<{ lat: number; lng: number } | null>((resolve) => {
@@ -98,13 +101,19 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
     setMessage(null);
     const near = here.current ?? { lat: 0, lng: 0 };
     // Google allows a 50 km bias at most; without a position the name decides.
-    const res = await PlacesService.searchByText(text, near.lat, near.lng, 50000);
+    const [res, community] = await Promise.all([
+      PlacesService.searchByText(text, near.lat, near.lng, 50000),
+      here.current ? CommunityPlacesService.listInArea(here.current, 50000) : Promise.resolve([]),
+    ]);
     if (id !== seq.current) return;
-    const places = (res.data?.results ?? []).map(toPlace).filter((p): p is PostPlace => !!p).slice(0, 6);
+    const places = [
+      ...community.filter((c) => namesMatch(text, c.name) || c.name.toLowerCase().includes(text.toLowerCase())).slice(0, 3).map(fromCommunity),
+      ...(res.data?.results ?? []).map(toPlace).filter((p): p is PostPlace => !!p),
+    ].slice(0, 8);
     setResults(places);
     setStatus('idle');
-    if (!res.success) setMessage("Search isn't working right now. Try dropping a pin instead.");
-    else if (places.length === 0) setMessage('No places found. Try another name, or drop a pin.');
+    if (!res.success && places.length === 0) setMessage(allowPin ? "Search isn't working right now. Try dropping a pin instead." : "Search isn't working right now. Please try again.");
+    else if (places.length === 0) setMessage(allowPin ? 'No places found. Try another name, or drop a pin.' : 'No places found. Try another name.');
   };
 
   const nearMe = async () => {
@@ -115,16 +124,16 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
     if (id !== seq.current) return;
     if (!p) {
       setStatus('idle');
-      setMessage('Location is off. Search for the place or drop a pin instead.');
+      setMessage(allowPin ? 'Location is off. Search for the place or drop a pin instead.' : 'Location is off. Search for the place by name.');
       return;
     }
     here.current = p;
-    const res = await PlacesService.searchNearby(p.lat, p.lng, 300);
+    const [res, community] = await Promise.all([PlacesService.searchNearby(p.lat, p.lng, 300), CommunityPlacesService.listInArea(p, 300)]);
     if (id !== seq.current) return;
-    const places = (res.data?.results ?? []).map(toPlace).filter((x): x is PostPlace => !!x).slice(0, 8);
+    const places = [...community.slice(0, 3).map(fromCommunity), ...(res.data?.results ?? []).map(toPlace).filter((x): x is PostPlace => !!x)].slice(0, 8);
     setResults(places);
     setStatus('idle');
-    if (places.length === 0) setMessage('Nothing found right here. Search by name, or drop a pin.');
+    if (places.length === 0) setMessage(allowPin ? 'Nothing found right here. Search by name, or drop a pin.' : 'Nothing found right here. Search by name.');
   };
 
   return (
@@ -138,6 +147,7 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
             <strong>{value.name || 'Pinned location'}</strong>
             {value.address && value.address !== value.name && <span>{value.address}</span>}
             {value.restaurantId && <span className="cf-place__fuzo">On FUZO</span>}
+            {value.communityPlaceId && <span className="cf-place__fuzo">Community Added</span>}
           </span>
           <button type="button" className="cf-place__clear" onClick={() => onChange(null)} aria-label="Change location">
             <X size={16} />
@@ -227,6 +237,7 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
                     <span>
                       <strong>{r.name}</strong>
                       {r.address && <span>{r.address}</span>}
+                      {r.communityPlaceId && <span className="cf-place__fuzo">Community Added</span>}
                     </span>
                   </button>
                 </li>

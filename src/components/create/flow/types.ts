@@ -4,6 +4,7 @@
 
 import { MAX_POST_PHOTOS, type PostKind, type PostPlace } from '@/lib/services/postService';
 import { DEFAULT_FLAVOR, emptyCardTags, type CardTags, type FlavorVector } from '@/lib/types/foodCard';
+import type { NewPlaceFields } from '@/lib/services/communityPlacesService';
 
 export type CreateMode = 'photo' | 'video' | 'url';
 
@@ -36,6 +37,8 @@ export interface PostFields {
   menuItemId: string | null;
   ingredients: [string, string, string][];
   steps: string[];
+  /** Restaurant posts: a restaurant that isn't on the map yet (Phase 7), instead of `place`. */
+  newPlace: NewPlaceFields | null;
 }
 
 export const emptyPostFields = (): PostFields => ({
@@ -50,4 +53,5 @@ export const emptyPostFields = (): PostFields => ({
   menuItemId: null,
   ingredients: [],
   steps: [],
+  newPlace: null,
 });

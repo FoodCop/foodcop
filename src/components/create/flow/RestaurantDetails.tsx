@@ -1,18 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Info } from 'lucide-react';
+import { Info, MapPinPlus, Store } from 'lucide-react';
 import { RESTAURANT_LABELS } from '@/lib/services/postService';
+import { emptyNewPlace, type PlaceDuplicate } from '@/lib/services/communityPlacesService';
 import { readExifGps, type GpsPoint } from '@/lib/utils/exifGps';
 import { ChipField } from './ChipField';
 import { LocationStep } from './LocationStep';
+import { NewRestaurantForm } from './NewRestaurantForm';
+import { placeFromDuplicate } from './placeFromDuplicate';
 import type { CreatePhoto, PostFields } from './types';
 
-// Restaurant post details (client, 2026-10-14; plan, Phase 6): pick the
-// restaurant (Scout search, places near you, or where the photo was taken),
-// then an optional caption and tags. The photos go to that restaurant's
-// gallery on FUZO (its owner can remove them), and posting from there counts
-// a visit. Restaurants that aren't listed yet come in Phase 7.
+// Restaurant post details (client, 2026-10-14; plan, Phases 6-7):
+// - On the map: pick the restaurant (Scout search, places near you, or where
+//   the photo was taken). The photos go to its gallery on FUZO (its owner can
+//   remove them), and posting from there counts a visit.
+// - Add new: a restaurant that isn't on the map yet (NewRestaurantForm). It
+//   shows on Scout as "Community Added" until the community votes on it.
+// Then an optional caption and tags.
 
 interface RestaurantDetailsProps {
   photos: CreatePhoto[];
@@ -22,6 +27,7 @@ interface RestaurantDetailsProps {
 
 export function RestaurantDetails({ photos, fields, onChange }: RestaurantDetailsProps) {
   const [photoSpot, setPhotoSpot] = useState<GpsPoint | null>(null);
+  const adding = !!fields.newPlace;
 
   // The first gallery photo that knows where it was taken.
   useEffect(() => {
@@ -41,21 +47,53 @@ export function RestaurantDetails({ photos, fields, onChange }: RestaurantDetail
     };
   }, [photos]);
 
+  const useExisting = async (d: PlaceDuplicate) => {
+    onChange({ newPlace: null, place: await placeFromDuplicate(d) });
+  };
+
   return (
     <div className="cf-form">
-      <LocationStep
-        value={fields.place}
-        onChange={(place) => onChange({ place })}
-        label="Which restaurant?"
-        photoSpot={photoSpot}
-        allowPin={false}
-      />
+      <section className="cf-field" aria-labelledby="cf-rest-mode">
+        <h3 id="cf-rest-mode" className="cf-field__label">Is it on the map?</h3>
+        <div className="cf-toggle" role="radiogroup" aria-labelledby="cf-rest-mode">
+          <button type="button" role="radio" aria-checked={!adding} className={`cf-toggle__opt${!adding ? ' is-on' : ''}`} onClick={() => onChange({ newPlace: null })}>
+            <Store size={18} aria-hidden="true" /> Find it
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={adding}
+            className={`cf-toggle__opt${adding ? ' is-on' : ''}`}
+            onClick={() => !adding && onChange({ newPlace: emptyNewPlace(), place: null })}
+          >
+            <MapPinPlus size={18} aria-hidden="true" /> Add a new one
+          </button>
+        </div>
+      </section>
+
+      {fields.newPlace ? (
+        <NewRestaurantForm
+          value={fields.newPlace}
+          onChange={(patch) => onChange({ newPlace: { ...fields.newPlace!, ...patch } })}
+          photoSpot={photoSpot}
+          onUseExisting={useExisting}
+        />
+      ) : (
+        <LocationStep
+          value={fields.place}
+          onChange={(place) => onChange({ place })}
+          label="Which restaurant?"
+          photoSpot={photoSpot}
+          allowPin={false}
+        />
+      )}
 
       <p className="cf-note">
         <Info size={16} aria-hidden="true" />
         <span>
-          Your photos show in the restaurant&apos;s gallery on FUZO. Posting while you&apos;re there counts as a visit.
-          Can&apos;t find it? Adding new restaurants is coming soon.
+          {adding
+            ? "New places show on the map as Community Added. Once 100 people vote, 2 in 3 saying it's real makes it Verified."
+            : "Your photos show in the restaurant's gallery on FUZO. Posting while you're there counts as a visit."}
         </span>
       </p>
 

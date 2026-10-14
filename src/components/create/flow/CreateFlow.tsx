@@ -13,6 +13,7 @@ import { VibeDetails } from './VibeDetails';
 import { FoodDetails } from './FoodDetails';
 import { RecipeDetails } from './RecipeDetails';
 import { RestaurantDetails } from './RestaurantDetails';
+import { placeFromDuplicate } from './placeFromDuplicate';
 import { emptyPostFields, type CreateKind, type CreateMode, type CreatePhoto, type CreateStep, type PostFields } from './types';
 
 // The Create flow (client, 2026-10-14; plan: docs/CREATE_FLOW_PLAN.md):
@@ -67,7 +68,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
   const [kind, setKind] = useState<CreateKind | null>(initialKind ?? null);
   const [fields, setFields] = useState<PostFields>(emptyPostFields);
   const [save, setSave] = useState<SaveState>({ status: 'idle' });
-  const [result, setResult] = useState<{ published: boolean; visitAt?: string } | null>(null);
+  const [result, setResult] = useState<{ published: boolean; visitAt?: string; addedPlace?: string } | null>(null);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const [direction, setDirection] = useState(1);
 
@@ -146,6 +147,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
     menuItemId: fields.menuItemId,
     ingredients: fields.ingredients,
     steps: fields.steps,
+    newPlace: k === 'restaurant' ? fields.newPlace : null,
   });
 
   const submit = async (publish: boolean) => {
@@ -161,20 +163,28 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
     setSave({ status: 'saving', publishing: publish });
     const res = await PostService.save(input, publish ? 'PUBLISHED' : 'DRAFT');
     if (!res.success) {
+      if (res.duplicate) {
+        // The new restaurant is already on the map: post to that place instead.
+        const existing = await placeFromDuplicate(res.duplicate);
+        patchFields({ newPlace: null, place: existing });
+        setSave({ status: 'error', message: `${existing.name ?? 'This place'} is already on the map, so we picked it for you. Tap Post to share your photos there.` });
+        return;
+      }
       setSave({ status: 'error', message: res.error || 'Something went wrong. Please try again.' });
       return;
     }
     setSave({ status: 'idle' });
-    setResult({ published: publish });
+    setResult({ published: publish, addedPlace: publish && input.newPlace ? input.newPlace.name.trim() : undefined });
     setDirection(1);
     setStep('done');
     // Posting from the place counts a visit there (checked by the database:
     // within 150 m, once a day). Runs after the done screen shows.
-    const place = input.place;
-    const atPlace = publish && res.data && place && kind !== 'recipe' && !(kind === 'food' && input.isHome);
-    if (atPlace && (place.placeId || place.restaurantId)) {
-      PostService.recordVisit(res.data!.id).then((counted) => {
-        if (counted) setResult((r) => (r ? { ...r, visitAt: place.name || 'this place' } : r));
+    const card = res.data;
+    const atPlace = publish && card && kind !== 'recipe' && !card.is_home && (card.place_id || card.restaurant_id || card.community_place_id);
+    if (atPlace) {
+      const placeName = card.place_name || input.place?.name || 'this place';
+      PostService.recordVisit(card.id).then((counted) => {
+        if (counted) setResult((r) => (r ? { ...r, visitAt: placeName } : r));
       });
     }
   };
@@ -288,7 +298,9 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo' }: Crea
                 <h2 className="cf-done__title">{result.published ? 'Posted!' : 'Draft saved'}</h2>
                 <p className="cf-done__sub">
                   {result.published
-                    ? `Your ${kindLabel.toLowerCase()} is on ${POSTED_TO[kind]}.`
+                    ? result.addedPlace
+                      ? `${result.addedPlace} is on the map as Community Added, and your photos are on the Feed and your profile.`
+                      : `Your ${kindLabel.toLowerCase()} is on ${POSTED_TO[kind]}.`
                     : 'You can finish it later from your profile.'}
                 </p>
                 <div role="status" className="cf-done__status">
