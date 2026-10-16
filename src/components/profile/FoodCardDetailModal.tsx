@@ -77,13 +77,25 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
         <div className="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
           <div className="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             <div className="position-relative" style={{ height: '250px', background: meta.color }}>
-              {current.image_url && (
-                <img
-                  src={current.image_url}
-                  alt={current.title}
-                  className="w-100 h-100 object-fit-cover"
-                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                />
+              {/* Every photo of the post, swipe sideways (was only the first). */}
+              {(current.photos?.length ? current.photos : current.image_url ? [current.image_url] : []).length > 0 && (
+                <div className="d-flex w-100 h-100" style={{ overflowX: 'auto', scrollSnapType: 'x mandatory' }}>
+                  {(current.photos?.length ? current.photos : [current.image_url as string]).map((src, i, all) => (
+                    <img
+                      key={`${i}-${src.slice(0, 60)}`}
+                      src={src}
+                      alt={all.length > 1 ? `${current.title} - photo ${i + 1} of ${all.length}` : current.title}
+                      className="h-100 object-fit-cover"
+                      style={{ flex: '0 0 100%', width: '100%', scrollSnapAlign: 'start' }}
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  ))}
+                </div>
+              )}
+              {(current.photos?.length ?? 0) > 1 && (
+                <span className="badge position-absolute top-0 start-0 m-3 text-white fw-bold" style={{ background: 'rgba(0,0,0,0.6)' }}>
+                  {current.photos!.length} photos · swipe
+                </span>
               )}
               {isVideo && (
                 <button

@@ -445,7 +445,9 @@ export default function ActivityTab({
   const [sharing, setSharing] = useState<SharePayload | null>(null);
   const handleShare = (item: AppItem) => setSharing(sharePayloadFromItem(item));
 
-  if (isLoadingCards || isLoadingSaved) {
+  // Spinner only on the first load: a refresh after saving must not unmount
+  // this tab, or an open Create flow / post pop-up would be thrown away.
+  if ((isLoadingCards && myCards.length === 0) || isLoadingSaved) {
     return (
       <div className="d-flex justify-content-center py-5">
         <div
