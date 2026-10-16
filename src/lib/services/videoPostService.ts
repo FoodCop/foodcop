@@ -58,8 +58,9 @@ export interface VideoPostInput {
   /** Recipe: [name, quantity, unit] rows and steps. */
   ingredients?: [string, string, string][];
   steps?: string[];
-  /** Review: where it was. */
+  /** Review: where it was, and the dish if picked from its FUZO menu. */
   place?: PostPlace | null;
+  menuItemId?: string | null;
   /** Tour: the stops, in order. */
   stops?: TourStop[];
   /** URL import: the original post. */
@@ -181,6 +182,7 @@ export const VideoPostService = {
       lng: anchor?.lng ?? null,
       restaurant_id: place?.restaurantId ?? null,
       community_place_id: place?.communityPlaceId ?? null,
+      menu_item_id: kind === 'food_review' && place?.restaurantId ? input.menuItemId ?? null : null,
       is_home: false,
       ...(input.source
         ? { source_url: input.source.url.slice(0, 600), source_platform: input.source.platform, source_author: input.source.author?.slice(0, 120) ?? null }

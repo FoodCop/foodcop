@@ -50,7 +50,7 @@ Checked in the app, and again by the database (`20261016000000_video_posts.sql`)
 - [x] **2. Data model:** video post types, `video_url`, `cover_url`, duration, stops (tours), source link (URL imports), security rules (own uploads only)
 - [x] **3. Real Trims:** members' videos (likes, saves, share), Profile → Videos; demo clips removed
 - [x] **4. Video Recipe (2a):** manual entry
-- [ ] **5. Food review (2b) and Food tour (2c):** several stops
+- [x] **5. Food review (2b) and Food tour (2c):** several stops
 - [ ] **6. URL import (3a)**
 - [ ] **7. AI helper:** once credit is available
 - [ ] **8. QA, security review, test cases**

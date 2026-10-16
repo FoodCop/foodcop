@@ -3,7 +3,7 @@
 // they are (Vibe / Food / Recipe / Restaurant), then fills that kind's steps.
 
 import { MAX_POST_PHOTOS, type PostKind, type PostPlace } from '@/lib/services/postService';
-import { DEFAULT_FLAVOR, emptyCardTags, type CardTags, type FlavorVector } from '@/lib/types/foodCard';
+import { DEFAULT_FLAVOR, emptyCardTags, type CardTags, type FlavorVector, type TourStop } from '@/lib/types/foodCard';
 import type { NewPlaceFields } from '@/lib/services/communityPlacesService';
 
 export type CreateMode = 'photo' | 'video' | 'url';
@@ -79,6 +79,8 @@ export interface PostFields {
   steps: string[];
   /** Restaurant posts: a restaurant that isn't on the map yet (Phase 7), instead of `place`. */
   newPlace: NewPlaceFields | null;
+  /** Food tour videos: the stops, in order. */
+  stops: TourStop[];
 }
 
 export const emptyPostFields = (): PostFields => ({
@@ -94,4 +96,5 @@ export const emptyPostFields = (): PostFields => ({
   ingredients: [],
   steps: [],
   newPlace: null,
+  stops: [],
 });

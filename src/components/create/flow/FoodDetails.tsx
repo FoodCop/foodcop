@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Home, Store } from 'lucide-react';
-import { RestaurantService, type MenuItem } from '@/lib/services/restaurantService';
 import { SUGGESTED_LABELS } from '@/lib/services/postService';
 import { UGC_DIETS, UGC_MEAL_TYPES } from '@/lib/utils/taxonomy';
 import { readExifGps, type GpsPoint } from '@/lib/utils/exifGps';
@@ -10,6 +9,7 @@ import { COOKING_STYLES, PRICE_LEVELS } from '@/components/create/shared/TagChip
 import { FlavorSliders } from '@/components/create/shared/FlavorSliders';
 import { ChipField } from './ChipField';
 import { LocationStep } from './LocationStep';
+import { FoodNameField } from './FoodNameField';
 import type { CreatePhoto, PostFields } from './types';
 
 // Food post details (client, 2026-10-14; plan, Phase 4):
@@ -28,7 +28,6 @@ interface FoodDetailsProps {
 
 export function FoodDetails({ photos, fields, onChange }: FoodDetailsProps) {
   const [photoSpot, setPhotoSpot] = useState<GpsPoint | null>(null);
-  const [menu, setMenu] = useState<MenuItem[]>([]);
   const restaurantId = fields.isHome ? null : fields.place?.restaurantId ?? null;
 
   // The first gallery photo that knows where it was taken.
@@ -49,18 +48,6 @@ export function FoodDetails({ photos, fields, onChange }: FoodDetailsProps) {
     };
   }, [photos]);
 
-  // The restaurant's FUZO menu, if the place is a FUZO restaurant.
-  useEffect(() => {
-    if (!restaurantId) return;
-    let cancelled = false;
-    RestaurantService.listMenu(restaurantId).then((res) => {
-      if (!cancelled) setMenu(res.success ? (res.data ?? []).filter((m) => m.is_available) : []);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [restaurantId]);
-  const menuItems = restaurantId ? menu : [];
 
   const setTags = (key: 'meal_type' | 'diet' | 'cooking_style', value: string[]) =>
     onChange({ tags: { ...fields.tags, [key]: value } });
@@ -91,41 +78,14 @@ export function FoodDetails({ photos, fields, onChange }: FoodDetailsProps) {
         />
       )}
 
-      <section className="cf-field" aria-labelledby="cf-food-name">
-        <h3 id="cf-food-name" className="cf-field__label">
-          Food name <span className="cf-field__req" aria-hidden="true">*</span>
-        </h3>
-        {menuItems.length > 0 && (
-          <>
-            <p className="cf-field__hint">Pick it from {fields.place?.name ?? 'the'} menu, or type it below.</p>
-            <div className="studio-tag-options" role="group" aria-label="Menu dishes">
-              {menuItems.slice(0, 30).map((m) => (
-                <button
-                  key={m.id}
-                  type="button"
-                  className={`studio-tag-chip${fields.menuItemId === m.id ? ' is-selected' : ''}`}
-                  aria-pressed={fields.menuItemId === m.id}
-                  onClick={() =>
-                    fields.menuItemId === m.id
-                      ? onChange({ menuItemId: null, title: '' })
-                      : onChange({ menuItemId: m.id, title: m.name })
-                  }
-                >
-                  {m.name}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
-        <input
-          className="cf-input"
-          value={fields.title}
-          onChange={(e) => onChange({ title: e.target.value, menuItemId: null })}
-          placeholder={menuItems.length ? 'Or type another dish' : 'e.g. Butter chicken'}
-          maxLength={120}
-          aria-label="Food name"
-        />
-      </section>
+      <FoodNameField
+        id="cf-food-name"
+        restaurantId={restaurantId}
+        restaurantName={fields.place?.name}
+        title={fields.title}
+        menuItemId={fields.menuItemId}
+        onChange={(patch) => onChange(patch)}
+      />
 
       <ChipField label="Meal type" options={UGC_MEAL_TYPES} selected={fields.tags.meal_type} onChange={(v) => setTags('meal_type', v)} />
       <ChipField label="Dietary" options={UGC_DIETS} selected={fields.tags.diet} onChange={(v) => setTags('diet', v)} />

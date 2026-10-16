@@ -19,6 +19,8 @@ import { VibeDetails } from './VibeDetails';
 import { FoodDetails } from './FoodDetails';
 import { RecipeDetails } from './RecipeDetails';
 import { RestaurantDetails } from './RestaurantDetails';
+import { ReviewDetails } from './ReviewDetails';
+import { TourDetails } from './TourDetails';
 import { placeFromDuplicate } from './placeFromDuplicate';
 import { DraftsSheet } from './DraftsSheet';
 import { fieldsOfCard, kindOfCard, photosOfCard, videoKindOfCard, videoOfCard } from './fromCard';
@@ -85,13 +87,6 @@ const VIDEO_STEPS: { id: CreateStep; label: string }[] = [
   { id: 'details', label: 'Details' },
 ];
 
-// Shown on a video post's details step until its phase is built (plan, phases 4-5).
-const VIDEO_COMING_NEXT: Record<VideoKind, string[]> = {
-  video_recipe: ['Dish name, ingredients and steps', 'Meal type, dietary, cooking style and flavour', 'Posted to Trims and your profile'],
-  food_review: ['The place and the food name', 'Cuisine, meal type, dietary, price, cooking style and flavour', 'Posted to Trims and your profile'],
-  food_tour: ['Each stop: its place and dish', 'Cuisine, meal type, dietary, price, cooking style (flavour optional)', 'Posted to Trims and your profile'],
-};
-
 // Kinds whose details screen is built (the rest show what's coming).
 const READY_KINDS: CreateKind[] = ['vibe', 'food', 'recipe', 'restaurant'];
 
@@ -113,7 +108,7 @@ const POSTED_TO: Record<CreateKind, string> = {
 };
 
 // Video kinds whose details screen is built (plan phases 4-5).
-const READY_VIDEO_KINDS: VideoKind[] = ['video_recipe'];
+const READY_VIDEO_KINDS: VideoKind[] = ['video_recipe', 'food_review', 'food_tour'];
 
 const VIDEO_POSTED_TO = 'Trims and your profile';
 
@@ -457,6 +452,9 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
       labels: fields.labels,
       ingredients: fields.ingredients,
       steps: fields.steps,
+      place: fields.place,
+      menuItemId: fields.menuItemId,
+      stops: fields.stops,
     };
     if (publish) {
       const missing = missingForVideoPublish(input);
@@ -472,6 +470,14 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
       return;
     }
     finishSaved(res.data, publish);
+    // A review posted from the place counts a visit there (the database checks: 150 m, once a day).
+    const card = res.data;
+    if (publish && !editingPublished && videoKind === 'food_review' && (card.place_id || card.restaurant_id || card.community_place_id)) {
+      const placeName = card.place_name || 'this place';
+      PostService.recordVisit(card.id).then((counted) => {
+        if (counted) setResult((r) => (r ? { ...r, visitAt: placeName } : r));
+      });
+    }
     // A replaced video / cover is deleted from storage (best effort).
     if (editing) {
       const kept = new Set([res.data.media_url, res.data.image_url].filter((u): u is string => !!u));
@@ -599,18 +605,8 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
                   </div>
                 )}
                 {videoKind === 'video_recipe' && <RecipeDetails fields={fields} onChange={patchFields} variant="video" />}
-                {!detailsReady && (
-                <div className="cf-soon__card">
-                  <span className="cf-soon__badge">Coming next</span>
-                  <h2 className="cf-soon__title">{kindLabel} videos</h2>
-                  <p className="cf-soon__sub">This step is being built. It will ask for:</p>
-                  <ul className="cf-soon__list">
-                    {VIDEO_COMING_NEXT[videoKind].map((line) => (
-                      <li key={line}>{line}</li>
-                    ))}
-                  </ul>
-                </div>
-                )}
+                {videoKind === 'food_review' && <ReviewDetails fields={fields} onChange={patchFields} />}
+                {videoKind === 'food_tour' && <TourDetails fields={fields} onChange={patchFields} />}
               </div>
             )}
 

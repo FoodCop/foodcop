@@ -66,7 +66,8 @@ const isNewPlace = (v: unknown): v is Partial<NewPlaceFields> => !!v && typeof v
 /** The post's answers. */
 export function fieldsOfCard(card: FoodCardRecord): PostFields {
   const tags = { ...emptyCardTags(), ...(card.tags ?? {}) };
-  const hasPlace = typeof card.lat === 'number' && typeof card.lng === 'number' && !card.is_home;
+  // A tour's position is its first stop; its places are the stops themselves.
+  const hasPlace = typeof card.lat === 'number' && typeof card.lng === 'number' && !card.is_home && card.card_type !== 'TOUR_VIDEO';
   const newPlace = card.new_place && isNewPlace(card.new_place) ? { ...emptyNewPlace(), ...card.new_place } : null;
   return {
     title: card.title === 'Untitled' ? '' : card.title ?? '',
@@ -92,5 +93,6 @@ export function fieldsOfCard(card: FoodCardRecord): PostFields {
     ingredients: (card.ingredients ?? []).map((r) => [r[0] ?? '', r[1] ?? '', r[2] ?? ''] as [string, string, string]),
     steps: card.steps ?? [],
     newPlace,
+    stops: card.stops ?? [],
   };
 }

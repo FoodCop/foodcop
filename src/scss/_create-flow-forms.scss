@@ -591,6 +591,119 @@ $cff-max: 40rem;
   }
 }
 
+// Food tour stops (client, 2026-10-16)
+.cf-stops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cf-stop {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: start;
+  padding: 0.6rem;
+  border-radius: 18px;
+  background: var(--studio-pill, #f2f1ee);
+}
+
+.cf-stop__num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-stop__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cf-stop__name {
+  margin: 0;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+
+  // The pin stays with the first word, however long the name.
+  svg {
+    display: inline;
+    vertical-align: -2px;
+    margin-right: 0.25rem;
+  }
+
+  .cf-place__fuzo {
+    display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0.05rem 0.45rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.68rem;
+  }
+}
+
+.cf-stop__addr {
+  margin: 0;
+  color: $cff-muted;
+  font-size: 0.8rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.cf-stop__dish {
+  background: #fff;
+  min-height: 40px;
+}
+
+// A section that folds open (e.g. the tour's optional flavour meter)
+.cf-fold {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: $cff-ink;
+  font-weight: 800;
+  font-size: 1rem;
+  text-align: left;
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba($fuzo-yellow-deep, 0.6);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg {
+      transition: none;
+    }
+  }
+}
+
 // Post / Save draft - pinned to the bottom of the screen.
 .cf-bar {
   position: absolute;
@@ -616,7 +729,7 @@ $cff-max: 40rem;
   padding: 0.55rem 0.9rem;
   border-radius: 14px;
   background: #fde7ea;
-  color: darken($rose, 16%);
+  color: darken($rose, 32%); // 4.5:1+ on the pink (WCAG AA)
   font-size: 0.88rem;
   font-weight: 700;
   text-align: center;
