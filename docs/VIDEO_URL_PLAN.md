@@ -33,10 +33,21 @@ Branch: `ayush/video-url`. The GitHub issue and draft PR track progress.
 - **Cover:** one frame chosen with a slider, saved as a JPEG photo.
 - **Storage:** `food-card-media/<user id>/video-<uuid>.mp4|webm`, plus the cover as `post-<uuid>.jpg`.
 
+## What a video post needs before it can be posted (phase 2)
+
+Checked in the app, and again by the database (`20261016000000_video_posts.sql`).
+
+- **Every video:** the clip (up to 60 s) and its cover, both uploaded by the poster. URL imports use the original post's link instead of an upload.
+- **Recipe video:** the dish name and at least one ingredient. Steps are optional, because the video shows them.
+- **Food review:** the place and the food name.
+- **Food tour:** 2 to 10 stops, each with a place on the map (the dish there is optional).
+- **Points:** a video post earns 25 points, once per post.
+- **Visits:** posting a review video from the place counts a visit. Tours don't count visits.
+
 ## Phases
 
 - [x] **1. Video capture:** record or pick, 60 s limit, background re-encode, preview, cover frame, the video type picker
-- [ ] **2. Data model:** video post types, `video_url`, `cover_url`, duration, stops (tours), source link (URL imports), security rules (own uploads only)
+- [x] **2. Data model:** video post types, `video_url`, `cover_url`, duration, stops (tours), source link (URL imports), security rules (own uploads only)
 - [ ] **3. Real Trims:** members' videos (likes, saves, share), Profile → Videos; demo clips removed
 - [ ] **4. Video Recipe (2a):** manual entry
 - [ ] **5. Food review (2b) and Food tour (2c):** several stops

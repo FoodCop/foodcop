@@ -252,12 +252,16 @@ export const PostService = {
     const { data: authData } = await supabase.auth.getUser();
     const userId = authData?.user?.id;
     if (!userId) return { success: false, error: 'Please sign in.' };
-    const { data: card } = await supabase.from('food_cards').select('photos, image_url').eq('id', id).eq('user_id', userId).maybeSingle();
+    const { data: card } = await supabase.from('food_cards').select('photos, image_url, media_url').eq('id', id).eq('user_id', userId).maybeSingle();
     const { data: gone, error } = await supabase.from('food_cards').delete().eq('id', id).eq('user_id', userId).select('id');
     if (error) return { success: false, error: error.message };
     if (!gone?.length) return { success: false, error: 'This post was already deleted.' };
     // Then its photos (best effort).
-    const urls = [...((card?.photos as string[] | null) ?? []), ...(card?.image_url ? [card.image_url as string] : [])];
+    const urls = [
+      ...((card?.photos as string[] | null) ?? []),
+      ...(card?.image_url ? [card.image_url as string] : []),
+      ...(card?.media_url ? [card.media_url as string] : []),
+    ];
     await MediaUploadService.removePostPhotos([...new Set(urls)]);
     return { success: true, data: null };
   },

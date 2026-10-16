@@ -98,9 +98,31 @@ export const MediaUploadService = {
   },
 
   /**
-   * Best effort: deletes post photos the user removed (editing a post, or
-   * deleting it). Only the caller's own Create-flow uploads
-   * ("<their id>/post-<uuid>.jpg") are touched; storage rules check it too.
+   * A video post's video (client, 2026-10-16; docs/VIDEO_URL_PLAN.md): the
+   * recording or the prepared gallery clip, already small (<= 720p) and
+   * without hidden location data. Saved as "<user id>/video-<uuid>.<ext>".
+   */
+  async uploadPostVideo(video: Blob): Promise<ServiceResult<string>> {
+    const supabase = createClient();
+    if (!supabase) return { success: false, error: 'Supabase is not configured' };
+    const { data: authData } = await supabase.auth.getUser();
+    const userId = authData?.user?.id;
+    if (!userId) return { success: false, error: 'You must be logged in to post a video' };
+    const type = (video.type || 'video/webm').split(';')[0].trim();
+    const ext = type === 'video/mp4' ? 'mp4' : type === 'video/quicktime' ? 'mov' : type === 'video/webm' ? 'webm' : null;
+    if (!ext) return { success: false, error: "This video type can't be posted. Try another video." };
+    if (video.size > 100 * 1024 * 1024) return { success: false, error: 'This video is too big (over 100 MB). Choose a shorter clip.' };
+    const path = `${userId}/video-${uploadId()}.${ext}`;
+    const { error } = await supabase.storage.from(BUCKET).upload(path, video, { contentType: type, cacheControl: '31536000', upsert: false });
+    if (error) return { success: false, error: error.message };
+    return { success: true, data: supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl };
+  },
+
+  /**
+   * Best effort: deletes post photos (and videos) the user removed (editing a
+   * post, or deleting it). Only the caller's own Create-flow uploads
+   * ("<their id>/post-<uuid>.jpg", "<their id>/video-<uuid>.mp4|webm|mov")
+   * are touched; storage rules check it too.
    */
   async removePostPhotos(urls: string[]): Promise<void> {
     const supabase = createClient();
@@ -114,7 +136,7 @@ export const MediaUploadService = {
         const i = u.indexOf(marker);
         return i >= 0 ? decodeURIComponent(u.slice(i + marker.length).split('?')[0]) : null;
       })
-      .filter((p): p is string => !!p && new RegExp(`^${userId}/post-[0-9a-f-]{36}[.]jpg$`, 'i').test(p));
+      .filter((p): p is string => !!p && new RegExp(`^${userId}/(post-[0-9a-f-]{36}[.]jpg|video-[0-9a-f-]{36}[.](mp4|webm|mov))$`, 'i').test(p));
     if (!paths.length) return;
     const { error } = await supabase.storage.from(BUCKET).remove(paths);
     if (error) console.warn('Old post photos not removed:', error.message);

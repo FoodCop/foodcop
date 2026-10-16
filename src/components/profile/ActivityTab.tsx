@@ -204,6 +204,12 @@ function getCardBadgeLabel(cardType?: string): string {
       return 'FOOD';
     case 'RESTAURANT_PHOTO':
       return 'RESTAURANT';
+    case 'RECIPE_VIDEO':
+      return 'RECIPE';
+    case 'REVIEW_VIDEO':
+      return 'FOOD REVIEW';
+    case 'TOUR_VIDEO':
+      return 'FOOD TOUR';
     default:
       return cardType.replace(/_/g, ' ').toUpperCase();
   }
