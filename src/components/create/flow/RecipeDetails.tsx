@@ -55,7 +55,7 @@ export function RecipeDetails({ fields, onChange, variant = 'photo' }: RecipeDet
     <div className="cf-form">
       {isVideo && (
         <p className="cf-note">
-          <span>Add the dish and what goes in it - your video shows how. Soon FUZO&apos;s AI will fill this in from your video for you.</span>
+          <span>Add the dish and what goes in it - your video shows how.</span>
         </p>
       )}
       <section className="cf-field">

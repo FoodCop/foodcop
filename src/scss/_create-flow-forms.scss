@@ -470,6 +470,58 @@ $cff-max: 40rem;
   }
 }
 
+// FUZO AI banner (phase 7): working / filled in (+ Undo) / couldn't help
+.cf-ai-live:empty {
+  display: none;
+}
+
+.cf-ai {
+  max-width: $cff-max;
+  margin: 0 auto 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba($fuzo-yellow, 0.22), rgba(#b48cf0, 0.18));
+  color: $cff-ink;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.35;
+
+  > span {
+    flex: 1 1 12rem;
+  }
+
+  > svg {
+    flex: none;
+  }
+
+  &--error {
+    background: var(--studio-pill, #f2f1ee);
+    color: $cff-muted;
+  }
+}
+
+.cf-ai__undo {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0 0.9rem;
+  border: 0;
+  border-radius: 9999px;
+  background: #fff;
+  color: $cff-ink;
+  font-weight: 800;
+
+  &:focus-visible {
+    outline: 3px solid rgba($fuzo-yellow-deep, 0.6);
+    outline-offset: 2px;
+  }
+}
+
 // A short info line inside a form (e.g. where restaurant photos go)
 .cf-note {
   display: flex;

@@ -24,7 +24,7 @@ export function ReviewDetails({ fields, onChange }: ReviewDetailsProps) {
   return (
     <div className="cf-form">
       <p className="cf-note">
-        <span>Tell people where this was and what you had. Soon FUZO&apos;s AI will spot the place and the dish from your video.</span>
+        <span>Tell people where this was and what you had.</span>
       </p>
 
       <LocationStep value={fields.place} onChange={(place) => onChange({ place, menuItemId: null })} label="Where was this?" />

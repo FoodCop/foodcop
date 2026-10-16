@@ -25,6 +25,9 @@ import { placeFromDuplicate } from './placeFromDuplicate';
 import { DraftsSheet } from './DraftsSheet';
 import { fieldsOfCard, importOfCard, kindOfCard, photosOfCard, videoKindOfCard, videoOfCard } from './fromCard';
 import { SourceCredit } from '@/components/create/shared/SourceCredit';
+import { AiBanner } from './AiBanner';
+import { useAiFill } from './useAiFill';
+import type { AiTask } from '@/lib/ai/aiFillClient';
 import type { ImportResult } from '@/app/api/import/route';
 import { emptyCardTags } from '@/lib/types/foodCard';
 import { VideoPostService, missingForVideoPublish, type VideoPostInput } from '@/lib/services/videoPostService';
@@ -146,6 +149,8 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
   // URL import: the original post (credited to its creator).
   const [importSource, setImportSource] = useState<ImportSource | null>(() => (editCard ? importOfCard(editCard) : null));
   const importPhotoRef = useRef<HTMLInputElement>(null);
+  // An import that didn't bring a full recipe: FUZO AI reads its caption / cover.
+  const [importNeedsAi, setImportNeedsAi] = useState(false);
   const [waitingForVideo, setWaitingForVideo] = useState(false);
   const prepAbort = useRef<AbortController | null>(null);
   const sourceFile = useRef<Blob | null>(null);
@@ -349,6 +354,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
   const onImported = async (r: ImportResult) => {
     const cover = r.image ? await fetch(r.image).then((res) => res.blob()).catch(() => null) : null;
     setImportSource({ url: r.url, platform: r.platform, author: r.author, embedUrl: r.embedUrl });
+    setImportNeedsAi(!r.recipe?.ingredients.length);
     setFields({
       ...emptyPostFields(),
       title: r.recipe?.name ?? r.title ?? '',
@@ -419,6 +425,29 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     setFields((f) => ({ ...f, ...patch }));
     if (save.status === 'error') setSave({ status: 'idle' });
   };
+
+  // ---- FUZO AI (phase 7): fills empty fields once per video / import --------------
+  const aiTask: AiTask | null =
+    video && videoKind
+      ? videoKind === 'video_recipe'
+        ? 'recipe'
+        : videoKind === 'food_review'
+          ? 'review'
+          : 'tour'
+      : importSource && kind === 'recipe'
+        ? 'recipe'
+        : null;
+  const ai = useAiFill({
+    enabled: step === 'details' && !editing && !!aiTask && (!importSource || importNeedsAi),
+    runKey: aiTask ? `${video?.id ?? importSource?.url ?? 'post'}:${aiTask}` : null,
+    task: aiTask,
+    videoUrl: video && video.source !== 'import' ? video.url : null,
+    videoDuration: video?.duration,
+    image: video?.source === 'import' ? video.cover ?? null : importSource ? photos[0]?.file ?? null : null,
+    text: importSource ? [fields.title, fields.caption].filter(Boolean).join(' / ') : undefined,
+    fields,
+    onChange: patchFields,
+  });
 
   const toInput = (k: CreateKind): PostInput => ({
     kind: k,
@@ -681,6 +710,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
             {step === 'details' && video && videoKind && (
               <div className="cf-details">
                 {importSource && <SourceCredit url={importSource.url} platform={importSource.platform} author={importSource.author} className="cf-details__credit" />}
+                <AiBanner state={ai.state} onUndo={ai.undo} what={video.source === 'import' ? 'post' : 'video'} />
                 {video.coverUrl && (
                   <div className="cf-kind__photos cf-kind__photos--video" aria-label="Your video">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -707,6 +737,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
             {step === 'details' && !video && kind && (
               <div className="cf-details">
                 {importSource && <SourceCredit url={importSource.url} platform={importSource.platform} author={importSource.author} className="cf-details__credit" />}
+                {importSource && <AiBanner state={ai.state} onUndo={ai.undo} what="post" />}
                 {importSource && photos.length === 0 && (
                   <div className="cf-import__addphoto">
                     <p>Add a photo of the dish - the post didn&apos;t share one.</p>

@@ -66,7 +66,7 @@ export function TourDetails({ fields, onChange }: TourDetailsProps) {
   return (
     <div className="cf-form">
       <p className="cf-note">
-        <span>Add each place in the order you visited. Soon FUZO&apos;s AI will find the stops in your video for you.</span>
+        <span>Add each place in the order you visited.</span>
       </p>
 
       <section className="cf-field" aria-labelledby="cf-tour-stops">

@@ -65,6 +65,18 @@ Checked in the app, and again by the database (`20261016000000_video_posts.sql`)
 - Time and size limits apply.
 - Embeds are built only from recognised post IDs, in a sandboxed frame. Nothing from another site is shown as HTML.
 
+## FUZO AI (phase 7)
+
+- **When it runs:** when a video's details screen opens. FUZO AI (Google Gemini, `GEMINI_MODEL` in `src/lib/ai/geminiModel.ts`) looks at **8 small frames** from the video, plus an imported post's caption and cover, and fills in what it sees:
+  - **Recipe:** the dish, ingredients and steps.
+  - **Review:** the food and the place. The place is matched to a real one through FUZO's place search.
+  - **Tour:** the stops, each matched to a real place, with its dish.
+  - **Any type:** cuisine, meal type, dietary and cooking style, kept to FUZO's own lists.
+- **Only empty fields** are filled. What the user typed is kept, and **Undo** puts back what was there.
+- **Turns itself on:** while the Google AI account has no credit, Google answers "credits depleted" (HTTP 402). The server then **pauses AI for 5 minutes** without calling Google, and the forms stay manual. After the pause it tries again. **Once credit is added, AI is on within 5 minutes, with no code change or redeploy.** (`src/lib/ai/geminiServer.ts`)
+- **Frames, not the whole video:** Vercel limits uploads to the server to about 4.5 MB, and a 60 s clip is about 20 MB. The voice-over isn't heard.
+- **Limits:** sign-in is required, with 30 AI fills per 10 minutes per person. The imported caption is treated as information about the food, never as instructions, and the answer is limited to the fields asked for.
+
 ## Phases
 
 - [x] **1. Video capture:** record or pick, 60 s limit, background re-encode, preview, cover frame, the video type picker
@@ -73,5 +85,5 @@ Checked in the app, and again by the database (`20261016000000_video_posts.sql`)
 - [x] **4. Video Recipe (2a):** manual entry
 - [x] **5. Food review (2b) and Food tour (2c):** several stops
 - [x] **6. URL import (3a)**
-- [ ] **7. AI helper:** once credit is available
+- [x] **7. AI helper:** switches itself on once credit is available
 - [ ] **8. QA, security review, test cases**
