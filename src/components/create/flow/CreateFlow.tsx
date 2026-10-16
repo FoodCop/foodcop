@@ -12,7 +12,9 @@ import type { FoodCardRecord } from '@/lib/types/foodCard';
 import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
 import { postSharePayload } from '@/lib/share/postShare';
 import { CameraCapture } from './CameraCapture';
-import { KindPicker, KIND_OPTIONS } from './KindPicker';
+import { KindPicker, KIND_OPTIONS, VIDEO_KIND_OPTIONS } from './KindPicker';
+import { VideoPreview } from './VideoPreview';
+import { coverFrame, NeedsTapError, prepareVideo } from '@/lib/media/video';
 import { VibeDetails } from './VibeDetails';
 import { FoodDetails } from './FoodDetails';
 import { RecipeDetails } from './RecipeDetails';
@@ -20,7 +22,17 @@ import { RestaurantDetails } from './RestaurantDetails';
 import { placeFromDuplicate } from './placeFromDuplicate';
 import { DraftsSheet } from './DraftsSheet';
 import { fieldsOfCard, kindOfCard, photosOfCard } from './fromCard';
-import { emptyPostFields, type CreateKind, type CreateMode, type CreatePhoto, type CreateStep, type PostFields } from './types';
+import {
+  emptyPostFields,
+  MAX_VIDEO_UPLOAD_BYTES,
+  type CreateKind,
+  type CreateMode,
+  type CreatePhoto,
+  type CreateStep,
+  type CreateVideo,
+  type PostFields,
+  type VideoKind,
+} from './types';
 
 // The Create flow (client, 2026-10-14; plan: docs/CREATE_FLOW_PLAN.md):
 // camera -> "What is this?" -> that kind's details -> Post. This component
@@ -50,11 +62,27 @@ const editingOf = (card: FoodCardRecord): Editing => ({
   originalPhotos: card.photos?.length ? card.photos : card.image_url ? [card.image_url] : [],
 });
 
-const STEPS: { id: CreateStep; label: string }[] = [
+const PHOTO_STEPS: { id: CreateStep; label: string }[] = [
   { id: 'capture', label: 'Photos' },
   { id: 'kind', label: 'Type' },
   { id: 'details', label: 'Details' },
 ];
+
+// Video posts (client, 2026-10-16; docs/VIDEO_URL_PLAN.md): record / pick ->
+// preview + cover -> Recipe / Food review / Food tour -> details.
+const VIDEO_STEPS: { id: CreateStep; label: string }[] = [
+  { id: 'capture', label: 'Video' },
+  { id: 'video', label: 'Cover' },
+  { id: 'kind', label: 'Type' },
+  { id: 'details', label: 'Details' },
+];
+
+// Shown on a video post's details step until its phase is built (plan, phases 4-5).
+const VIDEO_COMING_NEXT: Record<VideoKind, string[]> = {
+  video_recipe: ['Dish name, ingredients and steps', 'Meal type, dietary, cooking style and flavour', 'Posted to Trims and your profile'],
+  food_review: ['The place and the food name', 'Cuisine, meal type, dietary, price, cooking style and flavour', 'Posted to Trims and your profile'],
+  food_tour: ['Each stop: its place and dish', 'Cuisine, meal type, dietary, price, cooking style (flavour optional)', 'Posted to Trims and your profile'],
+};
 
 // Kinds whose details screen is built (the rest show what's coming).
 const READY_KINDS: CreateKind[] = ['vibe', 'food', 'recipe', 'restaurant'];
@@ -90,6 +118,11 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
   const [fields, setFields] = useState<PostFields>(() => (editCard && editKind ? fieldsOfCard(editCard) : emptyPostFields()));
   const [editing, setEditing] = useState<Editing | null>(() => (editCard && editKind ? editingOf(editCard) : null));
   const [draftsOpen, setDraftsOpen] = useState(false);
+  // Video posts: the clip and what it is.
+  const [video, setVideo] = useState<CreateVideo | null>(null);
+  const [videoKind, setVideoKind] = useState<VideoKind | null>(null);
+  const prepAbort = useRef<AbortController | null>(null);
+  const sourceFile = useRef<Blob | null>(null);
   // The user's unfinished posts (camera "Drafts" button); not while editing.
   const [drafts, setDrafts] = useState<FoodCardRecord[]>([]);
   useEffect(() => {
@@ -115,6 +148,19 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     photosRef.current = photos;
   }, [photos]);
   useEffect(() => () => photosRef.current.forEach((p) => p.file && URL.revokeObjectURL(p.url)), []);
+  const videoRef = useRef(video);
+  useEffect(() => {
+    videoRef.current = video;
+  }, [video]);
+  useEffect(
+    () => () => {
+      prepAbort.current?.abort();
+      const v = videoRef.current;
+      if (v?.file) URL.revokeObjectURL(v.url);
+      if (v?.coverUrl) URL.revokeObjectURL(v.coverUrl);
+    },
+    [],
+  );
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -128,12 +174,13 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
 
   const requestClose = useCallback(() => {
     if (saving) return;
-    if (step !== 'done' && (photos.length > 0 || editing)) setConfirmDiscard(true);
+    if (step !== 'done' && (photos.length > 0 || video || editing)) setConfirmDiscard(true);
     else onClose();
-  }, [saving, step, photos.length, editing, onClose]);
+  }, [saving, step, photos.length, video, editing, onClose]);
 
+  const steps = video ? VIDEO_STEPS : PHOTO_STEPS;
   const goTo = (next: CreateStep) => {
-    setDirection(STEPS.findIndex((s) => s.id === next) > STEPS.findIndex((s) => s.id === step) ? 1 : -1);
+    setDirection(steps.findIndex((s) => s.id === next) > steps.findIndex((s) => s.id === step) ? 1 : -1);
     setStep(next);
   };
 
@@ -142,7 +189,8 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     setSave({ status: 'idle' });
     // A saved post keeps its kind: Back goes to its photos.
     if (step === 'details') goTo(editing ? 'capture' : 'kind');
-    else if (step === 'kind') goTo('capture');
+    else if (step === 'kind') goTo(video ? 'video' : 'capture');
+    else if (step === 'video') goTo('capture');
     else requestClose();
   };
 
@@ -166,6 +214,67 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
       if (gone?.file) URL.revokeObjectURL(gone.url);
       return prev.filter((p) => p.id !== id);
     });
+
+  // ---- Video --------------------------------------------------------------------
+  // Gallery clips are re-encoded (<= 720p, no hidden location data) in the
+  // background; the user carries on meanwhile.
+  const startPrep = (v: CreateVideo) => {
+    const file = sourceFile.current;
+    if (!file) return;
+    prepAbort.current?.abort();
+    const ctrl = new AbortController();
+    prepAbort.current = ctrl;
+    const update = (patch: Partial<CreateVideo>) => setVideo((cur) => (cur && cur.id === v.id ? { ...cur, ...patch } : cur));
+    update({ prep: { status: 'working', progress: 0 } });
+    let last = -1;
+    prepareVideo(
+      file,
+      (p) => {
+        const pct = Math.floor(p * 50) / 50; // 2% steps: fewer re-renders
+        if (pct !== last) {
+          last = pct;
+          update({ prep: { status: 'working', progress: pct } });
+        }
+      },
+      ctrl.signal,
+    )
+      .then((out) => {
+        if (ctrl.signal.aborted) return;
+        if (out.size > MAX_VIDEO_UPLOAD_BYTES) update({ prep: { status: 'error', message: 'This video is still too big after preparing it. Choose a shorter clip.' } });
+        else update({ file: out, prep: { status: 'ready' } });
+      })
+      .catch((err) => {
+        if (ctrl.signal.aborted || (err instanceof DOMException && err.name === 'AbortError')) return;
+        update({
+          prep: {
+            status: 'error',
+            message:
+              err instanceof NeedsTapError
+                ? 'Tap "Prepare video" to get it ready for posting.'
+                : "We couldn't prepare this video in this browser. Try recording it in FUZO, or use another browser.",
+          },
+        });
+      });
+  };
+
+  const addVideo = (v: CreateVideo) => {
+    if (video?.file) URL.revokeObjectURL(video.url);
+    prepAbort.current?.abort();
+    sourceFile.current = v.source === 'gallery' ? v.file : null;
+    setVideo(v);
+    setVideoKind(null);
+    if (v.source === 'gallery') startPrep(v);
+    goTo('video');
+  };
+
+  const removeVideo = () => {
+    prepAbort.current?.abort();
+    if (video?.file) URL.revokeObjectURL(video.url);
+    if (video?.coverUrl) URL.revokeObjectURL(video.coverUrl);
+    sourceFile.current = null;
+    setVideo(null);
+    setVideoKind(null);
+  };
 
   // Finish a draft picked from the camera's Drafts list.
   const openDraft = (card: FoodCardRecord) => {
@@ -249,9 +358,19 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     }
   };
 
-  const stepIndex = STEPS.findIndex((s) => s.id === step);
-  const kindLabel = KIND_OPTIONS.find((k) => k.id === kind)?.label ?? '';
-  const detailsReady = !!kind && READY_KINDS.includes(kind);
+  const stepIndex = steps.findIndex((s) => s.id === step);
+  const kindLabel = video ? VIDEO_KIND_OPTIONS.find((k) => k.id === videoKind)?.label ?? 'Video' : KIND_OPTIONS.find((k) => k.id === kind)?.label ?? '';
+  const detailsReady = !video && !!kind && READY_KINDS.includes(kind);
+  const title =
+    step === 'video'
+      ? 'Your video'
+      : step === 'kind'
+        ? video
+          ? 'What is this video?'
+          : 'What is this?'
+        : editingPublished
+          ? `Edit ${kindLabel.toLowerCase()}`
+          : `${kindLabel} details`;
   const slide = reduceMotion
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
     : {
@@ -268,9 +387,9 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
             <ArrowLeft size={20} />
           </button>
           <div className="cf__titles">
-            <h1 className="cf__title">{step === 'kind' ? 'What is this?' : editingPublished ? `Edit ${kindLabel.toLowerCase()}` : `${kindLabel} details`}</h1>
-            <ol className="cf__progress" aria-label={`Step ${stepIndex + 1} of ${STEPS.length}`}>
-              {STEPS.map((s, i) => (
+            <h1 className="cf__title">{title}</h1>
+            <ol className="cf__progress" aria-label={`Step ${stepIndex + 1} of ${steps.length}`}>
+              {steps.map((s, i) => (
                 <li key={s.id} className={i <= stepIndex ? 'is-done' : ''} aria-current={i === stepIndex ? 'step' : undefined}>
                   <span className="visually-hidden">{s.label}</span>
                 </li>
@@ -293,14 +412,73 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
                 photos={photos}
                 onAddPhotos={addPhotos}
                 onRemovePhoto={removePhoto}
-                onNext={() => goTo(editing ? 'details' : 'kind')}
+                onNext={() => goTo(video ? 'video' : editing ? 'details' : 'kind')}
                 onClose={requestClose}
                 draftCount={editing ? 0 : drafts.length}
                 onOpenDrafts={() => setDraftsOpen(true)}
+                video={video}
+                onVideo={addVideo}
+                onRemoveVideo={removeVideo}
               />
             )}
 
-            {step === 'kind' && (
+            {step === 'video' && video && (
+              <VideoPreview
+                video={video}
+                onCoverTime={(t) => setVideo((cur) => (cur ? { ...cur, coverTime: t } : cur))}
+                onRetryPrep={() => startPrep(video)}
+                onRetake={() => {
+                  removeVideo();
+                  goTo('capture');
+                }}
+                onNext={async () => {
+                  // The cover as a JPEG (for the type picker now, the upload later).
+                  const id = video.id;
+                  const t = video.coverTime;
+                  goTo('kind');
+                  try {
+                    const blob = await coverFrame(video.url, t);
+                    setVideo((cur) => {
+                      if (!cur || cur.id !== id) return cur;
+                      if (cur.coverUrl) URL.revokeObjectURL(cur.coverUrl);
+                      return { ...cur, cover: blob, coverUrl: URL.createObjectURL(blob) };
+                    });
+                  } catch {
+                    /* the type picker falls back to the video itself */
+                  }
+                }}
+              />
+            )}
+
+            {step === 'kind' && video && (
+              <KindPicker<VideoKind>
+                photos={[]}
+                video={video}
+                options={VIDEO_KIND_OPTIONS}
+                selected={videoKind}
+                onPick={(k) => {
+                  setVideoKind(k);
+                  goTo('details');
+                }}
+              />
+            )}
+
+            {step === 'details' && video && videoKind && (
+              <div className="cf-details">
+                <div className="cf-soon__card">
+                  <span className="cf-soon__badge">Coming next</span>
+                  <h2 className="cf-soon__title">{kindLabel} videos</h2>
+                  <p className="cf-soon__sub">This step is being built. It will ask for:</p>
+                  <ul className="cf-soon__list">
+                    {VIDEO_COMING_NEXT[videoKind].map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {step === 'kind' && !video && (
               <KindPicker
                 photos={photos}
                 selected={kind}
@@ -311,7 +489,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
               />
             )}
 
-            {step === 'details' && kind && (
+            {step === 'details' && !video && kind && (
               <div className="cf-details">
                 <ul className="cf-kind__photos" aria-label="Your photos">
                   {photos.map((p, i) => (
@@ -484,7 +662,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
               <p id="cf-confirm-text" className="cf-confirm__text">
                 {editing
                   ? `Changes you made won't be saved. Your ${editing.status === 'DRAFT' ? 'draft' : 'post'} stays as it was.`
-                  : `Your ${photos.length === 1 ? 'photo' : `${photos.length} photos`} and anything you've filled in will be lost.`}
+                  : `Your ${video ? 'video' : photos.length === 1 ? 'photo' : `${photos.length} photos`} and anything you've filled in will be lost.`}
               </p>
               <div className="cf-confirm__actions">
                 <button type="button" className="cf-confirm__btn cf-confirm__btn--danger" onClick={onClose}>

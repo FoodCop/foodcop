@@ -11,9 +11,46 @@ export type CreateMode = 'photo' | 'video' | 'url';
 /** What the photos are (saved by PostService as that kind of post). */
 export type CreateKind = PostKind;
 
-export type CreateStep = 'capture' | 'kind' | 'details' | 'done';
+/** 'video' = the video preview / cover step (video posts only). */
+export type CreateStep = 'capture' | 'video' | 'kind' | 'details' | 'done';
 
 export const MAX_PHOTOS = MAX_POST_PHOTOS;
+
+// Video posts (client, 2026-10-16; plan: docs/VIDEO_URL_PLAN.md).
+/** Longest video a post can have, in seconds. */
+export const MAX_VIDEO_SECONDS = 60;
+/** Largest file we try to work with (the storage limit is 100 MB per file). */
+export const MAX_VIDEO_INPUT_BYTES = 1024 * 1024 * 1024;
+export const MAX_VIDEO_UPLOAD_BYTES = 100 * 1024 * 1024;
+
+/** What a video is (2a / 2b / 2c in the client spec). */
+export type VideoKind = 'video_recipe' | 'food_review' | 'food_tour';
+
+/** Getting a gallery video ready to post (re-encoded to <= 720p, no hidden location data). */
+export type VideoPrep =
+  | { status: 'ready' }
+  | { status: 'working'; progress: number }
+  | { status: 'error'; message: string };
+
+export interface CreateVideo {
+  id: string;
+  /** What gets uploaded: the recording, or the gallery file once prepared. null for a posted video (editing). */
+  file: Blob | null;
+  /** Object URL for previews, or the posted video's URL. */
+  url: string;
+  /** Seconds (from the recording timer or the file). */
+  duration: number;
+  width: number;
+  height: number;
+  source: 'camera' | 'gallery' | 'existing';
+  /** Gallery videos are re-encoded before upload; recordings are ready at once. */
+  prep: VideoPrep;
+  /** The frame chosen as the cover, in seconds. */
+  coverTime: number;
+  /** That frame as a JPEG (made when leaving the preview) and its preview URL. */
+  cover?: Blob | null;
+  coverUrl?: string | null;
+}
 
 export interface CreatePhoto {
   id: string;
