@@ -48,7 +48,7 @@ Checked in the app, and again by the database (`20261016000000_video_posts.sql`)
 
 - [x] **1. Video capture:** record or pick, 60 s limit, background re-encode, preview, cover frame, the video type picker
 - [x] **2. Data model:** video post types, `video_url`, `cover_url`, duration, stops (tours), source link (URL imports), security rules (own uploads only)
-- [ ] **3. Real Trims:** members' videos (likes, saves, share), Profile → Videos; demo clips removed
+- [x] **3. Real Trims:** members' videos (likes, saves, share), Profile → Videos; demo clips removed
 - [ ] **4. Video Recipe (2a):** manual entry
 - [ ] **5. Food review (2b) and Food tour (2c):** several stops
 - [ ] **6. URL import (3a)**

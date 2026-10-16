@@ -163,6 +163,210 @@
   }
 }
 
+.reel-user__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  min-height: 44px;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover .reel-user__name {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $fuzo-yellow;
+    outline-offset: 2px;
+    border-radius: 9999px;
+  }
+}
+
+.reel-user__avatar {
+  overflow: hidden;
+  color: $fz-ink;
+  font-weight: 800;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// What it is + where (real member videos, client 2026-10-16)
+.reel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.4rem;
+}
+
+.reel-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  padding: 0.2rem 0.6rem;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(30, 26, 22, 0.55);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+
+  &--link:hover {
+    background: rgba(30, 26, 22, 0.75);
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $fuzo-yellow;
+    outline-offset: 2px;
+  }
+}
+
+.reel-recipe-link {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: $fuzo-yellow-pale;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+// Loading / no videos / couldn't load
+.reel-state {
+  height: 100%;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 2rem 1.5rem;
+  background: #141210;
+  color: #fff;
+  text-align: center;
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($fuzo-yellow, 0.16);
+    color: $fuzo-yellow;
+    margin-bottom: 0.25rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--body-font), $font-family-sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+  }
+
+  &__sub {
+    margin: 0 0 0.5rem;
+    max-width: 18rem;
+    color: rgba(#fff, 0.72);
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  &__btn {
+    min-height: 44px;
+    padding: 0 1.4rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-weight: 800;
+    box-shadow: 0 4px 14px rgba($fuzo-yellow, 0.35);
+
+    &:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.reel-toast {
+  position: absolute;
+  left: 50%;
+  top: 3.75rem; // under the counter, clear of the caption and tags
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 0.55rem 1rem;
+  border-radius: 9999px;
+  background: rgba(20, 18, 16, 0.9);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.reel-stops {
+  list-style: none;
+  counter-reset: stop;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  li {
+    counter-increment: stop;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 14px;
+    background: $fz-cream;
+    color: $fz-ink;
+    text-decoration: none;
+
+    &::before {
+      content: counter(stop);
+      flex: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: $fuzo-yellow;
+      color: $fuzo-yellow-ink;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    span {
+      margin-left: auto;
+      color: $fz-ink-soft;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  }
+}
+
 .reel-caption {
   margin: 0;
   font-size: 0.82rem;
@@ -189,7 +393,8 @@
   transition: background 0.15s ease, transform 0.2s $fz-ease;
 
   &:hover { background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
-  &.following { background: rgba(30, 26, 22, 0.6); color: #fff; box-shadow: none; }
+  &.following { background: rgba(30, 26, 22, 0.6); color: #fff; box-shadow: none; cursor: default; }
+  &:disabled { transform: none; }
 }
 
 .reel-actions {

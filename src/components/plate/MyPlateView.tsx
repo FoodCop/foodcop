@@ -92,7 +92,7 @@ function toEntry(s: SavedPlateItem): PlateEntry {
         : kind === 'feed'
           ? [str(m.authorName) && `by ${str(m.authorName)}`, str(m.cuisine)].filter(Boolean).join(' · ') || 'From your feed'
           : kind === 'trims'
-            ? 'Studio Trim'
+            ? [str(m.cat), str(m.author) && `by ${str(m.author)}`].filter(Boolean).join(' · ') || 'Trim'
             : str(m.cat) || 'Saved item';
   return {
     key: s.id,
@@ -480,7 +480,7 @@ function PlateCard({ entry, showKind, onOpen, onRemove }: { entry: PlateEntry; s
   const meta = KIND_META[kind];
   const KindIcon = meta.icon;
   const href =
-    kind === 'places' ? placeHref(entry) : kind === 'trims' ? '/trims' : kind === 'dishes' && str(entry.raw.metadata?.restaurantId) ? `/profile/${str(entry.raw.metadata?.restaurantId)}` : null;
+    kind === 'places' ? placeHref(entry) : kind === 'trims' ? `/dashboard?tab=trims&trim=${encodeURIComponent(entry.raw.item_id)}` : kind === 'dishes' && str(entry.raw.metadata?.restaurantId) ? `/profile/${str(entry.raw.metadata?.restaurantId)}` : null;
   const directions = kind === 'places' ? directionsUrl(placeRef(entry)) : null;
   const rating = kind === 'places' && typeof item.rating === 'number' && item.rating > 0 ? item.rating : null;
   const openLabel = `Open ${title}`;

@@ -3,11 +3,11 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowLeft, BookOpen, MapPin, Pencil, Share2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Clapperboard, MapPin, Pencil, Share2 } from 'lucide-react';
 import { canEditInCreate } from '@/components/create/flow/fromCard';
 import { communityRecipeId } from '@/lib/recipes/communityRecipes';
 import { postTitle } from '@/lib/share/postShare';
-import { TYPE_META, type FoodCardRecord } from '@/lib/types/foodCard';
+import { TYPE_META, VIDEO_CARD_TYPES, type FoodCardRecord } from '@/lib/types/foodCard';
 
 // The whole post, for signed-in viewers of /post/<id> (PostView loads it):
 // photos (swipe), who posted it and when, where, caption, tags, recipe
@@ -39,13 +39,17 @@ export function PostDetail({ card, author, isOwner, onShare, onEdit }: PostDetai
   const [slide, setSlide] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
   const meta = TYPE_META[card.card_type];
-  const photos = photosOf(card);
+  // Video posts (client, 2026-10-16) play their video instead of photos.
+  const isVideo = VIDEO_CARD_TYPES.includes(card.card_type) && /^https:\/\//i.test(card.media_url ?? '');
+  const photos = isVideo ? [] : photosOf(card);
+  const stops = card.stops ?? [];
   const chips = [...(card.labels ?? []), ...(card.business_identity ?? []), ...Object.values(card.tags ?? {}).flat()].filter(
     (t, i, all): t is string => typeof t === 'string' && !!t && all.indexOf(t) === i,
   );
   const ingredients = (card.ingredients ?? []).filter((r) => r[0]);
   const steps = (card.steps ?? []).filter(Boolean);
-  const hasPlace = typeof card.lat === 'number' && typeof card.lng === 'number' && !card.is_home;
+  // A tour lists its stops instead of one place.
+  const hasPlace = typeof card.lat === 'number' && typeof card.lng === 'number' && !card.is_home && card.card_type !== 'TOUR_VIDEO';
   const placeHref = hasPlace
     ? `/scout?${new URLSearchParams({ name: card.place_name || postTitle(card), lat: String(card.lat), lng: String(card.lng), ...(card.place_id ? { place: card.place_id } : {}) }).toString()}`
     : null;
@@ -70,6 +74,23 @@ export function PostDetail({ card, author, isOwner, onShare, onEdit }: PostDetai
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         aria-labelledby="fz-post-title"
       >
+        {isVideo && (
+          <div className="fz-post__photos fz-post__photos--video">
+            <video
+              className="fz-post__video"
+              src={card.media_url ?? undefined}
+              poster={card.image_url ?? undefined}
+              controls
+              playsInline
+              preload="metadata"
+              aria-label={`${meta?.label ?? 'Video'}: ${postTitle(card)}`}
+            />
+            <span className="fz-post__badge">
+              {meta?.emoji} {meta?.label}
+            </span>
+          </div>
+        )}
+
         {photos.length > 0 && (
           <div className="fz-post__photos">
             <div className="fz-post__track" ref={trackRef} onScroll={onScroll} tabIndex={0} aria-label={`${photos.length} ${photos.length === 1 ? 'photo' : 'photos'}`}>
@@ -148,6 +169,24 @@ export function PostDetail({ card, author, isOwner, onShare, onEdit }: PostDetai
             </section>
           )}
 
+          {stops.length > 0 && (
+            <section className="fz-post__section" aria-labelledby="fz-post-stops">
+              <h2 id="fz-post-stops">Stops</h2>
+              <ol className="fz-post__stops">
+                {stops.map((st, i) => (
+                  <li key={`${i}-${st.name}`}>
+                    <Link
+                      href={`/scout?${new URLSearchParams({ name: st.name, lat: String(st.lat), lng: String(st.lng), ...(st.placeId ? { place: st.placeId } : {}) }).toString()}`}
+                    >
+                      <strong>{st.name}</strong>
+                      {st.dish && <span className="fz-post__muted">{st.dish}</span>}
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
+
           {steps.length > 0 && (
             <section className="fz-post__section" aria-labelledby="fz-post-steps">
               <h2 id="fz-post-steps">Steps</h2>
@@ -164,6 +203,11 @@ export function PostDetail({ card, author, isOwner, onShare, onEdit }: PostDetai
               <button type="button" className="fz-post__btn fz-post__btn--primary" onClick={onShare}>
                 <Share2 size={18} aria-hidden="true" /> Share
               </button>
+            )}
+            {isVideo && card.status === 'PUBLISHED' && (
+              <Link href={`/dashboard?tab=trims&trim=${encodeURIComponent(card.id)}`} className="fz-post__btn">
+                <Clapperboard size={18} aria-hidden="true" /> Watch in Trims
+              </Link>
             )}
             {card.card_type === 'RECIPE' && card.status === 'PUBLISHED' && (
               <Link href={`/dashboard?tab=bites&recipe=${communityRecipeId(card.id)}`} className="fz-post__btn">

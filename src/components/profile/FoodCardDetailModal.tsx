@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Loader2, Pencil, PlayCircle, Trash2 } from 'lucide-react';
 import type { FoodCardRecord } from '../../lib/types/foodCard';
-import { TYPE_META, familyOf } from '../../lib/types/foodCard';
+import { TYPE_META, VIDEO_CARD_TYPES, familyOf } from '../../lib/types/foodCard';
 import { foodCardService } from '../../lib/services/foodCardService';
 import ShareSheet, { type SharePayload } from '../share/ShareSheet';
 import { VideoPlayerModal } from '../ui/VideoPlayerModal';
@@ -50,7 +50,9 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
   };
 
   const meta = TYPE_META[current.card_type];
-  const isVideo = current.card_type === 'BITE_VIDEO' && !!current.media_url;
+  // Every video post (client, 2026-10-16), not just the older Bite videos.
+  const isVideo = VIDEO_CARD_TYPES.includes(current.card_type) && !!current.media_url;
+  const stops = current.stops ?? [];
   const family = familyOf(current.card_type);
   const ingredients = (current.ingredients ?? []).filter((row) => row[0]);
   const nutrition = Object.entries(current.nutrition ?? {}).filter(([, v]) => typeof v === 'number' && v > 0);
@@ -152,7 +154,7 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
                 </div>
               )}
 
-              {family === 'recipe' && ingredients.length > 0 && (
+              {(family === 'recipe' || current.card_type === 'RECIPE_VIDEO') && ingredients.length > 0 && (
                 <div className="mt-4">
                   <h6 className="fw-bold text-uppercase small text-muted mb-2">Ingredients</h6>
                   <ul className="list-unstyled mb-0">
@@ -171,6 +173,20 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
                   {nutrition.map(([key, value]) => (
                     <span key={key} className="badge bg-warning-subtle text-dark border">{key}: {String(value)}</span>
                   ))}
+                </div>
+              )}
+
+              {stops.length > 0 && (
+                <div className="mt-4">
+                  <h6 className="fw-bold text-uppercase small text-muted mb-2">Stops</h6>
+                  <ol className="mb-0 ps-3">
+                    {stops.map((st, i) => (
+                      <li key={`${i}-${st.name}`} className="py-1">
+                        <span className="fw-semibold">{st.name}</span>
+                        {st.dish && <span className="text-muted"> · {st.dish}</span>}
+                      </li>
+                    ))}
+                  </ol>
                 </div>
               )}
 
