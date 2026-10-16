@@ -43,6 +43,8 @@ export interface VideoMeta {
 const loadVideo = (src: string) =>
   new Promise<HTMLVideoElement>((resolve, reject) => {
     const v = document.createElement('video');
+    // Posted videos live on storage: ask for CORS so a cover frame can be read from them.
+    if (/^https?:/i.test(src)) v.crossOrigin = 'anonymous';
     v.preload = 'metadata';
     v.muted = true;
     v.playsInline = true;

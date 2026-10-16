@@ -5,7 +5,7 @@
 import { DEFAULT_FLAVOR, emptyCardTags, type FoodCardRecord, type FoodCardType } from '@/lib/types/foodCard';
 import { emptyNewPlace, type NewPlaceFields } from '@/lib/services/communityPlacesService';
 import { MAX_POST_PHOTOS } from '@/lib/services/postService';
-import type { CreateKind, CreatePhoto, PostFields } from './types';
+import type { CreateKind, CreatePhoto, CreateVideo, PostFields, VideoKind } from './types';
 
 const KIND_BY_TYPE: Partial<Record<FoodCardType, CreateKind>> = {
   VIBE_PHOTO: 'vibe',
@@ -17,11 +17,39 @@ const KIND_BY_TYPE: Partial<Record<FoodCardType, CreateKind>> = {
 /** The Create-flow kind of a post, or null for older card types the flow doesn't make. */
 export const kindOfCard = (card: Pick<FoodCardRecord, 'card_type'>): CreateKind | null => KIND_BY_TYPE[card.card_type] ?? null;
 
+// Video posts (client, 2026-10-16; docs/VIDEO_URL_PLAN.md).
+const VIDEO_KIND_BY_TYPE: Partial<Record<FoodCardType, VideoKind>> = {
+  RECIPE_VIDEO: 'video_recipe',
+  REVIEW_VIDEO: 'food_review',
+  TOUR_VIDEO: 'food_tour',
+};
+
+/** A video post's kind, or null for other posts. */
+export const videoKindOfCard = (card: Pick<FoodCardRecord, 'card_type'>): VideoKind | null => VIDEO_KIND_BY_TYPE[card.card_type] ?? null;
+
+/** A video post's clip as an already-uploaded Create video (null if it has none, e.g. an early draft). */
+export function videoOfCard(card: FoodCardRecord): CreateVideo | null {
+  if (!card.media_url || !/^https:\/\//i.test(card.media_url)) return null;
+  return {
+    id: `existing-video-${card.id}`,
+    file: null,
+    url: card.media_url,
+    duration: Number(card.video_duration) || 0,
+    width: card.video_width ?? 0,
+    height: card.video_height ?? 0,
+    source: 'existing',
+    prep: { status: 'ready' },
+    coverTime: 0,
+    cover: null,
+    coverUrl: card.image_url ?? null,
+  };
+}
+
 /**
  * Whether the Create flow can edit this card. Recipes made with the older
  * recipe studio have no photos list but do have a cover photo, so they open too.
  */
-export const canEditInCreate = (card: FoodCardRecord) => kindOfCard(card) !== null;
+export const canEditInCreate = (card: FoodCardRecord) => kindOfCard(card) !== null || videoKindOfCard(card) !== null;
 
 /** The post's photos as already-uploaded Create photos. */
 export function photosOfCard(card: FoodCardRecord): CreatePhoto[] {

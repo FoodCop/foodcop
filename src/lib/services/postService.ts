@@ -12,6 +12,7 @@ import { createClient } from '@/lib/supabase/client';
 import { MediaUploadService } from '@/lib/services/mediaUploadService';
 import { PointsService, type PointsActionType } from '@/lib/services/pointsService';
 import { CommunityPlacesService, type NewPlaceFields, type PlaceDuplicate } from '@/lib/services/communityPlacesService';
+import { VIDEO_CARD_TYPE } from '@/lib/services/videoPostService';
 import type { ServiceResult } from '@/lib/types/serviceResult';
 import {
   DEFAULT_FLAVOR,
@@ -285,7 +286,8 @@ export const PostService = {
       .select('*')
       .eq('user_id', userId)
       .eq('status', 'DRAFT')
-      .in('card_type', Object.values(POST_CARD_TYPE))
+      // Photo posts and video posts (client, 2026-10-16).
+      .in('card_type', [...Object.values(POST_CARD_TYPE), ...Object.values(VIDEO_CARD_TYPE)])
       .order('updated_at', { ascending: false })
       .limit(50);
     if (error) return { success: false, error: error.message };

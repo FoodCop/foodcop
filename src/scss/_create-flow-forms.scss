@@ -52,6 +52,12 @@ $cff-max: 40rem;
   letter-spacing: -0.01em;
 }
 
+.cf-field__opt {
+  color: $cff-muted;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
 .cf-field__req {
   color: darken($rose, 8%);
 }
