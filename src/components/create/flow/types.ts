@@ -3,17 +3,65 @@
 // they are (Vibe / Food / Recipe / Restaurant), then fills that kind's steps.
 
 import { MAX_POST_PHOTOS, type PostKind, type PostPlace } from '@/lib/services/postService';
-import { DEFAULT_FLAVOR, emptyCardTags, type CardTags, type FlavorVector } from '@/lib/types/foodCard';
+import { DEFAULT_FLAVOR, emptyCardTags, type CardTags, type FlavorVector, type TourStop } from '@/lib/types/foodCard';
 import type { NewPlaceFields } from '@/lib/services/communityPlacesService';
+import type { ImportPlatform } from '@/lib/import/platforms';
 
 export type CreateMode = 'photo' | 'video' | 'url';
 
 /** What the photos are (saved by PostService as that kind of post). */
 export type CreateKind = PostKind;
 
-export type CreateStep = 'capture' | 'kind' | 'details' | 'done';
+/** 'video' = the video preview / cover step (video posts only). */
+export type CreateStep = 'capture' | 'video' | 'kind' | 'details' | 'done';
 
 export const MAX_PHOTOS = MAX_POST_PHOTOS;
+
+// Video posts (client, 2026-10-16; plan: docs/VIDEO_URL_PLAN.md).
+/** Longest video a post can have, in seconds. */
+export const MAX_VIDEO_SECONDS = 60;
+/** Largest file we try to work with (the storage limit is 100 MB per file). */
+export const MAX_VIDEO_INPUT_BYTES = 1024 * 1024 * 1024;
+export const MAX_VIDEO_UPLOAD_BYTES = 100 * 1024 * 1024;
+
+/** What a video is (2a / 2b / 2c in the client spec). */
+export type VideoKind = 'video_recipe' | 'food_review' | 'food_tour';
+
+/** Getting a gallery video ready to post (re-encoded to <= 720p, no hidden location data). */
+export type VideoPrep =
+  | { status: 'ready' }
+  | { status: 'working'; progress: number }
+  | { status: 'error'; message: string };
+
+export interface CreateVideo {
+  id: string;
+  /** What gets uploaded: the recording, or the gallery file once prepared. null for a posted video (editing). */
+  file: Blob | null;
+  /** Object URL for previews, or the posted video's URL. */
+  url: string;
+  /** Seconds (from the recording timer or the file). */
+  duration: number;
+  width: number;
+  height: number;
+  /** 'import' = a video post imported by its link: it plays embedded, nothing is uploaded. */
+  source: 'camera' | 'gallery' | 'existing' | 'import';
+  /** Gallery videos are re-encoded before upload; recordings are ready at once. */
+  prep: VideoPrep;
+  /** The frame chosen as the cover, in seconds. */
+  coverTime: number;
+  /** That frame as a JPEG (made when leaving the preview) and its preview URL. */
+  cover?: Blob | null;
+  coverUrl?: string | null;
+}
+
+/** A post imported by its link (URL tab): the original, credited to its creator. */
+export interface ImportSource {
+  url: string;
+  platform: ImportPlatform;
+  author: string | null;
+  /** The player address for videos we can embed. */
+  embedUrl: string | null;
+}
 
 export interface CreatePhoto {
   id: string;
@@ -42,6 +90,8 @@ export interface PostFields {
   steps: string[];
   /** Restaurant posts: a restaurant that isn't on the map yet (Phase 7), instead of `place`. */
   newPlace: NewPlaceFields | null;
+  /** Food tour videos: the stops, in order. */
+  stops: TourStop[];
 }
 
 export const emptyPostFields = (): PostFields => ({
@@ -57,4 +107,5 @@ export const emptyPostFields = (): PostFields => ({
   ingredients: [],
   steps: [],
   newPlace: null,
+  stops: [],
 });

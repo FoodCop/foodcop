@@ -52,6 +52,8 @@ export const FOOD_CARD_TYPES = [
   'FOOD_REVIEW', 'FOOD_EXPLORATION', 'FOOD_RECOMMENDATION', 'FOOD_COLLECTION',
   // Camera Create flow (client, 2026-10-14). Recipes from it reuse RECIPE.
   'VIBE_PHOTO', 'FOOD_PHOTO', 'RESTAURANT_PHOTO',
+  // Video posts (client, 2026-10-16; docs/VIDEO_URL_PLAN.md): Trims + Profile -> Videos.
+  'RECIPE_VIDEO', 'REVIEW_VIDEO', 'TOUR_VIDEO',
 ] as const;
 
 export type FoodCardType = (typeof FOOD_CARD_TYPES)[number];
@@ -83,7 +85,27 @@ export const TYPE_META: Record<FoodCardType, TypeMeta> = {
   VIBE_PHOTO: { label: 'Vibe', emoji: '✨', family: 'discovery', color: '#F28C6B' },
   FOOD_PHOTO: { label: 'Food', emoji: '🍝', family: 'discovery', color: '#4FAE6E' },
   RESTAURANT_PHOTO: { label: 'Restaurant', emoji: '🏪', family: 'restaurant', color: '#E0B33C' },
+
+  RECIPE_VIDEO: { label: 'Recipe video', emoji: '🎬', family: 'video', color: '#E8472B' },
+  REVIEW_VIDEO: { label: 'Food review', emoji: '⭐', family: 'video', color: '#F2A93B' },
+  TOUR_VIDEO: { label: 'Food tour', emoji: '🗺️', family: 'video', color: '#3EB49A' },
 };
+
+/** Card types that are videos (Trims, Profile -> Videos). */
+export const VIDEO_CARD_TYPES: FoodCardType[] = ['BITE_VIDEO', 'RECIPE_VIDEO', 'REVIEW_VIDEO', 'TOUR_VIDEO'];
+
+/** One stop of a food tour video. */
+export interface TourStop {
+  name: string;
+  address?: string | null;
+  lat: number;
+  lng: number;
+  placeId?: string | null;
+  restaurantId?: string | null;
+  communityPlaceId?: string | null;
+  /** What they ate there. */
+  dish?: string | null;
+}
 
 export const familyOf = (cardType: FoodCardType): FoodCardFamily => TYPE_META[cardType].family;
 
@@ -127,4 +149,13 @@ export interface FoodCardRecord {
   steps?: string[];
   /** A draft's new-restaurant details (Phase 7), until it's published. */
   new_place?: Record<string, unknown> | null;
+  // Video posts (20261016000000_video_posts.sql). The video is media_url, its cover image_url.
+  video_duration?: number | null;
+  video_width?: number | null;
+  video_height?: number | null;
+  stops?: TourStop[];
+  /** URL imports: the original post, its platform and creator. */
+  source_url?: string | null;
+  source_platform?: 'instagram' | 'tiktok' | 'facebook' | 'pinterest' | 'youtube' | 'web' | null;
+  source_author?: string | null;
 }

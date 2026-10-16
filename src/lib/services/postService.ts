@@ -12,6 +12,7 @@ import { createClient } from '@/lib/supabase/client';
 import { MediaUploadService } from '@/lib/services/mediaUploadService';
 import { PointsService, type PointsActionType } from '@/lib/services/pointsService';
 import { CommunityPlacesService, type NewPlaceFields, type PlaceDuplicate } from '@/lib/services/communityPlacesService';
+import { VIDEO_CARD_TYPE } from '@/lib/services/videoPostService';
 import type { ServiceResult } from '@/lib/types/serviceResult';
 import {
   DEFAULT_FLAVOR,
@@ -78,6 +79,8 @@ export interface PostInput {
   steps?: string[];
   /** Restaurant posts: add this new restaurant to the map on publish. */
   newPlace?: NewPlaceFields | null;
+  /** Imported by its link (URL tab): the original post, credited to its creator. */
+  source?: { url: string; platform: string; author?: string | null } | null;
 }
 
 const clean = (values: string[] | undefined, maxLen: number, maxCount: number) =>
@@ -193,6 +196,9 @@ export const PostService = {
       lat: place?.lat ?? null,
       lng: place?.lng ?? null,
       restaurant_id: place?.restaurantId ?? null,
+      ...(input.source
+        ? { source_url: input.source.url.slice(0, 600), source_platform: input.source.platform, source_author: input.source.author?.slice(0, 120) ?? null }
+        : {}),
       // Only sent when used, so other posts work before the Phase 7 migration.
       ...(place?.communityPlaceId ? { community_place_id: place.communityPlaceId } : {}),
       // Drafts keep the new restaurant's details until it's published.
@@ -252,12 +258,16 @@ export const PostService = {
     const { data: authData } = await supabase.auth.getUser();
     const userId = authData?.user?.id;
     if (!userId) return { success: false, error: 'Please sign in.' };
-    const { data: card } = await supabase.from('food_cards').select('photos, image_url').eq('id', id).eq('user_id', userId).maybeSingle();
+    const { data: card } = await supabase.from('food_cards').select('photos, image_url, media_url').eq('id', id).eq('user_id', userId).maybeSingle();
     const { data: gone, error } = await supabase.from('food_cards').delete().eq('id', id).eq('user_id', userId).select('id');
     if (error) return { success: false, error: error.message };
     if (!gone?.length) return { success: false, error: 'This post was already deleted.' };
     // Then its photos (best effort).
-    const urls = [...((card?.photos as string[] | null) ?? []), ...(card?.image_url ? [card.image_url as string] : [])];
+    const urls = [
+      ...((card?.photos as string[] | null) ?? []),
+      ...(card?.image_url ? [card.image_url as string] : []),
+      ...(card?.media_url ? [card.media_url as string] : []),
+    ];
     await MediaUploadService.removePostPhotos([...new Set(urls)]);
     return { success: true, data: null };
   },
@@ -281,7 +291,8 @@ export const PostService = {
       .select('*')
       .eq('user_id', userId)
       .eq('status', 'DRAFT')
-      .in('card_type', Object.values(POST_CARD_TYPE))
+      // Photo posts and video posts (client, 2026-10-16).
+      .in('card_type', [...Object.values(POST_CARD_TYPE), ...Object.values(VIDEO_CARD_TYPE)])
       .order('updated_at', { ascending: false })
       .limit(50);
     if (error) return { success: false, error: error.message };

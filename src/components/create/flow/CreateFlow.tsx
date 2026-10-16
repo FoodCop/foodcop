@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowLeft, Check, Footprints, Loader2, Share2, X } from 'lucide-react';
+import { ArrowLeft, Check, Clapperboard, Footprints, Loader2, Share2, X } from 'lucide-react';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { PostService, missingForPublish, type PostInput } from '@/lib/services/postService';
 import { MediaUploadService } from '@/lib/services/mediaUploadService';
@@ -12,15 +12,37 @@ import type { FoodCardRecord } from '@/lib/types/foodCard';
 import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
 import { postSharePayload } from '@/lib/share/postShare';
 import { CameraCapture } from './CameraCapture';
-import { KindPicker, KIND_OPTIONS } from './KindPicker';
+import { KindPicker, KIND_OPTIONS, VIDEO_KIND_OPTIONS } from './KindPicker';
+import { VideoPreview } from './VideoPreview';
+import { coverFrame, NeedsTapError, prepareVideo } from '@/lib/media/video';
 import { VibeDetails } from './VibeDetails';
 import { FoodDetails } from './FoodDetails';
 import { RecipeDetails } from './RecipeDetails';
 import { RestaurantDetails } from './RestaurantDetails';
+import { ReviewDetails } from './ReviewDetails';
+import { TourDetails } from './TourDetails';
 import { placeFromDuplicate } from './placeFromDuplicate';
 import { DraftsSheet } from './DraftsSheet';
-import { fieldsOfCard, kindOfCard, photosOfCard } from './fromCard';
-import { emptyPostFields, type CreateKind, type CreateMode, type CreatePhoto, type CreateStep, type PostFields } from './types';
+import { fieldsOfCard, importOfCard, kindOfCard, photosOfCard, videoKindOfCard, videoOfCard } from './fromCard';
+import { SourceCredit } from '@/components/create/shared/SourceCredit';
+import { AiBanner } from './AiBanner';
+import { useAiFill } from './useAiFill';
+import type { AiTask } from '@/lib/ai/aiFillClient';
+import type { ImportResult } from '@/app/api/import/route';
+import { emptyCardTags } from '@/lib/types/foodCard';
+import { VideoPostService, missingForVideoPublish, type VideoPostInput } from '@/lib/services/videoPostService';
+import {
+  emptyPostFields,
+  MAX_VIDEO_UPLOAD_BYTES,
+  type CreateKind,
+  type CreateMode,
+  type CreatePhoto,
+  type CreateStep,
+  type CreateVideo,
+  type ImportSource,
+  type PostFields,
+  type VideoKind,
+} from './types';
 
 // The Create flow (client, 2026-10-14; plan: docs/CREATE_FLOW_PLAN.md):
 // camera -> "What is this?" -> that kind's details -> Post. This component
@@ -47,11 +69,33 @@ type Editing = { id: string; status: 'DRAFT' | 'PUBLISHED'; originalPhotos: stri
 const editingOf = (card: FoodCardRecord): Editing => ({
   id: card.id,
   status: card.status,
-  originalPhotos: card.photos?.length ? card.photos : card.image_url ? [card.image_url] : [],
+  // For a video post: its video and cover (replaced ones are deleted after saving).
+  originalPhotos: videoKindOfCard(card)
+    ? [card.media_url, card.image_url].filter((u): u is string => !!u)
+    : card.photos?.length
+      ? card.photos
+      : card.image_url
+        ? [card.image_url]
+        : [],
 });
 
-const STEPS: { id: CreateStep; label: string }[] = [
+const PHOTO_STEPS: { id: CreateStep; label: string }[] = [
   { id: 'capture', label: 'Photos' },
+  { id: 'kind', label: 'Type' },
+  { id: 'details', label: 'Details' },
+];
+
+// Video posts (client, 2026-10-16; docs/VIDEO_URL_PLAN.md): record / pick ->
+// preview + cover -> Recipe / Food review / Food tour -> details.
+// URL import (client, 2026-10-16): paste a link -> the recipe's details.
+const IMPORT_STEPS: { id: CreateStep; label: string }[] = [
+  { id: 'capture', label: 'Link' },
+  { id: 'details', label: 'Details' },
+];
+
+const VIDEO_STEPS: { id: CreateStep; label: string }[] = [
+  { id: 'capture', label: 'Video' },
+  { id: 'video', label: 'Cover' },
   { id: 'kind', label: 'Type' },
   { id: 'details', label: 'Details' },
 ];
@@ -76,6 +120,11 @@ const POSTED_TO: Record<CreateKind, string> = {
   restaurant: "the Feed, your profile and the restaurant's gallery",
 };
 
+// Video kinds whose details screen is built (plan phases 4-5).
+const READY_VIDEO_KINDS: VideoKind[] = ['video_recipe', 'food_review', 'food_tour'];
+
+const VIDEO_POSTED_TO = 'Trims and your profile';
+
 type SaveState = { status: 'idle' } | { status: 'saving'; publishing: boolean } | { status: 'error'; message: string };
 
 export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCard, onSaved }: CreateFlowProps) {
@@ -83,13 +132,28 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
   const reduceMotion = useReducedMotion();
   const trapRef = useFocusTrap(true);
   const editKind = editCard ? kindOfCard(editCard) : null;
-  const [step, setStep] = useState<CreateStep>(editKind ? 'details' : 'capture');
-  const [mode, setMode] = useState<CreateMode>(initialMode);
+  const editVideoKind = editCard ? videoKindOfCard(editCard) : null;
+  const editable = !!(editKind || editVideoKind);
+  const [step, setStep] = useState<CreateStep>(editable ? 'details' : 'capture');
+  const [mode, setMode] = useState<CreateMode>(editVideoKind ? 'video' : initialMode);
   const [photos, setPhotos] = useState<CreatePhoto[]>(() => (editCard && editKind ? photosOfCard(editCard) : []));
   const [kind, setKind] = useState<CreateKind | null>(editKind ?? initialKind ?? null);
-  const [fields, setFields] = useState<PostFields>(() => (editCard && editKind ? fieldsOfCard(editCard) : emptyPostFields()));
-  const [editing, setEditing] = useState<Editing | null>(() => (editCard && editKind ? editingOf(editCard) : null));
+  const [fields, setFields] = useState<PostFields>(() => (editCard && editable ? fieldsOfCard(editCard) : emptyPostFields()));
+  const [editing, setEditing] = useState<Editing | null>(() => (editCard && editable ? editingOf(editCard) : null));
   const [draftsOpen, setDraftsOpen] = useState(false);
+  // Video posts: the clip and what it is.
+  const [video, setVideo] = useState<CreateVideo | null>(() => (editCard && editVideoKind ? videoOfCard(editCard) : null));
+  const [videoKind, setVideoKind] = useState<VideoKind | null>(editVideoKind);
+  // Post was tapped while a gallery video was still being prepared: post once it's ready.
+  const pendingPost = useRef<boolean | null>(null);
+  // URL import: the original post (credited to its creator).
+  const [importSource, setImportSource] = useState<ImportSource | null>(() => (editCard ? importOfCard(editCard) : null));
+  const importPhotoRef = useRef<HTMLInputElement>(null);
+  // An import that didn't bring a full recipe: FUZO AI reads its caption / cover.
+  const [importNeedsAi, setImportNeedsAi] = useState(false);
+  const [waitingForVideo, setWaitingForVideo] = useState(false);
+  const prepAbort = useRef<AbortController | null>(null);
+  const sourceFile = useRef<Blob | null>(null);
   // The user's unfinished posts (camera "Drafts" button); not while editing.
   const [drafts, setDrafts] = useState<FoodCardRecord[]>([]);
   useEffect(() => {
@@ -104,7 +168,13 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
   }, [editCard]);
   const editingPublished = editing?.status === 'PUBLISHED';
   const [save, setSave] = useState<SaveState>({ status: 'idle' });
-  const [result, setResult] = useState<{ published: boolean; edited?: boolean; visitAt?: string; addedPlace?: string; card?: FoodCardRecord } | null>(null);
+  const [result, setResult] = useState<{
+    published: boolean;
+    edited?: boolean;
+    visitAt?: string;
+    addedPlace?: string;
+    card?: FoodCardRecord;
+  } | null>(null);
   const [sharing, setSharing] = useState<SharePayload | null>(null);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const [direction, setDirection] = useState(1);
@@ -115,6 +185,19 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     photosRef.current = photos;
   }, [photos]);
   useEffect(() => () => photosRef.current.forEach((p) => p.file && URL.revokeObjectURL(p.url)), []);
+  const videoRef = useRef(video);
+  useEffect(() => {
+    videoRef.current = video;
+  }, [video]);
+  useEffect(
+    () => () => {
+      prepAbort.current?.abort();
+      const v = videoRef.current;
+      if (v?.file) URL.revokeObjectURL(v.url);
+      if (v?.coverUrl) URL.revokeObjectURL(v.coverUrl);
+    },
+    [],
+  );
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -128,12 +211,13 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
 
   const requestClose = useCallback(() => {
     if (saving) return;
-    if (step !== 'done' && (photos.length > 0 || editing)) setConfirmDiscard(true);
+    if (step !== 'done' && (photos.length > 0 || video || editing || importSource)) setConfirmDiscard(true);
     else onClose();
-  }, [saving, step, photos.length, editing, onClose]);
+  }, [saving, step, photos.length, video, editing, importSource, onClose]);
 
+  const steps = importSource && !editing ? IMPORT_STEPS : video ? VIDEO_STEPS : PHOTO_STEPS;
   const goTo = (next: CreateStep) => {
-    setDirection(STEPS.findIndex((s) => s.id === next) > STEPS.findIndex((s) => s.id === step) ? 1 : -1);
+    setDirection(steps.findIndex((s) => s.id === next) > steps.findIndex((s) => s.id === step) ? 1 : -1);
     setStep(next);
   };
 
@@ -141,8 +225,14 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     if (saving) return;
     setSave({ status: 'idle' });
     // A saved post keeps its kind: Back goes to its photos.
-    if (step === 'details') goTo(editing ? 'capture' : 'kind');
-    else if (step === 'kind') goTo('capture');
+    if (step === 'details' && importSource && !editing) {
+      // Back from an import goes to the URL tab for another link.
+      clearImport();
+      setMode('url');
+      goTo('capture');
+    } else if (step === 'details') goTo(editing ? (video && video.source !== 'import' ? 'video' : 'capture') : 'kind');
+    else if (step === 'kind') goTo(video ? 'video' : 'capture');
+    else if (step === 'video') goTo('capture');
     else requestClose();
   };
 
@@ -167,17 +257,167 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
       return prev.filter((p) => p.id !== id);
     });
 
+  // ---- Video --------------------------------------------------------------------
+  // Gallery clips are re-encoded (<= 720p, no hidden location data) in the
+  // background; the user carries on meanwhile.
+  const startPrep = (v: CreateVideo) => {
+    const file = sourceFile.current;
+    if (!file) return;
+    prepAbort.current?.abort();
+    const ctrl = new AbortController();
+    prepAbort.current = ctrl;
+    const update = (patch: Partial<CreateVideo>) => setVideo((cur) => (cur && cur.id === v.id ? { ...cur, ...patch } : cur));
+    update({ prep: { status: 'working', progress: 0 } });
+    let last = -1;
+    prepareVideo(
+      file,
+      (p) => {
+        const pct = Math.floor(p * 50) / 50; // 2% steps: fewer re-renders
+        if (pct !== last) {
+          last = pct;
+          update({ prep: { status: 'working', progress: pct } });
+        }
+      },
+      ctrl.signal,
+    )
+      .then((out) => {
+        if (ctrl.signal.aborted) return;
+        if (out.size > MAX_VIDEO_UPLOAD_BYTES) {
+          const message = 'This video is still too big after preparing it. Choose a shorter clip.';
+          update({ prep: { status: 'error', message } });
+          if (pendingPost.current !== null) {
+            pendingPost.current = null;
+            setWaitingForVideo(false);
+            setSave({ status: 'error', message });
+          }
+          return;
+        }
+        update({ file: out, prep: { status: 'ready' } });
+        // Post was tapped while this was running: carry on with the prepared file.
+        if (pendingPost.current !== null) {
+          const publish = pendingPost.current;
+          pendingPost.current = null;
+          setWaitingForVideo(false);
+          submitVideoRef.current?.(publish, { file: out, prep: { status: 'ready' } });
+        }
+      })
+      .catch((err) => {
+        if (ctrl.signal.aborted || (err instanceof DOMException && err.name === 'AbortError')) return;
+        const message =
+          err instanceof NeedsTapError
+            ? 'Tap "Prepare video" to get it ready for posting.'
+            : "We couldn't prepare this video in this browser. Try recording it in FUZO, or use another browser.";
+        update({ prep: { status: 'error', message } });
+        if (pendingPost.current !== null) {
+          pendingPost.current = null;
+          setWaitingForVideo(false);
+          setSave({ status: 'error', message: `Your video isn't ready: ${message} Go back to the video to fix it.` });
+        }
+      });
+  };
+
+  const addVideo = (v: CreateVideo) => {
+    if (video?.file) URL.revokeObjectURL(video.url);
+    prepAbort.current?.abort();
+    sourceFile.current = v.source === 'gallery' ? v.file : null;
+    setVideo(v);
+    setVideoKind(null);
+    if (v.source === 'gallery') startPrep(v);
+    goTo('video');
+  };
+
+  const removeVideo = () => {
+    prepAbort.current?.abort();
+    if (video?.file) URL.revokeObjectURL(video.url);
+    if (video?.coverUrl) URL.revokeObjectURL(video.coverUrl);
+    sourceFile.current = null;
+    setVideo(null);
+    setVideoKind(null);
+  };
+
+  // ---- URL import ---------------------------------------------------------------
+  // Mostly recipes (client spec): a video becomes a recipe Trim (it plays
+  // embedded from the original), a photo post / recipe page a Recipe card.
+  // The cover comes back from /api/import as data and is saved by FUZO.
+  const clearImport = () => {
+    setImportSource(null);
+    if (video?.source === 'import') {
+      if (video.coverUrl) URL.revokeObjectURL(video.coverUrl);
+      setVideo(null);
+      setVideoKind(null);
+    }
+    photos.forEach((p) => p.file && URL.revokeObjectURL(p.url));
+    setPhotos([]);
+    setKind(initialKind ?? null);
+  };
+
+  const onImported = async (r: ImportResult) => {
+    const cover = r.image ? await fetch(r.image).then((res) => res.blob()).catch(() => null) : null;
+    setImportSource({ url: r.url, platform: r.platform, author: r.author, embedUrl: r.embedUrl });
+    setImportNeedsAi(!r.recipe?.ingredients.length);
+    setFields({
+      ...emptyPostFields(),
+      title: r.recipe?.name ?? r.title ?? '',
+      caption: r.caption ?? '',
+      ingredients: r.recipe?.ingredients ?? [],
+      steps: r.recipe?.steps ?? [],
+      tags: { ...emptyCardTags(), cuisine: r.recipe?.cuisine ?? [] },
+    });
+    setSave(
+      r.partial
+        ? { status: 'error', message: `${r.platform === 'web' ? 'That page' : 'The post'} didn't share its details - add them below.` }
+        : { status: 'idle' },
+    );
+    if (r.video) {
+      setPhotos([]);
+      setKind(null);
+      setVideo({
+        id: crypto.randomUUID(),
+        file: null,
+        url: r.embedUrl ?? '',
+        duration: 0,
+        width: 0,
+        height: 0,
+        source: 'import',
+        prep: { status: 'ready' },
+        coverTime: 0,
+        cover,
+        coverUrl: cover ? URL.createObjectURL(cover) : null,
+      });
+      setVideoKind('video_recipe');
+    } else {
+      setVideo(null);
+      setVideoKind(null);
+      setKind('recipe');
+      setPhotos(cover ? [{ id: crypto.randomUUID(), file: cover, url: URL.createObjectURL(cover), source: 'gallery' }] : []);
+    }
+    setDirection(1);
+    setStep('details');
+  };
+
   // Finish a draft picked from the camera's Drafts list.
   const openDraft = (card: FoodCardRecord) => {
     const k = kindOfCard(card);
-    if (!k) return;
+    const vk = videoKindOfCard(card);
+    if (!k && !vk) return;
     photos.forEach((p) => p.file && URL.revokeObjectURL(p.url));
-    setPhotos(photosOfCard(card));
-    setKind(k);
     setFields(fieldsOfCard(card));
     setEditing(editingOf(card));
+    setImportSource(importOfCard(card));
     setDraftsOpen(false);
     setSave({ status: 'idle' });
+    if (vk) {
+      const v = videoOfCard(card);
+      setPhotos([]);
+      setVideo(v);
+      setVideoKind(vk);
+      setMode('video');
+      // A draft saved before its video uploaded goes back to the camera.
+      goTo(v ? 'details' : 'capture');
+      return;
+    }
+    setPhotos(photosOfCard(card));
+    setKind(k);
     goTo('details');
   };
 
@@ -185,6 +425,29 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     setFields((f) => ({ ...f, ...patch }));
     if (save.status === 'error') setSave({ status: 'idle' });
   };
+
+  // ---- FUZO AI (phase 7): fills empty fields once per video / import --------------
+  const aiTask: AiTask | null =
+    video && videoKind
+      ? videoKind === 'video_recipe'
+        ? 'recipe'
+        : videoKind === 'food_review'
+          ? 'review'
+          : 'tour'
+      : importSource && kind === 'recipe'
+        ? 'recipe'
+        : null;
+  const ai = useAiFill({
+    enabled: step === 'details' && !editing && !!aiTask && (!importSource || importNeedsAi),
+    runKey: aiTask ? `${video?.id ?? importSource?.url ?? 'post'}:${aiTask}` : null,
+    task: aiTask,
+    videoUrl: video && video.source !== 'import' ? video.url : null,
+    videoDuration: video?.duration,
+    image: video?.source === 'import' ? video.cover ?? null : importSource ? photos[0]?.file ?? null : null,
+    text: importSource ? [fields.title, fields.caption].filter(Boolean).join(' / ') : undefined,
+    fields,
+    onChange: patchFields,
+  });
 
   const toInput = (k: CreateKind): PostInput => ({
     kind: k,
@@ -201,10 +464,13 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     ingredients: fields.ingredients,
     steps: fields.steps,
     newPlace: k === 'restaurant' ? fields.newPlace : null,
+    source: importSource ? { url: importSource.url, platform: importSource.platform, author: importSource.author } : null,
   });
 
   const submit = async (publish: boolean) => {
-    if (!kind || saving) return;
+    if (saving) return;
+    if (video) return submitVideo(publish);
+    if (!kind) return;
     const input = toInput(kind);
     if (publish) {
       const missing = missingForPublish(input);
@@ -249,9 +515,105 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     }
   };
 
-  const stepIndex = STEPS.findIndex((s) => s.id === step);
-  const kindLabel = KIND_OPTIONS.find((k) => k.id === kind)?.label ?? '';
-  const detailsReady = !!kind && READY_KINDS.includes(kind);
+  // ---- Posting a video ---------------------------------------------------------
+  const finishSaved = (card: FoodCardRecord | undefined, publish: boolean, extra?: { addedPlace?: string }) => {
+    setSave({ status: 'idle' });
+    setResult({ published: publish, edited: editingPublished, card, ...extra });
+    setDirection(1);
+    setStep('done');
+    onSaved?.();
+  };
+
+  const submitVideo = async (publish: boolean, override?: Partial<CreateVideo>) => {
+    const v = video ? { ...video, ...override } : null;
+    if (!v || !videoKind) return;
+    if (v.prep.status === 'error') {
+      setSave({ status: 'error', message: `Your video isn't ready: ${v.prep.message} Go back to the video to fix it.` });
+      return;
+    }
+    if (v.prep.status === 'working') {
+      // Post as soon as the video is ready (startPrep carries on from here).
+      pendingPost.current = publish;
+      setWaitingForVideo(true);
+      setSave({ status: 'saving', publishing: publish });
+      return;
+    }
+    let cover: Blob | string | null = v.cover ?? v.coverUrl ?? null;
+    if (!cover && v.source !== 'import') {
+      try {
+        cover = await coverFrame(v.url, v.coverTime);
+      } catch {
+        cover = null;
+      }
+    }
+    const input: VideoPostInput = {
+      kind: videoKind,
+      // An import plays from the original post: no upload, its link instead.
+      video: v.source === 'import' ? null : v.file ?? v.url,
+      source: importSource ? { url: importSource.url, platform: importSource.platform, author: importSource.author } : null,
+      cover,
+      duration: v.duration,
+      width: v.width,
+      height: v.height,
+      title: fields.title,
+      caption: fields.caption,
+      tags: fields.tags,
+      flavorProfile: fields.flavorProfile,
+      labels: fields.labels,
+      ingredients: fields.ingredients,
+      steps: fields.steps,
+      place: fields.place,
+      menuItemId: fields.menuItemId,
+      stops: fields.stops,
+    };
+    if (publish) {
+      const missing = missingForVideoPublish(input);
+      if (missing) {
+        setSave({ status: 'error', message: missing });
+        return;
+      }
+    }
+    setSave({ status: 'saving', publishing: publish });
+    const res = await VideoPostService.save(input, publish ? 'PUBLISHED' : 'DRAFT', editing?.id);
+    if (!res.success || !res.data) {
+      setSave({ status: 'error', message: res.error || 'Something went wrong. Please try again.' });
+      return;
+    }
+    finishSaved(res.data, publish);
+    // A review posted from the place counts a visit there (the database checks: 150 m, once a day).
+    const card = res.data;
+    if (publish && !editingPublished && videoKind === 'food_review' && (card.place_id || card.restaurant_id || card.community_place_id)) {
+      const placeName = card.place_name || 'this place';
+      PostService.recordVisit(card.id).then((counted) => {
+        if (counted) setResult((r) => (r ? { ...r, visitAt: placeName } : r));
+      });
+    }
+    // A replaced video / cover is deleted from storage (best effort).
+    if (editing) {
+      const kept = new Set([res.data.media_url, res.data.image_url].filter((u): u is string => !!u));
+      MediaUploadService.removePostPhotos(editing.originalPhotos.filter((u) => !kept.has(u)));
+      setEditing({ ...editing, status: res.data.status, originalPhotos: [...kept] });
+    }
+  };
+  // The prepare step finishes outside React's render; it calls the latest submitVideo through this.
+  const submitVideoRef = useRef<typeof submitVideo | null>(null);
+  useEffect(() => {
+    submitVideoRef.current = submitVideo;
+  });
+
+  const stepIndex = steps.findIndex((s) => s.id === step);
+  const kindLabel = video ? VIDEO_KIND_OPTIONS.find((k) => k.id === videoKind)?.label ?? 'Video' : KIND_OPTIONS.find((k) => k.id === kind)?.label ?? '';
+  const detailsReady = video ? !!videoKind && READY_VIDEO_KINDS.includes(videoKind) : !!kind && READY_KINDS.includes(kind);
+  const title =
+    step === 'video'
+      ? 'Your video'
+      : step === 'kind'
+        ? video
+          ? 'What is this video?'
+          : 'What is this?'
+        : editingPublished
+          ? `Edit ${kindLabel.toLowerCase()}`
+          : `${kindLabel} details`;
   const slide = reduceMotion
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
     : {
@@ -268,9 +630,9 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
             <ArrowLeft size={20} />
           </button>
           <div className="cf__titles">
-            <h1 className="cf__title">{step === 'kind' ? 'What is this?' : editingPublished ? `Edit ${kindLabel.toLowerCase()}` : `${kindLabel} details`}</h1>
-            <ol className="cf__progress" aria-label={`Step ${stepIndex + 1} of ${STEPS.length}`}>
-              {STEPS.map((s, i) => (
+            <h1 className="cf__title">{title}</h1>
+            <ol className="cf__progress" aria-label={`Step ${stepIndex + 1} of ${steps.length}`}>
+              {steps.map((s, i) => (
                 <li key={s.id} className={i <= stepIndex ? 'is-done' : ''} aria-current={i === stepIndex ? 'step' : undefined}>
                   <span className="visually-hidden">{s.label}</span>
                 </li>
@@ -293,14 +655,75 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
                 photos={photos}
                 onAddPhotos={addPhotos}
                 onRemovePhoto={removePhoto}
-                onNext={() => goTo(editing ? 'details' : 'kind')}
+                onNext={() => goTo(video ? 'video' : editing ? 'details' : 'kind')}
                 onClose={requestClose}
                 draftCount={editing ? 0 : drafts.length}
                 onOpenDrafts={() => setDraftsOpen(true)}
+                video={video}
+                onVideo={addVideo}
+                onRemoveVideo={removeVideo}
+                onImported={onImported}
               />
             )}
 
-            {step === 'kind' && (
+            {step === 'video' && video && (
+              <VideoPreview
+                video={video}
+                onCoverTime={(t) => setVideo((cur) => (cur ? { ...cur, coverTime: t } : cur))}
+                onRetryPrep={() => startPrep(video)}
+                onRetake={() => {
+                  removeVideo();
+                  goTo('capture');
+                }}
+                onNext={async () => {
+                  // The cover as a JPEG (for the type picker now, the upload later).
+                  const id = video.id;
+                  const t = video.coverTime;
+                  goTo(editing && videoKind ? 'details' : 'kind');
+                  try {
+                    const blob = await coverFrame(video.url, t);
+                    setVideo((cur) => {
+                      if (!cur || cur.id !== id) return cur;
+                      if (cur.coverUrl) URL.revokeObjectURL(cur.coverUrl);
+                      return { ...cur, cover: blob, coverUrl: URL.createObjectURL(blob) };
+                    });
+                  } catch {
+                    /* the type picker falls back to the video itself */
+                  }
+                }}
+              />
+            )}
+
+            {step === 'kind' && video && (
+              <KindPicker<VideoKind>
+                photos={[]}
+                video={video}
+                options={VIDEO_KIND_OPTIONS}
+                selected={videoKind}
+                onPick={(k) => {
+                  setVideoKind(k);
+                  goTo('details');
+                }}
+              />
+            )}
+
+            {step === 'details' && video && videoKind && (
+              <div className="cf-details">
+                {importSource && <SourceCredit url={importSource.url} platform={importSource.platform} author={importSource.author} className="cf-details__credit" />}
+                <AiBanner state={ai.state} onUndo={ai.undo} what={video.source === 'import' ? 'post' : 'video'} />
+                {video.coverUrl && (
+                  <div className="cf-kind__photos cf-kind__photos--video" aria-label="Your video">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={video.coverUrl} alt="Video cover" />
+                  </div>
+                )}
+                {videoKind === 'video_recipe' && <RecipeDetails fields={fields} onChange={patchFields} variant="video" />}
+                {videoKind === 'food_review' && <ReviewDetails fields={fields} onChange={patchFields} />}
+                {videoKind === 'food_tour' && <TourDetails fields={fields} onChange={patchFields} />}
+              </div>
+            )}
+
+            {step === 'kind' && !video && (
               <KindPicker
                 photos={photos}
                 selected={kind}
@@ -311,8 +734,32 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
               />
             )}
 
-            {step === 'details' && kind && (
+            {step === 'details' && !video && kind && (
               <div className="cf-details">
+                {importSource && <SourceCredit url={importSource.url} platform={importSource.platform} author={importSource.author} className="cf-details__credit" />}
+                {importSource && <AiBanner state={ai.state} onUndo={ai.undo} what="post" />}
+                {importSource && photos.length === 0 && (
+                  <div className="cf-import__addphoto">
+                    <p>Add a photo of the dish - the post didn&apos;t share one.</p>
+                    <button type="button" className="cf-chipbtn" onClick={() => importPhotoRef.current?.click()}>
+                      Add a photo
+                    </button>
+                    <input
+                      ref={importPhotoRef}
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        e.target.value = '';
+                        if (file && file.type.startsWith('image/')) {
+                          setPhotos([{ id: crypto.randomUUID(), file, url: URL.createObjectURL(file), source: 'gallery' }]);
+                          if (save.status === 'error') setSave({ status: 'idle' });
+                        }
+                      }}
+                    />
+                  </div>
+                )}
                 <ul className="cf-kind__photos" aria-label="Your photos">
                   {photos.map((p, i) => (
                     <li key={p.id}>
@@ -342,7 +789,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
               </div>
             )}
 
-            {step === 'done' && kind && result && (
+            {step === 'done' && (kind || video) && result && (
               <div className="cf-done">
                 <motion.span
                   className="cf-done__icon"
@@ -353,9 +800,9 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
                 >
                   <Check size={40} strokeWidth={3} />
                 </motion.span>
-                {photos[0] && (
+                {(photos[0]?.url || video?.coverUrl) && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img className="cf-done__photo" src={photos[0].url} alt="" />
+                  <img className="cf-done__photo" src={photos[0]?.url || video?.coverUrl || ''} alt="" />
                 )}
                 <h2 className="cf-done__title">{result.edited ? 'Changes saved' : result.published ? 'Posted!' : 'Draft saved'}</h2>
                 <p className="cf-done__sub">
@@ -364,7 +811,9 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
                     : result.published
                     ? result.addedPlace
                       ? `${result.addedPlace} is on the map as Community Added, and your photos are on the Feed and your profile.`
-                      : `Your ${kindLabel.toLowerCase()} is on ${POSTED_TO[kind]}.`
+                      : video
+                        ? `Your ${kindLabel.toLowerCase()} video is on ${VIDEO_POSTED_TO}.`
+                        : `Your ${kindLabel.toLowerCase()} is on ${kind ? POSTED_TO[kind] : 'your profile'}.`
                     : 'You can finish it later from your profile.'}
                 </p>
                 <div role="status" className="cf-done__status">
@@ -387,7 +836,20 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
                       <Share2 size={18} aria-hidden="true" /> Share
                     </button>
                   )}
-                  {result.published && (
+                  {result.published && video && result.card && (
+                    <button
+                      type="button"
+                      className="cf-bar__draft"
+                      onClick={() => {
+                        const id = result.card!.id;
+                        onClose();
+                        router.push(`/dashboard?tab=trims&trim=${encodeURIComponent(id)}`);
+                      }}
+                    >
+                      <Clapperboard size={18} aria-hidden="true" /> Watch in Trims
+                    </button>
+                  )}
+                  {result.published && !video && (
                     <button
                       type="button"
                       className="cf-bar__draft"
@@ -434,7 +896,12 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
             <button type="button" className="cf-bar__post" onClick={() => submit(true)} disabled={saving}>
               {saving && save.publishing ? (
                 <>
-                  <Loader2 size={18} className="scout-spin" /> {editingPublished ? 'Saving…' : 'Posting…'}
+                  <Loader2 size={18} className="scout-spin" />{' '}
+                  {waitingForVideo && video?.prep.status === 'working'
+                    ? `Getting video ready… ${Math.round(video.prep.progress * 100)}%`
+                    : editingPublished
+                      ? 'Saving…'
+                      : 'Posting…'}
                 </>
               ) : editingPublished ? (
                 'Save changes'
@@ -484,7 +951,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
               <p id="cf-confirm-text" className="cf-confirm__text">
                 {editing
                   ? `Changes you made won't be saved. Your ${editing.status === 'DRAFT' ? 'draft' : 'post'} stays as it was.`
-                  : `Your ${photos.length === 1 ? 'photo' : `${photos.length} photos`} and anything you've filled in will be lost.`}
+                  : `Your ${video ? 'video' : photos.length === 1 ? 'photo' : `${photos.length} photos`} and anything you've filled in will be lost.`}
               </p>
               <div className="cf-confirm__actions">
                 <button type="button" className="cf-confirm__btn cf-confirm__btn--danger" onClick={onClose}>

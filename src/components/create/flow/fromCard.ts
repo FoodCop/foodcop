@@ -5,7 +5,8 @@
 import { DEFAULT_FLAVOR, emptyCardTags, type FoodCardRecord, type FoodCardType } from '@/lib/types/foodCard';
 import { emptyNewPlace, type NewPlaceFields } from '@/lib/services/communityPlacesService';
 import { MAX_POST_PHOTOS } from '@/lib/services/postService';
-import type { CreateKind, CreatePhoto, PostFields } from './types';
+import type { CreateKind, CreatePhoto, CreateVideo, ImportSource, PostFields, VideoKind } from './types';
+import { embedUrlFor, parseSourceUrl } from '@/lib/import/platforms';
 
 const KIND_BY_TYPE: Partial<Record<FoodCardType, CreateKind>> = {
   VIBE_PHOTO: 'vibe',
@@ -17,11 +18,62 @@ const KIND_BY_TYPE: Partial<Record<FoodCardType, CreateKind>> = {
 /** The Create-flow kind of a post, or null for older card types the flow doesn't make. */
 export const kindOfCard = (card: Pick<FoodCardRecord, 'card_type'>): CreateKind | null => KIND_BY_TYPE[card.card_type] ?? null;
 
+// Video posts (client, 2026-10-16; docs/VIDEO_URL_PLAN.md).
+const VIDEO_KIND_BY_TYPE: Partial<Record<FoodCardType, VideoKind>> = {
+  RECIPE_VIDEO: 'video_recipe',
+  REVIEW_VIDEO: 'food_review',
+  TOUR_VIDEO: 'food_tour',
+};
+
+/** A video post's kind, or null for other posts. */
+export const videoKindOfCard = (card: Pick<FoodCardRecord, 'card_type'>): VideoKind | null => VIDEO_KIND_BY_TYPE[card.card_type] ?? null;
+
+/** A video post's clip as an already-uploaded Create video (null if it has none, e.g. an early draft). */
+export function videoOfCard(card: FoodCardRecord): CreateVideo | null {
+  // An imported video: it plays embedded from the original post.
+  if (!card.media_url && card.source_url) {
+    return {
+      id: `import-video-${card.id}`,
+      file: null,
+      url: embedUrlFor(card.source_url) ?? '',
+      duration: 0,
+      width: 0,
+      height: 0,
+      source: 'import',
+      prep: { status: 'ready' },
+      coverTime: 0,
+      cover: null,
+      coverUrl: card.image_url ?? null,
+    };
+  }
+  if (!card.media_url || !/^https:\/\//i.test(card.media_url)) return null;
+  return {
+    id: `existing-video-${card.id}`,
+    file: null,
+    url: card.media_url,
+    duration: Number(card.video_duration) || 0,
+    width: card.video_width ?? 0,
+    height: card.video_height ?? 0,
+    source: 'existing',
+    prep: { status: 'ready' },
+    coverTime: 0,
+    cover: null,
+    coverUrl: card.image_url ?? null,
+  };
+}
+
 /**
  * Whether the Create flow can edit this card. Recipes made with the older
  * recipe studio have no photos list but do have a cover photo, so they open too.
  */
-export const canEditInCreate = (card: FoodCardRecord) => kindOfCard(card) !== null;
+/** The original post an imported card came from, if any. */
+export function importOfCard(card: FoodCardRecord): ImportSource | null {
+  const parsed = card.source_url ? parseSourceUrl(card.source_url) : null;
+  if (!parsed) return null;
+  return { url: parsed.url, platform: card.source_platform ?? parsed.platform, author: card.source_author ?? null, embedUrl: parsed.embedUrl };
+}
+
+export const canEditInCreate = (card: FoodCardRecord) => kindOfCard(card) !== null || videoKindOfCard(card) !== null;
 
 /** The post's photos as already-uploaded Create photos. */
 export function photosOfCard(card: FoodCardRecord): CreatePhoto[] {
@@ -38,7 +90,8 @@ const isNewPlace = (v: unknown): v is Partial<NewPlaceFields> => !!v && typeof v
 /** The post's answers. */
 export function fieldsOfCard(card: FoodCardRecord): PostFields {
   const tags = { ...emptyCardTags(), ...(card.tags ?? {}) };
-  const hasPlace = typeof card.lat === 'number' && typeof card.lng === 'number' && !card.is_home;
+  // A tour's position is its first stop; its places are the stops themselves.
+  const hasPlace = typeof card.lat === 'number' && typeof card.lng === 'number' && !card.is_home && card.card_type !== 'TOUR_VIDEO';
   const newPlace = card.new_place && isNewPlace(card.new_place) ? { ...emptyNewPlace(), ...card.new_place } : null;
   return {
     title: card.title === 'Untitled' ? '' : card.title ?? '',
@@ -64,5 +117,6 @@ export function fieldsOfCard(card: FoodCardRecord): PostFields {
     ingredients: (card.ingredients ?? []).map((r) => [r[0] ?? '', r[1] ?? '', r[2] ?? ''] as [string, string, string]),
     steps: card.steps ?? [],
     newPlace,
+    stops: card.stops ?? [],
   };
 }

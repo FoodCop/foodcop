@@ -2,15 +2,20 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Camera, ChevronRight, FileClock, ImagePlus, Link2, SwitchCamera, Video, X, Zap, ZapOff } from 'lucide-react';
-import { MAX_PHOTOS, type CreateMode, type CreatePhoto } from './types';
+import { Camera, ChevronRight, FileClock, Film, ImagePlus, SwitchCamera, X, Zap, ZapOff } from 'lucide-react';
+import { baseMime, readVideoMeta, recorderMime, VIDEO_BITRATE } from '@/lib/media/video';
+import { UrlImport } from './UrlImport';
+import type { ImportResult } from '@/app/api/import/route';
+import { MAX_PHOTOS, MAX_VIDEO_INPUT_BYTES, MAX_VIDEO_SECONDS, type CreateMode, type CreatePhoto, type CreateVideo } from './types';
 
 // Step 1 of the Create flow: a full-screen camera like Instagram's. Live
 // camera with a shutter, front / back switch and flash (where the phone
 // supports it), a gallery button, the photos picked so far (up to 5) and the
-// Photo · Video · URL tabs. Video and URL come later (plan, phase "Later").
-// Without camera access (refused, no camera, not https) it falls back to the
-// gallery.
+// Photo · Video · URL tabs. Video (client, 2026-10-16; docs/VIDEO_URL_PLAN.md):
+// the shutter becomes a record button (tap to start / stop, stops itself at
+// 60 s; the microphone is asked for only then), or one clip from the gallery.
+// URL imports a post by its link (UrlImport). Without camera access (refused, no camera, not https) it
+// falls back to the gallery.
 
 type CameraStatus = 'starting' | 'live' | 'denied' | 'nocamera' | 'unsupported' | 'error';
 
@@ -25,7 +30,15 @@ interface CameraCaptureProps {
   /** Unfinished posts the user can go back to ("Drafts" button; hidden at 0). */
   draftCount?: number;
   onOpenDrafts?: () => void;
+  /** The post's video (video mode), and a newly recorded / picked one. */
+  video?: CreateVideo | null;
+  onVideo?: (video: CreateVideo) => void;
+  onRemoveVideo?: () => void;
+  /** URL tab: a link was read (POST /api/import). */
+  onImported?: (result: ImportResult) => void;
 }
+
+const clock = (sec: number) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
 
 const MODES: { id: CreateMode; label: string }[] = [
   { id: 'photo', label: 'Photo' },
@@ -35,7 +48,21 @@ const MODES: { id: CreateMode; label: string }[] = [
 
 const newId = () => crypto.randomUUID();
 
-export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemovePhoto, onNext, onClose, draftCount = 0, onOpenDrafts }: CameraCaptureProps) {
+export function CameraCapture({
+  mode,
+  onModeChange,
+  photos,
+  onAddPhotos,
+  onRemovePhoto,
+  onNext,
+  onClose,
+  draftCount = 0,
+  onOpenDrafts,
+  video = null,
+  onVideo,
+  onRemoveVideo,
+  onImported,
+}: CameraCaptureProps) {
   const reduceMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -47,9 +74,21 @@ export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemov
   const [torchOn, setTorchOn] = useState(false);
   const [flash, setFlash] = useState(0);
   const [notice, setNotice] = useState<string | null>(null);
+  const videoFileRef = useRef<HTMLInputElement>(null);
+  // Recording (video mode).
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const micRef = useRef<MediaStream | null>(null);
+  const startedAtRef = useRef(0);
+  const [recording, setRecording] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
 
   const remaining = MAX_PHOTOS - photos.length;
   const photoMode = mode === 'photo';
+  const videoMode = mode === 'video';
+  // A post is photos or one video, not both.
+  const videoBlocked = videoMode && photos.length > 0;
+  const photoBlocked = photoMode && !!video;
+  const cameraMode = (photoMode && !photoBlocked) || (videoMode && !videoBlocked);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -127,9 +166,143 @@ export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemov
 
   useEffect(() => {
     if (!notice) return;
-    const t = setTimeout(() => setNotice(null), 2200);
+    const t = setTimeout(() => setNotice(null), notice.length > 60 ? 5000 : 2200);
     return () => clearTimeout(t);
   }, [notice]);
+
+  // ---- Video: record ----------------------------------------------------------
+  const stopRecording = useCallback(() => {
+    const rec = recorderRef.current;
+    if (rec && rec.state !== 'inactive') rec.stop();
+  }, []);
+
+  const startRecording = async () => {
+    const stream = streamRef.current;
+    const videoEl = videoRef.current;
+    if (!stream || status !== 'live' || recording) return;
+    if (recorderMime() === null) {
+      setNotice("This browser can't record video. Choose one from your gallery.");
+      return;
+    }
+    // Sound: ask for the microphone only now; without it, record silently.
+    let mic: MediaStream | null = null;
+    try {
+      mic = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+    } catch {
+      setNotice('Recording without sound - the microphone is off.');
+    }
+    micRef.current = mic;
+    // Record a copy of the camera track: recording the one the preview shows
+    // can come out empty in some browsers. The copy is stopped afterwards.
+    const tracks = [...stream.getVideoTracks().map((t) => t.clone()), ...(mic?.getAudioTracks() ?? [])];
+    const mime = recorderMime(!!mic?.getAudioTracks().length);
+    let rec: MediaRecorder;
+    try {
+      rec = new MediaRecorder(new MediaStream(tracks), { ...(mime ? { mimeType: mime } : {}), videoBitsPerSecond: VIDEO_BITRATE });
+    } catch {
+      tracks.forEach((t) => t.stop());
+      mic?.getTracks().forEach((t) => t.stop());
+      setNotice("This browser can't record video. Choose one from your gallery.");
+      return;
+    }
+    const chunks: Blob[] = [];
+    rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+    rec.onstop = () => {
+      tracks.forEach((t) => t.stop());
+      micRef.current?.getTracks().forEach((t) => t.stop());
+      micRef.current = null;
+      recorderRef.current = null;
+      setRecording(false);
+      const duration = Math.min(MAX_VIDEO_SECONDS, (performance.now() - startedAtRef.current) / 1000);
+      if (duration < 1) {
+        setNotice('Hold on a little longer - videos need at least 1 second.');
+        return;
+      }
+      const blob = new Blob(chunks, { type: baseMime(rec.mimeType || mime || 'video/webm') });
+      if (!blob.size) {
+        setNotice("That recording didn't save - please record it again.");
+        return;
+      }
+      const settings = stream.getVideoTracks()[0]?.getSettings?.() ?? {};
+      onVideo?.({
+        id: newId(),
+        file: blob,
+        url: URL.createObjectURL(blob),
+        duration,
+        width: videoEl?.videoWidth || settings.width || 0,
+        height: videoEl?.videoHeight || settings.height || 0,
+        source: 'camera',
+        prep: { status: 'ready' },
+        coverTime: Math.min(1, duration / 2),
+      });
+    };
+    recorderRef.current = rec;
+    startedAtRef.current = performance.now();
+    setElapsed(0);
+    rec.start(1000);
+    setRecording(true);
+  };
+
+  // Timer + the 60 s limit.
+  useEffect(() => {
+    if (!recording) return;
+    const t = setInterval(() => {
+      const sec = (performance.now() - startedAtRef.current) / 1000;
+      setElapsed(sec);
+      if (sec >= MAX_VIDEO_SECONDS) stopRecording();
+    }, 200);
+    return () => clearInterval(t);
+  }, [recording, stopRecording]);
+
+  // Leaving the screen while recording throws that recording away.
+  useEffect(
+    () => () => {
+      const rec = recorderRef.current;
+      if (rec && rec.state !== 'inactive') {
+        rec.onstop = null;
+        rec.stop();
+      }
+      micRef.current?.getTracks().forEach((t) => t.stop());
+    },
+    [],
+  );
+
+  // ---- Video: pick from the gallery ---------------------------------------------
+  const pickVideo = async (files: FileList | null) => {
+    const file = files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('video/')) {
+      setNotice('Please choose a video.');
+      return;
+    }
+    if (file.size > MAX_VIDEO_INPUT_BYTES) {
+      setNotice('That video is too big. Choose a shorter clip (up to 60 seconds).');
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    try {
+      const meta = await readVideoMeta(url);
+      if (meta.duration > MAX_VIDEO_SECONDS + 0.5) {
+        URL.revokeObjectURL(url);
+        setNotice(`Videos can be up to 1:00 - this one is ${clock(meta.duration)}. Trim it in your phone's gallery first, then pick it again.`);
+        return;
+      }
+      onVideo?.({
+        id: newId(),
+        file,
+        url,
+        duration: meta.duration,
+        width: meta.width,
+        height: meta.height,
+        source: 'gallery',
+        prep: { status: 'working', progress: 0 },
+        coverTime: Math.min(1, meta.duration / 2),
+      });
+    } catch (err) {
+      URL.revokeObjectURL(url);
+      setNotice(err instanceof Error ? err.message : "This video can't be opened. Try another one.");
+    }
+  };
 
   const capture = () => {
     const video = videoRef.current;
@@ -191,7 +364,7 @@ export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemov
     if (added.length) onAddPhotos(added);
   };
 
-  const openGallery = () => fileRef.current?.click();
+  const openGallery = () => (videoMode ? videoFileRef : fileRef).current?.click();
 
   const fallback = status === 'denied' || status === 'nocamera' || status === 'unsupported' || status === 'error';
   const fallbackText: Record<string, string> = {
@@ -202,7 +375,7 @@ export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemov
   };
 
   return (
-    <div className="cf-cam" aria-label="Take or choose photos">
+    <div className="cf-cam" aria-label={videoMode ? 'Record or choose a video' : 'Take or choose photos'}>
       <input
         ref={fileRef}
         type="file"
@@ -214,55 +387,90 @@ export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemov
           e.target.value = '';
         }}
       />
+      <input
+        ref={videoFileRef}
+        type="file"
+        accept="video/*"
+        hidden
+        onChange={(e) => {
+          pickVideo(e.target.files);
+          e.target.value = '';
+        }}
+      />
 
       {/* Top bar */}
       <div className="cf-cam__top">
         <button type="button" className="cf-cam__icon" onClick={onClose} aria-label="Close">
           <X size={24} />
         </button>
-        {photoMode && status === 'live' && torchSupported && (
+        {cameraMode && status === 'live' && torchSupported && (
           <button type="button" className="cf-cam__icon" onClick={toggleTorch} aria-label={torchOn ? 'Turn flash off' : 'Turn flash on'} aria-pressed={torchOn}>
             {torchOn ? <Zap size={22} /> : <ZapOff size={22} />}
           </button>
         )}
-        {draftCount > 0 && onOpenDrafts && photos.length === 0 && (
+        {draftCount > 0 && onOpenDrafts && photos.length === 0 && !video && !recording && (
           <button type="button" className="cf-cam__drafts" onClick={onOpenDrafts}>
             <FileClock size={16} aria-hidden="true" /> Drafts <span className="cf-cam__drafts-n">{draftCount}</span>
           </button>
         )}
-        <span className="cf-cam__count" aria-live="polite">{photos.length}/{MAX_PHOTOS}</span>
+        {videoMode ? (
+          <span className={`cf-cam__count cf-cam__timer${recording ? ' is-recording' : ''}`} aria-live="off">
+            {recording && <span className="cf-cam__rec-dot" aria-hidden="true" />}
+            {clock(recording ? elapsed : 0)} / {clock(MAX_VIDEO_SECONDS)}
+          </span>
+        ) : mode === 'photo' ? (
+          <span className="cf-cam__count" aria-live="polite">{photos.length}/{MAX_PHOTOS}</span>
+        ) : null}
       </div>
 
       {/* Viewfinder */}
       <div className="cf-cam__view">
         <video
           ref={videoRef}
-          className={`cf-cam__video${facing === 'user' ? ' is-mirrored' : ''}${status === 'live' ? ' is-live' : ''}${photoMode ? '' : ' is-hidden'}`}
+          className={`cf-cam__video${facing === 'user' ? ' is-mirrored' : ''}${status === 'live' ? ' is-live' : ''}${cameraMode ? '' : ' is-hidden'}`}
           playsInline
           muted
           autoPlay
           aria-hidden="true"
         />
 
-        {photoMode && status === 'starting' && <div className="cf-cam__msg">Opening camera…</div>}
+        {cameraMode && status === 'starting' && <div className="cf-cam__msg">Opening camera…</div>}
 
-        {photoMode && fallback && (
+        {cameraMode && fallback && (
           <div className="cf-cam__msg cf-cam__msg--fallback">
             <Camera size={40} aria-hidden="true" />
-            <p>{fallbackText[status]}</p>
+            <p>{videoMode ? fallbackText[status].replace('pick photos', 'pick a video').replace('Pick photos', 'Pick a video') : fallbackText[status]}</p>
             <button type="button" className="cf-cam__pill" onClick={openGallery}>
-              <ImagePlus size={18} /> Choose from gallery
+              {videoMode ? <Film size={18} /> : <ImagePlus size={18} />} Choose from gallery
             </button>
           </div>
         )}
 
-        {mode !== 'photo' && (
+        {videoBlocked && (
           <div className="cf-cam__msg cf-cam__msg--fallback">
-            {mode === 'video' ? <Video size={40} aria-hidden="true" /> : <Link2 size={40} aria-hidden="true" />}
-            <p>{mode === 'video' ? 'Video posts are coming soon.' : 'Posting a link is coming soon.'}</p>
+            <Film size={40} aria-hidden="true" />
+            <p>A post is either photos or one video. Remove your photos to post a video.</p>
             <button type="button" className="cf-cam__pill" onClick={() => onModeChange('photo')}>
-              <Camera size={18} /> Take photos instead
+              <Camera size={18} /> Back to photos
             </button>
+          </div>
+        )}
+
+        {photoBlocked && (
+          <div className="cf-cam__msg cf-cam__msg--fallback">
+            <Camera size={40} aria-hidden="true" />
+            <p>A post is either photos or one video. Remove your video to take photos.</p>
+            <button type="button" className="cf-cam__pill" onClick={() => onModeChange('video')}>
+              <Film size={18} /> Back to video
+            </button>
+          </div>
+        )}
+
+        {mode === 'url' && onImported && <UrlImport onImported={onImported} />}
+
+        {recording && (
+          <div className="cf-cam__rec-bar" aria-hidden="true">
+            <span style={{ width: `${Math.min(100, (elapsed / MAX_VIDEO_SECONDS) * 100)}%` }} />
           </div>
         )}
 
@@ -294,8 +502,26 @@ export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemov
         </AnimatePresence>
       </div>
 
+      {/* The video + Next (video mode) */}
+      {videoMode && video && !recording && (
+        <div className="cf-cam__tray">
+          <ul className="cf-cam__thumbs" aria-label="Video in this post">
+            <li className="cf-cam__thumb cf-cam__thumb--video">
+              <video src={video.url} muted playsInline preload="metadata" aria-label={`Video, ${clock(video.duration)}`} />
+              <span className="cf-cam__thumb-len">{clock(video.duration)}</span>
+              <button type="button" className="cf-cam__thumb-remove" onClick={onRemoveVideo} aria-label="Remove video">
+                <X size={12} strokeWidth={3} />
+              </button>
+            </li>
+          </ul>
+          <button type="button" className="cf-cam__next" onClick={onNext}>
+            Next <ChevronRight size={18} strokeWidth={2.6} />
+          </button>
+        </div>
+      )}
+
       {/* Picked photos + Next */}
-      {photos.length > 0 && (
+      {photoMode && photos.length > 0 && (
         <div className="cf-cam__tray">
           <ul className="cf-cam__thumbs" aria-label="Photos in this post">
             {photos.map((p, i) => (
@@ -314,31 +540,46 @@ export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemov
         </div>
       )}
 
-      {/* Controls */}
-      <div className="cf-cam__controls">
-        <button type="button" className="cf-cam__side" onClick={openGallery} aria-label="Choose photos from gallery" disabled={remaining <= 0}>
-          {photos.length > 0 ? (
+      {/* Controls (not on the URL tab) */}
+      <div className="cf-cam__controls" hidden={mode === 'url'}>
+        <button
+          type="button"
+          className="cf-cam__side"
+          onClick={openGallery}
+          aria-label={videoMode ? 'Choose a video from gallery' : 'Choose photos from gallery'}
+          disabled={videoMode ? videoBlocked || recording : photoBlocked || remaining <= 0}
+        >
+          {videoMode ? (
+            <Film size={22} />
+          ) : photos.length > 0 ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={photos[photos.length - 1].url} alt="" />
           ) : (
             <ImagePlus size={22} />
           )}
         </button>
-        <button
-          type="button"
-          className="cf-cam__shutter"
-          onClick={capture}
-          disabled={!photoMode || status !== 'live'}
-          aria-label="Take photo"
-        >
-          <span />
-        </button>
+        {videoMode ? (
+          <button
+            type="button"
+            className={`cf-cam__shutter cf-cam__shutter--video${recording ? ' is-recording' : ''}`}
+            onClick={recording ? stopRecording : startRecording}
+            disabled={videoBlocked || status !== 'live'}
+            aria-label={recording ? 'Stop recording' : 'Start recording'}
+            aria-pressed={recording}
+          >
+            <span />
+          </button>
+        ) : (
+          <button type="button" className="cf-cam__shutter" onClick={capture} disabled={!photoMode || photoBlocked || status !== 'live'} aria-label="Take photo">
+            <span />
+          </button>
+        )}
         <button
           type="button"
           className="cf-cam__side"
           onClick={() => setFacing((f) => (f === 'environment' ? 'user' : 'environment'))}
           aria-label="Switch camera"
-          disabled={!photoMode || status !== 'live' || !canSwitch}
+          disabled={!cameraMode || status !== 'live' || !canSwitch || recording}
           style={{ visibility: canSwitch ? 'visible' : 'hidden' }}
         >
           <SwitchCamera size={22} />
@@ -355,6 +596,7 @@ export function CameraCapture({ mode, onModeChange, photos, onAddPhotos, onRemov
             aria-selected={mode === m.id}
             className={`cf-cam__mode${mode === m.id ? ' is-active' : ''}`}
             onClick={() => onModeChange(m.id)}
+            disabled={recording}
           >
             {m.label}
           </button>

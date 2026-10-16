@@ -11,16 +11,20 @@ import type { PostFields } from './types';
 // Cuisine*, Ingredients* (name, quantity, unit), Preparation steps*, then
 // Meal type, Dietary, Cooking style and the Flavour meter. No location.
 // Published recipes appear in the Feed, Bites and Profile -> Recipes.
+// variant="video" is the recipe video (2a, client 2026-10-16): the video
+// shows the cooking, so cuisine and steps are optional there.
 
 interface RecipeDetailsProps {
   fields: PostFields;
   onChange: (patch: Partial<PostFields>) => void;
+  variant?: 'photo' | 'video';
 }
 
 const MAX_INGREDIENTS = 40;
 const MAX_STEPS = 30;
 
-export function RecipeDetails({ fields, onChange }: RecipeDetailsProps) {
+export function RecipeDetails({ fields, onChange, variant = 'photo' }: RecipeDetailsProps) {
+  const isVideo = variant === 'video';
   // Always show at least one empty row to type into.
   const ingredients: [string, string, string][] = fields.ingredients.length ? fields.ingredients : [['', '', '']];
   const steps = fields.steps.length ? fields.steps : [''];
@@ -49,6 +53,11 @@ export function RecipeDetails({ fields, onChange }: RecipeDetailsProps) {
 
   return (
     <div className="cf-form">
+      {isVideo && (
+        <p className="cf-note">
+          <span>Add the dish and what goes in it - your video shows how.</span>
+        </p>
+      )}
       <section className="cf-field">
         <label htmlFor="cf-recipe-name" className="cf-field__label">
           Food name <span className="cf-field__req" aria-hidden="true">*</span>
@@ -65,7 +74,7 @@ export function RecipeDetails({ fields, onChange }: RecipeDetailsProps) {
 
       <ChipField
         label="Cuisine"
-        required
+        required={!isVideo}
         options={UGC_CUISINES.filter((c) => c !== 'Custom')}
         selected={fields.tags.cuisine}
         onChange={(v) => setTags('cuisine', v)}
@@ -125,7 +134,7 @@ export function RecipeDetails({ fields, onChange }: RecipeDetailsProps) {
 
       <section className="cf-field" aria-labelledby="cf-recipe-steps">
         <h3 id="cf-recipe-steps" className="cf-field__label">
-          Preparation steps <span className="cf-field__req" aria-hidden="true">*</span>
+          Preparation steps {isVideo ? <span className="cf-field__opt">(optional)</span> : <span className="cf-field__req" aria-hidden="true">*</span>}
         </h3>
         <ol className="cf-rows">
           {steps.map((step, i) => (

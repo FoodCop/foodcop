@@ -52,6 +52,12 @@ $cff-max: 40rem;
   letter-spacing: -0.01em;
 }
 
+.cf-field__opt {
+  color: $cff-muted;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
 .cf-field__req {
   color: darken($rose, 8%);
 }
@@ -440,6 +446,82 @@ $cff-max: 40rem;
   text-underline-offset: 2px;
 }
 
+// Imported posts: who it's from + the original (URL import)
+.cf-details__credit {
+  max-width: $cff-max;
+  margin: 0 auto 0.75rem;
+}
+
+.cf-import__addphoto {
+  max-width: $cff-max;
+  margin: 0 auto 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 18px;
+  background: rgba($fuzo-yellow, 0.16);
+  font-weight: 700;
+
+  p {
+    margin: 0;
+  }
+}
+
+// FUZO AI banner (phase 7): working / filled in (+ Undo) / couldn't help
+.cf-ai-live:empty {
+  display: none;
+}
+
+.cf-ai {
+  max-width: $cff-max;
+  margin: 0 auto 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba($fuzo-yellow, 0.22), rgba(#b48cf0, 0.18));
+  color: $cff-ink;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.35;
+
+  > span {
+    flex: 1 1 12rem;
+  }
+
+  > svg {
+    flex: none;
+  }
+
+  &--error {
+    background: var(--studio-pill, #f2f1ee);
+    color: $cff-muted;
+  }
+}
+
+.cf-ai__undo {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0 0.9rem;
+  border: 0;
+  border-radius: 9999px;
+  background: #fff;
+  color: $cff-ink;
+  font-weight: 800;
+
+  &:focus-visible {
+    outline: 3px solid rgba($fuzo-yellow-deep, 0.6);
+    outline-offset: 2px;
+  }
+}
+
 // A short info line inside a form (e.g. where restaurant photos go)
 .cf-note {
   display: flex;
@@ -585,6 +667,119 @@ $cff-max: 40rem;
   }
 }
 
+// Food tour stops (client, 2026-10-16)
+.cf-stops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cf-stop {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: start;
+  padding: 0.6rem;
+  border-radius: 18px;
+  background: var(--studio-pill, #f2f1ee);
+}
+
+.cf-stop__num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: $fuzo-yellow;
+  color: $fuzo-yellow-ink;
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-stop__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cf-stop__name {
+  margin: 0;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+
+  // The pin stays with the first word, however long the name.
+  svg {
+    display: inline;
+    vertical-align: -2px;
+    margin-right: 0.25rem;
+  }
+
+  .cf-place__fuzo {
+    display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0.05rem 0.45rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.68rem;
+  }
+}
+
+.cf-stop__addr {
+  margin: 0;
+  color: $cff-muted;
+  font-size: 0.8rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.cf-stop__dish {
+  background: #fff;
+  min-height: 40px;
+}
+
+// A section that folds open (e.g. the tour's optional flavour meter)
+.cf-fold {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: $cff-ink;
+  font-weight: 800;
+  font-size: 1rem;
+  text-align: left;
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba($fuzo-yellow-deep, 0.6);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg {
+      transition: none;
+    }
+  }
+}
+
 // Post / Save draft - pinned to the bottom of the screen.
 .cf-bar {
   position: absolute;
@@ -610,7 +805,7 @@ $cff-max: 40rem;
   padding: 0.55rem 0.9rem;
   border-radius: 14px;
   background: #fde7ea;
-  color: darken($rose, 16%);
+  color: darken($rose, 32%); // 4.5:1+ on the pink (WCAG AA)
   font-size: 0.88rem;
   font-weight: 700;
   text-align: center;

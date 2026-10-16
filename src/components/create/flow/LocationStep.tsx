@@ -24,6 +24,8 @@ interface LocationStepProps {
   photoSpot?: GpsPoint | null;
   /** Offer "Drop a pin" / "Use the photo's exact spot" (off when it must be a listed place). */
   allowPin?: boolean;
+  /** Show the required star next to the label (default yes). */
+  required?: boolean;
 }
 
 type Status = 'idle' | 'searching' | 'locating' | 'error';
@@ -47,7 +49,7 @@ const getPosition = () =>
     );
   });
 
-export function LocationStep({ value, onChange, label = 'Location', photoSpot = null, allowPin = true }: LocationStepProps) {
+export function LocationStep({ value, onChange, label = 'Location', photoSpot = null, allowPin = true, required = true }: LocationStepProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PostPlace[]>([]);
   const [status, setStatus] = useState<Status>('idle');
@@ -138,7 +140,9 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
 
   return (
     <section className="cf-field" aria-labelledby="cf-loc-label">
-      <h3 id="cf-loc-label" className="cf-field__label">{label} <span className="cf-field__req" aria-hidden="true">*</span></h3>
+      <h3 id="cf-loc-label" className="cf-field__label">
+        {label} {required && <span className="cf-field__req" aria-hidden="true">*</span>}
+      </h3>
 
       {value ? (
         <div className="cf-place">

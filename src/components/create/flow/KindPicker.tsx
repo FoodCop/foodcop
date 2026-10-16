@@ -3,41 +3,71 @@
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import type { CreateKind, CreatePhoto } from './types';
+import type { CreateKind, CreatePhoto, VideoKind } from './types';
 
 // Step 2 of the Create flow: "What is this?" - four compact illustrated cards
 // (client, 2026-10-14: "show buttons", then the illustrated reference: each
 // picture on its own pastel blob with accent strokes). Art lives in
 // public/images/create/kind-<id>.webp; swap those files to change it.
+// Video posts (client, 2026-10-16) pick from VIDEO_KIND_OPTIONS instead.
 
-export const KIND_OPTIONS: { id: CreateKind; label: string; sub: string; art: string }[] = [
+export interface KindOption<T extends string> {
+  id: T;
+  label: string;
+  sub: string;
+  art: string;
+}
+
+export const KIND_OPTIONS: KindOption<CreateKind>[] = [
   { id: 'vibe', label: 'Vibe', sub: 'People and the feel of a place', art: '/images/create/kind-vibe-peach.webp' },
   { id: 'food', label: 'Food', sub: 'A dish, out or at home', art: '/images/create/kind-food.webp' },
   { id: 'recipe', label: 'Recipe', sub: 'Something you cooked, with steps', art: '/images/create/kind-recipe.webp' },
   { id: 'restaurant', label: 'Restaurant', sub: 'The place itself, or a new find', art: '/images/create/kind-restaurant.webp' },
 ];
 
-interface KindPickerProps {
+// Art reused from the photo kinds until the client sends video ones.
+export const VIDEO_KIND_OPTIONS: KindOption<VideoKind>[] = [
+  { id: 'video_recipe', label: 'Recipe', sub: 'How you cooked it, with steps', art: '/images/create/kind-recipe.webp' },
+  { id: 'food_review', label: 'Food review', sub: 'A dish and the place you had it', art: '/images/create/kind-food.webp' },
+  { id: 'food_tour', label: 'Food tour', sub: 'Several stops in one video', art: '/images/create/kind-restaurant.webp' },
+];
+
+interface KindPickerProps<T extends string> {
   photos: CreatePhoto[];
-  selected: CreateKind | null;
-  onPick: (kind: CreateKind) => void;
+  /** A video post: shown above the cards instead of photos. */
+  video?: { url: string; coverUrl?: string | null } | null;
+  options?: KindOption<T>[];
+  selected: T | null;
+  onPick: (kind: T) => void;
 }
 
-export function KindPicker({ photos, selected, onPick }: KindPickerProps) {
+export function KindPicker<T extends string = CreateKind>({ photos, video, options, selected, onPick }: KindPickerProps<T>) {
   const reduceMotion = useReducedMotion();
+  const list = (options ?? KIND_OPTIONS) as KindOption<T>[];
   return (
     <div className="cf-kind">
-      <ul className="cf-kind__photos" aria-label="Your photos">
-        {photos.map((p, i) => (
-          <li key={p.id}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.url} alt={`Photo ${i + 1}`} />
-          </li>
-        ))}
-      </ul>
+      {video ? (
+        <div className="cf-kind__photos cf-kind__photos--video" aria-label="Your video">
+          {video.coverUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={video.coverUrl} alt="Video cover" />
+          ) : (
+            <video src={video.url} muted playsInline preload="metadata" aria-hidden="true" />
+          )}
+        </div>
+      ) : (
+        <ul className="cf-kind__photos" aria-label="Your photos">
+          {photos.map((p, i) => (
+            <li key={p.id}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={p.url} alt={`Photo ${i + 1}`} />
+            </li>
+          ))}
+        </ul>
+      )}
 
-      <div className="cf-kind__grid" role="group" aria-label="What is this?">
-        {KIND_OPTIONS.map(({ id, label, sub, art }, i) => (
+      <div className={`cf-kind__grid${list.length === 3 ? ' cf-kind__grid--three' : ''}`} role="group" aria-label={video ? 'What is this video?' : 'What is this?'}>
+        {list.map(({ id, label, sub, art }, i) => (
           <motion.button
             key={id}
             type="button"

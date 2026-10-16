@@ -997,6 +997,7 @@ $rail-pad-sm: 1rem;
   border-radius: 22px;
   overflow: hidden;
   isolation: isolate;
+  position: relative; // for the reel's toast
   background: $fz-ink;
   box-shadow: $fz-shadow-dark;
 

@@ -5,8 +5,8 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronRight, ImageOff, Loader2, Trash2, X } from 'lucide-react';
 import { PostService } from '@/lib/services/postService';
 import type { FoodCardRecord } from '@/lib/types/foodCard';
-import { KIND_OPTIONS } from './KindPicker';
-import { kindOfCard } from './fromCard';
+import { KIND_OPTIONS, VIDEO_KIND_OPTIONS } from './KindPicker';
+import { kindOfCard, videoKindOfCard } from './fromCard';
 
 // Unfinished posts (client, 2026-10-14; plan Phase 8: "Drafts yes"). Opened
 // from the camera's "Drafts" button: pick one to finish it, or delete it.
@@ -84,7 +84,10 @@ export function DraftsSheet({ open, drafts, onClose, onOpenDraft, onDeleted }: D
               <ul className="cf-drafts__list">
                 {drafts.map((d) => {
                   const kind = kindOfCard(d);
-                  const label = KIND_OPTIONS.find((k) => k.id === kind)?.label ?? 'Post';
+                  const vKind = videoKindOfCard(d);
+                  const label = vKind
+                    ? `${VIDEO_KIND_OPTIONS.find((k) => k.id === vKind)?.label ?? 'Video'} video`
+                    : KIND_OPTIONS.find((k) => k.id === kind)?.label ?? 'Post';
                   const cover = d.photos?.[0] ?? d.image_url;
                   const title = d.title && d.title !== 'Untitled' ? d.title : d.place_name || `${label} post`;
                   return (
@@ -101,7 +104,7 @@ export function DraftsSheet({ open, drafts, onClose, onOpenDraft, onDeleted }: D
                         </div>
                       ) : (
                         <>
-                          <button type="button" className="cf-drafts__open" onClick={() => onOpenDraft(d)} disabled={!kind}>
+                          <button type="button" className="cf-drafts__open" onClick={() => onOpenDraft(d)} disabled={!kind && !vKind}>
                             <span className="cf-drafts__thumb" aria-hidden="true">
                               {cover ? (
                                 // eslint-disable-next-line @next/next/no-img-element
