@@ -86,4 +86,4 @@ Checked in the app, and again by the database (`20261016000000_video_posts.sql`)
 - [x] **5. Food review (2b) and Food tour (2c):** several stops
 - [x] **6. URL import (3a)**
 - [x] **7. AI helper:** switches itself on once credit is available
-- [ ] **8. QA, security review, test cases**
+- [x] **8. QA, security review, test cases** (`docs/VIDEO_URL_TEST_CASES.md`; fix: `20261016020000_video_url_security.sql`)
