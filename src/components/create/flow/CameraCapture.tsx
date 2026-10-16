@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Camera, ChevronRight, FileClock, Film, ImagePlus, Link2, SwitchCamera, X, Zap, ZapOff } from 'lucide-react';
+import { Camera, ChevronRight, FileClock, Film, ImagePlus, SwitchCamera, X, Zap, ZapOff } from 'lucide-react';
 import { baseMime, readVideoMeta, recorderMime, VIDEO_BITRATE } from '@/lib/media/video';
+import { UrlImport } from './UrlImport';
+import type { ImportResult } from '@/app/api/import/route';
 import { MAX_PHOTOS, MAX_VIDEO_INPUT_BYTES, MAX_VIDEO_SECONDS, type CreateMode, type CreatePhoto, type CreateVideo } from './types';
 
 // Step 1 of the Create flow: a full-screen camera like Instagram's. Live
@@ -12,7 +14,7 @@ import { MAX_PHOTOS, MAX_VIDEO_INPUT_BYTES, MAX_VIDEO_SECONDS, type CreateMode, 
 // Photo · Video · URL tabs. Video (client, 2026-10-16; docs/VIDEO_URL_PLAN.md):
 // the shutter becomes a record button (tap to start / stop, stops itself at
 // 60 s; the microphone is asked for only then), or one clip from the gallery.
-// URL comes later. Without camera access (refused, no camera, not https) it
+// URL imports a post by its link (UrlImport). Without camera access (refused, no camera, not https) it
 // falls back to the gallery.
 
 type CameraStatus = 'starting' | 'live' | 'denied' | 'nocamera' | 'unsupported' | 'error';
@@ -32,6 +34,8 @@ interface CameraCaptureProps {
   video?: CreateVideo | null;
   onVideo?: (video: CreateVideo) => void;
   onRemoveVideo?: () => void;
+  /** URL tab: a link was read (POST /api/import). */
+  onImported?: (result: ImportResult) => void;
 }
 
 const clock = (sec: number) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
@@ -57,6 +61,7 @@ export function CameraCapture({
   video = null,
   onVideo,
   onRemoveVideo,
+  onImported,
 }: CameraCaptureProps) {
   const reduceMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -413,9 +418,9 @@ export function CameraCapture({
             {recording && <span className="cf-cam__rec-dot" aria-hidden="true" />}
             {clock(recording ? elapsed : 0)} / {clock(MAX_VIDEO_SECONDS)}
           </span>
-        ) : (
+        ) : mode === 'photo' ? (
           <span className="cf-cam__count" aria-live="polite">{photos.length}/{MAX_PHOTOS}</span>
-        )}
+        ) : null}
       </div>
 
       {/* Viewfinder */}
@@ -461,15 +466,7 @@ export function CameraCapture({
           </div>
         )}
 
-        {mode === 'url' && (
-          <div className="cf-cam__msg cf-cam__msg--fallback">
-            <Link2 size={40} aria-hidden="true" />
-            <p>Posting a link is coming soon.</p>
-            <button type="button" className="cf-cam__pill" onClick={() => onModeChange('photo')}>
-              <Camera size={18} /> Take photos instead
-            </button>
-          </div>
-        )}
+        {mode === 'url' && onImported && <UrlImport onImported={onImported} />}
 
         {recording && (
           <div className="cf-cam__rec-bar" aria-hidden="true">
@@ -543,8 +540,8 @@ export function CameraCapture({
         </div>
       )}
 
-      {/* Controls */}
-      <div className="cf-cam__controls">
+      {/* Controls (not on the URL tab) */}
+      <div className="cf-cam__controls" hidden={mode === 'url'}>
         <button
           type="button"
           className="cf-cam__side"

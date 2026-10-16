@@ -23,7 +23,10 @@ import { ReviewDetails } from './ReviewDetails';
 import { TourDetails } from './TourDetails';
 import { placeFromDuplicate } from './placeFromDuplicate';
 import { DraftsSheet } from './DraftsSheet';
-import { fieldsOfCard, kindOfCard, photosOfCard, videoKindOfCard, videoOfCard } from './fromCard';
+import { fieldsOfCard, importOfCard, kindOfCard, photosOfCard, videoKindOfCard, videoOfCard } from './fromCard';
+import { SourceCredit } from '@/components/create/shared/SourceCredit';
+import type { ImportResult } from '@/app/api/import/route';
+import { emptyCardTags } from '@/lib/types/foodCard';
 import { VideoPostService, missingForVideoPublish, type VideoPostInput } from '@/lib/services/videoPostService';
 import {
   emptyPostFields,
@@ -33,6 +36,7 @@ import {
   type CreatePhoto,
   type CreateStep,
   type CreateVideo,
+  type ImportSource,
   type PostFields,
   type VideoKind,
 } from './types';
@@ -80,6 +84,12 @@ const PHOTO_STEPS: { id: CreateStep; label: string }[] = [
 
 // Video posts (client, 2026-10-16; docs/VIDEO_URL_PLAN.md): record / pick ->
 // preview + cover -> Recipe / Food review / Food tour -> details.
+// URL import (client, 2026-10-16): paste a link -> the recipe's details.
+const IMPORT_STEPS: { id: CreateStep; label: string }[] = [
+  { id: 'capture', label: 'Link' },
+  { id: 'details', label: 'Details' },
+];
+
 const VIDEO_STEPS: { id: CreateStep; label: string }[] = [
   { id: 'capture', label: 'Video' },
   { id: 'video', label: 'Cover' },
@@ -133,6 +143,9 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
   const [videoKind, setVideoKind] = useState<VideoKind | null>(editVideoKind);
   // Post was tapped while a gallery video was still being prepared: post once it's ready.
   const pendingPost = useRef<boolean | null>(null);
+  // URL import: the original post (credited to its creator).
+  const [importSource, setImportSource] = useState<ImportSource | null>(() => (editCard ? importOfCard(editCard) : null));
+  const importPhotoRef = useRef<HTMLInputElement>(null);
   const [waitingForVideo, setWaitingForVideo] = useState(false);
   const prepAbort = useRef<AbortController | null>(null);
   const sourceFile = useRef<Blob | null>(null);
@@ -193,11 +206,11 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
 
   const requestClose = useCallback(() => {
     if (saving) return;
-    if (step !== 'done' && (photos.length > 0 || video || editing)) setConfirmDiscard(true);
+    if (step !== 'done' && (photos.length > 0 || video || editing || importSource)) setConfirmDiscard(true);
     else onClose();
-  }, [saving, step, photos.length, video, editing, onClose]);
+  }, [saving, step, photos.length, video, editing, importSource, onClose]);
 
-  const steps = video ? VIDEO_STEPS : PHOTO_STEPS;
+  const steps = importSource && !editing ? IMPORT_STEPS : video ? VIDEO_STEPS : PHOTO_STEPS;
   const goTo = (next: CreateStep) => {
     setDirection(steps.findIndex((s) => s.id === next) > steps.findIndex((s) => s.id === step) ? 1 : -1);
     setStep(next);
@@ -207,7 +220,12 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     if (saving) return;
     setSave({ status: 'idle' });
     // A saved post keeps its kind: Back goes to its photos.
-    if (step === 'details') goTo(editing ? (video ? 'video' : 'capture') : 'kind');
+    if (step === 'details' && importSource && !editing) {
+      // Back from an import goes to the URL tab for another link.
+      clearImport();
+      setMode('url');
+      goTo('capture');
+    } else if (step === 'details') goTo(editing ? (video && video.source !== 'import' ? 'video' : 'capture') : 'kind');
     else if (step === 'kind') goTo(video ? 'video' : 'capture');
     else if (step === 'video') goTo('capture');
     else requestClose();
@@ -312,6 +330,65 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     setVideoKind(null);
   };
 
+  // ---- URL import ---------------------------------------------------------------
+  // Mostly recipes (client spec): a video becomes a recipe Trim (it plays
+  // embedded from the original), a photo post / recipe page a Recipe card.
+  // The cover comes back from /api/import as data and is saved by FUZO.
+  const clearImport = () => {
+    setImportSource(null);
+    if (video?.source === 'import') {
+      if (video.coverUrl) URL.revokeObjectURL(video.coverUrl);
+      setVideo(null);
+      setVideoKind(null);
+    }
+    photos.forEach((p) => p.file && URL.revokeObjectURL(p.url));
+    setPhotos([]);
+    setKind(initialKind ?? null);
+  };
+
+  const onImported = async (r: ImportResult) => {
+    const cover = r.image ? await fetch(r.image).then((res) => res.blob()).catch(() => null) : null;
+    setImportSource({ url: r.url, platform: r.platform, author: r.author, embedUrl: r.embedUrl });
+    setFields({
+      ...emptyPostFields(),
+      title: r.recipe?.name ?? r.title ?? '',
+      caption: r.caption ?? '',
+      ingredients: r.recipe?.ingredients ?? [],
+      steps: r.recipe?.steps ?? [],
+      tags: { ...emptyCardTags(), cuisine: r.recipe?.cuisine ?? [] },
+    });
+    setSave(
+      r.partial
+        ? { status: 'error', message: `${r.platform === 'web' ? 'That page' : 'The post'} didn't share its details - add them below.` }
+        : { status: 'idle' },
+    );
+    if (r.video) {
+      setPhotos([]);
+      setKind(null);
+      setVideo({
+        id: crypto.randomUUID(),
+        file: null,
+        url: r.embedUrl ?? '',
+        duration: 0,
+        width: 0,
+        height: 0,
+        source: 'import',
+        prep: { status: 'ready' },
+        coverTime: 0,
+        cover,
+        coverUrl: cover ? URL.createObjectURL(cover) : null,
+      });
+      setVideoKind('video_recipe');
+    } else {
+      setVideo(null);
+      setVideoKind(null);
+      setKind('recipe');
+      setPhotos(cover ? [{ id: crypto.randomUUID(), file: cover, url: URL.createObjectURL(cover), source: 'gallery' }] : []);
+    }
+    setDirection(1);
+    setStep('details');
+  };
+
   // Finish a draft picked from the camera's Drafts list.
   const openDraft = (card: FoodCardRecord) => {
     const k = kindOfCard(card);
@@ -320,6 +397,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     photos.forEach((p) => p.file && URL.revokeObjectURL(p.url));
     setFields(fieldsOfCard(card));
     setEditing(editingOf(card));
+    setImportSource(importOfCard(card));
     setDraftsOpen(false);
     setSave({ status: 'idle' });
     if (vk) {
@@ -357,6 +435,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     ingredients: fields.ingredients,
     steps: fields.steps,
     newPlace: k === 'restaurant' ? fields.newPlace : null,
+    source: importSource ? { url: importSource.url, platform: importSource.platform, author: importSource.author } : null,
   });
 
   const submit = async (publish: boolean) => {
@@ -431,7 +510,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
       return;
     }
     let cover: Blob | string | null = v.cover ?? v.coverUrl ?? null;
-    if (!cover) {
+    if (!cover && v.source !== 'import') {
       try {
         cover = await coverFrame(v.url, v.coverTime);
       } catch {
@@ -440,7 +519,9 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
     }
     const input: VideoPostInput = {
       kind: videoKind,
-      video: v.file ?? v.url,
+      // An import plays from the original post: no upload, its link instead.
+      video: v.source === 'import' ? null : v.file ?? v.url,
+      source: importSource ? { url: importSource.url, platform: importSource.platform, author: importSource.author } : null,
       cover,
       duration: v.duration,
       width: v.width,
@@ -552,6 +633,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
                 video={video}
                 onVideo={addVideo}
                 onRemoveVideo={removeVideo}
+                onImported={onImported}
               />
             )}
 
@@ -598,6 +680,7 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
 
             {step === 'details' && video && videoKind && (
               <div className="cf-details">
+                {importSource && <SourceCredit url={importSource.url} platform={importSource.platform} author={importSource.author} className="cf-details__credit" />}
                 {video.coverUrl && (
                   <div className="cf-kind__photos cf-kind__photos--video" aria-label="Your video">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -623,6 +706,29 @@ export function CreateFlow({ onClose, initialKind, initialMode = 'photo', editCa
 
             {step === 'details' && !video && kind && (
               <div className="cf-details">
+                {importSource && <SourceCredit url={importSource.url} platform={importSource.platform} author={importSource.author} className="cf-details__credit" />}
+                {importSource && photos.length === 0 && (
+                  <div className="cf-import__addphoto">
+                    <p>Add a photo of the dish - the post didn&apos;t share one.</p>
+                    <button type="button" className="cf-chipbtn" onClick={() => importPhotoRef.current?.click()}>
+                      Add a photo
+                    </button>
+                    <input
+                      ref={importPhotoRef}
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        e.target.value = '';
+                        if (file && file.type.startsWith('image/')) {
+                          setPhotos([{ id: crypto.randomUUID(), file, url: URL.createObjectURL(file), source: 'gallery' }]);
+                          if (save.status === 'error') setSave({ status: 'idle' });
+                        }
+                      }}
+                    />
+                  </div>
+                )}
                 <ul className="cf-kind__photos" aria-label="Your photos">
                   {photos.map((p, i) => (
                     <li key={p.id}>

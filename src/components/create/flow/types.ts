@@ -5,6 +5,7 @@
 import { MAX_POST_PHOTOS, type PostKind, type PostPlace } from '@/lib/services/postService';
 import { DEFAULT_FLAVOR, emptyCardTags, type CardTags, type FlavorVector, type TourStop } from '@/lib/types/foodCard';
 import type { NewPlaceFields } from '@/lib/services/communityPlacesService';
+import type { ImportPlatform } from '@/lib/import/platforms';
 
 export type CreateMode = 'photo' | 'video' | 'url';
 
@@ -42,7 +43,8 @@ export interface CreateVideo {
   duration: number;
   width: number;
   height: number;
-  source: 'camera' | 'gallery' | 'existing';
+  /** 'import' = a video post imported by its link: it plays embedded, nothing is uploaded. */
+  source: 'camera' | 'gallery' | 'existing' | 'import';
   /** Gallery videos are re-encoded before upload; recordings are ready at once. */
   prep: VideoPrep;
   /** The frame chosen as the cover, in seconds. */
@@ -50,6 +52,15 @@ export interface CreateVideo {
   /** That frame as a JPEG (made when leaving the preview) and its preview URL. */
   cover?: Blob | null;
   coverUrl?: string | null;
+}
+
+/** A post imported by its link (URL tab): the original, credited to its creator. */
+export interface ImportSource {
+  url: string;
+  platform: ImportPlatform;
+  author: string | null;
+  /** The player address for videos we can embed. */
+  embedUrl: string | null;
 }
 
 export interface CreatePhoto {

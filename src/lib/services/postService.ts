@@ -79,6 +79,8 @@ export interface PostInput {
   steps?: string[];
   /** Restaurant posts: add this new restaurant to the map on publish. */
   newPlace?: NewPlaceFields | null;
+  /** Imported by its link (URL tab): the original post, credited to its creator. */
+  source?: { url: string; platform: string; author?: string | null } | null;
 }
 
 const clean = (values: string[] | undefined, maxLen: number, maxCount: number) =>
@@ -194,6 +196,9 @@ export const PostService = {
       lat: place?.lat ?? null,
       lng: place?.lng ?? null,
       restaurant_id: place?.restaurantId ?? null,
+      ...(input.source
+        ? { source_url: input.source.url.slice(0, 600), source_platform: input.source.platform, source_author: input.source.author?.slice(0, 120) ?? null }
+        : {}),
       // Only sent when used, so other posts work before the Phase 7 migration.
       ...(place?.communityPlaceId ? { community_place_id: place.communityPlaceId } : {}),
       // Drafts keep the new restaurant's details until it's published.

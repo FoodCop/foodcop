@@ -1,14 +1,15 @@
 /**
  * TRIMS - the Home "Trims" reel: real member videos, newest first (client,
  * 2026-10-16: "no demo clips, use real clips"; plan: docs/VIDEO_URL_PLAN.md,
- * phase 3). Published video posts that have an uploaded video (imported
- * links come with URL import). Privacy follows the database: a private
+ * phase 3). Published video posts: uploaded videos, and imported ones (URL
+ * import) that play embedded from the original post. Privacy follows the database: a private
  * profile's videos only come back for people allowed to see them.
  */
 
 import { createClient } from '@/lib/supabase/client';
 import { VIDEO_CARD_TYPES, type FoodCardRecord } from '@/lib/types/foodCard';
 import type { ServiceResult } from '@/lib/types/serviceResult';
+import { embedUrlFor } from '@/lib/import/platforms';
 
 export interface TrimAuthor {
   id: string;
@@ -24,6 +25,9 @@ export interface Trim {
 export const TRIMS_PAGE = 10;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** An uploaded video (https), or an imported one we can embed. Older cards may hold other links. */
+export const playable = (c: FoodCardRecord) => /^https:\/\//i.test(c.media_url ?? '') || (!c.media_url && !!embedUrlFor(c.source_url));
 
 async function withAuthors(cards: FoodCardRecord[]): Promise<Trim[]> {
   const supabase = createClient();
@@ -44,19 +48,23 @@ export const TrimsService = {
   async list(before?: string, limit = TRIMS_PAGE): Promise<ServiceResult<Trim[]>> {
     const supabase = createClient();
     if (!supabase) return { success: false, error: 'Supabase is not configured' };
-    let query = supabase
-      .from('food_cards')
-      .select('*')
-      .eq('status', 'PUBLISHED')
-      .in('card_type', VIDEO_CARD_TYPES)
-      .not('media_url', 'is', null)
-      .order('created_at', { ascending: false })
-      .limit(limit);
-    if (before) query = query.lt('created_at', before);
-    const { data, error } = await query;
+    const run = (withImports: boolean) => {
+      let query = supabase
+        .from('food_cards')
+        .select('*')
+        .eq('status', 'PUBLISHED')
+        .in('card_type', VIDEO_CARD_TYPES)
+        .or(withImports ? 'media_url.not.is.null,source_url.not.is.null' : 'media_url.not.is.null')
+        .order('created_at', { ascending: false })
+        .limit(limit);
+      if (before) query = query.lt('created_at', before);
+      return query;
+    };
+    let { data, error } = await run(true);
+    // Before the video-posts migration there is no source_url column: uploads only.
+    if (error && /source_url/i.test(error.message)) ({ data, error } = await run(false));
     if (error) return { success: false, error: error.message };
-    // Only real uploads play in the reel (older cards may hold other links).
-    const cards = ((data ?? []) as FoodCardRecord[]).filter((c) => /^https:\/\//i.test(c.media_url ?? ''));
+    const cards = ((data ?? []) as FoodCardRecord[]).filter(playable);
     return { success: true, data: await withAuthors(cards) };
   },
 
@@ -66,7 +74,7 @@ export const TrimsService = {
     if (!supabase || !UUID.test(cardId)) return null;
     const { data } = await supabase.from('food_cards').select('*').eq('id', cardId).eq('status', 'PUBLISHED').in('card_type', VIDEO_CARD_TYPES).maybeSingle();
     const card = data as FoodCardRecord | null;
-    if (!card?.media_url) return null;
+    if (!card || !playable(card)) return null;
     return (await withAuthors([card]))[0] ?? null;
   },
 };

@@ -5,7 +5,8 @@
 import { DEFAULT_FLAVOR, emptyCardTags, type FoodCardRecord, type FoodCardType } from '@/lib/types/foodCard';
 import { emptyNewPlace, type NewPlaceFields } from '@/lib/services/communityPlacesService';
 import { MAX_POST_PHOTOS } from '@/lib/services/postService';
-import type { CreateKind, CreatePhoto, CreateVideo, PostFields, VideoKind } from './types';
+import type { CreateKind, CreatePhoto, CreateVideo, ImportSource, PostFields, VideoKind } from './types';
+import { embedUrlFor, parseSourceUrl } from '@/lib/import/platforms';
 
 const KIND_BY_TYPE: Partial<Record<FoodCardType, CreateKind>> = {
   VIBE_PHOTO: 'vibe',
@@ -29,6 +30,22 @@ export const videoKindOfCard = (card: Pick<FoodCardRecord, 'card_type'>): VideoK
 
 /** A video post's clip as an already-uploaded Create video (null if it has none, e.g. an early draft). */
 export function videoOfCard(card: FoodCardRecord): CreateVideo | null {
+  // An imported video: it plays embedded from the original post.
+  if (!card.media_url && card.source_url) {
+    return {
+      id: `import-video-${card.id}`,
+      file: null,
+      url: embedUrlFor(card.source_url) ?? '',
+      duration: 0,
+      width: 0,
+      height: 0,
+      source: 'import',
+      prep: { status: 'ready' },
+      coverTime: 0,
+      cover: null,
+      coverUrl: card.image_url ?? null,
+    };
+  }
   if (!card.media_url || !/^https:\/\//i.test(card.media_url)) return null;
   return {
     id: `existing-video-${card.id}`,
@@ -49,6 +66,13 @@ export function videoOfCard(card: FoodCardRecord): CreateVideo | null {
  * Whether the Create flow can edit this card. Recipes made with the older
  * recipe studio have no photos list but do have a cover photo, so they open too.
  */
+/** The original post an imported card came from, if any. */
+export function importOfCard(card: FoodCardRecord): ImportSource | null {
+  const parsed = card.source_url ? parseSourceUrl(card.source_url) : null;
+  if (!parsed) return null;
+  return { url: parsed.url, platform: card.source_platform ?? parsed.platform, author: card.source_author ?? null, embedUrl: parsed.embedUrl };
+}
+
 export const canEditInCreate = (card: FoodCardRecord) => kindOfCard(card) !== null || videoKindOfCard(card) !== null;
 
 /** The post's photos as already-uploaded Create photos. */

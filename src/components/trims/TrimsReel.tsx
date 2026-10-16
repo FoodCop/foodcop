@@ -16,6 +16,7 @@ import { FriendRequestService, type FriendRequestRelationship } from '@/lib/serv
 import { TrimsService, TRIMS_PAGE, type Trim } from '@/lib/services/trimsService';
 import { postPath, postSharePayload, postTitle } from '@/lib/share/postShare';
 import { TYPE_META } from '@/lib/types/foodCard';
+import { PLATFORM_LABEL, embedUrlFor, parseSourceUrl } from '@/lib/import/platforms';
 
 // The Home "Trims" reel (client, 2026-10-16: "no demo clips, use real
 // clips"; plan: docs/VIDEO_URL_PLAN.md, phase 3). A full-bleed vertical swiper
@@ -49,6 +50,8 @@ export default function TrimsReel() {
   const [activeTrimId, setActiveTrimId] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  // An imported clip playing from its original post (one at a time).
+  const [embedFor, setEmbedFor] = useState<string | null>(null);
   const swiperRef = useRef<SwiperType | null>(null);
 
   // Player state: only the visible slide plays (others pause - saves battery
@@ -148,6 +151,7 @@ export default function TrimsReel() {
       setActiveIndex(index);
       setPaused(false);
       setProgress(0);
+      setEmbedFor(null);
       if (index >= trims.length - 3) loadMore();
     },
     [trims.length, loadMore],
@@ -281,9 +285,49 @@ export default function TrimsReel() {
           const stops = card.stops ?? [];
           const hasPlace = card.card_type === 'REVIEW_VIDEO' && typeof card.lat === 'number' && typeof card.lng === 'number';
           const near = Math.abs(i - activeIndex) <= 1;
+          // Imported by its link (URL import): plays from the original post.
+          const imported = !card.media_url && !!card.source_url;
+          const source = imported ? parseSourceUrl(card.source_url!) : null;
+          const embed = imported ? embedUrlFor(card.source_url) : null;
+          const where = source ? PLATFORM_LABEL[card.source_platform ?? source.platform] : '';
           return (
             <SwiperSlide key={id}>
               <div className="reel-area">
+                {imported ? (
+                  <div className="reel-import">
+                    {card.image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img className="reel-import__cover" src={card.image_url} alt="" />
+                    ) : (
+                      <span className="reel-import__cover reel-import__cover--blank" aria-hidden="true" />
+                    )}
+                    {embedFor === id && isActive && embed ? (
+                      <div className="reel-import__player">
+                        <iframe
+                          src={embed}
+                          title={`${postTitle(card)} on ${where}`}
+                          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                          allowFullScreen
+                          referrerPolicy="strict-origin-when-cross-origin"
+                          sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
+                        />
+                        <button type="button" className="reel-import__close" onClick={() => setEmbedFor(null)} aria-label="Close the video">
+                          ✕
+                        </button>
+                      </div>
+                    ) : embed ? (
+                      <button type="button" className="reel-import__play" onClick={() => setEmbedFor(id)} aria-label={`Watch ${postTitle(card)} from ${where}`}>
+                        <Play size={30} fill="currentColor" aria-hidden="true" />
+                        <span>Watch</span>
+                      </button>
+                    ) : (
+                      <a className="reel-import__play" href={source?.url} target="_blank" rel="noopener noreferrer nofollow">
+                        <Play size={30} fill="currentColor" aria-hidden="true" />
+                        <span>Watch on {where}</span>
+                      </a>
+                    )}
+                  </div>
+                ) : (
                 <video
                   ref={(el) => {
                     videoRefs.current[i] = el;
@@ -302,6 +346,7 @@ export default function TrimsReel() {
                   }}
                   aria-label={`${meta?.label ?? 'Video'}: ${postTitle(card)}, by ${author.name}`}
                 />
+                )}
                 <span className="reel-area__shade" aria-hidden="true" />
 
                 {/* Top: position + sound */}
@@ -350,6 +395,12 @@ export default function TrimsReel() {
                         <Link href={scoutLink(card.place_name || postTitle(card), card.lat as number, card.lng as number, card.place_id)} className="reel-tag reel-tag--link">
                           <MapPin size={12} aria-hidden="true" /> {card.place_name || 'On the map'}
                         </Link>
+                      )}
+                      {imported && source && (
+                        <a href={source.url} target="_blank" rel="noopener noreferrer nofollow" className="reel-tag reel-tag--link">
+                          From {card.source_author ? `${card.source_author} on ` : ''}
+                          {where}
+                        </a>
                       )}
                       {stops.length > 0 && (
                         <button

@@ -195,6 +195,87 @@
   }
 }
 
+// Imported clips (URL import): the cover + Watch, which plays the original post here.
+.reel-import {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #141210;
+}
+
+.reel-import__cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  &--blank {
+    background: linear-gradient(160deg, #3a2a1a, #141210);
+  }
+}
+
+.reel-import__play {
+  position: relative;
+  z-index: 3;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1.1rem 1.4rem;
+  border: 0;
+  border-radius: 24px;
+  background: rgba(20, 18, 16, 0.6);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+
+  &:hover {
+    color: #fff;
+    background: rgba(20, 18, 16, 0.75);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $fuzo-yellow;
+    outline-offset: 2px;
+  }
+}
+
+.reel-import__player {
+  position: absolute;
+  inset: 3rem 0 0;
+  z-index: 6; // above the shade, captions and action rail
+  background: #000;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}
+
+.reel-import__close {
+  position: absolute;
+  top: -2.9rem;
+  right: 0.5rem;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(20, 18, 16, 0.75);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+
+  &:focus-visible {
+    outline: 3px solid $fuzo-yellow;
+    outline-offset: 2px;
+  }
+}
+
 // What it is + where (real member videos, client 2026-10-16)
 .reel-tags {
   display: flex;

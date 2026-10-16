@@ -59,6 +59,39 @@ $post-ease: cubic-bezier(0.16, 1, 0.3, 1);
   background: #ece8df;
 }
 
+// "Imported from @creator on TikTok · Open original" (shared: Create, post page, pop-ups)
+.fz-source-credit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  border-radius: 14px;
+  background: var(--studio-pill, #f2f1ee);
+  color: $post-ink;
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 32px;
+    color: $post-ink;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
+// Imported videos play from the original post
+.fz-post__embed {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #111;
+}
+
 // Video posts: the video, 9:16, letterboxed on dark
 .fz-post__photos--video {
   aspect-ratio: 9 / 16;

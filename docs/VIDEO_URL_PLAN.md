@@ -44,6 +44,27 @@ Checked in the app, and again by the database (`20261016000000_video_posts.sql`)
 - **Points:** a video post earns 25 points, once per post.
 - **Visits:** posting a review video from the place counts a visit. Tours don't count visits.
 
+## URL import (phase 6)
+
+1. Create → **URL** tab: paste a link and tap **Import**.
+2. FUZO's server reads what the post shares publicly (`POST /api/import`, `src/lib/import/`). Imports are always recipes (client spec):
+   - **Video** (TikTok, Instagram reel, Facebook video, YouTube): becomes a **recipe video** (2a). It is not copied: Trims shows the cover, and **Watch** plays the original post embedded.
+   - **Photo post / pin / recipe website:** becomes a **photo Recipe** (1c). Ingredients and steps are filled in when the site publishes them (schema.org Recipe), as are the photo and cuisine.
+3. Every imported post shows **"Imported from @creator on TikTok · Open original"**.
+
+**What each platform shares:**
+- **YouTube:** title, creator and thumbnail.
+- **TikTok:** title, creator and thumbnail. TikTok is blocked in India, so from an Indian server only the link is saved and the user types the rest.
+- **Recipe websites:** usually the full recipe.
+- **Pinterest:** title, image, and the recipe if the pin links to a recipe site.
+- **Instagram / Facebook:** usually nothing to apps without a login. The link and embed are saved, and the user adds the name and photo.
+
+**Safety:**
+- Sign-in is required, with a limit of 20 imports per 10 minutes.
+- Only `https` links. Private, loopback and cloud-metadata addresses are refused, checked again on every redirect.
+- Time and size limits apply.
+- Embeds are built only from recognised post IDs, in a sandboxed frame. Nothing from another site is shown as HTML.
+
 ## Phases
 
 - [x] **1. Video capture:** record or pick, 60 s limit, background re-encode, preview, cover frame, the video type picker
@@ -51,6 +72,6 @@ Checked in the app, and again by the database (`20261016000000_video_posts.sql`)
 - [x] **3. Real Trims:** members' videos (likes, saves, share), Profile → Videos; demo clips removed
 - [x] **4. Video Recipe (2a):** manual entry
 - [x] **5. Food review (2b) and Food tour (2c):** several stops
-- [ ] **6. URL import (3a)**
+- [x] **6. URL import (3a)**
 - [ ] **7. AI helper:** once credit is available
 - [ ] **8. QA, security review, test cases**

@@ -7,6 +7,8 @@ import { ArrowLeft, BookOpen, Clapperboard, MapPin, Pencil, Share2 } from 'lucid
 import { canEditInCreate } from '@/components/create/flow/fromCard';
 import { communityRecipeId } from '@/lib/recipes/communityRecipes';
 import { postTitle } from '@/lib/share/postShare';
+import { embedUrlFor } from '@/lib/import/platforms';
+import { SourceCredit } from '@/components/create/shared/SourceCredit';
 import { TYPE_META, VIDEO_CARD_TYPES, type FoodCardRecord } from '@/lib/types/foodCard';
 
 // The whole post, for signed-in viewers of /post/<id> (PostView loads it):
@@ -41,7 +43,9 @@ export function PostDetail({ card, author, isOwner, onShare, onEdit }: PostDetai
   const meta = TYPE_META[card.card_type];
   // Video posts (client, 2026-10-16) play their video instead of photos.
   const isVideo = VIDEO_CARD_TYPES.includes(card.card_type) && /^https:\/\//i.test(card.media_url ?? '');
-  const photos = isVideo ? [] : photosOf(card);
+  // Imported by its link (URL import): a video plays from the original post.
+  const embed = VIDEO_CARD_TYPES.includes(card.card_type) && !card.media_url ? embedUrlFor(card.source_url) : null;
+  const photos = isVideo || embed ? [] : photosOf(card);
   const stops = card.stops ?? [];
   const chips = [...(card.labels ?? []), ...(card.business_identity ?? []), ...Object.values(card.tags ?? {}).flat()].filter(
     (t, i, all): t is string => typeof t === 'string' && !!t && all.indexOf(t) === i,
@@ -91,6 +95,21 @@ export function PostDetail({ card, author, isOwner, onShare, onEdit }: PostDetai
           </div>
         )}
 
+        {embed && (
+          <div className="fz-post__photos fz-post__photos--video">
+            <iframe
+              className="fz-post__embed"
+              src={embed}
+              title={`${postTitle(card)} - original post`}
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
+            />
+          </div>
+        )}
+
         {photos.length > 0 && (
           <div className="fz-post__photos">
             <div className="fz-post__track" ref={trackRef} onScroll={onScroll} tabIndex={0} aria-label={`${photos.length} ${photos.length === 1 ? 'photo' : 'photos'}`}>
@@ -133,6 +152,8 @@ export function PostDetail({ card, author, isOwner, onShare, onEdit }: PostDetai
           <h1 id="fz-post-title" className="fz-post__title">
             {postTitle(card)}
           </h1>
+
+          {card.source_url && <SourceCredit url={card.source_url} platform={card.source_platform} author={card.source_author} />}
 
           {placeHref && (
             <Link href={placeHref} className="fz-post__place">
@@ -204,7 +225,7 @@ export function PostDetail({ card, author, isOwner, onShare, onEdit }: PostDetai
                 <Share2 size={18} aria-hidden="true" /> Share
               </button>
             )}
-            {isVideo && card.status === 'PUBLISHED' && (
+            {(isVideo || embed) && card.status === 'PUBLISHED' && (
               <Link href={`/dashboard?tab=trims&trim=${encodeURIComponent(card.id)}`} className="fz-post__btn">
                 <Clapperboard size={18} aria-hidden="true" /> Watch in Trims
               </Link>

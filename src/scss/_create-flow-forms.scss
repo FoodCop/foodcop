@@ -446,6 +446,30 @@ $cff-max: 40rem;
   text-underline-offset: 2px;
 }
 
+// Imported posts: who it's from + the original (URL import)
+.cf-details__credit {
+  max-width: $cff-max;
+  margin: 0 auto 0.75rem;
+}
+
+.cf-import__addphoto {
+  max-width: $cff-max;
+  margin: 0 auto 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 18px;
+  background: rgba($fuzo-yellow, 0.16);
+  font-weight: 700;
+
+  p {
+    margin: 0;
+  }
+}
+
 // A short info line inside a form (e.g. where restaurant photos go)
 .cf-note {
   display: flex;

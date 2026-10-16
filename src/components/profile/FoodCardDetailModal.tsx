@@ -11,6 +11,7 @@ import { VideoPlayerModal } from '../ui/VideoPlayerModal';
 import { PostService } from '../../lib/services/postService';
 import { canEditInCreate } from '../create/flow/fromCard';
 import { postSharePayload } from '../../lib/share/postShare';
+import { SourceCredit } from '../create/shared/SourceCredit';
 
 interface FoodCardDetailModalProps {
   card: FoodCardRecord;
@@ -143,6 +144,10 @@ export default function FoodCardDetailModal({ card, currentUserId, onClose, onUp
                   </span>
                 </div>
               </div>
+
+              {current.source_url && (
+                <SourceCredit url={current.source_url} platform={current.source_platform} author={current.source_author} className="mb-3" />
+              )}
 
               {current.caption && <p className="text-muted fw-semibold">{current.caption}</p>}
 
