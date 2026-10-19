@@ -1325,3 +1325,307 @@ html[data-theme='dark'] {
   .fz-onb__cta { transition: none; }
   .fz-onb__spin { animation-duration: 2.5s; }
 }
+
+// ============================================================================
+// VERIFICATION (phase 6): badge, status page, sign-in reminder, admin review,
+// locked dashboard tools.
+// ============================================================================
+
+// FUZO Verified badge (profile name row, Scout pop-up). Only shown when approved.
+.fz-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.22rem 0.6rem 0.22rem 0.45rem;
+  border-radius: 9999px;
+  background: rgba($sky, 0.16);
+  color: darken($sky, 38%);
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  svg { color: darken($sky, 22%); }
+  &--sm { padding: 0.18rem 0.5rem 0.18rem 0.38rem; font-size: 0.68rem; }
+}
+
+.fz-verify-eyebrow {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: darken($fz-ink-soft, 14%);
+}
+
+.fz-onb__badge--good { background: rgba($lime, 0.18); color: darken($lime, 32%); }
+.fz-onb__badge--warn { background: rgba($chili, 0.1); color: darken($chili, 12%); }
+.fz-onb__ghost--link { display: inline-flex; align-items: center; text-decoration: none; color: $fz-ink; &:hover { color: $fz-ink; } }
+.fz-onb__skip--link { display: flex; align-items: center; justify-content: center; text-decoration: none; }
+
+.fz-verify-reason {
+  margin: 0 0 1rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: 16px;
+  background: rgba($chili, 0.08);
+  border: 1px solid rgba($chili, 0.25);
+  color: $fz-ink;
+
+  strong { display: block; margin-bottom: 0.2rem; font-size: 0.82rem; font-weight: 800; color: darken($chili, 18%); }
+  p { margin: 0; font-size: 0.9rem; line-height: 1.5; }
+}
+
+.fz-verify-locked {
+  margin: 0 0 1.1rem;
+  padding-left: 1.2rem;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: $fz-ink;
+}
+
+// B-11 reminder pop-up.
+.fz-remind {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(10, 8, 6, 0.45);
+
+  @media (min-width: 576px) { align-items: center; }
+
+  &__card {
+    position: relative;
+    width: 100%;
+    max-width: 28rem;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    padding: 1.4rem 1.25rem 1.2rem;
+    border-radius: 28px;
+    background: #fff;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  &__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: $onb-pill;
+    color: $fz-ink;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  .fz-onb__title { padding-right: 2.5rem; font-family: var(--body-font), sans-serif; }
+}
+
+// Admin review page.
+.fz-admin {
+  &__main {
+    flex: 1;
+    width: 100%;
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 0.5rem 1rem 4rem;
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0 0 1rem;
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      min-height: 40px;
+      padding: 0 0.9rem;
+      border: 0;
+      border-radius: 9999px;
+      background: $onb-pill;
+      color: $fz-ink;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+
+      span { min-width: 1.4rem; padding: 0.05rem 0.4rem; border-radius: 9999px; background: #fff; font-size: 0.74rem; text-align: center; }
+      &.is-on { background: $fuzo-yellow; color: $fuzo-yellow-ink; }
+      &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+    }
+  }
+
+  &__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+
+  &__item {
+    border-radius: 22px;
+    background: #fff;
+    border: 1px solid #f2f2f2;
+    box-shadow: $onb-float;
+    overflow: hidden;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    min-height: 64px;
+    padding: 0.8rem 1rem;
+    border: 0;
+    background: none;
+    text-align: left;
+    color: $fz-ink;
+    cursor: pointer;
+
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: -3px; border-radius: 22px; }
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+
+    strong { display: block; font-size: 0.98rem; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    span { font-size: 0.8rem; color: darken($fz-ink-soft, 14%); }
+  }
+
+  &__status {
+    flex-shrink: 0;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    background: $onb-pill;
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+
+    &--pending_review { background: $fuzo-yellow-tint; color: darken($fuzo-yellow-deep, 30%); }
+    &--action_required,
+    &--submission_overdue { background: rgba($chili, 0.1); color: darken($chili, 18%); }
+    &--verified { background: rgba($lime, 0.18); color: darken($lime, 34%); }
+  }
+
+  &__chev { flex-shrink: 0; transition: transform 0.2s $fz-ease; }
+  &__item.is-open &__chev { transform: rotate(180deg); }
+
+  &__panel { padding: 0 1rem 1rem; overflow: hidden; }
+
+  &__facts {
+    margin: 0 0 0.9rem;
+    display: grid;
+    gap: 0.5rem 1rem;
+    @media (min-width: 640px) { grid-template-columns: 1fr 1fr; }
+
+    dt { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: darken($fz-ink-soft, 14%); }
+    dd { margin: 0.1rem 0 0; font-size: 0.88rem; color: $fz-ink; overflow-wrap: anywhere; }
+  }
+
+  &__docs {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 14px;
+      background: $onb-pill;
+      font-size: 0.82rem;
+      color: $fz-ink;
+
+      > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+      strong { display: block; font-size: 0.86rem; }
+    }
+  }
+
+  &__open {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 36px;
+    padding: 0 0.75rem;
+    border: 0;
+    border-radius: 9999px;
+    background: #fff;
+    color: $fz-ink;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+
+    &:hover { background: $fuzo-yellow-tint; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+
+    .fz-onb__cta { width: auto; flex: 1 1 12rem; height: 46px; }
+    .fz-onb__ghost { flex: 0 1 auto; }
+  }
+
+  &__confirm p { margin: 0; font-size: 0.9rem; color: $fz-ink; }
+  &__empty { margin: 0.5rem 0; font-size: 0.88rem; color: darken($fz-ink-soft, 14%); }
+}
+
+// Restaurant Dashboard: tools locked until verified.
+.fz-dash-locked {
+  display: flex;
+  gap: 0.8rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  border-radius: 20px;
+  background: $fuzo-yellow-tint;
+  border: 1px solid rgba($fuzo-yellow-deep, 0.35);
+  color: $fz-ink;
+
+  > svg { flex-shrink: 0; margin-top: 2px; color: $fuzo-yellow-deep; }
+  strong { display: block; font-size: 0.95rem; font-weight: 800; }
+  p { margin: 0.25rem 0 0.7rem; font-size: 0.86rem; line-height: 1.5; }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 1rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-decoration: none;
+
+    &:hover { color: $fuzo-yellow-ink; background: mix(#fff, $fuzo-yellow, 15%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+html[data-theme='dark'] {
+  .fz-admin__item { background: #f4f4f2; border-color: #f4f4f2; }
+  .fz-remind__card { background: #f4f4f2; }
+  .fz-verify-eyebrow { color: #b9b4aa; }
+  // The admin page's title and empty text sit straight on the black page.
+  .fz-admin__main > .fz-onb__title { color: #f4f4f2; }
+  .fz-admin__main > .fz-onb__sub,
+  .fz-admin__main > .fz-admin__empty { color: #cfcac0; }
+  .fz-admin__filters button:not(.is-on) { background: #1c1c1c; color: #f4f4f2; span { background: #2a2a2a; } }
+}
+
+// The back pill is sometimes a link (admin page): no underline.
+a.fz-onb__back { text-decoration: none; color: $fz-ink; &:hover { color: $fz-ink; } }

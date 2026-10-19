@@ -188,7 +188,7 @@ function useDocuments() {
   return { docs, status, refresh };
 }
 
-function Deadline({ status }: { status: BusinessStatus | null }) {
+export function Deadline({ status }: { status: BusinessStatus | null }) {
   if (!status) return null;
   if (status.status === 'pending_review' || status.status === 'verified') {
     return (
@@ -223,6 +223,33 @@ const DOC_SECTIONS: { type: DocumentKind; title: string; text: string }[] = [
 ];
 
 export function DocumentsStep({ onSaved, renderSubmit }: { onSaved: () => void; renderSubmit: Submit }) {
+  return (
+    <form
+      noValidate
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSaved();
+      }}
+    >
+      <DocumentUploads footer={(count, busy) => renderSubmit(count ? 'Continue' : 'Upload later and continue', busy)} />
+    </form>
+  );
+}
+
+/**
+ * The document upload block: deadline banner, one card per document type
+ * with its files and an Upload button. Used by onboarding (B-08) and the
+ * verification page (B-11 to B-13).
+ */
+export function DocumentUploads({
+  footer,
+  showDeadline = true,
+  onUploaded,
+}: {
+  footer?: (docCount: number, uploading: boolean) => React.ReactNode;
+  showDeadline?: boolean;
+  onUploaded?: () => void;
+}) {
   const id = useId();
   const { docs, status, refresh } = useDocuments();
   const [uploading, setUploading] = useState<DocumentKind | null>(null);
@@ -242,17 +269,12 @@ export function DocumentsStep({ onSaved, renderSubmit }: { onSaved: () => void; 
     if (!r.success) return setError(r.error === 'needs_update' ? errorText('needs_update') : 'The upload didn’t work. Check your connection and try again.');
     setDone(`${file.name} uploaded.`);
     await refresh();
+    onUploaded?.();
   };
 
   return (
-    <form
-      noValidate
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSaved();
-      }}
-    >
-      <Deadline status={status} />
+    <>
+      {showDeadline && <Deadline status={status} />}
       {DOC_SECTIONS.map((sec) => {
         const mine = (docs ?? []).filter((d) => d.type === sec.type);
         return (
@@ -304,8 +326,8 @@ export function DocumentsStep({ onSaved, renderSubmit }: { onSaved: () => void; 
         </p>
       )}
       <ErrorLine text={error} />
-      {renderSubmit((docs ?? []).length ? 'Continue' : 'Upload later and continue', !!uploading)}
-    </form>
+      {footer?.((docs ?? []).length, !!uploading)}
+    </>
   );
 }
 

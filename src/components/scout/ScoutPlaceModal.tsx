@@ -3,6 +3,7 @@
 import React from 'react';
 import { X, Star, Clock, MapPin, Bookmark, Share2, Navigation, Globe, Phone, Check, ChevronDown, Utensils, Footprints } from 'lucide-react';
 import Link from 'next/link';
+import VerifiedBadge from '@/components/business/VerifiedBadge';
 import type { ScoutPlace } from '@/types/scout';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import type { FuzoRestaurantLink } from '@/lib/services/restaurantService';
@@ -247,6 +248,7 @@ export const ScoutPlaceModal = ({
           <div className="scout-modal__fuzo">
             <div className="scout-modal__fuzo-info">
               <span className="scout-modal__fuzo-badge">★ On FUZO</span>
+              {fuzoRestaurant.verified && <VerifiedBadge size="sm" />}
               <span className="scout-modal__fuzo-rating">
                 {fuzoRestaurant.reviewCount > 0
                   ? `${fuzoRestaurant.average.toFixed(1)} ★ · ${fuzoRestaurant.reviewCount.toLocaleString()} ${fuzoRestaurant.reviewCount === 1 ? 'review' : 'reviews'}`

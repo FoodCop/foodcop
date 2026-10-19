@@ -107,7 +107,7 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - [x] **3. Individual (I-04 to I-06):** profile (name, live @username check, photo, roles), Personalise / Skip, Food DNA + flavours + cuisines + diet (saved as you go), Ready; existing users asked for birth date and roles.
 - [x] **4. Business part 1 (B-01 to B-04):** category, details, location and branches (map pin or service area), operations by category.
 - [x] **5. Business part 2 (B-05 to B-10):** reservations, loyalty, delivery, document upload, review, profile created.
-- [ ] **6. Verification (B-11 to B-14):** reminder on sign-in, under review / action required / verified screens, the admin review page, Verified badge on the profile and Scout.
+- [x] **6. Verification (B-11 to B-14):** reminder on sign-in, under review / action required / verified screens, the admin review page, Verified badge on the profile and Scout.
 - [ ] **7. "Finish your profile":** Home and Profile card, the 1 / 3 / 7-day pop-up.
 - [ ] **8. Clean-up and QA:** remove the old wizard, security review, test cases (`docs/ONBOARDING_TEST_CASES.md`).
 
@@ -207,6 +207,28 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
   - while not verified, what stays locked until approval;
   - **View business profile** and **Go to FUZO**.
 - **Tests:** 105 browser checks covering every screen and branch (both / neither, listed, the truck path with no reservations, a wrong file type, PDF and photo uploads, editing from review, overdue), 320-1600 px in light and dark, and accessibility. Phases 2-4 (117 / 103 / 88) still pass.
+
+## Phase 6 notes
+
+- **B-11 reminder (`VerificationReminder`, in the root layout):**
+  - **When:** once per browser session, for a business whose documents are awaiting, overdue or need changes. Never during onboarding, sign-in, the legal pages, or on `/business` and `/admin`.
+  - **What it says:** that the profile stays visible, what's unavailable, the deadline and days left (or that it has passed), or the reviewer's reason.
+  - **Buttons:** **Upload documents** / **Replace documents**, and **Remind me later**. Esc also closes it.
+- **`/business/verification` (`VerificationView`)** shows the matching screen:
+  - **awaiting / overdue (B-11):** the upload form, plus the list of what's unavailable until approval;
+  - **pending review (B-12):** status, plus more files can still be added;
+  - **action required (B-13):** "What needs to change" (the reviewer's note) and Replace documents;
+  - **verified (B-14):** status, the badge available, and **Open business dashboard** (`/profile?tab=dashboard`, which now opens that tab).
+  - The page is for signed-in users only. Accounts that aren't businesses see a short note.
+- **`/admin/verification` (`AdminVerificationView`):**
+  - **Lists:** filters for Needs review / Action required / Awaiting documents (incl. overdue) / Verified / All, with counts.
+  - **Each business:** private contact, address, account date, deadline, documents (each opened through a 5-minute signed link to the private bucket).
+  - **Decisions:** **Approve** (with a confirm step) or **Ask for changes** (a reason is required).
+  - **Access:** non-admins see "This page is for FUZO admins" and never load the list. The database refuses them anyway.
+  - **Setup:** add yourself as admin after the migration: `INSERT INTO public.app_admins (user_id) VALUES ('<your user id>');`
+- **FUZO Verified badge (`VerifiedBadge`):** next to a business's name on its profile, and in Scout's "On FUZO" strip. It shows only when `restaurant_profiles.is_verified` (set by the server), never for unverified businesses.
+- **Restaurant Dashboard:** for an unverified business, the menu and gallery managers are replaced by a note ("unlock once FUZO approves your documents" + Verification status). Business details stay editable. This matches the database, which refuses menu, gallery and post changes until approval. Posting through Create shows the database's own message: "Business posts unlock once your documents are approved."
+- **Tests:** 87 browser checks covering every reminder state (and none for pending, verified or individual accounts), every status screen, an upload moving to review, admin access, filters, signed links, both decisions, the badge, 320-1600 px in light and dark, and accessibility. The `/business` and `/admin` pages need a real sign-in on the server, so the test used stand-in copies of them, removed afterwards. Phases 2-5 still pass.
 
 ## Still to confirm (client / legal, from the spec)
 

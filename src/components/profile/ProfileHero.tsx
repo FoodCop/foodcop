@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import VerifiedBadge from '@/components/business/VerifiedBadge';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -389,6 +390,7 @@ export default function ProfileHero({
             <div className="fz-phero__id">
               <div className="fz-phero__name-row">
                 <h1 className="fz-phero__name">{profile.name}</h1>
+                {isRestaurant && restaurant.profile?.is_verified && <VerifiedBadge />}
                 <span className="fz-phero__level">
                   <Crown size={14} strokeWidth={2.4} aria-hidden="true" />
                   LEVEL {profile.level ?? 1}

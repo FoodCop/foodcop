@@ -365,6 +365,12 @@ Instagram, TikTok, YouTube, X, Facebook, Pinterest. Linking = paste your profile
     - an outlined card per document type, with the uploaded files as grey rows (green check, name, status) and a dashed Upload pill.
   - **Review:** a plain list of uppercase labels and values with a round grey pencil per row.
   - **Created:** a grey facts box (Available in green), a checklist with ticks, and the yellow-tint note on what stays locked.
+- **Verification (`src/components/business/*`):**
+  - **Verified badge:** a small sky-tint pill with a check, "Verified" (`.fz-verified`).
+  - **Reminder:** a white bottom sheet on phones and a centred card from 576px, over a dim backdrop, with a round grey close button.
+  - **Status page:** the onboarding card shell, with a "What needs to change" chili note and a bulleted list of what's locked.
+  - **Admin page:** filter pills with counts, floating rows that expand (status pill: yellow-tint for review, chili for action required or overdue, lime for verified), documents as grey rows with an "Open ↗" pill, and yellow Approve / grey Ask for changes.
+  - **Locked Dashboard tools:** a yellow-tint note with a lock and a yellow "Verification status" pill.
 - **/terms and /privacy** are plain reading pages (max 46rem) with a yellow-tint "Draft" note until the final text arrives.
 
 ## Login / Sign up (`src/app/(auth)/login/page.tsx`, `.fz-auth` in `_auth.scss`)

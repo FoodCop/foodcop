@@ -39,7 +39,7 @@ function ProfilePageContent() {
     ? (activityParam as ActivityCategory)
     : undefined;
   const tabParam = searchParams.get('tab');
-  const initialTab = tabParam === 'dna' ? 'dna' : tabParam === 'settings' ? 'settings' : undefined;
+  const initialTab = tabParam === 'dna' ? 'dna' : tabParam === 'settings' ? 'settings' : tabParam === 'dashboard' ? 'dashboard' : undefined;
 
   const [realProfile, setRealProfile] = useState<UserProfile | null>(null);
   const [currentUserId, setCurrentUserId] = useState<string | undefined>(undefined);

@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Clock, Copy, Crosshair, Edit3, Images, Loader2, MapPin, Plus, Search, Store, Trash2, Utensils, X } from 'lucide-react';
+import Link from 'next/link';
+import { Clock, Copy, Crosshair, Edit3, Images, Loader2, Lock, MapPin, Plus, Search, Store, Trash2, Utensils, X } from 'lucide-react';
 import { patchRestaurant, refreshRestaurant, useOpenStatus, useRestaurant } from '@/lib/hooks/useRestaurant';
 import {
   GALLERY_CATEGORIES,
@@ -64,8 +65,25 @@ export default function RestaurantDashboardTab({ restaurantId, restaurantName }:
         </div>
       )}
       <BusinessDetails restaurantId={restaurantId} restaurantName={restaurantName} profile={profile} />
-      <GalleryManager restaurantId={restaurantId} gallery={profile?.gallery ?? []} />
-      <MenuManager restaurantId={restaurantId} menu={menu} currency={profile?.currency ?? 'USD'} />
+      {/* Business tools wait for document approval (client spec v1, section 8; the
+          database refuses menu + gallery changes until then). Basic details stay editable. */}
+      {profile?.is_verified === false ? (
+        <div className="fz-dash-locked" role="note">
+          <Lock size={20} aria-hidden="true" />
+          <div>
+            <strong>Menu, gallery and posts unlock once FUZO approves your documents</strong>
+            <p>Your profile is already visible. Upload your business documents to get verified.</p>
+            <Link href="/business/verification" className="fz-dash-locked__cta">
+              Verification status
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <>
+          <GalleryManager restaurantId={restaurantId} gallery={profile?.gallery ?? []} />
+          <MenuManager restaurantId={restaurantId} menu={menu} currency={profile?.currency ?? 'USD'} />
+        </>
+      )}
     </div>
   );
 }
