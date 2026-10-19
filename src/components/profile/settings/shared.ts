@@ -1,4 +1,4 @@
-import { FLAVORS, CUISINES, DIETARY } from '@/lib/onboarding/data';
+import { TASTE_FLAVOURS as FLAVORS, TASTE_CUISINES as CUISINES, TASTE_DIETS as DIETARY } from '@/lib/onboarding/taste';
 
 export type TasteField = 'flavors' | 'cuisines' | 'dietary';
 

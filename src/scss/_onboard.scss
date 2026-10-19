@@ -267,6 +267,137 @@ $onb-float: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 0
   p { margin: 0 auto 1.1rem; max-width: 30ch; font-size: 0.92rem; line-height: 1.5; color: darken($fz-ink-soft, 12%); }
 }
 
+// Pastel choice chips (roles, flavours, cuisines, diet, Food DNA answers).
+.fz-step-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fz-step-pastel {
+  @include fz-pastel-cycle;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1.5px solid transparent;
+  border-radius: 9999px;
+  background: var(--pastel);
+  color: $fz-ink;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s $fz-ease, box-shadow 0.15s ease;
+
+  &:hover:not([aria-disabled='true']) { background: var(--pastel-hover); }
+  &:active:not([aria-disabled='true']) { transform: scale(0.97); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &.is-on {
+    background: $fuzo-yellow;
+    border-color: $fuzo-yellow-deep;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 4px 12px -4px rgba($fuzo-yellow-deep, 0.6);
+  }
+  &[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
+}
+
+.fz-step-count {
+  margin: 0.55rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: darken($fz-ink-soft, 14%);
+}
+
+.fz-step-group {
+  margin: 0.25rem 0 1.1rem;
+
+  &__label {
+    margin: 0 0 0.55rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: $fz-ink;
+
+    span { margin-left: 0.3rem; font-weight: 600; color: darken($fz-ink-soft, 14%); }
+  }
+}
+
+// Profile photo picker: round photo (or initial) with a camera badge.
+.fz-step-avatar {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.1rem;
+
+  &__pic {
+    position: relative;
+    flex-shrink: 0;
+    width: 76px;
+    height: 76px;
+    padding: 0;
+    border: 3px solid $fuzo-yellow;
+    border-radius: 50%;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-ink;
+    font-size: 1.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease;
+
+    img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+    > span:first-child { display: inline-flex; width: 100%; height: 100%; align-items: center; justify-content: center; }
+    &:hover { transform: scale(1.03); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 3px; }
+  }
+
+  &__cam {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fz-ink;
+    color: #fff;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+
+    strong { font-size: 0.95rem; font-weight: 800; color: $fz-ink; }
+    span { font-size: 0.82rem; color: darken($fz-ink-soft, 14%); }
+  }
+}
+
+// @username field: the @ sits inside the grey pill.
+.fz-step-handle {
+  position: relative;
+
+  svg { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: darken($fz-ink-soft, 14%); pointer-events: none; }
+  input { padding-left: 2.5rem !important; }
+}
+
+.fz-step-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 1.3rem;
+  margin: 0.4rem 0 0 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: darken($fz-ink-soft, 14%);
+
+  &--free { color: darken($lime, 32%); }
+  &--taken,
+  &--invalid { color: darken($chili, 14%); }
+}
+
 // ── Create account steps in the login card ─────────────────────────────────
 .fz-signup {
   &__top {
@@ -487,6 +618,138 @@ $onb-float: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 0
   }
 
   &__spin { animation: fz-onb-spin 0.9s linear infinite; }
+
+  // Quiet secondary action under the main button ("Skip for now").
+  &__skip {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 0.5rem;
+    border: 0;
+    background: none;
+    color: darken($fz-ink-soft, 14%);
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover:not(:disabled) { color: $fz-ink; text-decoration: underline; text-decoration-color: $fuzo-yellow; text-underline-offset: 3px; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; border-radius: 9999px; }
+    &:disabled { opacity: 0.6; }
+  }
+
+  // "Build your food profile" list.
+  &__list {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+
+    li {
+      @include fz-pastel-cycle;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 16px;
+      background: var(--pastel);
+      font-size: 0.82rem;
+      color: mix($fz-ink, #fff, 80%);
+
+      > span:first-child {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        color: $fz-ink;
+      }
+      strong { display: block; font-size: 0.92rem; color: $fz-ink; }
+    }
+  }
+
+  &__done-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: -0.5rem 0 1.1rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 9999px;
+    background: rgba($lime, 0.18);
+    color: darken($lime, 34%);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+}
+
+// ── Food profile questionnaire (I-05A) ─────────────────────────────────────
+.fz-taste {
+  &__progress {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: darken($fz-ink-soft, 14%);
+  }
+
+  &__bar {
+    flex: 1;
+    height: 6px;
+    border-radius: 9999px;
+    background: $onb-pill;
+    overflow: hidden;
+
+    i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, $fuzo-yellow, $fuzo-yellow-deep); }
+  }
+
+  &__questions { display: grid; gap: 1.2rem; margin-bottom: 1.1rem; }
+
+  &__q-text { margin: 0 0 0.5rem; font-size: 0.95rem; font-weight: 800; color: $fz-ink; line-height: 1.35; }
+  &__q-help { margin: -0.3rem 0 0.5rem; font-size: 0.8rem; color: darken($fz-ink-soft, 14%); }
+
+  &__result { margin-bottom: 1.1rem; }
+
+  &__persona {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 20px;
+    background: $fz-ink-card;
+    color: #fff;
+
+    > span { font-size: 2rem; line-height: 1; }
+    strong { display: block; font-size: 1.1rem; font-weight: 800; color: $fuzo-yellow-pale; }
+    p { margin: 0.25rem 0 0; font-size: 0.86rem; line-height: 1.45; color: rgba(#fff, 0.85); }
+  }
+
+  &__axes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+
+    li { display: grid; grid-template-columns: 7.5rem 1fr 2.6rem; align-items: center; gap: 0.6rem; }
+  }
+
+  &__axis { font-size: 0.86rem; font-weight: 700; color: $fz-ink; white-space: nowrap; }
+  &__track { height: 9px; border-radius: 9999px; background: $onb-pill; overflow: hidden; i { display: block; height: 100%; border-radius: inherit; } }
+  &__pct { text-align: right; font-size: 0.82rem; font-weight: 800; font-variant-numeric: tabular-nums; color: $fz-ink; }
+
+  &__nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+
+    .fz-onb__skip { width: auto; padding: 0 0.75rem; }
+  }
 }
 
 @keyframes fz-onb-spin { to { transform: rotate(360deg); } }

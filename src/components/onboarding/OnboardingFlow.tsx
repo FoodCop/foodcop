@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
-import { AlertCircle, ArrowRight, Loader2, LogOut, Store } from 'lucide-react';
+import { AlertCircle, ArrowRight, Check, Dna, Flame, Globe2, Loader2, LogOut, Salad, Store } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { safeNextPath } from '@/lib/share/safeNext';
 import { takeNextAfterSignup } from '@/lib/share/afterSignup';
@@ -13,20 +13,27 @@ import { OnboardingService, nextStep, type OnboardingState, type OnboardingStep 
 import { AccountTypeStep } from './steps/AccountTypeStep';
 import { AgeStep, TooYoung } from './steps/AgeStep';
 import { ConsentChecks, consentsMissing, type Consents } from './steps/ConsentChecks';
+import { ProfileStep, RolesStep } from './steps/ProfileStep';
+import { TasteSetup } from './steps/TasteSetup';
 
 // /onboarding (client spec v1, docs/ONBOARDING_PLAN.md). Shows only what is
 // still missing, worked out from the database, so it resumes anywhere:
 //   type (I-01) -> age (I-03, individuals) -> consent (I-02 ticks) -> ...
+//   -> profile (I-04) -> "Build your food profile" (I-05) -> food profile
+//   (I-05A, optional) -> ready (I-06).
 // Choices made on the sign-up steps before the account existed are saved
-// first (lib/onboarding/intent). Phases 3-5 add the profile, food profile and
-// business screens between consent and the end.
+// first (lib/onboarding/intent). Existing accounts (already onboarded) are
+// sent here once for what's missing: birth date, consent, roles
+// (OnboardingCatchUp). Phases 4-5 add the business screens.
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const STEPS: Record<AccountType, OnboardingStep[]> = {
-  individual: ['type', 'age', 'consent', 'ready'],
+  individual: ['type', 'age', 'consent', 'profile', 'personalize', 'taste', 'ready'],
   food_business: ['type', 'consent', 'business'],
 };
+/** Existing accounts only see what's missing. */
+const CATCH_UP: OnboardingStep[] = ['age', 'consent', 'roles'];
 
 const MESSAGES: Record<string, string> = {
   needs_update: 'Onboarding needs the latest database update (npx supabase db push). Ask your admin to run it.',
@@ -55,13 +62,13 @@ export default function OnboardingFlow() {
 
   const show = useCallback(
     (s: OnboardingState) => {
-      if (s.isOnboarded) {
+      const n = nextStep(s);
+      if (n === 'done') {
         leave();
         return;
       }
       setState(s);
       setName((n) => n || s.displayName);
-      const n = nextStep(s);
       setStep(n);
       OnboardingService.saveStep(n);
     },
@@ -83,7 +90,7 @@ export default function OnboardingFlow() {
       }
       // Save what was chosen on the sign-up steps, then carry on from there.
       const intent = readIntent();
-      if (intent && !res.data.isOnboarded) {
+      if (intent) {
         const applied = await OnboardingService.applyIntent(res.data, intent);
         if (cancelled) return;
         clearIntent();
@@ -142,8 +149,11 @@ export default function OnboardingFlow() {
   };
 
   const business = state?.accountType === 'food_business' || type === 'food_business';
-  const flow = STEPS[state?.accountType ?? type ?? 'individual'];
+  const flow = state?.isOnboarded ? (business ? ['consent' as const] : CATCH_UP) : STEPS[state?.accountType ?? type ?? 'individual'];
   const index = step ? Math.max(0, flow.indexOf(step)) : 0;
+  const finishLater = async () => {
+    if (await run(() => OnboardingService.setFoodPrefs('skipped', true))) await reload();
+  };
 
   const errorNote = error && (
     <motion.p className="fz-onb__error" role="alert" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}>
@@ -165,7 +175,7 @@ export default function OnboardingFlow() {
   );
 
   let body: React.ReactNode;
-  let key = step ?? 'loading';
+  let key: string = step ?? 'loading';
   if (loadError) {
     key = 'load-error';
     body = (
@@ -220,7 +230,7 @@ export default function OnboardingFlow() {
         <h1 className="fz-onb__title" tabIndex={-1} ref={headingRef}>
           Confirm your age
         </h1>
-        <p className="fz-onb__sub">This helps us apply the right protections.</p>
+        <p className="fz-onb__sub">{state.isOnboarded ? 'We now ask everyone for this, to apply the right protections.' : 'This helps us apply the right protections.'}</p>
         <AgeStep
           onTooYoung={() => {
             blockAgeGate();
@@ -267,6 +277,103 @@ export default function OnboardingFlow() {
         {cta('Continue')}
       </form>
     );
+  } else if (step === 'profile') {
+    body = (
+      <>
+        <h1 className="fz-onb__title" tabIndex={-1} ref={headingRef}>
+          Your profile
+        </h1>
+        <p className="fz-onb__sub">Make your account yours. This is how people find you on FUZO.</p>
+        <ProfileStep
+          initialName={state.displayName}
+          initialUsername={state.username}
+          initialAvatar={state.avatarUrl}
+          initialRoles={state.roles}
+          onSaved={reload}
+          renderSubmit={(label, busy) => (
+            <button type="submit" className="fz-onb__cta" disabled={busy}>
+              {busy ? <Loader2 size={18} className="fz-onb__spin" aria-hidden="true" /> : null}
+              {busy ? 'Saving…' : label} {!busy && <ArrowRight size={18} aria-hidden="true" />}
+            </button>
+          )}
+        />
+      </>
+    );
+  } else if (step === 'roles') {
+    body = (
+      <>
+        <h1 className="fz-onb__title" tabIndex={-1} ref={headingRef}>
+          What describes you?
+        </h1>
+        <p className="fz-onb__sub">Pick any that fit. They show on your profile and you can change them later.</p>
+        <RolesStep
+          initialRoles={state.roles}
+          onDone={async (roles) => {
+            if (await run(() => OnboardingService.saveRoles(roles, state.data))) await reload();
+          }}
+          renderSubmit={(label, busy) => (
+            <button type="submit" className="fz-onb__cta" disabled={busy}>
+              {busy ? 'Saving…' : label} {!busy && <ArrowRight size={18} aria-hidden="true" />}
+            </button>
+          )}
+        />
+      </>
+    );
+  } else if (step === 'personalize') {
+    body = (
+      <>
+        <span className="fz-onb__badge" aria-hidden="true">
+          <Dna size={26} />
+        </span>
+        <h1 className="fz-onb__title" tabIndex={-1} ref={headingRef}>
+          Build your food profile
+        </h1>
+        <p className="fz-onb__sub">Get recommendations that reflect your taste. It takes about 3 minutes.</p>
+        <ul className="fz-onb__list">
+          {[
+            [Dna, 'Food DNA', 'How you like to eat out and explore'],
+            [Flame, 'Flavour DNA', 'Spicy, smoky, sweet…'],
+            [Globe2, 'Favourite cuisines', 'Up to 10'],
+            [Salad, 'Dietary preferences', 'Vegetarian, halal, gluten free…'],
+          ].map(([Icon, t, d]) => {
+            const I = Icon as typeof Dna;
+            return (
+              <li key={t as string}>
+                <span aria-hidden="true">
+                  <I size={17} />
+                </span>
+                <span>
+                  <strong>{t as string}</strong>
+                  {d as string}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="fz-onb__hint">You can do this now or any time later. Skipping doesn&rsquo;t limit anything.</p>
+        {errorNote}
+        {cta('Personalise now', async () => {
+          if (await run(() => OnboardingService.setFoodPrefs('in_progress'))) await reload();
+        })}
+        <button type="button" className="fz-onb__skip" onClick={finishLater} disabled={saving}>
+          Skip for now
+        </button>
+      </>
+    );
+  } else if (step === 'taste') {
+    body = (
+      <TasteSetup
+        data={state.data}
+        headingRef={headingRef}
+        onDone={reload}
+        onSkip={reload}
+        renderSubmit={(label, busy) => (
+          <button type="submit" className="fz-onb__cta" disabled={busy}>
+            {busy ? 'Saving…' : label} {!busy && <ArrowRight size={18} aria-hidden="true" />}
+          </button>
+        )}
+      />
+    );
   } else if (step === 'ready') {
     body = (
       <form
@@ -283,7 +390,16 @@ export default function OnboardingFlow() {
         <h1 className="fz-onb__title" tabIndex={-1} ref={headingRef}>
           You&rsquo;re ready to explore
         </h1>
-        <p className="fz-onb__sub">Explore food, discover places and see what people are eating. Your food profile can be set up any time from your profile.</p>
+        <p className="fz-onb__sub">
+          {state.foodPrefs === 'completed'
+            ? 'Your food profile is set. Your recommendations start from it and get sharper as you explore.'
+            : 'Explore food, discover places and see what people are eating. You can finish your food profile any time from your profile.'}
+        </p>
+        {state.foodPrefs === 'completed' && (
+          <p className="fz-onb__done-line">
+            <Check size={15} strokeWidth={3} aria-hidden="true" /> Food profile saved
+          </p>
+        )}
         {!state.displayName && (
           <div className="fz-step-field">
             <label htmlFor="onb-name">Your name</label>

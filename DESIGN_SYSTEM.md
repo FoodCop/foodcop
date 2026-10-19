@@ -346,6 +346,13 @@ Instagram, TikTok, YouTube, X, Facebook, Pinterest. Linking = paste your profile
   - step 2 is the age step: grey pill dropdowns, Yes/No chips for Quebec, and a lock line saying it's private;
   - step 3 is the account form, with the consent ticks as grey rows (yellow-tint when ticked).
 - **/onboarding** uses the clean look: a white page with the FUZO logo and a grey "Sign out" pill on top, then one floating white card (28px, `fz-float` shadow) holding the dots, a body-font sentence-case title, a single yellow main button, and errors next to the field. Dark mode is a black page with the near-white card.
+- **Profile step:** a 76px yellow-ringed avatar (or initial) with a dark camera badge, grey pill fields with an @ inside the username field and a live hint under it (green free / red taken), and roles as pastel chips.
+- **Food profile:**
+  - a "n of 9" yellow progress bar;
+  - pastel chips everywhere (selected = solid yellow with a check), with "x of up to N" under them;
+  - Food DNA questions as bold numbered lines with chips;
+  - the result: a dark ink persona card (pale-yellow title) and 5 gradient bars in the profile's Food DNA colours.
+  - "Back" and "Skip for now" are quiet text buttons under the main button.
 - **/terms and /privacy** are plain reading pages (max 46rem) with a yellow-tint "Draft" note until the final text arrives.
 
 ## Login / Sign up (`src/app/(auth)/login/page.tsx`, `.fz-auth` in `_auth.scss`)

@@ -104,7 +104,7 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 
 - [x] **1. Data and security rules:** account type, private birth date, roles, food-profile status, consents; businesses, branches, preferences, documents (private bucket), verification + audit log, `app_admins`; database rules that lock business posts and the Dashboard; existing restaurants marked verified. Database tests.
 - [x] **2. Start and sign-up:** Welcome (I-01), age check, Create account with consent (email and Google), `/terms` and `/privacy`, save/resume, send unfinished people back to onboarding, the new onboarding look.
-- [ ] **3. Individual (I-04 to I-06):** profile (name, live @username check, photo, roles), Personalise / Skip, Food DNA + flavours + cuisines + diet (saved as you go), Ready; existing users asked for birth date and roles.
+- [x] **3. Individual (I-04 to I-06):** profile (name, live @username check, photo, roles), Personalise / Skip, Food DNA + flavours + cuisines + diet (saved as you go), Ready; existing users asked for birth date and roles.
 - [ ] **4. Business part 1 (B-01 to B-04):** category, details, location and branches (map pin or service area), operations by category.
 - [ ] **5. Business part 2 (B-05 to B-10):** reservations, loyalty, delivery, document upload, review, profile created.
 - [ ] **6. Verification (B-11 to B-14):** reminder on sign-in, under review / action required / verified screens, the admin review page, Verified badge on the profile and Scout.
@@ -144,6 +144,27 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
   - saving the browser choices after sign-in, and resuming at the age step;
   - keyboard use, reduced motion, light and dark, 320-1600 px with no sideways scroll, accessibility and the console.
 - **Not tested in the browser:** the middleware redirect, since it needs a real signed-in session. Check it on the phone after the migration is pushed.
+
+## Phase 3 notes
+
+- **Order for a new individual:** type → age → consent → **Your profile** (I-04) → **Build your food profile** (I-05) → the food profile (I-05A, optional) → **You're ready** (I-06).
+- **Profile:**
+  - **Name and @username are required.** The username is suggested from the name ("Asha Patel" → `asha.patel`) and checked live (free / taken / bad characters). The database also refuses duplicates in other capitals.
+  - **Photo and roles are optional.** "Skip optional profile details" saves just the name and username.
+  - **The photo is re-saved as a JPEG of at most 800px,** which removes its hidden location data. This now applies to every avatar and banner upload, including Settings.
+- **Food profile:** 9 screens.
+  - **Flavours:** up to 5, from the 10 Flavour DNA axes, the same list as the client's mock.
+  - **Cuisines and diet:** up to 10 cuisines, plus diets from FUZO's taxonomy; "No restrictions" can't be combined with a diet.
+  - **Food DNA:** the 5 sections of FUZO's real quiz.
+  - **The result:** a persona and the 5 scores.
+- **Saving and skipping:**
+  - **Saved as you go:** each screen saves when you leave it (`taste_profiles`, plus the quiz answers in `user_onboarding.data`), so it resumes on the same screen.
+  - **Skipping:** "Skip for now" works on every screen. It records `skipped` (or `in_progress` if something was saved) with the time, for the phase 7 reminders. Skipping never blocks anything.
+- **Shared taste lists:** Settings → Taste preferences now uses the same lists (`lib/onboarding/taste.ts`). Older saved values that aren't in these lists still show in the summary.
+- **Existing accounts (client, 2026-10-18):** `OnboardingCatchUp` checks once per browser session. If an account that is already onboarded lacks a birth date, the current Terms / Privacy, or roles (asked once, and "Not now" is fine), it sends them to `/onboarding` for just those steps, then back to the page they were on.
+- **Tests:**
+  - **103 browser checks:** profile, username states, photo, roles, skip, the full questionnaire, resume, skipping halfway, catch-up, an up-to-date account not being sent anywhere, 320-1600 px in light and dark, and accessibility.
+  - **Phase 2's 117 checks** still pass.
 
 ## Still to confirm (client / legal, from the spec)
 

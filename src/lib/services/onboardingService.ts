@@ -10,6 +10,19 @@ import { createClient } from '@/lib/supabase/client';
 import type { ServiceResult } from '@/lib/types/serviceResult';
 import { PRIVACY_VERSION, TERMS_VERSION, type AccountType } from '@/lib/onboarding/policy';
 import type { SignupIntent } from '@/lib/onboarding/intent';
+import type { DnaAxis, TasteProfileState } from '@/lib/recommendation/dna';
+
+export type FoodPrefsStatus = 'not_started' | 'skipped' | 'in_progress' | 'completed';
+
+/** Free-form progress kept in user_onboarding.data (owner only). */
+export interface OnboardingData {
+  /** Which personalisation screen they reached (resume). */
+  tasteStep?: number;
+  /** Food DNA answers so far (saved after each section). */
+  dna?: TasteProfileState;
+  /** Existing accounts are asked for roles once. */
+  rolesAsked?: boolean;
+}
 
 export interface OnboardingState {
   userId: string;
@@ -21,23 +34,35 @@ export interface OnboardingState {
   /** Accepted the current Terms / Privacy versions. */
   termsOk: boolean;
   privacyOk: boolean;
-  /** Last screen they were on (for optional steps that leave no other trace). */
+  username: string | null;
+  avatarUrl: string | null;
+  roles: string[];
+  foodPrefs: FoodPrefsStatus;
+  skippedAt: string | null;
+  data: OnboardingData;
+  /** Last screen they were on. */
   savedStep: string | null;
 }
 
-/** Screens of the flow, in order. Later phases add the profile + business screens. */
-export type OnboardingStep = 'type' | 'age' | 'consent' | 'ready' | 'business';
+/** Screens of the flow. 'roles' is for existing accounts; 'done' = nothing left. Phases 4-5 add the business screens. */
+export type OnboardingStep = 'type' | 'age' | 'consent' | 'profile' | 'roles' | 'personalize' | 'taste' | 'ready' | 'business' | 'done';
 
 /** The first thing still missing. */
 export function nextStep(s: OnboardingState): OnboardingStep {
   if (!s.accountType) return 'type';
   if (s.accountType === 'individual' && !s.hasBirthDate) return 'age';
   if (!s.termsOk || !s.privacyOk) return 'consent';
-  return s.accountType === 'individual' ? 'ready' : 'business';
+  if (s.accountType === 'food_business') return s.isOnboarded ? 'done' : 'business';
+  // Existing accounts (client, 2026-10-18): birth date + consent above, then roles once.
+  if (s.isOnboarded) return s.roles.length || s.data.rolesAsked ? 'done' : 'roles';
+  if (!s.username || !s.displayName.trim()) return 'profile';
+  if (s.foodPrefs === 'not_started') return 'personalize';
+  if (s.foodPrefs === 'in_progress' && !s.skippedAt) return 'taste';
+  return 'ready';
 }
 
 /** Failure codes the screens show their own message for. */
-export type OnboardingError = 'too_young' | 'needs_update' | 'signed_out' | 'failed';
+export type OnboardingError = 'too_young' | 'needs_update' | 'signed_out' | 'username_taken' | 'username_invalid' | 'failed';
 
 function codeOf(message: string | undefined): OnboardingError {
   if (!message) return 'failed';
@@ -48,6 +73,7 @@ function codeOf(message: string | undefined): OnboardingError {
 }
 
 const fail = <T,>(message: string | undefined): ServiceResult<T> => ({ success: false, error: codeOf(message) });
+const now = () => new Date().toISOString();
 
 /** The client and the signed-in user, or null. */
 async function me() {
@@ -66,10 +92,10 @@ export const OnboardingService = {
     const { supabase, user } = m;
 
     const [profile, priv, consents, progress] = await Promise.all([
-      supabase.from('users').select('account_type, display_name, is_onboarded').eq('id', user.id).maybeSingle(),
+      supabase.from('users').select('account_type, display_name, is_onboarded, username, avatar_url, roles').eq('id', user.id).maybeSingle(),
       supabase.from('user_private').select('user_id').eq('user_id', user.id).maybeSingle(),
       supabase.from('user_consents').select('document, version').eq('user_id', user.id),
-      supabase.from('user_onboarding').select('step').eq('user_id', user.id).maybeSingle(),
+      supabase.from('user_onboarding').select('step, data, food_prefs_status, skipped_at').eq('user_id', user.id).maybeSingle(),
     ]);
     const err = profile.error ?? priv.error ?? consents.error ?? progress.error;
     if (err) return fail(err.message);
@@ -86,6 +112,12 @@ export const OnboardingService = {
         hasBirthDate: !!priv.data,
         termsOk: accepted.some((c) => c.document === 'terms' && c.version === TERMS_VERSION),
         privacyOk: accepted.some((c) => c.document === 'privacy' && c.version === PRIVACY_VERSION),
+        username: profile.data?.username ?? null,
+        avatarUrl: profile.data?.avatar_url ?? (user.user_metadata?.avatar_url as string | undefined) ?? null,
+        roles: (profile.data?.roles as string[] | null) ?? [],
+        foodPrefs: (progress.data?.food_prefs_status as FoodPrefsStatus | undefined) ?? 'not_started',
+        skippedAt: progress.data?.skipped_at ?? null,
+        data: (progress.data?.data as OnboardingData | null) ?? {},
         savedStep: progress.data?.step ?? null,
       },
     };
@@ -94,8 +126,7 @@ export const OnboardingService = {
   async setAccountType(type: AccountType): Promise<ServiceResult> {
     const m = await me();
     if (!m) return { success: false, error: 'signed_out' };
-    const { supabase, user } = m;
-    const { error } = await supabase.from('users').update({ account_type: type }).eq('id', user.id);
+    const { error } = await m.supabase.from('users').update({ account_type: type }).eq('id', m.user.id);
     return error ? fail(error.message) : { success: true };
   },
 
@@ -145,7 +176,81 @@ export const OnboardingService = {
     const m = await me();
     if (!m) return;
     // Best effort - progress is mostly worked out from the data itself.
-    await m.supabase.from('user_onboarding').upsert({ user_id: m.user.id, step, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+    await m.supabase.from('user_onboarding').upsert({ user_id: m.user.id, step, updated_at: now() }, { onConflict: 'user_id' });
+  },
+
+  /** Is this username free (and well formed)? Live check while typing; null = couldn't check. */
+  async usernameAvailable(username: string): Promise<boolean | null> {
+    const supabase = createClient();
+    if (!supabase) return null;
+    const { data, error } = await supabase.rpc('username_available', { p_username: username });
+    return error ? null : !!data;
+  },
+
+  /** I-04: name, username, photo, roles. */
+  async saveProfile(p: { displayName: string; username: string; roles: string[]; avatarUrl?: string | null }): Promise<ServiceResult> {
+    const m = await me();
+    if (!m) return { success: false, error: 'signed_out' };
+    const patch: Record<string, unknown> = { display_name: p.displayName.trim().slice(0, 80), username: p.username, roles: p.roles };
+    if (p.avatarUrl !== undefined) patch.avatar_url = p.avatarUrl;
+    const { error } = await m.supabase.from('users').update(patch).eq('id', m.user.id);
+    if (error && /duplicate key|username_lower/i.test(error.message)) return { success: false, error: 'username_taken' };
+    if (error && /Usernames are/i.test(error.message)) return { success: false, error: 'username_invalid' };
+    return error ? fail(error.message) : { success: true };
+  },
+
+  /** Existing accounts: their roles (asked once; may be left empty). */
+  async saveRoles(roles: string[], data: OnboardingData): Promise<ServiceResult> {
+    const m = await me();
+    if (!m) return { success: false, error: 'signed_out' };
+    const { error } = await m.supabase.from('users').update({ roles }).eq('id', m.user.id);
+    if (error) return fail(error.message);
+    return this.saveData({ ...data, rolesAsked: true });
+  },
+
+  /** Writes user_onboarding.data (callers pass the whole object). */
+  async saveData(data: OnboardingData): Promise<ServiceResult> {
+    const m = await me();
+    if (!m) return { success: false, error: 'signed_out' };
+    const { error } = await m.supabase.from('user_onboarding').upsert({ user_id: m.user.id, data, updated_at: now() }, { onConflict: 'user_id' });
+    return error ? fail(error.message) : { success: true };
+  },
+
+  /** Food profile status; skipping stamps the time (the reminders count from it). */
+  async setFoodPrefs(status: FoodPrefsStatus, skipped = false): Promise<ServiceResult> {
+    const m = await me();
+    if (!m) return { success: false, error: 'signed_out' };
+    const row: Record<string, unknown> = { user_id: m.user.id, food_prefs_status: status, updated_at: now() };
+    if (skipped) row.skipped_at = now();
+    if (status === 'completed' || (status === 'in_progress' && !skipped)) row.skipped_at = null;
+    const { error } = await m.supabase.from('user_onboarding').upsert(row, { onConflict: 'user_id' });
+    return error ? fail(error.message) : { success: true };
+  },
+
+  /** Flavours / cuisines / diet, saved as each screen is left. */
+  async saveTaste(patch: { flavors?: string[]; cuisines?: string[]; dietary?: string[] }): Promise<ServiceResult> {
+    const m = await me();
+    if (!m) return { success: false, error: 'signed_out' };
+    const { error } = await m.supabase.from('taste_profiles').upsert({ user_id: m.user.id, ...patch, updated_at: now() }, { onConflict: 'user_id' });
+    return error ? fail(error.message) : { success: true };
+  },
+
+  async loadTaste(): Promise<{ flavors: string[]; cuisines: string[]; dietary: string[] }> {
+    const m = await me();
+    if (!m) return { flavors: [], cuisines: [], dietary: [] };
+    const { data } = await m.supabase.from('taste_profiles').select('flavors, cuisines, dietary').eq('user_id', m.user.id).maybeSingle();
+    return { flavors: data?.flavors ?? [], cuisines: data?.cuisines ?? [], dietary: data?.dietary ?? [] };
+  },
+
+  /** The finished Food DNA quiz: scores + persona (read by the profile's Food DNA tab and recommendations). */
+  async saveDnaResult(scores: Record<DnaAxis, number>, persona: { emoji: string; title: string; desc: string }): Promise<ServiceResult> {
+    const m = await me();
+    if (!m) return { success: false, error: 'signed_out' };
+    const { error } = await m.supabase.from('taste_profiles').upsert(
+      { user_id: m.user.id, dna_scores: scores, result_emoji: persona.emoji, result_title: persona.title, result_desc: persona.desc, updated_at: now() },
+      { onConflict: 'user_id' },
+    );
+    return error ? fail(error.message) : { success: true };
   },
 
   /** Required steps done: mark onboarded (the database checks them again). */
@@ -157,9 +262,7 @@ export const OnboardingService = {
     if (displayName?.trim()) patch.display_name = displayName.trim().slice(0, 80);
     const { error } = await supabase.from('users').update(patch).eq('id', user.id);
     if (error) return fail(error.message);
-    await supabase
-      .from('user_onboarding')
-      .upsert({ user_id: user.id, step: 'done', completed_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+    await supabase.from('user_onboarding').upsert({ user_id: user.id, step: 'done', completed_at: now(), updated_at: now() }, { onConflict: 'user_id' });
     await supabase.from('user_stats').upsert({ user_id: user.id }, { onConflict: 'user_id' });
     return { success: true };
   },
