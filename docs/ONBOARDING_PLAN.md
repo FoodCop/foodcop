@@ -103,7 +103,7 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 ## Phases
 
 - [x] **1. Data and security rules:** account type, private birth date, roles, food-profile status, consents; businesses, branches, preferences, documents (private bucket), verification + audit log, `app_admins`; database rules that lock business posts and the Dashboard; existing restaurants marked verified. Database tests.
-- [ ] **2. Start and sign-up:** Welcome (I-01), age check, Create account with consent (email and Google), `/terms` and `/privacy`, save/resume, send unfinished people back to onboarding, the new onboarding look.
+- [x] **2. Start and sign-up:** Welcome (I-01), age check, Create account with consent (email and Google), `/terms` and `/privacy`, save/resume, send unfinished people back to onboarding, the new onboarding look.
 - [ ] **3. Individual (I-04 to I-06):** profile (name, live @username check, photo, roles), Personalise / Skip, Food DNA + flavours + cuisines + diet (saved as you go), Ready; existing users asked for birth date and roles.
 - [ ] **4. Business part 1 (B-01 to B-04):** category, details, location and branches (map pin or service area), operations by category.
 - [ ] **5. Business part 2 (B-05 to B-10):** reservations, loyalty, delivery, document upload, review, profile created.
@@ -129,6 +129,21 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - **Making an admin:** in the Supabase SQL editor run `INSERT INTO public.app_admins (user_id) VALUES ('<your user id>');`
 - **The old wizard stops working** against this database, since it doesn't record consent. Phase 2 replaces it. The migration is only pushed after the branch is merged, so nothing live breaks.
 - **Tests:** 104 database checks (PGlite) and 23 checks of the app rules, all passing.
+
+## Phase 2 notes
+
+- **Create account (/login, `SignupSteps.tsx`):** Welcome (Individual / Food Business), then age (individuals), then name, email and password or Google, with the Terms and Privacy ticks. Food businesses tick a third box: "I'm 18 or older and allowed to set up this business on FUZO".
+- **Before the account exists,** the choices wait in the browser for a day (`lib/onboarding/intent.ts`, never sent to the sign-in service). `/onboarding` saves them as soon as the person is signed in, which also covers email confirmation and the Google redirect. Confirming on another device means onboarding just asks again.
+- **`/onboarding` (`OnboardingFlow.tsx`)** asks only for what the database doesn't have yet (account type, age, the current Terms / Privacy versions), so it resumes anywhere. Individuals end on "You're ready to explore". Businesses stop at a placeholder until phases 4-5.
+- **The age gate is neutral:** month and year dropdowns, with "Do you live in Quebec?" only when the person is exactly 13. Too young: a friendly message, nothing kept, and the device waits a day. If the database refuses an age, the same screen shows with Sign out.
+- **Sent back to onboarding:** the middleware redirects signed-in people who haven't finished from every app page, then returns them to that page. It skips guests, `/`, sign-in, `/terms`, `/privacy` and the API. A cookie remembers "finished" so most requests don't query the database; it never grants anything.
+- **Guests** ("Just looking?") go straight to Home, since they have no account to onboard.
+- **`/terms` and `/privacy`:** placeholder text with a "Draft" notice. It describes what FUZO actually does, but the client must send the real wording. Bump `TERMS_VERSION` / `PRIVACY_VERSION` in `policy.ts` when it changes, and everyone accepts the new version on their next visit to onboarding.
+- **Tests:** 117 browser checks, passing, with Supabase faked in the browser:
+  - every step and branch: Quebec, too young, the one-day wait, business;
+  - saving the browser choices after sign-in, and resuming at the age step;
+  - keyboard use, reduced motion, light and dark, 320-1600 px with no sideways scroll, accessibility and the console.
+- **Not tested in the browser:** the middleware redirect, since it needs a real signed-in session. Check it on the phone after the migration is pushed.
 
 ## Still to confirm (client / legal, from the spec)
 

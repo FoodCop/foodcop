@@ -5,17 +5,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, ArrowLeft, ArrowRight, Compass, Eye, EyeOff, Gift, Lock, Mail, MailCheck, User, Users } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, Compass, Eye, EyeOff, Gift, Lock, Mail, MailCheck, Users } from 'lucide-react';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { safeNextPath } from '@/lib/share/safeNext';
 import { rememberNextAfterSignup, takeNextAfterSignup } from '@/lib/share/afterSignup';
+import { SignupSteps } from '@/components/auth/SignupSteps';
 
 // ?mode=signup opens on Create account (e.g. a shared post's "Sign up to see it").
 const noSubscribe = () => () => {};
 const readWantsSignup = () => new URLSearchParams(window.location.search).get('mode') === 'signup';
 
 // Sign in / Create account / Reset password on one page, wired to Supabase
-// Auth (email + password, Google, guest). Layout (_auth.scss, .fz-auth):
+// Auth (email + password, Google, guest). Create account is the onboarding
+// spec's first steps (SignupSteps: account type, age, then the account). Layout (_auth.scss, .fz-auth):
 // desktop = dark brand panel (food photo, logo, tagline, 3 reasons) beside a
 // raised paper form card; phone = compact photo header above the card. The
 // card has a Sign in | Create account switch, icon inputs, a password
@@ -27,18 +29,6 @@ const readWantsSignup = () => new URLSearchParams(window.location.search).get('m
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/** 0-4 rough password strength for the sign-up hint. */
-function passwordScore(pw: string): number {
-  if (pw.length < 6) return 0;
-  let score = 1;
-  if (pw.length >= 10) score++;
-  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
-  if (/\d/.test(pw)) score++;
-  if (/[^A-Za-z0-9]/.test(pw)) score++;
-  return Math.min(4, score);
-}
-const STRENGTH = ['Too short', 'Weak', 'Okay', 'Good', 'Strong'];
-
 export default function LoginPage() {
   const router = useRouter();
 
@@ -46,7 +36,6 @@ export default function LoginPage() {
   const [modeChoice, setMode] = useState<'signin' | 'signup' | 'forgot' | null>(null);
   const mode = modeChoice ?? (wantsSignup ? 'signup' : 'signin');
   const [showPassword, setShowPassword] = useState(false);
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +43,7 @@ export default function LoginPage() {
   const [confirmationSent, setConfirmationSent] = useState(false);
   const [resetSent, setResetSent] = useState(false);
 
-  const afterAuth = async (supabase: NonNullable<ReturnType<typeof createClient>>, userId: string) => {
+  const afterAuth = async (supabase: NonNullable<ReturnType<typeof createClient>>, userId: string, name?: string) => {
     await supabase.from('users').upsert(
       { id: userId, email, display_name: name || null },
       { onConflict: 'id', ignoreDuplicates: true },
@@ -88,21 +77,10 @@ export default function LoginPage() {
       return;
     }
     setLoading(true);
-    const { data, error: authError } =
-      mode === 'signup'
-        ? await supabase.auth.signUp({ email, password, options: { data: { display_name: name } } })
-        : await supabase.auth.signInWithPassword({ email, password });
+    const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (authError) {
       setError(authError.message);
-      return;
-    }
-    // signUp() still returns a user even when email confirmation is required -
-    // data.session is only populated once the user actually confirms. Writing
-    // to the users table now would just 401 (no auth.uid() yet), so surface a
-    // real "check your email" state instead of silently proceeding.
-    if (mode === 'signup' && data.user && !data.session) {
-      setConfirmationSent(true);
       return;
     }
     if (data.user) await afterAuth(supabase, data.user.id);
@@ -158,14 +136,14 @@ export default function LoginPage() {
       setError(authError.message);
       return;
     }
-    if (data.user) router.push('/onboarding');
+    // Guests just look around: no account, so no onboarding.
+    if (data.user) router.push('/dashboard');
   };
 
   const switchMode = (m: 'signin' | 'signup' | 'forgot') => {
     setMode(m);
     setError(null);
   };
-  const score = passwordScore(password);
 
   // Linked to the inputs (aria-describedby) so screen readers read it with the field.
   const errorNote = error && (
@@ -181,7 +159,6 @@ export default function LoginPage() {
       <span>{error}</span>
     </motion.div>
   );
-  const describedBy = (...ids: (string | false | undefined)[]) => ids.filter(Boolean).join(' ') || undefined;
   const errId = error ? 'auth-error' : undefined;
   // Which view is showing - drives the cross-fade between them.
   const view = confirmationSent ? 'confirm' : mode === 'forgot' ? (resetSent ? 'reset-sent' : 'forgot') : mode;
@@ -252,18 +229,21 @@ export default function LoginPage() {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.18, ease: EASE }}
           >
-          <h1 className="fz-auth__title">
-            {confirmationSent ? 'Check your email' : mode === 'signin' ? 'Welcome back' : mode === 'signup' ? 'Join FUZO' : 'Reset your password'}
-          </h1>
-          <p className="fz-auth__sub">
-            {confirmationSent
-              ? 'One quick step and you’re in.'
-              : mode === 'signin'
-                ? 'Your next favourite meal awaits.'
-                : mode === 'signup'
-                  ? 'Find your next favourite meal, together.'
-                  : 'Enter your email and we’ll send you a reset link.'}
-          </p>
+          {/* Create account has its own titles, one per step. */}
+          {view !== 'signup' && (
+            <>
+              <h1 className="fz-auth__title">
+                {confirmationSent ? 'Check your email' : mode === 'signin' ? 'Welcome back' : 'Reset your password'}
+              </h1>
+              <p className="fz-auth__sub">
+                {confirmationSent
+                  ? 'One quick step and you’re in.'
+                  : mode === 'signin'
+                    ? 'Your next favourite meal awaits.'
+                    : 'Enter your email and we’ll send you a reset link.'}
+              </p>
+            </>
+          )}
 
           {!isSupabaseConfigured && (
             <div className="fz-auth__note fz-auth__note--warn">
@@ -276,7 +256,7 @@ export default function LoginPage() {
             <div className="fz-auth__done">
               <span className="fz-auth__done-icon" aria-hidden="true"><MailCheck size={26} /></span>
               <p>
-                We sent a confirmation link to <strong>{email}</strong>. Open it, then come back and sign in.
+                We sent a confirmation link to <strong>{email}</strong>. Open it on this device to carry on setting up your account.
               </p>
               <button
                 type="button"
@@ -340,26 +320,21 @@ export default function LoginPage() {
                 </p>
               </form>
             )
+          ) : mode === 'signup' ? (
+            <SignupSteps
+              onSignedIn={(userId, name) => {
+                const supabase = createClient();
+                if (supabase) afterAuth(supabase, userId, name);
+              }}
+              onConfirmationSent={(address) => {
+                setEmail(address);
+                setConfirmationSent(true);
+              }}
+              onGoogle={handleGoogle}
+              onSignIn={() => switchMode('signin')}
+            />
           ) : (
             <form onSubmit={handleSubmit}>
-              {mode === 'signup' && (
-                <div className="fz-auth__field">
-                  <label htmlFor="name">Name</label>
-                  <div className="fz-auth__input">
-                    <User size={17} aria-hidden="true" />
-                    <input
-                      type="text"
-                      id="name"
-                      placeholder="Your name"
-                      aria-describedby={errId}
-                      autoComplete="name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-              )}
 
               <div className="fz-auth__field">
                 <label htmlFor="email">Email</label>
@@ -385,12 +360,12 @@ export default function LoginPage() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="password"
-                    placeholder={mode === 'signup' ? 'At least 6 characters' : 'Your password'}
-                    autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+                    placeholder="Your password"
+                    autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    aria-describedby={describedBy(mode === 'signup' && password && 'pw-strength', errId)}
+                    aria-describedby={errId}
                   />
                   <button
                     type="button"
@@ -401,29 +376,16 @@ export default function LoginPage() {
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
-                {mode === 'signup' && password && (
-                  <div className="fz-auth__strength" id="pw-strength">
-                    <span className="fz-auth__bars" data-score={score} aria-hidden="true">
-                      <i />
-                      <i />
-                      <i />
-                      <i />
-                    </span>
-                    {STRENGTH[score]}
-                  </div>
-                )}
                 {/* After the input in tab order (email → password → this), shown beside the label. */}
-                {mode === 'signin' && (
-                  <button type="button" className="fz-auth__link fz-auth__link--small fz-auth__forgot" onClick={() => switchMode('forgot')}>
-                    Forgot password?
-                  </button>
-                )}
+                <button type="button" className="fz-auth__link fz-auth__link--small fz-auth__forgot" onClick={() => switchMode('forgot')}>
+                  Forgot password?
+                </button>
               </div>
 
               {errorNote}
 
               <button type="submit" className="fz-auth__cta" disabled={loading}>
-                {loading ? 'Please wait…' : mode === 'signin' ? <>Sign in <ArrowRight size={18} /></> : <>Create account <ArrowRight size={18} /></>}
+                {loading ? 'Please wait…' : <>Sign in <ArrowRight size={18} /></>}
               </button>
 
               <div className="fz-auth__divider">or</div>

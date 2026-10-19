@@ -1,11 +1,5 @@
-import AuthBackHeader from "@/components/auth/AuthBackHeader";
-import OnboardingWizard from "@/components/onboarding/OnboardingWizard";
+import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 
 export default function OnboardingPage() {
-  return (
-    <>
-      <AuthBackHeader />
-      <OnboardingWizard />
-    </>
-  );
+  return <OnboardingFlow />;
 }

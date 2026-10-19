@@ -1,0 +1,573 @@
+// ============================================================================
+// ONBOARDING (client spec v1, docs/ONBOARDING_PLAN.md)
+// - .fz-step-*  : step pieces shared by the sign-up card (/login) and
+//                 /onboarding: account type tiles, age dropdowns, consent ticks.
+// - .fz-signup  : the Create account steps inside the login card.
+// - .fz-onb     : the /onboarding page (clean look: white page, one floating
+//                 card, yellow for the selected option and the main button).
+// - .fz-legal   : /terms and /privacy.
+// ============================================================================
+
+$onb-pill: #f2f1ee; // the clean look's grey controls
+$onb-float: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 0 1px rgba(0, 0, 0, 0.04);
+
+// ── Shared step pieces ─────────────────────────────────────────────────────
+.fz-step-types {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+
+.fz-step-type {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  min-height: 84px;
+  padding: 0.95rem 1rem;
+  text-align: left;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  background: $onb-pill;
+  color: $fz-ink;
+  cursor: pointer;
+  transition: border-color 0.2s $fz-ease, background 0.2s $fz-ease, transform 0.2s $fz-ease, box-shadow 0.2s $fz-ease;
+
+  &:hover { transform: translateY(-1px); background: mix($onb-pill, $fz-ink, 96%); }
+  &:active { transform: scale(0.99); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: $fuzo-yellow-deep;
+    box-shadow: $fz-shadow-sm;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+
+    strong { font-size: 1rem; font-weight: 800; }
+    span { font-size: 0.83rem; line-height: 1.4; color: darken($fz-ink-soft, 12%); }
+  }
+
+  &__check {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba($fz-ink, 0.18);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    transition: background 0.2s $fz-ease, border-color 0.2s $fz-ease;
+  }
+
+  &.is-on {
+    border-color: $fuzo-yellow;
+    background: $fuzo-yellow-tint;
+    box-shadow: 0 6px 18px -8px rgba($fuzo-yellow-deep, 0.55);
+
+    .fz-step-type__icon { background: $fuzo-yellow; color: $fuzo-yellow-ink; }
+    .fz-step-type__check { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; }
+  }
+}
+
+.fz-step-field {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: $fz-ink;
+  }
+
+  select,
+  input {
+    width: 100%;
+    height: 50px;
+    padding: 0 1rem;
+    border: 1.5px solid transparent;
+    border-radius: 9999px;
+    background-color: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+    &:focus { outline: none; border-color: $fuzo-yellow-deep; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); background-color: #fff; }
+    &[aria-invalid='true'] { border-color: $chili; }
+  }
+
+  select {
+    appearance: none;
+    padding-right: 2.4rem;
+    cursor: pointer;
+    // Chevron drawn with two gradients (no image request).
+    background-image: linear-gradient(45deg, transparent 50%, $fz-ink 50%), linear-gradient(135deg, $fz-ink 50%, transparent 50%);
+    background-position: calc(100% - 1.3rem) 52%, calc(100% - 0.95rem) 52%;
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+  }
+}
+
+.fz-step-age__row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.fz-step-quebec {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+
+  legend {
+    margin-bottom: 0.5rem;
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: $fz-ink;
+  }
+
+  &__opts { display: flex; gap: 0.5rem; }
+}
+
+.fz-step-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border-radius: 9999px;
+  background: $onb-pill;
+  color: $fz-ink;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+
+  input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+  &:has(input:focus-visible) { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &.is-on { background: $fuzo-yellow; color: $fuzo-yellow-ink; box-shadow: 0 4px 12px -4px rgba($fuzo-yellow-deep, 0.6); }
+}
+
+.fz-step-private {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: darken($fz-ink-soft, 12%);
+
+  svg { flex-shrink: 0; margin-top: 2px; }
+}
+
+.fz-step-error {
+  margin: 0 0 0.8rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: darken($chili, 14%);
+}
+
+.fz-step-consents {
+  margin: 0.25rem 0 1rem;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.fz-step-consent {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 16px;
+  background: $onb-pill;
+  border: 1.5px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  // The real checkbox sits over the drawn box: keyboard and screen readers use it.
+  input {
+    position: absolute;
+    left: 0.85rem;
+    top: 0.7rem;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__box {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    border: 2px solid rgba($fz-ink, 0.3);
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: $fuzo-yellow-ink;
+    pointer-events: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  input:focus-visible + .fz-step-consent__box { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+  label {
+    flex: 1;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: $fz-ink;
+    cursor: pointer;
+
+    a {
+      color: $fz-ink;
+      font-weight: 800;
+      text-decoration: underline;
+      text-decoration-color: $fuzo-yellow-deep;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+  }
+
+  &.is-on {
+    background: $fuzo-yellow-tint;
+    .fz-step-consent__box { background: $fuzo-yellow; border-color: $fuzo-yellow-deep; }
+  }
+  &.is-invalid { border-color: rgba($chili, 0.6); }
+}
+
+.fz-step-young {
+  text-align: center;
+  padding: 0.5rem 0 0.25rem;
+
+  &__icon { font-size: 2.6rem; display: block; margin-bottom: 0.4rem; }
+  h2 { margin: 0 0 0.4rem; font-size: 1.3rem; font-weight: 800; color: $fz-ink; }
+  p { margin: 0 auto 1.1rem; max-width: 30ch; font-size: 0.92rem; line-height: 1.5; color: darken($fz-ink-soft, 12%); }
+}
+
+// ── Create account steps in the login card ─────────────────────────────────
+.fz-signup {
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 32px;
+    margin-bottom: 0.9rem;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 32px;
+    padding: 0.3rem 0.75rem 0.3rem 0.55rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover { background: $fuzo-yellow-tint; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+// Step dots: yellow = current, yellow-tint = done (same as the Create studio).
+.fz-signup__dots,
+.fz-onb__dots {
+  display: inline-flex;
+  gap: 0.35rem;
+
+  i {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: rgba($fz-ink, 0.14);
+    transition: width 0.25s $fz-ease, background 0.25s $fz-ease;
+
+    &.is-done { background: mix(#fff, $fuzo-yellow-deep, 35%); }
+    &.is-on { width: 22px; background: $fuzo-yellow; }
+  }
+}
+
+// ── /onboarding page ───────────────────────────────────────────────────────
+.fz-onb {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: max(0.75rem, env(safe-area-inset-top)) 1rem 0.75rem;
+  }
+
+  &__logo {
+    height: 40px;
+    width: auto;
+    @media (min-width: 768px) { height: 44px; }
+    &--dark { display: none; }
+  }
+
+  &__signout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 40px;
+    padding: 0 0.95rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover { background: mix($onb-pill, $fz-ink, 92%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1.5rem 1rem 3rem;
+
+    @media (min-width: 768px) { align-items: center; padding-bottom: 5rem; }
+  }
+
+  &__card {
+    width: 100%;
+    max-width: 30rem;
+    padding: 1.4rem 1.25rem 1.6rem;
+    border-radius: 28px;
+    background: #fff;
+    border: 1px solid #f2f2f2;
+    box-shadow: $onb-float;
+
+    @media (min-width: 576px) { padding: 1.75rem 1.75rem 2rem; }
+  }
+
+  &__dots { margin-bottom: 1rem; }
+
+  // Sentence-case body font, like the Create studio.
+  &__title {
+    margin: 0;
+    font-family: var(--body-font), sans-serif;
+    font-size: clamp(1.5rem, 5vw, 1.85rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: $fz-ink;
+
+    &:focus { outline: none; }
+  }
+
+  &__sub {
+    margin: 0.4rem 0 1.3rem;
+    font-size: 0.93rem;
+    line-height: 1.5;
+    color: darken($fz-ink-soft, 12%);
+  }
+
+  &__hint {
+    margin: -0.3rem 0 1rem;
+    font-size: 0.8rem;
+    color: darken($fz-ink-soft, 12%);
+  }
+
+  &__badge {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 0.8rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+    font-size: 1.7rem;
+  }
+
+  &__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin: 0 0 0.9rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 14px;
+    background: rgba($chili, 0.08);
+    border: 1px solid rgba($chili, 0.25);
+    color: darken($chili, 18%);
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.4;
+
+    svg { flex-shrink: 0; margin-top: 1px; }
+  }
+
+  &__cta {
+    width: 100%;
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -6px rgba($fuzo-yellow-deep, 0.6);
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover:not(:disabled) { background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
+    &:active:not(:disabled) { transform: scale(0.98); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+    &:disabled { opacity: 0.7; cursor: default; }
+  }
+
+  &__ghost {
+    min-height: 44px;
+    padding: 0 1.2rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover { background: mix($onb-pill, $fz-ink, 92%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 2rem 0;
+    text-align: center;
+    color: $fz-ink;
+
+    p { margin: 0; max-width: 34ch; font-size: 0.92rem; line-height: 1.5; }
+  }
+
+  &__spin { animation: fz-onb-spin 0.9s linear infinite; }
+}
+
+@keyframes fz-onb-spin { to { transform: rotate(360deg); } }
+
+// ── /terms, /privacy ───────────────────────────────────────────────────────
+.fz-legal {
+  min-height: 100dvh;
+  background: #fff;
+  color: $fz-ink;
+
+  &__page {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 4rem;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 36px;
+    margin-bottom: 1.25rem;
+    padding: 0 0.85rem 0 0.6rem;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover { background: $fuzo-yellow-tint; color: $fz-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__title { margin: 0; font-size: clamp(1.7rem, 5vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; color: inherit; }
+  &__meta { margin: 0.35rem 0 1rem; font-size: 0.85rem; color: darken($fz-ink-soft, 12%); }
+
+  &__draft {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem;
+    padding: 0.8rem 1rem;
+    border-radius: 16px;
+    background: $fuzo-yellow-tint;
+    border: 1px solid rgba($fuzo-yellow-deep, 0.35);
+    font-size: 0.88rem;
+    line-height: 1.45;
+
+    svg { flex-shrink: 0; margin-top: 2px; color: $fuzo-yellow-deep; }
+  }
+
+  &__intro { font-size: 1rem; line-height: 1.6; }
+
+  &__section {
+    margin-top: 1.6rem;
+
+    h2 { margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 800; color: inherit; }
+    p { margin: 0 0 0.6rem; font-size: 0.95rem; line-height: 1.65; color: mix($fz-ink, #fff, 88%); }
+  }
+}
+
+// ── Dark mode: black page, the card stays near-white (clean look) ─────────
+html[data-theme='dark'] {
+  .fz-onb,
+  .fz-legal { background: #000; }
+
+  .fz-onb__logo--light { display: none; }
+  .fz-onb__logo--dark { display: block; }
+  .fz-onb__signout { background: #1c1c1c; color: #f4f4f2; }
+  .fz-onb__card { background: #f4f4f2; border-color: #f4f4f2; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6); }
+
+  .fz-legal { color: #f4f4f2; }
+  .fz-legal__back { background: #1c1c1c; color: #f4f4f2; }
+  .fz-legal__meta { color: #b9b4aa; }
+  .fz-legal__section p { color: #dedad2; }
+  .fz-legal__draft { color: $fz-ink; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-step-type,
+  .fz-onb__cta { transition: none; }
+  .fz-onb__spin { animation-duration: 2.5s; }
+}

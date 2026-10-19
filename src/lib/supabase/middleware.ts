@@ -2,6 +2,9 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { safeNextPath } from '@/lib/share/safeNext';
 
+/** Holds the id of a user known to have finished onboarding. */
+const ONBOARDED_COOKIE = 'fz-onb';
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -60,6 +63,30 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
   
+  // Signed in but onboarding not finished: back to onboarding (client spec v1,
+  // docs/ONBOARDING_PLAN.md), then on to where they were going. Guests
+  // (anonymous) just look around. A cookie remembers "finished" for this
+  // user so most requests skip the lookup; it only saves a redirect - the
+  // database rules never depend on it.
+  const path = request.nextUrl.pathname;
+  const onboardingFree =
+    path === '/' ||
+    /^\/(onboarding|login|auth|reset-password|terms|privacy|api)(\/|$)/.test(path) ||
+    /\.[a-z0-9]{2,5}$/i.test(path);
+  if (user && !user.is_anonymous && !onboardingFree && request.cookies.get(ONBOARDED_COOKIE)?.value !== user.id) {
+    const { data: profile, error } = await supabase.from('users').select('is_onboarded').eq('id', user.id).maybeSingle();
+    if (!error && profile && !profile.is_onboarded) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/onboarding';
+      url.search = '';
+      url.searchParams.set('next', `${path}${request.nextUrl.search}`);
+      return NextResponse.redirect(url);
+    }
+    if (profile?.is_onboarded) {
+      supabaseResponse.cookies.set(ONBOARDED_COOKIE, user.id, { httpOnly: true, sameSite: 'lax', secure: true, path: '/', maxAge: 60 * 60 * 24 * 30 });
+    }
+  }
+
   // If user is logged in and tries to access login, redirect to dashboard
   if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/')) {
     const next = request.nextUrl.pathname === '/login' ? safeNextPath(request.nextUrl.searchParams.get('next')) : null;
