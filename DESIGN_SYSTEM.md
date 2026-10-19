@@ -353,6 +353,12 @@ Instagram, TikTok, YouTube, X, Facebook, Pinterest. Linking = paste your profile
   - Food DNA questions as bold numbered lines with chips;
   - the result: a dark ink persona card (pale-yellow title) and 5 gradient bars in the profile's Food DNA colours.
   - "Back" and "Skip for now" are quiet text buttons under the main button.
+- **Business screens:**
+  - **Business type:** 8 pastel tiles, 2 per row (white icon circle, name, one line); selected = yellow-tint with a deep-yellow ring and a yellow icon.
+  - **Section labels** are small uppercase headings ("CONTACT PERSON · PRIVATE").
+  - **Locations** use the Create flow's place picker. Extra locations are outlined cards with a red bin, under a dashed "Add another location" pill.
+  - **Hours** are grey rows: switch · Mon · two time boxes. One line from 390px; smaller phones put the times on a second line.
+  - **Back** is a grey pill left of the step dots.
 - **/terms and /privacy** are plain reading pages (max 46rem) with a yellow-tint "Draft" note until the final text arrives.
 
 ## Login / Sign up (`src/app/(auth)/login/page.tsx`, `.fz-auth` in `_auth.scss`)

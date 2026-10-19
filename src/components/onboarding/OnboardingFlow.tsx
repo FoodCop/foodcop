@@ -3,18 +3,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
-import { AlertCircle, ArrowRight, Check, Dna, Flame, Globe2, Loader2, LogOut, Salad, Store } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, Check, Dna, Flame, Globe2, Loader2, LogOut, Salad, Store } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { safeNextPath } from '@/lib/share/safeNext';
 import { takeNextAfterSignup } from '@/lib/share/afterSignup';
 import { clearIntent, readIntent, blockAgeGate } from '@/lib/onboarding/intent';
 import type { AccountType } from '@/lib/onboarding/policy';
-import { OnboardingService, nextStep, type OnboardingState, type OnboardingStep } from '@/lib/services/onboardingService';
+import { BUSINESS_EDITABLE, OnboardingService, nextStep, type OnboardingData, type OnboardingState, type OnboardingStep } from '@/lib/services/onboardingService';
+import { CATEGORY_CONFIG } from '@/lib/onboarding/business';
+import type { BusinessCategory } from '@/lib/onboarding/policy';
 import { AccountTypeStep } from './steps/AccountTypeStep';
 import { AgeStep, TooYoung } from './steps/AgeStep';
 import { ConsentChecks, consentsMissing, type Consents } from './steps/ConsentChecks';
 import { ProfileStep, RolesStep } from './steps/ProfileStep';
 import { TasteSetup } from './steps/TasteSetup';
+import { BusinessScreen, CategoryStep, DetailsStep, LocationsStep, OperationsStep } from './steps/BusinessSteps';
 
 // /onboarding (client spec v1, docs/ONBOARDING_PLAN.md). Shows only what is
 // still missing, worked out from the database, so it resumes anywhere:
@@ -24,13 +27,14 @@ import { TasteSetup } from './steps/TasteSetup';
 // Choices made on the sign-up steps before the account existed are saved
 // first (lib/onboarding/intent). Existing accounts (already onboarded) are
 // sent here once for what's missing: birth date, consent, roles
-// (OnboardingCatchUp). Phases 4-5 add the business screens.
+// (OnboardingCatchUp). Food businesses: type -> consent -> category (B-01)
+// -> details (B-02) -> locations (B-03) -> operations (B-04) -> ... (phase 5).
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const STEPS: Record<AccountType, OnboardingStep[]> = {
   individual: ['type', 'age', 'consent', 'profile', 'personalize', 'taste', 'ready'],
-  food_business: ['type', 'consent', 'business'],
+  food_business: ['type', 'consent', 'category', 'details', 'locations', 'operations', 'business'],
 };
 /** Existing accounts only see what's missing. */
 const CATCH_UP: OnboardingStep[] = ['age', 'consent', 'roles'];
@@ -126,6 +130,25 @@ export default function OnboardingFlow() {
     if (res.success && res.data) show(res.data);
   };
 
+  /** A business screen saved: remember it's done, then go to what's next. */
+  const businessDone = async (flag: keyof OnboardingData) => {
+    if (!state) return;
+    if (await run(() => OnboardingService.saveData({ ...state.data, [flag]: true }))) await reload();
+  };
+  const businessSubmit = (label: string, busy: boolean) => (
+    <button type="submit" className="fz-onb__cta" disabled={busy}>
+      {busy ? (
+        <>
+          <Loader2 size={18} className="fz-onb__spin" aria-hidden="true" /> Saving…
+        </>
+      ) : (
+        <>
+          {label} <ArrowRight size={18} aria-hidden="true" />
+        </>
+      )}
+    </button>
+  );
+
   const run = async (action: () => Promise<{ success: boolean; error?: string }>) => {
     setSaving(true);
     setError(null);
@@ -151,6 +174,13 @@ export default function OnboardingFlow() {
   const business = state?.accountType === 'food_business' || type === 'food_business';
   const flow = state?.isOnboarded ? (business ? ['consent' as const] : CATCH_UP) : STEPS[state?.accountType ?? type ?? 'individual'];
   const index = step ? Math.max(0, flow.indexOf(step)) : 0;
+  // Back: through the business screens (each was saved, so they re-open filled in).
+  const backTo = step ? BUSINESS_EDITABLE[BUSINESS_EDITABLE.indexOf(step) - 1] : undefined;
+  const canGoBack = !!backTo || (step === 'business' && !!state?.businessCategory);
+  const goBack = () => {
+    setError(null);
+    setStep(step === 'business' ? 'operations' : backTo!);
+  };
   const finishLater = async () => {
     if (await run(() => OnboardingService.setFoodPrefs('skipped', true))) await reload();
   };
@@ -374,6 +404,37 @@ export default function OnboardingFlow() {
         )}
       />
     );
+  } else if (step === 'category' || step === 'details' || step === 'locations' || step === 'operations') {
+    const cat = state.businessCategory as BusinessCategory | null;
+    const kind = cat ? CATEGORY_CONFIG[cat].location.kind : 'address';
+    const head: Record<typeof step, [string, string]> = {
+      category: ['Choose your business type', 'Tell us what kind of food business you run.'],
+      details: ['Business details', 'Create your business identity on FUZO.'],
+      locations: kind === 'address' ? ['Location and branches', 'Add where customers can find you.'] : ['Where you work', 'Add your base and the area you cover.'],
+      operations: ['How your business operates', 'Just the essentials for your type of business. You can add more later.'],
+    };
+    body = (
+      <>
+        <h1 className="fz-onb__title" tabIndex={-1} ref={headingRef}>
+          {head[step][0]}
+        </h1>
+        <p className="fz-onb__sub">{head[step][1]}</p>
+        <BusinessScreen key={step}>
+          {(profile) =>
+            step === 'category' ? (
+              <CategoryStep profile={profile} onSaved={reload} renderSubmit={businessSubmit} />
+            ) : step === 'details' ? (
+              <DetailsStep profile={profile} onSaved={() => businessDone('bizDetails')} renderSubmit={businessSubmit} />
+            ) : step === 'locations' ? (
+              <LocationsStep profile={profile} onSaved={() => businessDone('bizLocations')} renderSubmit={businessSubmit} />
+            ) : (
+              <OperationsStep profile={profile} onSaved={() => businessDone('bizOps')} onLater={() => businessDone('bizOps')} renderSubmit={businessSubmit} />
+            )
+          }
+        </BusinessScreen>
+        {errorNote}
+      </>
+    );
   } else if (step === 'ready') {
     body = (
       <form
@@ -418,9 +479,9 @@ export default function OnboardingFlow() {
           <Store size={26} />
         </span>
         <h1 className="fz-onb__title" tabIndex={-1} ref={headingRef}>
-          Next: your business details
+          Next: reservations, loyalty and delivery
         </h1>
-        <p className="fz-onb__sub">Setting up your business profile is coming in the next update of this branch.</p>
+        <p className="fz-onb__sub">Your business details are saved. The last few questions are coming in the next update of this branch.</p>
       </>
     );
   }
@@ -443,11 +504,20 @@ export default function OnboardingFlow() {
         <main className="fz-onb__main">
           <div className="fz-onb__card">
             {state && step && !tooYoung && !loadError && (
-              <span className="fz-onb__dots" role="img" aria-label={`Step ${index + 1} of ${flow.length}`}>
-                {flow.map((s, i) => (
-                  <i key={s} className={i === index ? 'is-on' : i < index ? 'is-done' : ''} />
-                ))}
-              </span>
+              <div className="fz-onb__bar">
+                {canGoBack ? (
+                  <button type="button" className="fz-onb__back" onClick={goBack} disabled={saving}>
+                    <ArrowLeft size={15} aria-hidden="true" /> Back
+                  </button>
+                ) : (
+                  <span />
+                )}
+                <span className="fz-onb__dots" role="img" aria-label={`Step ${index + 1} of ${flow.length}`}>
+                  {flow.map((s, i) => (
+                    <i key={s} className={i === index ? 'is-on' : i < index ? 'is-done' : ''} />
+                  ))}
+                </span>
+              </div>
             )}
             <AnimatePresence mode="wait" initial={false}>
               <motion.div

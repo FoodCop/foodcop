@@ -398,6 +398,260 @@ $onb-float: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 0
   &--invalid { color: darken($chili, 14%); }
 }
 
+// ── Food business screens (B-01 to B-04) ───────────────────────────────────
+// B-01: 8 tiles, 2 per row (3 from 560px).
+.fz-step-cats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+
+.fz-step-cat {
+  @include fz-pastel-cycle;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-height: 112px;
+  padding: 0.8rem;
+  text-align: left;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  background: var(--pastel);
+  color: $fz-ink;
+  cursor: pointer;
+  transition: transform 0.2s $fz-ease, border-color 0.2s $fz-ease, box-shadow 0.2s $fz-ease;
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0.3rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: $fz-ink;
+  }
+
+  strong { font-size: 0.92rem; font-weight: 800; line-height: 1.2; }
+  > span:last-child { font-size: 0.76rem; line-height: 1.35; color: mix($fz-ink, #fff, 75%); }
+
+  &:hover { transform: translateY(-1px); background: var(--pastel-hover); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &.is-on {
+    border-color: $fuzo-yellow-deep;
+    background: $fuzo-yellow-tint;
+    box-shadow: 0 6px 18px -8px rgba($fuzo-yellow-deep, 0.55);
+
+    .fz-step-cat__icon { background: $fuzo-yellow; color: $fuzo-yellow-ink; }
+  }
+}
+
+// Small section headings inside a form ("Contact person · private").
+.fz-step-section {
+  margin: 0.4rem 0 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: $fz-ink;
+
+  span { font-weight: 600; letter-spacing: 0; text-transform: none; color: darken($fz-ink-soft, 14%); }
+}
+
+.fz-step-note {
+  margin: -0.4rem 0 1rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 14px;
+  background: $fuzo-yellow-tint;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: $fz-ink;
+}
+
+.fz-step-field textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid transparent;
+  border-radius: 18px;
+  background: $onb-pill;
+  color: $fz-ink;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  resize: vertical;
+
+  &:focus { outline: none; border-color: $fuzo-yellow-deep; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); background: #fff; }
+}
+
+.fz-step-branches { margin: 0.5rem 0 1rem; }
+
+.fz-step-branch {
+  position: relative;
+  margin: 0 0 0.8rem;
+  padding: 0.9rem 0.9rem 0.2rem;
+  border: 1.5px solid $onb-pill;
+  border-radius: 20px;
+
+  legend {
+    display: block;
+    width: 100%;
+    margin: 0 0 0.6rem;
+    padding: 0.35rem 2.5rem 0 0; // room for the remove button
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: $fz-ink;
+  }
+
+  &__remove {
+    position: absolute;
+    top: 0.45rem;
+    right: 0.45rem;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: darken($chili, 10%);
+    cursor: pointer;
+
+    &:hover { background: rgba($chili, 0.1); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+.fz-step-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1.5px dashed rgba($fz-ink, 0.25);
+  border-radius: 9999px;
+  background: #fff;
+  color: $fz-ink;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:hover { border-color: $fuzo-yellow-deep; background: $fuzo-yellow-tint; }
+  &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+  &--quiet { border-style: solid; border-color: transparent; background: $onb-pill; min-height: 40px; font-size: 0.8rem; }
+}
+
+// Weekly hours: day · switch · times.
+.fz-step-hours {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+
+  legend { margin-bottom: 0.5rem; font-size: 0.82rem; font-weight: 800; color: $fz-ink; }
+
+  ul { list-style: none; margin: 0 0 0.6rem; padding: 0; display: grid; gap: 0.35rem; }
+
+  // switch · Mon · 11:00 – 21:00 on one line from 390px (smaller phones: times on a second line).
+  li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.55rem;
+    min-height: 48px;
+    padding: 0.35rem 0.5rem;
+    border-radius: 14px;
+    background: $onb-pill;
+    @media (min-width: 390px) { flex-wrap: nowrap; }
+  }
+
+  &__day { width: 2.4rem; font-size: 0.86rem; font-weight: 700; color: $fz-ink; }
+  &__closed { font-size: 0.84rem; font-weight: 600; color: darken($fz-ink-soft, 14%); }
+
+  &__times {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: auto;
+    color: $fz-ink;
+
+    input {
+      width: 5.6rem;
+      height: 38px;
+      padding: 0 0.4rem;
+      border: 1.5px solid transparent;
+      border-radius: 10px;
+      background: #fff;
+      color: $fz-ink;
+      font-size: 0.86rem;
+      font-weight: 600;
+
+      &:focus { outline: none; border-color: $fuzo-yellow-deep; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); }
+    }
+  }
+}
+
+// Switch (open / closed).
+.fz-step-switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 46px;
+  height: 28px;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba($fz-ink, 0.22);
+  cursor: pointer;
+  transition: background 0.2s $fz-ease;
+
+  i {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s $fz-ease;
+  }
+
+  &.is-on { background: $fuzo-yellow-deep; i { transform: translateX(18px); } }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+}
+
+// Checkbox row ("Add usual hours").
+.fz-step-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: $fz-ink;
+  cursor: pointer;
+
+  input { position: absolute; opacity: 0; width: 22px; height: 22px; margin: 0; cursor: pointer; }
+
+  &__box {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    border: 2px solid rgba($fz-ink, 0.3);
+    background: #fff;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  input:checked + &__box {
+    border-color: $fuzo-yellow-deep;
+    background: $fuzo-yellow url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23241f16' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / 14px no-repeat;
+  }
+  input:focus-visible + &__box { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+}
+
+// Location picker (Create flow's LocationStep) inside the onboarding card.
+.fz-onb__card .cf-field { margin-bottom: 1rem; }
+
 // ── Create account steps in the login card ─────────────────────────────────
 .fz-signup {
   &__top {
@@ -510,7 +764,32 @@ $onb-float: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 0
     @media (min-width: 576px) { padding: 1.75rem 1.75rem 2rem; }
   }
 
-  &__dots { margin-bottom: 1rem; }
+  // Back pill + step dots above the screen.
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 32px;
+    margin-bottom: 1rem;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 36px;
+    padding: 0 0.8rem 0 0.6rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover { background: $fuzo-yellow-tint; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
 
   // Sentence-case body font, like the Create studio.
   &__title {

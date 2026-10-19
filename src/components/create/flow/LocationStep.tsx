@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Camera, Crosshair, Loader2, MapPin, Navigation, Search, Store, X } from 'lucide-react';
 import LocationPickerModal from '@/components/profile/LocationPickerModal';
 import { PlacesService, type ScoutPlaceRaw } from '@/lib/services/placesService';
@@ -50,6 +50,8 @@ const getPosition = () =>
   });
 
 export function LocationStep({ value, onChange, label = 'Location', photoSpot = null, allowPin = true, required = true }: LocationStepProps) {
+  // Unique per picker: a form can hold several (business locations).
+  const labelId = `cf-loc-${useId()}`;
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PostPlace[]>([]);
   const [status, setStatus] = useState<Status>('idle');
@@ -139,8 +141,8 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
   };
 
   return (
-    <section className="cf-field" aria-labelledby="cf-loc-label">
-      <h3 id="cf-loc-label" className="cf-field__label">
+    <section className="cf-field" aria-labelledby={labelId}>
+      <h3 id={labelId} className="cf-field__label">
         {label} {required && <span className="cf-field__req" aria-hidden="true">*</span>}
       </h3>
 

@@ -22,6 +22,10 @@ export interface OnboardingData {
   dna?: TasteProfileState;
   /** Existing accounts are asked for roles once. */
   rolesAsked?: boolean;
+  /** Food business screens done (B-02 details, B-03 locations, B-04 operations). */
+  bizDetails?: boolean;
+  bizLocations?: boolean;
+  bizOps?: boolean;
 }
 
 export interface OnboardingState {
@@ -40,19 +44,45 @@ export interface OnboardingState {
   foodPrefs: FoodPrefsStatus;
   skippedAt: string | null;
   data: OnboardingData;
+  /** Food businesses: the chosen category (B-01), once the business profile exists. */
+  businessCategory: string | null;
   /** Last screen they were on. */
   savedStep: string | null;
 }
 
-/** Screens of the flow. 'roles' is for existing accounts; 'done' = nothing left. Phases 4-5 add the business screens. */
-export type OnboardingStep = 'type' | 'age' | 'consent' | 'profile' | 'roles' | 'personalize' | 'taste' | 'ready' | 'business' | 'done';
+/** Screens of the flow. 'roles' is for existing accounts; 'done' = nothing left. Phase 5 adds the rest of the business screens. */
+export type OnboardingStep =
+  | 'type'
+  | 'age'
+  | 'consent'
+  | 'profile'
+  | 'roles'
+  | 'personalize'
+  | 'taste'
+  | 'ready'
+  | 'category'
+  | 'details'
+  | 'locations'
+  | 'operations'
+  | 'business'
+  | 'done';
+
+/** The food business screens in order (Back goes through these). */
+export const BUSINESS_EDITABLE: OnboardingStep[] = ['category', 'details', 'locations', 'operations'];
 
 /** The first thing still missing. */
 export function nextStep(s: OnboardingState): OnboardingStep {
   if (!s.accountType) return 'type';
   if (s.accountType === 'individual' && !s.hasBirthDate) return 'age';
   if (!s.termsOk || !s.privacyOk) return 'consent';
-  if (s.accountType === 'food_business') return s.isOnboarded ? 'done' : 'business';
+  if (s.accountType === 'food_business') {
+    if (s.isOnboarded) return 'done';
+    if (!s.businessCategory) return 'category';
+    if (!s.data.bizDetails) return 'details';
+    if (!s.data.bizLocations) return 'locations';
+    if (!s.data.bizOps) return 'operations';
+    return 'business';
+  }
   // Existing accounts (client, 2026-10-18): birth date + consent above, then roles once.
   if (s.isOnboarded) return s.roles.length || s.data.rolesAsked ? 'done' : 'roles';
   if (!s.username || !s.displayName.trim()) return 'profile';
@@ -91,13 +121,14 @@ export const OnboardingService = {
     if (!m) return { success: false, error: 'signed_out' };
     const { supabase, user } = m;
 
-    const [profile, priv, consents, progress] = await Promise.all([
+    const [profile, priv, consents, progress, business] = await Promise.all([
       supabase.from('users').select('account_type, display_name, is_onboarded, username, avatar_url, roles').eq('id', user.id).maybeSingle(),
       supabase.from('user_private').select('user_id').eq('user_id', user.id).maybeSingle(),
       supabase.from('user_consents').select('document, version').eq('user_id', user.id),
       supabase.from('user_onboarding').select('step, data, food_prefs_status, skipped_at').eq('user_id', user.id).maybeSingle(),
+      supabase.from('restaurant_profiles').select('business_category').eq('user_id', user.id).maybeSingle(),
     ]);
-    const err = profile.error ?? priv.error ?? consents.error ?? progress.error;
+    const err = profile.error ?? priv.error ?? consents.error ?? progress.error ?? business.error;
     if (err) return fail(err.message);
 
     const accepted = consents.data ?? [];
@@ -118,6 +149,7 @@ export const OnboardingService = {
         foodPrefs: (progress.data?.food_prefs_status as FoodPrefsStatus | undefined) ?? 'not_started',
         skippedAt: progress.data?.skipped_at ?? null,
         data: (progress.data?.data as OnboardingData | null) ?? {},
+        businessCategory: business.data?.business_category ?? null,
         savedStep: progress.data?.step ?? null,
       },
     };

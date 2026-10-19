@@ -105,7 +105,7 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - [x] **1. Data and security rules:** account type, private birth date, roles, food-profile status, consents; businesses, branches, preferences, documents (private bucket), verification + audit log, `app_admins`; database rules that lock business posts and the Dashboard; existing restaurants marked verified. Database tests.
 - [x] **2. Start and sign-up:** Welcome (I-01), age check, Create account with consent (email and Google), `/terms` and `/privacy`, save/resume, send unfinished people back to onboarding, the new onboarding look.
 - [x] **3. Individual (I-04 to I-06):** profile (name, live @username check, photo, roles), Personalise / Skip, Food DNA + flavours + cuisines + diet (saved as you go), Ready; existing users asked for birth date and roles.
-- [ ] **4. Business part 1 (B-01 to B-04):** category, details, location and branches (map pin or service area), operations by category.
+- [x] **4. Business part 1 (B-01 to B-04):** category, details, location and branches (map pin or service area), operations by category.
 - [ ] **5. Business part 2 (B-05 to B-10):** reservations, loyalty, delivery, document upload, review, profile created.
 - [ ] **6. Verification (B-11 to B-14):** reminder on sign-in, under review / action required / verified screens, the admin review page, Verified badge on the profile and Scout.
 - [ ] **7. "Finish your profile":** Home and Profile card, the 1 / 3 / 7-day pop-up.
@@ -165,6 +165,30 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - **Tests:**
   - **103 browser checks:** profile, username states, photo, roles, skip, the full questionnaire, resume, skipping halfway, catch-up, an up-to-date account not being sent anywhere, 320-1600 px in light and dark, and accessibility.
   - **Phase 2's 117 checks** still pass.
+
+## Phase 4 notes
+
+- **Order for a food business:** type → consent → **business type** (B-01, 8 tiles) → **business details** (B-02) → **location and branches** (B-03) → **how your business operates** (B-04) → phase 5. Back goes through these screens, and each re-opens filled in. Progress is resumed from `user_onboarding.data` (`bizDetails`, `bizLocations`, `bizOps`) and the saved category.
+- **B-01:** saves `restaurant_profiles.business_category` (creating the business profile row) and the device's time zone, which the open/closed status needs.
+- **B-02:**
+  - business name → `users.display_name`;
+  - owner or contact name, contact email (pre-filled from the account) and contact phone → `business_private`, which is private;
+  - public phone and website (`spicetrail.ca` → `https://spicetrail.ca`) → `restaurant_profiles`.
+- **B-03, one framework for every category** (`lib/onboarding/business.ts`):
+  - **Restaurant, café, bakery:** a main address (search, near me or pin), plus "Add another location" (up to 10 here).
+  - **Food truck:** a base (optional) plus the area it operates in.
+  - **Cloud kitchen:** the kitchen address, which is never shown publicly, plus the delivery area.
+  - **Catering, meal prep:** the area served, plus an optional private base. No branches.
+  - **Specialty food:** a shop or the area it sells in.
+  - **The main location** is copied onto the profile by the database (Scout pin, address, hours), and its Google place links the Google listing. A place already claimed on FUZO shows a note that it's checked during verification.
+- **B-04, short on purpose:**
+  - cuisines (up to 5), dine-in / takeaway and price range, where they apply;
+  - each category's own questions (what you serve or bake, how people order, events you cater, what you sell and where, and so on) → `operations`;
+  - a food truck's regular stops;
+  - weekly hours (on/off switch, open and close times, "Use Monday's hours every day"). Required for walk-in places, optional for the rest, and copied to every location for now.
+  - **"Complete more details later"** skips the screen. Delivery and reservations are their own questions in phase 5.
+- **Fix found while testing:** the place picker has its own search form, and forms can't nest. Put inside a screen's form, Enter in the search box would have submitted the screen. The screen is now a plain container. The picker's label id is also unique per picker, since a screen can hold several.
+- **Tests:** 88 browser checks covering every category's location model, validation, Back, resume, "later", 320-1600 px in light and dark, and accessibility. The restaurant path was also checked at 390 and 414 px. Phase 2 (117) and phase 3 (103) still pass.
 
 ## Still to confirm (client / legal, from the spec)
 
