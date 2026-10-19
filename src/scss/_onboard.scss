@@ -649,6 +649,216 @@ $onb-float: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 0
   input:focus-visible + &__box { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
 }
 
+// ── B-05 to B-10 ───────────────────────────────────────────────────────────
+// Radio cards (reservations, loyalty, delivery).
+.fz-step-options {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.fz-step-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.8rem 0.95rem;
+  text-align: left;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  background: $onb-pill;
+  color: $fz-ink;
+  cursor: pointer;
+  transition: border-color 0.2s $fz-ease, background 0.2s $fz-ease;
+
+  &__dot {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    border-radius: 50%;
+    border: 2px solid rgba($fz-ink, 0.3);
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: $fuzo-yellow-ink;
+  }
+
+  strong { display: block; font-size: 0.93rem; font-weight: 800; }
+  span span { display: block; margin-top: 0.15rem; font-size: 0.8rem; line-height: 1.4; color: darken($fz-ink-soft, 14%); }
+
+  &:hover { background: mix($onb-pill, $fz-ink, 96%); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &.is-on {
+    border-color: $fuzo-yellow-deep;
+    background: $fuzo-yellow-tint;
+
+    .fz-step-option__dot { background: $fuzo-yellow; border-color: $fuzo-yellow-deep; }
+  }
+}
+
+// Document deadline banner.
+.fz-step-deadline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 16px;
+  background: $fuzo-yellow-tint;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: $fz-ink;
+
+  svg { flex-shrink: 0; margin-top: 1px; color: $fuzo-yellow-deep; }
+  &--ok { background: rgba($lime, 0.16); svg { color: darken($lime, 34%); } }
+  &--late { background: rgba($chili, 0.1); svg { color: darken($chili, 12%); } }
+}
+
+.fz-step-doc {
+  margin-bottom: 0.9rem;
+  padding: 0.9rem;
+  border-radius: 20px;
+  border: 1.5px solid $onb-pill;
+
+  &__head {
+    display: flex;
+    gap: 0.7rem;
+    margin-bottom: 0.7rem;
+
+    h3 { margin: 0; font-family: var(--body-font), sans-serif; font-size: 0.95rem; font-weight: 800; color: $fz-ink; }
+    p { margin: 0.15rem 0 0; font-size: 0.8rem; line-height: 1.4; color: darken($fz-ink-soft, 14%); }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+  }
+
+  &__files {
+    list-style: none;
+    margin: 0 0 0.6rem;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      min-width: 0;
+      padding: 0.45rem 0.7rem;
+      border-radius: 12px;
+      background: $onb-pill;
+      font-size: 0.82rem;
+      color: $fz-ink;
+
+      svg { flex-shrink: 0; color: darken($lime, 30%); }
+      span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      em { flex-shrink: 0; font-style: normal; font-weight: 700; color: darken($fz-ink-soft, 14%); }
+    }
+  }
+}
+
+.fz-step-ok {
+  margin: 0 0 0.8rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: darken($lime, 34%);
+}
+
+// B-09 review list.
+.fz-step-review {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+
+  > li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 0.5rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid $onb-pill;
+
+    &:first-child { padding-top: 0; }
+  }
+
+  &__label { grid-column: 1; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: darken($fz-ink-soft, 14%); }
+  &__value { grid-column: 1; margin: 0.15rem 0 0; font-size: 0.92rem; font-weight: 600; line-height: 1.4; color: $fz-ink; overflow-wrap: anywhere; }
+
+  &__edit {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: $onb-pill;
+    color: $fz-ink;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover { background: $fuzo-yellow-tint; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+// B-10 facts + checklist.
+.fz-step-facts {
+  list-style: none;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  border-radius: 18px;
+  background: $onb-pill;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.95rem;
+    font-size: 0.86rem;
+    color: darken($fz-ink-soft, 14%);
+
+    & + li { border-top: 1px solid rgba($fz-ink, 0.06); }
+  }
+
+  strong { display: inline-flex; align-items: center; gap: 0.3rem; text-align: right; color: $fz-ink; font-weight: 800; }
+  .is-good { color: darken($lime, 34%); }
+}
+
+.fz-step-checklist {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $fz-ink;
+
+    svg { flex-shrink: 0; color: rgba($fz-ink, 0.35); }
+    &.is-done svg { color: darken($lime, 30%); }
+  }
+}
+
 // Location picker (Create flow's LocationStep) inside the onboarding card.
 .fz-onb__card .cf-field { margin-bottom: 1rem; }
 
@@ -868,6 +1078,8 @@ $onb-float: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 0
     &:active:not(:disabled) { transform: scale(0.98); }
     &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
     &:disabled { opacity: 0.7; cursor: default; }
+
+    &--link { text-decoration: none; &:hover { color: $fuzo-yellow-ink; } }
   }
 
   &__ghost {

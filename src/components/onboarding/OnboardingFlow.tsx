@@ -9,7 +9,7 @@ import { safeNextPath } from '@/lib/share/safeNext';
 import { takeNextAfterSignup } from '@/lib/share/afterSignup';
 import { clearIntent, readIntent, blockAgeGate } from '@/lib/onboarding/intent';
 import type { AccountType } from '@/lib/onboarding/policy';
-import { BUSINESS_EDITABLE, OnboardingService, nextStep, type OnboardingData, type OnboardingState, type OnboardingStep } from '@/lib/services/onboardingService';
+import { OnboardingService, businessSteps, nextStep, type OnboardingData, type OnboardingState, type OnboardingStep } from '@/lib/services/onboardingService';
 import { CATEGORY_CONFIG } from '@/lib/onboarding/business';
 import type { BusinessCategory } from '@/lib/onboarding/policy';
 import { AccountTypeStep } from './steps/AccountTypeStep';
@@ -18,6 +18,7 @@ import { ConsentChecks, consentsMissing, type Consents } from './steps/ConsentCh
 import { ProfileStep, RolesStep } from './steps/ProfileStep';
 import { TasteSetup } from './steps/TasteSetup';
 import { BusinessScreen, CategoryStep, DetailsStep, LocationsStep, OperationsStep } from './steps/BusinessSteps';
+import { CreatedStep, DocumentsStep, PreferenceStep, ReviewStep } from './steps/BusinessFinish';
 
 // /onboarding (client spec v1, docs/ONBOARDING_PLAN.md). Shows only what is
 // still missing, worked out from the database, so it resumes anywhere:
@@ -28,13 +29,15 @@ import { BusinessScreen, CategoryStep, DetailsStep, LocationsStep, OperationsSte
 // first (lib/onboarding/intent). Existing accounts (already onboarded) are
 // sent here once for what's missing: birth date, consent, roles
 // (OnboardingCatchUp). Food businesses: type -> consent -> category (B-01)
-// -> details (B-02) -> locations (B-03) -> operations (B-04) -> ... (phase 5).
+// -> details (B-02) -> locations (B-03) -> operations (B-04) -> reservations
+// (B-05, sit-down places only) -> loyalty (B-06) -> delivery (B-07) ->
+// documents (B-08, optional) -> review (B-09) -> created (B-10).
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const STEPS: Record<AccountType, OnboardingStep[]> = {
   individual: ['type', 'age', 'consent', 'profile', 'personalize', 'taste', 'ready'],
-  food_business: ['type', 'consent', 'category', 'details', 'locations', 'operations', 'business'],
+  food_business: ['type', 'consent', 'category', 'details', 'locations', 'operations', 'reservations', 'loyalty', 'delivery', 'documents', 'review'],
 };
 /** Existing accounts only see what's missing. */
 const CATCH_UP: OnboardingStep[] = ['age', 'consent', 'roles'];
@@ -57,6 +60,8 @@ export default function OnboardingFlow() {
   const [consents, setConsents] = useState<Consents>({ terms: false, privacy: false, authority: false });
   const [triedConsent, setTriedConsent] = useState(false);
   const [name, setName] = useState('');
+  /** B-10 shows after the profile is created (instead of leaving straight away). */
+  const [created, setCreated] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   const leave = useCallback(() => {
@@ -172,14 +177,21 @@ export default function OnboardingFlow() {
   };
 
   const business = state?.accountType === 'food_business' || type === 'food_business';
-  const flow = state?.isOnboarded ? (business ? ['consent' as const] : CATCH_UP) : STEPS[state?.accountType ?? type ?? 'individual'];
+  const flow: OnboardingStep[] = state?.isOnboarded
+    ? business
+      ? ['consent']
+      : CATCH_UP
+    : state?.accountType === 'food_business'
+      ? ['type', 'consent', ...businessSteps(state.businessCategory)]
+      : STEPS[state?.accountType ?? type ?? 'individual'];
   const index = step ? Math.max(0, flow.indexOf(step)) : 0;
   // Back: through the business screens (each was saved, so they re-open filled in).
-  const backTo = step ? BUSINESS_EDITABLE[BUSINESS_EDITABLE.indexOf(step) - 1] : undefined;
-  const canGoBack = !!backTo || (step === 'business' && !!state?.businessCategory);
+  const bizFlow = businessSteps(state?.businessCategory ?? null);
+  const backTo = step && state?.accountType === 'food_business' && !created ? bizFlow[bizFlow.indexOf(step) - 1] : undefined;
+  const canGoBack = !!backTo;
   const goBack = () => {
     setError(null);
-    setStep(step === 'business' ? 'operations' : backTo!);
+    setStep(backTo!);
   };
   const finishLater = async () => {
     if (await run(() => OnboardingService.setFoodPrefs('skipped', true))) await reload();
@@ -404,31 +416,69 @@ export default function OnboardingFlow() {
         )}
       />
     );
-  } else if (step === 'category' || step === 'details' || step === 'locations' || step === 'operations') {
+  } else if (created || bizFlow.includes(step)) {
     const cat = state.businessCategory as BusinessCategory | null;
     const kind = cat ? CATEGORY_CONFIG[cat].location.kind : 'address';
-    const head: Record<typeof step, [string, string]> = {
+    const shown = created ? 'created' : step;
+    if (created) key = 'created';
+    const head: Record<string, [string, string]> = {
       category: ['Choose your business type', 'Tell us what kind of food business you run.'],
       details: ['Business details', 'Create your business identity on FUZO.'],
       locations: kind === 'address' ? ['Location and branches', 'Add where customers can find you.'] : ['Where you work', 'Add your base and the area you cover.'],
       operations: ['How your business operates', 'Just the essentials for your type of business. You can add more later.'],
+      reservations: ['Table reservations', 'Do you offer table reservations?'],
+      loyalty: ['Customer loyalty', 'Do you have a customer loyalty program?'],
+      delivery: ['Food delivery platforms', 'Is your business listed on food delivery apps?'],
+      documents: ['Business documents', 'Help customers trust your business. You can upload them now or later.'],
+      review: ['Review your business profile', 'Check your details before creating your profile.'],
+      created: ['Your business profile is created', 'It can be discovered on FUZO now.'],
     };
     body = (
       <>
+        {created && (
+          <span className="fz-onb__badge" aria-hidden="true">
+            <Store size={26} />
+          </span>
+        )}
         <h1 className="fz-onb__title" tabIndex={-1} ref={headingRef}>
-          {head[step][0]}
+          {head[shown][0]}
         </h1>
-        <p className="fz-onb__sub">{head[step][1]}</p>
-        <BusinessScreen key={step}>
+        <p className="fz-onb__sub">{head[shown][1]}</p>
+        <BusinessScreen key={shown}>
           {(profile) =>
-            step === 'category' ? (
+            created ? (
+              <CreatedStep profile={profile} onGo={leave} />
+            ) : step === 'category' ? (
               <CategoryStep profile={profile} onSaved={reload} renderSubmit={businessSubmit} />
             ) : step === 'details' ? (
               <DetailsStep profile={profile} onSaved={() => businessDone('bizDetails')} renderSubmit={businessSubmit} />
             ) : step === 'locations' ? (
               <LocationsStep profile={profile} onSaved={() => businessDone('bizLocations')} renderSubmit={businessSubmit} />
-            ) : (
+            ) : step === 'operations' ? (
               <OperationsStep profile={profile} onSaved={() => businessDone('bizOps')} onLater={() => businessDone('bizOps')} renderSubmit={businessSubmit} />
+            ) : step === 'reservations' || step === 'loyalty' || step === 'delivery' ? (
+              <PreferenceStep
+                kind={step}
+                profile={profile}
+                onSaved={() => businessDone(step === 'reservations' ? 'bizReservations' : step === 'loyalty' ? 'bizLoyalty' : 'bizDelivery')}
+                renderSubmit={businessSubmit}
+              />
+            ) : step === 'documents' ? (
+              <DocumentsStep onSaved={() => businessDone('bizDocs')} renderSubmit={businessSubmit} />
+            ) : (
+              <ReviewStep
+                profile={profile}
+                onEdit={(s) => {
+                  setError(null);
+                  setStep(s);
+                }}
+                onCreate={async () => {
+                  const ok = await run(() => OnboardingService.finish());
+                  if (ok) setCreated(true);
+                  return ok;
+                }}
+                renderSubmit={businessSubmit}
+              />
             )
           }
         </BusinessScreen>
@@ -471,19 +521,6 @@ export default function OnboardingFlow() {
         {cta('Enter FUZO')}
       </form>
     );
-  } else {
-    // Food business: the business screens (B-01 to B-10) come in phases 4-5.
-    body = (
-      <>
-        <span className="fz-onb__badge" aria-hidden="true">
-          <Store size={26} />
-        </span>
-        <h1 className="fz-onb__title" tabIndex={-1} ref={headingRef}>
-          Next: reservations, loyalty and delivery
-        </h1>
-        <p className="fz-onb__sub">Your business details are saved. The last few questions are coming in the next update of this branch.</p>
-      </>
-    );
   }
 
   return (
@@ -503,7 +540,7 @@ export default function OnboardingFlow() {
 
         <main className="fz-onb__main">
           <div className="fz-onb__card">
-            {state && step && !tooYoung && !loadError && (
+            {state && step && !tooYoung && !loadError && !created && (
               <div className="fz-onb__bar">
                 {canGoBack ? (
                   <button type="button" className="fz-onb__back" onClick={goBack} disabled={saving}>

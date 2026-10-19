@@ -106,7 +106,7 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - [x] **2. Start and sign-up:** Welcome (I-01), age check, Create account with consent (email and Google), `/terms` and `/privacy`, save/resume, send unfinished people back to onboarding, the new onboarding look.
 - [x] **3. Individual (I-04 to I-06):** profile (name, live @username check, photo, roles), Personalise / Skip, Food DNA + flavours + cuisines + diet (saved as you go), Ready; existing users asked for birth date and roles.
 - [x] **4. Business part 1 (B-01 to B-04):** category, details, location and branches (map pin or service area), operations by category.
-- [ ] **5. Business part 2 (B-05 to B-10):** reservations, loyalty, delivery, document upload, review, profile created.
+- [x] **5. Business part 2 (B-05 to B-10):** reservations, loyalty, delivery, document upload, review, profile created.
 - [ ] **6. Verification (B-11 to B-14):** reminder on sign-in, under review / action required / verified screens, the admin review page, Verified badge on the profile and Scout.
 - [ ] **7. "Finish your profile":** Home and Profile card, the 1 / 3 / 7-day pop-up.
 - [ ] **8. Clean-up and QA:** remove the old wizard, security review, test cases (`docs/ONBOARDING_TEST_CASES.md`).
@@ -189,6 +189,24 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
   - **"Complete more details later"** skips the screen. Delivery and reservations are their own questions in phase 5.
 - **Fix found while testing:** the place picker has its own search form, and forms can't nest. Put inside a screen's form, Enter in the search box would have submitted the screen. The screen is now a plain container. The picker's label id is also unique per picker, since a screen can hold several.
 - **Tests:** 88 browser checks covering every category's location model, validation, Back, resume, "later", 320-1600 px in light and dark, and accessibility. The restaurant path was also checked at 390 and 414 px. Phase 2 (117) and phase 3 (103) still pass.
+
+## Phase 5 notes
+
+- **Order after operations:** table reservations (B-05, **restaurants and cafés only**; trucks, cloud kitchens, caterers, meal prep, bakeries and specialty food skip it, since the spec says not to force irrelevant fields) → loyalty (B-06) → delivery (B-07) → documents (B-08) → review (B-09) → created (B-10).
+- **B-05 / B-06:** existing / FUZO's / both / neither, stored as two yes/no columns each. **B-07:** listed / interested / not offered. All three are answers only: nothing is set up, and the screen says so. Delivery says FUZO never delivers or takes orders.
+- **B-08 documents:**
+  - **What to upload:** business registration (needed for verification) and food safety (if it applies). PDF, JPG or PNG up to 10 MB, checked before uploading.
+  - **Privacy:** photos are re-saved as JPEG to drop hidden location data. Files go to the private `business-documents` bucket in the owner's folder, and a `business_documents` row is added.
+  - **Starting the review:** the business registration moves the status to *pending review*.
+  - **The deadline banner** shows "Due by <date> · N days left", "The deadline passed on <date>…", or "Documents received".
+  - **"Upload later and continue"** is the main button until something is uploaded.
+- **B-09 review:** business, contact, locations, operations, reservations, loyalty, delivery and documents, each with an Edit button. Editing a screen returns straight to the review. **Create business profile** marks onboarding finished, and the database checks the required parts again.
+- **B-10 created:**
+  - profile visibility "Available" and the document status (plus the due date while documents are outstanding);
+  - a setup checklist showing only what the business chose: menu and locations, plus reservations, loyalty and delivery links only if they showed interest, and documents;
+  - while not verified, what stays locked until approval;
+  - **View business profile** and **Go to FUZO**.
+- **Tests:** 105 browser checks covering every screen and branch (both / neither, listed, the truck path with no reservations, a wrong file type, PDF and photo uploads, editing from review, overdue), 320-1600 px in light and dark, and accessibility. Phases 2-4 (117 / 103 / 88) still pass.
 
 ## Still to confirm (client / legal, from the spec)
 

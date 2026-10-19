@@ -11,6 +11,7 @@ import type { ServiceResult } from '@/lib/types/serviceResult';
 import { PRIVACY_VERSION, TERMS_VERSION, type AccountType } from '@/lib/onboarding/policy';
 import type { SignupIntent } from '@/lib/onboarding/intent';
 import type { DnaAxis, TasteProfileState } from '@/lib/recommendation/dna';
+import { asksReservations } from '@/lib/onboarding/business';
 
 export type FoodPrefsStatus = 'not_started' | 'skipped' | 'in_progress' | 'completed';
 
@@ -26,6 +27,11 @@ export interface OnboardingData {
   bizDetails?: boolean;
   bizLocations?: boolean;
   bizOps?: boolean;
+  /** B-05 to B-08 answered / seen. */
+  bizReservations?: boolean;
+  bizLoyalty?: boolean;
+  bizDelivery?: boolean;
+  bizDocs?: boolean;
 }
 
 export interface OnboardingState {
@@ -50,7 +56,7 @@ export interface OnboardingState {
   savedStep: string | null;
 }
 
-/** Screens of the flow. 'roles' is for existing accounts; 'done' = nothing left. Phase 5 adds the rest of the business screens. */
+/** Screens of the flow. 'roles' is for existing accounts; 'done' = nothing left. */
 export type OnboardingStep =
   | 'type'
   | 'age'
@@ -64,11 +70,20 @@ export type OnboardingStep =
   | 'details'
   | 'locations'
   | 'operations'
-  | 'business'
+  | 'reservations'
+  | 'loyalty'
+  | 'delivery'
+  | 'documents'
+  | 'review'
   | 'done';
 
 /** The food business screens in order (Back goes through these). */
-export const BUSINESS_EDITABLE: OnboardingStep[] = ['category', 'details', 'locations', 'operations'];
+export const BUSINESS_EDITABLE: OnboardingStep[] = ['category', 'details', 'locations', 'operations', 'reservations', 'loyalty', 'delivery', 'documents', 'review'];
+
+/** The business screens this category sees (table reservations only where people sit down). */
+export function businessSteps(category: string | null): OnboardingStep[] {
+  return BUSINESS_EDITABLE.filter((st) => st !== 'reservations' || asksReservations(category));
+}
 
 /** The first thing still missing. */
 export function nextStep(s: OnboardingState): OnboardingStep {
@@ -81,7 +96,11 @@ export function nextStep(s: OnboardingState): OnboardingStep {
     if (!s.data.bizDetails) return 'details';
     if (!s.data.bizLocations) return 'locations';
     if (!s.data.bizOps) return 'operations';
-    return 'business';
+    if (asksReservations(s.businessCategory) && !s.data.bizReservations) return 'reservations';
+    if (!s.data.bizLoyalty) return 'loyalty';
+    if (!s.data.bizDelivery) return 'delivery';
+    if (!s.data.bizDocs) return 'documents';
+    return 'review';
   }
   // Existing accounts (client, 2026-10-18): birth date + consent above, then roles once.
   if (s.isOnboarded) return s.roles.length || s.data.rolesAsked ? 'done' : 'roles';

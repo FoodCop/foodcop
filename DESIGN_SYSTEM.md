@@ -359,6 +359,12 @@ Instagram, TikTok, YouTube, X, Facebook, Pinterest. Linking = paste your profile
   - **Locations** use the Create flow's place picker. Extra locations are outlined cards with a red bin, under a dashed "Add another location" pill.
   - **Hours** are grey rows: switch · Mon · two time boxes. One line from 390px; smaller phones put the times on a second line.
   - **Back** is a grey pill left of the step dots.
+  - **Reservations / loyalty / delivery:** grey radio cards (round dot, bold title, one grey line); selected = yellow-tint with a deep-yellow ring and a yellow check dot.
+  - **Documents:**
+    - a yellow-tint deadline banner (lime when received, chili when overdue);
+    - an outlined card per document type, with the uploaded files as grey rows (green check, name, status) and a dashed Upload pill.
+  - **Review:** a plain list of uppercase labels and values with a round grey pencil per row.
+  - **Created:** a grey facts box (Available in green), a checklist with ticks, and the yellow-tint note on what stays locked.
 - **/terms and /privacy** are plain reading pages (max 46rem) with a yellow-tint "Draft" note until the final text arrives.
 
 ## Login / Sign up (`src/app/(auth)/login/page.tsx`, `.fz-auth` in `_auth.scss`)

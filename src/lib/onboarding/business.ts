@@ -203,3 +203,6 @@ export function normaliseWebsite(raw: string): string | null {
     return null;
   }
 }
+
+/** B-05 "Table reservations" is only asked where people sit down to eat. */
+export const asksReservations = (category: string | null) => category === 'restaurant' || category === 'cafe';
