@@ -102,7 +102,7 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 
 ## Phases
 
-- [ ] **1. Data and security rules:** account type, private birth date, roles, food-profile status, consents; businesses, branches, preferences, documents (private bucket), verification + audit log, `app_admins`; database rules that lock business posts and the Dashboard; existing restaurants marked verified. Database tests.
+- [x] **1. Data and security rules:** account type, private birth date, roles, food-profile status, consents; businesses, branches, preferences, documents (private bucket), verification + audit log, `app_admins`; database rules that lock business posts and the Dashboard; existing restaurants marked verified. Database tests.
 - [ ] **2. Start and sign-up:** Welcome (I-01), age check, Create account with consent (email and Google), `/terms` and `/privacy`, save/resume, send unfinished people back to onboarding, the new onboarding look.
 - [ ] **3. Individual (I-04 to I-06):** profile (name, live @username check, photo, roles), Personalise / Skip, Food DNA + flavours + cuisines + diet (saved as you go), Ready; existing users asked for birth date and roles.
 - [ ] **4. Business part 1 (B-01 to B-04):** category, details, location and branches (map pin or service area), operations by category.
@@ -110,6 +110,25 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - [ ] **6. Verification (B-11 to B-14):** reminder on sign-in, under review / action required / verified screens, the admin review page, Verified badge on the profile and Scout.
 - [ ] **7. "Finish your profile":** Home and Profile card, the 1 / 3 / 7-day pop-up.
 - [ ] **8. Clean-up and QA:** remove the old wizard, security review, test cases (`docs/ONBOARDING_TEST_CASES.md`).
+
+## Phase 1 notes (`20261018000000_onboarding.sql`, rules mirrored in `src/lib/onboarding/policy.ts`)
+
+- **Tables:**
+  - `user_private`: birth month/year, owner only.
+  - `user_consents`: document, version, server time.
+  - `user_onboarding`: progress, food-profile status, reminders.
+  - `business_private`: contact, owner and admins.
+  - `business_branches`: everyone reads the public view `business_branches_public`, which blanks a hidden cloud-kitchen address.
+  - `business_documents` + the private `business-documents` bucket.
+  - `business_verification`, `business_audit_log`, `app_admins`.
+  - `users` gets `account_type` and `roles`; `restaurant_profiles` gets category, operations, the reservations / loyalty / delivery answers and `is_verified`.
+- **Age by month only:** a birthday counts from the month after the birth month, so someone turning 13 this month gets in next month. The database refuses an under-age birth date even if the app is bypassed, and a birth date can't be changed afterwards (support fixes typos).
+- **When a review starts:** the first submission needs the **business registration**; food safety documents are optional ("if applicable" in the spec). After "action required", any new document re-submits. Only an admin can approve.
+- **Two kinds of verified:** document verification is new and separate from `place_verified`, which only confirms the restaurant's Google listing link.
+- **"Onboarded" is checked by the database:** account type, both consents and a name, plus the birth date (individuals) or a business profile with a category (businesses).
+- **Making an admin:** in the Supabase SQL editor run `INSERT INTO public.app_admins (user_id) VALUES ('<your user id>');`
+- **The old wizard stops working** against this database, since it doesn't record consent. Phase 2 replaces it. The migration is only pushed after the branch is merged, so nothing live breaks.
+- **Tests:** 104 database checks (PGlite) and 23 checks of the app rules, all passing.
 
 ## Still to confirm (client / legal, from the spec)
 
