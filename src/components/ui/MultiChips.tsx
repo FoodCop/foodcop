@@ -1,8 +1,7 @@
-// Extracted out of OnboardingWizard.tsx (originally private to that file) so
-// Settings' Taste Preference edit rows (Flavor Profile / Cuisine / Dietary)
-// can reuse the exact same chip-grid UI and .onboarding-chip* styles
-// (_onboarding.scss, imported globally via main.scss) instead of a second,
-// slightly-different implementation.
+// Chip-grid toggles shared by the Food DNA quiz and Settings' Taste
+// Preference edit rows (Flavor Profile / Cuisine / Dietary), styled by the
+// .onboarding-chip* rules in _onboarding.scss. (Originally from the old
+// onboarding wizard, since removed.)
 
 export function toggleArr(arr: string[], value: string, max?: number): string[] {
   if (arr.includes(value)) return arr.filter((v) => v !== value);

@@ -1,0 +1,284 @@
+# Onboarding - plan
+
+Source: the client's "FUZO Onboarding Specification v1", "Onboarding Mock Screens & Workflow v1" and the onboarding flowchart (all 13 Oct 2026). Screen IDs (I-01…, B-01…) are the client's and are used in code, tickets and test cases.
+Branch: `ayush/onboarding`. The GitHub issue and draft PR track progress.
+
+## The flow
+
+```
+Welcome: Individual or Food Business (I-01)
+├─ Individual: age (I-03) → create account + consent (I-02) → profile (I-04)
+│    → "Personalise now / Skip for now" (I-05) → Food DNA, flavours, cuisines, diet (I-05A) → ready (I-06)
+└─ Food Business: create account + consent → category (B-01) → details (B-02) → location and branches (B-03)
+     → operations (B-04) → reservations (B-05) → loyalty (B-06) → delivery (B-07)
+     → documents, optional now (B-08) → review (B-09) → profile created (B-10)
+     → verification: reminder on each login (B-11), under review (B-12), action required (B-13), verified (B-14)
+```
+
+The old three-path wizard (Discover / Create / Business) is replaced. "Creator" becomes a **role** on an Individual account.
+
+## Decisions (client, 2026-10-18)
+
+- **Document review:** an admin page. Admins are listed in an `app_admins` table; Ayush's account is added first.
+- **Restaurants that already exist** are test data: they are marked verified, so nothing of theirs gets locked.
+- **Age rules:** Canadian best practice (see below).
+- **People who already have accounts** are asked for their birth month/year and roles on their next sign-in.
+- **Look:** the app's current clean style (white page, FUZO yellow for selected options and main buttons, pastel chips, Framer Motion). The mock's brown/red palette is not used, since the mock says it is low-fidelity and the styling is ours.
+- **No setup screens after onboarding** in this branch. Reservations, loyalty and delivery are saved as answers only; FUZO Reservations / Loyalty don't exist yet.
+- **Documents:** PDF, JPG or PNG, up to 10 MB each. The 15-day rule applies to all 8 categories.
+- **Roles:** the spec's list: Food Explorer, Food Reviewer, Food Blogger / Creator, Food Travel Explorer, Recipe Creator, Cooking Instructor, Chef / Private Chef / Catering. Several can be picked and changed later.
+- **Skipped questions get asked again:** anything optional that was skipped (food profile, photo, roles) is brought back later; see "Finish your profile" below.
+
+## Age (Canadian best practice)
+
+Canada's privacy regulator (OPC, under PIPEDA) treats children **under 13** as unable to give meaningful consent; Quebec's Law 25 needs a parent's consent **under 14**. FUZO has no parental-consent process, so:
+
+- **Minimum age:** 13; 14 in Quebec. Only someone who turns out to be 13 sees one extra question, "Do you live in Quebec?". The limits are constants in one file, so legal can change them.
+- **Age comes first, before the account is created.** If someone is too young, nothing about them is stored, and the device remembers it for a day so the date can't just be changed and retried. The client's screen order puts the account first; asking age first is the standard practice, so no data is collected from a child.
+- **Neutral question:** month and year dropdowns, with nothing that hints at the minimum age.
+- **Teens (under 18) get private defaults:** a private profile, and no exact location on their posts by default. They can change these later.
+- **Birth month/year is private:** it is kept in its own table that only the owner can read, and is never shown on the profile.
+- The spec says legal must confirm this before launch; it is listed under "Still to confirm".
+
+## Consent
+
+The Create account step has two boxes: **Terms of Service** and **Privacy Policy**. Each acceptance is stored with the document's version and the time (`user_consents`). FUZO has no Terms or Privacy page yet. This branch adds `/terms` and `/privacy` pages with placeholder text, and **the client needs to send the real text**.
+
+## Food Business
+
+**Categories and what each one is asked (B-03 / B-04):**
+
+| Category | Location | Operations |
+|---|---|---|
+| Restaurant | Address(es) + branches | Hours, dine-in / takeaway, cuisines |
+| Café | Address(es) | Hours, food and drinks offered |
+| Bakery | Address(es) | Hours, baked-goods categories |
+| Food Truck | Base location + area it operates in | Usual hours, regular stops (optional) |
+| Cloud Kitchen | Kitchen location (not public) + delivery area | Hours, how people order |
+| Catering Company | Service area | Catering types, events, delivers or not |
+| Meal Prep | Service area | Meal offerings, ordering and delivery |
+| Specialty Food | Address(es) or service area | Product categories, where it's sold |
+
+- **Branches:** one business, many locations. Shared details live on the business; each branch has its own name, address or area, map pin and hours.
+- **Reservations and loyalty:** four choices each: existing / FUZO / both / neither. Stored as two separate yes/no answers.
+- **Delivery:** listed / interested / not offered. FUZO never delivers.
+- **Documents:** business registration and food safety. Kept in a **private** store that only the owner and admins can open (short-lived links).
+
+**Verification:**
+
+| State | When |
+|---|---|
+| Awaiting documents | Created less than 15 days ago (15 × 24 h from account creation), nothing submitted |
+| Submission overdue | 15 days passed, nothing submitted |
+| Pending review | Documents submitted |
+| Action required | An admin asked for changes (reason shown) |
+| Verified | An admin approved them |
+
+"Awaiting" and "overdue" are worked out from the creation time, not stored. Every submission, approval, rejection and status change is written to an audit log.
+
+**Until verified, the database refuses** (not just the app):
+- business posts (restaurant posts, and food cards posted by the business account);
+- the Restaurant Dashboard's menu, gallery and offers.
+
+The Verified badge and Verified location tag are also hidden. The public profile stays visible, and normal users can still tag the place in their own posts. Ads and FUZO Loyalty don't exist yet; they will follow the same check when built.
+
+**Reminder (B-11):** a pop-up on every business sign-in while documents are missing. It shows the deadline in the owner's time zone, the days left (or that the deadline has passed), the reviewer's reason if any, **Upload documents**, and **Remind me later**. It never hides the profile.
+
+**Admin review page:** a list of businesses waiting, their documents, and Approve / Ask for changes (with a reason).
+
+## "Finish your profile" (client, 2026-10-18)
+
+When someone skips optional questions (food profile, photo, roles), FUZO asks again:
+- A **"Finish your profile"** card on Home and on their Profile shows what's left and how far along they are. It stays until everything is done.
+- A short pop-up after sign-in 1, 3 and 7 days after skipping. After that, only the card.
+- It stops as soon as everything is filled in. Food DNA answers are saved as people go, so they continue where they stopped.
+
+## Rules for everyone
+
+- Progress is saved on every step (resume after a refresh or on another device).
+- Anyone signed in who hasn't finished the required steps is sent back to onboarding.
+- Back on every screen, one main button per screen, errors shown next to the field, and the main button explains what's missing instead of just being greyed out.
+- Usernames are checked live for duplicates.
+
+## Phases
+
+- [x] **1. Data and security rules:** account type, private birth date, roles, food-profile status, consents; businesses, branches, preferences, documents (private bucket), verification + audit log, `app_admins`; database rules that lock business posts and the Dashboard; existing restaurants marked verified. Database tests.
+- [x] **2. Start and sign-up:** Welcome (I-01), age check, Create account with consent (email and Google), `/terms` and `/privacy`, save/resume, send unfinished people back to onboarding, the new onboarding look.
+- [x] **3. Individual (I-04 to I-06):** profile (name, live @username check, photo, roles), Personalise / Skip, Food DNA + flavours + cuisines + diet (saved as you go), Ready; existing users asked for birth date and roles.
+- [x] **4. Business part 1 (B-01 to B-04):** category, details, location and branches (map pin or service area), operations by category.
+- [x] **5. Business part 2 (B-05 to B-10):** reservations, loyalty, delivery, document upload, review, profile created.
+- [x] **6. Verification (B-11 to B-14):** reminder on sign-in, under review / action required / verified screens, the admin review page, Verified badge on the profile and Scout.
+- [x] **7. "Finish your profile":** Home and Profile card, the 1 / 3 / 7-day pop-up.
+- [x] **8. Clean-up and QA:** remove the old wizard, security review, test cases (`docs/ONBOARDING_TEST_CASES.md`).
+
+## Phase 1 notes (`20261018000000_onboarding.sql`, rules mirrored in `src/lib/onboarding/policy.ts`)
+
+- **Tables:**
+  - `user_private`: birth month/year, owner only.
+  - `user_consents`: document, version, server time.
+  - `user_onboarding`: progress, food-profile status, reminders.
+  - `business_private`: contact, owner and admins.
+  - `business_branches`: everyone reads the public view `business_branches_public`, which blanks a hidden cloud-kitchen address.
+  - `business_documents` + the private `business-documents` bucket.
+  - `business_verification`, `business_audit_log`, `app_admins`.
+  - `users` gets `account_type` and `roles`; `restaurant_profiles` gets category, operations, the reservations / loyalty / delivery answers and `is_verified`.
+- **Age by month only:** a birthday counts from the month after the birth month, so someone turning 13 this month gets in next month. The database refuses an under-age birth date even if the app is bypassed, and a birth date can't be changed afterwards (support fixes typos).
+- **When a review starts:** the first submission needs the **business registration**; food safety documents are optional ("if applicable" in the spec). After "action required", any new document re-submits. Only an admin can approve.
+- **Two kinds of verified:** document verification is new and separate from `place_verified`, which only confirms the restaurant's Google listing link.
+- **"Onboarded" is checked by the database:** account type, both consents and a name, plus the birth date (individuals) or a business profile with a category (businesses).
+- **Making an admin:** in the Supabase SQL editor run `INSERT INTO public.app_admins (user_id) VALUES ('<your user id>');`
+- **The old wizard stops working** against this database, since it doesn't record consent. Phase 2 replaces it. The migration is only pushed after the branch is merged, so nothing live breaks.
+- **Tests:** 104 database checks (PGlite) and 23 checks of the app rules, all passing.
+
+## Phase 2 notes
+
+- **Create account (/login, `SignupSteps.tsx`):** Welcome (Individual / Food Business), then age (individuals), then name, email and password or Google, with the Terms and Privacy ticks. Food businesses tick a third box: "I'm 18 or older and allowed to set up this business on FUZO".
+- **Before the account exists,** the choices wait in the browser for a day (`lib/onboarding/intent.ts`, never sent to the sign-in service). `/onboarding` saves them as soon as the person is signed in, which also covers email confirmation and the Google redirect. Confirming on another device means onboarding just asks again.
+- **`/onboarding` (`OnboardingFlow.tsx`)** asks only for what the database doesn't have yet (account type, age, the current Terms / Privacy versions), so it resumes anywhere. Individuals end on "You're ready to explore". Businesses stop at a placeholder until phases 4-5.
+- **The age gate is neutral:** month and year dropdowns, with "Do you live in Quebec?" only when the person is exactly 13. Too young: a friendly message, nothing kept, and the device waits a day. If the database refuses an age, the same screen shows with Sign out.
+- **Sent back to onboarding:** the middleware redirects signed-in people who haven't finished from every app page, then returns them to that page. It skips guests, `/`, sign-in, `/terms`, `/privacy` and the API. A cookie remembers "finished" so most requests don't query the database; it never grants anything.
+- **Guests** ("Just looking?") go straight to Home, since they have no account to onboard.
+- **`/terms` and `/privacy`:** placeholder text with a "Draft" notice. It describes what FUZO actually does, but the client must send the real wording. Bump `TERMS_VERSION` / `PRIVACY_VERSION` in `policy.ts` when it changes, and everyone accepts the new version on their next visit to onboarding.
+- **Tests:** 117 browser checks, passing, with Supabase faked in the browser:
+  - every step and branch: Quebec, too young, the one-day wait, business;
+  - saving the browser choices after sign-in, and resuming at the age step;
+  - keyboard use, reduced motion, light and dark, 320-1600 px with no sideways scroll, accessibility and the console.
+- **Not tested in the browser:** the middleware redirect, since it needs a real signed-in session. Check it on the phone after the migration is pushed.
+
+## Phase 3 notes
+
+- **Order for a new individual:** type → age → consent → **Your profile** (I-04) → **Build your food profile** (I-05) → the food profile (I-05A, optional) → **You're ready** (I-06).
+- **Profile:**
+  - **Name and @username are required.** The username is suggested from the name ("Asha Patel" → `asha.patel`) and checked live (free / taken / bad characters). The database also refuses duplicates in other capitals.
+  - **Photo and roles are optional.** "Skip optional profile details" saves just the name and username.
+  - **The photo is re-saved as a JPEG of at most 800px,** which removes its hidden location data. This now applies to every avatar and banner upload, including Settings.
+- **Food profile:** 9 screens.
+  - **Flavours:** up to 5, from the 10 Flavour DNA axes, the same list as the client's mock.
+  - **Cuisines and diet:** up to 10 cuisines, plus diets from FUZO's taxonomy; "No restrictions" can't be combined with a diet.
+  - **Food DNA:** the 5 sections of FUZO's real quiz.
+  - **The result:** a persona and the 5 scores.
+- **Saving and skipping:**
+  - **Saved as you go:** each screen saves when you leave it (`taste_profiles`, plus the quiz answers in `user_onboarding.data`), so it resumes on the same screen.
+  - **Skipping:** "Skip for now" works on every screen. It records `skipped` (or `in_progress` if something was saved) with the time, for the phase 7 reminders. Skipping never blocks anything.
+- **Shared taste lists:** Settings → Taste preferences now uses the same lists (`lib/onboarding/taste.ts`). Older saved values that aren't in these lists still show in the summary.
+- **Existing accounts (client, 2026-10-18):** `OnboardingCatchUp` checks once per browser session. If an account that is already onboarded lacks a birth date, the current Terms / Privacy, or roles (asked once, and "Not now" is fine), it sends them to `/onboarding` for just those steps, then back to the page they were on.
+- **Tests:**
+  - **103 browser checks:** profile, username states, photo, roles, skip, the full questionnaire, resume, skipping halfway, catch-up, an up-to-date account not being sent anywhere, 320-1600 px in light and dark, and accessibility.
+  - **Phase 2's 117 checks** still pass.
+
+## Phase 4 notes
+
+- **Order for a food business:** type → consent → **business type** (B-01, 8 tiles) → **business details** (B-02) → **location and branches** (B-03) → **how your business operates** (B-04) → phase 5. Back goes through these screens, and each re-opens filled in. Progress is resumed from `user_onboarding.data` (`bizDetails`, `bizLocations`, `bizOps`) and the saved category.
+- **B-01:** saves `restaurant_profiles.business_category` (creating the business profile row) and the device's time zone, which the open/closed status needs.
+- **B-02:**
+  - business name → `users.display_name`;
+  - owner or contact name, contact email (pre-filled from the account) and contact phone → `business_private`, which is private;
+  - public phone and website (`spicetrail.ca` → `https://spicetrail.ca`) → `restaurant_profiles`.
+- **B-03, one framework for every category** (`lib/onboarding/business.ts`):
+  - **Restaurant, café, bakery:** a main address (search, near me or pin), plus "Add another location" (up to 10 here).
+  - **Food truck:** a base (optional) plus the area it operates in.
+  - **Cloud kitchen:** the kitchen address, which is never shown publicly, plus the delivery area.
+  - **Catering, meal prep:** the area served, plus an optional private base. No branches.
+  - **Specialty food:** a shop or the area it sells in.
+  - **The main location** is copied onto the profile by the database (Scout pin, address, hours), and its Google place links the Google listing. A place already claimed on FUZO shows a note that it's checked during verification.
+- **B-04, short on purpose:**
+  - cuisines (up to 5), dine-in / takeaway and price range, where they apply;
+  - each category's own questions (what you serve or bake, how people order, events you cater, what you sell and where, and so on) → `operations`;
+  - a food truck's regular stops;
+  - weekly hours (on/off switch, open and close times, "Use Monday's hours every day"). Required for walk-in places, optional for the rest, and copied to every location for now.
+  - **"Complete more details later"** skips the screen. Delivery and reservations are their own questions in phase 5.
+- **Fix found while testing:** the place picker has its own search form, and forms can't nest. Put inside a screen's form, Enter in the search box would have submitted the screen. The screen is now a plain container. The picker's label id is also unique per picker, since a screen can hold several.
+- **Tests:** 88 browser checks covering every category's location model, validation, Back, resume, "later", 320-1600 px in light and dark, and accessibility. The restaurant path was also checked at 390 and 414 px. Phase 2 (117) and phase 3 (103) still pass.
+
+## Phase 5 notes
+
+- **Order after operations:** table reservations (B-05, **restaurants and cafés only**; trucks, cloud kitchens, caterers, meal prep, bakeries and specialty food skip it, since the spec says not to force irrelevant fields) → loyalty (B-06) → delivery (B-07) → documents (B-08) → review (B-09) → created (B-10).
+- **B-05 / B-06:** existing / FUZO's / both / neither, stored as two yes/no columns each. **B-07:** listed / interested / not offered. All three are answers only: nothing is set up, and the screen says so. Delivery says FUZO never delivers or takes orders.
+- **B-08 documents:**
+  - **What to upload:** business registration (needed for verification) and food safety (if it applies). PDF, JPG or PNG up to 10 MB, checked before uploading.
+  - **Privacy:** photos are re-saved as JPEG to drop hidden location data. Files go to the private `business-documents` bucket in the owner's folder, and a `business_documents` row is added.
+  - **Starting the review:** the business registration moves the status to *pending review*.
+  - **The deadline banner** shows "Due by <date> · N days left", "The deadline passed on <date>…", or "Documents received".
+  - **"Upload later and continue"** is the main button until something is uploaded.
+- **B-09 review:** business, contact, locations, operations, reservations, loyalty, delivery and documents, each with an Edit button. Editing a screen returns straight to the review. **Create business profile** marks onboarding finished, and the database checks the required parts again.
+- **B-10 created:**
+  - profile visibility "Available" and the document status (plus the due date while documents are outstanding);
+  - a setup checklist showing only what the business chose: menu and locations, plus reservations, loyalty and delivery links only if they showed interest, and documents;
+  - while not verified, what stays locked until approval;
+  - **View business profile** and **Go to FUZO**.
+- **Tests:** 105 browser checks covering every screen and branch (both / neither, listed, the truck path with no reservations, a wrong file type, PDF and photo uploads, editing from review, overdue), 320-1600 px in light and dark, and accessibility. Phases 2-4 (117 / 103 / 88) still pass.
+
+## Phase 6 notes
+
+- **B-11 reminder (`VerificationReminder`, in the root layout):**
+  - **When:** once per browser session, for a business whose documents are awaiting, overdue or need changes. Never during onboarding, sign-in, the legal pages, or on `/business` and `/admin`.
+  - **What it says:** that the profile stays visible, what's unavailable, the deadline and days left (or that it has passed), or the reviewer's reason.
+  - **Buttons:** **Upload documents** / **Replace documents**, and **Remind me later**. Esc also closes it.
+- **`/business/verification` (`VerificationView`)** shows the matching screen:
+  - **awaiting / overdue (B-11):** the upload form, plus the list of what's unavailable until approval;
+  - **pending review (B-12):** status, plus more files can still be added;
+  - **action required (B-13):** "What needs to change" (the reviewer's note) and Replace documents;
+  - **verified (B-14):** status, the badge available, and **Open business dashboard** (`/profile?tab=dashboard`, which now opens that tab).
+  - The page is for signed-in users only. Accounts that aren't businesses see a short note.
+- **`/admin/verification` (`AdminVerificationView`):**
+  - **Lists:** filters for Needs review / Action required / Awaiting documents (incl. overdue) / Verified / All, with counts.
+  - **Each business:** private contact, address, account date, deadline, documents (each opened through a 5-minute signed link to the private bucket).
+  - **Decisions:** **Approve** (with a confirm step) or **Ask for changes** (a reason is required).
+  - **Access:** non-admins see "This page is for FUZO admins" and never load the list. The database refuses them anyway.
+  - **Setup:** add yourself as admin after the migration: `INSERT INTO public.app_admins (user_id) VALUES ('<your user id>');`
+- **FUZO Verified badge (`VerifiedBadge`):** next to a business's name on its profile, and in Scout's "On FUZO" strip. It shows only when `restaurant_profiles.is_verified` (set by the server), never for unverified businesses.
+- **Restaurant Dashboard:** for an unverified business, the menu and gallery managers are replaced by a note ("unlock once FUZO approves your documents" + Verification status). Business details stay editable. This matches the database, which refuses menu, gallery and post changes until approval. Posting through Create shows the database's own message: "Business posts unlock once your documents are approved."
+- **Tests:** 87 browser checks covering every reminder state (and none for pending, verified or individual accounts), every status screen, an upload moving to review, admin access, filters, signed links, both decisions, the badge, 320-1600 px in light and dark, and accessibility. The `/business` and `/admin` pages need a real sign-in on the server, so the test used stand-in copies of them, removed afterwards. Phases 2-5 still pass.
+
+## Phase 7 notes
+
+- **What counts as left** (`lib/onboarding/finishProfile.ts`): the food profile (skipped or half-done), a profile photo and roles. These are the optional parts of onboarding. Only individuals who finished onboarding get the card and pop-up; businesses and people mid-onboarding don't.
+- **Card (`FinishProfileCard`):**
+  - **Where:** the first block of Home → For you, and on your own Profile between the header and the tabs.
+  - **What it shows:** "N of 3 done", a progress bar (read out to screen readers), pastel chips for what's left, and **Finish now**.
+  - **Hiding:** it disappears once everything's done. The × hides it for a week on that device, then it comes back until everything is done.
+- **`/finish-profile` (`FinishProfileView`):**
+  - **The list:** what's left plus what's done ("Done - tap to change"), in any order.
+  - **Food profile:** the same questionnaire as onboarding, picking up on the screen they stopped at.
+  - **Photo and roles:** the onboarding profile step, without "Skip optional profile details" (it would clear saved roles).
+  - **All done:** "Your profile is complete".
+- **Pop-up (`FinishProfileNudge`, root layout):**
+  - **Timing:** checked once per browser session. Due 1, 3 and 7 days after skipping, counted from `skipped_at` (or from finishing onboarding when only the photo or roles are missing). At most once a day and three times in all; after that, only the card.
+  - **Records:** each showing writes `nudges_shown` + `last_nudge_at`, so it doesn't repeat on another device.
+  - **Not shown:** while the existing-account catch-up still has something to ask, or on onboarding, sign-in, the legal pages, `/business`, `/admin` and `/finish-profile`.
+  - **Buttons:** **Finish now** / **Not now**; Esc also closes it.
+- **Tests:**
+  - **76 browser checks:** card states and hiding, the finish page (roles, resuming the questionnaire, photo, all done), every pop-up timing rule (day 1, before day 3, day 3, once a day, after 3 showings, catch-up pending, businesses), 320-1600 px in light and dark, and accessibility.
+  - **The rest:** Home, Profile and `/finish-profile` need a real sign-in on the server, so the card and page were tested through stand-in pages, since removed. Phases 2-5 still pass.
+
+## Phase 8 notes
+
+- **Removed:** the old three-path wizard (`OnboardingWizard.tsx`), its 23 images (`public/onboarding/`), its unused data (`lib/onboarding/data.ts` keeps only `BUSINESS_IDENTITY`, which Create uses) and its styles. The Food DNA quiz keeps the shared `.onboarding-*` page, card, chip and footer rules. `scripts/seed_masterbots.ts` now carries its own persona labels and marks bots as individuals.
+- **Security review:** I reviewed every new table, policy, function, storage rule and page. Fixes (`20261018010000_onboarding_hardening.sql`):
+  - **"Onboarded" checks more in the database,** so the screens can't be skipped by calling the API: individuals also need a username, and businesses need a contact person and contact email.
+  - **At most 20 document files and records per business,** so the private bucket can't be filled up. The upload screen explains the limit.
+- **Checked and fine:**
+  - **Owner-only data:** birth dates, consents, progress, business contacts and documents are owner-only (plus admins for business data).
+  - **Server-set fields:** account type is set once; the verified flag, review and audit log are server-only; the verification statuses can't be self-set.
+  - **Unverified businesses:** content and menu/gallery changes are refused.
+  - **Uploads:** documents only in your own folder, as PDF/JPG/PNG up to 10 MB, opened through 5-minute signed links.
+  - **Links and text:** websites are always linked as `https://` (a `javascript:` value can't run); reviewer notes and file names are shown as text; `?next=` only allows same-site paths.
+  - **Cookie:** the onboarding cookie only skips a redirect and grants nothing.
+- **Under-18 location default, now enforced:** phase 1 stored "no exact location on posts" for under-18s, but nothing used it. Photo posts now save a dropped pin or the photo's own GPS rounded to about 1 km (no street address) when the setting is off. Listed places are never changed. Settings → Privacy has a new **Exact location on posts** switch.
+- **Accepted (low risk):**
+  - the reservations / loyalty / delivery answers are readable with the public restaurant profile;
+  - the sign-up choices wait in the browser for up to a day before onboarding saves them;
+  - uploaded PDFs aren't virus-scanned (listed under known limits).
+- **Also fixed:** a lint error in the Profile page's older code (loading state set inside an effect).
+- **QA:**
+  - **Database:** 108 checks (PGlite).
+  - **Browser:** 576 checks across six suites (sign-up 117, individual 103, business 1: 88, business 2: 105, verification 87, finish your profile 76): every screen and branch, 320-1600 px, light and dark, accessibility, the console.
+  - **Code:** types and lint are clean on all 48 changed files (the only warnings are older `<img>` notes).
+- **Phone test cases:** `docs/ONBOARDING_TEST_CASES.md`.
+
+## Still to confirm (client / legal, from the spec)
+
+- Age rules for each launch country (Canada handled as above).
+- The exact documents required for each category and country.
+- What happens when approved documents expire, or the business changes its details.
+- Terms of Service and Privacy Policy text.

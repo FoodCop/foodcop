@@ -38,6 +38,7 @@ import DashPlaceCard from './DashPlaceCard';
 import { useNearbyPlaces, type DashPlace } from './useNearbyPlaces';
 import { NearbyCities } from './NearbyCities';
 import { LocationChip } from './LocationChip';
+import FinishProfileCard from '@/components/onboarding/FinishProfileCard';
 
 // Dashboard = the post-login home, laid out from the client's sketch (same
 // structure on phone and desktop):
@@ -257,6 +258,9 @@ export default function DashboardView() {
 
         {/* For you */}
         <div role="tabpanel" id="home-panel-foryou" aria-labelledby="home-tab-foryou" hidden={active !== 'foryou'} className="fz-dash-panel">
+          {/* Skipped onboarding questions (client, 2026-10-18). Renders nothing once all done. */}
+          <FinishProfileCard where="home" />
+
           {isBusinessProfile && hasPinnedRestaurant === false && (
             <div className="fz-dash-nudge">
               <div>

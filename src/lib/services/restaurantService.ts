@@ -37,6 +37,8 @@ export interface RestaurantProfile {
   services?: string[];
   /** The owner's photo gallery (migration 20261006010000). */
   gallery?: RestaurantGalleryPhoto[];
+  /** FUZO Verified: business documents approved (migration 20261018000000; set by the server only). */
+  is_verified?: boolean;
 }
 
 export const GALLERY_CATEGORIES = ['Food', 'Ambience', 'Interior', 'Bar'] as const;
@@ -151,6 +153,8 @@ export interface FuzoRestaurantLink {
   cuisines: string[];
   /** Title of the restaurant's latest Offer post (last 30 days) - the red tag on Scout pins. */
   offerTitle: string | null;
+  /** FUZO Verified (documents approved). */
+  verified: boolean;
 }
 
 /**
@@ -162,7 +166,7 @@ export interface FuzoRestaurantLink {
 export const verifiedPlaceId = (profile: Pick<RestaurantProfile, 'place_id' | 'place_verified'> | null | undefined): string | null =>
   profile && profile.place_verified !== false ? profile.place_id ?? null : null;
 
-type ProfileRow = { user_id: string; place_id: string | null; place_verified?: boolean | null; hours: unknown; timezone: string | null; lat?: number | null; lng?: number | null; address?: string | null; cuisines?: string[] | null };
+type ProfileRow = { user_id: string; place_id: string | null; place_verified?: boolean | null; is_verified?: boolean | null; hours: unknown; timezone: string | null; lat?: number | null; lng?: number | null; address?: string | null; cuisines?: string[] | null };
 
 /** Attach name/photo (business accounts only) + rating to restaurant_profiles rows. */
 async function toLinks(rows: ProfileRow[]): Promise<FuzoRestaurantLink[]> {
@@ -211,6 +215,7 @@ async function toLinks(rows: ProfileRow[]): Promise<FuzoRestaurantLink[]> {
       address: r.address ?? null,
       cuisines: r.cuisines ?? [],
       offerTitle: offerById.get(r.user_id) ?? null,
+      verified: r.is_verified === true,
     });
   });
   return out;

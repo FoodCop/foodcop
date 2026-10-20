@@ -1,0 +1,1802 @@
+// ============================================================================
+// ONBOARDING (client spec v1, docs/ONBOARDING_PLAN.md)
+// - .fz-step-*  : step pieces shared by the sign-up card (/login) and
+//                 /onboarding: account type tiles, age dropdowns, consent ticks.
+// - .fz-signup  : the Create account steps inside the login card.
+// - .fz-onb     : the /onboarding page (clean look: white page, one floating
+//                 card, yellow for the selected option and the main button).
+// - .fz-legal   : /terms and /privacy.
+// ============================================================================
+
+$onb-pill: #f2f1ee; // the clean look's grey controls
+$onb-float: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 0 1px rgba(0, 0, 0, 0.04);
+
+// ── Shared step pieces ─────────────────────────────────────────────────────
+.fz-step-types {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+
+.fz-step-type {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  min-height: 84px;
+  padding: 0.95rem 1rem;
+  text-align: left;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  background: $onb-pill;
+  color: $fz-ink;
+  cursor: pointer;
+  transition: border-color 0.2s $fz-ease, background 0.2s $fz-ease, transform 0.2s $fz-ease, box-shadow 0.2s $fz-ease;
+
+  &:hover { transform: translateY(-1px); background: mix($onb-pill, $fz-ink, 96%); }
+  &:active { transform: scale(0.99); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: $fuzo-yellow-deep;
+    box-shadow: $fz-shadow-sm;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+
+    strong { font-size: 1rem; font-weight: 800; }
+    span { font-size: 0.83rem; line-height: 1.4; color: darken($fz-ink-soft, 12%); }
+  }
+
+  &__check {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba($fz-ink, 0.18);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    transition: background 0.2s $fz-ease, border-color 0.2s $fz-ease;
+  }
+
+  &.is-on {
+    border-color: $fuzo-yellow;
+    background: $fuzo-yellow-tint;
+    box-shadow: 0 6px 18px -8px rgba($fuzo-yellow-deep, 0.55);
+
+    .fz-step-type__icon { background: $fuzo-yellow; color: $fuzo-yellow-ink; }
+    .fz-step-type__check { background: $fuzo-yellow; border-color: $fuzo-yellow; color: $fuzo-yellow-ink; }
+  }
+}
+
+.fz-step-field {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: $fz-ink;
+  }
+
+  select,
+  input {
+    width: 100%;
+    height: 50px;
+    padding: 0 1rem;
+    border: 1.5px solid transparent;
+    border-radius: 9999px;
+    background-color: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+    &:focus { outline: none; border-color: $fuzo-yellow-deep; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); background-color: #fff; }
+    &[aria-invalid='true'] { border-color: $chili; }
+  }
+
+  select {
+    appearance: none;
+    padding-right: 2.4rem;
+    cursor: pointer;
+    // Chevron drawn with two gradients (no image request).
+    background-image: linear-gradient(45deg, transparent 50%, $fz-ink 50%), linear-gradient(135deg, $fz-ink 50%, transparent 50%);
+    background-position: calc(100% - 1.3rem) 52%, calc(100% - 0.95rem) 52%;
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+  }
+}
+
+.fz-step-age__row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.fz-step-quebec {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+
+  legend {
+    margin-bottom: 0.5rem;
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: $fz-ink;
+  }
+
+  &__opts { display: flex; gap: 0.5rem; }
+}
+
+.fz-step-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border-radius: 9999px;
+  background: $onb-pill;
+  color: $fz-ink;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+
+  input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+  &:has(input:focus-visible) { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &.is-on { background: $fuzo-yellow; color: $fuzo-yellow-ink; box-shadow: 0 4px 12px -4px rgba($fuzo-yellow-deep, 0.6); }
+}
+
+.fz-step-private {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: darken($fz-ink-soft, 12%);
+
+  svg { flex-shrink: 0; margin-top: 2px; }
+}
+
+.fz-step-error {
+  margin: 0 0 0.8rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: darken($chili, 14%);
+}
+
+.fz-step-consents {
+  margin: 0.25rem 0 1rem;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.fz-step-consent {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 16px;
+  background: $onb-pill;
+  border: 1.5px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  // The real checkbox sits over the drawn box: keyboard and screen readers use it.
+  input {
+    position: absolute;
+    left: 0.85rem;
+    top: 0.7rem;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__box {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    border: 2px solid rgba($fz-ink, 0.3);
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: $fuzo-yellow-ink;
+    pointer-events: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  input:focus-visible + .fz-step-consent__box { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+  label {
+    flex: 1;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: $fz-ink;
+    cursor: pointer;
+
+    a {
+      color: $fz-ink;
+      font-weight: 800;
+      text-decoration: underline;
+      text-decoration-color: $fuzo-yellow-deep;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+  }
+
+  &.is-on {
+    background: $fuzo-yellow-tint;
+    .fz-step-consent__box { background: $fuzo-yellow; border-color: $fuzo-yellow-deep; }
+  }
+  &.is-invalid { border-color: rgba($chili, 0.6); }
+}
+
+.fz-step-young {
+  text-align: center;
+  padding: 0.5rem 0 0.25rem;
+
+  &__icon { font-size: 2.6rem; display: block; margin-bottom: 0.4rem; }
+  h2 { margin: 0 0 0.4rem; font-size: 1.3rem; font-weight: 800; color: $fz-ink; }
+  p { margin: 0 auto 1.1rem; max-width: 30ch; font-size: 0.92rem; line-height: 1.5; color: darken($fz-ink-soft, 12%); }
+}
+
+// Pastel choice chips (roles, flavours, cuisines, diet, Food DNA answers).
+.fz-step-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fz-step-pastel {
+  @include fz-pastel-cycle;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1.5px solid transparent;
+  border-radius: 9999px;
+  background: var(--pastel);
+  color: $fz-ink;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s $fz-ease, box-shadow 0.15s ease;
+
+  &:hover:not([aria-disabled='true']) { background: var(--pastel-hover); }
+  &:active:not([aria-disabled='true']) { transform: scale(0.97); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &.is-on {
+    background: $fuzo-yellow;
+    border-color: $fuzo-yellow-deep;
+    color: $fuzo-yellow-ink;
+    box-shadow: 0 4px 12px -4px rgba($fuzo-yellow-deep, 0.6);
+  }
+  &[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
+}
+
+.fz-step-count {
+  margin: 0.55rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: darken($fz-ink-soft, 14%);
+}
+
+.fz-step-group {
+  margin: 0.25rem 0 1.1rem;
+
+  &__label {
+    margin: 0 0 0.55rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: $fz-ink;
+
+    span { margin-left: 0.3rem; font-weight: 600; color: darken($fz-ink-soft, 14%); }
+  }
+}
+
+// Profile photo picker: round photo (or initial) with a camera badge.
+.fz-step-avatar {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.1rem;
+
+  &__pic {
+    position: relative;
+    flex-shrink: 0;
+    width: 76px;
+    height: 76px;
+    padding: 0;
+    border: 3px solid $fuzo-yellow;
+    border-radius: 50%;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-ink;
+    font-size: 1.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s $fz-ease;
+
+    img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+    > span:first-child { display: inline-flex; width: 100%; height: 100%; align-items: center; justify-content: center; }
+    &:hover { transform: scale(1.03); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 3px; }
+  }
+
+  &__cam {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fz-ink;
+    color: #fff;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+
+    strong { font-size: 0.95rem; font-weight: 800; color: $fz-ink; }
+    span { font-size: 0.82rem; color: darken($fz-ink-soft, 14%); }
+  }
+}
+
+// @username field: the @ sits inside the grey pill.
+.fz-step-handle {
+  position: relative;
+
+  svg { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: darken($fz-ink-soft, 14%); pointer-events: none; }
+  input { padding-left: 2.5rem !important; }
+}
+
+.fz-step-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 1.3rem;
+  margin: 0.4rem 0 0 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: darken($fz-ink-soft, 14%);
+
+  &--free { color: darken($lime, 32%); }
+  &--taken,
+  &--invalid { color: darken($chili, 14%); }
+}
+
+// ── Food business screens (B-01 to B-04) ───────────────────────────────────
+// B-01: 8 tiles, 2 per row (3 from 560px).
+.fz-step-cats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+
+.fz-step-cat {
+  @include fz-pastel-cycle;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-height: 112px;
+  padding: 0.8rem;
+  text-align: left;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  background: var(--pastel);
+  color: $fz-ink;
+  cursor: pointer;
+  transition: transform 0.2s $fz-ease, border-color 0.2s $fz-ease, box-shadow 0.2s $fz-ease;
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0.3rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: $fz-ink;
+  }
+
+  strong { font-size: 0.92rem; font-weight: 800; line-height: 1.2; }
+  > span:last-child { font-size: 0.76rem; line-height: 1.35; color: mix($fz-ink, #fff, 75%); }
+
+  &:hover { transform: translateY(-1px); background: var(--pastel-hover); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &.is-on {
+    border-color: $fuzo-yellow-deep;
+    background: $fuzo-yellow-tint;
+    box-shadow: 0 6px 18px -8px rgba($fuzo-yellow-deep, 0.55);
+
+    .fz-step-cat__icon { background: $fuzo-yellow; color: $fuzo-yellow-ink; }
+  }
+}
+
+// Small section headings inside a form ("Contact person · private").
+.fz-step-section {
+  margin: 0.4rem 0 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: $fz-ink;
+
+  span { font-weight: 600; letter-spacing: 0; text-transform: none; color: darken($fz-ink-soft, 14%); }
+}
+
+.fz-step-note {
+  margin: -0.4rem 0 1rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 14px;
+  background: $fuzo-yellow-tint;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: $fz-ink;
+}
+
+.fz-step-field textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid transparent;
+  border-radius: 18px;
+  background: $onb-pill;
+  color: $fz-ink;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  resize: vertical;
+
+  &:focus { outline: none; border-color: $fuzo-yellow-deep; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); background: #fff; }
+}
+
+.fz-step-branches { margin: 0.5rem 0 1rem; }
+
+.fz-step-branch {
+  position: relative;
+  margin: 0 0 0.8rem;
+  padding: 0.9rem 0.9rem 0.2rem;
+  border: 1.5px solid $onb-pill;
+  border-radius: 20px;
+
+  legend {
+    display: block;
+    width: 100%;
+    margin: 0 0 0.6rem;
+    padding: 0.35rem 2.5rem 0 0; // room for the remove button
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: $fz-ink;
+  }
+
+  &__remove {
+    position: absolute;
+    top: 0.45rem;
+    right: 0.45rem;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: darken($chili, 10%);
+    cursor: pointer;
+
+    &:hover { background: rgba($chili, 0.1); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+.fz-step-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1.5px dashed rgba($fz-ink, 0.25);
+  border-radius: 9999px;
+  background: #fff;
+  color: $fz-ink;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:hover { border-color: $fuzo-yellow-deep; background: $fuzo-yellow-tint; }
+  &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+  &--quiet { border-style: solid; border-color: transparent; background: $onb-pill; min-height: 40px; font-size: 0.8rem; }
+}
+
+// Weekly hours: day · switch · times.
+.fz-step-hours {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+
+  legend { margin-bottom: 0.5rem; font-size: 0.82rem; font-weight: 800; color: $fz-ink; }
+
+  ul { list-style: none; margin: 0 0 0.6rem; padding: 0; display: grid; gap: 0.35rem; }
+
+  // switch · Mon · 11:00 – 21:00 on one line from 390px (smaller phones: times on a second line).
+  li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.55rem;
+    min-height: 48px;
+    padding: 0.35rem 0.5rem;
+    border-radius: 14px;
+    background: $onb-pill;
+    @media (min-width: 390px) { flex-wrap: nowrap; }
+  }
+
+  &__day { width: 2.4rem; font-size: 0.86rem; font-weight: 700; color: $fz-ink; }
+  &__closed { font-size: 0.84rem; font-weight: 600; color: darken($fz-ink-soft, 14%); }
+
+  &__times {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: auto;
+    color: $fz-ink;
+
+    input {
+      width: 5.6rem;
+      height: 38px;
+      padding: 0 0.4rem;
+      border: 1.5px solid transparent;
+      border-radius: 10px;
+      background: #fff;
+      color: $fz-ink;
+      font-size: 0.86rem;
+      font-weight: 600;
+
+      &:focus { outline: none; border-color: $fuzo-yellow-deep; box-shadow: 0 0 0 3px rgba($fuzo-yellow, 0.35); }
+    }
+  }
+}
+
+// Switch (open / closed).
+.fz-step-switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 46px;
+  height: 28px;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba($fz-ink, 0.22);
+  cursor: pointer;
+  transition: background 0.2s $fz-ease;
+
+  i {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s $fz-ease;
+  }
+
+  &.is-on { background: $fuzo-yellow-deep; i { transform: translateX(18px); } }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+}
+
+// Checkbox row ("Add usual hours").
+.fz-step-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: $fz-ink;
+  cursor: pointer;
+
+  input { position: absolute; opacity: 0; width: 22px; height: 22px; margin: 0; cursor: pointer; }
+
+  &__box {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    border: 2px solid rgba($fz-ink, 0.3);
+    background: #fff;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  input:checked + &__box {
+    border-color: $fuzo-yellow-deep;
+    background: $fuzo-yellow url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23241f16' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / 14px no-repeat;
+  }
+  input:focus-visible + &__box { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+}
+
+// ── B-05 to B-10 ───────────────────────────────────────────────────────────
+// Radio cards (reservations, loyalty, delivery).
+.fz-step-options {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.fz-step-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.8rem 0.95rem;
+  text-align: left;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  background: $onb-pill;
+  color: $fz-ink;
+  cursor: pointer;
+  transition: border-color 0.2s $fz-ease, background 0.2s $fz-ease;
+
+  &__dot {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    border-radius: 50%;
+    border: 2px solid rgba($fz-ink, 0.3);
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: $fuzo-yellow-ink;
+  }
+
+  strong { display: block; font-size: 0.93rem; font-weight: 800; }
+  span span { display: block; margin-top: 0.15rem; font-size: 0.8rem; line-height: 1.4; color: darken($fz-ink-soft, 14%); }
+
+  &:hover { background: mix($onb-pill, $fz-ink, 96%); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  &.is-on {
+    border-color: $fuzo-yellow-deep;
+    background: $fuzo-yellow-tint;
+
+    .fz-step-option__dot { background: $fuzo-yellow; border-color: $fuzo-yellow-deep; }
+  }
+}
+
+// Document deadline banner.
+.fz-step-deadline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 16px;
+  background: $fuzo-yellow-tint;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: $fz-ink;
+
+  svg { flex-shrink: 0; margin-top: 1px; color: $fuzo-yellow-deep; }
+  &--ok { background: rgba($lime, 0.16); svg { color: darken($lime, 34%); } }
+  &--late { background: rgba($chili, 0.1); svg { color: darken($chili, 12%); } }
+}
+
+.fz-step-doc {
+  margin-bottom: 0.9rem;
+  padding: 0.9rem;
+  border-radius: 20px;
+  border: 1.5px solid $onb-pill;
+
+  &__head {
+    display: flex;
+    gap: 0.7rem;
+    margin-bottom: 0.7rem;
+
+    h3 { margin: 0; font-family: var(--body-font), sans-serif; font-size: 0.95rem; font-weight: 800; color: $fz-ink; }
+    p { margin: 0.15rem 0 0; font-size: 0.8rem; line-height: 1.4; color: darken($fz-ink-soft, 14%); }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+  }
+
+  &__files {
+    list-style: none;
+    margin: 0 0 0.6rem;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      min-width: 0;
+      padding: 0.45rem 0.7rem;
+      border-radius: 12px;
+      background: $onb-pill;
+      font-size: 0.82rem;
+      color: $fz-ink;
+
+      svg { flex-shrink: 0; color: darken($lime, 30%); }
+      span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      em { flex-shrink: 0; font-style: normal; font-weight: 700; color: darken($fz-ink-soft, 14%); }
+    }
+  }
+}
+
+.fz-step-ok {
+  margin: 0 0 0.8rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: darken($lime, 34%);
+}
+
+// B-09 review list.
+.fz-step-review {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+
+  > li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 0.5rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid $onb-pill;
+
+    &:first-child { padding-top: 0; }
+  }
+
+  &__label { grid-column: 1; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: darken($fz-ink-soft, 14%); }
+  &__value { grid-column: 1; margin: 0.15rem 0 0; font-size: 0.92rem; font-weight: 600; line-height: 1.4; color: $fz-ink; overflow-wrap: anywhere; }
+
+  &__edit {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: $onb-pill;
+    color: $fz-ink;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover { background: $fuzo-yellow-tint; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+// B-10 facts + checklist.
+.fz-step-facts {
+  list-style: none;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  border-radius: 18px;
+  background: $onb-pill;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.95rem;
+    font-size: 0.86rem;
+    color: darken($fz-ink-soft, 14%);
+
+    & + li { border-top: 1px solid rgba($fz-ink, 0.06); }
+  }
+
+  strong { display: inline-flex; align-items: center; gap: 0.3rem; text-align: right; color: $fz-ink; font-weight: 800; }
+  .is-good { color: darken($lime, 34%); }
+}
+
+.fz-step-checklist {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $fz-ink;
+
+    svg { flex-shrink: 0; color: rgba($fz-ink, 0.35); }
+    &.is-done svg { color: darken($lime, 30%); }
+  }
+}
+
+// Location picker (Create flow's LocationStep) inside the onboarding card.
+.fz-onb__card .cf-field { margin-bottom: 1rem; }
+
+// ── Create account steps in the login card ─────────────────────────────────
+.fz-signup {
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 32px;
+    margin-bottom: 0.9rem;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 32px;
+    padding: 0.3rem 0.75rem 0.3rem 0.55rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover { background: $fuzo-yellow-tint; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+// Step dots: yellow = current, yellow-tint = done (same as the Create studio).
+.fz-signup__dots,
+.fz-onb__dots {
+  display: inline-flex;
+  gap: 0.35rem;
+
+  i {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: rgba($fz-ink, 0.14);
+    transition: width 0.25s $fz-ease, background 0.25s $fz-ease;
+
+    &.is-done { background: mix(#fff, $fuzo-yellow-deep, 35%); }
+    &.is-on { width: 22px; background: $fuzo-yellow; }
+  }
+}
+
+// ── /onboarding page ───────────────────────────────────────────────────────
+.fz-onb {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: max(0.75rem, env(safe-area-inset-top)) 1rem 0.75rem;
+  }
+
+  &__logo {
+    height: 40px;
+    width: auto;
+    @media (min-width: 768px) { height: 44px; }
+    &--dark { display: none; }
+  }
+
+  &__signout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 40px;
+    padding: 0 0.95rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover { background: mix($onb-pill, $fz-ink, 92%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1.5rem 1rem 3rem;
+
+    @media (min-width: 768px) { align-items: center; padding-bottom: 5rem; }
+  }
+
+  &__card {
+    width: 100%;
+    max-width: 30rem;
+    padding: 1.4rem 1.25rem 1.6rem;
+    border-radius: 28px;
+    background: #fff;
+    border: 1px solid #f2f2f2;
+    box-shadow: $onb-float;
+
+    @media (min-width: 576px) { padding: 1.75rem 1.75rem 2rem; }
+  }
+
+  // Back pill + step dots above the screen.
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 32px;
+    margin-bottom: 1rem;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 36px;
+    padding: 0 0.8rem 0 0.6rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover { background: $fuzo-yellow-tint; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  // Sentence-case body font, like the Create studio.
+  &__title {
+    margin: 0;
+    font-family: var(--body-font), sans-serif;
+    font-size: clamp(1.5rem, 5vw, 1.85rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: $fz-ink;
+
+    &:focus { outline: none; }
+  }
+
+  &__sub {
+    margin: 0.4rem 0 1.3rem;
+    font-size: 0.93rem;
+    line-height: 1.5;
+    color: darken($fz-ink-soft, 12%);
+  }
+
+  &__hint {
+    margin: -0.3rem 0 1rem;
+    font-size: 0.8rem;
+    color: darken($fz-ink-soft, 12%);
+  }
+
+  &__badge {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 0.8rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+    font-size: 1.7rem;
+  }
+
+  &__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin: 0 0 0.9rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 14px;
+    background: rgba($chili, 0.08);
+    border: 1px solid rgba($chili, 0.25);
+    color: darken($chili, 18%);
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.4;
+
+    svg { flex-shrink: 0; margin-top: 1px; }
+  }
+
+  &__cta {
+    width: 100%;
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -6px rgba($fuzo-yellow-deep, 0.6);
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover:not(:disabled) { background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
+    &:active:not(:disabled) { transform: scale(0.98); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+    &:disabled { opacity: 0.7; cursor: default; }
+
+    &--link { text-decoration: none; &:hover { color: $fuzo-yellow-ink; } }
+  }
+
+  &__ghost {
+    min-height: 44px;
+    padding: 0 1.2rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover { background: mix($onb-pill, $fz-ink, 92%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 2rem 0;
+    text-align: center;
+    color: $fz-ink;
+
+    p { margin: 0; max-width: 34ch; font-size: 0.92rem; line-height: 1.5; }
+  }
+
+  &__spin { animation: fz-onb-spin 0.9s linear infinite; }
+
+  // Quiet secondary action under the main button ("Skip for now").
+  &__skip {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 0.5rem;
+    border: 0;
+    background: none;
+    color: darken($fz-ink-soft, 14%);
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover:not(:disabled) { color: $fz-ink; text-decoration: underline; text-decoration-color: $fuzo-yellow; text-underline-offset: 3px; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; border-radius: 9999px; }
+    &:disabled { opacity: 0.6; }
+  }
+
+  // "Build your food profile" list.
+  &__list {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+
+    li {
+      @include fz-pastel-cycle;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 16px;
+      background: var(--pastel);
+      font-size: 0.82rem;
+      color: mix($fz-ink, #fff, 80%);
+
+      > span:first-child {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        color: $fz-ink;
+      }
+      strong { display: block; font-size: 0.92rem; color: $fz-ink; }
+    }
+  }
+
+  &__done-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: -0.5rem 0 1.1rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 9999px;
+    background: rgba($lime, 0.18);
+    color: darken($lime, 34%);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+}
+
+// ── Food profile questionnaire (I-05A) ─────────────────────────────────────
+.fz-taste {
+  &__progress {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: darken($fz-ink-soft, 14%);
+  }
+
+  &__bar {
+    flex: 1;
+    height: 6px;
+    border-radius: 9999px;
+    background: $onb-pill;
+    overflow: hidden;
+
+    i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, $fuzo-yellow, $fuzo-yellow-deep); }
+  }
+
+  &__questions { display: grid; gap: 1.2rem; margin-bottom: 1.1rem; }
+
+  &__q-text { margin: 0 0 0.5rem; font-size: 0.95rem; font-weight: 800; color: $fz-ink; line-height: 1.35; }
+  &__q-help { margin: -0.3rem 0 0.5rem; font-size: 0.8rem; color: darken($fz-ink-soft, 14%); }
+
+  &__result { margin-bottom: 1.1rem; }
+
+  &__persona {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 20px;
+    background: $fz-ink-card;
+    color: #fff;
+
+    > span { font-size: 2rem; line-height: 1; }
+    strong { display: block; font-size: 1.1rem; font-weight: 800; color: $fuzo-yellow-pale; }
+    p { margin: 0.25rem 0 0; font-size: 0.86rem; line-height: 1.45; color: rgba(#fff, 0.85); }
+  }
+
+  &__axes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+
+    li { display: grid; grid-template-columns: 7.5rem 1fr 2.6rem; align-items: center; gap: 0.6rem; }
+  }
+
+  &__axis { font-size: 0.86rem; font-weight: 700; color: $fz-ink; white-space: nowrap; }
+  &__track { height: 9px; border-radius: 9999px; background: $onb-pill; overflow: hidden; i { display: block; height: 100%; border-radius: inherit; } }
+  &__pct { text-align: right; font-size: 0.82rem; font-weight: 800; font-variant-numeric: tabular-nums; color: $fz-ink; }
+
+  &__nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+
+    .fz-onb__skip { width: auto; padding: 0 0.75rem; }
+  }
+}
+
+@keyframes fz-onb-spin { to { transform: rotate(360deg); } }
+
+// ── /terms, /privacy ───────────────────────────────────────────────────────
+.fz-legal {
+  min-height: 100dvh;
+  background: #fff;
+  color: $fz-ink;
+
+  &__page {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 4rem;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 36px;
+    margin-bottom: 1.25rem;
+    padding: 0 0.85rem 0 0.6rem;
+    border-radius: 9999px;
+    background: $onb-pill;
+    color: $fz-ink;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover { background: $fuzo-yellow-tint; color: $fz-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__title { margin: 0; font-size: clamp(1.7rem, 5vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; color: inherit; }
+  &__meta { margin: 0.35rem 0 1rem; font-size: 0.85rem; color: darken($fz-ink-soft, 12%); }
+
+  &__draft {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem;
+    padding: 0.8rem 1rem;
+    border-radius: 16px;
+    background: $fuzo-yellow-tint;
+    border: 1px solid rgba($fuzo-yellow-deep, 0.35);
+    font-size: 0.88rem;
+    line-height: 1.45;
+
+    svg { flex-shrink: 0; margin-top: 2px; color: $fuzo-yellow-deep; }
+  }
+
+  &__intro { font-size: 1rem; line-height: 1.6; }
+
+  &__section {
+    margin-top: 1.6rem;
+
+    h2 { margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 800; color: inherit; }
+    p { margin: 0 0 0.6rem; font-size: 0.95rem; line-height: 1.65; color: mix($fz-ink, #fff, 88%); }
+  }
+}
+
+// ── Dark mode: black page, the card stays near-white (clean look) ─────────
+html[data-theme='dark'] {
+  .fz-onb,
+  .fz-legal { background: #000; }
+
+  .fz-onb__logo--light { display: none; }
+  .fz-onb__logo--dark { display: block; }
+  .fz-onb__signout { background: #1c1c1c; color: #f4f4f2; }
+  .fz-onb__card { background: #f4f4f2; border-color: #f4f4f2; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6); }
+
+  .fz-legal { color: #f4f4f2; }
+  .fz-legal__back { background: #1c1c1c; color: #f4f4f2; }
+  .fz-legal__meta { color: #b9b4aa; }
+  .fz-legal__section p { color: #dedad2; }
+  .fz-legal__draft { color: $fz-ink; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-step-type,
+  .fz-onb__cta { transition: none; }
+  .fz-onb__spin { animation-duration: 2.5s; }
+}
+
+// ============================================================================
+// VERIFICATION (phase 6): badge, status page, sign-in reminder, admin review,
+// locked dashboard tools.
+// ============================================================================
+
+// FUZO Verified badge (profile name row, Scout pop-up). Only shown when approved.
+.fz-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.22rem 0.6rem 0.22rem 0.45rem;
+  border-radius: 9999px;
+  background: rgba($sky, 0.16);
+  color: darken($sky, 38%);
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  svg { color: darken($sky, 22%); }
+  &--sm { padding: 0.18rem 0.5rem 0.18rem 0.38rem; font-size: 0.68rem; }
+}
+
+.fz-verify-eyebrow {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: darken($fz-ink-soft, 14%);
+}
+
+.fz-onb__badge--good { background: rgba($lime, 0.18); color: darken($lime, 32%); }
+.fz-onb__badge--warn { background: rgba($chili, 0.1); color: darken($chili, 12%); }
+.fz-onb__ghost--link { display: inline-flex; align-items: center; text-decoration: none; color: $fz-ink; &:hover { color: $fz-ink; } }
+.fz-onb__skip--link { display: flex; align-items: center; justify-content: center; text-decoration: none; }
+
+.fz-verify-reason {
+  margin: 0 0 1rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: 16px;
+  background: rgba($chili, 0.08);
+  border: 1px solid rgba($chili, 0.25);
+  color: $fz-ink;
+
+  strong { display: block; margin-bottom: 0.2rem; font-size: 0.82rem; font-weight: 800; color: darken($chili, 18%); }
+  p { margin: 0; font-size: 0.9rem; line-height: 1.5; }
+}
+
+.fz-verify-locked {
+  margin: 0 0 1.1rem;
+  padding-left: 1.2rem;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: $fz-ink;
+}
+
+// B-11 reminder pop-up.
+.fz-remind {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(10, 8, 6, 0.45);
+
+  @media (min-width: 576px) { align-items: center; }
+
+  &__card {
+    position: relative;
+    width: 100%;
+    max-width: 28rem;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    padding: 1.4rem 1.25rem 1.2rem;
+    border-radius: 28px;
+    background: #fff;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  &__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: $onb-pill;
+    color: $fz-ink;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  .fz-onb__title { padding-right: 2.5rem; font-family: var(--body-font), sans-serif; }
+}
+
+// Admin review page.
+.fz-admin {
+  &__main {
+    flex: 1;
+    width: 100%;
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 0.5rem 1rem 4rem;
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0 0 1rem;
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      min-height: 40px;
+      padding: 0 0.9rem;
+      border: 0;
+      border-radius: 9999px;
+      background: $onb-pill;
+      color: $fz-ink;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+
+      span { min-width: 1.4rem; padding: 0.05rem 0.4rem; border-radius: 9999px; background: #fff; font-size: 0.74rem; text-align: center; }
+      &.is-on { background: $fuzo-yellow; color: $fuzo-yellow-ink; }
+      &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+    }
+  }
+
+  &__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+
+  &__item {
+    border-radius: 22px;
+    background: #fff;
+    border: 1px solid #f2f2f2;
+    box-shadow: $onb-float;
+    overflow: hidden;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    min-height: 64px;
+    padding: 0.8rem 1rem;
+    border: 0;
+    background: none;
+    text-align: left;
+    color: $fz-ink;
+    cursor: pointer;
+
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: -3px; border-radius: 22px; }
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+
+    strong { display: block; font-size: 0.98rem; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    span { font-size: 0.8rem; color: darken($fz-ink-soft, 14%); }
+  }
+
+  &__status {
+    flex-shrink: 0;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    background: $onb-pill;
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+
+    &--pending_review { background: $fuzo-yellow-tint; color: darken($fuzo-yellow-deep, 30%); }
+    &--action_required,
+    &--submission_overdue { background: rgba($chili, 0.1); color: darken($chili, 18%); }
+    &--verified { background: rgba($lime, 0.18); color: darken($lime, 34%); }
+  }
+
+  &__chev { flex-shrink: 0; transition: transform 0.2s $fz-ease; }
+  &__item.is-open &__chev { transform: rotate(180deg); }
+
+  &__panel { padding: 0 1rem 1rem; overflow: hidden; }
+
+  &__facts {
+    margin: 0 0 0.9rem;
+    display: grid;
+    gap: 0.5rem 1rem;
+    @media (min-width: 640px) { grid-template-columns: 1fr 1fr; }
+
+    dt { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: darken($fz-ink-soft, 14%); }
+    dd { margin: 0.1rem 0 0; font-size: 0.88rem; color: $fz-ink; overflow-wrap: anywhere; }
+  }
+
+  &__docs {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 14px;
+      background: $onb-pill;
+      font-size: 0.82rem;
+      color: $fz-ink;
+
+      > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+      strong { display: block; font-size: 0.86rem; }
+    }
+  }
+
+  &__open {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 36px;
+    padding: 0 0.75rem;
+    border: 0;
+    border-radius: 9999px;
+    background: #fff;
+    color: $fz-ink;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+
+    &:hover { background: $fuzo-yellow-tint; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+
+    .fz-onb__cta { width: auto; flex: 1 1 12rem; height: 46px; }
+    .fz-onb__ghost { flex: 0 1 auto; }
+  }
+
+  &__confirm p { margin: 0; font-size: 0.9rem; color: $fz-ink; }
+  &__empty { margin: 0.5rem 0; font-size: 0.88rem; color: darken($fz-ink-soft, 14%); }
+}
+
+// Restaurant Dashboard: tools locked until verified.
+.fz-dash-locked {
+  display: flex;
+  gap: 0.8rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  border-radius: 20px;
+  background: $fuzo-yellow-tint;
+  border: 1px solid rgba($fuzo-yellow-deep, 0.35);
+  color: $fz-ink;
+
+  > svg { flex-shrink: 0; margin-top: 2px; color: $fuzo-yellow-deep; }
+  strong { display: block; font-size: 0.95rem; font-weight: 800; }
+  p { margin: 0.25rem 0 0.7rem; font-size: 0.86rem; line-height: 1.5; }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 1rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-decoration: none;
+
+    &:hover { color: $fuzo-yellow-ink; background: mix(#fff, $fuzo-yellow, 15%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+html[data-theme='dark'] {
+  .fz-admin__item { background: #f4f4f2; border-color: #f4f4f2; }
+  .fz-remind__card { background: #f4f4f2; }
+  .fz-verify-eyebrow { color: #b9b4aa; }
+  // The admin page's title and empty text sit straight on the black page.
+  .fz-admin__main > .fz-onb__title { color: #f4f4f2; }
+  .fz-admin__main > .fz-onb__sub,
+  .fz-admin__main > .fz-admin__empty { color: #cfcac0; }
+  .fz-admin__filters button:not(.is-on) { background: #1c1c1c; color: #f4f4f2; span { background: #2a2a2a; } }
+}
+
+// The back pill is sometimes a link (admin page): no underline.
+a.fz-onb__back { text-decoration: none; color: $fz-ink; &:hover { color: $fz-ink; } }
+
+// ============================================================================
+// "FINISH YOUR PROFILE" (phase 7): card on Home + Profile, /finish-profile list.
+// ============================================================================
+.fz-finish {
+  position: relative;
+  padding: 1.1rem 1.2rem 1.15rem;
+  border-radius: 28px;
+  background: var(--fz-float-bg, #fff);
+  border: 1px solid var(--fz-float-border, #f2f2f2);
+  box-shadow: var(--fz-float-shadow, #{$onb-float});
+  color: $fz-ink;
+  overflow: hidden;
+
+  // Home: first block of For you. Profile: between the header and the tabs.
+  &--home { margin-top: 1.25rem; }
+  &--profile {
+    width: calc(100% - 2rem);
+    max-width: 1100px;
+    margin: 1rem auto;
+  }
+
+  &__close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: darken($fz-ink-soft, 14%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover { background: $onb-pill; color: $fz-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-right: 2.5rem;
+
+    h2 { margin: 0; font-family: var(--body-font), sans-serif; font-size: 1.05rem; font-weight: 800; color: $fz-ink; }
+    p { margin: 0.1rem 0 0; font-size: 0.82rem; color: darken($fz-ink-soft, 14%); }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+  }
+
+  &__bar {
+    height: 7px;
+    margin: 0.85rem 0 0.75rem;
+    border-radius: 9999px;
+    background: $onb-pill;
+    overflow: hidden;
+
+    i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, $fuzo-yellow, $fuzo-yellow-deep); transition: width 0.4s $fz-ease; }
+  }
+
+  &__items {
+    list-style: none;
+    margin: 0 0 0.9rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    li {
+      @include fz-pastel-cycle;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 9999px;
+      background: var(--pastel);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: $fz-ink;
+    }
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    padding: 0 1.2rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 6px 16px -6px rgba($fuzo-yellow-deep, 0.6);
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover { color: $fuzo-yellow-ink; background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+// Inside the pop-up the item chips sit under the text.
+.fz-remind .fz-finish__items { margin-top: -0.4rem; }
+
+// /finish-profile list of what's left.
+.fz-finish-list {
+  list-style: none;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    min-height: 68px;
+    padding: 0.8rem 0.95rem;
+    text-align: left;
+    border: 2px solid transparent;
+    border-radius: 18px;
+    background: $onb-pill;
+    color: $fz-ink;
+    cursor: pointer;
+    transition: background 0.2s $fz-ease, transform 0.2s $fz-ease;
+
+    > svg:last-child { flex-shrink: 0; color: darken($fz-ink-soft, 14%); }
+    &:hover { background: mix($onb-pill, $fz-ink, 96%); transform: translateY(-1px); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+    &.is-done {
+      background: rgba($lime, 0.12);
+      .fz-finish-list__icon { background: rgba($lime, 0.25); color: darken($lime, 34%); }
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: $fz-ink;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+
+    strong { display: block; font-size: 0.95rem; font-weight: 800; }
+    span { display: block; margin-top: 0.1rem; font-size: 0.8rem; color: darken($fz-ink-soft, 14%); }
+  }
+}

@@ -49,7 +49,7 @@ export default function ResetPasswordForm() {
     if (data.user) {
       // Closes a real gap, not boilerplate: a user who signed up but never
       // confirmed their email has no `users` row yet (only afterAuth/the
-      // OAuth callback create it) - OnboardingWizard.tsx does an `update`,
+      // OAuth callback create it) - onboarding does an `update`,
       // not an `upsert`, when finishing onboarding, which silently no-ops
       // on a missing row.
       await supabase.from('users').upsert(

@@ -34,7 +34,14 @@ import fs from 'fs';
 import path from 'path';
 import { randomUUID } from 'crypto';
 import { MASTERBOT_PERSONAS, type MasterbotPersona } from './data/masterbotPersonas';
-import { PERSONALITY } from '../src/lib/onboarding/data';
+// The old onboarding quiz's four personas (its data file was removed in the
+// onboarding rebuild; the bots keep these labels).
+const PERSONALITY = {
+  explorer: { icon: '/SVG/restaurant/Spicy.svg', title: 'Flavor Explorer', desc: 'You chase bold, new flavors and rarely order the same dish twice.' },
+  comfort: { icon: '/SVG/food/PIZZA.svg', title: 'Comfort Craver', desc: 'Familiar, indulgent food is where your heart is.' },
+  health: { icon: '/SVG/food/VEGAN.svg', title: 'Health Hero', desc: 'Balanced, nourishing meals top your list every time.' },
+  trend: { icon: '/SVG/food/SUSHI.svg', title: 'Trend Hunter', desc: 'You eat with your eyes first and chase what’s buzzing.' },
+} as const;
 import { emptyCardTags, DEFAULT_FLAVOR, type FoodCardType } from '../src/lib/types/foodCard';
 import taxonomyData from '../src/lib/data/fuzoTaxonomy.json';
 
@@ -208,6 +215,7 @@ async function ensureAccount(persona: MasterbotPersona): Promise<string> {
       username: persona.username,
       display_name: persona.displayName,
       profile_type: 'foodlover',
+      account_type: 'individual',
       profile_subtype: persona.subtype,
       is_onboarded: true,
     })

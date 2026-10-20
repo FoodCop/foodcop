@@ -4,9 +4,10 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProfileHero from '@/components/profile/ProfileHero';
 import ProfileTabs from '@/components/profile/ProfileTabs';
+import FinishProfileCard from '@/components/onboarding/FinishProfileCard';
 import type { UserProfile } from '@/components/profile/demoProfile';
 import type { FoodDnaRealData } from '@/components/profile/FoodDnaSection';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { useMyFoodCards } from '@/lib/hooks/useMyFoodCards';
 import { TYPE_META } from '@/lib/types/foodCard';
 import { PointsService } from '@/lib/services/pointsService';
@@ -39,12 +40,12 @@ function ProfilePageContent() {
     ? (activityParam as ActivityCategory)
     : undefined;
   const tabParam = searchParams.get('tab');
-  const initialTab = tabParam === 'dna' ? 'dna' : tabParam === 'settings' ? 'settings' : undefined;
+  const initialTab = tabParam === 'dna' ? 'dna' : tabParam === 'settings' ? 'settings' : tabParam === 'dashboard' ? 'dashboard' : undefined;
 
   const [realProfile, setRealProfile] = useState<UserProfile | null>(null);
   const [currentUserId, setCurrentUserId] = useState<string | undefined>(undefined);
   const [tasteProfile, setTasteProfile] = useState<FoodDnaRealData | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(isSupabaseConfigured);
 
   const { cards: myCards, isLoading: isLoadingCards, refetch: refetchCards } = useMyFoodCards(currentUserId);
 
@@ -61,10 +62,7 @@ function ProfilePageContent() {
 
   useEffect(() => {
     const supabase = createClient();
-    if (!supabase) {
-      setIsLoading(false);
-      return;
-    }
+    if (!supabase) return; // not configured: isLoading started false
 
     (async () => {
       const {
@@ -168,6 +166,8 @@ function ProfilePageContent() {
   return (
     <div className="profile-shell">
       <ProfileHero profile={profile} userId={currentUserId} />
+      {/* Skipped onboarding questions (client, 2026-10-18). Renders nothing once all done. */}
+      <FinishProfileCard where="profile" />
       <ProfileTabs
         userId={currentUserId}
         profile={profile}

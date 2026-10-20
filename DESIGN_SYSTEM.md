@@ -339,6 +339,44 @@ Removed routes: `/discover` and `/ai-chef` (Bites/Feed/Trims are dashboard tabs;
 ## Social profiles (`socialLinksService.ts`, `SocialLinksEditor.tsx`, `SocialLinksSheet.tsx`)
 Instagram, TikTok, YouTube, X, Facebook, Pinterest. Linking = paste your profile link (or @username): the link must be for that site, it's reduced to the bare handle (URLs are always rebuilt by the app, never stored), a "✓ @handle" confirmation shows, and "Open ↗" checks it's really you before saving. Shown on the Profile: desktop = row of round brand badges under the bio (`.fz-hero-socials`, + "Add/Edit socials" on your own); mobile = the flip card. Editing from the profile opens the "Your socials" sheet (no trip to Settings); Settings > Profile has the same editor. (Real OAuth "connect" isn't used: Instagram's personal-account API was shut down and the others need app review - verified-by-link is the reliable option.)
 
+## Onboarding (`src/components/onboarding/*`, `_onboard.scss`, client spec v1; plan: docs/ONBOARDING_PLAN.md)
+- **Create account on /login** uses the login card itself (`SignupSteps.tsx`):
+  - a small Back pill and step dots on top (yellow pill = current, yellow-tint = done);
+  - step 1 is two big grey tiles, Individual and Food Business (a radio group; the selected tile turns yellow-tint with a yellow ring and check);
+  - step 2 is the age step: grey pill dropdowns, Yes/No chips for Quebec, and a lock line saying it's private;
+  - step 3 is the account form, with the consent ticks as grey rows (yellow-tint when ticked).
+- **/onboarding** uses the clean look: a white page with the FUZO logo and a grey "Sign out" pill on top, then one floating white card (28px, `fz-float` shadow) holding the dots, a body-font sentence-case title, a single yellow main button, and errors next to the field. Dark mode is a black page with the near-white card.
+- **Profile step:** a 76px yellow-ringed avatar (or initial) with a dark camera badge, grey pill fields with an @ inside the username field and a live hint under it (green free / red taken), and roles as pastel chips.
+- **Food profile:**
+  - a "n of 9" yellow progress bar;
+  - pastel chips everywhere (selected = solid yellow with a check), with "x of up to N" under them;
+  - Food DNA questions as bold numbered lines with chips;
+  - the result: a dark ink persona card (pale-yellow title) and 5 gradient bars in the profile's Food DNA colours.
+  - "Back" and "Skip for now" are quiet text buttons under the main button.
+- **Business screens:**
+  - **Business type:** 8 pastel tiles, 2 per row (white icon circle, name, one line); selected = yellow-tint with a deep-yellow ring and a yellow icon.
+  - **Section labels** are small uppercase headings ("CONTACT PERSON · PRIVATE").
+  - **Locations** use the Create flow's place picker. Extra locations are outlined cards with a red bin, under a dashed "Add another location" pill.
+  - **Hours** are grey rows: switch · Mon · two time boxes. One line from 390px; smaller phones put the times on a second line.
+  - **Back** is a grey pill left of the step dots.
+  - **Reservations / loyalty / delivery:** grey radio cards (round dot, bold title, one grey line); selected = yellow-tint with a deep-yellow ring and a yellow check dot.
+  - **Documents:**
+    - a yellow-tint deadline banner (lime when received, chili when overdue);
+    - an outlined card per document type, with the uploaded files as grey rows (green check, name, status) and a dashed Upload pill.
+  - **Review:** a plain list of uppercase labels and values with a round grey pencil per row.
+  - **Created:** a grey facts box (Available in green), a checklist with ticks, and the yellow-tint note on what stays locked.
+- **Verification (`src/components/business/*`):**
+  - **Verified badge:** a small sky-tint pill with a check, "Verified" (`.fz-verified`).
+  - **Reminder:** a white bottom sheet on phones and a centred card from 576px, over a dim backdrop, with a round grey close button.
+  - **Status page:** the onboarding card shell, with a "What needs to change" chili note and a bulleted list of what's locked.
+  - **Admin page:** filter pills with counts, floating rows that expand (status pill: yellow-tint for review, chili for action required or overdue, lime for verified), documents as grey rows with an "Open ↗" pill, and yellow Approve / grey Ask for changes.
+  - **Locked Dashboard tools:** a yellow-tint note with a lock and a yellow "Verification status" pill.
+- **"Finish your profile":**
+  - **The card:** a floating card on Home (For you, first) and Profile with a yellow-tint sparkle icon, "N of 3 done", a yellow progress bar, pastel chips for what's left, a yellow "Finish now" pill, and a quiet × to hide it for a week.
+  - **`/finish-profile`:** grey rows with a white icon circle, title, hint and chevron; done rows are lime-tint with a check.
+  - **The pop-up:** the same sheet/card as the verification reminder.
+- **/terms and /privacy** are plain reading pages (max 46rem) with a yellow-tint "Draft" note until the final text arrives.
+
 ## Login / Sign up (`src/app/(auth)/login/page.tsx`, `.fz-auth` in `_auth.scss`)
 Desktop: split screen - dark brand panel (moody food photo `public/images/hero-cards/noodles-wine.jpg` under a dark scrim, white FUZO logo, heading-font "Find food you'll love.", sub line, 3 reasons with yellow round icons) beside a cream column with a raised paper card. ≤900px: the panel becomes a 240px photo header (logo + title only) and the card overlaps it. Card: cream "← Home" pill, yellow pill **Sign in | Create account** switch, heading-font title, pill inputs with leading icons (cream, yellow focus ring, autofill kept cream), "Forgot password?" beside the password label, 4-bar strength meter when creating a password (chili → turmeric → yellow → lime), styled error/notice boxes, yellow CTA with arrow, "or", Google button, quiet "Just looking? Continue as guest". Confirmation / reset-sent states = yellow-tint mail icon + message + CTA. `AuthBackHeader` (onboarding, reset password, DNA quiz) uses the same "← Home" pill. Sign-in logic is unchanged.
 Motion: entrance is CSS (card rises, brand text + points stagger) so nothing waits on hydration; Framer Motion handles interactions - the switch's yellow pill slides (`layoutId`), views cross-fade (`AnimatePresence`), errors fade in; all reduced-motion aware (`MotionConfig reducedMotion="user"` + media query). Desktop brand panel is sticky (100dvh) so its text stays visible on short screens. Images via `next/image` (hero photo `loading="eager"` + `fetchPriority="high"`). A11y: labels on every input, errors `role=alert` + linked by `aria-describedby`, tab order email → password → show → "Forgot password?" (DOM after the input, positioned beside the label), ≥44px touch targets.

@@ -29,6 +29,8 @@ export interface UserSettings {
   showOnlineStatus: boolean;
   /** Chat: let people see when you've read their message (and see theirs). */
   sendReadReceipts: boolean;
+  /** Save a dropped pin / photo GPS exactly on posts (off by default for under-18s). */
+  postExactLocation: boolean;
 }
 
 export const DEFAULT_USER_SETTINGS: UserSettings = {
@@ -45,6 +47,7 @@ export const DEFAULT_USER_SETTINGS: UserSettings = {
   notifyRecommendations: true,
   showOnlineStatus: true,
   sendReadReceipts: true,
+  postExactLocation: true,
 };
 
 interface ServiceResult<T> {
@@ -67,6 +70,7 @@ interface UserSettingsRow {
   notify_recommendations: boolean;
   show_online_status: boolean;
   send_read_receipts: boolean;
+  post_exact_location?: boolean;
 }
 
 const fromRow = (row: UserSettingsRow): UserSettings => ({
@@ -83,6 +87,7 @@ const fromRow = (row: UserSettingsRow): UserSettings => ({
   notifyRecommendations: row.notify_recommendations,
   showOnlineStatus: row.show_online_status ?? true,
   sendReadReceipts: row.send_read_receipts ?? true,
+  postExactLocation: row.post_exact_location ?? true,
 });
 
 const toRow = (settings: Partial<UserSettings>) => ({
@@ -99,6 +104,7 @@ const toRow = (settings: Partial<UserSettings>) => ({
   ...(settings.notifyRecommendations !== undefined && { notify_recommendations: settings.notifyRecommendations }),
   ...(settings.showOnlineStatus !== undefined && { show_online_status: settings.showOnlineStatus }),
   ...(settings.sendReadReceipts !== undefined && { send_read_receipts: settings.sendReadReceipts }),
+  ...(settings.postExactLocation !== undefined && { post_exact_location: settings.postExactLocation }),
 });
 
 export const UserSettingsService = {

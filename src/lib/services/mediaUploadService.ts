@@ -204,11 +204,14 @@ export const MediaUploadService = {
       return { success: false, error: 'You must be logged in to upload an image' };
     }
 
-    const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    // Re-saved as a JPEG (avatars at most 800px): smaller, and the photo's
+    // hidden EXIF data (e.g. where it was taken) is dropped.
+    const image = await downscaleImage(file, kind === 'avatar' ? 800 : 2000, true);
+    const extension = image.type === 'image/jpeg' ? 'jpg' : file.name.split('.').pop()?.toLowerCase() || 'jpg';
     const path = `${userId}/${kind}.${extension}`;
 
-    const { error: uploadError } = await supabase.storage.from(PROFILE_BUCKET).upload(path, file, {
-      contentType: file.type || 'image/jpeg',
+    const { error: uploadError } = await supabase.storage.from(PROFILE_BUCKET).upload(path, image, {
+      contentType: image.type || 'image/jpeg',
       cacheControl: '3600',
       upsert: true,
     });

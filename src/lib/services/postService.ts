@@ -134,6 +134,24 @@ async function uploadPhotos(photos: (Blob | string)[]): Promise<ServiceResult<st
   return { success: true, data: results.map((r) => (r.success ? r.data! : '')) };
 }
 
+
+/**
+ * Under-18s start with "no exact location on posts" (user_settings.
+ * post_exact_location, onboarding phase 1; they can turn it back on). A
+ * private spot - a dropped pin or the photo's own GPS, not a listed place -
+ * is then saved rounded to about 1 km, without the street address.
+ */
+export async function blurPrivateSpot<P extends { lat: number; lng: number; address?: string | null; placeId?: string | null; communityPlaceId?: string | null; restaurantId?: string | null }>(
+  supabase: NonNullable<ReturnType<typeof createClient>>,
+  userId: string,
+  place: P | null,
+): Promise<P | null> {
+  if (!place || place.placeId || place.communityPlaceId || place.restaurantId) return place;
+  const { data, error } = await supabase.from('user_settings').select('post_exact_location').eq('user_id', userId).maybeSingle();
+  if (error || data?.post_exact_location !== false) return place;
+  return { ...place, lat: Math.round(place.lat * 100) / 100, lng: Math.round(place.lng * 100) / 100, address: null };
+}
+
 export const PostService = {
   /**
    * Saves a post. status 'DRAFT' saves whatever is filled in; 'PUBLISHED'
@@ -171,6 +189,8 @@ export const PostService = {
         place = { ...place!, communityPlaceId: added.data };
       }
     }
+
+    place = await blurPrivateSpot(supabase, userId, place);
 
     const uploaded = await uploadPhotos(input.photos.slice(0, MAX_POST_PHOTOS));
     if (!uploaded.success) return { success: false, error: uploaded.error };
