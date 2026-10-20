@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProfileHero from '@/components/profile/ProfileHero';
 import ProfileTabs from '@/components/profile/ProfileTabs';
+import FinishProfileCard from '@/components/onboarding/FinishProfileCard';
 import type { UserProfile } from '@/components/profile/demoProfile';
 import type { FoodDnaRealData } from '@/components/profile/FoodDnaSection';
 import { createClient } from '@/lib/supabase/client';
@@ -168,6 +169,8 @@ function ProfilePageContent() {
   return (
     <div className="profile-shell">
       <ProfileHero profile={profile} userId={currentUserId} />
+      {/* Skipped onboarding questions (client, 2026-10-18). Renders nothing once all done. */}
+      <FinishProfileCard where="profile" />
       <ProfileTabs
         userId={currentUserId}
         profile={profile}

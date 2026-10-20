@@ -1629,3 +1629,174 @@ html[data-theme='dark'] {
 
 // The back pill is sometimes a link (admin page): no underline.
 a.fz-onb__back { text-decoration: none; color: $fz-ink; &:hover { color: $fz-ink; } }
+
+// ============================================================================
+// "FINISH YOUR PROFILE" (phase 7): card on Home + Profile, /finish-profile list.
+// ============================================================================
+.fz-finish {
+  position: relative;
+  padding: 1.1rem 1.2rem 1.15rem;
+  border-radius: 28px;
+  background: var(--fz-float-bg, #fff);
+  border: 1px solid var(--fz-float-border, #f2f2f2);
+  box-shadow: var(--fz-float-shadow, #{$onb-float});
+  color: $fz-ink;
+  overflow: hidden;
+
+  // Home: first block of For you. Profile: between the header and the tabs.
+  &--home { margin-top: 1.25rem; }
+  &--profile {
+    width: calc(100% - 2rem);
+    max-width: 1100px;
+    margin: 1rem auto;
+  }
+
+  &__close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: darken($fz-ink-soft, 14%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover { background: $onb-pill; color: $fz-ink; }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-right: 2.5rem;
+
+    h2 { margin: 0; font-family: var(--body-font), sans-serif; font-size: 1.05rem; font-weight: 800; color: $fz-ink; }
+    p { margin: 0.1rem 0 0; font-size: 0.82rem; color: darken($fz-ink-soft, 14%); }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $fuzo-yellow-tint;
+    color: $fuzo-yellow-deep;
+  }
+
+  &__bar {
+    height: 7px;
+    margin: 0.85rem 0 0.75rem;
+    border-radius: 9999px;
+    background: $onb-pill;
+    overflow: hidden;
+
+    i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, $fuzo-yellow, $fuzo-yellow-deep); transition: width 0.4s $fz-ease; }
+  }
+
+  &__items {
+    list-style: none;
+    margin: 0 0 0.9rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    li {
+      @include fz-pastel-cycle;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 9999px;
+      background: var(--pastel);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: $fz-ink;
+    }
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    padding: 0 1.2rem;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 6px 16px -6px rgba($fuzo-yellow-deep, 0.6);
+    transition: transform 0.2s $fz-ease, background 0.15s ease;
+
+    &:hover { color: $fuzo-yellow-ink; background: mix(#fff, $fuzo-yellow, 15%); transform: translateY(-1px); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+}
+
+// Inside the pop-up the item chips sit under the text.
+.fz-remind .fz-finish__items { margin-top: -0.4rem; }
+
+// /finish-profile list of what's left.
+.fz-finish-list {
+  list-style: none;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    min-height: 68px;
+    padding: 0.8rem 0.95rem;
+    text-align: left;
+    border: 2px solid transparent;
+    border-radius: 18px;
+    background: $onb-pill;
+    color: $fz-ink;
+    cursor: pointer;
+    transition: background 0.2s $fz-ease, transform 0.2s $fz-ease;
+
+    > svg:last-child { flex-shrink: 0; color: darken($fz-ink-soft, 14%); }
+    &:hover { background: mix($onb-pill, $fz-ink, 96%); transform: translateY(-1px); }
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+
+    &.is-done {
+      background: rgba($lime, 0.12);
+      .fz-finish-list__icon { background: rgba($lime, 0.25); color: darken($lime, 34%); }
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: $fz-ink;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+
+    strong { display: block; font-size: 0.95rem; font-weight: 800; }
+    span { display: block; margin-top: 0.1rem; font-size: 0.8rem; color: darken($fz-ink-soft, 14%); }
+  }
+}

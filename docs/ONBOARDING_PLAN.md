@@ -108,7 +108,7 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - [x] **4. Business part 1 (B-01 to B-04):** category, details, location and branches (map pin or service area), operations by category.
 - [x] **5. Business part 2 (B-05 to B-10):** reservations, loyalty, delivery, document upload, review, profile created.
 - [x] **6. Verification (B-11 to B-14):** reminder on sign-in, under review / action required / verified screens, the admin review page, Verified badge on the profile and Scout.
-- [ ] **7. "Finish your profile":** Home and Profile card, the 1 / 3 / 7-day pop-up.
+- [x] **7. "Finish your profile":** Home and Profile card, the 1 / 3 / 7-day pop-up.
 - [ ] **8. Clean-up and QA:** remove the old wizard, security review, test cases (`docs/ONBOARDING_TEST_CASES.md`).
 
 ## Phase 1 notes (`20261018000000_onboarding.sql`, rules mirrored in `src/lib/onboarding/policy.ts`)
@@ -229,6 +229,27 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - **FUZO Verified badge (`VerifiedBadge`):** next to a business's name on its profile, and in Scout's "On FUZO" strip. It shows only when `restaurant_profiles.is_verified` (set by the server), never for unverified businesses.
 - **Restaurant Dashboard:** for an unverified business, the menu and gallery managers are replaced by a note ("unlock once FUZO approves your documents" + Verification status). Business details stay editable. This matches the database, which refuses menu, gallery and post changes until approval. Posting through Create shows the database's own message: "Business posts unlock once your documents are approved."
 - **Tests:** 87 browser checks covering every reminder state (and none for pending, verified or individual accounts), every status screen, an upload moving to review, admin access, filters, signed links, both decisions, the badge, 320-1600 px in light and dark, and accessibility. The `/business` and `/admin` pages need a real sign-in on the server, so the test used stand-in copies of them, removed afterwards. Phases 2-5 still pass.
+
+## Phase 7 notes
+
+- **What counts as left** (`lib/onboarding/finishProfile.ts`): the food profile (skipped or half-done), a profile photo and roles. These are the optional parts of onboarding. Only individuals who finished onboarding get the card and pop-up; businesses and people mid-onboarding don't.
+- **Card (`FinishProfileCard`):**
+  - **Where:** the first block of Home → For you, and on your own Profile between the header and the tabs.
+  - **What it shows:** "N of 3 done", a progress bar (read out to screen readers), pastel chips for what's left, and **Finish now**.
+  - **Hiding:** it disappears once everything's done. The × hides it for a week on that device, then it comes back until everything is done.
+- **`/finish-profile` (`FinishProfileView`):**
+  - **The list:** what's left plus what's done ("Done - tap to change"), in any order.
+  - **Food profile:** the same questionnaire as onboarding, picking up on the screen they stopped at.
+  - **Photo and roles:** the onboarding profile step, without "Skip optional profile details" (it would clear saved roles).
+  - **All done:** "Your profile is complete".
+- **Pop-up (`FinishProfileNudge`, root layout):**
+  - **Timing:** checked once per browser session. Due 1, 3 and 7 days after skipping, counted from `skipped_at` (or from finishing onboarding when only the photo or roles are missing). At most once a day and three times in all; after that, only the card.
+  - **Records:** each showing writes `nudges_shown` + `last_nudge_at`, so it doesn't repeat on another device.
+  - **Not shown:** while the existing-account catch-up still has something to ask, or on onboarding, sign-in, the legal pages, `/business`, `/admin` and `/finish-profile`.
+  - **Buttons:** **Finish now** / **Not now**; Esc also closes it.
+- **Tests:**
+  - **76 browser checks:** card states and hiding, the finish page (roles, resuming the questionnaire, photo, all done), every pop-up timing rule (day 1, before day 3, day 3, once a day, after 3 showings, catch-up pending, businesses), 320-1600 px in light and dark, and accessibility.
+  - **The rest:** Home, Profile and `/finish-profile` need a real sign-in on the server, so the card and page were tested through stand-in pages, since removed. Phases 2-5 still pass.
 
 ## Still to confirm (client / legal, from the spec)
 

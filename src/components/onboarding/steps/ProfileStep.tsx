@@ -36,12 +36,15 @@ interface ProfileStepProps {
   initialRoles: string[];
   onSaved: () => void;
   renderSubmit: (label: string, busy: boolean) => React.ReactNode;
+  /** Onboarding offers "Skip optional profile details"; later edits don't. */
+  showSkip?: boolean;
+  submitLabel?: string;
 }
 
 const ROLE_LABEL: Record<string, string> = Object.fromEntries(ROLES.map((r) => [r.id, r.label]));
 const ROLE_IDS = ROLES.map((r) => r.id);
 
-export function ProfileStep({ initialName, initialUsername, initialAvatar, initialRoles, onSaved, renderSubmit }: ProfileStepProps) {
+export function ProfileStep({ initialName, initialUsername, initialAvatar, initialRoles, onSaved, renderSubmit, showSkip = true, submitLabel = 'Continue' }: ProfileStepProps) {
   const id = useId();
   const [name, setName] = useState(initialName);
   const [username, setUsername] = useState(initialUsername ?? suggestUsername(initialName));
@@ -194,10 +197,12 @@ export function ProfileStep({ initialName, initialUsername, initialAvatar, initi
         </p>
       )}
 
-      {renderSubmit('Continue', saving)}
-      <button type="button" className="fz-onb__skip" onClick={() => save(false)} disabled={saving}>
-        Skip optional profile details
-      </button>
+      {renderSubmit(submitLabel, saving)}
+      {showSkip && (
+        <button type="button" className="fz-onb__skip" onClick={() => save(false)} disabled={saving}>
+          Skip optional profile details
+        </button>
+      )}
     </form>
   );
 }

@@ -20,6 +20,7 @@ import "swiper/css/free-mode";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import OnboardingCatchUp from "@/components/onboarding/OnboardingCatchUp";
 import VerificationReminder from "@/components/business/VerificationReminder";
+import FinishProfileNudge from "@/components/onboarding/FinishProfileNudge";
 import { createClient } from "@/lib/supabase/server";
 import { THEME_SCRIPT } from "@/lib/theme";
 
@@ -58,6 +59,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           {children}
           <OnboardingCatchUp />
           <VerificationReminder />
+          <FinishProfileNudge />
         </AuthProvider>
         {/* Plain global <script> (like every one of the source templates used),
             not a webpack module import - bootstrap's UMD bundle touches

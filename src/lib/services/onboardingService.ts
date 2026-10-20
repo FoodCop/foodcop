@@ -49,6 +49,11 @@ export interface OnboardingState {
   roles: string[];
   foodPrefs: FoodPrefsStatus;
   skippedAt: string | null;
+  /** "Finish your profile" pop-ups shown so far, and when the last one was. */
+  nudgesShown: number;
+  lastNudgeAt: string | null;
+  /** When onboarding was finished. */
+  completedAt: string | null;
   data: OnboardingData;
   /** Food businesses: the chosen category (B-01), once the business profile exists. */
   businessCategory: string | null;
@@ -144,7 +149,7 @@ export const OnboardingService = {
       supabase.from('users').select('account_type, display_name, is_onboarded, username, avatar_url, roles').eq('id', user.id).maybeSingle(),
       supabase.from('user_private').select('user_id').eq('user_id', user.id).maybeSingle(),
       supabase.from('user_consents').select('document, version').eq('user_id', user.id),
-      supabase.from('user_onboarding').select('step, data, food_prefs_status, skipped_at').eq('user_id', user.id).maybeSingle(),
+      supabase.from('user_onboarding').select('step, data, food_prefs_status, skipped_at, nudges_shown, last_nudge_at, completed_at').eq('user_id', user.id).maybeSingle(),
       supabase.from('restaurant_profiles').select('business_category').eq('user_id', user.id).maybeSingle(),
     ]);
     const err = profile.error ?? priv.error ?? consents.error ?? progress.error ?? business.error;
@@ -167,6 +172,9 @@ export const OnboardingService = {
         roles: (profile.data?.roles as string[] | null) ?? [],
         foodPrefs: (progress.data?.food_prefs_status as FoodPrefsStatus | undefined) ?? 'not_started',
         skippedAt: progress.data?.skipped_at ?? null,
+        nudgesShown: progress.data?.nudges_shown ?? 0,
+        lastNudgeAt: progress.data?.last_nudge_at ?? null,
+        completedAt: progress.data?.completed_at ?? null,
         data: (progress.data?.data as OnboardingData | null) ?? {},
         businessCategory: business.data?.business_category ?? null,
         savedStep: progress.data?.step ?? null,
@@ -302,6 +310,15 @@ export const OnboardingService = {
       { onConflict: 'user_id' },
     );
     return error ? fail(error.message) : { success: true };
+  },
+
+  /** A "Finish your profile" pop-up was shown (counts towards the 3, at most one a day). */
+  async markNudgeShown(shownBefore: number): Promise<void> {
+    const m = await me();
+    if (!m) return;
+    await m.supabase
+      .from('user_onboarding')
+      .upsert({ user_id: m.user.id, nudges_shown: Math.min(20, shownBefore + 1), last_nudge_at: now(), updated_at: now() }, { onConflict: 'user_id' });
   },
 
   /** Required steps done: mark onboarded (the database checks them again). */

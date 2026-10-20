@@ -371,6 +371,10 @@ Instagram, TikTok, YouTube, X, Facebook, Pinterest. Linking = paste your profile
   - **Status page:** the onboarding card shell, with a "What needs to change" chili note and a bulleted list of what's locked.
   - **Admin page:** filter pills with counts, floating rows that expand (status pill: yellow-tint for review, chili for action required or overdue, lime for verified), documents as grey rows with an "Open ↗" pill, and yellow Approve / grey Ask for changes.
   - **Locked Dashboard tools:** a yellow-tint note with a lock and a yellow "Verification status" pill.
+- **"Finish your profile":**
+  - **The card:** a floating card on Home (For you, first) and Profile with a yellow-tint sparkle icon, "N of 3 done", a yellow progress bar, pastel chips for what's left, a yellow "Finish now" pill, and a quiet × to hide it for a week.
+  - **`/finish-profile`:** grey rows with a white icon circle, title, hint and chevron; done rows are lime-tint with a check.
+  - **The pop-up:** the same sheet/card as the verification reminder.
 - **/terms and /privacy** are plain reading pages (max 46rem) with a yellow-tint "Draft" note until the final text arrives.
 
 ## Login / Sign up (`src/app/(auth)/login/page.tsx`, `.fz-auth` in `_auth.scss`)
