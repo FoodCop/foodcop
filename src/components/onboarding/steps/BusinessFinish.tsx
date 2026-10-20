@@ -261,6 +261,7 @@ export function DocumentUploads({
     if (!file) return;
     const problem = documentProblem(file);
     if (problem) return setError(problem);
+    if ((docs ?? []).length >= 20) return setError('You can upload up to 20 documents. Contact FUZO support if you need to replace more.');
     setError(null);
     setDone(null);
     setUploading(type);

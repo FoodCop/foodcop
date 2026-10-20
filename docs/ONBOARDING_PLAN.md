@@ -109,7 +109,7 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - [x] **5. Business part 2 (B-05 to B-10):** reservations, loyalty, delivery, document upload, review, profile created.
 - [x] **6. Verification (B-11 to B-14):** reminder on sign-in, under review / action required / verified screens, the admin review page, Verified badge on the profile and Scout.
 - [x] **7. "Finish your profile":** Home and Profile card, the 1 / 3 / 7-day pop-up.
-- [ ] **8. Clean-up and QA:** remove the old wizard, security review, test cases (`docs/ONBOARDING_TEST_CASES.md`).
+- [x] **8. Clean-up and QA:** remove the old wizard, security review, test cases (`docs/ONBOARDING_TEST_CASES.md`).
 
 ## Phase 1 notes (`20261018000000_onboarding.sql`, rules mirrored in `src/lib/onboarding/policy.ts`)
 
@@ -250,6 +250,31 @@ When someone skips optional questions (food profile, photo, roles), FUZO asks ag
 - **Tests:**
   - **76 browser checks:** card states and hiding, the finish page (roles, resuming the questionnaire, photo, all done), every pop-up timing rule (day 1, before day 3, day 3, once a day, after 3 showings, catch-up pending, businesses), 320-1600 px in light and dark, and accessibility.
   - **The rest:** Home, Profile and `/finish-profile` need a real sign-in on the server, so the card and page were tested through stand-in pages, since removed. Phases 2-5 still pass.
+
+## Phase 8 notes
+
+- **Removed:** the old three-path wizard (`OnboardingWizard.tsx`), its 23 images (`public/onboarding/`), its unused data (`lib/onboarding/data.ts` keeps only `BUSINESS_IDENTITY`, which Create uses) and its styles. The Food DNA quiz keeps the shared `.onboarding-*` page, card, chip and footer rules. `scripts/seed_masterbots.ts` now carries its own persona labels and marks bots as individuals.
+- **Security review:** I reviewed every new table, policy, function, storage rule and page. Fixes (`20261018010000_onboarding_hardening.sql`):
+  - **"Onboarded" checks more in the database,** so the screens can't be skipped by calling the API: individuals also need a username, and businesses need a contact person and contact email.
+  - **At most 20 document files and records per business,** so the private bucket can't be filled up. The upload screen explains the limit.
+- **Checked and fine:**
+  - **Owner-only data:** birth dates, consents, progress, business contacts and documents are owner-only (plus admins for business data).
+  - **Server-set fields:** account type is set once; the verified flag, review and audit log are server-only; the verification statuses can't be self-set.
+  - **Unverified businesses:** content and menu/gallery changes are refused.
+  - **Uploads:** documents only in your own folder, as PDF/JPG/PNG up to 10 MB, opened through 5-minute signed links.
+  - **Links and text:** websites are always linked as `https://` (a `javascript:` value can't run); reviewer notes and file names are shown as text; `?next=` only allows same-site paths.
+  - **Cookie:** the onboarding cookie only skips a redirect and grants nothing.
+- **Under-18 location default, now enforced:** phase 1 stored "no exact location on posts" for under-18s, but nothing used it. Photo posts now save a dropped pin or the photo's own GPS rounded to about 1 km (no street address) when the setting is off. Listed places are never changed. Settings → Privacy has a new **Exact location on posts** switch.
+- **Accepted (low risk):**
+  - the reservations / loyalty / delivery answers are readable with the public restaurant profile;
+  - the sign-up choices wait in the browser for up to a day before onboarding saves them;
+  - uploaded PDFs aren't virus-scanned (listed under known limits).
+- **Also fixed:** a lint error in the Profile page's older code (loading state set inside an effect).
+- **QA:**
+  - **Database:** 108 checks (PGlite).
+  - **Browser:** 576 checks across six suites (sign-up 117, individual 103, business 1: 88, business 2: 105, verification 87, finish your profile 76): every screen and branch, 320-1600 px, light and dark, accessibility, the console.
+  - **Code:** types and lint are clean on all 48 changed files (the only warnings are older `<img>` notes).
+- **Phone test cases:** `docs/ONBOARDING_TEST_CASES.md`.
 
 ## Still to confirm (client / legal, from the spec)
 

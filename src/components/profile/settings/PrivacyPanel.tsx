@@ -54,6 +54,30 @@ export default function PrivacyPanel({ settings, updateSetting }: PrivacyPanelPr
 
       <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
         <div className="d-flex align-items-center gap-3">
+          <div className="bg-danger bg-opacity-10 text-danger rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>📍</div>
+          <div>
+            <div className="fw-bold text-dark">Exact location on posts</div>
+            <small className="text-muted d-block">
+              {settings.postExactLocation
+                ? 'Dropped pins and photo locations are saved exactly'
+                : 'Dropped pins and photo locations are rounded to about 1 km. Listed places are always shown'}
+            </small>
+          </div>
+        </div>
+        <div className="form-check form-switch fs-4 m-0">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            role="switch"
+            aria-label="Exact location on posts"
+            checked={settings.postExactLocation}
+            onChange={(e) => updateSetting('postExactLocation', e.target.checked)}
+          />
+        </div>
+      </div>
+
+      <div className="list-group-item d-flex align-items-center justify-content-between p-3 border-0 border-bottom">
+        <div className="d-flex align-items-center gap-3">
           <div className="bg-success bg-opacity-10 text-success rounded p-2 text-center d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>🟢</div>
           <div>
             <div className="fw-bold text-dark">Show when I&rsquo;m active</div>
