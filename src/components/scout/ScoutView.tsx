@@ -16,7 +16,7 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Search, X, RefreshCw, Navigation, Locate, MapPin } from 'lucide-react';
+import { Search, X, RefreshCw, Navigation, Locate, MapPin, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { PlacesService } from '@/lib/services/placesService';
 import { PlateService } from '@/lib/services/plateService';
@@ -27,10 +27,13 @@ import ShareSheet, { type SharePayload } from '../share/ShareSheet';
 import type { AppItem } from '@/types/appItem';
 import type { ScoutPlace, ScoutFilter, MapLike } from '@/types/scout';
 import { getGoogleMaps } from '@/types/scout';
+import { googleMessage } from '@/lib/google/limits';
+import { withoutGoogleLink } from '@/lib/google/photos';
+import { useMapsFailed } from '@/lib/maps/mapsHealth';
+import { MapUnavailable } from '@/components/maps/MapUnavailable';
 import {
   toScoutPlace,
   toSavedScoutPlace,
-  SCOUT_FALLBACK_PLACES,
   calculateNeuralMatch,
   sortPlaces,
   filterPlaces,
@@ -218,64 +221,92 @@ export default function ScoutView() {
     return placeSuggestions.map(p => ({ text: p.text, placeId: p.placeId, type: 'place' as const }));
   }, [placeSuggestions]);
 
+  const showActionToast = useCallback((message: string) => {
+    setActionToast(message);
+    setTimeout(() => setActionToast(null), 3000);
+  }, []);
+
+  const mapsFailed = useMapsFailed();
+
   // --- Data Fetching: Source A (Google Places) ---
+  // Each search costs money, so opening Explore or moving the map never runs
+  // one: only the search bar, "Search this area" and "Load more" do
+  // (docs/GOOGLE_COST_PLAN.md). FUZO's own places (below) load by themselves.
+  const [searched, setSearched] = useState<{ lat: number; lng: number; radius: number } | null>(null);
+  // Where the map is now, to know when "Search this area" is worth offering.
+  const [viewCenter, setViewCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [nextPage, setNextPage] = useState<{ kind: 'nearby' | 'textsearch'; token: string } | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  /** Makes the map's centre the area FUZO's own places load for. Free. */
+  const applyMapCentre = useCallback((map: MapLike) => {
+    const center = map.getCenter();
+    if (!center) return null;
+    const here = {
+      lat: typeof center.lat === 'function' ? center.lat() : center.lat,
+      lng: typeof center.lng === 'function' ? center.lng() : center.lng,
+    };
+    setMapCenter(here);
+    setViewCenter(here);
+    return here;
+  }, []);
+
   const fetchPlaces = useCallback(async (map: MapLike, query?: string) => {
+    const here = applyMapCentre(map);
+    if (!here) return;
     setIsLoading(true);
+    setNextPage(null);
     const seq = ++requestSeq.current;
 
     try {
-      const center = (map as any).getCenter();
-      const lat = typeof center.lat === 'function' ? center.lat() : center.lat;
-      const lng = typeof center.lng === 'function' ? center.lng() : center.lng;
-      setMapCenter({ lat, lng });
-
       const result = query
-        ? await PlacesService.searchByText(query, lat, lng, filter.maxDistance)
-        : await PlacesService.searchNearby(lat, lng, filter.maxDistance);
+        ? await PlacesService.searchByText(query, here.lat, here.lng, filter.maxDistance)
+        : await PlacesService.searchNearby(here.lat, here.lng, filter.maxDistance);
 
       if (!shouldApplyLatestRequest(mounted, seq, requestSeq)) return;
       setIsLoading(false);
 
-      if (result.success && result.data?.results && result.data.results.length > 0) {
-        const transformed = result.data.results.map((r, i) => toScoutPlace(r, i, MAPS_API_KEY));
-        setMainMapPlaces(transformed);
-
-        // Google sends 20 per page: load pages 2-3 in the background (up to 60).
-        // A token is only valid ~2s after it's issued, so wait and retry once.
-        let token = result.data.next_page_token;
-        const kind = query ? 'textsearch' : 'nearby';
-        for (let page = 2; token && page <= 3; page++) {
-          await new Promise((r) => setTimeout(r, 2000));
-          if (!shouldApplyLatestRequest(mounted, seq, requestSeq)) return;
-          let more = await PlacesService.nextPage(kind, token);
-          if (more.success && more.data?.status === 'INVALID_REQUEST') {
-            await new Promise((r) => setTimeout(r, 1500));
-            more = await PlacesService.nextPage(kind, token);
-          }
-          if (!shouldApplyLatestRequest(mounted, seq, requestSeq)) return;
-          if (!more.success || !more.data?.results?.length) break;
-          const extra = more.data.results.map((r, i) => toScoutPlace(r, i + page * 20, MAPS_API_KEY));
-          setMainMapPlaces((prev) => {
-            const ids = new Set(prev.map((p) => p.placeId || p.id));
-            return [...prev, ...extra.filter((p) => !ids.has(p.placeId || p.id))];
-          });
-          token = more.data.next_page_token;
-        }
+      if (result.success) {
+        setSearched({ ...here, radius: filter.maxDistance });
+        setMainMapPlaces((result.data?.results ?? []).map((r, i) => toScoutPlace(r, i)));
+        const token = result.data?.next_page_token;
+        if (token) setNextPage({ kind: query ? 'textsearch' : 'nearby', token });
       } else {
-        if (result.data?.status === 'ZERO_RESULTS') {
-          setMainMapPlaces([]);
-        } else {
-          setMainMapPlaces(SCOUT_FALLBACK_PLACES);
-        }
+        showActionToast(googleMessage(result.code, "We couldn't search this area. Please try again."));
       }
     } catch (err) {
       console.error('Scout fetch error:', err);
       if (shouldApplyLatestRequest(mounted, seq, requestSeq)) {
         setIsLoading(false);
-        setMainMapPlaces(SCOUT_FALLBACK_PLACES);
+        showActionToast("We couldn't search this area. Please try again.");
       }
     }
-  }, [filter.maxDistance]);
+  }, [filter.maxDistance, showActionToast, applyMapCentre]);
+
+  // The next 20 places, when asked for. Google's token works ~2s after it's issued: wait and retry once.
+  const loadMorePlaces = useCallback(async () => {
+    if (!nextPage || isLoadingMore) return;
+    setIsLoadingMore(true);
+    const seq = requestSeq.current;
+    let more = await PlacesService.nextPage(nextPage.kind, nextPage.token);
+    if (more.success && more.data?.status === 'INVALID_REQUEST') {
+      await new Promise((r) => setTimeout(r, 2000));
+      more = await PlacesService.nextPage(nextPage.kind, nextPage.token);
+    }
+    if (!shouldApplyLatestRequest(mounted, seq, requestSeq)) return;
+    setIsLoadingMore(false);
+    if (!more.success) {
+      showActionToast(googleMessage(more.code, "We couldn't load more places. Please try again."));
+      return;
+    }
+    setMainMapPlaces((prev) => {
+      const ids = new Set(prev.map((p) => p.placeId || p.id));
+      const extra = (more.data?.results ?? []).map((r, i) => toScoutPlace(r, prev.length + i));
+      return [...prev, ...extra.filter((p) => !ids.has(p.placeId || p.id))];
+    });
+    const token = more.data?.next_page_token;
+    setNextPage(token ? { kind: nextPage.kind, token } : null);
+  }, [nextPage, isLoadingMore, showActionToast]);
 
   // --- Data Fetching: Source B (Community FUZO Pins) ---
   // Community pins (fuzo_locations) inside the current search area - not a
@@ -507,10 +538,10 @@ export default function ScoutView() {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.setCenter(pos);
         (mapInstanceRef.current as any).setZoom(14);
-        fetchPlaces(mapInstanceRef.current);
+        applyMapCentre(mapInstanceRef.current);
       }
     });
-  }, [fetchPlaces]);
+  }, [applyMapCentre]);
 
   const handleSearch = (e?: React.FormEvent, explicitQuery?: string) => {
     if (e) e.preventDefault();
@@ -534,11 +565,6 @@ export default function ScoutView() {
   };
 
 
-  const showActionToast = (message: string) => {
-    setActionToast(message);
-    setTimeout(() => setActionToast(null), 3000);
-  };
-
   // Load which places the signed-in user has already saved, so the modal's
   // Save button can reflect real state (filled/labeled "Saved") instead of
   // always looking unsaved.
@@ -559,7 +585,7 @@ export default function ScoutView() {
               id: i.item_id,
               name: String(m.name || m.title || 'Saved place'),
               cat: typeof m.cat === 'string' ? m.cat : 'Restaurant',
-              img: typeof m.image === 'string' ? m.image : '',
+              img: withoutGoogleLink(m.image),
               lat,
               lng,
               placeId: typeof m.placeId === 'string' ? m.placeId : undefined,
@@ -705,6 +731,13 @@ export default function ScoutView() {
         attempts += 1;
         if (attempts >= MAX_ATTEMPTS) {
           console.error("Failed to load Google Maps Map class after retrying.");
+          // No map at all: show the message, and FUZO's own places around the user.
+          (window as unknown as { gm_authFailure?: () => void }).gm_authFailure?.();
+          navigator.geolocation.getCurrentPosition((p) => {
+            const pos = { lat: p.coords.latitude, lng: p.coords.longitude };
+            setUserLocation(pos);
+            setMapCenter(pos);
+          }, () => {});
           return;
         }
         setTimeout(initMap, 500);
@@ -749,8 +782,12 @@ export default function ScoutView() {
         else if (!areaOnly) setPendingPlace(deepLink);
       }
 
-      fetchPlaces(map);
+      applyMapCentre(map);
       map.addListener('click', handleMapClick);
+      map.addListener('idle', () => {
+        const c = map.getCenter();
+        if (c) setViewCenter({ lat: c.lat(), lng: c.lng() });
+      });
       map.addListener('zoom_changed', () => {
         const z = map.getZoom();
         if (typeof z === 'number') setMapZoom(Math.round(z));
@@ -762,7 +799,7 @@ export default function ScoutView() {
         // Opened on a specific place? Show the blue dot, but stay on that place.
         if (deepLink) return;
         map.setCenter(pos);
-        fetchPlaces(map);
+        applyMapCentre(map);
       }, () => {});
     };
 
@@ -947,7 +984,7 @@ export default function ScoutView() {
         try {
           const result = await PlacesService.getPlaceDetails(selectedPlace.placeId as string);
           if (result.success && result.data?.result) {
-            const detailedPlace = mergePlaceDetails(selectedPlace, result.data.result, MAPS_API_KEY);
+            const detailedPlace = mergePlaceDetails(selectedPlace, result.data.result);
             setSelectedPlace(detailedPlace);
             setMainMapPlaces(prev => prev.map(p => p.id === selectedPlace.id ? detailedPlace : p));
           }
@@ -961,12 +998,22 @@ export default function ScoutView() {
     }
   }, [selectedPlace?.id]);
 
+  // "Search this area": until the first search, then once the map has moved
+  // well away from it or the radius has grown.
+  const movedAway =
+    !!searched &&
+    !!viewCenter &&
+    getDistanceInMeters(searched.lat, searched.lng, viewCenter.lat, viewCenter.lng) > Math.max(500, searched.radius * 0.25);
+  const showSearchArea =
+    isMapReady && !mapsFailed && !directions.open && !nav.active && !directions.pick && (!searched || movedAway || filter.maxDistance > searched.radius);
+
   // --- Legend Counts ---
 
   return (
     <div className={`scout-root${nav.active ? ' is-navigating' : ''}${directions.pick ? ' is-picking' : ''}`} style={{ position: 'relative', width: '100%', height: '100%' }}>
       {/* Map canvas */}
       <div ref={mapRef} style={{ position: 'absolute', inset: 0, zIndex: 0 }} id="scout-map" />
+      {mapsFailed && <MapUnavailable hint="You can still browse FUZO's places in the list." />}
 
       {/* Search bar */}
       <div className="scout-search">
@@ -989,7 +1036,7 @@ export default function ScoutView() {
                 className="scout-search__input"
               />
               {searchQuery && (
-                <button type="button" onClick={() => { setSearchQuery(''); setShowSuggestions(false); if (mapInstanceRef.current) fetchPlaces(mapInstanceRef.current); }} className="scout-search__clear">
+                <button type="button" onClick={() => { setSearchQuery(''); setShowSuggestions(false); }} className="scout-search__clear">
                   <X size={18} />
                 </button>
               )}
@@ -1052,14 +1099,21 @@ export default function ScoutView() {
       {/* FAB cluster */}
       <div className="scout-fabs">
         <button
-          onClick={() => mapInstanceRef.current && fetchPlaces(mapInstanceRef.current)}
-          className={`scout-fab${isLoading ? ' scout-fab--busy' : ''}`}
+          onClick={() => {
+            if (mapInstanceRef.current) applyMapCentre(mapInstanceRef.current);
+            loadFuzo();
+          }}
+          className="scout-fab"
+          aria-label="Refresh FUZO places here"
+          title="Refresh FUZO places here"
         >
-          <RefreshCw size={18} className={isLoading ? 'scout-spin' : ''} />
+          <RefreshCw size={18} />
         </button>
         <button
           onClick={handleRecenterMap}
           className="scout-fab"
+          aria-label="Go to my location"
+          title="Go to my location"
         >
           <Locate size={18} />
         </button>
@@ -1071,6 +1125,17 @@ export default function ScoutView() {
           <MapPin size={20} strokeWidth={3} />
         </button>
       </div>
+
+      {showSearchArea && (
+        <button
+          type="button"
+          className="scout-search-area"
+          disabled={isLoading}
+          onClick={() => { if (mapInstanceRef.current) fetchPlaces(mapInstanceRef.current, searchQuery.trim() || undefined); }}
+        >
+          {isLoading ? <Loader2 size={15} className="scout-spin" aria-hidden="true" /> : <Search size={15} aria-hidden="true" />} Search this area
+        </button>
+      )}
 
       {/* Overlay panels */}
       {nav.active && directions.target ? (
@@ -1124,7 +1189,10 @@ export default function ScoutView() {
         onPlaceSelect={handlePlaceSelect}
         filter={filter}
         onFilterChange={setFilter}
-        onDistanceChangeEnd={() => { if (mapInstanceRef.current) fetchPlaces(mapInstanceRef.current, searchQuery); }}
+        canLoadMore={!!nextPage}
+        loadingMore={isLoadingMore}
+        onLoadMore={loadMorePlaces}
+        searched={!!searched}
         onClose={() => { }}
       />
       )}
@@ -1158,7 +1226,7 @@ export default function ScoutView() {
         <ScoutAddPinModal
           initialCoordinates={addPinCoords}
           onClose={() => { setIsAddPinModalOpen(false); setAddPinCoords(undefined); }}
-          onSuccess={() => { if (mapInstanceRef.current) fetchPlaces(mapInstanceRef.current); loadFuzo(); }}
+          onSuccess={() => { loadFuzo(); }}
         />
       )}
     </div>

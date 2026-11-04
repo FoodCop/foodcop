@@ -57,6 +57,25 @@ interface ServiceResult<T> {
   success: boolean;
   data?: T;
   error?: string;
+  /** Why Google was refused: 'sign_in' | 'user_limit' | 'daily_limit' | 'unavailable' (lib/google/limits). */
+  code?: string;
+}
+
+// The same question in the same tab within 10 minutes reuses the answer, e.g.
+// going Home -> Explore -> Home. Kept in memory only and never saved.
+const REUSE_MS = 10 * 60 * 1000;
+const answers = new Map<string, { at: number; result: Promise<ServiceResult<unknown>> }>();
+
+function reused<T>(key: string, ask: () => Promise<ServiceResult<T>>): Promise<ServiceResult<T>> {
+  const known = answers.get(key);
+  if (known && Date.now() - known.at < REUSE_MS) return known.result as Promise<ServiceResult<T>>;
+  const result = ask().then((res) => {
+    if (!res.success) answers.delete(key); // a failed call may work next time
+    return res;
+  });
+  answers.set(key, { at: Date.now(), result });
+  if (answers.size > 100) answers.delete(answers.keys().next().value as string);
+  return result;
 }
 
 async function makeRequest<T>(path: string, payload: unknown): Promise<ServiceResult<T>> {
@@ -75,6 +94,7 @@ async function makeRequest<T>(path: string, payload: unknown): Promise<ServiceRe
       return {
         success: false,
         error: data?.error || `Request failed (${response.status})`,
+        code: data?.code,
       };
     }
 
@@ -89,30 +109,25 @@ async function makeRequest<T>(path: string, payload: unknown): Promise<ServiceRe
 
 export const PlacesService = {
   async searchNearby(latitude: number, longitude: number, radius = 5000): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string; error_message?: string; next_page_token?: string }>> {
-    return makeRequest('/places/nearby', {
-      latitude,
-      longitude,
-      radius,
-      type: 'restaurant',
-    });
+    return reused(`nearby:${latitude.toFixed(3)},${longitude.toFixed(3)},${radius}`, () =>
+      makeRequest('/places/nearby', { latitude, longitude, radius }),
+    );
   },
 
-  /** Pages 2-3 of a nearby / text search (Google's next_page_token; ~2s before it's valid). */
+  /** The next page of a nearby / text search, when the user asks for more (Google's next_page_token; ~2s before it's valid). */
   async nextPage(kind: 'nearby' | 'textsearch', pagetoken: string): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string; next_page_token?: string }>> {
     return makeRequest(`/places/${kind}`, { pagetoken });
   },
 
   async searchByText(query: string, latitude: number, longitude: number, radius = 50000): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string; error_message?: string; next_page_token?: string }>> {
-    return makeRequest('/places/textsearch', {
-      query,
-      location: { lat: latitude, lng: longitude },
-      radius,
-    });
+    return reused(`text:${query.trim().toLowerCase()}:${latitude.toFixed(3)},${longitude.toFixed(3)},${radius}`, () =>
+      makeRequest('/places/textsearch', { query, location: { lat: latitude, lng: longitude }, radius }),
+    );
   },
 
   /** Places close to a route line (Directions' "Food along the way"). */
-  async searchAlongRoute(polyline: string, query = 'restaurants'): Promise<ServiceResult<{ results: (ScoutPlaceRaw & { photo_name?: string })[]; status?: string }>> {
-    return makeRequest('/places/search-along-route', { polyline, query });
+  async searchAlongRoute(polyline: string): Promise<ServiceResult<{ results: ScoutPlaceRaw[]; status?: string }>> {
+    return reused(`along:${polyline}`, () => makeRequest('/places/search-along-route', { polyline }));
   },
 
 
@@ -131,9 +146,6 @@ export const PlacesService = {
       return { address: wp };
     };
 
-    // Traffic-aware routing and route modifiers only apply to motor vehicles -
-    // the Routes API rejects them for WALK.
-    const motor = travelMode === 'DRIVE' || travelMode === 'TWO_WHEELER';
     const payload = {
       origin: parseWaypoint(origin),
       destination: parseWaypoint(destination),
@@ -141,20 +153,12 @@ export const PlacesService = {
       computeAlternativeRoutes: false,
       // Step texts follow the user's language (the API otherwise guesses from the route's region).
       languageCode: typeof navigator !== 'undefined' && navigator.language ? navigator.language : 'en',
-      ...(motor
-        ? {
-            routingPreference: 'TRAFFIC_AWARE',
-            routeModifiers: { avoidTolls: false, avoidHighways: false, avoidFerries: false },
-          }
-        : {}),
     };
 
     return makeRequest('/directions', payload);
   },
 
   async getPlaceDetails(placeId: string): Promise<ServiceResult<{ result?: ScoutPlaceRaw; status?: string }>> {
-    return makeRequest('/places/details', {
-      place_id: placeId,
-    });
+    return reused(`details:${placeId}`, () => makeRequest('/places/details', { place_id: placeId }));
   },
 };

@@ -18,8 +18,6 @@ const supabaseHost = (() => {
 
 const EXACT_HOSTS = new Set([
   'images.unsplash.com',
-  'maps.googleapis.com',
-  'places.googleapis.com',
   'i.ytimg.com',
   ...(supabaseHost ? [supabaseHost] : []),
 ]);

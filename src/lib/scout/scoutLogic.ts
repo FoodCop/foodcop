@@ -3,14 +3,7 @@
 
 import type { AppItem } from '@/types/appItem';
 import type { ScoutPlace, ScoutFilter } from '@/types/scout';
-
-const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
-
-// Shared by toScoutPlace() below and the Dashboard's nearby-restaurants rail
-// (recommendationService.ts's getNearbyRestaurants()) - same Google Places
-// Photo API URL shape, one place to build it.
-export const buildPlacePhotoUrl = (photoReference: string, mapsApiKey: string = MAPS_API_KEY, maxWidth = 400): string =>
-  `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=${mapsApiKey}`;
+import { MAX_PLACE_PHOTOS, placePhotoPath } from '@/lib/google/photos';
 
 const parseOpeningHours = (weekdayText?: string[]): Record<string, string> => {
   if (!weekdayText || weekdayText.length === 0) return {};
@@ -33,7 +26,7 @@ const parseOpeningHours = (weekdayText?: string[]): Record<string, string> => {
   return results;
 };
 
-export const mergePlaceDetails = (original: ScoutPlace, details: any, mapsApiKey: string = MAPS_API_KEY): ScoutPlace => {
+export const mergePlaceDetails = (original: ScoutPlace, details: any): ScoutPlace => {
   if (!details) return original;
 
   return {
@@ -58,9 +51,12 @@ export const mergePlaceDetails = (original: ScoutPlace, details: any, mapsApiKey
       text: r.text || '',
       time: r.relative_time_description || 'Recently'
     })),
-    photos: (details.photos || []).map((p: any) =>
-      `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${p.photo_reference}&key=${mapsApiKey}`
-    ),
+    // Each photo costs money, so a place shows a few, and only on its Photos tab.
+    photoRef: original.photoRef || details.photos?.[0]?.photo_reference,
+    photos: (details.photos || [])
+      .filter((p: any) => p.photo_reference)
+      .slice(0, MAX_PLACE_PHOTOS)
+      .map((p: any) => placePhotoPath(p.photo_reference)),
     wheelchairAccessibleEntrance: details.wheelchair_accessible_entrance,
     servesBeer: details.serves_beer,
     servesWine: details.serves_wine,
@@ -73,29 +69,7 @@ export const mergePlaceDetails = (original: ScoutPlace, details: any, mapsApiKey
   };
 };
 
-export const SCOUT_FALLBACK_PLACES: ScoutPlace[] = [
-  {
-    id: 'fallback-1',
-    name: 'The Glass House',
-    cat: 'Fine Dining',
-    rating: 4.8,
-    reviews: 1240,
-    address: '123 Crystal Lane, NY',
-    phone: '+1 212-555-0123',
-    website: 'theglasshouse.com',
-    vibe: ['Elegant', 'Romantic', 'Quiet'],
-    img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400',
-    lat: 40.7128,
-    lng: -74.0060,
-    timings: { mon: '5PM - 11PM', tue: '5PM - 11PM', wed: '5PM - 11PM', thu: '5PM - 12AM', fri: '5PM - 1AM', sat: '4PM - 1AM', sun: '4PM - 10PM' },
-    menu: [],
-    userReviews: [],
-    photos: [],
-    matchPercentage: 98
-  }
-];
-
-export const toScoutPlace = (result: any, index: number, mapsApiKey: string = MAPS_API_KEY): ScoutPlace => {
+export const toScoutPlace = (result: any, index: number): ScoutPlace => {
   const getCoord = (coord: any) => {
     if (typeof coord === 'function') return coord();
     if (typeof coord === 'number') return coord;
@@ -118,9 +92,9 @@ export const toScoutPlace = (result: any, index: number, mapsApiKey: string = MA
     phone: result.formatted_phone_number || '',
     website: result.website || '',
     vibe: [],
-    img: result.photos?.[0]?.photo_reference
-      ? buildPlacePhotoUrl(result.photos[0].photo_reference, mapsApiKey)
-      : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400',
+    // Lists show no Google photo (the biggest cost on the bill). The pop-up loads this one.
+    img: '',
+    photoRef: result.photos?.[0]?.photo_reference,
     lat,
     lng,
     timings: {},

@@ -453,6 +453,10 @@ export const ChatView = ({
         onNewChat={() => setNewChatOpen(true)}
         onAcceptRequest={acceptRequest}
         onDeclineRequest={declineRequest}
+        userId={userId}
+        friends={friends}
+        blockedIds={blockedIds}
+        onOpenDm={openDmWithFriend}
       />
 
       <div className={`fz-chat-pane${activeThread ? ' is-active' : ''}`}>

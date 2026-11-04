@@ -70,7 +70,7 @@ export default function ProfileTabs({
   // Restaurants: the owner also gets the Dashboard (business details, hours, menu management).
   const tabs: (PersonTab | BusinessTab)[] = isRestaurant
     ? isCurrentUser
-      ? ['menu', 'activity', 'info', 'gallery', 'dashboard']
+      ? ['menu', 'activity', 'info', 'gallery', 'dashboard', 'settings'] // Settings holds Sign out (client, 2026-11-04)
       : ['menu', 'activity', 'info', 'gallery']
     : isCurrentUser
       ? ['activity', 'dna', 'settings']
@@ -122,7 +122,7 @@ export default function ProfileTabs({
       ) : active === 'gallery' ? (
         <RestaurantGalleryTab restaurantId={userId ?? ''} isOwner={isCurrentUser} onManage={() => setActive('dashboard')} />
       ) : active === 'settings' ? (
-        <SettingsTab onProfileUpdate={onProfileUpdate} />
+        <SettingsTab onProfileUpdate={onProfileUpdate} business={isRestaurant} />
       ) : (
         <div className="text-center text-muted py-5">
           <div style={{ fontSize: 32 }}>{EMPTY_STATE[active].emoji}</div>

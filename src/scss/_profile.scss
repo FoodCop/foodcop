@@ -330,6 +330,25 @@
 
   // Narrow cards (phones): just icon + count side by side; the label stays for
   // screen readers only. 520px+ shows the full mockup tile with its label.
+  // The Meetups stat opens its pop-up: a button that lays out like the tile.
+  &__tile-btn {
+    display: inherit;
+    flex-direction: inherit;
+    align-items: inherit;
+    justify-content: inherit;
+    gap: inherit;
+    width: 100%;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
   &__tile {
     display: flex;
     flex-direction: row;

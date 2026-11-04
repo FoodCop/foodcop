@@ -10,6 +10,8 @@ import { createClient } from '@/lib/supabase/client';
 import { foodCardService } from '@/lib/services/foodCardService';
 import { FlavorSliders } from '@/components/create/shared/FlavorSliders';
 import { TagChips } from '@/components/create/shared/TagChips';
+import { useMapsFailed } from '@/lib/maps/mapsHealth';
+import { MapUnavailable } from '@/components/maps/MapUnavailable';
 import { DEFAULT_FLAVOR, emptyCardTags, TYPE_META, type CardTags, type FlavorVector, type FoodCardType } from '@/lib/types/foodCard';
 
 const CUISINES = [
@@ -68,6 +70,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
   });
 
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapsFailed = useMapsFailed();
   const mapInstanceRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const autocompleteInputRef = useRef<HTMLInputElement>(null);
@@ -308,6 +311,7 @@ export const ScoutAddPinModal = ({ onClose, onSuccess, initialCoordinates, cardT
         {currentStep === 1 && (
           <div className="scout-wizard__map">
             <div ref={mapRef} className="scout-wizard__map-canvas" />
+            {mapsFailed && <MapUnavailable hint="You can't place a pin until the map is back." />}
             <div className="scout-wizard__map-overlay">
               <div className="scout-wizard__map-overlay-inner">
                 <p className="scout-wizard__address">{address}</p>

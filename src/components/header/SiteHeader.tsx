@@ -3,17 +3,18 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Bell, House, MessageCircle } from 'lucide-react';
+import { Bell, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import TakoAssistant from '@/components/tako/TakoAssistant';
+import { TAKO_OPEN_EVENT, type TakoStart } from '@/lib/tako/openTako';
 import { NotificationsService } from '@/lib/services/notificationsService';
 import { ChatService } from '@/lib/services/chatService';
 
 // The ONE navbar for the whole app (dashboard, Scout, Messages,
 // Notifications, Rewards, Profile...) - exactly the home (dashboard) bar from
-// the client's sketch: slim solid-gold bar, profile photo | FUZO logo (opens
-// Tako, the AI food assistant) | home + bell. Home (the house icon) goes
-// back to the dashboard from any page; it's lit while you're there. The photo
+// the client's sketch: slim solid-gold bar, profile photo | FUZO logo | bell.
+// The logo is the way Home (/dashboard: Bites · Feed · Trims) from any page;
+// there is no separate house icon (client, 2026-11-04). The photo
 // opens your profile (Sign out is in Profile > Settings); the bell opens Notifications + Messages with real
 // unread dots. Menus are plain React state (no Bootstrap
 // JS). Styles: _header.scss (.fz-topbar).
@@ -23,6 +24,17 @@ export default function SiteHeader() {
   const pathname = usePathname();
   const [menu, setMenu] = useState<'inbox' | null>(null);
   const [isTakoOpen, setIsTakoOpen] = useState(false);
+  // A shortcut (the Tako page's quick asks and starting points) opens Tako
+  // with a chat or group ready; the assistant remounts for each one.
+  const [takoStart, setTakoStart] = useState<{ id: number; start: TakoStart } | null>(null);
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      setTakoStart((prev) => ({ id: (prev?.id ?? 0) + 1, start: (e as CustomEvent<TakoStart>).detail ?? {} }));
+      setIsTakoOpen(true);
+    };
+    window.addEventListener(TAKO_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(TAKO_OPEN_EVENT, onOpen);
+  }, []);
   const [unread, setUnread] = useState({ notifications: false, messages: 0 });
 
   // Real unread state, refreshed on every page change.
@@ -52,10 +64,6 @@ export default function SiteHeader() {
   const showInboxDot = signedIn && (unread.notifications || unread.messages > 0);
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
   const displayName = (user?.user_metadata?.display_name as string | undefined) || user?.email?.split('@')[0] || 'You';
-  // Pages with the bottom dock already have its Home button, so the navbar
-  // doesn't repeat it there.
-  const DOCK_PAGES = ['/dashboard', '/scout', '/my-plate', '/leaderboard', '/rewards'];
-  const hasDock = DOCK_PAGES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   return (
     <>
@@ -69,12 +77,12 @@ export default function SiteHeader() {
           ) : null}
         </div>
 
-        {/* Centre: logo - opens Tako when signed in, goes home otherwise. */}
+        {/* Centre: logo - Home (the dashboard) when signed in, the landing page otherwise. */}
         {signedIn ? (
-          <button type="button" className="fz-topbar__logo" onClick={() => { close(); setIsTakoOpen(true); }} aria-label="Ask Tako, your AI food assistant" title="Ask Tako">
+          <Link href="/dashboard" className="fz-topbar__logo" onClick={close} aria-label="FUZO home" aria-current={pathname === '/dashboard' ? 'page' : undefined}>
             <img className="fz-topbar__logo-img" src="/images/brand/fuzo-logo.png" alt="FUZO - Discover Food That Finds You" width={457} height={181} />
             <img className="fz-topbar__logo-img fz-topbar__logo-img--dark" src="/images/brand/fuzo-logo-dark.png" alt="" aria-hidden="true" width={457} height={181} />
-          </button>
+          </Link>
         ) : (
           <Link href="/" className="fz-topbar__logo" aria-label="FUZO home">
             <img className="fz-topbar__logo-img" src="/images/brand/fuzo-logo.png" alt="FUZO - Discover Food That Finds You" width={457} height={181} />
@@ -82,20 +90,8 @@ export default function SiteHeader() {
           </Link>
         )}
 
-        {/* Right: home (back to the dashboard from anywhere - not shown on the
-            dashboard itself, whose bottom dock has Home) + inbox. */}
+        {/* Right: inbox. */}
         <div className="fz-topbar__side fz-topbar__side--end">
-          {signedIn && !hasDock && (
-            <Link
-              href="/dashboard"
-              className="fz-topbar__icon"
-              aria-label="Home"
-              title="Home"
-              onClick={close}
-            >
-              <House size={20} strokeWidth={2.2} />
-            </Link>
-          )}
           {signedIn ? (
             <div className="fz-topbar__anchor">
               <button
@@ -133,7 +129,9 @@ export default function SiteHeader() {
         </div>
       </header>
 
-      {signedIn && <TakoAssistant variant="overlay" isOpen={isTakoOpen} onClose={() => setIsTakoOpen(false)} />}
+      {signedIn && (
+        <TakoAssistant key={takoStart?.id ?? 0} variant="overlay" isOpen={isTakoOpen} onClose={() => setIsTakoOpen(false)} start={takoStart?.start} />
+      )}
     </>
   );
 }

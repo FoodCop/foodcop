@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type RefObject } from 'react'
 import { PlacesService, type TravelMode } from '@/lib/services/placesService';
 import { isGooglePlaceId } from '@/lib/maps/placeLinks';
 import { toScoutPlace } from '@/lib/scout/scoutLogic';
+import { googleMessage } from '@/lib/google/limits';
 import type { ScoutPlace } from '@/types/scout';
 
 // Directions on Scout, like Google Maps (this replaced the old Route Planner):
@@ -36,7 +37,7 @@ export type DirStatus =
   | { status: 'error'; message: string }
   | { status: 'ready'; route: DirRoute };
 
-export type AlongStatus = { status: 'off' } | { status: 'loading' } | { status: 'error' } | { status: 'ready'; places: ScoutPlace[] };
+export type AlongStatus = { status: 'off' } | { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; places: ScoutPlace[] };
 
 // Just the bits of the Maps JS API used here.
 type MapsOverlay = { setMap: (map: unknown) => void };
@@ -67,7 +68,6 @@ function fitRoute(map: MapLike, g: MapsApi, path: unknown[]) {
 }
 
 const mapsApi = () => (window as unknown as { google?: { maps?: MapsApi } }).google?.maps ?? null;
-const PUBLIC_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
 
 type RawRoute = {
   duration?: string;
@@ -87,7 +87,7 @@ type RawRoute = {
 const MODE_LABEL: Record<TravelMode, string> = { DRIVE: 'car', TWO_WHEELER: 'bike', WALK: 'walking' };
 
 type Result = { key: string; route?: DirRoute; polyline?: string; error?: string };
-type Along = { key: string; places?: ScoutPlace[]; error?: boolean };
+type Along = { key: string; places?: ScoutPlace[]; error?: string };
 
 export function useScoutDirections(mapRef: RefObject<unknown>, isMapReady: boolean) {
   const [open, setOpen] = useState(false);
@@ -279,7 +279,7 @@ export function useScoutDirections(mapRef: RefObject<unknown>, isMapReady: boole
       const encoded = raw?.polyline?.encodedPolyline;
       if (!raw || !encoded) {
         clearDrawing();
-        setResult({ key, error: `No ${MODE_LABEL[m]} route found to ${t.name}. Try another way to travel.` });
+        setResult({ key, error: googleMessage(res.code, `No ${MODE_LABEL[m]} route found to ${t.name}. Try another way to travel.`) });
         return;
       }
 
@@ -346,15 +346,10 @@ export function useScoutDirections(mapRef: RefObject<unknown>, isMapReady: boole
     PlacesService.searchAlongRoute(readyPolyline).then((res) => {
       if (cancelled) return;
       if (!res.success) {
-        setAlong({ key, error: true });
+        setAlong({ key, error: googleMessage(res.code, "Couldn't load places along this route.") });
         return;
       }
-      const places = (res.data?.results ?? []).map((r, i) => {
-        const place = toScoutPlace(r, i);
-        return r.photo_name && PUBLIC_MAPS_KEY
-          ? { ...place, img: `https://places.googleapis.com/v1/${r.photo_name}/media?maxWidthPx=400&key=${PUBLIC_MAPS_KEY}` }
-          : place;
-      });
+      const places = (res.data?.results ?? []).map((r, i) => toScoutPlace(r, i));
       setAlong({ key, places });
     });
     return () => {
@@ -380,7 +375,7 @@ export function useScoutDirections(mapRef: RefObject<unknown>, isMapReady: boole
   let alongStatus: AlongStatus = { status: 'off' };
   if (alongWay && status.status === 'ready') {
     if (!along || along.key !== key) alongStatus = { status: 'loading' };
-    else if (along.error) alongStatus = { status: 'error' };
+    else if (along.error) alongStatus = { status: 'error', message: along.error };
     else alongStatus = { status: 'ready', places: along.places ?? [] };
   }
 

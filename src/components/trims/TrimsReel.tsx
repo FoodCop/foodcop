@@ -303,6 +303,12 @@ export default function TrimsReel() {
                     )}
                     {embedFor === id && isActive && embed ? (
                       <div className="reel-import__player">
+                        <div className="reel-import__bar">
+                          <span className="reel-import__name">{postTitle(card)}</span>
+                          <button type="button" className="reel-import__close" onClick={() => setEmbedFor(null)} aria-label="Close the video">
+                            ✕
+                          </button>
+                        </div>
                         <iframe
                           src={embed}
                           title={`${postTitle(card)} on ${where}`}
@@ -311,9 +317,6 @@ export default function TrimsReel() {
                           referrerPolicy="strict-origin-when-cross-origin"
                           sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
                         />
-                        <button type="button" className="reel-import__close" onClick={() => setEmbedFor(null)} aria-label="Close the video">
-                          ✕
-                        </button>
                       </div>
                     ) : embed ? (
                       <button type="button" className="reel-import__play" onClick={() => setEmbedFor(id)} aria-label={`Watch ${postTitle(card)} from ${where}`}>
@@ -355,9 +358,12 @@ export default function TrimsReel() {
                     {i + 1} / {trims.length}
                     {hasMore ? '+' : ''}
                   </span>
-                  <button type="button" className="reel-hud__btn" onClick={() => setMuted((m) => !m)} aria-label={muted ? 'Turn sound on' : 'Turn sound off'}>
-                    {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                  </button>
+                  {/* An imported video has its own sound control in the player. */}
+                  {!imported && (
+                    <button type="button" className="reel-hud__btn" onClick={() => setMuted((m) => !m)} aria-label={muted ? 'Turn sound on' : 'Turn sound off'}>
+                      {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                    </button>
+                  )}
                 </div>
 
                 {isActive && paused && (
@@ -416,7 +422,7 @@ export default function TrimsReel() {
                     </div>
                     <p className="reel-caption">
                       <strong>{postTitle(card)}</strong>
-                      {card.caption ? ` · ${card.caption}` : ''}
+                      {card.caption || ''}
                     </p>
                     {card.card_type === 'RECIPE_VIDEO' && (
                       <Link href={postPath(id)} className="reel-recipe-link">

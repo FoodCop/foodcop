@@ -42,7 +42,7 @@ export interface GeminiGenerateRequest {
 
 type GeminiServiceResult =
   | { success: true; data: { text: string; raw: unknown } }
-  | { success: false; error: string };
+  | { success: false; error: string; code?: string };
 
 const normalizeContents = (contents: GeminiGenerateRequest['contents']) => {
   if (typeof contents === 'string') {
@@ -101,14 +101,15 @@ async function requestWithRetry(body: Record<string, unknown>, maxRetries = 3): 
         return { success: true, data: { text, raw: data } };
       }
 
-      if ((status === 503 || status === 429) && attempt < maxRetries - 1) {
+      // A refused call (`code`: sign in, or a daily limit) won't change on retry.
+      if ((status === 503 || status === 429) && !(data as { code?: string }).code && attempt < maxRetries - 1) {
         attempt++;
         const backoffMs = Math.pow(2, attempt) * 1000 + Math.random() * 500;
         await delay(backoffMs);
         continue;
       }
 
-      return { success: false, error: (data as { error?: string })?.error || `Gemini request failed (${status})` };
+      return { success: false, error: (data as { error?: string })?.error || `Gemini request failed (${status})`, code: (data as { code?: string }).code };
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : 'Network error' };
     }

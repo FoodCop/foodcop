@@ -6,11 +6,12 @@ import { getNearbyRestaurants, type NearbyRestaurant } from '@/lib/services/reco
 import { RestaurantService, type FuzoRestaurantLink } from '@/lib/services/restaurantService';
 import { getOpenStatus, type OpenStatus } from '@/lib/restaurant/hours';
 import { directionsUrl, mapUrl } from '@/lib/maps/placeLinks';
+import { googleMessage } from '@/lib/google/limits';
 
-// Restaurants for the dashboard rows, from two real sources merged into one
-// list: Google Places near the user, and FUZO restaurant accounts (their own
-// map location, or a Google place they've linked). A FUZO restaurant opens its
-// FUZO profile; a plain Google place opens on Scout, centred with its popup.
+// Restaurants for the dashboard rows: FUZO restaurant accounts (their own map
+// location) straight away, plus Google Places near the user once they ask
+// (showGoogle), because each Google search costs money. A FUZO restaurant opens
+// its FUZO profile; a plain Google place opens on Scout, centred with its popup.
 //
 // Location: the browser's GPS if allowed, otherwise the user's saved home
 // area (Settings > Profile), otherwise "unavailable" with a way to fix it.
@@ -161,19 +162,39 @@ export function useNearbyPlaces({ enabled, topCuisine, radiusKm, hiddenGems, lux
     // Locate once when ready - re-prompting on every render would be hostile.
   }, [enabled, locate]);
 
+  // Google results: the location they were asked for, so a new location goes back to FUZO only.
+  const hereKey = loc.status === 'ready' ? `${loc.lat},${loc.lng}` : '';
+  const [askedFor, setAskedFor] = useState<string | null>(null);
+  const googleOn = askedFor !== null && askedFor === hereKey;
+  const [googleError, setGoogleError] = useState<string | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const showGoogle = useCallback(() => {
+    setGoogleError(null);
+    setGoogleLoading(true);
+    setAskedFor(hereKey);
+  }, [hereKey]);
+
   // Fetch + merge whenever we have a location.
   useEffect(() => {
     if (loc.status !== 'ready') return;
     let cancelled = false;
     const here = { lat: loc.lat, lng: loc.lng };
     (async () => {
-      const [google, fuzoArea] = await Promise.all([
-        getNearbyRestaurants(here.lat, here.lng, topCuisine, { radiusKm, hiddenGems, luxury }),
+      const [answer, fuzoArea] = await Promise.all([
+        googleOn ? getNearbyRestaurants(here.lat, here.lng, topCuisine, { radiusKm, hiddenGems, luxury }) : Promise.resolve({ restaurants: [] as NearbyRestaurant[], error: undefined, code: undefined }),
         RestaurantService.listInArea(here, radiusKm * 1000),
       ]);
+      const google = answer.restaurants;
       const googleIds = google.map((g) => g.placeId).filter(Boolean);
       const linked = await RestaurantService.findByPlaceIds(googleIds);
       if (cancelled) return;
+      if (googleOn) {
+        setGoogleLoading(false);
+        if (answer.error) {
+          setGoogleError(googleMessage(answer.code, "We couldn't load more places. Please try again."));
+          setAskedFor(null); // lets them try again
+        }
+      }
 
       // place_id -> FUZO restaurant (from either lookup)
       const byPlace = new Map<string, FuzoRestaurantLink>();
@@ -228,7 +249,7 @@ export function useNearbyPlaces({ enabled, topCuisine, radiusKm, hiddenGems, lux
     return () => {
       cancelled = true;
     };
-  }, [loc, topCuisine, radiusKm, hiddenGems, luxury]);
+  }, [loc, topCuisine, radiusKm, hiddenGems, luxury, googleOn]);
 
   // Two lenses on the same places: on FUZO + taste match first, and closest first.
   const recommended = useMemo(
@@ -245,5 +266,5 @@ export function useNearbyPlaces({ enabled, topCuisine, radiusKm, hiddenGems, lux
   );
   const nearest = useMemo(() => (places ? [...places].sort((a, b) => a.distanceMeters - b.distanceMeters) : null), [places]);
 
-  return { loc, recommended, nearest, retryGps, setPickedLocation, chooseHomeArea };
+  return { loc, recommended, nearest, retryGps, setPickedLocation, chooseHomeArea, googleOn, googleLoading, googleError, showGoogle };
 }

@@ -2,7 +2,6 @@
 
 import { postSharePayload } from '@/lib/share/postShare';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
 import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
 import { useAuth } from '../auth/AuthProvider';
 import {
@@ -19,8 +18,8 @@ import { UserSettingsService, DEFAULT_USER_SETTINGS } from '@/lib/services/userS
 import { createClient } from '@/lib/supabase/client';
 import FeedDeck, { type SwipeDir } from './FeedDeck';
 
-// The Feed tab: real food_cards ranked by getFeedCards(), in a Tinder-style
-// swipe stack (FeedDeck). Curated recipes are Bites' job, not Feed's.
+// The Feed tab: real food_cards ranked by getFeedCards(), one swipe card at a
+// time (FeedDeck). Curated recipes are Bites' job, not Feed's.
 // Swipe directions (client, 2026-10-06): left = dislike, right = like,
 // up = share, down = save to My Plate.
 const HINT_KEY = 'fz-feed-swipe-hint-seen';
@@ -46,8 +45,9 @@ export default function FoodCardFeed() {
     noticeTimer.current = window.setTimeout(() => setNotice(null), 2200);
   };
   useEffect(() => () => window.clearTimeout(noticeTimer.current), []);
-  // "How to swipe" hint until the first swipe (remembered on this device;
-  // read after hydration so the server and first client render agree).
+  // New here: the card shows each swipe once (remembered on this device after
+  // it ends, is skipped or the first swipe; read after hydration so the
+  // server and first client render agree).
   const hintSeen = useSyncExternalStore(
     () => () => {},
     () => {
@@ -160,13 +160,6 @@ export default function FoodCardFeed() {
         <div className="feed__stage" role="status" aria-label="Finding discoveries for you">
           <div className="feed-card feed-card--skeleton" />
         </div>
-        <div className="feed__bar" aria-hidden="true">
-          <span className="feed__btn feed__btn--nope feed__btn--ghost" />
-          <span className="feed__btn feed__btn--share feed__btn--ghost" />
-          <span className="feed__count">&nbsp;</span>
-          <span className="feed__btn feed__btn--save feed__btn--ghost" />
-          <span className="feed__btn feed__btn--like feed__btn--ghost" />
-        </div>
       </div>
     );
   }
@@ -193,16 +186,8 @@ export default function FoodCardFeed() {
             </div>
           )
         }
-        footer={
-          showHint && (
-            <p className="feed__hint" aria-hidden="true">
-              <span><ArrowLeft size={13} /> Nope</span>
-              <span><ArrowRight size={13} /> Like</span>
-              <span><ArrowUp size={13} /> Share</span>
-              <span><ArrowDown size={13} /> Save</span>
-            </p>
-          )
-        }
+        demo={showHint}
+        onDemoDone={hideHint}
       />
       <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
     </>

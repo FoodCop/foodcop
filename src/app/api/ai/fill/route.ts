@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createClient as createServerSupabaseClient } from '@/lib/supabase/server';
 import { geminiJson, type GeminiPart } from '@/lib/ai/geminiServer';
+import { guardGoogle } from '@/lib/google/guard';
 import { UGC_CUISINES, UGC_DIETS, UGC_MEAL_TYPES } from '@/lib/utils/taxonomy';
 import { COOKING_STYLES } from '@/components/create/shared/TagChips';
+import { cleanSocialText } from '@/lib/import/cleanSocial';
 
 // POST /api/ai/fill - FUZO AI fills in a post from its video (client spec:
 // "AI identifies name, ingredients, and steps OR asks for manual input",
@@ -105,6 +107,8 @@ export async function POST(request: Request) {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth?.user) return NextResponse.json({ error: 'Please sign in.' }, { status: 401 });
   if (!allowed(auth.user.id)) return NextResponse.json({ error: 'FUZO AI is busy for you right now. Try again in a few minutes.' }, { status: 429 });
+  const refused = await guardGoogle('gemini');
+  if (refused) return refused;
 
   let body: { task?: unknown; frames?: unknown; text?: unknown };
   try {
@@ -119,7 +123,7 @@ export async function POST(request: Request) {
     .slice(0, MAX_FRAMES)
     .map((f) => (typeof f === 'string' ? f.match(/^data:image\/jpeg;base64,([A-Za-z0-9+/=]+)$/)?.[1] ?? null : null))
     .filter((b64): b64 is string => !!b64 && b64.length * 0.75 <= MAX_FRAME_BYTES);
-  const text = typeof body.text === 'string' ? body.text.slice(0, MAX_TEXT).trim() : '';
+  const text = typeof body.text === 'string' ? (cleanSocialText(body.text.slice(0, MAX_TEXT)) ?? '') : '';
   if (!frames.length && !text) return NextResponse.json({ error: 'Nothing to look at.' }, { status: 400 });
 
   const parts: GeminiPart[] = [
@@ -142,6 +146,7 @@ export async function POST(request: Request) {
       `diet must only use: ${UGC_DIETS.join(', ')}.`,
       `cookingStyle must only use: ${COOKING_STYLES.join(', ')}.`,
       'Keep names short. At most 40 ingredients, 30 steps, 10 stops.',
+      'Use only food content: for a recipe only the dish, ingredients and steps. Ignore likes, views, comments, follower counts, usernames, hashtags, music credits, links, promo or discount codes and calls to follow, like, share or subscribe.',
     ].join('\n'),
   });
   if (!res.ok) return NextResponse.json({ off: res.reason, message: res.message }, { status: 200 });

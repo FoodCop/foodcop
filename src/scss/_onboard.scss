@@ -1429,6 +1429,111 @@ html[data-theme='dark'] {
   .fz-onb__title { padding-right: 2.5rem; font-family: var(--body-font), sans-serif; }
 }
 
+// "Your meetups" pop-up (MeetupsModal.tsx), on the .fz-remind sheet.
+.fz-meetups {
+  &__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 0.5rem;
+    color: $fz-ink;
+    text-align: center;
+    p { margin: 0; max-width: 18rem; font-size: 0.9rem; }
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 1.2rem;
+    border: 0;
+    border-radius: 9999px;
+    background: $fuzo-yellow;
+    color: $fuzo-yellow-ink;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    &:hover { color: $fuzo-yellow-ink; background: mix(#fff, $fuzo-yellow, 15%); }
+    &:focus-visible { outline: 2px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+
+  &__list { display: grid; gap: 0.6rem; margin: 0.9rem 0 0; padding: 0; list-style: none; }
+}
+
+.fz-meetup {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.6rem;
+  border-radius: 16px;
+  background: $onb-pill;
+  color: $fz-ink;
+
+  &__art {
+    flex: none;
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+    img { width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  &__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; overflow-wrap: anywhere; }
+  strong { font-size: 0.95rem; font-weight: 700; }
+  &__line { display: block; font-size: 0.82rem; color: mix($fz-ink, $fz-ink-soft, 40%); svg { vertical-align: -2px; } }
+  a#{&}__line { color: $fz-ink; text-decoration: underline; min-height: 24px; }
+}
+
+// Admin dashboard (/admin, AdminDashboardView.tsx).
+.fz-admin-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fz-admin-tile,
+.fz-admin-link {
+  border: 1px solid #f2f2f2;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+  color: $fz-ink;
+}
+
+.fz-admin-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+
+  > svg { color: $fuzo-yellow-deep; margin-bottom: 0.3rem; }
+  strong { font-size: 1.7rem; font-weight: 800; line-height: 1.1; }
+  span { font-size: 0.85rem; color: mix($fz-ink, $fz-ink-soft, 40%); }
+}
+
+.fz-admin-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 64px;
+  padding: 0.8rem 1.1rem;
+  text-decoration: none;
+
+  &:hover { color: $fz-ink; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1); }
+  &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  > span { display: flex; flex-direction: column; min-width: 0; }
+  strong { font-weight: 700; }
+  span span { font-size: 0.85rem; color: mix($fz-ink, $fz-ink-soft, 40%); }
+}
+
 // Admin review page.
 .fz-admin {
   &__main {
@@ -1619,6 +1724,7 @@ html[data-theme='dark'] {
 html[data-theme='dark'] {
   .fz-admin__item { background: #f4f4f2; border-color: #f4f4f2; }
   .fz-remind__card { background: #f4f4f2; }
+  .fz-meetup { background: #e4e2dc; }
   .fz-verify-eyebrow { color: #b9b4aa; }
   // The admin page's title and empty text sit straight on the black page.
   .fz-admin__main > .fz-onb__title { color: #f4f4f2; }

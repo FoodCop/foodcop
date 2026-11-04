@@ -3,31 +3,27 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Compass, House, Plus, Salad, Trophy } from 'lucide-react';
+import { Compass, Plus, Salad, Trophy } from 'lucide-react';
 import { CreateFlow } from '@/components/create/flow/CreateFlow';
 import { useScrollCompact } from '@/lib/hooks/useScrollCompact';
+import { TakoFace } from '@/components/tako/TakoFace';
 
-// The bottom bar shared by Home, Explore (Scout), My Plate and Leaderboard &
-// Rewards (client, 2026-10-06, Feoy reference): a white bar along the bottom
-// with Explore · Create · (Home, raised yellow centre) · My Plate · Rankings.
-// The current page's item is highlighted.
+// The bottom bar shared by Home, Tako, Explore (Scout), My Plate and
+// Leaderboard & Rewards (client, 2026-10-06, Feoy reference): a white bar
+// along the bottom with Explore · Create · (Tako, raised yellow centre) ·
+// My Plate · Rankings. Tako replaced Home in the centre (client, 2026-11-04);
+// Home is the navbar's house icon. The current page's item is highlighted.
 export default function AppDock({
   compact: compactProp,
-  onHome,
-  homeActive,
 }: {
   /** Controlled compact state (Home also folds its tab bar); otherwise follows page scroll. */
   compact?: boolean;
-  /** Home's own handler (back to "For you" + top); elsewhere Home links to /dashboard. */
-  onHome?: () => void;
-  homeActive?: boolean;
 }) {
   const pathname = usePathname();
   const scrollCompact = useScrollCompact();
   const compact = compactProp ?? scrollCompact;
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const current = (href: string) => (pathname === href || pathname.startsWith(`${href}/`) ? 'page' : undefined);
-  const onDashboard = pathname === '/dashboard';
 
   return (
     <>
@@ -40,16 +36,10 @@ export default function AppDock({
           <Plus size={20} strokeWidth={2.2} />
           <span>Create</span>
         </button>
-        {/* Home is the raised yellow button in the notch (client, 2026-10-07). */}
-        {onHome ? (
-          <button type="button" className="fz-dash-dock__fab" onClick={onHome} aria-label="Home" aria-current={homeActive ? 'page' : undefined}>
-            <House size={24} strokeWidth={2.3} />
-          </button>
-        ) : (
-          <Link href="/dashboard" className="fz-dash-dock__fab" aria-label="Home" aria-current={onDashboard ? 'page' : undefined}>
-            <House size={24} strokeWidth={2.3} />
-          </Link>
-        )}
+        {/* Tako is the raised yellow button in the notch. */}
+        <Link href="/tako" className="fz-dash-dock__fab fz-dash-dock__fab--tako" aria-label="Tako for you" aria-current={current('/tako')}>
+          <TakoFace size={56} still />
+        </Link>
         <Link href="/my-plate" className="fz-dash-dock__item" aria-current={current('/my-plate')}>
           <Salad size={20} strokeWidth={2.1} />
           <span>My Plate</span>

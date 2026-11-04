@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { getGoogleMaps } from '@/types/scout';
+import { useMapsFailed } from '@/lib/maps/mapsHealth';
+import { MapUnavailable } from '@/components/maps/MapUnavailable';
 
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
 
@@ -30,6 +32,7 @@ interface LocationPickerModalProps {
 // raw coordinates.
 export default function LocationPickerModal({ initialLat, initialLng, onConfirm, onClose, title = 'Set your location', zIndex = 1080 }: LocationPickerModalProps) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapsFailed = useMapsFailed();
   const mapInstanceRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const positionRef = useRef(
@@ -138,7 +141,10 @@ export default function LocationPickerModal({ initialLat, initialLng, onConfirm,
             <button type="button" className="btn-close" onClick={onClose} aria-label="Close" />
           </div>
           {MAPS_API_KEY ? (
-            <div ref={mapRef} style={{ width: '100%', height: '360px' }} />
+            <div style={{ position: 'relative' }}>
+              <div ref={mapRef} style={{ width: '100%', height: '360px' }} />
+              {mapsFailed && <MapUnavailable hint="You can still use your current location below." />}
+            </div>
           ) : (
             <div className="text-center text-muted py-5 bg-light">Maps isn&rsquo;t configured.</div>
           )}

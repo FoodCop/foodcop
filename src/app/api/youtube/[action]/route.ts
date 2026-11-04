@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { guardGoogle } from '@/lib/google/guard';
 
 // Server-side YouTube Data API v3 proxy. Mirrors /api/places/[action] and
 // /api/gemini - a direct Next.js Route Handler using a server-only env var
@@ -16,6 +17,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ action: 
     return NextResponse.json({ success: false, error: 'YOUTUBE_API_KEY is not configured on the server.' }, { status: 500 });
   }
 
+  // Signed-in members only, within the daily limits (docs/GOOGLE_COST_PLAN.md).
+  const refused = await guardGoogle('youtube');
+  if (refused) return refused;
+
   const { action } = await params;
   const { searchParams } = new URL(req.url);
 
@@ -25,7 +30,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ action: 
       if (!q) {
         return NextResponse.json({ success: false, error: 'Query parameter "q" is required' }, { status: 400 });
       }
-      const maxResults = searchParams.get('maxResults') || '8';
+      const maxResults = String(Math.min(Math.max(Number(searchParams.get('maxResults')) || 8, 1), 10));
       const order = searchParams.get('order') || 'relevance';
 
       const url = new URL(`${YOUTUBE_BASE_URL}/search`);

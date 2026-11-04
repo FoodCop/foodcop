@@ -6,6 +6,7 @@ import { parseSourceUrl, type ImportPlatform, type ParsedSource } from './platfo
 import { FetchBlockedError, safeFetch } from './safeFetch';
 import { readMeta, readRecipe, splitIngredient, type ImportedRecipe } from './readPage';
 import { htmlToText } from '@/lib/utils/text';
+import { cleanSocialText } from './cleanSocial';
 
 export { FetchBlockedError };
 
@@ -87,7 +88,7 @@ export async function importLink(raw: string): Promise<ImportResult> {
         : `https://www.tiktok.com/oembed?url=${encodeURIComponent(src.url)}`;
     const o = await oembed(endpoint);
     if (o) {
-      const caption = text(o.title, 1500);
+      const caption = cleanSocialText(text(o.title, 1500));
       result.caption = caption;
       result.title = caption ? caption.split(/[.!?\n#]/)[0].trim().slice(0, 120) || null : null;
       result.author = text(o.author_unique_id ? `@${o.author_unique_id}` : o.author_name, 120);
@@ -111,7 +112,7 @@ export async function importLink(raw: string): Promise<ImportResult> {
         if (origin) recipe = readRecipe(origin.html, origin.url);
       }
       result.title = recipe?.name ?? m.title;
-      result.caption = recipe?.description ?? m.description;
+      result.caption = recipe?.description ?? cleanSocialText(m.description);
       result.author = recipe?.author ?? m.author ?? m.siteName;
       result.recipe = recipeOut(recipe);
       result.video = src.video || (src.platform !== 'web' && m.isVideo);

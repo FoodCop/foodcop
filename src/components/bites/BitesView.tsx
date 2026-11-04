@@ -184,11 +184,13 @@ export function BitesView() {
                   }}
                 >
                   <img className="fz-dash-card__img" src={recipe.image} alt="" loading="lazy" onError={handleImageError} />
+                  {/* The Feed card's soft fade: the same photo, blurred, under the title. */}
+                  <img className="bites-tile__blur" src={recipe.image} alt="" loading="lazy" aria-hidden="true" onError={handleImageError} />
                   <span className="fz-dash-card__shade" />
                   <span className="fz-dash-card__chip">
                     {recipe.author ? (
                       <>
-                        <ChefHat size={11} /> FUZO community
+                        <ChefHat size={11} /> Community
                       </>
                     ) : (
                       <>

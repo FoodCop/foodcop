@@ -40,6 +40,7 @@ import { SOCIAL_ICONS } from './settings/SocialLinksEditor';
 import { StatusPill, formatCount } from './restaurant/RestaurantBits';
 import RateRestaurantModal from './restaurant/RateRestaurantModal';
 import SocialLinksSheet from './SocialLinksSheet';
+import MeetupsModal from './MeetupsModal';
 import { useOpenStatus, useRestaurant } from '@/lib/hooks/useRestaurant';
 import { RSVPService } from '@/lib/services/rsvpService';
 import { SOCIAL_META, SOCIAL_PLATFORMS, SocialLinksService, type SocialLinks } from '@/lib/services/socialLinksService';
@@ -110,6 +111,7 @@ export default function ProfileHero({
   const [editingSocials, setEditingSocials] = useState(false);
   // Meetups you're going to (own profile only - RSVPs are visible just inside each chat).
   const [meetups, setMeetups] = useState<number | null>(null);
+  const [showMeetups, setShowMeetups] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -493,11 +495,13 @@ export default function ProfileHero({
                   {/* Meetups you're going to - RSVPs are private to each chat, so only shown to you. */}
                   {isOwnProfile && meetups !== null && (
                     <li className="fz-phero__tile">
-                      <CalendarCheck size={20} className="fz-phero__tile-icon fz-phero__tile-icon--meetups" aria-hidden="true" />
-                      <span className="fz-phero__tile-text">
-                        <strong>{meetups}</strong>
-                        <span>Meetups</span>
-                      </span>
+                      <button type="button" className="fz-phero__tile-btn" onClick={() => setShowMeetups(true)} aria-haspopup="dialog" aria-label={`Meetups: ${meetups}. See your meetups`}>
+                        <CalendarCheck size={20} className="fz-phero__tile-icon fz-phero__tile-icon--meetups" aria-hidden="true" />
+                        <span className="fz-phero__tile-text">
+                          <strong>{meetups}</strong>
+                          <span>Meetups</span>
+                        </span>
+                      </button>
                     </li>
                   )}
                 </>
@@ -804,6 +808,8 @@ export default function ProfileHero({
       )}
 
       <ShareSheet payload={sharing} onClose={() => setSharing(null)} />
+
+      {showMeetups && userId && <MeetupsModal userId={userId} onClose={() => setShowMeetups(false)} />}
 
       {/* Saved Item Details Modal */}
       {viewingDetail && viewingDetail.kind === 'saved' && (

@@ -15,27 +15,31 @@
  *     method that doesn't exist anywhere) was dropped in favor of the proven
  *     structured-schema flow.
  *
- * Rendered as an overlay, opened from the FUZO logo in the app navbar
- * (SiteHeader); the `variant="page"` layout is kept for a full-page use.
+ * Two uses: the Tako page (/tako, `variant="page"`, opened from the FUZO logo
+ * and the dock's centre button, with the For you sections passed as `extras`
+ * under the landing), and an overlay mounted in SiteHeader for shortcuts
+ * (openTako) from elsewhere.
  *
  * Landing redesign (client, 2026-10-07: "more animated / modern, a 3D mascot
  * face, 3 options first, the rest open below, a search bar"): Tako's animated
- * face (TakoMascot) with a speech bubble, the ask/search bar, then three big
+ * face (TakoFace) with a speech bubble, the ask/search bar, then three big
  * starting points - Eat out / Cook / Explore (TAKO_GROUPS). Picking one makes
  * Tako hop and opens that group's options in a card underneath; picking
  * another swaps them, picking it again closes them.
  */
 
-import { useState, useEffect, useRef, type CSSProperties } from 'react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, ChefHat, ChevronDown, RotateCcw, Search, Sparkles, UtensilsCrossed, X, type LucideIcon } from 'lucide-react';
+import { ArrowUp, ChevronDown, RotateCcw, Search, X } from 'lucide-react';
 import { GeminiService } from '@/lib/services/geminiService';
 import { CHEF_SUGGESTED_PROMPTS, CHEF_SYSTEM_INSTRUCTION, CHEF_RESPONSE_SCHEMA, TAKO_GROUPS, getGreeting } from '@/lib/tako/prompts';
 import type { ChatMessage, ChefStructuredResponse, TakoAction, TakoGroup } from '@/types/tako';
+import type { TakoStart } from '@/lib/tako/openTako';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { CreateFlow } from '@/components/create/flow/CreateFlow';
-import { TakoMascot, type TakoMood } from './TakoMascot';
+import { type TakoMood } from './TakoMascot';
+import { TakoFace } from './TakoFace';
 import { GEMINI_MODEL } from '@/lib/ai/geminiModel';
 
 const parseChefResponse = (text: string): ChefStructuredResponse | null => {
@@ -63,29 +67,30 @@ const parseChefResponse = (text: string): ChefStructuredResponse | null => {
   return null;
 };
 
-const GROUP_ICONS: Record<TakoGroup['id'], LucideIcon> = {
-  eat: UtensilsCrossed,
-  cook: ChefHat,
-  explore: Sparkles,
-};
-
 const EASE = [0.16, 1, 0.3, 1] as const;
+
+const WELCOME: ChatMessage = { role: 'ai', text: "Tako here! Let's find you something tasty." };
 
 interface TakoAssistantProps {
   variant: 'overlay' | 'page';
   isOpen?: boolean;
   onClose?: () => void;
+  /** Opened from a shortcut (openTako): start this chat, or open this group. Read once, on mount. */
+  start?: TakoStart;
+  /** Page variant: more sections under the landing (the Tako page's For you picks). */
+  extras?: ReactNode;
 }
 
-export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoAssistantProps) {
+export default function TakoAssistant({ variant, isOpen = true, onClose, start, extras }: TakoAssistantProps) {
   const router = useRouter();
   const reduceMotion = useReducedMotion();
-  const [phase, setPhase] = useState<'landing' | 'chat'>('landing');
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const startPrompt = start?.prompt?.trim() || null;
+  const [phase, setPhase] = useState<'landing' | 'chat'>(startPrompt ? 'chat' : 'landing');
+  const [messages, setMessages] = useState<ChatMessage[]>(startPrompt ? [WELCOME, { role: 'user', text: startPrompt }] : []);
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Boolean(startPrompt));
   const [isCreateCardOpen, setIsCreateCardOpen] = useState(false);
-  const [openGroupId, setOpenGroupId] = useState<TakoGroup['id'] | null>(null);
+  const [openGroupId, setOpenGroupId] = useState<TakoGroup['id'] | null>(start?.group ?? null);
   const [mood, setMood] = useState<TakoMood>('idle');
   const [searchFocused, setSearchFocused] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
@@ -130,7 +135,11 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
     if (!overrideText) setInput('');
     setMessages(prev => [...prev, { role: 'user', text: outgoing }]);
     setLoading(true);
+    await answer(outgoing);
+  };
 
+  // Asks Gemini and adds Tako's reply (or why there isn't one).
+  const answer = async (outgoing: string) => {
     try {
       const res = await GeminiService.generateContent({
         model: GEMINI_MODEL,
@@ -144,6 +153,9 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
 
       if (res.success && res.data?.text) {
         setMessages(prev => [...prev, { role: 'ai', text: res.data.text }]);
+      } else if (!res.success && res.code) {
+        const refused = res.error;
+        setMessages(prev => [...prev, { role: 'ai', text: refused }]);
       } else {
         throw new Error(!res.success ? res.error : 'Gemini unavailable');
       }
@@ -157,9 +169,18 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
   const startChat = (text: string) => {
     setPhase('chat');
     setInput('');
-    setMessages([{ role: 'ai', text: "Tako here! Let's find you something tasty." }]);
+    setMessages([WELCOME]);
     sendMessage(text);
   };
+
+  // A shortcut's question is already on screen (see the initial state); fetch its answer once.
+  const asked = useRef(false);
+  useEffect(() => {
+    if (!startPrompt || asked.current) return;
+    asked.current = true;
+    void answer(startPrompt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, for the prompt this mount was created with
+  }, []);
 
   const backToLanding = () => {
     setPhase('landing');
@@ -199,12 +220,12 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
       role={variant === 'overlay' ? 'dialog' : undefined}
       aria-modal={variant === 'overlay' ? true : undefined}
       aria-label={variant === 'overlay' ? 'Tako, your food assistant' : undefined}
-      className={`tako-shell tako-shell--${variant}${variant === 'overlay' && isOpen ? ' is-open' : ''}`}
+      className={`tako-shell tako-shell--${variant} is-${phase}${variant === 'overlay' && isOpen ? ' is-open' : ''}`}
     >
       <div className="tako-shell__header">
         {phase === 'chat' && (
           <div className="tako-chat__who">
-            {visible && <TakoMascot size={48} mood={loading ? 'thinking' : 'idle'} />}
+            {visible && <TakoFace size={48} mood={loading ? 'thinking' : 'idle'} />}
             <div>
               <div className="tako-chat__name">Tako</div>
               <div className="tako-chat__status" aria-live="polite">{loading ? 'Thinking…' : 'Your food buddy'}</div>
@@ -232,7 +253,7 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
               <div className="tako-hero__stage">
                 {visible && (
                   <>
-                    <TakoMascot mood={mood} size={176} lookAt={searchFocused ? { x: 0, y: 1 } : null} />
+                    <TakoFace mood={mood} size={176} lookAt={searchFocused ? { x: 0, y: 1 } : null} />
                     <motion.div
                       className="tako-hero__bubble"
                       initial={reduceMotion ? false : { opacity: 0, scale: 0.8, y: 8 }}
@@ -272,7 +293,6 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
 
             <div className="tako-picks" role="group" aria-label="Where to start">
               {TAKO_GROUPS.map((g, i) => {
-                const Icon = GROUP_ICONS[g.id];
                 const open = openGroupId === g.id;
                 return (
                   <motion.button
@@ -285,12 +305,9 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
                     whileTap={reduceMotion ? undefined : { scale: 0.96 }}
                     {...rise(0.28 + i * 0.07)}
                   >
-                    <span
-                      className="tako-pick__ball"
-                      style={{ '--tako-from': g.tint[0], '--tako-to': g.tint[1] } as CSSProperties}
-                      aria-hidden="true"
-                    >
-                      <Icon size={24} strokeWidth={2.2} />
+                    {/* Client illustration per group (2026-11-04): public/images/tako/pick-<id>.webp. */}
+                    <span className="tako-pick__art" aria-hidden="true">
+                      <img src={`/images/tako/pick-${g.id}.webp`} alt="" width={480} height={250} draggable={false} />
                     </span>
                     <span className="tako-pick__label">{g.label}</span>
                     <span className="tako-pick__sub">{g.sub}</span>
@@ -337,6 +354,8 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {extras}
           </div>
         ) : (
           <>
@@ -364,7 +383,7 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
                     <div key={`ai-${idx}`} className="tako-msg--ai">
                       <div className="tako-ai-card">
                         <div className="tako-ai-card__header">
-                          <div className="tako-ai-card__icon"><TakoMascot size={34} still /></div>
+                          <div className="tako-ai-card__icon"><TakoFace size={34} still /></div>
                           <p className="tako-ai-card__speech">{parsed.speech}</p>
                         </div>
 
@@ -414,7 +433,7 @@ export default function TakoAssistant({ variant, isOpen = true, onClose }: TakoA
 
                 return (
                   <div key={`ai-fallback-${idx}`} className="tako-msg--ai">
-                    <div className="tako-ai-card__icon"><TakoMascot size={34} still /></div>
+                    <div className="tako-ai-card__icon"><TakoFace size={34} still /></div>
                     <div className="tako-msg__bubble">{m.text}</div>
                   </div>
                 );

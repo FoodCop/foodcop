@@ -27,6 +27,7 @@ import {
 import PlateService, { type SavedPlateItem } from '@/lib/services/plateService';
 import { normalizeSavedItemForUI } from '@/lib/services/savedItems';
 import { directionsUrl, mapUrl } from '@/lib/maps/placeLinks';
+import { withoutGoogleLink } from '@/lib/google/photos';
 import { useAuth } from '@/components/auth/AuthProvider';
 import SavedItemDetailModal from '@/components/profile/SavedItemDetailModal';
 import { Rail, SkeletonCards } from '@/components/dashboard/Rail';
@@ -80,7 +81,7 @@ function toEntry(s: SavedPlateItem): PlateEntry {
   const m = s.metadata ?? {};
   const kind = kindOf(s);
   const item = normalizeSavedItemForUI(s);
-  const image = str(m.image) || str(m.img) || str(m.image_url) || null;
+  const image = withoutGoogleLink(str(m.image) || str(m.img) || str(m.image_url)) || null;
   const minutes = Number(m.readyInMinutes);
   const sub =
     kind === 'places'

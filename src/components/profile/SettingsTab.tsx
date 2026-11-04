@@ -32,6 +32,8 @@ function parsePhone(phone: string | null): { countryCode: string; number: string
 interface SettingsTabProps {
   /** Lets Edit Profile's saves update ProfileHero's name/handle immediately. */
   onProfileUpdate?: (patch: { name?: string; handle?: string }) => void;
+  /** A restaurant account: no Taste Preferences / Discovery (those are for food explorers). */
+  business?: boolean;
 }
 
 // Letters, digits, underscore, period; 3-30 chars - no spaces, so it always
@@ -44,7 +46,7 @@ type SettingsView = 'menu' | 'profile' | 'taste' | 'discovery' | 'privacy' | 'co
 // long inline-editing page - every field below is the exact same real,
 // persisted state the old single-page SettingsTab had, just grouped behind
 // a menu row + a panel instead of always being on screen at once.
-export default function SettingsTab({ onProfileUpdate }: SettingsTabProps = {}) {
+export default function SettingsTab({ onProfileUpdate, business = false }: SettingsTabProps = {}) {
   const router = useRouter();
   const [view, setView] = useState<SettingsView>('menu');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -382,13 +384,14 @@ export default function SettingsTab({ onProfileUpdate }: SettingsTabProps = {}) 
   const usernameFormatValid = USERNAME_PATTERN.test(usernameTrimmedLower);
   const bioDirty = bio.trim() !== savedBio;
 
-  const MENU_ROWS: { key: SettingsView; emoji: string; title: string; sub: string }[] = [
+  type Row = { key: SettingsView; emoji: string; title: string; sub: string };
+  const MENU_ROWS = ([
     { key: 'profile', emoji: '👤', title: 'Profile', sub: 'Name, username, photo and bio' },
     { key: 'taste', emoji: '🍴', title: 'Taste Preferences', sub: 'Cuisines, dietary preferences' },
     { key: 'discovery', emoji: '📍', title: 'Discovery', sub: 'Discovery radius and match sensitivity' },
     { key: 'privacy', emoji: '🔒', title: 'Privacy', sub: 'Profile visibility and data' },
     { key: 'connected', emoji: '🔗', title: 'Connected Accounts', sub: 'Instagram, TikTok, YouTube' },
-  ];
+  ] satisfies Row[]).filter((row) => !business || (row.key !== 'taste' && row.key !== 'discovery'));
   const PREFERENCE_ROWS: { key: SettingsView; emoji: string; title: string; sub: string }[] = [
     { key: 'notifications', emoji: '🔔', title: 'Notifications', sub: 'Manage your notifications' },
     { key: 'appearance', emoji: '🌙', title: 'Appearance', sub: 'Light, dark or system' },

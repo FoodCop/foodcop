@@ -21,6 +21,7 @@ import {
   RefreshCw,
   RotateCcw,
   Star,
+  Utensils,
   UtensilsCrossed,
   X,
   type LucideIcon,
@@ -262,7 +263,7 @@ export function ScoutDirectionsPanel(props: Props) {
                 <Loader2 size={16} className="scout-spin" aria-hidden="true" /> Finding spots along your route…
               </p>
             )}
-            {alongStatus.status === 'error' && <p className="scout-dir__note">Couldn&apos;t load places along this route.</p>}
+            {alongStatus.status === 'error' && <p className="scout-dir__note">{alongStatus.message}</p>}
             {alongStatus.status === 'ready' &&
               (alongStatus.places.length === 0 ? (
                 <p className="scout-dir__note">No restaurants found along this route.</p>
@@ -274,7 +275,7 @@ export function ScoutDirectionsPanel(props: Props) {
                       <li key={p.id}>
                         <button type="button" className="scout-dir__spot" onClick={() => onSelectPlace(p)}>
                           <span className="scout-dir__spot-photo">
-                            <img src={p.img} alt="" loading="lazy" />
+                            {p.img ? <img src={p.img} alt="" loading="lazy" /> : <span className="scout-dir__spot-noimg" aria-hidden="true"><Utensils size={18} /></span>}
                             <SourceBadge origin={placeOrigin(p)} className="scout-dir__spot-badge" />
                           </span>
                           <span className="scout-dir__spot-text">
