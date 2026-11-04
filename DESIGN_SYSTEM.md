@@ -140,7 +140,7 @@ Supersedes the For you, dock-Home and navbar-house notes in Dashboard and Clean 
 - **Saved feed cards** open the real post (`SavedItemDetailModal` loads it and shows `FoodCardDetailModal`), falling back to the saved details if the post is gone.
 - **Chat link cards:** a `fuzo.app/post/<id>` link (or this site's own) in a message renders as a card (`ChatPostLink.tsx`); other sites and missing posts stay plain text.
 - **OpenTable / Uber Eats:** restaurant-family feed cards with a place name get two pills beside Explore (`lib/maps/partnerLinks.ts`). They open a search on those sites; neither shares availability without a partner agreement, so never present them as confirmed availability.
-- **Recipe + Trim cards:** Bites tiles and the Trims caption area use the Feed card's soft blur fade and heading-font title.
+- **Recipe + Trim cards:** Bites tiles use the Feed card's soft blur fade and heading-font title. Trims use the heading-font title with no blur, only the dark shade, so the video and photo stay sharp (client 2026-11-04).
 - **First-time guide:** `GuidedTour.tsx` on Home, a spotlight over the tabs, Tako, Explore, Create, My Plate and Rankings. Waits for the Feed demo, shows once (`fz-guide-seen`), Esc or Skip ends it.
 - **Admin:** `/admin` (`AdminDashboardView.tsx`) shows people, businesses, posts, video posts and a link to verification, for `is_app_admin` accounts. The server checks this before the page loads (`lib/supabase/middleware.ts`, covers everything under `/admin`): signed out goes to login, signed in but not an admin goes Home.
 - **Imports:** `lib/import/cleanSocial.ts` strips like and comment counts, hashtags, promo lines and @mention lines from imported captions, and FUZO AI is told to keep food content only.

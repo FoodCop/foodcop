@@ -127,19 +127,6 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 0.9rem 1.4rem;
-
-  // The Feed card's soft blur fade under the text (client list #4, 2026-11-04).
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3rem 0 0;
-    z-index: -1;
-    pointer-events: none;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    -webkit-mask-image: linear-gradient(to top, #000 0%, #000 45%, transparent 100%);
-    mask-image: linear-gradient(to top, #000 0%, #000 45%, transparent 100%);
-  }
 }
 
 .reel-info {
