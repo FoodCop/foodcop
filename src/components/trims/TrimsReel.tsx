@@ -1,5 +1,6 @@
 'use client';
 
+import ChatAvatar from '@/components/chat/ChatAvatar';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -7,7 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
 import { Mousewheel } from 'swiper/modules';
 import 'swiper/css';
-import { Bookmark, Clapperboard, Heart, Loader2, MapPin, MoreVertical, Play, Route, Share2, Volume2, VolumeX } from 'lucide-react';
+import { ArrowUpRight, Bookmark, Clapperboard, Heart, Loader2, MapPin, MoreVertical, Play, Route, Share2, Volume2, VolumeX } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import ShareSheet, { type SharePayload } from '@/components/share/ShareSheet';
 import { PlateService } from '@/lib/services/plateService';
@@ -36,6 +37,14 @@ type Status = 'loading' | 'ready' | 'error';
 
 const scoutLink = (name: string, lat: number, lng: number, placeId?: string | null) =>
   `/scout?${new URLSearchParams({ name, lat: String(lat), lng: String(lng), ...(placeId ? { place: placeId } : {}) }).toString()}`;
+
+// Imported posts often start their caption with the same words as the title.
+const captionWithoutTitle = (title: string, caption: string | null | undefined) => {
+  const text = caption?.trim();
+  if (!text) return null;
+  if (!text.toLowerCase().startsWith(title.trim().toLowerCase())) return text;
+  return text.slice(title.trim().length).replace(/^[\s.,:;!?·|–—-]+/, '') || null;
+};
 
 export default function TrimsReel() {
   const { user } = useAuth();
@@ -290,6 +299,7 @@ export default function TrimsReel() {
           const source = imported ? parseSourceUrl(card.source_url!) : null;
           const embed = imported ? embedUrlFor(card.source_url) : null;
           const where = source ? PLATFORM_LABEL[card.source_platform ?? source.platform] : '';
+          const captionText = captionWithoutTitle(postTitle(card), card.caption);
           return (
             <SwiperSlide key={id}>
               <div className="reel-area">
@@ -378,12 +388,7 @@ export default function TrimsReel() {
                     <div className="reel-user">
                       <Link href={`/profile/${author.id}`} className="reel-user__link">
                         <span className="reel-user__avatar" aria-hidden="true">
-                          {author.avatar ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={author.avatar} alt="" />
-                          ) : (
-                            author.name.charAt(0).toUpperCase()
-                          )}
+                          <ChatAvatar id={author.id} name={author.name} src={author.avatar} size={34} />
                         </span>
                         <span className="reel-user__name">{author.name}</span>
                       </Link>
@@ -393,25 +398,19 @@ export default function TrimsReel() {
                         </button>
                       )}
                     </div>
-                    <div className="reel-tags">
-                      <span className="reel-tag">
-                        {meta?.emoji} {meta?.label}
-                      </span>
+                    <h3 className="reel-title">{postTitle(card)}</h3>
+                    {captionText && <p className="reel-caption">{captionText}</p>}
+                    <div className="reel-meta">
+                      <span className="reel-meta__item">{meta?.label}</span>
                       {hasPlace && (
-                        <Link href={scoutLink(card.place_name || postTitle(card), card.lat as number, card.lng as number, card.place_id)} className="reel-tag reel-tag--link">
+                        <Link href={scoutLink(card.place_name || postTitle(card), card.lat as number, card.lng as number, card.place_id)} className="reel-meta__item reel-meta__item--link reel-meta__item--source">
                           <MapPin size={12} aria-hidden="true" /> {card.place_name || 'On the map'}
                         </Link>
-                      )}
-                      {imported && source && (
-                        <a href={source.url} target="_blank" rel="noopener noreferrer nofollow" className="reel-tag reel-tag--link">
-                          From {card.source_author ? `${card.source_author} on ` : ''}
-                          {where}
-                        </a>
                       )}
                       {stops.length > 0 && (
                         <button
                           type="button"
-                          className="reel-tag reel-tag--link"
+                          className="reel-meta__item reel-meta__item--link"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#trimsMoreCanvas"
                           onClick={() => setActiveTrimId(id)}
@@ -419,14 +418,16 @@ export default function TrimsReel() {
                           <Route size={12} aria-hidden="true" /> {stops.length} stops
                         </button>
                       )}
+                      {imported && source && (
+                        <a href={source.url} target="_blank" rel="noopener noreferrer nofollow" className="reel-meta__item reel-meta__item--link reel-meta__item--source">
+                          {card.source_author ? `${card.source_author} on ` : ''}
+                          {where}
+                        </a>
+                      )}
                     </div>
-                    <p className="reel-caption">
-                      <strong>{postTitle(card)}</strong>
-                      {card.caption || ''}
-                    </p>
                     {card.card_type === 'RECIPE_VIDEO' && (
                       <Link href={postPath(id)} className="reel-recipe-link">
-                        See the recipe
+                        See the recipe <ArrowUpRight size={15} strokeWidth={2.6} aria-hidden="true" />
                       </Link>
                     )}
                   </div>

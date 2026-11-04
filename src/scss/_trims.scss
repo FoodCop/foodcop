@@ -152,7 +152,7 @@
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
 
   &__avatar {
     width: 38px;
@@ -164,7 +164,6 @@
     flex-shrink: 0;
     background: $fz-paper;
     border: 2px solid $fuzo-yellow;
-    font-size: 1.05rem;
   }
 
   &__name {
@@ -314,54 +313,110 @@
   }
 }
 
-// What it is + where (real member videos, client 2026-10-16)
-.reel-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-bottom: 0.4rem;
+// Text over the video, top to bottom: author, title, caption, one quiet info
+// line (what it is, where, who made it), one action. Client 2026-11-04: pills,
+// emoji and a stack of links read as messy.
+.reel-title {
+  margin: 0 0 0.25rem;
+  font-family: $headings-font-family;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
-.reel-tag {
+.reel-meta {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin-top: 0.4rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: rgba(#fff, 0.82);
+  white-space: nowrap;
+}
+
+.reel-meta__item {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  max-width: 100%;
-  padding: 0.2rem 0.6rem;
+  gap: 0.2rem;
+  flex: none;
+  min-height: 24px;
+  padding: 0;
   border: 0;
-  border-radius: 9999px;
-  background: rgba(30, 26, 22, 0.55);
-  backdrop-filter: blur(8px);
-  color: #fff;
-  font-size: 0.72rem;
-  font-weight: 800;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  background: none;
+  color: inherit;
+  font: inherit;
   text-decoration: none;
 
-  &--link:hover {
-    background: rgba(30, 26, 22, 0.75);
+  & + &::before {
+    content: '·';
+    margin: 0 0.4rem;
+  }
+
+  &--link {
+    cursor: pointer;
+
+    &:hover {
+      color: #fff;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $fuzo-yellow;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+  }
+
+  // A place name or credit gives way first on a narrow card.
+  &--source {
+    display: block;
+    flex: 0 1 auto;
+    min-width: 0;
+    line-height: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    svg { vertical-align: -2px; }
+    &::before { display: inline; }
+  }
+}
+
+// The same dark frosted pill as the Feed card's Explore.
+.reel-recipe-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  margin-top: 0.55rem;
+  padding: 0 1.05rem;
+  border: 1px solid rgba(#fff, 0.16);
+  border-radius: 9999px;
+  background: rgba(14, 12, 10, 0.62);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover {
+    background: rgba(14, 12, 10, 0.8);
     color: #fff;
   }
 
   &:focus-visible {
     outline: 3px solid $fuzo-yellow;
     outline-offset: 2px;
-  }
-}
-
-.reel-recipe-link {
-  display: inline-block;
-  margin-top: 0.35rem;
-  color: $fuzo-yellow-pale;
-  font-size: 0.8rem;
-  font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-
-  &:hover {
-    color: #fff;
   }
 }
 
@@ -488,33 +543,22 @@
 
 .reel-caption {
   margin: 0;
-  font-size: 0.82rem;
-  line-height: 1.4;
-  color: rgba(#fff, 0.85);
+  font-size: 0.84rem;
+  line-height: 1.38;
+  color: rgba(#fff, 0.9);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-
-  // The post name as a heading, like the Feed card title.
-  strong {
-    display: block;
-    margin-bottom: 0.15rem;
-    font-family: $headings-font-family;
-    font-size: 1.4rem;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    line-height: 1.08;
-    color: #fff;
-  }
 }
 
 .follow-btn {
   flex-shrink: 0;
   border: 0;
   border-radius: 9999px;
-  padding: 0.3rem 0.95rem;
+  min-height: 34px;
+  padding: 0 0.95rem;
   background: $fuzo-yellow;
   color: $fuzo-yellow-ink;
   font-size: 0.74rem;
@@ -606,13 +650,14 @@
   .reel-progress span { transition: none; }
 }
 
-// Short players (small phones): shorter text and a tighter action rail, so the
+// Short players (small phones): no caption and a tighter action rail, so the
 // text, the rail and Watch all fit without covering each other. The creator
 // credit and the recipe link always stay.
 @container (max-height: 460px) {
-  .reel-caption { -webkit-line-clamp: 2; }
-  .reel-caption strong { font-size: 1.15rem; }
-  .reel-section { padding-bottom: 0.9rem; }
+  .reel-caption { display: none; }
+  .reel-title { font-size: 1.2rem; }
+  .reel-section { padding-bottom: 0.8rem; }
+  .reel-recipe-link { margin-top: 0.3rem; }
   .reel-actions { gap: 0.35rem; }
   .reel-actions .r-btn > span:not(.r-btn__icon) { display: none; }
   .reel-actions .r-btn__icon { width: 44px; height: 44px; }
