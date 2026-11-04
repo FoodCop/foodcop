@@ -1,5 +1,6 @@
 import type { AppItem } from '../../types/appItem';
 import type { PlateItemType } from './plateService';
+import { withoutGoogleLink } from '../google/photos';
 
 const getSavedUiId = (itemType: string, itemId: string) => {
   const prefixByType: Record<string, string> = {
@@ -75,7 +76,7 @@ export const normalizeSavedItemForUI = (savedItem: unknown): AppItem => {
     placeId: typeof (metadata.placeId || saved.placeId) === 'string' ? String(metadata.placeId || saved.placeId) : undefined,
     name: String(metadata.title || metadata.name || saved.name || `Saved ${itemType}`),
     cat: String(metadata.cat || metadata.category || fallbackCategory),
-    img: String(metadata.image || metadata.img || metadata.image_url || saved.img || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400'),
+    img: withoutGoogleLink(String(metadata.image || metadata.img || metadata.image_url || saved.img || '')) || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400',
     lat: Number.isFinite(Number(lat)) ? Number(lat) : undefined,
     lng: Number.isFinite(Number(lng)) ? Number(lng) : undefined,
     address: typeof (metadata.address || saved.address) === 'string' ? String(metadata.address || saved.address) : undefined,

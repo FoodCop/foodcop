@@ -1,27 +1,36 @@
 'use client';
 
-import { useImperativeHandle, useRef, useState, type ReactNode, type Ref } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from 'react';
+import Link from 'next/link';
 import {
   animate,
+  AnimatePresence,
   motion,
   useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   useTransform,
+  type AnimationPlaybackControls,
   type MotionValue,
   type PanInfo,
 } from 'framer-motion';
-import { Bookmark, Heart, Share2, X } from 'lucide-react';
-import { TYPE_META } from '@/lib/types/foodCard';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, Bookmark, CalendarDays, Heart, Share2, ShoppingBag, X } from 'lucide-react';
+import { partnerLinks } from '@/lib/maps/partnerLinks';
+import { familyOf } from '@/lib/types/foodCard';
 import type { FeedCard } from '@/lib/services/recommendationService';
 
-// The Feed's Tinder-style card stack (client, 2026-10-18: "make it like
-// Tinder" on phones). The top card follows the finger 1:1, tilts around the
-// point it was grabbed, and is thrown off-screen from wherever it is on
-// release - a long drag or a quick flick both count. The card behind grows
-// into place as you drag, and the matching action button lights up.
+// The Feed's swipe card (client, 2026-11-04: "like the Greece card"): one
+// full-photo card at a time (no stack behind it, no action buttons), the
+// photo fading into a soft blur at the bottom under a big title, the caption
+// and a dark frosted EXPLORE pill that opens the post.
+// The card follows the finger 1:1 and tilts with the sideways drag. Once a
+// swipe counts (a long drag or a quick flick), the card always leaves the
+// same way for that direction (client, 2026-11-04: "the sliding is random,
+// use fixed movement"): left / right fly straight out sideways with a fixed
+// tilt, up / down straight up / down, all at one fixed speed.
 // Directions (client, 2026-10-06): left = dislike, right = like, up = share,
-// down = save to My Plate.
+// down = save to My Plate. Arrow keys do the same, and screen readers get
+// hidden buttons. First visit: the card shows each swipe once (`demo`).
 
 export type SwipeDir = 'left' | 'right' | 'up' | 'down';
 
@@ -29,9 +38,9 @@ const DIST_X = 0.3; // share of the card width a sideways drag needs to commit
 const DIST_Y = 120; // px of up/down drag that commits
 const FLICK = 500; // px/s: a flick this fast commits even a short drag
 const MIN_FLICK_DIST = 30; // ...as long as it moved at least this far
-const BEHIND = 2; // cards drawn under the top one
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+const wait = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
 
 /** Which way a drag points (the axis that moved more), or null while it's tiny. */
 function dirOf(x: number, y: number): SwipeDir | null {
@@ -39,39 +48,84 @@ function dirOf(x: number, y: number): SwipeDir | null {
   return Math.abs(x) >= Math.abs(y) ? (x > 0 ? 'right' : 'left') : y < 0 ? 'up' : 'down';
 }
 
+// The first-visit demo, in this order.
+const DEMO: { dir: SwipeDir; label: string; icon: typeof ArrowLeft }[] = [
+  { dir: 'left', label: 'Swipe left to skip', icon: ArrowLeft },
+  { dir: 'right', label: 'Swipe right to like', icon: ArrowRight },
+  { dir: 'up', label: 'Swipe up to share', icon: ArrowUp },
+  { dir: 'down', label: 'Swipe down to save', icon: ArrowDown },
+];
+
 export interface FeedDeckProps {
   cards: FeedCard[];
   /** The user decided on a card (fires as the throw starts). */
   onSwipe: (dir: SwipeDir, card: FeedCard) => void;
-  /** Shown between the stack and the action bar (confirmation pill). */
+  /** Shown under the card (confirmation pill). */
   notice?: ReactNode;
-  /** Shown under the action bar (first-visit hint). */
-  footer?: ReactNode;
+  /** Show the swipe demo (new users); onDemoDone fires when it ends or is skipped. */
+  demo?: boolean;
+  onDemoDone?: () => void;
 }
 
 interface TopCardHandle {
   fling: (dir: SwipeDir) => void;
+  /** Lean the card towards a direction and back (the demo). Resolves when back. */
+  nudge: (dir: SwipeDir) => Promise<void>;
+  stop: () => void;
 }
 
-export default function FeedDeck({ cards, onSwipe, notice, footer }: FeedDeckProps) {
+export default function FeedDeck({ cards, onSwipe, notice, demo = false, onDemoDone }: FeedDeckProps) {
+  const reduce = useReducedMotion();
   const [index, setIndex] = useState(0);
-  const [hot, setHot] = useState<SwipeDir | null>(null);
   const topRef = useRef<TopCardHandle>(null);
-  // 0 → 1 as the top card is dragged towards a decision; drives the card behind.
-  const progress = useMotionValue(0);
+  const [demoStep, setDemoStep] = useState(0);
 
   const done = index >= cards.length;
-  const visible = cards.slice(index, index + 1 + BEHIND);
+  const card = done ? null : cards[index];
+  const next = cards[index + 1];
 
   const fling = (dir: SwipeDir) => topRef.current?.fling(dir);
+
+  const endDemo = () => {
+    topRef.current?.stop();
+    onDemoDone?.();
+  };
+
+  // The demo: lean the card each way in turn, with a label for each.
+  useEffect(() => {
+    if (!demo || reduce || !card) return;
+    let cancelled = false;
+    (async () => {
+      await wait(700);
+      for (let i = 0; i < DEMO.length && !cancelled; i++) {
+        setDemoStep(i);
+        await topRef.current?.nudge(DEMO[i].dir);
+        if (!cancelled) await wait(250);
+      }
+      if (!cancelled) {
+        await wait(300);
+        onDemoDone?.();
+      }
+    })();
+    return () => {
+      cancelled = true;
+      topRef.current?.stop();
+    };
+    // Runs once per demo; the card it starts on is enough.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [demo, reduce]);
 
   function onKeyDown(e: React.KeyboardEvent) {
     const map: Record<string, SwipeDir> = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' };
     const dir = map[e.key];
     if (!dir) return;
     e.preventDefault();
+    if (demo) endDemo();
     fling(dir);
   }
+
+  const step = DEMO[demoStep];
+  const StepIcon = step.icon;
 
   return (
     <div className="feed">
@@ -79,31 +133,20 @@ export default function FeedDeck({ cards, onSwipe, notice, footer }: FeedDeckPro
         className="feed__stage"
         tabIndex={0}
         role="group"
-        aria-label="Feed cards. Swipe or use arrow keys: left dislike, right like, up share, down save to My Plate."
+        aria-label="Feed card. Swipe or use arrow keys: left skip, right like, up share, down save to My Plate."
         onKeyDown={onKeyDown}
       >
-        {/* Drawn back to front so the top card is last (on top). */}
-        {visible
-          .map((card, depth) =>
-            depth === 0 ? (
-              <TopCard
-                key={card.card.id}
-                ref={topRef}
-                card={card}
-                progress={progress}
-                onHot={setHot}
-                onDecide={(dir) => onSwipe(dir, card)}
-                onGone={() => {
-                  progress.jump(0);
-                  setHot(null);
-                  setIndex((i) => i + 1);
-                }}
-              />
-            ) : (
-              <BackCard key={card.card.id} card={card} depth={depth} progress={progress} />
-            ),
-          )
-          .reverse()}
+        {card && (
+          <TopCard
+            key={card.card.id}
+            ref={topRef}
+            card={card}
+            onDecide={(dir) => onSwipe(dir, card)}
+            onGone={() => setIndex((i) => i + 1)}
+          />
+        )}
+        {/* Warm the next photo so it's there when this card goes. */}
+        {next?.card.image_url && <link rel="preload" as="image" href={next.card.image_url} />}
 
         {done && (
           <div className="feed-done">
@@ -115,55 +158,77 @@ export default function FeedDeck({ cards, onSwipe, notice, footer }: FeedDeckPro
             </button>
           </div>
         )}
+
+        {/* First visit: how to swipe. Tap anywhere to skip. */}
+        <AnimatePresence>
+          {demo && card && (
+            <motion.div
+              className={`feed-coach${reduce ? ' feed-coach--still' : ''}`}
+              role="dialog"
+              aria-label="How to use the Feed"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={endDemo}
+            >
+              {reduce ? (
+                <div className="feed-coach__legend">
+                  {DEMO.map(({ dir, label, icon: Icon }) => (
+                    <span key={dir}>
+                      <Icon size={16} strokeWidth={2.6} aria-hidden="true" /> {label}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <span className={`feed-coach__finger feed-coach__finger--${step.dir}`} key={step.dir} aria-hidden="true" />
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={step.dir}
+                      className="feed-coach__label"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.2 }}
+                      aria-live="polite"
+                    >
+                      <StepIcon size={16} strokeWidth={2.6} aria-hidden="true" /> {step.label}
+                    </motion.span>
+                  </AnimatePresence>
+                </>
+              )}
+              <button type="button" className="feed-coach__skip" onClick={endDemo} autoFocus>
+                Got it
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {notice}
 
-      <div className="feed__bar">
-        <button className={`feed__btn feed__btn--nope${hot === 'left' ? ' is-hot' : ''}`} onClick={() => fling('left')} type="button" aria-label="Dislike" title="Dislike (swipe left)" disabled={done}>
-          <X size={26} strokeWidth={3} />
-        </button>
-        <button className={`feed__btn feed__btn--share${hot === 'up' ? ' is-hot' : ''}`} onClick={() => fling('up')} type="button" aria-label="Share" title="Share (swipe up)" disabled={done}>
-          <Share2 size={18} strokeWidth={2.4} />
-        </button>
-        <span className="feed__count" aria-live="polite">
-          {done ? `${cards.length} / ${cards.length}` : `${index + 1} / ${cards.length}`}
-        </span>
-        <button className={`feed__btn feed__btn--save${hot === 'down' ? ' is-hot' : ''}`} onClick={() => fling('down')} type="button" aria-label="Save to My Plate" title="Save to My Plate (swipe down)" disabled={done}>
-          <Bookmark size={18} strokeWidth={2.4} />
-        </button>
-        <button className={`feed__btn feed__btn--like${hot === 'right' ? ' is-hot' : ''}`} onClick={() => fling('right')} type="button" aria-label="Like" title="Like (swipe right)" disabled={done}>
-          <Heart size={26} fill="currentColor" />
-        </button>
-      </div>
-
-      {!done && footer}
+      {/* No visible buttons (client); these keep every action reachable without a swipe. */}
+      {!done && (
+        <div className="visually-hidden">
+          <button type="button" onClick={() => fling('left')}>Skip this card</button>
+          <button type="button" onClick={() => fling('right')}>Like</button>
+          <button type="button" onClick={() => fling('up')}>Share</button>
+          <button type="button" onClick={() => fling('down')}>Save to My Plate</button>
+          <span aria-live="polite">{`Card ${index + 1} of ${cards.length}`}</span>
+        </div>
+      )}
     </div>
-  );
-}
-
-/** A card waiting underneath: smaller and lower, growing into place as the top card is dragged away. */
-function BackCard({ card, depth, progress }: { card: FeedCard; depth: number; progress: MotionValue<number> }) {
-  const scale = useTransform(progress, (p) => 1 - (depth - p) * 0.05);
-  const y = useTransform(progress, (p) => (depth - p) * 14);
-  return (
-    <motion.article className="feed-card feed-card--behind" style={{ scale, y }} aria-hidden="true" inert>
-      <CardFace card={card} />
-    </motion.article>
   );
 }
 
 function TopCard({
   card,
-  progress,
-  onHot,
   onDecide,
   onGone,
   ref,
 }: {
   card: FeedCard;
-  progress: MotionValue<number>;
-  onHot: (dir: SwipeDir | null) => void;
   onDecide: (dir: SwipeDir) => void;
   onGone: () => void;
   ref: Ref<TopCardHandle>;
@@ -173,14 +238,13 @@ function TopCard({
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const opacity = useMotionValue(1);
-  // Grabbed below the middle → tilt the other way, like holding a real card there.
-  const grab = useMotionValue(1);
-  const rotate = useTransform([x, grab], ([v, g]: number[]) => Math.max(-22, Math.min(22, v / 14)) * g);
+  // Tilt follows the sideways position only, the same wherever the card is held.
+  const rotate = useTransform(x, (v) => Math.max(-16, Math.min(16, v / 18)));
   // The card's width, measured when a drag starts (distances scale with it).
   const cardW = useMotionValue(340);
   const busy = useRef(false);
-  const lastDir = useRef<SwipeDir | null>(null);
   const armed = useRef(false);
+  const running = useRef<AnimationPlaybackControls[]>([]);
 
   /** How far towards a decision the card is (0 = centre, 1 = will commit). */
   const strength = (vx: number, vy: number) => {
@@ -196,62 +260,76 @@ function TopCard({
   const stampUp = useTransform([x, y], stampFor('up'));
   const stampDown = useTransform([x, y], stampFor('down'));
 
+  // A tiny buzz (Android) the moment a release would count.
   const track = () => {
-    const vx = x.get();
-    const vy = y.get();
-    const s = strength(vx, vy);
-    progress.set(clamp01(s));
-    const d = dirOf(vx, vy);
-    if (d !== lastDir.current) {
-      lastDir.current = d;
-      onHot(d);
-    }
-    // A tiny buzz (Android) the moment a release would count, like Tinder.
-    const nowArmed = s >= 1;
+    const nowArmed = strength(x.get(), y.get()) >= 1;
     if (nowArmed && !armed.current) navigator.vibrate?.(8);
     armed.current = nowArmed;
   };
   useMotionValueEvent(x, 'change', track);
   useMotionValueEvent(y, 'change', track);
 
-  /** Throw the card off-screen from where it is now, carrying the finger's speed. */
-  const throwAway = (dir: SwipeDir, vx = 0, vy = 0) => {
+  const stopAll = () => {
+    running.current.forEach((c) => c.stop());
+    running.current = [];
+  };
+
+  /** Send the card off-screen: one fixed path and speed per direction. */
+  const throwAway = (dir: SwipeDir) => {
     if (busy.current) return;
     busy.current = true;
+    stopAll();
     onDecide(dir);
-    onHot(dir);
-    progress.set(1);
     if (reduce) {
       animate(opacity, 0, { duration: 0.18 }).then(onGone);
       return;
     }
-    const W = window.innerWidth;
-    const H = window.innerHeight;
     const sideways = dir === 'left' || dir === 'right';
     const sign = dir === 'right' || dir === 'down' ? 1 : -1;
-    const targetX = sideways ? sign * (W + cardW.get()) : x.get() + vx * 0.15;
-    const targetY = sideways ? y.get() + vy * 0.2 : sign * (H + 200);
-    // Faster flicks leave faster; a button press uses a steady throw.
-    const speed = Math.hypot(vx, vy);
-    const duration = speed > 0 ? Math.max(0.2, Math.min(0.42, 900 / speed / 4)) : 0.38;
-    animate(x, targetX, { duration, ease: [0.2, 0.7, 0.4, 1] });
-    animate(y, targetY, { duration, ease: [0.2, 0.7, 0.4, 1] }).then(onGone);
+    const targetX = sideways ? sign * (window.innerWidth / 2 + cardW.get()) : 0;
+    const targetY = sideways ? 0 : sign * (window.innerHeight / 2 + (el.current?.offsetHeight ?? 600));
+    const t = { duration: 0.36, ease: [0.4, 0, 0.2, 1] as const };
+    animate(x, targetX, t);
+    animate(y, targetY, t).then(onGone);
+  };
+
+  const springBack = () => {
+    const spring = { type: 'spring' as const, stiffness: 520, damping: 32 };
+    running.current = [animate(x, 0, spring), animate(y, 0, spring)];
   };
 
   useImperativeHandle(ref, () => ({
     fling: (dir) => {
-      // Buttons and keys: tilt from the top, like a grab near the top edge.
-      grab.set(1);
       if (el.current) cardW.set(el.current.offsetWidth);
       throwAway(dir);
     },
+    nudge: async (dir) => {
+      if (busy.current) return;
+      if (el.current) cardW.set(el.current.offsetWidth);
+      // Far enough to show the stamp clearly, never far enough to count.
+      const toX = dir === 'left' || dir === 'right' ? (dir === 'right' ? 1 : -1) * cardW.get() * DIST_X * 0.8 : 0;
+      const toY = dir === 'up' || dir === 'down' ? (dir === 'down' ? 1 : -1) * DIST_Y * 0.8 : 0;
+      const ease = [0.33, 1, 0.68, 1] as const;
+      const out = [animate(x, toX, { duration: 0.55, ease }), animate(y, toY, { duration: 0.55, ease })];
+      running.current = out;
+      await Promise.all(out);
+      if (running.current !== out) return; // stopped
+      await wait(450);
+      if (running.current !== out) return;
+      const back = [animate(x, 0, { duration: 0.45, ease }), animate(y, 0, { duration: 0.45, ease })];
+      running.current = back;
+      await Promise.all(back);
+    },
+    stop: () => {
+      if (busy.current) return;
+      stopAll();
+      springBack();
+    },
   }));
 
-  const onPointerDown = (e: React.PointerEvent) => {
-    const r = el.current?.getBoundingClientRect();
-    if (!r) return;
-    cardW.set(r.width);
-    grab.set(e.clientY > r.top + r.height / 2 ? -1 : 1);
+  const onPointerDown = () => {
+    stopAll();
+    if (el.current) cardW.set(el.current.offsetWidth);
   };
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
@@ -264,19 +342,19 @@ function TopCard({
     const v = sideways ? vx : vy;
     const flicked = !!dir && Math.abs(v) > FLICK && Math.sign(v) === Math.sign(sideways ? ox : oy) && Math.hypot(ox, oy) > MIN_FLICK_DIST;
     if (dir && (far || flicked)) {
-      throwAway(dir, vx, vy);
+      throwAway(dir);
       return;
     }
-    // Not far enough: spring back to the middle.
-    const spring = { type: 'spring' as const, stiffness: 520, damping: 32 };
-    animate(x, 0, spring);
-    animate(y, 0, spring);
+    springBack();
   };
 
+  const { card: c } = card;
+  // Only posts about a named restaurant get the OpenTable / Uber Eats hand-offs.
+  const partners = c.place_name && !c.is_home && familyOf(c.card_type) === 'restaurant' ? partnerLinks(c.place_name, c.lat, c.lng) : null;
   return (
     <motion.article
       ref={el}
-      className="feed-card feed-card--top"
+      className="feed-card"
       style={{ x, y, rotate, opacity }}
       drag
       dragMomentum={false}
@@ -284,8 +362,63 @@ function TopCard({
       onPointerDown={onPointerDown}
       onDragEnd={onDragEnd}
       whileTap={{ cursor: 'grabbing' }}
+      initial={reduce ? false : { scale: 0.96 }}
+      animate={{ scale: 1 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
     >
-      <CardFace card={card} />
+      {c.image_url ? (
+        <>
+          <img className="feed-card__img" src={c.image_url} alt="" draggable={false} />
+          {/* The same photo, blurred, showing only at the bottom: the soft fade under the text. */}
+          <img className="feed-card__blur" src={c.image_url} alt="" draggable={false} aria-hidden="true" />
+        </>
+      ) : (
+        <span className="feed-card__img feed-card__img--empty" />
+      )}
+      <span className="feed-card__shade" />
+
+      <div className="feed-card__body">
+        <h3 className="feed-card__title">{c.title}</h3>
+        {c.caption && <p className="feed-card__caption">{c.caption}</p>}
+        <div className="feed-card__actions">
+          <Link
+            href={`/post/${c.id}`}
+            className="feed-card__explore"
+            draggable={false}
+            // A press on the pill opens the post; it never starts a swipe.
+            onPointerDownCapture={(e) => e.stopPropagation()}
+          >
+            Explore <ArrowUpRight size={16} strokeWidth={2.6} aria-hidden="true" />
+          </Link>
+          {partners && (
+            <>
+              <a
+                href={partners.openTable}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="feed-card__partner"
+                draggable={false}
+                aria-label={`Find ${c.place_name} on OpenTable (opens a new tab)`}
+                onPointerDownCapture={(e) => e.stopPropagation()}
+              >
+                <CalendarDays size={15} aria-hidden="true" /> OpenTable
+              </a>
+              <a
+                href={partners.uberEats}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="feed-card__partner"
+                draggable={false}
+                aria-label={`Find ${c.place_name} on Uber Eats (opens a new tab)`}
+                onPointerDownCapture={(e) => e.stopPropagation()}
+              >
+                <ShoppingBag size={15} aria-hidden="true" /> Uber Eats
+              </a>
+            </>
+          )}
+        </div>
+      </div>
+
       {/* Drag feedback stamps. */}
       <motion.div className="feed-stamp feed-stamp--nope" style={{ opacity: stampLeft }} aria-hidden="true">
         <X size={16} strokeWidth={3} /> Nope
@@ -300,42 +433,5 @@ function TopCard({
         <Bookmark size={16} fill="currentColor" /> Save
       </motion.div>
     </motion.article>
-  );
-}
-
-function CardFace({ card: feedCard }: { card: FeedCard }) {
-  const meta = TYPE_META[feedCard.card.card_type];
-  const author = feedCard.author;
-  return (
-    <>
-      {feedCard.card.image_url ? (
-        <img className="feed-card__img" src={feedCard.card.image_url} alt="" draggable={false} />
-      ) : (
-        <span className="feed-card__img feed-card__img--empty" />
-      )}
-      <span className="feed-card__shade" />
-
-      <span className="feed-card-badge">
-        <span className="feed-card-badge__dot" style={{ backgroundColor: meta.color }} aria-hidden="true" />
-        {meta.emoji} {meta.label}
-      </span>
-
-      <div className="feed-card__body">
-        <div className="feed-card__author">
-          {author.avatarUrl ? (
-            <img src={author.avatarUrl} alt="" draggable={false} />
-          ) : (
-            <span aria-hidden="true">{(author.displayName || '?').charAt(0).toUpperCase()}</span>
-          )}
-          <span className="feed-card__author-name">{author.displayName}</span>
-        </div>
-        <h3 className="feed-card__title">{feedCard.card.title}</h3>
-        {feedCard.card.caption && <p className="feed-card__caption">{feedCard.card.caption}</p>}
-        <div className="feed-meta">
-          {feedCard.card.tags?.cuisine?.[0] && <span>{feedCard.card.tags.cuisine[0]}</span>}
-          {feedCard.matchReason && <span className="feed-card-match-reason">{feedCard.matchReason}</span>}
-        </div>
-      </div>
-    </>
   );
 }

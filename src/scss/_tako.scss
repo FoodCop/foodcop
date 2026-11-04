@@ -330,16 +330,17 @@ $tako-max: 44rem;
   &:hover {
     transform: translateY(-3px);
 
-    .tako-pick__ball {
-      transform: scale(1.06) rotate(-6deg);
+    .tako-pick__art img {
+      transform: scale(1.06) translateY(-2px);
     }
   }
 
   // Pastel card per option (Eat out peach, Cook butter, Explore lavender);
   // the open one gets a yellow ring.
-  &:nth-child(1) { background: #FFE6DA; }
-  &:nth-child(2) { background: #FFF2C9; }
-  &:nth-child(3) { background: #ECE5FC; }
+  // (sampled from the client's card art, so the illustrations sit seamlessly)
+  &:nth-child(1) { background: #FFE0D7; }
+  &:nth-child(2) { background: #FEEEBA; }
+  &:nth-child(3) { background: #E7DBFC; }
 
   &.is-open {
     border-color: $fuzo-yellow-deep;
@@ -353,26 +354,22 @@ $tako-max: 44rem;
 }
 
 // A glossy 3D ball: highlight top-left, colour gradient, inner shade + glow.
-.tako-pick__ball {
-  width: 58px;
-  height: 58px;
-  margin-bottom: 0.45rem;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background:
-    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.75) 0, rgba(255, 255, 255, 0) 32%),
-    radial-gradient(circle at 45% 38%, var(--tako-from), var(--tako-to) 78%);
-  box-shadow:
-    inset -5px -7px 12px rgba(0, 0, 0, 0.18),
-    inset 3px 4px 8px rgba(255, 255, 255, 0.35),
-    0 10px 18px -8px var(--tako-to);
-  transition: transform 0.35s $fz-ease;
+.tako-pick__art {
+  display: block;
+  width: 100%;
+  margin: -0.35rem 0 0.35rem;
 
-  svg {
-    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+  // The illustration is cut with its card colour; the soft edge fade blends it into the card.
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 480 / 250;
+    object-fit: contain;
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 78%, transparent 100%);
+    mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 78%, transparent 100%);
+    transition: transform 0.35s $fz-ease;
+    user-select: none;
   }
 }
 
@@ -386,7 +383,7 @@ $tako-max: 44rem;
   font-size: 0.72rem;
   font-weight: 600;
   line-height: 1.25;
-  color: $tako-muted;
+  color: mix($tako-ink, $tako-muted, 45%); // AA on the art-matched card colours
 
   @media (max-width: 359.98px) {
     display: none;
@@ -862,7 +859,7 @@ $tako-max: 44rem;
     animation: none;
   }
   .tako-pick,
-  .tako-pick__ball,
+  .tako-pick__art img,
   .tako-option__icon {
     transition: none;
   }

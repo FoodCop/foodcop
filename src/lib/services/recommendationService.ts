@@ -21,7 +21,6 @@ import { fetchCuratedRecipes } from '@/lib/recipes/curatedRecipes';
 import { PlacesService } from '@/lib/services/placesService';
 import { YouTubeService } from '@/lib/services/youtubeService';
 import { getDistance } from '@/lib/scout/geometryUtils';
-import { buildPlacePhotoUrl } from '@/lib/scout/scoutLogic';
 import { FLAVOR_AXES, ZERO_FLAVOR, type CardTags, type FlavorVector, type FoodCardRecord } from '@/lib/types/foodCard';
 import type { MatchSensitivity } from '@/lib/services/userSettingsService';
 import type { DnaAxis } from '@/lib/recommendation/dna';
@@ -389,10 +388,11 @@ export async function getNearbyRestaurants(
   lng: number,
   topCuisine?: string,
   options?: { radiusKm?: number; hiddenGems?: boolean; luxury?: number },
-): Promise<NearbyRestaurant[]> {
+): Promise<{ restaurants: NearbyRestaurant[]; error?: string; code?: string }> {
   const radiusMeters = (options?.radiusKm ?? 5) * 1000;
   const result = await PlacesService.searchNearby(lat, lng, radiusMeters);
-  if (!result.success || !result.data?.results?.length) return [];
+  if (!result.success) return { restaurants: [], error: result.error, code: result.code };
+  if (!result.data?.results?.length) return { restaurants: [] };
 
   const cuisineLower = topCuisine?.toLowerCase();
 
@@ -403,8 +403,6 @@ export async function getNearbyRestaurants(
       placeLat != null && placeLng != null ? getDistance({ lat, lng }, { lat: placeLat, lng: placeLng }) : Infinity;
     const haystack = `${place.name} ${place.vicinity || ''}`.toLowerCase();
 
-    const photoReference = place.photos?.[0]?.photo_reference;
-
     return {
       placeId: place.place_id || place.id || '',
       name: place.name,
@@ -414,7 +412,6 @@ export async function getNearbyRestaurants(
       priceLevel: place.price_level,
       distanceMeters,
       matchesTaste: !!cuisineLower && haystack.includes(cuisineLower),
-      image: photoReference ? buildPlacePhotoUrl(photoReference) : undefined,
       lat: typeof placeLat === 'number' ? placeLat : undefined,
       lng: typeof placeLng === 'number' ? placeLng : undefined,
     };
@@ -432,14 +429,14 @@ export async function getNearbyRestaurants(
   // higher/lower Google price_level (0-4, already real), same threshold/
   // no-op-when-absent convention as getFeedCards' Health/Luxury bias above.
   const luxury = options?.luxury;
-  if (luxury === undefined) return restaurants.sort(baseCompare);
+  if (luxury === undefined) return { restaurants: restaurants.sort(baseCompare) };
 
   const luxuryCompare = (a: NearbyRestaurant, b: NearbyRestaurant) => {
     if (luxury > DNA_AXIS_THRESHOLD) return (b.priceLevel ?? -1) - (a.priceLevel ?? -1);
     if (luxury < 100 - DNA_AXIS_THRESHOLD) return (a.priceLevel ?? 5) - (b.priceLevel ?? 5);
     return 0;
   };
-  return restaurants.sort((a, b) => luxuryCompare(a, b) || baseCompare(a, b));
+  return { restaurants: restaurants.sort((a, b) => luxuryCompare(a, b) || baseCompare(a, b)) };
 }
 
 export async function getSuggestedVideos(topCuisine?: string): Promise<SuggestedVideo[]> {

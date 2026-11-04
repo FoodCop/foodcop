@@ -35,6 +35,16 @@ export interface ChatContact {
   avatar: string | null;
 }
 
+export interface Meetup {
+  id: string;
+  locked: boolean;
+  name: string;
+  date: string | null;
+  time: string | null;
+  location: string | null;
+  image: string | null;
+}
+
 export interface ChatMessage {
   id: string;
   conversationId?: string;
@@ -336,6 +346,50 @@ export const ChatService = {
     const rows = ((data ?? []) as unknown[]).reverse();
     const messages = await Promise.all(rows.map((row) => hydrateMessage(params.threadType, params.threadId, params.userId, row)));
     return { success: true, data: messages };
+  },
+
+  /**
+   * The meetups you said you're going to, newest RSVP first (profile pop-up,
+   * client list #7). The invite lives inside an end-to-end encrypted message,
+   * so it is read here on the device; `locked` = this device can't open it yet.
+   */
+  async listMeetups(userId: string): Promise<ChatResult<Meetup[]>> {
+    const client = supabase;
+    if (!client) return { success: false, error: 'Supabase is not configured' };
+
+    const { data: rsvps, error } = await client
+      .from('event_rsvps')
+      .select('message_id, updated_at')
+      .eq('user_id', userId)
+      .eq('status', 'going')
+      .order('updated_at', { ascending: false })
+      .limit(30);
+    if (error) return { success: false, error: error.message };
+    const ids = (rsvps ?? []).map((r) => r.message_id as string);
+    if (!ids.length) return { success: true, data: [] };
+
+    const [dms, groups] = await Promise.all([
+      client.from('dm_messages').select(DM_COLUMNS).in('id', ids),
+      client.from('group_messages').select(GROUP_COLUMNS).in('id', ids),
+    ]);
+    if (dms.error && groups.error) return { success: false, error: dms.error.message };
+
+    const hydrated = await Promise.all([
+      ...((dms.data ?? []) as unknown[]).map((row) => hydrateMessage('dm', String(asRecord(row).conversation_id), userId, row)),
+      ...((groups.data ?? []) as unknown[]).map((row) => hydrateMessage('group', String(asRecord(row).group_id), userId, row)),
+    ]);
+    const byId = new Map(hydrated.map((m) => [m.id, m]));
+    const meetups: Meetup[] = [];
+    for (const id of ids) {
+      const m = byId.get(id); // A deleted invite has no message any more: nothing to show.
+      if (!m) continue;
+      if (m.undecryptable) meetups.push({ id, locked: true, name: 'Encrypted meetup', date: null, time: null, location: null, image: null });
+      else if (m.sharedItem?.itemType === 'event') {
+        const e = m.sharedItem;
+        meetups.push({ id, locked: false, name: e.name || 'Meetup', date: e.eventDate || null, time: e.eventTime || null, location: e.eventLocation || null, image: e.img || null });
+      }
+    }
+    return { success: true, data: meetups };
   },
 
   async getConversationParticipants(conversationId: string): Promise<ChatResult<{ id: string; participant1: string; participant2: string }>> {

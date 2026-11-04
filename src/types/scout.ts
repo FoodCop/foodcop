@@ -40,6 +40,8 @@ export interface ScoutPlace {
   website: string;
   vibe: string[];
   img: string;
+  /** Google photo reference, for the pop-up's main photo when `img` is empty. */
+  photoRef?: string;
   lat: number;
   lng: number;
   timings: ScoutTimings;

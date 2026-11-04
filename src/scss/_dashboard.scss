@@ -978,12 +978,11 @@ $rail-pad-sm: 1rem;
   .bites-view { padding: 0; max-width: none; }
 }
 
-// Feed: the swipe stack sized to the space between the tabs, its action bar and the dock.
+// Feed: the swipe card sized to the space between the tabs and the dock.
 .fz-dash-panel--feed {
-  // Fit card + action bar between the tab bar (~143px incl. the top bar) and
-  // the floating dock (~100px), so the Skip / Save buttons are never hidden.
+  // Between the tab bar (~143px incl. the top bar) and the floating dock (~100px).
   .feed__stage {
-    height: clamp(240px, calc(100dvh - 262px), 620px);
+    height: clamp(240px, calc(100dvh - 250px), 660px);
     min-height: 0;
   }
 }
@@ -1375,4 +1374,88 @@ $rail-pad-sm: 1rem;
     background: $fuzo-yellow-tint;
     color: $fuzo-yellow-ink;
   }
+}
+
+// "Show more nearby": Google only runs when someone asks (docs/GOOGLE_COST_PLAN.md).
+.fz-dash-rail__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 36px;
+  padding: 0.35rem 0.85rem;
+  border: 0;
+  border-radius: 9999px;
+  background: $fuzo-yellow;
+  color: $fz-ink;
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover:not(:disabled) { background: #f7d36b; }
+  &:focus-visible { outline: 3px solid $fz-ink; outline-offset: 2px; }
+  &:disabled { opacity: 0.75; cursor: progress; }
+}
+
+.fz-dash-rail__error {
+  display: block;
+  margin: 0.5rem 0 0;
+  color: $chili;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+// First-time guide (GuidedTour.tsx): a spotlight over each main place in turn.
+.fz-guide {
+  position: fixed;
+  inset: 0;
+  z-index: 1250;
+
+  &__spot {
+    position: fixed;
+    border-radius: 18px;
+    box-shadow: 0 0 0 200vmax rgba(10, 8, 6, 0.62), 0 0 0 3px $fuzo-yellow;
+    pointer-events: none;
+  }
+
+  &__card {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    max-width: 22rem;
+    margin-inline: auto;
+    padding: 1rem 1.1rem;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
+    color: $fz-ink;
+
+    &.is-centred { right: auto; width: min(22rem, calc(100vw - 32px)); margin: 0; }
+  }
+
+  &__count { margin: 0; font-size: 0.75rem; font-weight: 700; color: mix($fz-ink, $fz-ink-soft, 40%); }
+  &__title { margin: 0.1rem 0 0.25rem; font-family: var(--body-font), sans-serif; font-size: 1.1rem; font-weight: 800; color: $fz-ink; }
+  &__text { margin: 0; font-size: 0.9rem; line-height: 1.4; }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+  }
+
+  &__skip,
+  &__next {
+    min-height: 44px;
+    padding: 0 1.2rem;
+    border: 0;
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    &:focus-visible { outline: 3px solid $fuzo-yellow-deep; outline-offset: 2px; }
+  }
+  &__skip { background: #f2f1ee; color: $fz-ink; }
+  &__next { background: $fuzo-yellow; color: $fuzo-yellow-ink; }
 }

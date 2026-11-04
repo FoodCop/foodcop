@@ -8,6 +8,7 @@ import { RestaurantService } from '@/lib/services/restaurantService';
 import { CommunityPlacesService, namesMatch, type CommunityPlace } from '@/lib/services/communityPlacesService';
 import type { PostPlace } from '@/lib/services/postService';
 import type { GpsPoint } from '@/lib/utils/exifGps';
+import { googleMessage } from '@/lib/google/limits';
 
 // Where a post was taken (Create flow; client, 2026-10-14: "search for a
 // place using Scout, or drop a map pin"). Used by Vibe, Food and Restaurant
@@ -61,7 +62,9 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
   const here = useRef<{ lat: number; lng: number } | null>(null);
   const [herePos, setHerePos] = useState<{ lat: number; lng: number } | null>(null);
   const seq = useRef(0);
-  const [fromPhoto, setFromPhoto] = useState<PostPlace[] | null>(null);
+  // Places where the photo was taken, once asked for (each search costs money).
+  const [photoAsk, setPhotoAsk] = useState<{ spot: GpsPoint; places: PostPlace[] | null; message?: string } | null>(null);
+  const photoAnswer = photoAsk && photoAsk.spot === photoSpot ? photoAsk : null;
 
   // Ask for the user's position once, quietly, to bias search results nearby.
   useEffect(() => {
@@ -71,18 +74,14 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
     });
   }, []);
 
-  // Places where the photo was taken (once per photo spot).
-  useEffect(() => {
+  const lookUpPhotoSpot = async () => {
     if (!photoSpot) return;
-    let cancelled = false;
-    PlacesService.searchNearby(photoSpot.lat, photoSpot.lng, 150).then((res) => {
-      if (cancelled) return;
-      setFromPhoto((res.data?.results ?? []).map(toPlace).filter((p): p is PostPlace => !!p).slice(0, 5));
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [photoSpot]);
+    const spot = photoSpot;
+    setPhotoAsk({ spot, places: null });
+    const res = await PlacesService.searchNearby(spot.lat, spot.lng, 150);
+    const places = (res.data?.results ?? []).map(toPlace).filter((p): p is PostPlace => !!p).slice(0, 5);
+    setPhotoAsk((cur) => (cur?.spot === spot ? { spot, places, message: res.success ? undefined : googleMessage(res.code, "We couldn't search there right now.") } : cur));
+  };
 
   const choose = async (place: PostPlace) => {
     setResults([]);
@@ -116,7 +115,7 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
     ].slice(0, 8);
     setResults(places);
     setStatus('idle');
-    if (!res.success && places.length === 0) setMessage(allowPin ? "Search isn't working right now. Try dropping a pin instead." : "Search isn't working right now. Please try again.");
+    if (!res.success && places.length === 0) setMessage(googleMessage(res.code, allowPin ? "Search isn't working right now. Try dropping a pin instead." : "Search isn't working right now. Please try again."));
     else if (places.length === 0) setMessage(allowPin ? 'No places found. Try another name, or drop a pin.' : 'No places found. Try another name.');
   };
 
@@ -137,7 +136,8 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
     const places = [...community.slice(0, 3).map(fromCommunity), ...(res.data?.results ?? []).map(toPlace).filter((x): x is PostPlace => !!x)].slice(0, 8);
     setResults(places);
     setStatus('idle');
-    if (places.length === 0) setMessage(allowPin ? 'Nothing found right here. Search by name, or drop a pin.' : 'Nothing found right here. Search by name.');
+    if (!res.success && places.length === 0) setMessage(googleMessage(res.code, "Search isn't working right now. Please try again."));
+    else if (places.length === 0) setMessage(allowPin ? 'Nothing found right here. Search by name, or drop a pin.' : 'Nothing found right here. Search by name.');
   };
 
   return (
@@ -166,15 +166,21 @@ export function LocationStep({ value, onChange, label = 'Location', photoSpot = 
               <p className="cf-fromphoto__title">
                 <Camera size={15} aria-hidden="true" /> From your photo&apos;s location
               </p>
-              {fromPhoto === null ? (
+              {!photoAnswer ? (
+                <button type="button" className="cf-chipbtn" onClick={lookUpPhotoSpot}>
+                  <Search size={15} aria-hidden="true" /> Find places there
+                </button>
+              ) : photoAnswer.places === null ? (
                 <p className="cf-field__hint">
                   <Loader2 size={14} className="scout-spin" aria-hidden="true" /> Looking for places there…
                 </p>
-              ) : fromPhoto.length === 0 ? (
+              ) : photoAnswer.message ? (
+                <p className="cf-field__hint" role="status">{photoAnswer.message}</p>
+              ) : photoAnswer.places.length === 0 ? (
                 <p className="cf-field__hint">We couldn&apos;t spot a restaurant there. Search for it{allowPin ? <>, or use the photo&apos;s spot</> : null}.</p>
               ) : (
                 <ul className="cf-results" aria-label="Places where the photo was taken">
-                  {fromPhoto.map((r) => (
+                  {photoAnswer.places.map((r) => (
                     <li key={`p-${r.placeId ?? ''}-${r.lat}-${r.lng}`}>
                       <button type="button" className="cf-results__item" onClick={() => choose(r)}>
                         <MapPin size={16} aria-hidden="true" />

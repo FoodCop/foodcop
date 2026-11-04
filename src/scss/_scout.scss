@@ -96,6 +96,7 @@ $scout-z-wizard: 1100;
 
 .scout-search__form {
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   height: 3rem;
@@ -103,6 +104,7 @@ $scout-z-wizard: 1100;
 
 .scout-search__input {
   flex: 1;
+  min-width: 0;
   background: transparent;
   border: 0;
   height: 100%;
@@ -542,7 +544,7 @@ $scout-z-wizard: 1100;
   padding: 3rem 1rem;
   font-size: 0.75rem;
   font-weight: 700;
-  color: $scout-ink-faint;
+  color: mix($fz-ink, $fz-ink-soft, 40%);
 }
 
 .scout-place-card {
@@ -3011,3 +3013,118 @@ body.fz-navigating .fz-dash-dock { display: none; }
   img { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
 }
 .scout-modal__muted { font-size: 0.85rem; color: $scout-ink-faint; }
+
+// ---------------------------------------------------------------------------
+// Google only when asked (docs/GOOGLE_COST_PLAN.md)
+// ---------------------------------------------------------------------------
+
+// Sits over the map, under Scout's controls: below the search bar and legend on
+// phones, level with them on wider screens, clear of the places panel.
+.scout-search-area {
+  position: absolute;
+  top: calc(#{$scout-top} + 7rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: $scout-z-chrome;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  border: 0;
+  border-radius: $scout-radius-pill;
+  background: $fuzo-yellow;
+  color: $fz-ink;
+  font-size: 0.82rem;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(36, 31, 22, 0.22);
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.2s $fz-ease;
+
+  &:hover:not(:disabled) { background: #f7d36b; box-shadow: 0 8px 22px rgba(36, 31, 22, 0.28); }
+  &:focus-visible { outline: 3px solid $fz-ink; outline-offset: 2px; }
+  &:disabled { opacity: 0.75; cursor: progress; }
+
+  @include media-breakpoint-up(md) {
+    top: calc(#{$scout-top} + 1rem);
+    left: calc(50% + 12rem);
+  }
+  @media (min-width: 1100px) {
+    top: calc(#{$scout-top} + 5rem);
+  }
+}
+
+.scout-panel__more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 0.5rem;
+  border: 0;
+  border-radius: $scout-radius-pill;
+  background: #f2f1ee;
+  color: $fz-ink;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover:not(:disabled) { background: #e8e6e1; }
+  &:focus-visible { outline: 3px solid $fuzo-yellow; outline-offset: 2px; }
+  &:disabled { opacity: 0.7; cursor: progress; }
+}
+
+.scout-dir__spot-noimg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #f2f1ee;
+  color: $fz-ink-soft;
+}
+
+// Covers a map Google refused to load (MapUnavailable.tsx). The parent is positioned.
+.fz-map-off {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 1.5rem;
+  background: #fff;
+  color: mix($fz-ink, $fz-ink-soft, 40%);
+  font-size: 0.85rem;
+  text-align: center;
+
+  strong {
+    color: $fz-ink;
+    font-size: 1rem;
+    font-weight: 800;
+  }
+}
+
+.fz-map-off__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.35rem;
+  border-radius: 50%;
+  background: $fuzo-yellow-tint;
+  color: $fuzo-yellow-deep;
+}
+
+html[data-theme='dark'] .fz-map-off {
+  background: #000;
+  color: #c9c6bf;
+
+  strong { color: #fff; }
+}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
-import { Star, ChevronRight, ChevronUp, Utensils, X } from 'lucide-react';
+import { Star, ChevronRight, ChevronUp, Loader2, Plus, Utensils, X } from 'lucide-react';
 import type { ScoutPlace, ScoutFilter } from '@/types/scout';
 import { getMatchPercentage } from '@/lib/scout/scoutLogic';
 import { SourceBadge, placeOrigin } from './SourceBadge';
@@ -11,7 +11,12 @@ interface ScoutDiscoveryPanelProps {
   onPlaceSelect: (place: ScoutPlace) => void;
   filter: ScoutFilter;
   onFilterChange: (filter: ScoutFilter) => void;
-  onDistanceChangeEnd: () => void;
+  /** Google has another page for the last search. */
+  canLoadMore?: boolean;
+  loadingMore?: boolean;
+  onLoadMore?: () => void;
+  /** The last search ran, so the empty message shouldn't suggest searching. */
+  searched?: boolean;
   onClose: () => void;
   /** Changes when a map-legend item is tapped - opens the mobile list sheet. */
   openSignal?: number;
@@ -31,7 +36,10 @@ export const ScoutDiscoveryPanel = ({
   onPlaceSelect,
   filter,
   onFilterChange,
-  onDistanceChangeEnd,
+  canLoadMore = false,
+  loadingMore = false,
+  onLoadMore,
+  searched = false,
   openSignal = 0,
   sourceLabel,
   onClearSource,
@@ -59,7 +67,9 @@ export const ScoutDiscoveryPanel = ({
   const emptyText =
     sourceLabel === 'Saved'
       ? 'No saved places yet - tap Save on any place to keep it here.'
-      : 'No spots found in this area';
+      : searched
+        ? 'No spots found in this area'
+        : 'No FUZO places here yet. Tap "Search this area" to see more.';
   const [dragStartY, setDragStartY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -110,11 +120,15 @@ export const ScoutDiscoveryPanel = ({
       step="500"
       value={filter.maxDistance}
       onChange={(e) => onFilterChange({ ...filter, maxDistance: parseInt(e.target.value) })}
-      onMouseUp={onDistanceChangeEnd}
-      onTouchEnd={onDistanceChangeEnd}
       className="scout-panel__radius-input"
     />
   );
+
+  const loadMore = canLoadMore && sourceLabel === undefined ? (
+    <button type="button" className="scout-panel__more" onClick={onLoadMore} disabled={loadingMore}>
+      {loadingMore ? <Loader2 size={15} className="scout-spin" aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />} Load more places
+    </button>
+  ) : null;
 
   const filterChips = (
     <div className="scout-panel__filters scout-hide-scrollbar">
@@ -168,6 +182,7 @@ export const ScoutDiscoveryPanel = ({
               <PlaceCard key={place.id} place={place} onSelect={onPlaceSelect} />
             ))
           )}
+          {loadMore}
         </div>
       </div>
 
@@ -191,6 +206,7 @@ export const ScoutDiscoveryPanel = ({
               <PlaceCard key={place.id} place={place} onSelect={onPlaceSelect} />
             ))
           )}
+          {loadMore}
         </div>
       </div>
     </>
@@ -211,6 +227,7 @@ const PlaceCard = ({ place, onSelect }: { place: ScoutPlace; onSelect: (p: Scout
           <img
             src={place.img}
             alt={place.name}
+            loading="lazy"
             onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=200'; }}
           />
         ) : (

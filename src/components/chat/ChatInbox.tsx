@@ -2,9 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import { Search, SquarePen, Lock } from 'lucide-react';
-import type { IncomingRequest, InboxThread } from '@/lib/services/chatService';
+import type { ChatContact, IncomingRequest, InboxThread } from '@/lib/services/chatService';
 import { formatInboxTime } from '@/lib/chat/format';
 import ChatAvatar from './ChatAvatar';
+import { PeopleResults } from './NewChatModal';
 
 type Tab = 'all' | 'unread' | 'groups' | 'requests';
 
@@ -21,6 +22,10 @@ export default function ChatInbox({
   onNewChat,
   onAcceptRequest,
   onDeclineRequest,
+  userId,
+  friends,
+  blockedIds,
+  onOpenDm,
 }: {
   threads: InboxThread[];
   requests: IncomingRequest[];
@@ -32,6 +37,10 @@ export default function ChatInbox({
   onNewChat: () => void;
   onAcceptRequest: (request: IncomingRequest) => void;
   onDeclineRequest: (request: IncomingRequest) => void;
+  userId: string;
+  friends: ChatContact[];
+  blockedIds: string[];
+  onOpenDm: (friend: ChatContact) => void;
 }) {
   const [tab, setTab] = useState<Tab>('all');
   const [query, setQuery] = useState('');
@@ -47,6 +56,16 @@ export default function ChatInbox({
       return t.title.toLowerCase().includes(q) || (t.username ?? '').toLowerCase().includes(q);
     });
   }, [threads, tab, query]);
+
+  // From 2 letters the search finds people too (client list #10, 2026-11-04):
+  // under any matching chats, each with Message or Follow.
+  const findPeople = tab === 'all' && query.trim().length >= 2;
+  const people = findPeople && (
+    <section aria-label="People on FUZO">
+      <h2 className="fz-chat-inbox__section">People</h2>
+      <PeopleResults query={query} userId={userId} friends={friends} blockedIds={blockedIds} onOpenDm={onOpenDm} hideIds={visible.flatMap((t) => (t.peerId ? [t.peerId] : []))} />
+    </section>
+  );
 
   const tabs: { key: Tab; label: string; badge?: number }[] = [
     { key: 'all', label: 'All' },
@@ -72,8 +91,8 @@ export default function ChatInbox({
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search conversations"
-          aria-label="Search conversations"
+          placeholder="Search chats or people"
+          aria-label="Search chats or people"
           maxLength={60}
         />
       </div>
@@ -116,7 +135,9 @@ export default function ChatInbox({
             ))
           )
         ) : visible.length === 0 ? (
-          threads.length === 0 ? (
+          people ? (
+            people
+          ) : threads.length === 0 ? (
             <EmptyList emoji="💬" title="No conversations yet" sub="Start a chat with a friend or create a group." action={{ label: 'New chat', onClick: onNewChat }} />
           ) : (
             <EmptyList emoji="🔍" title="Nothing found" sub={tab === 'unread' ? 'You’re all caught up.' : 'Try a different search.'} />
@@ -152,6 +173,7 @@ export default function ChatInbox({
             </button>
           ))
         )}
+        {!isLoading && tab === 'all' && visible.length > 0 && people}
       </div>
     </aside>
   );

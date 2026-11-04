@@ -47,7 +47,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const protectedRoutes = ['/messages', '/dashboard', '/notifications', '/dna-quiz', '/business', '/admin', '/finish-profile'];
+  const protectedRoutes = ['/messages', '/dashboard', '/tako', '/notifications', '/dna-quiz', '/business', '/admin', '/finish-profile'];
   const isProtectedRoute =
     protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route)) ||
     request.nextUrl.pathname === '/profile';
@@ -62,7 +62,20 @@ export async function updateSession(request: NextRequest) {
     url.searchParams.set('next', `${request.nextUrl.pathname}${request.nextUrl.search}`);
     return NextResponse.redirect(url);
   }
-  
+
+  // /admin is for app admins only, decided on the server by the database
+  // (is_app_admin, the app_admins table). Anyone else, guests included, goes
+  // Home without the page loading. If the check itself fails, the answer is no.
+  if (user && /^\/admin(\/|$)/.test(request.nextUrl.pathname)) {
+    const { data: isAdmin, error } = await supabase.rpc('is_app_admin');
+    if (error || isAdmin !== true) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/dashboard';
+      url.search = '';
+      return NextResponse.redirect(url);
+    }
+  }
+
   // Signed in but onboarding not finished: back to onboarding (client spec v1,
   // docs/ONBOARDING_PLAN.md), then on to where they were going. Guests
   // (anonymous) just look around. A cookie remembers "finished" for this

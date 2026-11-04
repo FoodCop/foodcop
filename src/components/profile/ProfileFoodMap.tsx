@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Globe2, LocateFixed, MapPin } from 'lucide-react';
 import { getGoogleMaps } from '@/types/scout';
+import { useMapsFailed } from '@/lib/maps/mapsHealth';
+import { MapUnavailable } from '@/components/maps/MapUnavailable';
 
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
 
@@ -69,6 +71,7 @@ function worldZoom(width: number) {
 // on unmount or a later resize can crash React trying to touch detached nodes.
 export default function ProfileFoodMap({ places, onSelect, onAdd }: ProfileFoodMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapsFailed = useMapsFailed();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapInstanceRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -203,6 +206,7 @@ export default function ProfileFoodMap({ places, onSelect, onAdd }: ProfileFoodM
   return (
     <div className="fz-world-map fz-profile-map">
       <div ref={mapRef} className="fz-world-map__canvas" />
+      {mapsFailed && <MapUnavailable />}
 
       {places.length > 0 ? (
         <div className="fz-world-map__controls">

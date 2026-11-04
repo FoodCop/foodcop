@@ -1,5 +1,6 @@
 'use client';
 
+import { placePhotoPath } from '@/lib/google/photos';
 import React from 'react';
 import { X, Star, Clock, MapPin, Bookmark, Share2, Navigation, Globe, Phone, Check, ChevronDown, Utensils, Footprints } from 'lucide-react';
 import Link from 'next/link';
@@ -133,6 +134,9 @@ export const ScoutPlaceModal = ({
   const amenities = fuzoRestaurant && !rawPlace.isNewFind ? fuzoProfile?.amenities ?? [] : [];
 
   const containerRef = useFocusTrap(true);
+  // A FUZO photo if there is one, otherwise the place's one Google photo (loaded only here).
+  const heroSrc = place.img || (place.photoRef ? placePhotoPath(place.photoRef) : '');
+  const [failedHero, setFailedHero] = React.useState<string | null>(null);
   const [editedName, setEditedName] = React.useState(place.name);
   const [editedCat, setEditedCat] = React.useState(place.cat);
   const [editedNotes, setEditedNotes] = React.useState('');
@@ -189,12 +193,8 @@ export const ScoutPlaceModal = ({
 
       {/* Hero Image */}
       <div className="scout-modal__hero">
-        {place.img ? (
-          <img
-            src={place.img}
-            alt={place.name}
-            onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800'; }}
-          />
+        {heroSrc && failedHero !== heroSrc ? (
+          <img src={heroSrc} alt={place.name} onError={() => setFailedHero(heroSrc)} />
         ) : (
           <span className="scout-modal__noimg" aria-hidden="true"><Utensils size={40} /></span>
         )}
@@ -438,7 +438,8 @@ export const ScoutPlaceModal = ({
                       <img
                         src={photoUrl}
                         alt={`${place.name} photo ${idx + 1}`}
-                        onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400'; }}
+                        loading="lazy"
+                        onError={(e) => { (e.target as HTMLImageElement).parentElement?.setAttribute('hidden', ''); }}
                       />
                     </div>
                   ))}

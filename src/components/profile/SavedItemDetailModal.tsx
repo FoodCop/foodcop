@@ -1,4 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import { withoutGoogleLink } from '@/lib/google/photos';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useAuth } from '@/components/auth/AuthProvider';
+import foodCardService from '@/lib/services/foodCardService';
+import FoodCardDetailModal from './FoodCardDetailModal';
+import type { FoodCardRecord } from '@/lib/types/foodCard';
 import type { AppItem } from '../../types/appItem';
 import { areSavedItemsEquivalent, inferItemTypeFromId } from '../../lib/services/savedItems';
 
@@ -11,7 +16,49 @@ interface SavedItemDetailModalProps {
   onShareRequest?: (item: AppItem) => void;
 }
 
-export default function SavedItemDetailModal({
+// A saved feed card (client list #11, 2026-11-04) only keeps its title and photo
+// in the save, so tapping it loads the real post and shows its full detail:
+// caption, ingredients, steps, nutrition. Anything else, or a post that has
+// since been deleted, keeps the saved details below.
+export default function SavedItemDetailModal(props: SavedItemDetailModalProps) {
+  const { user } = useAuth();
+  const meta = (typeof props.item.metadata === 'object' && props.item.metadata !== null ? props.item.metadata : {}) as Record<string, unknown>;
+  const cardId = meta.card_type ? String(props.item.itemId || props.item.id || '').replace(/^saved-/, '') : '';
+  const [loaded, setLoaded] = useState<{ id: string; card: FoodCardRecord | null } | null>(null);
+
+  useEffect(() => {
+    if (!cardId) return;
+    let cancelled = false;
+    foodCardService.getCardById(cardId).then((res) => {
+      if (!cancelled) setLoaded({ id: cardId, card: res.success ? (res.data ?? null) : null });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [cardId]);
+
+  if (cardId && loaded?.id !== cardId) {
+    return (
+      <div className="fz-remind" role="status" onClick={props.onClose}>
+        <span className="spinner-border text-warning m-auto" aria-hidden="true" />
+        <span className="visually-hidden">Loading post</span>
+      </div>
+    );
+  }
+  if (cardId && loaded?.card) {
+    return (
+      <FoodCardDetailModal
+        card={loaded.card}
+        currentUserId={user?.id ?? ''}
+        onClose={props.onClose}
+        onUpdated={(card) => setLoaded({ id: cardId, card })}
+      />
+    );
+  }
+  return <SavedDetails {...props} />;
+}
+
+function SavedDetails({
   item,
   savedItems = [],
   onClose,
@@ -32,7 +79,7 @@ export default function SavedItemDetailModal({
 
   const title = item.name || item.title || String(metadata.title || metadata.name || 'Saved Item');
   const category = item.cat || String(metadata.cat || metadata.category || 'Saved Item');
-  const imageSrc = item.img || item.image || item.imageUrl || item.thumbnailUrl || String(metadata.image || metadata.img || metadata.image_url || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80');
+  const imageSrc = withoutGoogleLink(item.img || item.image || item.imageUrl || item.thumbnailUrl || String(metadata.image || metadata.img || metadata.image_url || '')) || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80';
   const summary = String(metadata.description || metadata.caption || metadata.summary || item.description || item.caption || '');
   const address = item.address || String(metadata.address || metadata.locationName || '');
   

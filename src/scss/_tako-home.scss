@@ -1,0 +1,143 @@
+// ── Tako page (/tako, TakoHomeView.tsx; client 2026-11-04) ──
+// The original Tako screen (TakoAssistant variant="page", styled in
+// _tako.scss) with Home's old "For you" sections under the landing:
+// Explore cities / countries, Recommended Restaurants, Watch & Cook. They
+// reuse the dashboard's float cards and rails. Loaded after _clean.scss.
+
+// The landing scrolls with the page like every other page (nothing clipped
+// under the navbar); the chat keeps the fixed full-height layout so its input
+// stays put. Room at the bottom for the dock either way.
+.fz-tako-page .tako-shell--page.is-landing {
+  position: relative;
+  inset: auto;
+  overflow: visible;
+
+  .tako-shell__header { display: none; } // empty on the landing (no close button on a page)
+  .tako-body { overflow: visible; padding-top: 0.5rem; }
+}
+
+.fz-tako-page .tako-shell--page .tako-body {
+  padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+}
+
+// For you sections under the Eat Out / Cook / Explore picks.
+.fz-tako-more {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba($fz-ink, 0.08);
+  text-align: left;
+
+  > .fz-dash-cities,
+  > .fz-dash-rail { margin: 0; }
+}
+
+// Dark Tako sets light text; these cards stay light, so they keep dark ink.
+html[data-theme='dark'] .fz-tako-more {
+  border-top-color: rgba(#fff, 0.1);
+  color: $fz-ink;
+}
+
+// Secondary text on these white cards (sub-lines, distances, the idle
+// Countries option) needs a touch more contrast than the soft grey for WCAG
+// AA. The cards stay light in dark mode too.
+$tako-more-soft: mix($fz-ink, $fz-ink-soft, 40%);
+.fz-tako-more,
+html[data-theme='dark'] .fz-tako-more {
+  .fz-dash-cities__sub,
+  .fz-dash-city__dist,
+  .fz-dash-rail__sub,
+  .fz-dash-cities__toggle button:not(.is-active) { color: $tako-more-soft; }
+}
+
+// The dock's raised Tako button: the squirrel's round face fills it.
+.fz-dash-dock .fz-dash-dock__fab--tako {
+  overflow: hidden;
+  padding: 0;
+  background: #f6e3cf;
+  svg { display: block; }
+  .fz-tako-face { width: 100% !important; height: 100% !important; }
+}
+
+// The round face (TakoFace under 100px). Tilts while Tako is thinking.
+.fz-tako-face {
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+  user-select: none;
+
+  &.is-thinking { animation: fz-tako-think 1.4s ease-in-out infinite; }
+}
+
+@keyframes fz-tako-think {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+// The big animated squirrel (TakoSquirrel, the Tako landing): halo, a
+// dashed ring with three foods orbiting, and the floating squirrel.
+.tako-squirrel {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  margin: 26px 0 30px; // the ring and its foods reach past the box: keep them off the bubble and the title
+  perspective: 700px; // the 3D turn towards the pointer
+  cursor: pointer; // tap: a hop
+  touch-action: manipulation;
+
+  &__halo {
+    position: absolute;
+    inset: 4%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba($fuzo-yellow, 0.5), rgba($fuzo-yellow, 0.18) 60%, rgba($fuzo-yellow, 0));
+  }
+
+  &__orbit {
+    position: absolute;
+    inset: -8%;
+    border: 2px dashed rgba($fuzo-yellow-deep, 0.35);
+    border-radius: 50%;
+  }
+
+  &__food {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba($fz-ink, 0.15);
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  &__float {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 14px rgba($fz-ink, 0.18));
+    transform-origin: 50% 85%; // tilts and hops from its feet
+    user-select: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fz-tako-face.is-thinking { animation: none; }
+}
+
+html[data-theme='dark'] .tako-squirrel__orbit { border-color: rgba($fuzo-yellow, 0.3); }

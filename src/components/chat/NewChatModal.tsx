@@ -81,13 +81,45 @@ function FriendsTab({ friends, onPick, onFind }: { friends: ChatContact[]; onPic
 
 function FindTab({ userId, friends, blockedIds, onOpenDm }: { userId: string; friends: ChatContact[]; blockedIds: string[]; onOpenDm: (f: ChatContact) => void }) {
   const [q, setQ] = useState('');
+  return (
+    <>
+      <div className="fz-chat-search fz-chat-search--modal">
+        <Search size={16} aria-hidden />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name or username" aria-label="Search people" maxLength={40} autoFocus />
+      </div>
+      {q.trim().length < 2 ? (
+        <p className="fz-chat-dialog__text">Type at least 2 letters. You can message someone once you follow each other.</p>
+      ) : (
+        <PeopleResults query={q} userId={userId} friends={friends} blockedIds={blockedIds} onOpenDm={onOpenDm} />
+      )}
+    </>
+  );
+}
+
+/** People matching a search, each with Message / Follow / Requested. Used by the Messages search and the Find people tab. */
+export function PeopleResults({
+  query,
+  userId,
+  friends,
+  blockedIds,
+  onOpenDm,
+  hideIds,
+}: {
+  query: string;
+  userId: string;
+  friends: ChatContact[];
+  blockedIds: string[];
+  onOpenDm: (f: ChatContact) => void;
+  /** People already shown another way (the inbox's own conversation rows). */
+  hideIds?: string[];
+}) {
+  const term = query.trim();
   const [results, setResults] = useState<ChatContact[]>([]);
   const [rels, setRels] = useState<Record<string, FriendRelationshipState>>({});
-  const [searching, setSearching] = useState(false);
+  const [searching, setSearching] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   useEffect(() => {
-    const term = q.trim();
     if (term.length < 2) return; // results are ignored below this length
     let cancelled = false;
     const t = setTimeout(async () => {
@@ -103,7 +135,7 @@ function FindTab({ userId, friends, blockedIds, onOpenDm }: { userId: string; fr
       setSearching(false);
     }, 300);
     return () => { cancelled = true; clearTimeout(t); };
-  }, [q, userId, blockedIds]);
+  }, [term, userId, blockedIds]);
 
   const follow = async (p: ChatContact) => {
     setBusyId(p.id);
@@ -112,42 +144,34 @@ function FindTab({ userId, friends, blockedIds, onOpenDm }: { userId: string; fr
     setBusyId(null);
   };
 
+  const shown = results.filter((p) => !hideIds?.includes(p.id));
+
   return (
-    <>
-      <div className="fz-chat-search fz-chat-search--modal">
-        <Search size={16} aria-hidden />
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name or username" aria-label="Search people" maxLength={40} autoFocus />
-        {searching && <Loader2 size={15} className="chat-spin" />}
-      </div>
-      {q.trim().length < 2 ? (
-        <p className="fz-chat-dialog__text">Type at least 2 letters. You can message someone once you follow each other.</p>
-      ) : (
-        <ul className="fz-chat-people">
-          {results.map((p) => {
-            const state = rels[p.id] ?? 'none';
-            const isFriend = state === 'accepted' || friends.some((f) => f.id === p.id);
-            return (
-              <li key={p.id}>
-                <div className="fz-chat-people__row">
-                  <ChatAvatar id={p.id} name={p.name} src={p.avatar} size={42} />
-                  <span className="fz-chat-people__who"><span className="fz-chat-people__name">{p.name}</span><span className="fz-chat-people__sub">@{p.username}</span></span>
-                  {isFriend ? (
-                    <button type="button" className="fz-chat-pill fz-chat-pill--accent" onClick={() => onOpenDm(p)}>Message</button>
-                  ) : state === 'outgoing-pending' ? (
-                    <span className="fz-chat-pill fz-chat-pill--muted"><Check size={13} /> Requested</span>
-                  ) : state === 'incoming-pending' ? (
-                    <span className="fz-chat-pill fz-chat-pill--muted">Sent you a request</span>
-                  ) : (
-                    <button type="button" className="fz-chat-pill fz-chat-pill--accent" onClick={() => follow(p)} disabled={busyId === p.id}>{busyId === p.id ? '…' : 'Follow'}</button>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-          {!searching && results.length === 0 && <li className="fz-chat-people__none">No one found for “{q.trim()}”.</li>}
-        </ul>
-      )}
-    </>
+    <ul className="fz-chat-people" aria-busy={searching}>
+      {shown.map((p) => {
+        const state = rels[p.id] ?? 'none';
+        const isFriend = state === 'accepted' || friends.some((f) => f.id === p.id);
+        return (
+          <li key={p.id}>
+            <div className="fz-chat-people__row">
+              <ChatAvatar id={p.id} name={p.name} src={p.avatar} size={42} />
+              <span className="fz-chat-people__who"><span className="fz-chat-people__name">{p.name}</span><span className="fz-chat-people__sub">@{p.username}</span></span>
+              {isFriend ? (
+                <button type="button" className="fz-chat-pill fz-chat-pill--accent" onClick={() => onOpenDm(p)}>Message</button>
+              ) : state === 'outgoing-pending' ? (
+                <span className="fz-chat-pill fz-chat-pill--muted"><Check size={13} /> Requested</span>
+              ) : state === 'incoming-pending' ? (
+                <span className="fz-chat-pill fz-chat-pill--muted">Sent you a request</span>
+              ) : (
+                <button type="button" className="fz-chat-pill fz-chat-pill--accent" onClick={() => follow(p)} disabled={busyId === p.id}>{busyId === p.id ? '…' : 'Follow'}</button>
+              )}
+            </div>
+          </li>
+        );
+      })}
+      {searching && <li className="fz-chat-people__none" role="status"><Loader2 size={15} className="chat-spin" aria-hidden /> Searching…</li>}
+      {!searching && shown.length === 0 && <li className="fz-chat-people__none">No one found for “{term}”.</li>}
+    </ul>
   );
 }
 

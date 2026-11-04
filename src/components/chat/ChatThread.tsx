@@ -10,6 +10,7 @@ import type { AppItem } from '@/types/appItem';
 import { formatDayLabel, formatMessageTime, isSameDay } from '@/lib/chat/format';
 import ChatAvatar from './ChatAvatar';
 import { EventInviteCard } from './EventInviteCard';
+import { ChatPostLink, findPostLink } from './ChatPostLink';
 import { EventCreateModal } from './EventCreateModal';
 
 export interface UiMessage extends ChatMessage {
@@ -388,7 +389,12 @@ function MessageRow({
               </div>
             </div>
           ) : (
-            <div className={`fz-chat-bubble${mine ? ' is-mine' : ''}${m.status === 'error' ? ' is-error' : ''}`}>{m.content}</div>
+            (() => {
+              const bubble = (text: string) => <div className={`fz-chat-bubble${mine ? ' is-mine' : ''}${m.status === 'error' ? ' is-error' : ''}`}>{text}</div>;
+              const link = findPostLink(m.content);
+              if (!link) return bubble(m.content);
+              return <ChatPostLink postId={link.postId} fallback={bubble(m.content)} above={link.rest ? bubble(link.rest) : null} />;
+            })()
           )}
         </div>
 

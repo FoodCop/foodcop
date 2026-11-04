@@ -23,6 +23,7 @@ import VerificationReminder from "@/components/business/VerificationReminder";
 import FinishProfileNudge from "@/components/onboarding/FinishProfileNudge";
 import { createClient } from "@/lib/supabase/server";
 import { THEME_SCRIPT } from "@/lib/theme";
+import { MAPS_HEALTH_SCRIPT } from "@/lib/maps/mapsHealthScript";
 
 export const metadata: Metadata = {
   title: "FUZO",
@@ -53,6 +54,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         {/* Light / Dark / System (src/lib/theme.ts): applied before first
             paint so dark-mode users never see a light flash. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        {/* Notices when Google refuses to load maps (src/lib/maps/mapsHealthScript.ts). */}
+        <script dangerouslySetInnerHTML={{ __html: MAPS_HEALTH_SCRIPT }} />
       </head>
       <body>
         <AuthProvider initialUser={data.user}>

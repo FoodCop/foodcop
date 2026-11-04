@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { GEMINI_MODEL } from '@/lib/ai/geminiModel';
+import { guardGoogle } from '@/lib/google/guard';
 
 // Server-side Gemini proxy for Tako / Chef AI. Both legacy GeminiService
 // copies (React app + FUZO_V3) only knew how to reach a local Vite dev proxy
@@ -10,6 +11,8 @@ import { GEMINI_MODEL } from '@/lib/ai/geminiModel';
 // unchanged.
 
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+// The longest answer any caller may ask for (each extra token costs money).
+const MAX_OUTPUT_TOKENS = 4096;
 
 interface GeminiGenerationConfig {
   temperature?: number;
@@ -34,6 +37,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'GEMINI_API_KEY is not configured on the server.' }, { status: 500 });
   }
 
+  // Signed-in members only, within the daily limits (docs/GOOGLE_COST_PLAN.md).
+  const refused = await guardGoogle('gemini');
+  if (refused) return refused;
+
   let body: GeminiRouteBody;
   try {
     body = await request.json();
@@ -53,7 +60,7 @@ export async function POST(request: Request) {
 
   const geminiBody: Record<string, unknown> = {
     contents: body.contents,
-    generationConfig,
+    generationConfig: { ...generationConfig, maxOutputTokens: Math.min(Number(generationConfig.maxOutputTokens) || MAX_OUTPUT_TOKENS, MAX_OUTPUT_TOKENS) },
   };
   if (systemInstruction) {
     geminiBody.systemInstruction = { parts: [{ text: systemInstruction }] };
