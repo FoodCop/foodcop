@@ -19,6 +19,17 @@ const DETAIL_FIELDS = [
 
 const MAX_RADIUS = 50000;
 const TOKEN = /^[A-Za-z0-9_-]{1,2048}$/;
+// A next-page token we issue wraps Google's token with the search it belongs to (see packPage).
+const PAGE_TOKEN = /^[A-Za-z0-9_-]{1,6000}$/;
+
+// Places API (New) searches. Only these fields are asked for, so Google bills the
+// cheap tier and no Contact / Atmosphere add-ons (the old nearbysearch could not limit them).
+const SEARCH_FIELDS = [
+  'places.id', 'places.displayName', 'places.location', 'places.types',
+  'places.formattedAddress', 'places.shortFormattedAddress', 'places.rating', 'places.userRatingCount',
+].join(',') + ',nextPageToken';
+const NEW_SEARCH_URL = 'https://places.googleapis.com/v1/places:searchText';
+const PAGE_SIZE = 20;
 
 const coord = (value: unknown, max: number) => {
   const n = typeof value === 'number' ? value : Number.NaN;
@@ -35,6 +46,98 @@ const blockFromStatus = (status: unknown): GoogleBlock | null => {
   if (status === 'OVER_QUERY_LIMIT' || status === 'OVER_DAILY_LIMIT') return 'daily_limit';
   return null;
 };
+
+
+type NewPlace = {
+  id: string;
+  displayName?: { text?: string };
+  location?: { latitude: number; longitude: number };
+  rating?: number;
+  userRatingCount?: number;
+  formattedAddress?: string;
+  shortFormattedAddress?: string;
+  types?: string[];
+};
+
+/** What a next-page token must remember: Google needs the same search repeated with its token. */
+type PageState = { g: string; q: string; box?: [number, number, number, number]; bias?: [number, number, number] };
+
+const packPage = (state: PageState) => Buffer.from(JSON.stringify(state)).toString('base64url');
+const unpackPage = (token: string): PageState | null => {
+  try {
+    const s = JSON.parse(Buffer.from(token, 'base64url').toString('utf8')) as Partial<PageState>;
+    if (typeof s.g !== 'string' || !s.g || s.g.length > 2048 || typeof s.q !== 'string' || !s.q || s.q.length > 200) return null;
+    const nums = (a: unknown, n: number) => Array.isArray(a) && a.length === n && a.every((v) => typeof v === 'number' && Number.isFinite(v));
+    if (s.box !== undefined && !nums(s.box, 4)) return null;
+    if (s.bias !== undefined && !nums(s.bias, 3)) return null;
+    return { g: s.g, q: s.q, box: s.box, bias: s.bias };
+  } catch {
+    return null;
+  }
+};
+
+/** The square around a point that a radius covers: the new nearby search area. */
+const boxAround = (lat: number, lng: number, radius: number): [number, number, number, number] => {
+  const dLat = radius / 111320;
+  const dLng = radius / (111320 * Math.max(0.01, Math.cos((lat * Math.PI) / 180)));
+  const clamp = (v: number, m: number) => Math.min(Math.max(v, -m), m);
+  return [clamp(lat - dLat, 90), clamp(lng - dLng, 180), clamp(lat + dLat, 90), clamp(lng + dLng, 180)];
+};
+
+/**
+ * One Places API (New) text search, answered in the older result shape so the app's
+ * toScoutPlace() keeps working. `nearby` and `textsearch` both end up here.
+ */
+async function searchNew(state: PageState, pageToken?: string) {
+  const body: Record<string, unknown> = { textQuery: state.q, pageSize: PAGE_SIZE };
+  if (state.box) {
+    const [south, west, north, east] = state.box;
+    body.locationRestriction = { rectangle: { low: { latitude: south, longitude: west }, high: { latitude: north, longitude: east } } };
+    body.includedType = 'restaurant';
+    body.strictTypeFiltering = true;
+  } else if (state.bias) {
+    body.locationBias = { circle: { center: { latitude: state.bias[0], longitude: state.bias[1] }, radius: state.bias[2] } };
+  }
+  if (pageToken) body.pageToken = pageToken;
+
+  const res = await fetch(NEW_SEARCH_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': GOOGLE_API_KEY, 'X-Goog-FieldMask': SEARCH_FIELDS },
+    body: JSON.stringify(body),
+  });
+  if (res.status === 403) return googleRefusal('unavailable');
+  if (res.status === 429) return googleRefusal('daily_limit');
+  if (!res.ok) return NextResponse.json({ error: 'Search failed' }, { status: 502 });
+
+  const data = (await res.json()) as { places?: NewPlace[]; nextPageToken?: string };
+  const results = (data.places ?? [])
+    .filter((pl) => pl.location)
+    .map((pl) => ({
+      place_id: pl.id,
+      name: pl.displayName?.text || 'Place',
+      geometry: { location: { lat: pl.location!.latitude, lng: pl.location!.longitude } },
+      rating: pl.rating,
+      user_ratings_total: pl.userRatingCount,
+      vicinity: pl.shortFormattedAddress || pl.formattedAddress,
+      formatted_address: pl.formattedAddress,
+      types: pl.types,
+    }));
+  return NextResponse.json({
+    results,
+    status: results.length ? 'OK' : 'ZERO_RESULTS',
+    ...(data.nextPageToken ? { next_page_token: packPage({ ...state, g: data.nextPageToken }) } : {}),
+  });
+}
+
+/** The next page of a search we started: the token carries the search it belongs to. */
+async function nextPageOf(token: unknown) {
+  if (typeof token !== 'string' || !PAGE_TOKEN.test(token)) return badRequest('Invalid page');
+  const state = unpackPage(token);
+  if (!state) return badRequest('Invalid page');
+  const refused = await guardGoogle('search');
+  if (refused) return refused;
+  return searchNew(state, state.g);
+}
 
 /** Calls an older-style Places endpoint, turning "no" answers into the app's codes. */
 async function legacy(url: string) {
@@ -53,36 +156,25 @@ export async function POST(req: Request, { params }: { params: Promise<{ action:
 
     if (action === 'nearby') {
       const { latitude, longitude, radius, pagetoken } = body;
-      if (pagetoken !== undefined) {
-        if (typeof pagetoken !== 'string' || !TOKEN.test(pagetoken)) return badRequest('Invalid page');
-        const refused = await guardGoogle('search');
-        if (refused) return refused;
-        return await legacy(`${PLACES_BASE}/nearbysearch/json?pagetoken=${encodeURIComponent(pagetoken)}&key=${GOOGLE_API_KEY}`);
-      }
+      if (pagetoken !== undefined) return await nextPageOf(pagetoken);
       const lat = coord(latitude, 90);
       const lng = coord(longitude, 180);
       if (lat === null || lng === null) return badRequest('Invalid location');
       const refused = await guardGoogle('search');
       if (refused) return refused;
-      return await legacy(`${PLACES_BASE}/nearbysearch/json?location=${lat},${lng}&radius=${radiusOf(radius, 5000)}&type=restaurant&key=${GOOGLE_API_KEY}`);
+      return await searchNew({ g: '', q: 'restaurants', box: boxAround(lat, lng, radiusOf(radius, 5000)) });
     }
 
     if (action === 'textsearch') {
       const { query, location, radius, pagetoken } = body;
-      if (pagetoken !== undefined) {
-        if (typeof pagetoken !== 'string' || !TOKEN.test(pagetoken)) return badRequest('Invalid page');
-        const refused = await guardGoogle('search');
-        if (refused) return refused;
-        return await legacy(`${PLACES_BASE}/textsearch/json?pagetoken=${encodeURIComponent(pagetoken)}&key=${GOOGLE_API_KEY}`);
-      }
+      if (pagetoken !== undefined) return await nextPageOf(pagetoken);
       const text = typeof query === 'string' ? query.trim().slice(0, 200) : '';
       if (!text) return badRequest('Search text is required');
       const refused = await guardGoogle('search');
       if (refused) return refused;
       const lat = coord(location?.lat, 90);
       const lng = coord(location?.lng, 180);
-      const near = lat !== null && lng !== null ? `&location=${lat},${lng}&radius=${radiusOf(radius, MAX_RADIUS)}` : '';
-      return await legacy(`${PLACES_BASE}/textsearch/json?query=${encodeURIComponent(text)}${near}&key=${GOOGLE_API_KEY}`);
+      return await searchNew({ g: '', q: text, ...(lat !== null && lng !== null ? { bias: [lat, lng, radiusOf(radius, MAX_RADIUS)] as [number, number, number] } : {}) });
     }
 
     if (action === 'details') {
