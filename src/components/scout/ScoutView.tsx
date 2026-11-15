@@ -190,7 +190,8 @@ export default function ScoutView() {
 
   // --- Autocomplete ---
   const fetchSuggestions = useCallback(async (input: string) => {
-    if (!input || input.length < 2) {
+    // Every suggestion lookup is billed: wait for 3 letters (and a pause, below).
+    if (!input || input.trim().length < 3) {
       setPlaceSuggestions([]);
       return;
     }
@@ -1050,7 +1051,7 @@ export default function ScoutView() {
                   setSearchQuery(val);
                   setShowSuggestions(true);
                   if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
-                  searchTimerRef.current = setTimeout(() => { fetchSuggestions(val); }, 300);
+                  searchTimerRef.current = setTimeout(() => { fetchSuggestions(val); }, 500);
                 }}
                 onFocus={() => setShowSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}

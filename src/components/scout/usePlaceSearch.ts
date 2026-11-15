@@ -13,8 +13,8 @@ type PlacesLib = {
 type MapsWithImport = { importLibrary?: (name: string) => Promise<unknown> };
 
 /**
- * Google place autocomplete for a text field (Directions' From / To), debounced
- * 300ms. `bias` nudges results toward where the user is.
+ * Google place autocomplete for a text field (Directions' From / To), after 3
+ * letters and a 500ms pause (each lookup is billed). `bias` nudges results toward where the user is.
  */
 export function usePlaceSearch(bias?: { lat: number; lng: number } | null) {
   const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
@@ -25,7 +25,7 @@ export function usePlaceSearch(bias?: { lat: number; lng: number } | null) {
     (input: string) => {
       window.clearTimeout(timer.current);
       const text = input.trim();
-      if (text.length < 2) {
+      if (text.length < 3) {
         seq.current += 1;
         setSuggestions([]);
         return;
@@ -42,12 +42,13 @@ export function usePlaceSearch(bias?: { lat: number; lng: number } | null) {
           });
           if (id !== seq.current) return; // a newer keystroke won
           setSuggestions(
-            (res?.suggestions ?? []).map(extractSuggestionText).filter((s): s is PlaceSuggestion => !!s && !!s.text),
+            (res?.suggestions ?? []).map(extractSuggestionText).filter((s): s is PlaceSuggestion => !!s && !!s.text)
+              .slice(0, 4),
           );
         } catch (err) {
           console.error('Place search failed:', err);
         }
-      }, 300);
+      }, 500);
     },
     [bias],
   );
