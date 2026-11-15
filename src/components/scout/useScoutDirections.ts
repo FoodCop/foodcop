@@ -5,6 +5,7 @@ import { PlacesService, type TravelMode } from '@/lib/services/placesService';
 import { isGooglePlaceId } from '@/lib/maps/placeLinks';
 import { toScoutPlace } from '@/lib/scout/scoutLogic';
 import { googleMessage } from '@/lib/google/limits';
+import { readGeocode, saveGeocode } from '@/lib/maps/geocodeCache';
 import type { ScoutPlace } from '@/types/scout';
 
 // Directions on Scout, like Google Maps (this replaced the old Route Planner):
@@ -190,11 +191,15 @@ export function useScoutDirections(mapRef: RefObject<unknown>, isMapReady: boole
   // ---- Choose on map: the user moves the map under a fixed centre pin ----
   const geocodeSeq = useRef(0);
   const reverseGeocode = useCallback(async (p: LatLng): Promise<string | null> => {
+    const known = readGeocode('addr', p.lat, p.lng);
+    if (known) return known;
     const g = mapsApi();
     if (!g?.Geocoder) return null;
     try {
       const res = await new g.Geocoder().geocode({ location: p });
-      return res.results?.[0]?.formatted_address ?? null;
+      const address = res.results?.[0]?.formatted_address ?? null;
+      if (address) saveGeocode('addr', p.lat, p.lng, address);
+      return address;
     } catch {
       return null;
     }
