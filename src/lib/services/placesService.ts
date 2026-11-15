@@ -158,7 +158,8 @@ export const PlacesService = {
     return makeRequest('/directions', payload);
   },
 
-  async getPlaceDetails(placeId: string): Promise<ServiceResult<{ result?: ScoutPlaceRaw; status?: string }>> {
-    return reused(`details:${placeId}`, () => makeRequest('/places/details', { place_id: placeId }));
+  /** `more` asks for the reviews and service options instead (a second, pricier call, only on request). */
+  async getPlaceDetails(placeId: string, more = false): Promise<ServiceResult<{ result?: ScoutPlaceRaw; status?: string }>> {
+    return reused(`details:${more ? 'more:' : ''}${placeId}`, () => makeRequest('/places/details', { place_id: placeId, ...(more ? { more: true } : {}) }));
   },
 };

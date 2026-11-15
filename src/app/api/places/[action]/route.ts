@@ -8,13 +8,17 @@ import type { GoogleBlock } from '@/lib/google/limits';
 const GOOGLE_API_KEY = process.env.VITE_GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 const PLACES_BASE = 'https://maps.googleapis.com/maps/api/place';
 
-// Only what the place pop-up shows (mergePlaceDetails). Without this Google
-// sends and bills everything.
+// Place details are billed per group of fields, so they are asked for in two steps.
+// Opening a pop-up asks for the first group only; reviews and service options (Google's
+// pricier "Atmosphere" group) are asked for when the person taps "Show reviews".
 const DETAIL_FIELDS = [
-  'name', 'rating', 'user_ratings_total', 'formatted_address', 'formatted_phone_number', 'international_phone_number',
-  'website', 'url', 'opening_hours', 'current_opening_hours', 'price_level', 'editorial_summary', 'reviews', 'photos',
-  'dine_in', 'takeout', 'delivery', 'reservable', 'plus_code', 'wheelchair_accessible_entrance', 'serves_beer',
-  'serves_wine', 'serves_breakfast', 'serves_brunch', 'serves_lunch', 'serves_dinner', 'serves_vegetarian_food',
+  'name', 'formatted_address', 'formatted_phone_number', 'international_phone_number', 'website', 'url',
+  'opening_hours', 'current_opening_hours', 'plus_code', 'wheelchair_accessible_entrance', 'photos',
+].join(',');
+const MORE_DETAIL_FIELDS = [
+  'rating', 'user_ratings_total', 'price_level', 'editorial_summary', 'reviews', 'dine_in', 'takeout', 'delivery',
+  'reservable', 'serves_beer', 'serves_wine', 'serves_breakfast', 'serves_brunch', 'serves_lunch', 'serves_dinner',
+  'serves_vegetarian_food',
 ].join(',');
 
 const MAX_RADIUS = 50000;
@@ -178,11 +182,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ action:
     }
 
     if (action === 'details') {
-      const { place_id } = body;
+      const { place_id, more } = body;
       if (typeof place_id !== 'string' || !TOKEN.test(place_id)) return badRequest('Invalid place');
       const refused = await guardGoogle('details');
       if (refused) return refused;
-      return await legacy(`${PLACES_BASE}/details/json?place_id=${encodeURIComponent(place_id)}&fields=${DETAIL_FIELDS}&key=${GOOGLE_API_KEY}`);
+      return await legacy(`${PLACES_BASE}/details/json?place_id=${encodeURIComponent(place_id)}&fields=${more === true ? MORE_DETAIL_FIELDS : DETAIL_FIELDS}&key=${GOOGLE_API_KEY}`);
     }
 
     if (action === 'search-along-route') {

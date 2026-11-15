@@ -26,46 +26,64 @@ const parseOpeningHours = (weekdayText?: string[]): Record<string, string> => {
   return results;
 };
 
-export const mergePlaceDetails = (original: ScoutPlace, details: any): ScoutPlace => {
+/** Only the fields Google actually sent: a later call must not blank what an earlier one filled. */
+const defined = <T extends Record<string, unknown>>(values: T): Partial<T> =>
+  Object.fromEntries(Object.entries(values).filter(([, v]) => v !== undefined)) as Partial<T>;
+
+/**
+ * Merges a Google details answer into a place. There are two answers per place: the
+ * basic one (opening the pop-up) and the `more` one (reviews + service options, on request).
+ */
+export const mergePlaceDetails = (original: ScoutPlace, details: any, more = false): ScoutPlace => {
   if (!details) return original;
+
+  const hours = details.opening_hours?.weekday_text ? parseOpeningHours(details.opening_hours.weekday_text) : undefined;
+  const photos = Array.isArray(details.photos)
+    ? details.photos
+        .filter((p: any) => p.photo_reference)
+        // Each photo costs money, so a place shows a few, and only on its Photos tab.
+        .slice(0, MAX_PLACE_PHOTOS)
+        .map((p: any) => placePhotoPath(p.photo_reference))
+    : undefined;
 
   return {
     ...original,
-    phone: details.formatted_phone_number || details.international_phone_number || original.phone,
-    website: details.website || original.website,
-    rating: details.rating || original.rating,
-    reviews: details.user_ratings_total || original.reviews,
-    address: details.formatted_address || original.address,
-    timings: parseOpeningHours(details.opening_hours?.weekday_text) || original.timings,
-    priceLevel: details.price_level,
-    editorialSummary: details.editorial_summary?.overview,
-    dineIn: details.dine_in,
-    takeout: details.takeout,
-    delivery: details.delivery,
-    reservable: details.reservable,
-    plusCode: details.plus_code?.global_code || details.plus_code?.compound_code,
-    currentOpeningHours: details.current_opening_hours,
-    userReviews: (details.reviews || []).map((r: any) => ({
-      user: r.author_name || 'FUZO Scout',
-      rating: r.rating || 5,
-      text: r.text || '',
-      time: r.relative_time_description || 'Recently'
-    })),
-    // Each photo costs money, so a place shows a few, and only on its Photos tab.
-    photoRef: original.photoRef || details.photos?.[0]?.photo_reference,
-    photos: (details.photos || [])
-      .filter((p: any) => p.photo_reference)
-      .slice(0, MAX_PLACE_PHOTOS)
-      .map((p: any) => placePhotoPath(p.photo_reference)),
-    wheelchairAccessibleEntrance: details.wheelchair_accessible_entrance,
-    servesBeer: details.serves_beer,
-    servesWine: details.serves_wine,
-    servesBreakfast: details.serves_breakfast,
-    servesBrunch: details.serves_brunch,
-    servesLunch: details.serves_lunch,
-    servesDinner: details.serves_dinner,
-    servesVegetarianFood: details.serves_vegetarian_food,
-    menuLink: details.url
+    ...defined({
+      phone: details.formatted_phone_number || details.international_phone_number,
+      website: details.website,
+      rating: details.rating,
+      reviews: details.user_ratings_total,
+      address: details.formatted_address,
+      timings: hours && Object.keys(hours).length ? hours : undefined,
+      priceLevel: details.price_level,
+      editorialSummary: details.editorial_summary?.overview,
+      dineIn: details.dine_in,
+      takeout: details.takeout,
+      delivery: details.delivery,
+      reservable: details.reservable,
+      plusCode: details.plus_code?.global_code || details.plus_code?.compound_code,
+      currentOpeningHours: details.current_opening_hours,
+      userReviews: Array.isArray(details.reviews)
+        ? details.reviews.map((r: any) => ({
+            user: r.author_name || 'FUZO Scout',
+            rating: r.rating || 5,
+            text: r.text || '',
+            time: r.relative_time_description || 'Recently',
+          }))
+        : undefined,
+      photoRef: original.photoRef || details.photos?.[0]?.photo_reference,
+      photos,
+      wheelchairAccessibleEntrance: details.wheelchair_accessible_entrance,
+      servesBeer: details.serves_beer,
+      servesWine: details.serves_wine,
+      servesBreakfast: details.serves_breakfast,
+      servesBrunch: details.serves_brunch,
+      servesLunch: details.serves_lunch,
+      servesDinner: details.serves_dinner,
+      servesVegetarianFood: details.serves_vegetarian_food,
+      menuLink: details.url,
+    }),
+    ...(more ? { moreDetails: true } : {}),
   };
 };
 
