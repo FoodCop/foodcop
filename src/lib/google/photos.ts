@@ -5,7 +5,7 @@
 export const placePhotoPath = (photoReference: string) => `/api/places/photo?ref=${encodeURIComponent(photoReference)}&w=800`;
 
 /** The most Google photos one place may show (the first is the pop-up's main photo). */
-export const MAX_PLACE_PHOTOS = 4;
+export const MAX_PLACE_PHOTOS = 2;
 
 /**
  * Old saved places hold direct Google photo links, each with the API key in it

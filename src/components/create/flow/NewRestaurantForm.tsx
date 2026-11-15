@@ -50,7 +50,7 @@ export function NewRestaurantForm({ value, onChange, photoSpot, onUseExisting }:
     if (!dupKey || value.lat == null || value.lng == null) return;
     let cancelled = false;
     const t = window.setTimeout(() => {
-      CommunityPlacesService.findDuplicates(value.name.trim(), value.lat!, value.lng!).then((list) => {
+      CommunityPlacesService.findDuplicates(value.name.trim(), value.lat!, value.lng!, { google: false }).then((list) => {
         if (!cancelled) setDupes({ key: dupKey, list });
       });
     }, 600);

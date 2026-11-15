@@ -75,6 +75,8 @@ export interface ScoutPlace {
   servesDinner?: boolean;
   servesVegetarianFood?: boolean;
   menuLink?: string;
+  /** True once the reviews and service details (the pricier Google fields) were loaded on request. */
+  moreDetails?: boolean;
   /** A restaurant FUZO members added (Community Added / Verified by Community). */
   community?: CommunityPlace;
 }

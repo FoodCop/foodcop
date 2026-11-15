@@ -26,10 +26,10 @@ Set in `src/lib/google/limits.ts`. Override with `GOOGLE_DAILY_LIMIT_<KIND>` and
 
 | Kind | All users, per day | One user, per day |
 |---|---|---|
-| search | 30 | 8 |
-| details | 30 | 10 |
-| photo | 40 | 15 |
-| route | 50 | 15 |
+| search | 10 | 4 |
+| details | 10 | 5 |
+| photo | 25 | 8 |
+| route | 20 | 8 |
 | gemini | 200 | 40 |
 | youtube | 80 | 20 |
 

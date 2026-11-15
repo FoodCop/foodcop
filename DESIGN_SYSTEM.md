@@ -210,7 +210,7 @@ Client decisions (2026-10-06): Directions shows the route on FUZO's own map, lik
 **Google is only called when a person asks.** FUZO's own data loads first and is free. Don't add a Google call that runs by itself on page load, map move or scroll.
 - **Explore:** opening it makes no search. A yellow "Search this area" pill (`.scout-search-area`) runs one, and comes back when the map moves far enough. "Load more places" is one more page. The refresh button only reloads FUZO's places.
 - **Home:** Recommended and Near You show FUZO restaurants. "Show more nearby" (`.fz-dash-rail__more`) adds Google's, one search for both rails.
-- **Photos:** Google places in lists and cards use a placeholder icon. A pop-up costs one details call and one photo; the Photos tab shows up to 4 (`MAX_PLACE_PHOTOS`). Photos go through `/api/places/photo` (`placePhotoPath`), so the key never reaches the browser. Never build a Google photo link with a key, and don't save Google results or photos in the database.
+- **Photos:** Google places in lists and cards use a placeholder icon. A pop-up costs one details call and one photo; reviews and service options are a second details call, only when "Show Google reviews & more details" is tapped; the Photos tab shows up to 2 (`MAX_PLACE_PHOTOS`). Photos go through `/api/places/photo` (`placePhotoPath`), so the key never reaches the browser. Never build a Google photo link with a key, and don't save Google results or photos in the database.
 - **Every paid route** calls `guardGoogle(kind)` first (`src/lib/google/guard.ts`): real accounts only (no guests), within the daily limits in `src/lib/google/limits.ts`, counted in the database. Refusals carry a `code`; show `googleMessage(code)`.
 - **Maps refused by Google:** `MapUnavailable` (`.fz-map-off`) covers Google's "Oops", driven by `useMapsFailed()`. Any new map must use it. The script itself lives in `mapsHealthScript.ts`, which must stay free of hooks because the root layout is a server component.
 
@@ -220,7 +220,7 @@ Client decisions (2026-10-06): Directions shows the route on FUZO's own map, lik
   - **The FUZO "F" mark** (`public/images/brand/fuzo-mark.png`, trimmed to a 96px square): places created on FUZO, i.e. restaurant accounts and community pins.
   - Saved places count as Google when they have a Google place id.
   - The badge is labelled for screen readers ("From Google" / "On FUZO").
-- **More places:** Google's nearby / text search returns 20 per page. Scout shows one page per tap; "Load more places" fetches the next page via `next_page_token`, up to 60, de-duplicated (see Google cost rules).
+- **More places:** Google's nearby / text search returns 20 per page. Scout shows one page per tap; "Load more places" fetches one more page (40 places in all) via `next_page_token`, de-duplicated (see Google cost rules).
 - **Legend:** the legend (Nearby / FUZO / Saved) no longer covers the places panel's radius slider:
   - from 1100px it sits beside the search bar;
   - from 768–1099px the desktop panel starts lower (8.5rem).

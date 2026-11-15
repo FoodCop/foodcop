@@ -20,6 +20,9 @@ interface ScoutPlaceModalProps {
   modalTab: string;
   setModalTab: (tab: string) => void;
   isLoadingDetails: boolean;
+  /** Loads Google's reviews and service options (a second, pricier call, so only on request). */
+  onLoadMoreDetails?: () => void;
+  isLoadingMoreDetails?: boolean;
   isSaved?: boolean;
   onClose: () => void;
   onAction: (place: ScoutPlace, action: 'save' | 'share') => void;
@@ -44,6 +47,8 @@ export const ScoutPlaceModal = ({
   modalTab,
   setModalTab,
   isLoadingDetails,
+  onLoadMoreDetails,
+  isLoadingMoreDetails = false,
   isSaved = false,
   onClose,
   onAction,
@@ -507,6 +512,11 @@ export const ScoutPlaceModal = ({
               )}
               {fuzoRestaurant && fuzoReviews.length === 0 && (place.userReviews || []).length === 0 && (
                 <p className="scout-modal__empty-photos">No reviews yet - be the first on its FUZO page.</p>
+              )}
+              {onLoadMoreDetails && place.markerSource === 'google' && place.placeId && !place.moreDetails && (
+                <button type="button" className="btn btn-sm btn-outline-secondary rounded-pill w-100 my-2" onClick={onLoadMoreDetails} disabled={isLoadingMoreDetails}>
+                  {isLoadingMoreDetails ? 'Loading…' : 'Show Google reviews & more details'}
+                </button>
               )}
               {(place.userReviews || []).map((review) => (
                 <div key={`${review.user}-${review.time}`} className="scout-modal__review">

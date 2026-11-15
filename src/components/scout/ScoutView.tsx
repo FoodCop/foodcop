@@ -190,7 +190,8 @@ export default function ScoutView() {
 
   // --- Autocomplete ---
   const fetchSuggestions = useCallback(async (input: string) => {
-    if (!input || input.length < 2) {
+    // Every suggestion lookup is billed: wait for 3 letters (and a pause, below).
+    if (!input || input.trim().length < 3) {
       setPlaceSuggestions([]);
       return;
     }
@@ -304,8 +305,8 @@ export default function ScoutView() {
       const extra = (more.data?.results ?? []).map((r, i) => toScoutPlace(r, prev.length + i));
       return [...prev, ...extra.filter((p) => !ids.has(p.placeId || p.id))];
     });
-    const token = more.data?.next_page_token;
-    setNextPage(token ? { kind: nextPage.kind, token } : null);
+    // One extra page (40 places in all) at most: each page is a paid search.
+    setNextPage(null);
   }, [nextPage, isLoadingMore, showActionToast]);
 
   // --- Data Fetching: Source B (Community FUZO Pins) ---
@@ -998,6 +999,28 @@ export default function ScoutView() {
     }
   }, [selectedPlace?.id]);
 
+  // Reviews and service options are a second, pricier Google call: only when asked for.
+  const [isLoadingMoreDetails, setIsLoadingMoreDetails] = useState(false);
+  const loadMoreDetails = useCallback(async () => {
+    const place = selectedPlace;
+    if (!place || place.markerSource !== 'google' || !place.placeId || place.moreDetails || isLoadingMoreDetails) return;
+    setIsLoadingMoreDetails(true);
+    try {
+      const result = await PlacesService.getPlaceDetails(place.placeId, true);
+      if (result.success && result.data?.result) {
+        const detailed = mergePlaceDetails(place, result.data.result, true);
+        setSelectedPlace((current) => (current && current.id === place.id ? detailed : current));
+        setMainMapPlaces((prev) => prev.map((p) => (p.id === place.id ? detailed : p)));
+      } else {
+        showActionToast(googleMessage(result.code, "We couldn't load reviews. Please try again."));
+      }
+    } catch (err) {
+      console.error('Failed to fetch more place details:', err);
+    } finally {
+      setIsLoadingMoreDetails(false);
+    }
+  }, [selectedPlace, isLoadingMoreDetails, showActionToast]);
+
   // "Search this area": until the first search, then once the map has moved
   // well away from it or the radius has grown.
   const movedAway =
@@ -1028,7 +1051,7 @@ export default function ScoutView() {
                   setSearchQuery(val);
                   setShowSuggestions(true);
                   if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
-                  searchTimerRef.current = setTimeout(() => { fetchSuggestions(val); }, 300);
+                  searchTimerRef.current = setTimeout(() => { fetchSuggestions(val); }, 500);
                 }}
                 onFocus={() => setShowSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
@@ -1203,6 +1226,8 @@ export default function ScoutView() {
           modalTab={modalTab}
           setModalTab={setModalTab}
           isLoadingDetails={isLoadingDetails}
+          onLoadMoreDetails={loadMoreDetails}
+          isLoadingMoreDetails={isLoadingMoreDetails}
           isSaved={savedPlaceIds.has(selectedPlace.id)}
           fuzoRestaurant={fuzoLinkFor(selectedPlace)}
           onClose={() => setSelectedPlace(null)}

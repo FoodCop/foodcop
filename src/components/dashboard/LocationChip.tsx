@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ChevronDown, Home, LocateFixed, Map as MapIcon, MapPin } from 'lucide-react';
 import { getGoogleMaps } from '@/types/scout';
+import { readGeocode, saveGeocode } from '@/lib/maps/geocodeCache';
 import type { LocationState } from './useNearbyPlaces';
 
 const LocationPickerModal = dynamic(() => import('@/components/profile/LocationPickerModal'), { ssr: false });
@@ -18,6 +19,9 @@ const APPROX_METERS = 3000;
 
 /** "Bang Rak, Bangkok" for a point (Google Maps JS Geocoder, already loaded app-wide). */
 function reverseLabel(lat: number, lng: number): Promise<string | null> {
+  // The same spot is named once per device, not once per visit (each lookup is billed).
+  const known = readGeocode('chip', lat, lng);
+  if (known) return Promise.resolve(known);
   return new Promise((resolve) => {
     const google = getGoogleMaps();
     if (!google?.Geocoder) return resolve(null);
@@ -27,7 +31,9 @@ function reverseLabel(lat: number, lng: number): Promise<string | null> {
       const pick = (...types: string[]) => parts.find((c) => types.some((t) => c.types.includes(t)))?.long_name;
       const area = pick('sublocality_level_1', 'sublocality', 'neighborhood');
       const city = pick('locality', 'postal_town', 'administrative_area_level_2', 'administrative_area_level_1');
-      resolve([area, city].filter((v, i, a) => v && a.indexOf(v) === i).join(', ') || null);
+      const label = [area, city].filter((v, i, a) => v && a.indexOf(v) === i).join(', ') || null;
+      if (label) saveGeocode('chip', lat, lng, label);
+      resolve(label);
     });
   });
 }
