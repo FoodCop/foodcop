@@ -244,7 +244,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ action:
 
 // GET /api/places/photo?ref=<photo reference>&w=<width>: one Google photo.
 // Answers with a redirect to Google's image, so the key stays here and the
-// browser can reuse the same photo for an hour without paying again.
+// browser can reuse the same photo for a day without paying again.
 export async function GET(req: Request, { params }: { params: Promise<{ action: string }> }) {
   const { action } = await params;
   if (action !== 'photo') return badRequest('This action is not supported');
@@ -263,7 +263,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ action: 
     const location = res.headers.get('location');
     if (res.status >= 300 && res.status < 400 && location && new URL(location).hostname.endsWith('.googleusercontent.com')) {
       const answer = NextResponse.redirect(location, 302);
-      answer.headers.set('Cache-Control', 'private, max-age=3600');
+      answer.headers.set('Cache-Control', 'private, max-age=86400');
       return answer;
     }
     return googleRefusal(res.status === 429 ? 'daily_limit' : 'unavailable');

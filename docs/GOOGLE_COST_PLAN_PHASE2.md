@@ -65,7 +65,10 @@ Each step is one commit. Run `tsc`, `eslint` and `build` after each.
 - Re-check the numbers after step 1-2 land; the per-call cost will have dropped, so the
   limits can be raised later if the bill allows.
 
-### 5. Autocomplete: session token, longer debounce
+### 5. Autocomplete: longer debounce (DONE; session token dropped)
+
+**Status 2026-11-15:** done without a session token. Both boxes end in a text search, not a Place
+Details call, so Google bills each request separately whatever the token. 3 letters, 500 ms, 4 suggestions.
 
 - `ScoutView.tsx` (`fetchSuggestions`, ~line 192) and `usePlaceSearch.ts`: create one
   `AutocompleteSessionToken` per typing session, pass it to `fetchAutocompleteSuggestions`,
@@ -78,7 +81,11 @@ Each step is one commit. Run `tsc`, `eslint` and `build` after each.
   `localStorage` (wrap in try/catch), and reuse the saved home-area label when the point matches.
 - Share the cache with `useScoutDirections.ts` (~line 196) and `ScoutAddPinModal.tsx`.
 
-### 7. Load the Maps script only where needed
+### 7. Load the Maps script only where needed (SKIPPED)
+
+**Status 2026-11-15:** skipped. Google bills a map load when a `Map` is created, and each Geocoder /
+Autocomplete request when made. Loading the script alone is not billed, and nearly every page uses
+Google in some way, so this saves nothing and risks breaking map pages.
 
 - `src/app/layout.tsx` loads `maps/api/js` on every page. Move it behind the pages that draw a
   map or use autocomplete/geocoding (Scout, Profile food map, location picker, Add Pin, Create

@@ -305,8 +305,8 @@ export default function ScoutView() {
       const extra = (more.data?.results ?? []).map((r, i) => toScoutPlace(r, prev.length + i));
       return [...prev, ...extra.filter((p) => !ids.has(p.placeId || p.id))];
     });
-    const token = more.data?.next_page_token;
-    setNextPage(token ? { kind: nextPage.kind, token } : null);
+    // One extra page (40 places in all) at most: each page is a paid search.
+    setNextPage(null);
   }, [nextPage, isLoadingMore, showActionToast]);
 
   // --- Data Fetching: Source B (Community FUZO Pins) ---

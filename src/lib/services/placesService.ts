@@ -155,7 +155,8 @@ export const PlacesService = {
       languageCode: typeof navigator !== 'undefined' && navigator.language ? navigator.language : 'en',
     };
 
-    return makeRequest('/directions', payload);
+    // The same trip within 10 minutes reuses the answer (each route is billed).
+    return reused(`route:${JSON.stringify(payload)}`, () => makeRequest('/directions', payload));
   },
 
   /** `more` asks for the reviews and service options instead (a second, pricier call, only on request). */
