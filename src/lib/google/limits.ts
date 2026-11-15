@@ -8,10 +8,10 @@ export type GoogleKind = 'search' | 'details' | 'photo' | 'route' | 'gemini' | '
 export type GoogleBlock = 'sign_in' | 'user_limit' | 'daily_limit' | 'unavailable';
 
 export const GOOGLE_LIMITS: Record<GoogleKind, { daily: number; user: number }> = {
-  search: { daily: 30, user: 8 },
-  details: { daily: 30, user: 10 },
-  photo: { daily: 40, user: 15 },
-  route: { daily: 50, user: 15 },
+  search: { daily: 10, user: 4 },
+  details: { daily: 10, user: 5 },
+  photo: { daily: 25, user: 8 },
+  route: { daily: 20, user: 8 },
   gemini: { daily: 200, user: 40 },
   youtube: { daily: 80, user: 20 },
 };
