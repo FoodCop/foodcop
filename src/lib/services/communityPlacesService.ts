@@ -164,14 +164,17 @@ export const CommunityPlacesService = {
    * Places on FUZO or Google with a similar name within ~150 m. FUZO's check
    * is the same one add() enforces; Google's is checked here.
    */
-  async findDuplicates(name: string, lat: number, lng: number): Promise<PlaceDuplicate[]> {
+  async findDuplicates(name: string, lat: number, lng: number, opts: { google?: boolean } = {}): Promise<PlaceDuplicate[]> {
+    // Google's check is a paid search, so the form's automatic check leaves it out ({ google: false })
+    // and add() runs it once, when the person saves.
+    const askGoogle = opts.google !== false;
     if (nameKey(name).length < 2) return [];
     const supabase = createClient();
     const [fuzo, google] = await Promise.all([
       supabase
         ? supabase.rpc('find_place_duplicates', { p_name: name, p_lat: lat, p_lng: lng }).then(({ data }) => (data ?? []) as Array<{ kind: 'restaurant' | 'community'; id: string; name: string; lat: number; lng: number; place_id: string | null }>)
         : Promise.resolve([]),
-      PlacesService.searchNearby(lat, lng, 150).then((res) => res.data?.results ?? []).catch(() => []),
+      askGoogle ? PlacesService.searchNearby(lat, lng, 150).then((res) => res.data?.results ?? []).catch(() => []) : Promise.resolve([]),
     ]);
     const out: PlaceDuplicate[] = fuzo.map((d) => ({ kind: d.kind, id: d.id, name: d.name, lat: Number(d.lat), lng: Number(d.lng), placeId: d.place_id }));
     for (const g of google) {
